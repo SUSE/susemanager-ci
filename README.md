@@ -1,2 +1,8 @@
 # susemanager-ci
-CI infrastructure for SUSE Manager
+
+CI Automation for SUSE Manager.
+
+
+## Jenkins pipelines 
+
+This dir contain the Jenkins pipeline we use for Jenkins.
