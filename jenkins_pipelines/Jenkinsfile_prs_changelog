@@ -40,7 +40,7 @@ pipeline {
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
         stage('Run changelo test') {
             steps {
-                echo 'Run gitarro tests'
+                echo 'Run changelog tests'
                 sh "${gitarro_changelog_test}"
             }
         }

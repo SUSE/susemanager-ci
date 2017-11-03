@@ -1,0 +1,49 @@
+#!/usr/bin/env groovy
+
+// Configure the build properties
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '100')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+
+  // env variables
+  environment { 
+
+    javacheckstyle_check = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
+                " -c java_lint_checkstyle -d \"java-checkstyle\" " +
+                " -f \"java/\" " +
+                " -t ${env.WORKSPACE}/gitbot_java_lint/spacewalk/susemanager-utils/testing/automation/java-checkstyle.sh" +
+                " -g ${env.WORKSPACE}/gitbot_java_lint" +
+                "--check --changed_since 3600" 
+
+    javacheckstyle_test = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
+                " -c java_lint_checkstyle -d \"java-checkstyle\" " +
+                " -u ${BUILD_URL} " +
+                " -f \"java/\" " +
+                " -t ${env.WORKSPACE}/gitbot_java_lint/spacewalk/susemanager-utils/testing/automation/java-checkstyle.sh" +
+                " -g ${env.WORKSPACE}/gitbot_java_lint" 
+   }
+   // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+   // trigger
+    triggers {
+        cron('H/5 * * * *')
+       }
+    stages {
+        stage('Check Pull Request') {
+            steps {
+                 echo 'Check if a PR need checkstyle test'
+                 sh "${javacheckstyle_check} | grep \"TESTREQUIRED=true\" "
+               }
+         }
+        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
+        stage('Run Javacheckstyle test') {
+            steps {
+                  echo 'Run javacheckstyle tests'
+                   sh "${javacheckstyle_test}"
+                  }
+        }
+    }
+}
