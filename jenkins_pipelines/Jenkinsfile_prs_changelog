@@ -13,14 +13,14 @@ pipeline {
     gitarro_changelog_check = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
                 " -c changelog_test -d \"test if changelog was updated\" " +
                 " -t /home/jenkins/bin/changelog.rb" +
-                " -g \"/tmp/gitbot_changelog_trigger\" " +
+                " -g \"${env.WORKSPACE}\" " +
                 "--check --changed_since 3600" 
 
     gitarro_changelog_test = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
                 " -c changelog_test -d \"test if changelog was updated\" " +
                 " -t /home/jenkins/bin/changelog.rb" +
                 " -u ${env.BUILD_URL}" +
-                " -g \"/tmp/gitbot_changelog_trigger\" " 
+                " -g \"${env.WORKSPACE}\" " 
   }
 
    // run only on specific hosts
@@ -28,13 +28,13 @@ pipeline {
    // trigger
     triggers {
         cron('H/5 * * * *')
-       }
+    }
     stages {
-        stage('Check Pull Request for changelog') {
-            steps {
-               echo 'Check if a PR need changelog test'
-               sh "${gitarro_changelog_check} | grep \"TESTREQUIRED=true\" "
-            }
+      stage('Check Pull Request for changelog') {
+        steps {
+                echo 'Check if a PR need changelog test'
+                 sh "${gitarro_changelog_check} | grep \"TESTREQUIRED=true\" "
+              }
         }
         // If there is a PR that doesn't contain context changelog, we run this.
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
@@ -43,6 +43,12 @@ pipeline {
                 echo 'Run changelog tests'
                 sh "${gitarro_changelog_test}"
             }
+        }
+    }
+   // postactions
+   post { 
+        always { 
+            cleanWs()
         }
     }
 }

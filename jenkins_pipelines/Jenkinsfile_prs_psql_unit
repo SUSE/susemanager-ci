@@ -16,7 +16,7 @@ pipeline {
      context = "java_unittests_pgsql" 
      description = "java pgsql unit test" 
      filter = "java/"
-     git_fs = "/tmp/test_psql"
+     git_fs = "${env.WORKSPACE}"      
      // the actual test is the git repo
      test = "${git_fs}/spacewalk/susemanager-utils/testing/automation/java-unittests-pgsql.sh"
 
@@ -55,6 +55,11 @@ pipeline {
                   echo 'Run psql unit tests'
                    sh "$runtest}"
                   }
+        }
+    }
+  post { 
+        always { 
+            cleanWs()
         }
     }
 }
