@@ -11,25 +11,26 @@ pipeline {
   // env variables
   environment { 
 
-    // specific psql conf
+    // CONF To edit  
      repository = "SUSE/spacewalk"
-     context = "java_unittests_pgsql" 
-     description = "java pgsql unit test" 
-     filter = "java/"
+     context = "backend_unittests_pgsql" 
+     description = "python backend pgsql unit test"
      git_fs = "${env.WORKSPACE}"      
-     // the actual test is the git repo
-     test = "susemanager-utils/testing/automation/java-unittests-pgsql.sh"
+     filter = 'backend/'
+     // the actual test is the git repo (inside spacewalk)
+     test = "susemanager-utils/testing/automation/backend-unittest-pgsql.sh" 
 
+    // DO NOT EDIT THIS
     // this are execution jobs
     check = "gitarro.ruby2.1  -r ${repository}" + 
-                " -c ${context} -d ${description} " +
+                " -c ${context} -d \"${description}\" " +
                 " -f ${filter} " +
                 " -t ${test} " +
                 " -g ${git_fs}" +
                 "--check --changed_since 3600" 
 
     runtest = "gitarro.ruby2.1  -r ${repository}" + 
-                " -c ${context} -d ${description} " +
+                " -c ${context} -d \"${description}\" " +
                 " -f ${filter} " +
                 " -g ${git_fs} " +
                 " -u ${env.BUILD_URL}" +
@@ -50,9 +51,9 @@ pipeline {
                }
          }
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
-        stage('Run Java psql unit test') {
+        stage('Run tests against PR') {
             steps {
-                  echo 'Run psql unit tests'
+                  echo 'Run tests!'
                    sh "$runtest}"
                   }
         }

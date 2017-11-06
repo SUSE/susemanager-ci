@@ -14,16 +14,16 @@ pipeline {
     javacheckstyle_check = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
                 " -c java_lint_checkstyle -d \"java-checkstyle\" " +
                 " -f \"java/\" " +
-                " -t ${env.WORKSPACE}/gitbot_java_lint/spacewalk/susemanager-utils/testing/automation/java-checkstyle.sh" +
-                " -g ${env.WORKSPACE}/gitbot_java_lint" +
+                " -t susemanager-utils/testing/automation/java-checkstyle.sh" +
+                " -g ${env.WORKSPACE} " +
                 "--check --changed_since 3600" 
 
     javacheckstyle_test = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
                 " -c java_lint_checkstyle -d \"java-checkstyle\" " +
                 " -f \"java/\" " +
-                " -t ${env.WORKSPACE}/gitbot_java_lint/spacewalk/susemanager-utils/testing/automation/java-checkstyle.sh" +
+                " -t susemanager-utils/testing/automation/java-checkstyle.sh" +
                 " -u ${env.BUILD_URL} " +
-                " -g ${env.WORKSPACE}/gitbot_java_lint" 
+                " -g ${env.WORKSPACE} " 
    }
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
