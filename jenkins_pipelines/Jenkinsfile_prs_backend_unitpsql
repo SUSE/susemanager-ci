@@ -26,7 +26,7 @@ pipeline {
                 " -c ${context} -d \"${description}\" " +
                 " -f ${filter} " +
                 " -t ${test} " +
-                " -g ${git_fs}" +
+                " -g ${git_fs} " +
                 "--check --changed_since 3600" 
 
     runtest = "gitarro.ruby2.1  -r ${repository}" + 
