@@ -24,7 +24,7 @@ pipeline {
     check = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c ${context} -d \"${description}\" " +
                 " -t ${test} " +
-                " -g ${git_fs}" +
+                " -g ${git_fs} " +
                 "--check --changed_since 3600" 
 
     runtest = "gitarro.ruby2.1  -r ${repository}" + 
