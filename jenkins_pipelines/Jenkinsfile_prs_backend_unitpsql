@@ -33,7 +33,7 @@ pipeline {
                 " -c ${context} -d \"${description}\" " +
                 " -f ${filter} " +
                 " -g ${git_fs} " +
-                " -u \"${env.BUILD_URL}"\" +
+                " -u \"${env.BUILD_URL}\" " +
                 " -t ${test} " 
 
    }
