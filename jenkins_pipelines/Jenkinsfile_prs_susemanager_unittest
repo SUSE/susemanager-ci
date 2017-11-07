@@ -50,9 +50,9 @@ pipeline {
                }
          }
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
-        stage('Run Java psql unit test') {
+        stage('Run tests') {
             steps {
-                  echo 'Run psql unit tests'
+                  echo 'Run tests'
                    sh "$runtest}"
                   }
         }
