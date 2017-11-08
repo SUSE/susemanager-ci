@@ -1,9 +1,5 @@
 #!/usr/bin/env groovy
 
-def rootDir = pwd()
-def example = load "${rootDir}@script/hello.groovy "
-example.exampleMethod()
-
 // Configure the build properties
 properties([
     buildDiscarder(logRotator(numToKeepStr: '100')),
@@ -11,6 +7,13 @@ properties([
 ])
 
 pipeline {
+
+
+  def rootDir = pwd()
+  def example = load "${rootDir}@script/hello.groovy "
+  example.exampleMethod()
+
+
 
   // env variables
   environment { 
