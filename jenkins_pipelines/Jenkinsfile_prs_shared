@@ -9,12 +9,6 @@ properties([
 pipeline {
 
 
-  def rootDir = pwd()
-  def example = load "${rootDir}@script/hello.groovy "
-  example.exampleMethod()
-
-
-
   // env variables
   environment { 
 
@@ -45,6 +39,13 @@ pipeline {
    }
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
+   
+    def rootDir = pwd()
+    def example = load "${rootDir}@script/hello.groovy "
+    example.exampleMethod()
+
+
+
    // trigger
     triggers {
         cron('H/5 * * * *')
