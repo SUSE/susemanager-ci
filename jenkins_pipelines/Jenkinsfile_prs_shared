@@ -1,8 +1,8 @@
 #!/usr/bin/env groovy
-@Library('hello') _
-acme.name = 'Alice'
-echo acme.name /* prints: 'Alice' */
-acme.caution 'The queen is angry!' /* prints: 'Hello, Alice. CAUTION: The queen is angry!' */
+
+def rootDir = pwd()
+def example = load "${rootDir}@script/hello.groovy "
+example.exampleMethod()
 
 // Configure the build properties
 properties([
