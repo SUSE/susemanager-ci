@@ -1,5 +1,4 @@
 #!/usr/bin/env groovy
-example = load 'hello.groovy'
 
 
 // Configure the build properties
@@ -41,9 +40,9 @@ pipeline {
    }
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
-    script  {
-      example.exampleMethod()
-    }
+
+    example = load 'hello.groovy'
+    example.exampleMethod()
 
 
    // trigger
