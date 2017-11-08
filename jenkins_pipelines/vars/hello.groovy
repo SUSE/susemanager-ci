@@ -1,7 +1,5 @@
 #!/usr/bin/env groovy
 
-
-
 // Copyright 2017 SUSE LINUX GmbH, Nuernberg, Germany.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
