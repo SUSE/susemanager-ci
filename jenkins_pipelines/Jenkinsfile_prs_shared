@@ -41,9 +41,9 @@ pipeline {
    }
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
-   
-    example.exampleMethod()
-
+    script  {
+      example.exampleMethod()
+    }
 
 
    // trigger
