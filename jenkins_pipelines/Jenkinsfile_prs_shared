@@ -40,8 +40,7 @@ pipeline {
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
    
-    def rootDir = pwd()
-    def example = load "${rootDir}@script/hello.groovy "
+    def example = load "hello.groovy "
     example.exampleMethod()
 
 
