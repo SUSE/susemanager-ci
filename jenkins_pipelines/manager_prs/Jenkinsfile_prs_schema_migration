@@ -7,7 +7,10 @@ properties([
 ])
 
 pipeline {
+
+  // env variables
   environment { 
+    // specific psql conf
     repository = "SUSE/spacewalk"
     context = "schema_mig_test_pgsql" 
     description = "schema migration test" 
@@ -37,7 +40,10 @@ pipeline {
                  " -g \"${env.WORKSPACE}/oracle\" " 
     
   }
+
+  // run only on specific hosts
   agent { label 'suse-manager-unit-tests' }
+  // trigger
   triggers { cron('H/5 * * * *') }
   stages {
     stage('Check Pull Request') {
