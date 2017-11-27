@@ -1,0 +1,33 @@
+#!/usr/bin/env groovy
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '100')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+  environment { 
+   WITH_PROXY="true"
+   }
+    agent { label 'sumaform-cucumber'  }
+    triggers { cron('H 1-23/2 * * *')  }
+    stages {
+     stage('clone gitlab repo') {
+        steps {
+          echo 'clone testrunner repo'
+          git url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
+       }
+    }
+    stage('Execute Testsuite') {
+        steps {	
+          echo 'Exectute 31 Testsuite'
+          sh "cd ${env.WORKSPACE}"
+          sh "export ${env.WITH_PROXY} ./jenkins-runner.sh 31/VARS-full.sh"
+          }
+      }
+    }
+  post { 
+        always { 
+            cleanWs()
+        }
+    }
+}

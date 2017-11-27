@@ -13,6 +13,12 @@ This directory contain all pipelines that are executed for testing prs for space
 This pipelines use the same patterns, which is to use the gitarro tools for github PRS.
 1) Use gitarro https://github.com/openSUSE/gitarro
 
+
+### Cucumber tests pipelines.
+
+This directory contain the full acceptance tests pipelines for susemanager
+
+
 #### How to make a pipeline from scratch 
 
 If you are new to pipeline, start reading this:
