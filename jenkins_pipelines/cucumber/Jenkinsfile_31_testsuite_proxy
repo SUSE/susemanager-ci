@@ -20,7 +20,7 @@ pipeline {
     stage('Execute Testsuite') {
         steps {	
           echo 'Exectute 31 Testsuite'
-          sh "cd ${env.WORKSPACE}/sumaform-test-runner"
+//          sh "cd ${env.WORKSPACE}/sumaform-test-runner"
           sh "./jenkins-runner.sh 31/VARS-full.sh"
           }
       }
