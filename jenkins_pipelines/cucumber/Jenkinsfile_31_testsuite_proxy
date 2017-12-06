@@ -9,7 +9,7 @@ pipeline {
         WITH_PROXY = 'true'
     }
     agent { label 'sumaform-cucumber'  }
-    triggers { cron('H 1-23/2 * * *')  }
+   // triggers { cron('H 1-23/2 * * *')  }
     stages {
      stage('clone gitlab repo') {
         steps {
