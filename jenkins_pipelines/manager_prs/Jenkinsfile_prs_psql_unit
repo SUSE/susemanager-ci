@@ -13,7 +13,7 @@ pipeline {
 
     // specific psql conf
      repository = "SUSE/spacewalk"
-     context = "java_unittests_pgsql" 
+     context = "java_pgsql_tests"
      description = "java pgsql unit test" 
      filter = "java/"
      git_fs = "${env.WORKSPACE}"      
