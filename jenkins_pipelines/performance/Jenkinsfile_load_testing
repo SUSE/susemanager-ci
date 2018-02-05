@@ -1,0 +1,46 @@
+#!/usr/bin/env groovy
+
+// Configure the build properties
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+
+  // env variables
+  environment { 
+
+   }
+   // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+    stages {
+        stage('Clone Spacewalk repo') {
+            steps {
+                 git 
+                 echo 'Check if a PR need a test'
+                 sh "${check} | grep \"TESTREQUIRED=true\" "
+               }
+         }
+        // Deploy or use infrastructure.
+        stage('Deploy Locust node and suse-manager server') {
+            steps {
+                  // HACK: for the time beeing just run on refhost.
+                  echo 'Running on refhost'
+                   sh "$runtest}"
+                  }
+        }
+        // Run locust tests.
+        stage('Run Locust tests') {
+            steps {
+                  echo 'Running locusts testss'
+                   sh "$runtest}"
+                  }
+        }
+    }
+  post { 
+        always { 
+            cleanWs()
+        }
+    }
+}

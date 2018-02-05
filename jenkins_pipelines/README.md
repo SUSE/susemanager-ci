@@ -8,10 +8,15 @@ Currently we have:
 
 ### Manager Prs dir 
 
-This directory contain all pipelines that are executed for testing prs for spacewalk.
+This directory contains all pipelines that are executed for testing prs for spacewalk.
 
 This pipelines use the same patterns, which is to use the gitarro tools for github PRS.
 1) Use gitarro https://github.com/openSUSE/gitarro
+
+### Performance dir
+
+This dir contains pipelines related to scalabilty tests for suse-manager.
+
 
 #### How to make a pipeline from scratch 
 
