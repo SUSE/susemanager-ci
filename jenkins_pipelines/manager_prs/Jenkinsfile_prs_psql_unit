@@ -58,7 +58,8 @@ pipeline {
         }
     }
   post { 
-        always { 
+        always {
+            junit "spacewalk*/java/test-results/*.xml"
             cleanWs()
         }
     }
