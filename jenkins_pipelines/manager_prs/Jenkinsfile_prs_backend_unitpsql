@@ -59,7 +59,8 @@ pipeline {
         }
     }
   post { 
-        always { 
+        always {
+            junit "spacewalk*/backend/reports/pgsql_tests.xml" 
             cleanWs()
         }
     }
