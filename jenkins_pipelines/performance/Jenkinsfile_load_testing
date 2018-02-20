@@ -7,26 +7,35 @@ properties([
 ])
 
 pipeline {
-   // run only on specific hosts
-    agent { label 'suse-manager-unit-tests' }
+    // run wheere there is already terraform client installed
+    agent { label 'sumaform-cucumber' }
     stages {
-        // Deploy or use infrastructure.
-        stage('Deploy Locust node and suse-manager server') {
+        stage('Deploy Locust on cloud') {
             steps {
-                  // HACK: for the time beeing just run on refhost.
-                  echo 'Deploy Locust'
+                  // take the gitlab runner and execute the main.tf
+                  git url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
+                  bash '''#!/bin/bash
+                  cd performance
+                  git clone --depth 1 https://github.com/moio/sumaform.git'
+                  pwd 
+	 	  terraform init
+                  terraform plan
+                  '''
+                  // sh 'terraform apply'
                   }
         }
         // Run locust tests.
-        stage('Run Locust tests') {
+        stage('execute Locust tests') {
             steps {
-                  echo 'Running locusts testss'
+                  echo 'log in locust node and run the tests'
                   }
         }
     }
   post { 
         always { 
-            cleanWs()
+              echo 'post-actions'
+   //         sh 'terraform destroy'
+   //         cleanWs()
         }
     }
 }

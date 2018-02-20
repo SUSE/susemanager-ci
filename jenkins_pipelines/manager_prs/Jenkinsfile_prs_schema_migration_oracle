@@ -12,11 +12,11 @@ pipeline {
   environment { 
     // specific psql conf
     repository = "SUSE/spacewalk"
-    context = "schema_mig_test_pgsql" 
-    description = "schema migration test" 
+    context = "schema_migration_test_oracle" 
+    description = "schema migration test oracle" 
     filter = "schema/spacewalk"
     git_fs = "${env.WORKSPACE}"      
-    test = "susemanager-utils/testing/automation/schema-migration-test-pgsql.sh" \
+    test = "susemanager-utils/testing/automation/schema-migration-test-oracle.sh"
     // trigger tests
     check = "gitarro.ruby2.1  -r ${repository}" + 
             " -c ${context} -d ${description} " +
@@ -24,21 +24,13 @@ pipeline {
             " -t ${test} " +
             " -g ${git_fs} " +
             "--check --changed_since 3600" 
-    // postgresql
-    runtest_pg = "gitarro.ruby2.1  -r ${repository}" + 
+    // oracle test
+    runtest_oracle = "gitarro.ruby2.1  -r ${repository}" + 
                  " -c ${context} -d ${description} " +
                  " -f ${filter} " +
                  " -g ${git_fs} " +
                  " -u \"${env.BUILD_URL}\"" +
                  " -t ${test} " 
-    // oracle test
-    runtest_oracle = "gitarro.ruby2.1  -r ${repository}" + 
-                 " -c schema_mig_test_oracle -d \"python backend pgsql unit test\" " +
-                 " -t \"susemanager-utils/testing/automation/schema-migration-test-oracle.sh\" " +
-                 " -u \"${env.BUILD_URL}\" " +
-                 " -f \"schema/spacewalk/\" " +
-                 " -g \"${env.WORKSPACE}/oracle\" " 
-    
   }
 
   // run only on specific hosts
@@ -52,25 +44,12 @@ pipeline {
         sh "${check} | grep \"TESTREQUIRED=true\" "
         }
       }
-    stage('run parallel schema tests') {
-      // This jobs run in parallel if 1st is OK
-      parallel { 
-        stage('Run schema tests postgresql') {
-          steps {
-            echo 'Run tests'
-            sh "$runtest_pg"
+     stage('Run tests oracle') {
+       steps {
+          echo 'Run schema tests oracle '
+          sh "$runtest_oracle"
             }
-          }
-  
-        stage('Run tests oracle') {
-          steps {
-            echo 'Run schema tests oracle '
-            sh "$runtest_oracle"
-            }
-          }
-  
-        }
-    }
+       }
   }
   post { 
         always { 
