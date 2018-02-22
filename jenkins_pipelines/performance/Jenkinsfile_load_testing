@@ -26,10 +26,7 @@ pipeline {
                   }
                   sh 'mv sumaform prod/performance'
                   sh "mv prod/performance/$locust_tf prod/performance/sumaform"
-                  sh 'cd prod/performance/sumaform/'
-                  sh 'pwd'
-	 	  sh 'terraform init'
-                  sh 'terraform plan'
+                  sh 'cd prod/performance/sumaform/ && terraform init &&terraform plan'
                   // sh 'terraform apply'
                   }
         }
