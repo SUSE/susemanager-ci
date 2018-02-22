@@ -7,20 +7,29 @@ properties([
 ])
 
 pipeline {
+   environment {
+       sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
+       sumaform_url = 'https://github.com/moio/sumaform.git'
+       locust_tf = 'locust.tf'
+    }
     // run wheere there is already terraform client installed
     agent { label 'sumaform-cucumber' }
     stages {
         stage('Deploy Locust on cloud') {
             steps {
                   // take the gitlab runner and execute the main.tf
-                  git url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
-                  bash '''#!/bin/bash
-                  cd performance
-                  git clone --depth 1 https://github.com/moio/sumaform.git'
-                  pwd 
-	 	  terraform init
-                  terraform plan
-                  '''
+                  dir('prod') {
+                     git url: sumaform_runner_url
+                  }
+                  dir('sumaform') {
+                     git url: sumaform_url
+                  }
+                  sh 'mv sumaform prod/performance'
+                  sh "mv prod/performance/$locust_tf prod/performance/sumaform"
+                  sh 'cd prod/performance/sumaform/'
+                  sh 'pwd'
+	 	  sh 'terraform init'
+                  sh 'terraform plan'
                   // sh 'terraform apply'
                   }
         }
@@ -34,8 +43,8 @@ pipeline {
   post { 
         always { 
               echo 'post-actions'
-   //         sh 'terraform destroy'
-   //         cleanWs()
+              sh 'terraform destroy'
+              cleanWs()
         }
     }
 }
