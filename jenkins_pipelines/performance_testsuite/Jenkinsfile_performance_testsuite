@@ -46,7 +46,8 @@ pipeline {
   post { 
         always { 
               sh 'terraform destroy -force'
-              cleanWs()
+    // FIXME: for unstable version don't cleanup workspace since we want to debug
+    //          cleanWs()
         }
     }
 }
