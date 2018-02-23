@@ -1,52 +1,45 @@
 #!/usr/bin/env groovy
 
-// Configure the build properties
 properties([
     buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
     disableConcurrentBuilds(),
 ])
 
 pipeline {
-   environment {
-       sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
-       sumaform_url = 'https://github.com/moio/sumaform.git'
-       locust_tf = 'locust.tf'
-       ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-       locust_node = 'locust.cloud.suse.de'
+  environment {
+      sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
+      sumaform_url = 'https://github.com/moio/sumaform.git'
+      locust_tf = 'locust.tf'
+      ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+      locust_node = 'locust.cloud.suse.de'
+      exec_locust = 'run-locust'
     }
-    // run wheere there is already terraform client installed
-    agent { label 'sumaform-cucumber' }
-    stages {
+  agent { label 'sumaform-cucumber' }
+  stages {
         stage('Deploy Locust on cloud') {
-            steps {
-                  // take the gitlab runner and execute the main.tf
-                  dir('prod') {
-                     git url: sumaform_runner_url
-                  }
-                  dir('prod/performance/sumaform') {
-                     git url: sumaform_url
-                  }
-                  //sh 'mv sumaform prod/performance'
-                  sh "mv prod/performance/$locust_tf prod/performance/sumaform"
- 
-                  dir('prod/performance/sumaform') {
-                     sh 'terraform init'
-                     sh 'terraform apply'
-                    }
-                  }
-       }
-        // Run locust tests.
+          steps {
+  
+            dir('prod') { git url: sumaform_runner_url }
+            dir('prod/performance/sumaform') { git url: sumaform_url }
+            sh "mv prod/performance/$locust_tf prod/performance/sumaform"
+                    
+            dir('prod/performance/sumaform') {
+               sh 'terraform init'
+               sh 'terraform apply'
+            }
+  
+          }
+      }
         stage('execute Locust tests') {
-            steps {
-                    echo 'log in locust node and run the tests'
-                    sh "ssh $ssh_flags -tt root@$locust_node run-locust"
-                  }
+          steps {
+            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust"
+           }
         }
-    }
+  }
   post { 
-        always { 
-              sh 'terraform destroy -force'
-              cleanWs()
-        }
-    }
+    always { 
+      sh 'terraform destroy -force'
+      cleanWs()
+     }
+  }
 }
