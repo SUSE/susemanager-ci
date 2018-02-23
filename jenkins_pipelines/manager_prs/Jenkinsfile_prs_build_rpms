@@ -7,57 +7,41 @@ properties([
 ])
 
 pipeline {
-
-  // env variables
   environment { 
-
-    // CONF To edit  
      repository = "SUSE/spacewalk"
-     context = "obs_pkgs_build_susemagr" 
-     description = "Build from your Prs all pkgs for susemgr-Server" 
-     git_fs = "${env.WORKSPACE}"      
+     context = "obs_pkgs_build_susemagr"
+     description = "Build from your Prs all pkgs for susemgr-Server"
+     git_fs = "${env.WORKSPACE}"
      // the actual test is the git repo
      test = "/home/jenkins/bin/git2obs.sh"
 
-    // DO NOT EDIT THIS
-    // this are execution jobs
     check = "gitarro.ruby2.1  -r ${repository}" + 
-                " -c ${context} -d ${description} " +
+                " -c ${context} -d \"${description}\" " +
                 " -t ${test} " +
                 " -g ${git_fs} " +
                 "--check --changed_since 3600" 
 
     runtest = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c ${context} -d \"${description}\" " +
-                " -f ${filter} " +
                 " -g ${git_fs} " +
-                " -u ${env.BUILD_URL}" +
+                " -u \"${env.BUILD_URL}\" " +
                 " -t ${test} " 
 
    }
-   // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
-   // trigger
-    triggers {
-        cron('H/5 * * * *')
-       }
+    triggers { cron('H/5 * * * *') }
     stages {
         stage('Check Pull Request') {
-            steps {
-                 echo 'Check if a PR need a test'
-                 sh "${check} | grep \"TESTREQUIRED=true\" "
-               }
+            steps { sh "${check} | grep \"TESTREQUIRED=true\" "  }
          }
-        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
         stage('Run tests against PR') {
-            steps {
-                  echo 'Run tests!'
-                   sh "$runtest}"
-                  }
+            steps { sh "$runtest}" }
         }
+        stage("deploy sumaform infra with builded repository") { echo 'WIP'}
+        stage("run cucumber tests on Pull-Request") { echo 'WIP'}
     }
   post { 
-        always { 
+        always {
             cleanWs()
         }
     }

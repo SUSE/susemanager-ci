@@ -14,7 +14,7 @@ pipeline {
       locust_node = 'locust.cloud.suse.de'
       exec_locust = 'run-locust'
     }
-  agent { label 'sumaform-cucumber' }
+  agent { label 'performance-tests' }
   stages {
         stage('Deploy Locust on cloud') {
           steps {
