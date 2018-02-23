@@ -23,10 +23,10 @@ pipeline {
                   dir('prod') {
                      git url: sumaform_runner_url
                   }
-                  dir('sumaform') {
+                  dir('prod/performance/sumaform') {
                      git url: sumaform_url
                   }
-                  sh 'mv sumaform prod/performance'
+                  //sh 'mv sumaform prod/performance'
                   sh "mv prod/performance/$locust_tf prod/performance/sumaform"
  
                   dir('prod/performance/sumaform') {
@@ -46,8 +46,7 @@ pipeline {
   post { 
         always { 
               sh 'terraform destroy -force'
-    // FIXME: for unstable version don't cleanup workspace since we want to debug
-    //          cleanWs()
+              cleanWs()
         }
     }
 }
