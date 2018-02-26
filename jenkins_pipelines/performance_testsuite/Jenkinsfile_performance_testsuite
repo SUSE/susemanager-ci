@@ -11,7 +11,7 @@ pipeline {
       sumaform_url = 'https://github.com/moio/sumaform.git'
       locust_tf = 'locust.tf'
       ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-      locust_node = 'locust.cloud.suse.de'
+      locust_node = 'pts-locust.cloud.suse.de'
       exec_locust = 'run-locust'
     }
   agent { label 'performance-tests' }
