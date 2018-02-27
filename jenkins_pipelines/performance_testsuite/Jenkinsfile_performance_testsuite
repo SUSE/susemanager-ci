@@ -6,56 +6,65 @@ properties([
 ])
 
 pipeline {
-  environment {
-      sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
-      sumaform_url = 'https://github.com/moio/sumaform.git'
-      locust_tf = 'locust.tf'
-      ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-      locust_node = 'pts-locust.cloud.suse.de'
-      exec_locust = 'run-locust'
+    environment {
+        sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
+        sumaform_url = 'https://github.com/moio/sumaform.git'
+        locust_tf = 'locust.tf'
+        ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+        locust_node = 'pts-locust.cloud.suse.de'
+        exec_locust = 'run-locust'
     }
-  agent { label 'performance-tests' }
-  triggers { cron('H/30 * * * *')  }
-  stages {
+    agent {
+        label 'performance-tests'
+    }
+    triggers {
+        cron('H/30 * * * *')
+    }
+    stages {
         stage('Deploy VMs on ECP') {
-          steps {
-  
-            dir('prod') { git url: sumaform_runner_url }
-            dir('prod/performance/sumaform') { git url: sumaform_url }
-            sh "mv prod/performance/$locust_tf prod/performance/sumaform"
-                    
-            dir('prod/performance/sumaform') {
-               sh 'terraform init'
-               sh 'terraform apply'
+            steps {
+                dir('prod') {
+                    git url: sumaform_runner_url
+                }
+                dir('prod/performance/sumaform') {
+                    git url: sumaform_url
+                }
+                sh "mv prod/performance/$locust_tf prod/performance/sumaform"
+
+                dir('prod/performance/sumaform') {
+                    sh 'terraform init'
+                    sh 'terraform apply'
+                }
             }
-  
-          }
-      }
+        }
+
         // the results are showed in grafana
         stage('Locust stress tests: 200 users') {
-          steps {
-            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust"
-           }
+            steps {
+                sh "ssh $ssh_flags -tt root@$locust_node $exec_locust"
+            }
         }
 
         stage('Locust stress tests: 300 users') {
-          steps {
-            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 300"
-           }
-       }
+            steps {
+                sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 300"
+            }
+        }
 
-       stage('Locust stress tests: 400 users') {
-          steps {
-            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 400"
-           }
-       }
- }
-  post { 
-    always { 
-      dir('prod/performance/sumaform') {
-        sh 'terraform destroy -force'
-      }
-      cleanWs()
-     }
-  }
+        stage('Locust stress tests: 400 users') {
+            steps {
+                sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 400"
+            }
+        }
+    }
+    post {
+        always {
+            dir('prod/performance/sumaform') {
+                sh 'terraform destroy -force'
+            }
+            dir("${env.WORKSPACE}") {
+                deleteDir()
+            }
+        }
+    }
 }

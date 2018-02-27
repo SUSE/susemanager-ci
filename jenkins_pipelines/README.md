@@ -1,21 +1,30 @@
-# Welcome to our jenkins pipeline Susemanagers!
+# Pipelines for SUSE-Manager
 
-## What is inside the various directory.
+- Manager GitHub pull-request unit/tests
 
-Each dir is a namespace for pipelines, which are different from topic. 
+- Manager Github pull-request cucumber functional tests
 
-Currently we have:
+- Manager performance testsuite
 
-### Manager Prs dir 
+
+### Manager GitHub pull-request unit/tests
 
 This directory contains all pipelines that are executed for testing prs for spacewalk.
 
 This pipelines use the same patterns, which is to use the gitarro tools for github PRS.
 1) Use gitarro https://github.com/openSUSE/gitarro
 
-### Performance dir
+
+### Manager performance testsuite
 
 This dir contains pipelines related to scalabilty tests for suse-manager.
+
+
+
+### Manager Github pull-request cucumber functional tests
+
+This directory contain pipeline and scripts for running cucumber against GitHub Pull-requests
+
 
 
 #### How to make a pipeline from scratch 

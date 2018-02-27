@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
 
-// Configure the build properties
 properties([
     buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
     disableConcurrentBuilds(),
@@ -9,38 +8,50 @@ properties([
 pipeline {
   environment { 
      repository = "SUSE/spacewalk"
-     context = "obs_pkgs_build_susemagr"
-     description = "Build from your Prs all pkgs for susemgr-Server"
-     git_fs = "${env.WORKSPACE}"
-     // the actual test is the git repo
-     test = "/home/jenkins/bin/git2obs.sh"
-
+     context = "ruby_rubocop" 
+     description = "rubocop checkstyle"
+     git_fs = "${env.WORKSPACE}"      
+     filter = 'testsuite/'
+     test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/rubocop.sh" 
     check = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c ${context} -d \"${description}\" " +
+                " -f ${filter} " +
                 " -t ${test} " +
                 " -g ${git_fs} " +
                 "--check --changed_since 3600" 
 
     runtest = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c ${context} -d \"${description}\" " +
+                " -f ${filter} " +
                 " -g ${git_fs} " +
                 " -u \"${env.BUILD_URL}\" " +
                 " -t ${test} " 
 
    }
     agent { label 'suse-manager-unit-tests' }
-    triggers { cron('H/5 * * * *') }
+    triggers {
+        cron('H/10 * * * *')
+       }
     stages {
         stage('Check Pull Request') {
-            steps { sh "${check} | grep \"TESTREQUIRED=true\" "  }
+            steps {
+                 echo 'Check if a PR need a test'
+                 sh "${check} | grep \"TESTREQUIRED=true\" "
+               }
          }
         stage('Run tests against PR') {
-            steps { sh "$runtest}" }
+            steps {
+                  echo 'Run tests!'
+                   sh "$runtest}"
+                  }
         }
     }
   post { 
         always {
-            cleanWs()
+            dir("${env.WORKSPACE}") {
+                deleteDir()
+            }
+
         }
     }
 }
