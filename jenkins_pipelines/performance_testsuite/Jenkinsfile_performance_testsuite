@@ -17,7 +17,7 @@ pipeline {
   agent { label 'performance-tests' }
   triggers { cron('H/30 * * * *')  }
   stages {
-        stage('Deploy Locust on cloud') {
+        stage('Deploy VMs on ECP') {
           steps {
   
             dir('prod') { git url: sumaform_runner_url }
@@ -32,21 +32,21 @@ pipeline {
           }
       }
         // the results are showed in grafana
-        stage('execute Locust tests 200user 100hatchrate 120sec') {
+        stage('Locust stress tests: 200 users') {
           steps {
             sh "ssh $ssh_flags -tt root@$locust_node $exec_locust"
            }
         }
 
-        stage('execute Locust tests 300user 200hatchrate 120sec') {
+        stage('Locust stress tests: 300 users') {
           steps {
-            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 300 -r 200"
+            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 300"
            }
        }
 
-       stage('execute Locust tests 400user 250hatchrate 120sec') {
+       stage('Locust stress tests: 400 users') {
           steps {
-            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 400 -r 250"
+            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 400"
            }
        }
  }
