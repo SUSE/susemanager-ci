@@ -30,15 +30,29 @@ pipeline {
   
           }
       }
-        stage('execute Locust tests') {
+        stage('execute Locust tests 200user 100hatchrate 120sec') {
           steps {
             sh "ssh $ssh_flags -tt root@$locust_node $exec_locust"
            }
         }
-  }
+
+        stage('execute Locust tests 300user 200hatchrate 120sec') {
+          steps {
+            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 300 -r 200"
+           }
+       }
+
+       stage('execute Locust tests 400user 250hatchrate 120sec') {
+          steps {
+            sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 400 -r 250"
+           }
+       }
+ }
   post { 
     always { 
-      sh 'terraform destroy -force'
+      dir('prod/performance/sumaform') {
+        sh 'terraform destroy -force'
+      }
       cleanWs()
      }
   }
