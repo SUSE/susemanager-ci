@@ -39,9 +39,7 @@ pipeline {
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
    // trigger
-    triggers {
-        cron('H/5 * * * *')
-       }
+    triggers {  cron('H/5 * * * *')  }
     stages {
         stage('Check Pull Request') {
             steps {

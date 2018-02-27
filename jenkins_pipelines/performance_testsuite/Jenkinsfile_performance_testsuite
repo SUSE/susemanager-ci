@@ -15,6 +15,7 @@ pipeline {
       exec_locust = 'run-locust'
     }
   agent { label 'performance-tests' }
+  triggers { cron('H/30 * * * *')  }
   stages {
         stage('Deploy Locust on cloud') {
           steps {
