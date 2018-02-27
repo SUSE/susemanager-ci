@@ -30,6 +30,7 @@ pipeline {
   
           }
       }
+        // the results are showed in grafana
         stage('execute Locust tests 200user 100hatchrate 120sec') {
           steps {
             sh "ssh $ssh_flags -tt root@$locust_node $exec_locust"
