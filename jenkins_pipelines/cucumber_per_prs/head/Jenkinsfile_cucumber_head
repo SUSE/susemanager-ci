@@ -27,7 +27,9 @@ pipeline {
   // DONT MODIFY this variables ( they will be stay fixed)
   // -----
      scripts = "${env.WORKSPACE}/jenkins_pipelines/cucumber_per_prs/common_scripts"
-     test = "${scripts}/git2obs.sh ${obs_from_github}"
+     ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+     exec_tests = 'run-testsuite'
+     test = "${scripts}/execute_cucumber.sh ${ssh_flags} ${ctl_node} ${exec_tests}"
      repository = "SUSE/spacewalk"
      description = "cucumber tests for ${branch} branch"
      git_fs = "${env.WORKSPACE}"
@@ -38,7 +40,7 @@ pipeline {
                 " -b \"${branch}\" " +
                 "--check --changed_since 3600" 
 
-     runtest = "gitarro.ruby2.1  -r ${repository}" + 
+     run_cucumber_with_gitarro = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c \"${context}\" -d \"${description}\" " +
                 " -g ${git_fs} " +
                 " -u \"${env.BUILD_URL}\" " +
@@ -47,8 +49,6 @@ pipeline {
 
      sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
      sumaform_url = 'https://github.com/moio/sumaform.git'
-     ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-     exec_tests = 'run-testsuite'
     }
     agent {label 'sumaform-cucumber' }
     stages {
@@ -70,7 +70,7 @@ pipeline {
 
     stage('Build rpm from github PR') {
           steps { 
-                  sh "${runtest}" 
+                  sh "${scripts}/git2obs.sh ${obs_from_github}" 
                 }
 
       }
@@ -98,9 +98,9 @@ pipeline {
                 }
             }
      }
-     stage('run cucumber testsuite') {
+     stage('run cucumber testsuite and update status on github') {
             steps {
-                sh "ssh ${ssh_flags} -tt root@${ctl_node} \"${exec_tests}\""
+                sh "${run_cucumber_with_gitarro}"
                 sh "scp ${ssh_flags} root@${ctl_node}:root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
                 sh "scp ${ssh_flags} -rp root@$ctl_node:root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
             }
