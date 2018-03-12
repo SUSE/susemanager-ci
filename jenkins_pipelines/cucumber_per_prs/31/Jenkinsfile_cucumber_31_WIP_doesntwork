@@ -46,7 +46,7 @@ pipeline {
 
      // we have 2 gitarro github tests: 1) rpms are all successefull builded, 2) cucumber tests.
 
-     build_rpm_from_github_with_gitarro = = "gitarro.ruby2.1  -r ${repository}" + 
+     build_rpm_from_github_with_gitarro = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c \"${context_build}\" -d \"${description_build}\" " +
                 " -g ${git_fs} " +
                 " -u \"${env.BUILD_URL}\" " +
