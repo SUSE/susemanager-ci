@@ -42,7 +42,7 @@ pipeline {
 
      context_build = "build rpms from github branch: ${branch}"
      description_build = "build rpms from github spec"
-     test_build_rpm = "${scripts}/check_failure_rpm_pkg ${obs_from_github}"     
+     test_build_rpm = "${scripts}/check_failure_rpm_pkg.sh ${obs_from_github}"     
 
      // we have 2 gitarro github tests: 1) rpms are all successefull builded, 2) cucumber tests.
 
@@ -70,7 +70,7 @@ pipeline {
     stage('Obs github repository has all rpms published: wait and check for no failures') {
         steps {
                   sh "ruby ${scripts}/check_pkgs_published.rb ${obs_from_github}"
-                  sh "${scripts}/check_failure_rpm_pkg ${obs_from_github}"     
+                  sh "${scripts}/check_failure_rpm_pkg.sh ${obs_from_github}"     
                }
      }
 
