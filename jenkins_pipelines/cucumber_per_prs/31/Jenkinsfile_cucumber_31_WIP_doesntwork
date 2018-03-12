@@ -35,7 +35,7 @@ pipeline {
      git_fs = "${env.WORKSPACE}"
      check = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c \"${context}\" -d \"${description}\" " +
-                " -t ${test} " +
+                " -t ${test_build_rpm} " +
                 " -g ${git_fs} " +
                 " -b \"${branch}\" " +
                 "--check --changed_since 3600" 
