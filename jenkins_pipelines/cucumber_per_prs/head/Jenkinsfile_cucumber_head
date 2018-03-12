@@ -82,7 +82,7 @@ pipeline {
 
     stage('Build new spacewalk rpms from github specs Pull-Request') {
           steps { 
-                  sh "${scripts}/git2obs.sh ${obs_from_github}" 
+                  sh "${scripts}/git2obs.sh ${obs_from_github} ${env.WORKSPACE}" 
                 }
 
       }
