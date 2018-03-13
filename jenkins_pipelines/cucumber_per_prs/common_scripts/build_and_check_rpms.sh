@@ -16,5 +16,12 @@ check_obs_failure() {
   }
 }
 
+obs_from_github="$1"
+workspace="$2"
+scripts="$workspace/jenkins_pipelines/cucumber_per_prs/common_scripts"
+
 ###### MAIN #######
+
+$scripts/git2obs.sh '$obs_from_github' '$workspace'
+ruby $scripts/check_pkgs_published.rb '$obs_from_github'
 check_obs_failure
