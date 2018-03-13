@@ -29,7 +29,6 @@ pipeline {
      scripts = "${env.WORKSPACE}/jenkins_pipelines/cucumber_per_prs/common_scripts"
      ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
      exec_tests = 'run-testsuite'
-     cucumber_test = "${scripts}/execute_cucumber.sh ${ssh_flags} ${ctl_node} ${exec_tests}"
      repository = "SUSE/spacewalk"
      description = "cucumber tests for ${branch} branch"
      git_fs = "${env.WORKSPACE}"
@@ -112,9 +111,9 @@ pipeline {
      }
      stage('run cucumber testsuite and update status on github') {
             steps {
-                sh "${run_cucumber_with_gitarro}"
-                sh "scp ${ssh_flags} root@${ctl_node}:root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
-                sh "scp ${ssh_flags} -rp root@$ctl_node:root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
+               sh "ssh ${ssh_flags} root@${ctl_node} \"${exec_tests}\""
+               sh "scp ${ssh_flags} root@${ctl_node}:root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
+               sh "scp ${ssh_flags} -rp root@$ctl_node:root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
             }
         }
    }
