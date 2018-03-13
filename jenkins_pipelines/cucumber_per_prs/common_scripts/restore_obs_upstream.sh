@@ -18,3 +18,6 @@ rel-eng/build-packages-for-obs.sh
 
 # .. now submitt what's collected in "$WORKSPACE/SRPMS"
 rel-eng/push-packages-to-obs.sh
+
+cd ..
+rm -rf spacewalk_restore_$GIT_BRANCH
