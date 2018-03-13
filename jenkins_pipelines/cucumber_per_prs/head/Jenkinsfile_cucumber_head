@@ -58,7 +58,7 @@ pipeline {
                 " -g ${git_fs} " +
                 " -u \"${env.BUILD_URL}\" " +
                 " -b \"${branch}\" " +
-                " -t ${cucumber_test} " 
+                " -t \"${cucumber_test}\" " 
 
      sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
      sumaform_url = 'https://github.com/moio/sumaform.git'
