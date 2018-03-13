@@ -123,12 +123,11 @@ pipeline {
                 sh 'terraform destroy -force'
 
             }
-            junit "${env.WORKSPACE}/results_junit/*.xml"
-            archiveArtifacts artifacts: "${env.WORKSPACE}/output.html"
             // Always restore the pr-automation obs branch to head status. (keep pkg up2date)
             // we check at the begin of the pipeline on the status of the obs branch
-            echo '-- restoring obs pkg to test pr-automation obs repo -- '
             sh "${scripts}/restore_obs_upstream.sh ${obs_from_github} ${branch}"     
+            junit "${env.WORKSPACE}/results_junit/*.xml"
+            archiveArtifacts artifacts: "${env.WORKSPACE}/output.html"
             dir("${env.WORKSPACE}") {
                 deleteDir()
             }
