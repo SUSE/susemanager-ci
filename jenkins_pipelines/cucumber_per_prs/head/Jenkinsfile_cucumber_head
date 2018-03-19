@@ -97,7 +97,7 @@ pipeline {
                 sh "mv prod/cucumber-on-prs/${maintf} prod/cucumber-on-prs/sumaform"
 
                 dir('prod/cucumber-on-prs/sumaform') {
-                    sh "${scripts}/change_controlnode.sh '$maintf'"
+                    sh "${scripts}/change_controlnode.sh '${maintf}' '${branch}'"
                     sh 'terraform init'
                     sh 'terraform apply'
                 }
