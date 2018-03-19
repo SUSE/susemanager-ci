@@ -60,6 +60,11 @@ pipeline {
     agent {label 'sumaform-cucumber' }
     triggers { cron('H/10 * * * *') }
     stages {
+    stage('start in cleaned workspace') {
+        steps {
+              sh "cd ${env.WORKSPACE} && rm -Rf *"     
+              }
+     }
 
     stage('Obs github repository has all rpms published: wait and check for no failures') {
         steps {
