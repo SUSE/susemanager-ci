@@ -1,4 +1,7 @@
 #!/usr/bin/env groovy
+    triggers {
+        cron('H/5 * * * *')
+       }
 
 // Configure the build properties
 properties([

@@ -20,6 +20,8 @@ pipeline {
      maintf = 'head-prs.tf'
      obs_from_github = 'Devel:Galaxy:Manager:Head:Pr-Automation'
      branch = "Manager"
+
+
   // * gitarro specific
      context = "cucumber_head_pr_tests_experimental_00"
   // -----
@@ -56,6 +58,7 @@ pipeline {
     }
 
     agent {label 'sumaform-cucumber' }
+    triggers { cron('H/10 * * * *') }
     stages {
 
     stage('Obs github repository has all rpms published: wait and check for no failures') {
