@@ -9,9 +9,6 @@ properties([
 pipeline {
   environment { 
 
-  // FIXME: need a way to inject the github PR-branch to  control-node main.tf so it can use it
-  //  atm is using only the manager31 or head. fix here or in sumaform-testsrunner
-
   // +++++++
   // ADAPT: these variables need adaptation for branch, here is specific for HEAD branch
   // +++++++
@@ -21,12 +18,11 @@ pipeline {
      obs_from_github = 'Devel:Galaxy:Manager:Head:Pr-Automation'
      branch = "Manager"
 
-
   // * gitarro specific
-     context = "cucumber_head_pr_tests_experimental_00"
   // -----
   // DONT MODIFY this variables ( they will be stay fixed)
   // -----
+     context = "cucumber_${branch}"
      scripts = "${env.WORKSPACE}/jenkins_pipelines/cucumber_per_prs/common_scripts"
      ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
      exec_tests = 'run-testsuite'
