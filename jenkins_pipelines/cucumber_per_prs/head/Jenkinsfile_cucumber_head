@@ -33,7 +33,7 @@ pipeline {
                 " -t ${test_build_rpm} " +
                 " -g ${git_fs} " +
                 " -b \"${branch}\" " +
-                "--check --changed_since 12000" 
+                "--check" 
      context_build = "build rpms from github branch: ${branch}"
      description_build = "build rpms from github spec"
      test_build_rpm = "${scripts}/build_and_check_rpms.sh '${obs_from_github}' '${env.WORKSPACE}' "
@@ -110,7 +110,8 @@ pipeline {
             // Always restore the pr-automation obs branch to head status. (keep pkg up2date)
             // we check at the begin of the pipeline on the status of the obs branch
             sh "${scripts}/restore_obs_upstream.sh ${obs_from_github} ${branch}"     
-            archiveArtifacts artifacts: "output.html"
+            sh "mv output.html ${branch}${env.BUILD_NUMBER}.html"
+            archiveArtifacts artifacts: "${branch}${env.BUILD_NUMBER}.html"
             junit "results_junit/*.xml"
             dir("${env.WORKSPACE}") {
                 deleteDir()

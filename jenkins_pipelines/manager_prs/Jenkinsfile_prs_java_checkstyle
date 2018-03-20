@@ -1,8 +1,4 @@
 #!/usr/bin/env groovy
-    triggers {
-        cron('H/5 * * * *')
-       }
-
 // Configure the build properties
 properties([
     buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
@@ -31,9 +27,7 @@ pipeline {
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
    // trigger
-    triggers {
-        cron('H/5 * * * *')
-       }
+    triggers { cron('H/5 * * * *')  }
     stages {
         stage('Check Pull Request') {
             steps {
