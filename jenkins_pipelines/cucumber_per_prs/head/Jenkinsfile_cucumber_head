@@ -18,7 +18,6 @@ pipeline {
      obs_from_github = 'Devel:Galaxy:Manager:Head:Pr-Automation'
      branch = "Manager"
 
-  // * gitarro specific
   // -----
   // DONT MODIFY this variables ( they will be stay fixed)
   // -----
@@ -54,14 +53,8 @@ pipeline {
     }
 
     agent {label 'sumaform-cucumber' }
-    triggers { cron('H/10 * * * *') }
+    // triggers { cron('H/10 * * * *') }
     stages {
-    stage('start in cleaned workspace') {
-        steps {
-              sh "cd ${env.WORKSPACE} && rm -Rf *"     
-              }
-     }
-
     stage('Obs github repository has all rpms published: wait and check for no failures') {
         steps {
                   sh "ruby ${scripts}/check_pkgs_published.rb ${obs_from_github}"
