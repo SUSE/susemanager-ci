@@ -33,7 +33,7 @@ pipeline {
                 " -t ${test_build_rpm} " +
                 " -g ${git_fs} " +
                 " -b \"${branch}\" " +
-                "--check --changed_since 3600" 
+                "--check --changed_since 12000" 
      context_build = "build rpms from github branch: ${branch}"
      description_build = "build rpms from github spec"
      test_build_rpm = "${scripts}/build_and_check_rpms.sh '${obs_from_github}' '${env.WORKSPACE}' "
