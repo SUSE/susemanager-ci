@@ -18,7 +18,7 @@ pipeline {
         label 'performance-tests'
     }
     triggers {
-        cron('* H/2 * * *')
+        cron('H H/2 * * *')
     }
     stages {
         stage('Deploy VMs on ECP') {
