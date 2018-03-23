@@ -21,7 +21,7 @@ pipeline {
   // -----
   // DONT MODIFY this variables ( they will be stay fixed)
   // -----
-     context = "cucumber_${branch}"
+     context = "cucumber-${branch}-tests"
      scripts = "${env.WORKSPACE}/jenkins_pipelines/cucumber_per_prs/common_scripts"
      ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
      exec_tests = 'run-testsuite'
@@ -86,7 +86,10 @@ pipeline {
                 sh "mv prod/cucumber-on-prs/${maintf} prod/cucumber-on-prs/sumaform"
 
                 dir('prod/cucumber-on-prs/sumaform') {
-                    sh "${scripts}/change_controlnode.sh '${maintf}' '${branch}' '${env.WORKSPACE}'"
+                   // don't change control-node keep using Manager
+                   // 2 Problems: 1) forked clone pr doesn't work curr at sumaform.
+                   //             2) if there is a regresion on upstream branch all pr need to be up2date
+                   // sh "${scripts}/change_controlnode.sh '${maintf}' '${branch}' '${env.WORKSPACE}'"
                     sh 'terraform init'
                     sh 'terraform apply'
                 }
