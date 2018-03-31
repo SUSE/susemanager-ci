@@ -22,13 +22,13 @@ pipeline {
     stages {
         stage('Deploy VMs on ECP') {
             steps {
-                dir('prod') {
+                dir('prod/performance/runner') {
                     git url: sumaform_runner_url
                 }
                 dir('prod/performance/sumaform') {
                     git url: sumaform_url
                 }
-                sh "mv prod/performance/* prod/performance/sumaform"
+                sh "mv prod/performance/runner/* prod/performance/sumaform"
 
                 dir('prod/performance/sumaform') {
                     sh 'terraform init'
