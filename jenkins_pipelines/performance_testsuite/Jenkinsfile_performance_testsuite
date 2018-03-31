@@ -9,7 +9,6 @@ pipeline {
     environment {
         sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
         sumaform_url = 'https://github.com/moio/sumaform.git'
-        locust_tf = 'locust.tf'
         ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
         locust_node = 'pts-locust.cloud.suse.de'
         exec_locust = 'run-locust'
@@ -29,7 +28,7 @@ pipeline {
                 dir('prod/performance/sumaform') {
                     git url: sumaform_url
                 }
-                sh "mv prod/performance/$locust_tf prod/performance/sumaform"
+                sh "mv prod/performance/* prod/performance/sumaform"
 
                 dir('prod/performance/sumaform') {
                     sh 'terraform init'
