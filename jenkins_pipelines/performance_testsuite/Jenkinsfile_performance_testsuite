@@ -28,7 +28,7 @@ pipeline {
                 dir('prod/performance/sumaform') {
                     git url: sumaform_url
                 }
-                sh "mv prod/performance/runner/* prod/performance/sumaform"
+                sh "mv prod/performance/runner/performance/* prod/performance/sumaform"
 
                 dir('prod/performance/sumaform') {
                     sh 'terraform init'
