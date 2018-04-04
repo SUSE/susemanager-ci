@@ -55,6 +55,12 @@ pipeline {
                 sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 400"
             }
         }
+
+        stage('Apply patches in evil-minions') {
+            steps {
+                sh "prod/performance/sumaform/patch-applying.py"
+            }
+        }
     }
     post {
         always {
