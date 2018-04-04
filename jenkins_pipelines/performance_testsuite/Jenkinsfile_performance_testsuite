@@ -62,14 +62,14 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            dir('prod/performance/sumaform') {
-                sh 'terraform destroy -force'
-            }
-            dir("${env.WORKSPACE}") {
-                deleteDir()
-            }
-        }
+    //post {
+    //    always {
+    //        dir('prod/performance/sumaform') {
+    //            sh 'terraform destroy -force'
+    //        }
+    //        dir("${env.WORKSPACE}") {
+    //           deleteDir()
+    //        }
+    //    }
     }
 }
