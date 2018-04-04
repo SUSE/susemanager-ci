@@ -56,10 +56,12 @@ pipeline {
             }
         }
 
-        stage('Apply patches in evil-minions') {
-            steps {
-                sh "prod/performance/sumaform/patch-applying.py"
+        stage('Patch all evil minions') {
+          steps {
+            dir('prod/performance/sumaform') {
+                sh 'patch_all_systems.py'
             }
+          }
         }
     }
     post {
