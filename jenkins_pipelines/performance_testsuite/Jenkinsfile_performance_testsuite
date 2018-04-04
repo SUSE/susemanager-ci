@@ -10,6 +10,7 @@ pipeline {
         sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
         sumaform_url = 'https://github.com/moio/sumaform.git'
         ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+        server_node = 'pts-server.cloud.suse.de'
         locust_node = 'pts-locust.cloud.suse.de'
         exec_locust = 'run-locust'
     }
@@ -56,10 +57,13 @@ pipeline {
             }
         }
 
-        stage('Apply patches in evil-minions') {
-            steps {
-                sh "prod/performance/sumaform/patch-applying.py"
+        stage('Patch all evil minions') {
+          steps {
+            dir('prod/performance/sumaform') {
+              sh "wait_for_patchable_systems.py $server_node admin admin evil-minions 200"
+              sh "patch_all_systems.py $server_node admin admin"
             }
+          }
         }
     }
     //post {
