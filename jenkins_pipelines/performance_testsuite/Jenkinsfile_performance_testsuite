@@ -38,7 +38,15 @@ pipeline {
             }
         }
 
-        // the results are showed in grafana
+        stage('Patch all evil minions') {
+          steps {
+            dir('prod/performance/sumaform') {
+              sh "./wait_for_patchable_systems.py $server_node admin admin evil-minions 200"
+              sh "./patch_all_systems.py $server_node admin admin"
+            }
+          }
+        }
+
         stage('Locust stress tests: 200 users') {
             steps {
                 sh "ssh $ssh_flags -tt root@$locust_node $exec_locust"
@@ -55,15 +63,6 @@ pipeline {
             steps {
                 sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 400"
             }
-        }
-
-        stage('Patch all evil minions') {
-          steps {
-            dir('prod/performance/sumaform') {
-              sh "./wait_for_patchable_systems.py $server_node admin admin evil-minions 200"
-              sh "./patch_all_systems.py $server_node admin admin"
-            }
-          }
         }
     }
     //post {
