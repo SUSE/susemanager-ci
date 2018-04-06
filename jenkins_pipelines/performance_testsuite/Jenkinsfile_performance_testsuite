@@ -32,8 +32,10 @@ pipeline {
                 sh "mv prod/performance/runner/performance/* prod/performance/sumaform"
 
                 dir('prod/performance/sumaform') {
+                  ansiColor('xterm') {
                     sh 'terraform init'
                     sh 'terraform apply'
+                  }
                 }
             }
         }
