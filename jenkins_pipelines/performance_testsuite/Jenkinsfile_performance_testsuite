@@ -72,7 +72,7 @@ pipeline {
        always {
            dir('prod/performance/sumaform') {
              ansiColor('xterm') {
-               sh 'terraform destroy -force'
+               sh 'echo SKIPPED terraform destroy -force'
              }
            }
            dir("${env.WORKSPACE}") {
