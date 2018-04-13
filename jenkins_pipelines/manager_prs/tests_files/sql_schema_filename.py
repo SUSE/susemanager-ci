@@ -5,8 +5,7 @@ import sys
 
 endings = ['.sql', '.sql.postgresql', '.sql.oracle', '.deps']
 spacedirs = ['schema/spacewalk/common/', 'schema/spacewalk/postgres/', 'schema/spacewalk/oracle/', 'schema/spacewalk/upgrade/']
-# allow gitigiore
-gitigiore = ['.gitignore']
+gitignore = ['.gitignore']
 
 
 for spacedir in spacedirs:
