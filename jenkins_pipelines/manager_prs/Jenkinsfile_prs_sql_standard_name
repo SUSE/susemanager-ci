@@ -14,14 +14,14 @@ pipeline {
      git_fs = "${env.WORKSPACE}"      
      sql = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/sql_schema_filename.py"
     check = "gitarro.ruby2.1  -r ${repository}" + 
-                " -c ${context} -d ${description} " +
+                " -c ${context} -d \"${description}\" " +
                 " -f ${filter} " +
                 " -t ${test} " +
                 " -g ${git_fs} " +
                 "--check --changed_since 3600" 
 
     runtest = "gitarro.ruby2.1  -r ${repository}" + 
-                " -c ${context} -d ${description} " +
+                " -c ${context} -d \"${description}\" " +
                 " -f ${filter} " +
                 " -g ${git_fs} " +
                 " -u ${env.BUILD_URL}" +
