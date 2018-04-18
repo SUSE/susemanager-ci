@@ -1,0 +1,61 @@
+#!/usr/bin/env groovy
+
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '600', daysToKeepStr: '7')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+  environment { 
+     ctl_node = 'prs-31-ctl.cloud.suse.de'
+     maintf = '31-unreleased-updates/main.tf'
+     ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+     sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
+     sumaform_url = 'https://github.com/moio/sumaform.git'
+    }
+
+    agent {label 'sumaform-cucumber' }
+    triggers { cron('H * * * *') }
+    stages {
+
+    stage('Deploy cucumber VMs with unreleased updates') {
+            steps {
+                dir('prod') {
+                    git url: sumaform_runner_url
+                }
+                dir('prod/sumaform') {
+                    git url: sumaform_url
+                }
+                sh "mv prod/${maintf} prod/sumaform"
+
+                dir('prod/sumaform') {
+                    sh 'terraform init'
+                    sh 'terraform apply'
+                }
+            }
+     }
+
+     stage('run cucumber testsuite unreleased updates 31') {
+            steps {
+               sh "ssh ${ssh_flags} root@${ctl_node} run-testsuite"
+               sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
+               sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
+            }
+        }
+   }
+   post {
+        always {
+            dir('prod/sumaform') {
+                sh 'terraform destroy -force'
+
+            }
+ 
+            junit "results_junit/*.xml"
+            sh "mv output.html ${branch}${env.BUILD_NUMBER}.html"
+            archiveArtifacts artifacts: "${branch}${env.BUILD_NUMBER}.html"
+            dir("${env.WORKSPACE}") {
+                deleteDir()
+            }
+        }
+    }
+}

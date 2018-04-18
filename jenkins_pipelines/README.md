@@ -20,6 +20,9 @@ This pipelines use the same patterns, which is to use the gitarro tools for gith
 This dir contains pipelines related to scalabilty tests for suse-manager.
 
 
+### Manager cucumber unreleased update
+
+This pipeline is about to test unreleased update
 
 ### Manager Github pull-request cucumber functional tests
 
