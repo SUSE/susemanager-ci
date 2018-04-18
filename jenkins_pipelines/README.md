@@ -6,6 +6,7 @@
 
 - Manager performance testsuite
 
+- Manager unreleased updates cucumber tests  (branch only)
 
 ### Manager GitHub pull-request unit/tests
 
@@ -22,7 +23,7 @@ This dir contains pipelines related to scalabilty tests for suse-manager.
 
 ### Manager cucumber unreleased update
 
-This pipeline is about to test unreleased update
+This pipeline is about to test unreleased update pro branch
 
 ### Manager Github pull-request cucumber functional tests
 
