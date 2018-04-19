@@ -29,30 +29,40 @@ pipeline {
                 sh "mv prod/${maintf} prod/sumaform"
 
                 dir('prod/sumaform') {
-                    sh 'terraform init'
-                    sh 'terraform apply'
+                   ansiColor('xterm') {
+                      sh 'terraform init'
+                      sh 'terraform apply'
+                  }
                 }
             }
      }
 
      stage('run cucumber testsuite unreleased updates 31') {
-            steps {
-               sh "ssh ${ssh_flags} root@${ctl_node} run-testsuite"
-               sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
-               sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
+             steps {
+              script {
+               try {
+                 ansiColor('xterm') {
+                   sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
+                 }
+               }
+               finally {
+                 sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
+                 sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
+              }
             }
+           }
         }
    }
    post {
         always {
             dir('prod/sumaform') {
+               ansiColor('xterm') {
                 sh 'terraform destroy -force'
-
+               }
             }
- 
-            junit "results_junit/*.xml"
             sh "mv output.html ${branch}${env.BUILD_NUMBER}.html"
             archiveArtifacts artifacts: "${branch}${env.BUILD_NUMBER}.html"
+            junit "results_junit/*.xml"
             dir("${env.WORKSPACE}") {
                 deleteDir()
             }
