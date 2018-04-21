@@ -55,14 +55,18 @@ pipeline {
    }
    post {
         always {
+            sh "mv output.html ${branch}${env.BUILD_NUMBER}.html"
+            archiveArtifacts artifacts: "${branch}${env.BUILD_NUMBER}.html"
+            junit "results_junit/*.xml"
+        } 
+        cleanup {
+
             dir('prod/sumaform') {
                ansiColor('xterm') {
                 sh 'terraform destroy -force'
                }
             }
-            sh "mv output.html ${branch}${env.BUILD_NUMBER}.html"
-            archiveArtifacts artifacts: "${branch}${env.BUILD_NUMBER}.html"
-            junit "results_junit/*.xml"
+
             dir("${env.WORKSPACE}") {
                 deleteDir()
             }
