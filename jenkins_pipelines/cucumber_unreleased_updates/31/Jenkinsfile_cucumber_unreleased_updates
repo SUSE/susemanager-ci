@@ -48,6 +48,11 @@ pipeline {
                finally {
                  sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
                  sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
+                 dir('prod/sumaform') {
+                   ansiColor('xterm') {
+                        sh 'terraform destroy -force'
+                   }
+                 }
               }
             }
            }
@@ -58,18 +63,9 @@ pipeline {
             sh "mv output.html ${branch}${env.BUILD_NUMBER}.html"
             archiveArtifacts artifacts: "${branch}${env.BUILD_NUMBER}.html"
             junit "results_junit/*.xml"
-        } 
-        cleanup {
-
-            dir('prod/sumaform') {
-               ansiColor('xterm') {
-                sh 'terraform destroy -force'
-               }
-            }
-
             dir("${env.WORKSPACE}") {
-                deleteDir()
+             deleteDir()
             }
-        }
+        } 
     }
 }
