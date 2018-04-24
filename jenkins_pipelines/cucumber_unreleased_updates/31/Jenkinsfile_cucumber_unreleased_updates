@@ -60,10 +60,10 @@ pipeline {
    }
    post {
         always {
-            archiveArtifacts artifacts: "output.html"
-            junit "results_junit/*.xml"
             dir("${env.WORKSPACE}") {
-             deleteDir()
+              archiveArtifacts artifacts: 'output.html'
+              junit 'results_junit/*.xml'
+              deleteDir()
             }
         } 
     }
