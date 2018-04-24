@@ -1,0 +1,43 @@
+#!/usr/bin/env groovy
+
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '600', daysToKeepStr: '7')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+  environment { 
+//     ctl_node = 'prs-31-ctl.cloud.suse.de'
+//     maintf = '31-unreleased-updates/main.tf'
+     ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+     sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
+     sumaform_url = 'https://github.com/moio/sumaform.git'
+    }
+
+    agent {label 'sumaform-cucumber' }
+//    triggers { cron('H * * * *') }
+    stages {
+     stage('run cucumber testsuite for branch HEAD') {
+             steps {
+              script {
+               
+               try {
+                 ansiColor('xterm') {
+                   echo "skip tests"
+                   //sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
+                 }
+               }
+               finally {
+                 //sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
+                 //sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
+                 //dir('prod/sumaform') {
+                   ansiColor('xterm') {
+                          echo "destroy fake"
+                   //     sh 'terraform destroy -force'
+                   }
+                 }
+              }
+            }
+           }
+        }
+}

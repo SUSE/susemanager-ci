@@ -15,7 +15,7 @@ pipeline {
     }
 
     agent {label 'sumaform-cucumber' }
-//    triggers { cron('H * * * *') }
+    triggers { cron('H * * * *') }
     stages {
 
     stage('Deploy cucumber VMs with unreleased updates') {
