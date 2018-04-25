@@ -5,6 +5,8 @@ properties([
     disableConcurrentBuilds(),
 ])
 
+// TODO: add e-mail notification and export spacewalk-debug
+
 pipeline {
   environment { 
      ctl_node = 'suma-head-ctl.mgr.suse.de'
