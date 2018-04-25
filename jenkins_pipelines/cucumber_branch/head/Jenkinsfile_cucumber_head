@@ -24,6 +24,8 @@ pipeline {
                try {
                  ansiColor('xterm') {
                    echo "skip tests"
+                   date = sh(returnStdout: true, script: 'date').trim()
+                   echo date
                    //sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
                  }
                }
