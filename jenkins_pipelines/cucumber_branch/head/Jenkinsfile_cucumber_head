@@ -26,7 +26,7 @@ pipeline {
                    echo "skip tests"
                    date_hour = sh(returnStdout: true, script: "date +\'%H\'").trim()
                    echo date_hour
-                   if (date_hour == 09) {
+                   if (date_hour == '09') {
                        echo 'I only execute at 09'
                    } else {
                        echo 'I execute elsewhere'
