@@ -7,44 +7,77 @@ properties([
 
 pipeline {
   environment { 
-//     ctl_node = 'prs-31-ctl.cloud.suse.de'
-//     maintf = '31-unreleased-updates/main.tf'
+     ctl_node = 'suma-head-ctl.mgr.suse.de'
+     maintf_midnight = 'head/os-matrix/main-sle15.tf'
+     maintf = 'head/main-full.tf'
      ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
      sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
      sumaform_url = 'https://github.com/moio/sumaform.git'
     }
 
     agent {label 'sumaform-cucumber' }
-//    triggers { cron('H * * * *') }
+    triggers { cron('H * * * *') }
     stages {
-     stage('run cucumber testsuite for branch HEAD') {
+     stage('deploy HEAD cucumber infrastructure') {
              steps {
-              script {
-               
+
+                dir('prod') {
+                    git url: sumaform_runner_url
+                }
+
+                dir('prod/sumaform') {
+                    git url: sumaform_url
+                }
+
+         script {
                try {
                  ansiColor('xterm') {
                    echo "skip tests"
                    date_hour = sh(returnStdout: true, script: "date +\'%H\'").trim()
-                   echo date_hour
-                   if (date_hour == '00') {
-                       echo 'I only execute at 00'
+                   // RUN  the main_tf only at midnight
+                   if (date_hour == '00' || date_hour == '01' || date_hour == '02' || date_hour == '03' || date_hour == '04') {
+                       sh "mv prod/${maintf_midnight} prod/sumaform"
+                       dir('prod/sumaform') {
+                         ansiColor('xterm') {
+                         sh 'terraform init'
+                         sh 'terraform apply'
+                         sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
+                       }
+                    }
+
                    } else {
-                       echo 'default execution'
-                      }
-                   //sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
+                       sh "mv prod/${maintf_sle14sp3} prod/sumaform"
+                       dir('prod/sumaform') {
+                         ansiColor('xterm') {
+                           sh 'terraform init'
+                           sh 'terraform apply'
+                           sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
+                         }
+                       }
+                    }
                  }
                }
                finally {
-                 //sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
-                 //sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
-                 //dir('prod/sumaform') {
+                 sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
+                 sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
+                 dir('prod/sumaform') {
                    ansiColor('xterm') {
-                          echo "destroy fake"
-                   //     sh 'terraform destroy -force'
+                        sh 'terraform destroy -force'
                    }
                  }
               }
             }
            }
         }
+   }
+ post {
+        always {
+            dir("${env.WORKSPACE}") {
+              archiveArtifacts artifacts: 'output.html'
+              junit 'results_junit/*.xml'
+              deleteDir()
+            }
+        }
+    }
+
 }
