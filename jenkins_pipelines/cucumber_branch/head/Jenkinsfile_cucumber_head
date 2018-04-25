@@ -24,8 +24,13 @@ pipeline {
                try {
                  ansiColor('xterm') {
                    echo "skip tests"
-                   date = sh(returnStdout: true, script: 'date').trim()
-                   echo date
+                   date_hour = sh(returnStdout: true, script: "date +\'%H\'").trim()
+                   echo date_hour
+                   if (date_hour == 09) {
+                       echo 'I only execute at 09'
+                   } else {
+                       echo 'I execute elsewhere'
+                      }
                    //sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
                  }
                }
