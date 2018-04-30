@@ -30,18 +30,18 @@ pipeline {
                 sh "mv prod/performance/runner/performance/* prod/performance/sumaform"
 
                 dir('prod/performance/sumaform') {
-                  ansiColor('xterm') {
-                    sh 'terraform init'
-                    sh 'terraform apply'
-                  }
+                    ansiColor('xterm') {
+                        sh 'terraform init'
+                        sh 'terraform apply'
+                    }
                 }
             }
         }
 
         stage('Patch all evil minions') {
-          steps {
-            sh "ssh $ssh_flags -tt root@$server_node run-pts --patching-only"
-          }
+            steps {
+                sh "ssh $ssh_flags -tt root@$server_node run-pts --patching-only"
+            }
         }
 
         stage('Locust stress tests') {
@@ -51,15 +51,15 @@ pipeline {
         }
     }
     post {
-       always {
-           dir('prod/performance/sumaform') {
-             ansiColor('xterm') {
-               sh 'terraform destroy -force'
-             }
-           }
-           dir("${env.WORKSPACE}") {
-              deleteDir()
-           }
-       }
+        always {
+            dir('prod/performance/sumaform') {
+                ansiColor('xterm') {
+                    sh 'terraform destroy -force'
+                }
+            }
+            dir("${env.WORKSPACE}") {
+                deleteDir()
+            }
+        }
     }
 }
