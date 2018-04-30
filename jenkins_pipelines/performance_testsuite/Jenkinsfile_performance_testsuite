@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    buildDiscarder(logRotator(daysToKeep: 365, numToKeep: 5000, artifactDaysToKeep: 365, artifactNumToKeep: 5000)),
     disableConcurrentBuilds(),
 ])
 
