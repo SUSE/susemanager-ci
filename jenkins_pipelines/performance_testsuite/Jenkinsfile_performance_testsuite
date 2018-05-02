@@ -38,12 +38,6 @@ pipeline {
             }
         }
 
-        stage('Benchmark disk I/O performance') {
-            steps {
-                sh "ssh $ssh_flags -tt root@$server_node run-pts --fio-only"
-            }
-        }
-
         stage('Patch all evil minions') {
             steps {
                 sh "ssh $ssh_flags -tt root@$server_node run-pts --patching-only"
@@ -54,6 +48,12 @@ pipeline {
             steps {
                 sh "ssh $ssh_flags -tt root@$server_node run-pts --locust-only"
             }
+        }
+
+        stage('Benchmark disk I/O performance') {
+          steps {
+            sh "ssh $ssh_flags -tt root@$server_node run-pts --fio-only"
+          }
         }
     }
     post {
