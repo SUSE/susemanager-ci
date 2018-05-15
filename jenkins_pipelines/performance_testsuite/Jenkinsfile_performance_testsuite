@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    buildDiscarder(logRotator(daysToKeepStr: "365", numToKeepStr: "5000", artifactDaysToKeepStr: "365", artifactNumToKeepStr: "5000")),
     disableConcurrentBuilds(),
 ])
 
@@ -11,8 +11,6 @@ pipeline {
         sumaform_url = 'https://github.com/moio/sumaform.git'
         ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
         server_node = 'pts-server.cloud.suse.de'
-        locust_node = 'pts-locust.cloud.suse.de'
-        exec_locust = 'run-locust'
     }
     agent {
         label 'performance-tests'
@@ -27,57 +25,53 @@ pipeline {
                     git url: sumaform_runner_url
                 }
                 dir('prod/performance/sumaform') {
-                    git url: sumaform_url
+                    git url: sumaform_url, branch: 'local_volumes'
                 }
                 sh "mv prod/performance/runner/performance/* prod/performance/sumaform"
 
                 dir('prod/performance/sumaform') {
-                  ansiColor('xterm') {
-                    sh 'terraform init'
-                    sh 'terraform apply'
-                  }
+                    ansiColor('xterm') {
+                        sh 'terraform init'
+                        sh 'terraform apply'
+                    }
                 }
             }
         }
 
-        stage('Patch all evil minions') {
+        stage('Wait until evil-minions are onboarded') {
           steps {
-            dir('prod/performance/sumaform') {
-              sh "./wait_for_patchable_systems.py $server_node admin admin pts-evil-minions 200 200"
-              sh "./patch_all_systems.py $server_node admin admin"
-              sh "./wait_for_patchable_systems.py $server_node admin admin pts-evil-minions 200 0"
-            }
+            sh "ssh $ssh_flags -tt root@$server_node run-pts --onboarding-only"
           }
         }
 
-        stage('Locust stress tests: 200 users') {
+        stage('Benchmark disk I/O performance') {
+          steps {
+            sh "ssh $ssh_flags -tt root@$server_node run-pts --fio-only"
+          }
+        }
+
+        stage('Patch all evil minions') {
             steps {
-                sh "ssh $ssh_flags -tt root@$locust_node $exec_locust"
+                sh "ssh $ssh_flags -tt root@$server_node run-pts --patching-only"
             }
         }
 
-        stage('Locust stress tests: 300 users') {
+        stage('Locust stress tests') {
             steps {
-                sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 300"
-            }
-        }
-
-        stage('Locust stress tests: 400 users') {
-            steps {
-                sh "ssh $ssh_flags -tt root@$locust_node $exec_locust -c 400"
+                sh "ssh $ssh_flags -tt root@$server_node run-pts --locust-only"
             }
         }
     }
     post {
-       always {
-           dir('prod/performance/sumaform') {
-             ansiColor('xterm') {
-               sh 'terraform destroy -force'
-             }
-           }
-           dir("${env.WORKSPACE}") {
-              deleteDir()
-           }
-       }
+        always {
+            dir('prod/performance/sumaform') {
+                ansiColor('xterm') {
+                    sh 'terraform destroy -force'
+                }
+            }
+            dir("${env.WORKSPACE}") {
+                deleteDir()
+            }
+        }
     }
 }
