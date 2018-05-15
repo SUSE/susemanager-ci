@@ -9,9 +9,8 @@ properties([
 
 pipeline {
   environment { 
-     ctl_node = 'suma-head-ctl.mgr.suse.de'
-     maintf_midnight = 'head/os-matrix/main-sle15.tf'
-     maintf = 'head/main-full.tf'
+     ctl_node = 'cloud-ci-head-ctl.mgr.suse.de'
+     maintf = 'head/os-matrix/main-sle15.tf'
      ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
      sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
      sumaform_url = 'https://github.com/moio/sumaform.git'
@@ -20,7 +19,7 @@ pipeline {
     agent {label 'sumaform-cucumber' }
     triggers { cron('H * * * *') }
     stages {
-     stage('deploy HEAD cucumber infrastructure') {
+     stage('deploy HEAD cucumber sle15 infrastructure') {
              steps {
 
                 dir('prod') {
@@ -30,7 +29,10 @@ pipeline {
                 dir('prod/sumaform') {
                     git url: sumaform_url
                 }
-
+      }
+     }
+      stage('run cucumber tests') {
+        steps{
          script {
                try {
                  ansiColor('xterm') {
@@ -48,6 +50,7 @@ pipeline {
                finally {
                  sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
                  sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
+                 sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/spacewalk-debug.tar.bz2 ${env.WORKSPACE}"
                  dir('prod/sumaform') {
                    ansiColor('xterm') {
                         sh 'terraform destroy -force'
@@ -63,6 +66,7 @@ pipeline {
             dir("${env.WORKSPACE}") {
               archiveArtifacts artifacts: 'output.html'
               junit 'results_junit/*.xml'
+              archiveArtifacts artifacts: 'spacewalk-debug.tar.bz2'
               deleteDir()
             }
         }
