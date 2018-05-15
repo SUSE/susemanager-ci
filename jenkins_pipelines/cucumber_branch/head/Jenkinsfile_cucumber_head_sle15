@@ -34,29 +34,15 @@ pipeline {
          script {
                try {
                  ansiColor('xterm') {
-                   echo "skip tests"
-                   date_hour = sh(returnStdout: true, script: "date +\'%H\'").trim()
-                   // RUN  the main_tf only at midnight
-                   if (date_hour == '00' || date_hour == '01' || date_hour == '02' || date_hour == '03' || date_hour == '04') {
-                       sh "mv prod/${maintf_midnight} prod/sumaform"
-                       dir('prod/sumaform') {
-                         ansiColor('xterm') {
-                         sh 'terraform init'
-                         sh 'terraform apply'
-                         sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
-                       }
-                    }
-
-                   } else {
-                       sh "mv prod/${maintf_sle14sp3} prod/sumaform"
+                  sh "mv prod/${maintf} prod/sumaform"
                        dir('prod/sumaform') {
                          ansiColor('xterm') {
                            sh 'terraform init'
                            sh 'terraform apply'
                            sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
-                         }
                        }
                     }
+
                  }
                }
                finally {
