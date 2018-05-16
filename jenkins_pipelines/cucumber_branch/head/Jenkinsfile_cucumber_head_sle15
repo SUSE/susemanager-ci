@@ -51,11 +51,6 @@ pipeline {
                  sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
                  sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
                  sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/spacewalk-debug.tar.bz2 ${env.WORKSPACE}"
-                 dir('prod/sumaform') {
-                   ansiColor('xterm') {
-                        sh 'terraform destroy -force'
-                   }
-                 }
               }
             }
            }
@@ -63,6 +58,11 @@ pipeline {
    }
  post {
         always {
+           dir('prod/sumaform') {
+                  ansiColor('xterm') {
+                        sh 'terraform destroy -force'
+                   }
+                 }
             dir("${env.WORKSPACE}") {
               archiveArtifacts artifacts: 'output.html'
               junit 'results_junit/*.xml'
