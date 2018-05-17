@@ -32,7 +32,9 @@ pipeline {
                 dir('prod/performance/sumaform') {
                     ansiColor('xterm') {
                         sh 'terraform init'
-                        sh 'terraform apply'
+                        timeout(time: 6, unit:'HOURS') {
+                          sh 'terraform apply'
+                        }
                     }
                 }
             }
