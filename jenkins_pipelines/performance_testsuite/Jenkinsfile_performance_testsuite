@@ -25,7 +25,7 @@ pipeline {
                     git url: sumaform_runner_url
                 }
                 dir('prod/performance/sumaform') {
-                    git url: sumaform_url, branch: 'local_volumes'
+                    git url: sumaform_url
                 }
                 sh "mv prod/performance/runner/performance/* prod/performance/sumaform"
 
