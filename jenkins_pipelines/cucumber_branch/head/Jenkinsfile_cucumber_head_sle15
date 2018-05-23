@@ -41,7 +41,9 @@ pipeline {
                          ansiColor('xterm') {
                            sh 'terraform init'
                            sh 'terraform apply'
+                             timeout(time: 6, unit:'HOURS') {
                            sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
+                          }
                        }
                     }
 
