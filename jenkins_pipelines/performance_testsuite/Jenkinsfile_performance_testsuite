@@ -10,7 +10,7 @@ pipeline {
         sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
         sumaform_url = 'https://github.com/moio/sumaform.git'
         ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-        server_node = 'pts-server.cloud.suse.de'
+        server_node = 'cloud-pts-server.mgr.suse.de'
     }
     agent {
         label 'performance-tests'
