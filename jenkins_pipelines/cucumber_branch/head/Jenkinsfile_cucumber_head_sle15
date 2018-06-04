@@ -15,7 +15,6 @@ pipeline {
     }
 
     agent {label 'sumaform-cucumber' }
-    triggers { cron('H * * * *') }
     stages {
      stage('deploy HEAD cucumber sle15 infrastructure') {
              steps {
