@@ -1,0 +1,20 @@
+#!/usr/bin/env groovy
+
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '600', daysToKeepStr: '7')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+    agent {label 'sumaform-cucumber' }
+    triggers { cron('H * * * *') }
+    stages {
+      stage('Sles15 cucumber') {
+          build job: 'manager-Head-cucumber-sle15', propagate: true, wait: true
+      }
+      stage('Sles11sp4 cucumber') {
+          build job: 'manager-Head-cucumber-sle11sp4', propagate: true, wait: true
+      }
+      // add here more stages (need to create also the corrispondent jobs
+    }
+}
