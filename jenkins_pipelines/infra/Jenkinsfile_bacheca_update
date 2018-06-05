@@ -1,0 +1,29 @@
+#!/usr/bin/env groovy
+
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '600', daysToKeepStr: '7')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+  environment { 
+     bacheca = 'https://gitlab.suse.de/galaxy/infrastructure'
+    }
+
+    agent {label 'sumaform-cucumber' }
+    stages {
+     stage('deploy latest bacheca container manager') {
+             steps {
+
+                dir('bacheca') {
+                    git url: bacheca
+                    ansiColor('xterm') {
+                           sh "salt-ssh -i appsrv.mgr.suse.de state.apply bacheca-app"
+                          }
+
+                }
+
+             }
+         }
+    }
+}
