@@ -16,15 +16,10 @@ pipeline {
               build job: 'manager-Head-cucumber-sle15', wait: true
              }
             finally {
-              try {
-                 build job: 'manager-Head-cucumber-sle11sp4', wait: true
-              }
-                finally {
-                    echo "matrix done"
-                  }
+              build job: 'manager-Head-cucumber-sle11sp4', wait: true
+             }
              }
           }
         }
       }
-          }
-  }
+   }
