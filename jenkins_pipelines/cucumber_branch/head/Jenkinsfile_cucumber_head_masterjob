@@ -9,29 +9,22 @@ pipeline {
     agent {label 'sumaform-cucumber' }
     triggers { cron('H * * * *') }
     stages {
-      stage('Sles15 cucumber') {
+      stage('Matrix cucumber') {
           steps {  
           script {
             try {
               build job: 'manager-Head-cucumber-sle15', wait: true
              }
             finally {
-               echo "done" 
+              try {
+                 build job: 'manager-Head-cucumber-sle11sp4', wait: true
+              }
+                finally {
+                    echo "matrix done
+                  }
              }
           }
         }
       }
-      stage('Sles11sp4 cucumber') {
-          steps {  
-          script {
-            try {
-              build job: 'manager-Head-cucumber-sle11sp4', wait: true
-             }
-            finally {
-               echo "done" 
-             }
           }
-        }
-     }
   }
-}
