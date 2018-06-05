@@ -7,7 +7,7 @@ properties([
 
 pipeline {
   environment { 
-     bacheca = 'https://gitlab.suse.de/galaxy/infrastructure'
+     bacheca = 'gitlab@gitlab.suse.de:galaxy/infrastructure.git'
     }
 
     agent {label 'sumaform-cucumber' }
