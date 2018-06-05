@@ -8,7 +8,7 @@ properties([
 pipeline {
   environment { 
      ctl_node = 'cloud-ci-head-ctl.mgr.suse.de'
-     maintf = 'head/os-matrix/main-sle15.tf'
+     maintf = 'head/os-matrix/main-sle11sp4.tf'
      ssh_flags = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
      sumaform_runner_url = 'https://gitlab.suse.de/galaxy/sumaform-test-runner'
      sumaform_url = 'https://github.com/moio/sumaform.git'

@@ -10,10 +10,14 @@ pipeline {
     triggers { cron('H * * * *') }
     stages {
       stage('Sles15 cucumber') {
+          steps {
           build job: 'manager-Head-cucumber-sle15', propagate: true, wait: true
+          }
       }
       stage('Sles11sp4 cucumber') {
+          steps {
           build job: 'manager-Head-cucumber-sle11sp4', propagate: true, wait: true
+          }
       }
       // add here more stages (need to create also the corrispondent jobs
     }
