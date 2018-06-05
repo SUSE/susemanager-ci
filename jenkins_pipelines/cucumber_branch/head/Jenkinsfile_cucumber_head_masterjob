@@ -20,7 +20,7 @@ pipeline {
                  build job: 'manager-Head-cucumber-sle11sp4', wait: true
               }
                 finally {
-                    echo "matrix done
+                    echo "matrix done"
                   }
              }
           }
