@@ -32,19 +32,13 @@ pipeline {
         steps{
          script {
                try {
-                 ansiColor('xterm') {
                   sh "mv prod/${maintf} prod/sumaform"
                        dir('prod/sumaform') {
-                         ansiColor('xterm') {
                            sh 'terraform init'
                            sh 'terraform apply'
                              timeout(time: 6, unit:'HOURS') {
                            sh "ssh ${ssh_flags} -tt root@${ctl_node} run-testsuite"
                           }
-                       }
-                    }
-
-                 }
                }
                finally {
                  sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
@@ -58,9 +52,7 @@ pipeline {
  post {
         always {
            dir('prod/sumaform') {
-                  ansiColor('xterm') {
                         sh 'terraform destroy -force'
-                   }
                  }
             dir("${env.WORKSPACE}") {
               archiveArtifacts artifacts: 'output.html'
