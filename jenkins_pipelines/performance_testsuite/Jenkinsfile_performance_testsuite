@@ -30,11 +30,9 @@ pipeline {
                 sh "mv prod/performance/runner/performance/* prod/performance/sumaform"
 
                 dir('prod/performance/sumaform') {
-                    ansiColor('xterm') {
-                        sh 'terraform init'
-                        timeout(time: 6, unit:'HOURS') {
-                          sh 'terraform apply'
-                        }
+                    sh 'terraform init'
+                    timeout(time: 6, unit:'HOURS') {
+                      sh 'terraform apply'
                     }
                 }
             }
@@ -67,9 +65,7 @@ pipeline {
     post {
         always {
             dir('prod/performance/sumaform') {
-                ansiColor('xterm') {
-                    sh 'terraform destroy -force'
-                }
+                sh 'terraform destroy -force'
             }
             dir("${env.WORKSPACE}") {
                 deleteDir()
