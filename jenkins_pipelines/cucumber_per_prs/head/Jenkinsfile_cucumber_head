@@ -98,7 +98,9 @@ pipeline {
 
      stage('run cucumber testsuite and update status on github') {
             steps {
-               sh "${run_cucumber_with_gitarro}"
+               timeout(time: 9, unit:'HOURS') {
+                      sh "${run_cucumber_with_gitarro}"
+               }
                sh "scp ${ssh_flags} root@${ctl_node}:/root/spacewalk/testsuite/output.html ${env.WORKSPACE}"
                sh "scp ${ssh_flags} -rp root@$ctl_node:/root/spacewalk/testsuite/results_junit ${env.WORKSPACE}"
             }
