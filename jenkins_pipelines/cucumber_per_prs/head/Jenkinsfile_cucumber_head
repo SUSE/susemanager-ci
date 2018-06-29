@@ -87,8 +87,7 @@ pipeline {
 
                 dir('prod/cucumber-on-prs/sumaform') {
                    // don't change control-node keep using Manager
-                   // 2 Problems: 1) forked clone pr doesn't work curr at sumaform.
-                   //             2) if there is a regresion on upstream branch all pr need to be up2date
+                   // Problems: 1) forked clone pr doesn't work curr at sumaform.
                    // sh "${scripts}/change_controlnode.sh '${maintf}' '${branch}' '${env.WORKSPACE}'"
                     sh 'terraform init'
                     sh 'terraform apply'
@@ -114,7 +113,6 @@ pipeline {
 
             }
             // Always restore the pr-automation obs branch to head status. (keep pkg up2date)
-            // we check at the begin of the pipeline on the status of the obs branch
             sh "${scripts}/restore_obs_upstream.sh ${obs_from_github} ${branch}"     
             sh "mv output.html ${branch}${env.BUILD_NUMBER}.html"
             archiveArtifacts artifacts: "${branch}${env.BUILD_NUMBER}.html"
