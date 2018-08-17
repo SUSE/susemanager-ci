@@ -1,0 +1,64 @@
+#!/usr/bin/env groovy
+
+// Configure the build properties
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+
+  // env variables
+  environment { 
+
+    // specific psql conf
+     repository = "uyuni-project/uyuni"
+     context = "java_pgsql_tests"
+     description = "java pgsql unit test" 
+     filter = "java/"
+     git_fs = "${env.WORKSPACE}"      
+     // the actual test is the git repo
+     test = "susemanager-utils/testing/automation/java-unittests-pgsql.sh"
+
+    // this are execution jobs
+    check = "gitarro.ruby2.1  -r ${repository}" + 
+                " -c ${context} -d ${description} " +
+                " -f ${filter} " +
+                " -t ${test} " +
+                " -g ${git_fs} " +
+                "--check --changed_since 3600" 
+
+    runtest = "gitarro.ruby2.1  -r ${repository}" + 
+                " -c ${context} -d ${description} " +
+                " -f ${filter} " +
+                " -g ${git_fs} " +
+                " -u ${env.BUILD_URL}" +
+                " -t ${test} " 
+
+   }
+   // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+   // trigger
+    triggers {  cron('H/5 * * * *')  }
+    stages {
+        stage('Check Pull Request') {
+            steps {
+                 echo 'Check if a PR need a test'
+                 sh "${check} | grep \"TESTREQUIRED=true\" "
+               }
+         }
+        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
+        stage('Run Java psql unit test') {
+            steps {
+                  echo 'Run psql unit tests'
+                   sh "$runtest}"
+                  }
+        }
+    }
+  post { 
+        always {
+            junit "spacewalk*/java/test-results/*.xml"
+            cleanWs()
+        }
+    }
+}

@@ -1,0 +1,51 @@
+#!/usr/bin/env groovy
+// Configure the build properties
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+
+  // env variables
+  environment { 
+
+    javacheckstyle_check = "gitarro.ruby2.1  -r uyuni-project/uyuni" + 
+                " -c java_lint_checkstyle -d \"java-checkstyle\" " +
+                " -f \"java/\" " +
+                " -t susemanager-utils/testing/automation/java-checkstyle.sh" +
+                " -g ${env.WORKSPACE} " +
+                "--check --changed_since 3600" 
+
+    javacheckstyle_test = "gitarro.ruby2.1  -r uyuni-project/uyuni" + 
+                " -c java_lint_checkstyle -d \"java-checkstyle\" " +
+                " -f \"java/\" " +
+                " -t susemanager-utils/testing/automation/java-checkstyle.sh" +
+                " -u ${env.BUILD_URL} " +
+                " -g ${env.WORKSPACE} " 
+   }
+   // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+   // trigger
+    triggers { cron('H/5 * * * *')  }
+    stages {
+        stage('Check Pull Request') {
+            steps {
+                 echo 'Check if a PR need checkstyle test'
+                 sh "${javacheckstyle_check} | grep \"TESTREQUIRED=true\" "
+               }
+         }
+        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
+        stage('Run Javacheckstyle test') {
+            steps {
+                  echo 'Run javacheckstyle tests'
+                   sh "${javacheckstyle_test}"
+                  }
+        }
+    }
+   post { 
+        always { 
+            cleanWs()
+        }
+    }
+}
