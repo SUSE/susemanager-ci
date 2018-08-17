@@ -1,0 +1,57 @@
+#!/usr/bin/env groovy
+
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+  environment { 
+     repository = "uyuni-project/uyuni"
+     context = "ruby_rubocop" 
+     description = "rubocop checkstyle"
+     git_fs = "${env.WORKSPACE}"      
+     filter = 'testsuite/'
+     test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/rubocop.sh" 
+    check = "gitarro.ruby2.1  -r ${repository}" + 
+                " -c ${context} -d \"${description}\" " +
+                " -f ${filter} " +
+                " -t ${test} " +
+                " -g ${git_fs} " +
+                "--check --changed_since 3600" 
+
+    runtest = "gitarro.ruby2.1  -r ${repository}" + 
+                " -c ${context} -d \"${description}\" " +
+                " -f ${filter} " +
+                " -g ${git_fs} " +
+                " -u \"${env.BUILD_URL}\" " +
+                " -t ${test} " 
+
+   }
+    agent { label 'suse-manager-unit-tests' }
+    triggers {
+        cron('H/10 * * * *')
+       }
+    stages {
+        stage('Check Pull Request') {
+            steps {
+                 echo 'Check if a PR need a test'
+                 sh "${check} | grep \"TESTREQUIRED=true\" "
+               }
+         }
+        stage('Run tests against PR') {
+            steps {
+                  echo 'Run tests!'
+                   sh "$runtest}"
+                  }
+        }
+    }
+  post { 
+        always {
+            dir("${env.WORKSPACE}") {
+                deleteDir()
+            }
+
+        }
+    }
+}

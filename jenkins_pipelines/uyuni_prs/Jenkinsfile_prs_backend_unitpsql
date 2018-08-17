@@ -1,0 +1,67 @@
+#!/usr/bin/env groovy
+
+// Configure the build properties
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+
+  // env variables
+  environment { 
+
+    // CONF To edit  
+     repository = "uyuni-project/uyuni"
+     context = "backend_unittests_pgsql" 
+     description = "python backend pgsql unit test"
+     git_fs = "${env.WORKSPACE}"      
+     filter = 'backend/'
+     // the actual test is the git repo (inside spacewalk)
+     test = "susemanager-utils/testing/automation/backend-unittest-pgsql.sh" 
+
+    // DO NOT EDIT THIS
+    // this are execution jobs
+    check = "gitarro.ruby2.1  -r ${repository}" + 
+                " -c ${context} -d \"${description}\" " +
+                " -f ${filter} " +
+                " -t ${test} " +
+                " -g ${git_fs} " +
+                "--check --changed_since 3600" 
+
+    runtest = "gitarro.ruby2.1  -r ${repository}" + 
+                " -c ${context} -d \"${description}\" " +
+                " -f ${filter} " +
+                " -g ${git_fs} " +
+                " -u \"${env.BUILD_URL}\" " +
+                " -t ${test} " 
+
+   }
+   // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+   // trigger
+    triggers {
+        cron('H/5 * * * *')
+       }
+    stages {
+        stage('Check Pull Request') {
+            steps {
+                 echo 'Check if a PR need a test'
+                 sh "${check} | grep \"TESTREQUIRED=true\" "
+               }
+         }
+        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
+        stage('Run tests against PR') {
+            steps {
+                  echo 'Run tests!'
+                   sh "$runtest}"
+                  }
+        }
+    }
+  post { 
+        always {
+            junit "spacewalk*/backend/reports/pgsql_tests.xml" 
+            cleanWs()
+        }
+    }
+}
