@@ -10,19 +10,24 @@ pipeline {
 
   // env variables
   environment { 
-    gitarro_changelog_check = "gitarro.ruby2.1  -r uyuni-project/uyuni" + 
+    repository = "uyuni-project/uyuni"
+    gitarro_changelog_check = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c changelog_test -d \"test if changelog was updated\" " +
                 " -t /home/jenkins/bin/changelog.rb" +
                 " -g \"${env.WORKSPACE}\" " +
                 "--check --changed_since 3600" 
 
-    gitarro_changelog_test = "gitarro.ruby2.1  -r uyuni-project/uyuni" + 
+    gitarro_changelog_test = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c changelog_test -d \"test if changelog was updated\" " +
-                " -t /home/jenkins/bin/changelog.rb" +
+                " -t /home/jenkins/bin/changelog.rb " +
                 " -u ${env.BUILD_URL}" +
                 " -g \"${env.WORKSPACE}\" " 
-  }
-
+  
+   gitarro_enable_merging =  "gitarro.ruby2.1  -r ${repository}" +
+                " -c merge_enabled -d \"Merging enabled\" " +
+                " -u ${env.BUILD_URL}" +
+                " -g \"${env.WORKSPACE}\" "
+   }
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
    // trigger
@@ -41,7 +46,11 @@ pipeline {
         stage('Run changelo test') {
             steps {
                 echo 'Run changelog tests'
-                sh "${gitarro_changelog_test}"
+                sh "${gitarro_changelog_test};" +
+                   "CLRET=\$?;" +
+                   "PR_NUMBER=\$(grep 'GITARRO_PR_NUMBER:' ${env.WORKSPACE}/.gitarro_vars | cut -d ':' -f2);" +
+                   "if [ \$CLRET -eq 0 ]; then ${gitarro_enable_merging} -t /usr/bin/true -P \$PR_NUMBER; else ${gitarro_enable_merging} -t /usr/bin/false -P \$PR_NUMBER; fi;" +
+                   "exit \$CLRET"
             }
         }
     }
