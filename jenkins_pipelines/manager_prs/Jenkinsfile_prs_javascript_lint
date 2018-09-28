@@ -1,0 +1,50 @@
+#!/usr/bin/env groovy
+// Configure the build properties
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+
+  // env variables
+  environment { 
+
+    jslint_check = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
+                " -c javascript_lint -d \"javascript-lint\" " +
+                " -f \".js\" " +
+                " -t susemanager-utils/testing/automation/javascript-lint.sh" +
+                " -g ${env.WORKSPACE} " +
+                "--check --changed_since 3600" 
+    jslint_test = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
+                " -c javascript_lint -d \"javascript-lint\" " +
+                " -f \"js/\" " +
+                " -t susemanager-utils/testing/automation/javascript-lint.sh" +
+                " -u ${env.BUILD_URL} " +
+                " -g ${env.WORKSPACE} " 
+   }
+   // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+   // trigger
+    triggers { cron('H/5 * * * *')  }
+    stages {
+        stage('Check Pull Request') {
+            steps {
+                 echo 'Check if a PR needs JavaScript lint test'
+                 sh "${jslint_check} | grep \"TESTREQUIRED=true\" " // | grep \"TESTREQUIRED=true\" 
+               }
+         }
+        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
+        stage('Run Javascript lint test') {
+            steps {
+                  echo 'Run JavaScript lint tests'
+                   sh "${jslint_test}"
+                  }
+        }
+    }
+   post { 
+        always { 
+            cleanWs()
+        }
+    }
+}
