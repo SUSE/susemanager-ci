@@ -24,7 +24,7 @@ pipeline {
                 " -g \"${env.WORKSPACE}\" " 
   
    gitarro_enable_merging =  "gitarro.ruby2.1  -r ${repository}" +
-                " -c merge_enabled -d \"Merging enabled\" " +
+                " -c merge_enabled -d \"Merging enabled (requires changelog_test passing)\" " +
                 " -u ${env.BUILD_URL}" +
                 " -g \"${env.WORKSPACE}\" "
    }
@@ -43,10 +43,10 @@ pipeline {
         }
         // If there is a PR that doesn't contain context changelog, we run this.
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
-        stage('Run changelo test') {
+        stage('Run changelog test') {
             steps {
                 echo 'Run changelog tests'
-                sh "${gitarro_changelog_test};" +
+                sh "${gitarro_changelog_test} ||" +
                    "CLRET=\$?;" +
                    "PR_NUMBER=\$(grep 'GITARRO_PR_NUMBER:' ${env.WORKSPACE}/.gitarro_vars | cut -d ':' -f2);" +
                    "if [ \$CLRET -eq 0 ]; then ${gitarro_enable_merging} -t /usr/bin/true -P \$PR_NUMBER; else ${gitarro_enable_merging} -t /usr/bin/false -P \$PR_NUMBER; fi;" +
