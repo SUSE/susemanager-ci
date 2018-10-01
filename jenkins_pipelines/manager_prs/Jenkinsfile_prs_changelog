@@ -46,7 +46,8 @@ pipeline {
         stage('Run changelog test') {
             steps {
                 echo 'Run changelog tests'
-                sh "${gitarro_changelog_test} || CLRET=\$?;" +
+                sh "set +e;" +
+                   "${gitarro_changelog_test}; CLRET=\${?};" +
                    "PR_NUMBER=\$(grep 'GITARRO_PR_NUMBER:' ${env.WORKSPACE}/.gitarro_vars | cut -d ':' -f2);" +
                    "if [ \$CLRET -eq 0 ]; then ${gitarro_enable_merging} -t /usr/bin/true -P \$PR_NUMBER; else ${gitarro_enable_merging} -t /usr/bin/false -P \$PR_NUMBER; fi;" +
                    "exit \$CLRET"
