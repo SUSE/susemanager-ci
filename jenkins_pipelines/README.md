@@ -1,10 +1,15 @@
 # Pipelines for SUSE-Manager
 
-- Manager GitHub pull-request unit/tests
+- 1) Manager GitHub pull-request unit/tests 
+
+- 2) Manager performance testsuite
+
+- 3) Uyuni pipelines which are the same as 1)
+
+
+This is not running anywhere, is only experimental code not in prod.
 
 - Manager Github pull-request cucumber functional tests
-
-- Manager performance testsuite
 
 ### Manager GitHub pull-request unit/tests
 
@@ -17,7 +22,6 @@ This pipelines use the same patterns, which is to use the gitarro tools for gith
 ### Manager performance testsuite
 
 This dir contains pipelines related to scalabilty tests for suse-manager.
-
 
 #### How to make a pipeline from scratch 
 
