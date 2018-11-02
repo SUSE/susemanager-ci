@@ -6,8 +6,6 @@
 
 - Manager performance testsuite
 
-- Manager unreleased updates cucumber tests  (branch only)
-
 ### Manager GitHub pull-request unit/tests
 
 This directory contains all pipelines that are executed for testing prs for spacewalk.
@@ -28,7 +26,6 @@ This pipeline is about to test unreleased update pro branch
 ### Manager Github pull-request cucumber functional tests
 
 This directory contain pipeline and scripts for running cucumber against GitHub Pull-requests
-
 
 
 #### How to make a pipeline from scratch 
