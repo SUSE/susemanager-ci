@@ -44,6 +44,12 @@ pipeline {
         cron('H/5 * * * *')
        }
     stages {
+        stage('Clean Up Workspace') {
+            steps {
+                echo 'Clean up previous workspace'
+                cleanWs()
+            }
+        }
         stage('Check Pull Request') {
             steps {
                  echo 'Check if a PR need a test'
@@ -61,6 +67,9 @@ pipeline {
   post { 
         always {
             junit "spacewalk*/backend/reports/pgsql_tests.xml" 
+        }
+        success {
+            echo 'Clean up current workspace, when job success.'
             cleanWs()
         }
     }

@@ -33,6 +33,12 @@ pipeline {
         cron('H/10 * * * *')
        }
     stages {
+        stage('Clean Up Workspace') {
+            steps {
+                echo 'Clean up previous workspace'
+                cleanWs()
+            }
+        }
         stage('Check Pull Request') {
             steps {
                  echo 'Check if a PR need a test'
@@ -47,11 +53,9 @@ pipeline {
         }
     }
   post { 
-        always {
-            dir("${env.WORKSPACE}") {
-                deleteDir()
-            }
-
+        success {
+            echo 'Clean up current workspace, when job success.'
+            cleanWs()
         }
     }
 }
