@@ -41,6 +41,9 @@ pipeline {
    // trigger
     triggers {  cron('H/5 * * * *')  }
     stages {
+        stage('CleanUp Workspace') {
+            cleanWs()
+        }
         stage('Check Pull Request') {
             steps {
                  echo 'Check if a PR need a test'
