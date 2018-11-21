@@ -57,10 +57,12 @@ pipeline {
 
     post {
         always{
-            def exists = sh "[ -d spacewalk*/java/test-results ]"
-            if (exists) {
-                junit "spacewalk*/java/test-results/*.xml"
-            }
+            steps {
+                def exists = sh "[ -d spacewalk*/java/test-results ]"
+                if (exists) {
+                    junit "spacewalk*/java/test-results/*.xml"
+                }
+            }              
         }
         
         success {
