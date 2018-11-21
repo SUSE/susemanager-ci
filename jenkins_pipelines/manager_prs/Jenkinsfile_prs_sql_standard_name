@@ -40,13 +40,16 @@ pipeline {
         stage('Check Pull Request') {
             steps {
                  echo 'Check if a PR need a test'
-                 sh "${check} | grep \"TESTREQUIRED=true\" "
+                 sh "${check} 2>&1 | tee gitarro_check.log"
                }
          }
         stage('Run sql schem filename tests') {
+            when {
+                expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
+            }
             steps {
-                   sh "$runtest}"
-                  }
+                sh "${runtest}"
+            }
         }
     }
   post { 

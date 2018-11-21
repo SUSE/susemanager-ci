@@ -13,19 +13,11 @@ pipeline {
      filter = "schema/spacewalk"
      git_fs = "${env.WORKSPACE}"      
      test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/sql_schema_filename.py"
-    check = "gitarro.ruby2.1  -r ${repository}" + 
-                " -c ${context} -d \"${description}\" " +
-                " -f ${filter} " +
-                " -t ${test} " +
-                " -g ${git_fs} " +
-                "--check --changed_since 3600" 
-
-    runtest = "gitarro.ruby2.1  -r ${repository}" + 
-                " -c ${context} -d \"${description}\" " +
-                " -f ${filter} " +
-                " -g ${git_fs} " +
-                " -u ${env.BUILD_URL}" +
-                " -t ${test} " 
+     gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
+      
+     // this are execution jobs
+     check = "gitarro.ruby2.1 ${gitarro_common_params} --check --changed_since 3600" 
+     runtest = "gitarro.ruby2.1 ${gitarro_common_params} -u ${env.BUILD_URL}"
 
    }
     agent { label 'suse-manager-unit-tests' }
@@ -40,13 +32,16 @@ pipeline {
         stage('Check Pull Request') {
             steps {
                  echo 'Check if a PR need a test'
-                 sh "${check} | grep \"TESTREQUIRED=true\" "
+                 sh "${check} 2>&1 | tee gitarro_check.log"
                }
          }
         stage('Run sql schem filename tests') {
+            when {
+                expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
+            }
             steps {
-                   sh "$runtest}"
-                  }
+                sh "${runtest}"
+            }
         }
     }
   post { 
