@@ -51,20 +51,12 @@ pipeline {
             steps {
                   echo 'Run psql unit tests'
                   sh "${runtest}"
+                  junit "spacewalk*/java/test-results/*.xml"
             }
         }
     }
 
     post {
-        always{
-            steps {
-                def exists = sh "[ -d spacewalk*/java/test-results ]"
-                if (exists) {
-                    junit "spacewalk*/java/test-results/*.xml"
-                }
-            }              
-        }
-        
         success {
             cleanWs()
         }
