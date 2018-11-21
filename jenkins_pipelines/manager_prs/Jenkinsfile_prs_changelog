@@ -44,12 +44,15 @@ pipeline {
       stage('Check Pull Request for changelog') {
         steps {
                 echo 'Check if a PR need changelog test'
-                 sh "${gitarro_changelog_check} | grep \"TESTREQUIRED=true\" "
+                sh "${gitarro_changelog_check} 2>&1 | tee gitarro_check.log"
               }
         }
         // If there is a PR that doesn't contain context changelog, we run this.
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
         stage('Run changelog test') {
+            when {
+                expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
+            }
             steps {
                 echo 'Run changelog tests'
                 sh "set +e;" +

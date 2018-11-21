@@ -47,14 +47,17 @@ pipeline {
     stage('Check Pull Request') {
       steps {
         echo 'Check if a PR need a test'
-        sh "${check} | grep \"TESTREQUIRED=true\" "
+        sh "${check} 2>&1 | tee gitarro_check.log"
         }
       }
      stage('Run schema tests postgresql') {
+          when {
+            expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
+          }
           steps {
             echo 'Run tests'
-            sh "$runtest_pg"
-            }
+            sh "${runtest_pg}"
+          }
      }
   
   }

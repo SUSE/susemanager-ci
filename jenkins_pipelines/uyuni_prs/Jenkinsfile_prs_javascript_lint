@@ -38,15 +38,18 @@ pipeline {
         stage('Check Pull Request') {
             steps {
                  echo 'Check if a PR needs JavaScript lint test'
-                 sh "${jslint_check} | grep \"TESTREQUIRED=true\" "
+                 sh "${jslint_check} 2>&1 | tee gitarro_check.log"
                }
          }
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
         stage('Run Javascript lint test') {
+            when {
+                expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
+            }
             steps {
                   echo 'Run JavaScript lint tests'
                    sh "${jslint_test}"
-                  }
+            }
         }
     }
    post { 
