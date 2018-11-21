@@ -51,7 +51,7 @@ pipeline {
             steps {
                   echo 'Run psql unit tests'
                   sh "${runtest}"
-                  junit "spacewalk*/java/test-results/*.xml"
+                  junit "**/java/test-results/*.xml"
             }
         }
     }
