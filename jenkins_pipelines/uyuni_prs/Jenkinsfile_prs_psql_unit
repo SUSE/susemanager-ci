@@ -28,13 +28,19 @@ pipeline {
    }
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
-   // trigger
+    
+    parameters {
+        booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
+    }
+    
     triggers {  cron('H/5 * * * *')  }
     stages {
         stage('Clean Up Workspace') {
             steps {
                 echo 'Clean up previous workspace'
                 cleanWs()
+                echo 'Check out SCM'
+                checkout scm
             }
         }
         stage('Check Pull Request') {
