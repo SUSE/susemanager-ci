@@ -56,8 +56,10 @@ pipeline {
             }
             steps {
                   echo 'Run psql unit tests'
-                  sh "$runtest}"
+                  sh "set +e; ${runtest}; TESTS_RESULT=\$?; set -e;"
+                  echo 'Collecting JUnit Test reports'
                   junit "**/java/test-results/*.xml"
+                  sh "exit \$TESTS_RESULT"
             }
         }
     }
