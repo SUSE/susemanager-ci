@@ -30,7 +30,6 @@ pipeline {
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
     
-    triggers { cron('H/5 * * * *')  }
     stages {
         stage('Clean Up Workspace') {
             steps {
