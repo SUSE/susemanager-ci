@@ -10,15 +10,14 @@ pipeline {
 
   // env variables
   environment { 
-
     // specific psql conf
      repository = "uyuni-project/uyuni"
-     context = "java_pgsql_tests"
-     description = "java pgsql unit test" 
-     filter = "java/"
+     context = "susemanager_unittests" 
+     description = "susemanager unit test" 
+     filter = "susemanager/"
      git_fs = "${env.WORKSPACE}"      
      // the actual test is the git repo
-     test = "susemanager-utils/testing/automation/java-unittests-pgsql.sh"
+     test = "susemanager-utils/testing/automation/susemanager-unittest.sh"
      gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
       
      // this are execution jobs
@@ -32,8 +31,7 @@ pipeline {
     parameters {
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
-    
-    triggers {  cron('H/5 * * * *')  }
+
     stages {
         stage('Clean Up Workspace') {
             steps {
@@ -47,24 +45,28 @@ pipeline {
             steps {
                  echo 'Check if a PR need a test'
                  sh "${check} 2>&1 | tee gitarro_check.log"
-            }
+               }
          }
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
-        stage('Run Java psql unit test') {
+        stage('Run tests') {
             when {
                 expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
             }
             steps {
-                  echo 'Run psql unit tests'
-                  sh "$runtest}"
-                  junit "**/java/test-results/*.xml"
+                  echo 'Run tests'
+                  sh "${runtest}"
+                  junit "**/susemanager/src/reports/tests.xml"
             }
         }
     }
-
-    post {
-        success {
-            cleanWs()
+  post { 
+        success{
+            script {
+                if (params.cleanWorkspace == true) {
+                    echo 'Clean up current workspace, when job success.'
+                    cleanWs()
+                }
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ properties([
 pipeline {
 
     environment {
-      repository = "SUSE/spacewalk"
+      repository = "uyuni-project/uyuni"
       check = "gitarro.ruby2.1 -r ${repository} -t placeholder --check --changed_since 3600"
     }
 
@@ -47,7 +47,7 @@ pipeline {
                         ).trim()
                         echo PENDING
                         if (PENDING.contains('TESTREQUIRED=true')) {
-                            build job: "manager-prs-${context}-pipeline", wait: false
+                            build job: "uyuni-prs-${context}-pipeline", wait: false
                         }
                     }
                 }
