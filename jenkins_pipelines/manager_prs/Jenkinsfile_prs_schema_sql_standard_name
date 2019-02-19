@@ -8,22 +8,28 @@ properties([
 pipeline {
   environment { 
      repository = "SUSE/spacewalk"
-     context = "ruby_rubocop" 
-     description = "rubocop checkstyle"
+     context = "schema_sql_standard_name"
+     description = "comply sql filename standards" 
+     filter = "schema/spacewalk"
      git_fs = "${env.WORKSPACE}"      
-     filter = 'testsuite/'
-     test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/rubocop.sh" 
-     gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
-      
-     // this are execution jobs
-     check = "gitarro.ruby2.1 ${gitarro_common_params} --check --changed_since 3600" 
-     runtest = "gitarro.ruby2.1 ${gitarro_common_params} -u ${env.BUILD_URL}"
+     test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/sql_schema_filename.py"
+    check = "gitarro.ruby2.1  -r ${repository}" + 
+                " -c ${context} -d \"${description}\" " +
+                " -f ${filter} " +
+                " -t ${test} " +
+                " -g ${git_fs} " +
+                "--check --changed_since 3600" 
+
+    runtest = "gitarro.ruby2.1  -r ${repository}" + 
+                " -c ${context} -d \"${description}\" " +
+                " -f ${filter} " +
+                " -g ${git_fs} " +
+                " -u ${env.BUILD_URL}" +
+                " -t ${test} " 
 
    }
     agent { label 'suse-manager-unit-tests' }
-    triggers {
-        cron('H/10 * * * *')
-       }
+
     stages {
         stage('Clean Up Workspace') {
             steps {
@@ -39,13 +45,12 @@ pipeline {
                  sh "${check} 2>&1 | tee gitarro_check.log"
                }
          }
-        stage('Run tests against PR') {
+        stage('Run sql schem filename tests') {
             when {
                 expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
             }
             steps {
-                  echo 'Run tests!'
-                  sh "${runtest}"
+                sh "${runtest}"
             }
         }
     }
