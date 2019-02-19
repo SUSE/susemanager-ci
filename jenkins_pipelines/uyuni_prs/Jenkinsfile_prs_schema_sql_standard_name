@@ -21,7 +21,7 @@ pipeline {
 
    }
     agent { label 'suse-manager-unit-tests' }
-    triggers {  cron('H/5 * * * *')  }
+
     stages {
         stage('Clean Up Workspace') {
             steps {
