@@ -32,7 +32,7 @@ pipeline {
                 dir('prod/performance/sumaform') {
                     sh 'terraform init'
                     timeout(time: 6, unit:'HOURS') {
-                      sh 'terraform apply'
+                      sh 'terraform apply -auto-approve'
                     }
                 }
             }

@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 
+// Configure the build properties
 properties([
     buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
     disableConcurrentBuilds(),
@@ -7,17 +8,23 @@ properties([
 
 pipeline {
 
+    parameters {
+        string(defaultValue: "", description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
+    }
+
     environment {
-      repository = "SUSE/spacewalk"
-      check = "gitarro.ruby2.1 -r ${repository} -t placeholder --check --changed_since 3600"
+      repository = 'SUSE/spacewalk'
+      gitarro_cmd = 'gitarro.ruby2.1'
+      gitarro_local = 'ruby gitarro.rb'
+      check = " -r ${repository} -t placeholder --check --changed_since 3600"
     }
 
     agent { label 'suse-manager-unit-tests' }
-    
+
     triggers {
         cron('H/5 * * * *')
     }
-    
+
     stages {
         stage('Clean Up Workspace') {
             steps {
@@ -25,13 +32,23 @@ pipeline {
                 cleanWs()
                 echo 'Check out SCM'
                 checkout scm
+                script {
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        echo 'Check out Gitarro PR'
+                        checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
+                                  extensions       : [[$class: 'LocalBranch']],
+                                  userRemoteConfigs: [[refspec: "+refs/pull/${params.GITARRO_PR_NUMBER}/head:refs/remotes/origin/PR-${params.GITARRO_PR_NUMBER}", url: "https://git@github.com/openSUSE/gitarro"]]])
+                    }
+                }
             }
         }
         stage('Trigger pending tests') {
             steps {
+                echo "Trigger pending tests"
                 script {
                     contexts = [
                             'backend_unittests_pgsql',
+                            'javascript_lint',
                             'changelog_test',
                             'java_lint_checkstyle',
                             'java_pgsql_tests',
@@ -40,19 +57,24 @@ pipeline {
                             'schema_migration_test_pgsql',
                             'susemanager_unittests'
                     ]
+
                     contexts.each { context ->
+                        commands = "${gitarro_cmd} ${check} -c ${context}"
+                        if (params.GITARRO_PR_NUMBER != "") {
+                            commands = "${gitarro_local} ${check} -c ${context}"
+                        }
                         PENDING = sh(
-                                script: "${check} -c ${context}",
-                                returnStdout: true
-                        ).trim()
+                            script: "${commands}",
+                            returnStdout: true
+                            ).trim()
                         echo PENDING
                         if (PENDING.contains('TESTREQUIRED=true')) {
-                            build job: "manager-prs-${context}-pipeline", wait: false
+                            build job: "manager-prs-${context}-pipeline",  parameters: [[$class: 'StringParameterValue', name: 'GITARRO_PR_NUMBER', value: params.GITARRO_PR_NUMBER]], wait: false
                         }
                     }
                 }
             }
-         }
+        }
     }
 
     post {

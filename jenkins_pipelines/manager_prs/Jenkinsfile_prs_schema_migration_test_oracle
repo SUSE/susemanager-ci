@@ -2,67 +2,70 @@
 
 // Configure the build properties
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
-    disableConcurrentBuilds(),
+        buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+        disableConcurrentBuilds(),
 ])
 
 pipeline {
 
-  // env variables
-  environment { 
-    // specific psql conf
-    repository = "SUSE/spacewalk"
-    context = "schema_migration_test_oracle" 
-    description = "schema migration test oracle" 
-    filter = "schema/spacewalk"
-    git_fs = "${env.WORKSPACE}"      
-    test = "susemanager-utils/testing/automation/schema-migration-test-oracle.sh"
-    // trigger tests
-    check = "gitarro.ruby2.1  -r ${repository}" + 
-            " -c ${context} -d ${description} " +
-            " -f ${filter} " +
-            " -t ${test} " +
-            " -g ${git_fs} " +
-            "--check --changed_since 3600" 
-    // oracle test
-    runtest_oracle = "gitarro.ruby2.1  -r ${repository}" + 
-                 " -c ${context} -d ${description} " +
-                 " -f ${filter} " +
-                 " -g ${git_fs} " +
-                 " -u \"${env.BUILD_URL}\"" +
-                 " -t ${test} " 
-  }
+    parameters {
+        string(defaultValue: "", description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
+    }
 
-  // run only on specific hosts
-  agent { label 'suse-manager-unit-tests' }
+    environment {
+        // specific psql conf
+        repository = "SUSE/spacewalk"
+        context = "schema_migration_test_oracle"
+        description = "schema migration test oracle"
+        filter = "schema/spacewalk"
+        git_fs = "${env.WORKSPACE}"
+        test = "susemanager-utils/testing/automation/schema-migration-test-oracle.sh"
+        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_local = 'ruby gitarro.rb'
+        // oracle test
+        runtest_oracle = "-r ${repository}" +
+                " -c ${context} -d ${description} " +
+                " -f ${filter} " +
+                " -g ${git_fs} " +
+                " -u \"${env.BUILD_URL}\"" +
+                " -t ${test} "
+    }
 
-  stages {
-    stage('Clean Up Workspace') {
-        steps {
-            echo 'Clean up previous workspace'
-            cleanWs()
-            echo 'Check out SCM'
-            checkout scm
+    // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+
+    stages {
+        stage('Clean Up Workspace') {
+            steps {
+                echo 'Clean up previous workspace'
+                cleanWs()
+                echo 'Check out SCM'
+                checkout scm
+                script {
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        echo 'Check out Gitarro PR'
+                        checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
+                                  extensions       : [[$class: 'LocalBranch']],
+                                  userRemoteConfigs: [[refspec: "+refs/pull/${params.GITARRO_PR_NUMBER}/head:refs/remotes/origin/PR-${params.GITARRO_PR_NUMBER}", url: "https://git@github.com/openSUSE/gitarro"]]])
+                    }
+                }
+            }
+        }
+        stage('Run tests oracle') {
+            steps {
+                echo 'Run schema tests oracle'
+                script {
+                    runtest_oracle_cmd = "${gitarro_cmd} ${runtest_oracle}"
+                    if (params.GITARRO_PR_NUMBER != "") {
+                            runtest_oracle_cmd = "${gitarro_local} ${runtest_oracle}"
+                    }
+                }
+                sh "$runtest_oracle"
+            }
         }
     }
-    stage('Check Pull Request') {
-      steps {
-        echo 'Check if a PR need a test'
-        sh "${check} 2>&1 | tee gitarro_check.log"
-        }
-      }
-    stage('Run tests oracle') {
-      when {
-        expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
-      }
-       steps {
-          echo 'Run schema tests oracle '
-          sh "$runtest_oracle"
-            }
-       }
-  }
-  post { 
-        success{
+    post {
+        success {
             script {
                 if (params.cleanWorkspace == true) {
                     echo 'Clean up current workspace, when job success.'
