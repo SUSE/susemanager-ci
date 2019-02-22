@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+
 // Configure the build properties
 properties([
     buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
@@ -9,20 +10,20 @@ pipeline {
 
   // env variables
   environment { 
+    // specific psql conf
+     repository = "uyuni-project/uyuni"
+     context = "susemanager_unittests" 
+     description = "susemanager unit test" 
+     filter = "susemanager/"
+     git_fs = "${env.WORKSPACE}"      
+     // the actual test is the git repo
+     test = "susemanager-utils/testing/automation/susemanager-unittest.sh"
+     gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
+      
+     // this are execution jobs
+     check = "gitarro.ruby2.1 ${gitarro_common_params} --check --changed_since 3600" 
+     runtest = "gitarro.ruby2.1 ${gitarro_common_params} -u ${env.BUILD_URL}"
 
-    javacheckstyle_check = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
-                " -c java_lint_checkstyle -d \"java-checkstyle\" " +
-                " -f \"java/\" " +
-                " -t susemanager-utils/testing/automation/java-checkstyle.sh" +
-                " -g ${env.WORKSPACE} " +
-                "--check --changed_since 3600" 
-
-    javacheckstyle_test = "gitarro.ruby2.1  -r SUSE/spacewalk" + 
-                " -c java_lint_checkstyle -d \"java-checkstyle\" " +
-                " -f \"java/\" " +
-                " -t susemanager-utils/testing/automation/java-checkstyle.sh" +
-                " -u ${env.BUILD_URL} " +
-                " -g ${env.WORKSPACE} " 
    }
    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
@@ -30,8 +31,7 @@ pipeline {
     parameters {
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
-    
-    triggers { cron('H/5 * * * *')  }
+
     stages {
         stage('Clean Up Workspace') {
             steps {
@@ -43,22 +43,23 @@ pipeline {
         }
         stage('Check Pull Request') {
             steps {
-                 echo 'Check if a PR need checkstyle test'
-                 sh "${javacheckstyle_check} 2>&1 | tee gitarro_check.log"
+                 echo 'Check if a PR need a test'
+                 sh "${check} 2>&1 | tee gitarro_check.log"
                }
          }
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
-        stage('Run Javacheckstyle test') {
+        stage('Run tests') {
             when {
                 expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
             }
             steps {
-                  echo 'Run javacheckstyle tests'
-                   sh "${javacheckstyle_test}"
-                  }
+                  echo 'Run tests'
+                  sh "${runtest}"
+                  junit "**/susemanager/src/reports/tests.xml"
+            }
         }
     }
-   post { 
+  post { 
         success{
             script {
                 if (params.cleanWorkspace == true) {

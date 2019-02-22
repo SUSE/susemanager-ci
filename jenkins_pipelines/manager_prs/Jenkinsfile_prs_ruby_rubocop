@@ -1,24 +1,18 @@
 #!/usr/bin/env groovy
 
-// Configure the build properties
 properties([
     buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
     disableConcurrentBuilds(),
 ])
 
 pipeline {
-
-  // env variables
   environment { 
-
-    // specific psql conf
-     repository = "uyuni-project/uyuni"
-     context = "java_pgsql_tests"
-     description = "java pgsql unit test" 
-     filter = "java/"
+     repository = "SUSE/spacewalk"
+     context = "ruby_rubocop" 
+     description = "rubocop checkstyle"
      git_fs = "${env.WORKSPACE}"      
-     // the actual test is the git repo
-     test = "susemanager-utils/testing/automation/java-unittests-pgsql.sh"
+     filter = 'testsuite/'
+     test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/rubocop.sh" 
      gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
       
      // this are execution jobs
@@ -26,14 +20,8 @@ pipeline {
      runtest = "gitarro.ruby2.1 ${gitarro_common_params} -u ${env.BUILD_URL}"
 
    }
-   // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
-    
-    parameters {
-        booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
-    }
-    
-    triggers {  cron('H/5 * * * *')  }
+
     stages {
         stage('Clean Up Workspace') {
             steps {
@@ -47,24 +35,26 @@ pipeline {
             steps {
                  echo 'Check if a PR need a test'
                  sh "${check} 2>&1 | tee gitarro_check.log"
-            }
+               }
          }
-        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
-        stage('Run Java psql unit test') {
+        stage('Run tests against PR') {
             when {
                 expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
             }
             steps {
-                  echo 'Run psql unit tests'
-                  sh "$runtest}"
-                  junit "**/java/test-results/*.xml"
+                  echo 'Run tests!'
+                  sh "${runtest}"
             }
         }
     }
-
-    post {
-        success {
-            cleanWs()
+  post { 
+        success{
+            script {
+                if (params.cleanWorkspace == true) {
+                    echo 'Clean up current workspace, when job success.'
+                    cleanWs()
+                }
+            }
         }
     }
 }

@@ -1,23 +1,18 @@
 #!/usr/bin/env groovy
 
-// Configure the build properties
 properties([
     buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
     disableConcurrentBuilds(),
 ])
 
 pipeline {
-
-  // env variables
   environment { 
-    // specific psql conf
      repository = "uyuni-project/uyuni"
-     context = "susemanager_unittests" 
-     description = "susemanager unit test" 
-     filter = "susemanager/"
+     context = "schema_sql_standard_name"
+     description = "comply sql filename standards" 
+     filter = "schema/spacewalk"
      git_fs = "${env.WORKSPACE}"      
-     // the actual test is the git repo
-     test = "susemanager-utils/testing/automation/susemanager-unittest.sh"
+     test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/sql_schema_filename.py"
      gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
       
      // this are execution jobs
@@ -25,17 +20,8 @@ pipeline {
      runtest = "gitarro.ruby2.1 ${gitarro_common_params} -u ${env.BUILD_URL}"
 
    }
-   // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
-    
-    parameters {
-        booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
-    }
-    
-    triggers {
-        cron('H/5 * * * *')
-    }
-    
+
     stages {
         stage('Clean Up Workspace') {
             steps {
@@ -51,15 +37,12 @@ pipeline {
                  sh "${check} 2>&1 | tee gitarro_check.log"
                }
          }
-        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
-        stage('Run tests') {
+        stage('Run sql schem filename tests') {
             when {
                 expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
             }
             steps {
-                  echo 'Run tests'
-                  sh "${runtest}"
-                  junit "**/susemanager/src/reports/tests.xml"
+                sh "${runtest}"
             }
         }
     }

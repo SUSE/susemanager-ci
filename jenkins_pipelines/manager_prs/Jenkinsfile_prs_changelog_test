@@ -10,7 +10,7 @@ pipeline {
 
   // env variables
   environment { 
-    repository = "uyuni-project/uyuni"
+    repository = "SUSE/spacewalk"
     gitarro_changelog_check = "gitarro.ruby2.1  -r ${repository}" + 
                 " -c changelog_test -d \"test if changelog was updated\" " +
                 " -t /home/jenkins/bin/changelog.rb" +
@@ -35,18 +35,15 @@ pipeline {
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
     
-    triggers {
-        cron('H/5 * * * *')
-    }
     stages {
-        stage('Clean Up Workspace') {
-            steps {
-                echo 'Clean up previous workspace'
-                cleanWs()
-                echo 'Check out SCM'
-                checkout scm
-            }
-        }
+      stage('Clean Up Workspace') {
+          steps {
+              echo 'Clean up previous workspace'
+              cleanWs()
+              echo 'Check out SCM'
+              checkout scm
+          }
+      }
       stage('Check Pull Request for changelog') {
         steps {
                 echo 'Check if a PR need changelog test'

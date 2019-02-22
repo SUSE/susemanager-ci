@@ -1,0 +1,68 @@
+#!/usr/bin/env groovy
+
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+
+    environment {
+      repository = "uyuni-project/uyuni"
+      check = "gitarro.ruby2.1 -r ${repository} -t placeholder --check --changed_since 3600"
+    }
+
+    agent { label 'suse-manager-unit-tests' }
+    
+    triggers {
+        cron('H/5 * * * *')
+    }
+    
+    stages {
+        stage('Clean Up Workspace') {
+            steps {
+                echo 'Clean up previous workspace'
+                cleanWs()
+                echo 'Check out SCM'
+                checkout scm
+            }
+        }
+        stage('Trigger pending tests') {
+            steps {
+                script {
+                    contexts = [
+                            'backend_unittests_pgsql',
+                            'changelog_test',
+                            'java_lint_checkstyle',
+                            'java_pgsql_tests',
+                            'ruby_rubocop',
+                            'schema_migration_test_oracle',
+                            'schema_migration_test_pgsql',
+                            'susemanager_unittests'
+                    ]
+                    contexts.each { context ->
+                        PENDING = sh(
+                                script: "${check} -c ${context}",
+                                returnStdout: true
+                        ).trim()
+                        echo PENDING
+                        if (PENDING.contains('TESTREQUIRED=true')) {
+                            build job: "uyuni-prs-${context}-pipeline", wait: false
+                        }
+                    }
+                }
+            }
+         }
+    }
+
+    post {
+        success{
+            script {
+                if (params.cleanWorkspace == true) {
+                    echo 'Clean up current workspace, when job success.'
+                    cleanWs()
+                }
+            }
+        }
+    }
+}

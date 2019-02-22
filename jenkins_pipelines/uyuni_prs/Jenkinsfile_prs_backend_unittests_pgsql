@@ -10,14 +10,15 @@ pipeline {
 
   // env variables
   environment { 
-    // specific psql conf
-     repository = "SUSE/spacewalk"
-     context = "susemanager_unittests" 
-     description = "susemanager unit test" 
-     filter = "susemanager/"
+
+    // CONF To edit  
+     repository = "uyuni-project/uyuni"
+     context = "backend_unittests_pgsql" 
+     description = "python backend pgsql unit test"
      git_fs = "${env.WORKSPACE}"      
-     // the actual test is the git repo
-     test = "susemanager-utils/testing/automation/susemanager-unittest.sh"
+     filter = 'backend/'
+     // the actual test is the git repo (inside spacewalk)
+     test = "susemanager-utils/testing/automation/backend-unittest-pgsql.sh" 
      gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
       
      // this are execution jobs
@@ -30,10 +31,6 @@ pipeline {
     
     parameters {
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
-    }
-    
-    triggers {
-        cron('H/5 * * * *')
     }
     
     stages {
@@ -52,14 +49,14 @@ pipeline {
                }
          }
         // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
-        stage('Run tests') {
+        stage('Run tests against PR') {
             when {
                 expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
             }
             steps {
-                  echo 'Run tests'
+                  echo 'Run tests!'
                   sh "${runtest}"
-                  junit "**/susemanager/src/reports/tests.xml"
+                  junit "**/backend/reports/pgsql_tests.xml" 
             }
         }
     }
@@ -72,5 +69,5 @@ pipeline {
                 }
             }
         }
-    }
+  }
 }
