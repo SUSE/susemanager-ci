@@ -1,25 +1,24 @@
 #!/usr/bin/env groovy
 
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
-    disableConcurrentBuilds(),
+        buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+        disableConcurrentBuilds(),
 ])
 
 pipeline {
-  environment { 
-     repository = "SUSE/spacewalk"
-     context = "ruby_rubocop" 
-     description = "rubocop checkstyle"
-     git_fs = "${env.WORKSPACE}"      
-     filter = 'testsuite/'
-     test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/rubocop.sh" 
-     gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
-      
-     // this are execution jobs
-     check = "gitarro.ruby2.1 ${gitarro_common_params} --check --changed_since 3600" 
-     runtest = "gitarro.ruby2.1 ${gitarro_common_params} -u ${env.BUILD_URL}"
+    environment {
+        repository = "SUSE/spacewalk"
+        context = "ruby_rubocop"
+        description = "rubocop checkstyle"
+        git_fs = "${env.WORKSPACE}"
+        filter = 'testsuite/'
+        test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/rubocop.sh"
+        gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
+        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_local = 'ruby gitarro.rb'
+        runtest = "${gitarro_common_params} -u ${env.BUILD_URL}"
 
-   }
+    }
     agent { label 'suse-manager-unit-tests' }
 
     stages {
@@ -29,26 +28,31 @@ pipeline {
                 cleanWs()
                 echo 'Check out SCM'
                 checkout scm
+                script {
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        echo 'Check out Gitarro PR'
+                        checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
+                                  extensions       : [[$class: 'LocalBranch']],
+                                  userRemoteConfigs: [[refspec: "+refs/pull/${params.GITARRO_PR_NUMBER}/head:refs/remotes/origin/PR-${params.GITARRO_PR_NUMBER}", url: "https://git@github.com/openSUSE/gitarro"]]])
+                    }
+                }
             }
         }
-        stage('Check Pull Request') {
-            steps {
-                 echo 'Check if a PR need a test'
-                 sh "${check} 2>&1 | tee gitarro_check.log"
-               }
-         }
         stage('Run tests against PR') {
-            when {
-                expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
-            }
             steps {
-                  echo 'Run tests!'
-                  sh "${runtest}"
+                echo 'Run tests!'
+                script {
+                    commands = "${gitarro_cmd} ${runtest}"
+                    if (params.GITARRO_PR_NUMBER != "") {
+                            commands = "${gitarro_local} ${runtest}"
+                    }
+                }
+                sh "${commands}"
             }
         }
     }
-  post { 
-        success{
+    post {
+        success {
             script {
                 if (params.cleanWorkspace == true) {
                     echo 'Clean up current workspace, when job success.'

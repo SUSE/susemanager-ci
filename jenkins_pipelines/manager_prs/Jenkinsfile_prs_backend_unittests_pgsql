@@ -2,37 +2,38 @@
 
 // Configure the build properties
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
-    disableConcurrentBuilds(),
+        buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+        disableConcurrentBuilds(),
 ])
 
 pipeline {
 
-  // env variables
-  environment { 
+    parameters {
+        string(defaultValue: "", description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
+    }
 
-    // CONF To edit  
-     repository = "SUSE/spacewalk"
-     context = "backend_unittests_pgsql" 
-     description = "python backend pgsql unit test"
-     git_fs = "${env.WORKSPACE}"      
-     filter = 'backend/'
-     // the actual test is the git repo (inside spacewalk)
-     test = "susemanager-utils/testing/automation/backend-unittest-pgsql.sh" 
-     gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
-      
-     // this are execution jobs
-     check = "gitarro.ruby2.1 ${gitarro_common_params} --check --changed_since 3600" 
-     runtest = "gitarro.ruby2.1 ${gitarro_common_params} -u ${env.BUILD_URL}"
+    environment {
+        // CONF To edit
+        repository = "SUSE/spacewalk"
+        context = "backend_unittests_pgsql"
+        description = "python backend pgsql unit test"
+        git_fs = "${env.WORKSPACE}"
+        filter = 'backend/'
+        // the actual test is the git repo (inside spacewalk)
+        test = "susemanager-utils/testing/automation/backend-unittest-pgsql.sh"
+        gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
+        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_local = 'ruby gitarro.rb'
+        runtest = "${gitarro_common_params} -u ${env.BUILD_URL}"
+    }
 
-   }
-   // run only on specific hosts
+    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
-    
+
     parameters {
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
-    
+
     stages {
         stage('Clean Up Workspace') {
             steps {
@@ -40,28 +41,34 @@ pipeline {
                 cleanWs()
                 echo 'Check out SCM'
                 checkout scm
+                script {
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        echo 'Check out Gitarro PR'
+                        checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
+                                  extensions       : [[$class: 'LocalBranch']],
+                                  userRemoteConfigs: [[refspec: "+refs/pull/${params.GITARRO_PR_NUMBER}/head:refs/remotes/origin/PR-${params.GITARRO_PR_NUMBER}", url: "https://git@github.com/openSUSE/gitarro"]]])
+                    }
+                }
             }
         }
-        stage('Check Pull Request') {
-            steps {
-                 echo 'Check if a PR need a test'
-                 sh "${check} 2>&1 | tee gitarro_check.log"
-               }
-         }
-        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
         stage('Run tests against PR') {
-            when {
-                expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
-            }
             steps {
-                  echo 'Run tests!'
-                  sh "${runtest}"
-                  junit "**/backend/reports/pgsql_tests.xml" 
+                echo 'Run tests!'
+                script {
+                    commands = "${gitarro_cmd} ${runtest}"
+                    if (params.GITARRO_PR_NUMBER != "") {
+                            commands = "${gitarro_local} ${runtest}"
+                    }
+                }
+                sh "set +e; ${commands}; TESTS_RESULT=\$?; set -e;"
+                echo 'Collecting JUnit Test reports'
+                junit allowEmptyResults: true, testResults: "**/backend/reports/pgsql_tests.xml"
+                sh "exit \$TESTS_RESULT"
             }
         }
     }
-  post { 
-        success{
+    post {
+        success {
             script {
                 if (params.cleanWorkspace == true) {
                     echo 'Clean up current workspace, when job success.'
@@ -69,5 +76,5 @@ pipeline {
                 }
             }
         }
-  }
+    }
 }

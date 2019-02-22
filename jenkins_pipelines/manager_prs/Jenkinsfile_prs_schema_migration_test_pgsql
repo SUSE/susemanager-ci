@@ -2,68 +2,72 @@
 
 // Configure the build properties
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
-    disableConcurrentBuilds(),
+        buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+        disableConcurrentBuilds(),
 ])
 
 pipeline {
 
-  // env variables
-  environment { 
-    // specific psql conf
-    repository = "SUSE/spacewalk"
-    context = "schema_migration_test_pgsql" 
-    description = "schema migration test" 
-    filter = "schema/spacewalk"
-    git_fs = "${env.WORKSPACE}"      
-    test = "susemanager-utils/testing/automation/schema-migration-test-pgsql.sh" \
-    // trigger tests
-    check = "gitarro.ruby2.1  -r ${repository}" + 
-            " -c ${context} -d ${description} " +
-            " -f ${filter} " +
-            " -t ${test} " +
-            " -g ${git_fs} " +
-            "--check --changed_since 3600" 
-    // postgresql
-    runtest_pg = "gitarro.ruby2.1  -r ${repository}" + 
-                 " -c ${context} -d ${description} " +
-                 " -f ${filter} " +
-                 " -g ${git_fs} " +
-                 " -u \"${env.BUILD_URL}\"" +
-                 " -t ${test} " 
-  }
-
-  // run only on specific hosts
-  agent { label 'suse-manager-unit-tests' }
-
-  stages {
-    stage('Clean Up Workspace') {
-        steps {
-            echo 'Clean up previous workspace'
-            cleanWs()
-            echo 'Check out SCM'
-            checkout scm
-        }
+    parameters {
+        string(defaultValue: "", description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
     }
-    stage('Check Pull Request') {
-      steps {
-        echo 'Check if a PR need a test'
-        sh "${check} 2>&1 | tee gitarro_check.log"
+
+    environment {
+        // specific psql conf
+        repository = "SUSE/spacewalk"
+        context = "schema_migration_test_pgsql"
+        description = "schema migration test"
+        filter = "schema/spacewalk"
+        git_fs = "${env.WORKSPACE}"
+        test = "susemanager-utils/testing/automation/schema-migration-test-pgsql.sh" 
+        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_local = 'ruby gitarro.rb'
+    // postgresql
+        runtest_pg = "-r ${repository}" +
+                " -c ${context} -d ${description} " +
+                " -f ${filter} " +
+                " -g ${git_fs} " +
+                " -u \"${env.BUILD_URL}\"" +
+                " -t ${test} "
+    }
+
+    // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+
+    stages {
+        stage('Clean Up Workspace') {
+            steps {
+                echo 'Clean up previous workspace'
+                cleanWs()
+                echo 'Check out SCM'
+                checkout scm
+                script {
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        echo 'Check out Gitarro PR'
+                        checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
+                                  extensions       : [[$class: 'LocalBranch']],
+                                  userRemoteConfigs: [[refspec: "+refs/pull/${params.GITARRO_PR_NUMBER}/head:refs/remotes/origin/PR-${params.GITARRO_PR_NUMBER}", url: "https://git@github.com/openSUSE/gitarro"]]])
+                    }
+                }
+            }
         }
-      }
-     stage('Run schema tests postgresql') {
-          when {
-            expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
-          }
-          steps {
-            echo 'Run tests'
-            sh "${runtest_pg}"
-          }
-     }
-  
-  }
-  post { 
-        success{
+
+        stage('Run schema tests postgresql') {
+            steps {
+                echo 'Run tests'
+                script {
+                    runtest_pg_cmd = "${gitarro_cmd} ${runtest_pg}"
+                    if (params.GITARRO_PR_NUMBER != "") {
+                            runtest_pg_cmd = "${gitarro_local} ${runtest_pg}"
+                    }
+                }
+                sh "${runtest_pg_cmd}"
+            }
+        }
+
+    }
+    post {
+        success {
             script {
                 if (params.cleanWorkspace == true) {
                     echo 'Clean up current workspace, when job success.'

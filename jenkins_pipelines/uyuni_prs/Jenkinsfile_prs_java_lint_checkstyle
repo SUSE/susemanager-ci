@@ -1,36 +1,33 @@
 #!/usr/bin/env groovy
 // Configure the build properties
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
-    disableConcurrentBuilds(),
+        buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
+        disableConcurrentBuilds(),
 ])
 
 pipeline {
 
-  // env variables
-  environment { 
+    parameters {
+        string(defaultValue: "", description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
+    }
 
-    javacheckstyle_check = "gitarro.ruby2.1  -r uyuni-project/uyuni" + 
-                " -c java_lint_checkstyle -d \"java-checkstyle\" " +
-                " -f \"java/\" " +
-                " -t susemanager-utils/testing/automation/java-checkstyle.sh" +
-                " -g ${env.WORKSPACE} " +
-                "--check --changed_since 3600" 
-
-    javacheckstyle_test = "gitarro.ruby2.1  -r uyuni-project/uyuni" + 
+    environment {
+        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_local = 'ruby gitarro.rb'
+        javacheckstyle_test = "-r uyuni-project/uyuni" +
                 " -c java_lint_checkstyle -d \"java-checkstyle\" " +
                 " -f \"java/\" " +
                 " -t susemanager-utils/testing/automation/java-checkstyle.sh" +
                 " -u ${env.BUILD_URL} " +
-                " -g ${env.WORKSPACE} " 
-   }
-   // run only on specific hosts
+                " -g ${env.WORKSPACE} "
+    }
+    // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
-    
+
     parameters {
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
-    
+
     stages {
         stage('Clean Up Workspace') {
             steps {
@@ -38,27 +35,29 @@ pipeline {
                 cleanWs()
                 echo 'Check out SCM'
                 checkout scm
+                script {
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        echo 'Check out Gitarro PR'
+                        checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
+                                  extensions       : [[$class: 'LocalBranch']],
+                                  userRemoteConfigs: [[refspec: "+refs/pull/${params.GITARRO_PR_NUMBER}/head:refs/remotes/origin/PR-${params.GITARRO_PR_NUMBER}", url: "https://git@github.com/openSUSE/gitarro"]]])
+                    }
+                }
             }
         }
-        stage('Check Pull Request') {
-            steps {
-                 echo 'Check if a PR need checkstyle test'
-                 sh "${javacheckstyle_check} 2>&1 | tee gitarro_check.log"
-               }
-         }
-        // THIS JOB RUN ONLY IF THE 1ST IS SUCCESSEFULL. ( so it is triggered by 1st)
         stage('Run Javacheckstyle test') {
-            when {
-                expression { return readFile('gitarro_check.log').contains('TESTREQUIRED=true') }
-            }
             steps {
-                  echo 'Run javacheckstyle tests'
-                   sh "${javacheckstyle_test}"
-                  }
+                echo 'Run javacheckstyle tests'
+                javacheckstyle_test_cmd = "${gitarro_cmd} ${javacheckstyle_test}"
+                if (params.GITARRO_PR_NUMBER != "") {
+                    javacheckstyle_test_cmd = "${gitarro_local} ${javacheckstyle_test}"
+                }
+                sh "${javacheckstyle_test_cmd}"
+            }
         }
     }
-   post { 
-        success{
+    post {
+        success {
             script {
                 if (params.cleanWorkspace == true) {
                     echo 'Clean up current workspace, when job success.'
