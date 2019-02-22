@@ -6,6 +6,12 @@ properties([
 ])
 
 pipeline {
+
+    parameters {
+        string(defaultValue: "", description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
+        booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
+    }
+    
     environment {
         repository = "SUSE/spacewalk"
         context = "schema_sql_standard_name"
