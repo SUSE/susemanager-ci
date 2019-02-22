@@ -32,11 +32,11 @@ pipeline {
                 script {
                     contexts = [
                             'backend_unittests_pgsql',
+                            'javascript_lint',
                             'changelog_test',
                             'java_lint_checkstyle',
                             'java_pgsql_tests',
                             'ruby_rubocop',
-                            'schema_migration_test_oracle',
                             'schema_migration_test_pgsql',
                             'susemanager_unittests'
                     ]
