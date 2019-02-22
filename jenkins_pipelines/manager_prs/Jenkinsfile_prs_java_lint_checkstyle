@@ -46,9 +46,11 @@ pipeline {
         stage('Run Javacheckstyle test') {
             steps {
                 echo 'Run javacheckstyle tests'
-                javacheckstyle_test_cmd = "${gitarro_cmd} ${javacheckstyle_test}"
-                if (params.GITARRO_PR_NUMBER != "") {
-                    javacheckstyle_test_cmd = "${gitarro_local} ${javacheckstyle_test}"
+                script {
+                    javacheckstyle_test_cmd = "${gitarro_cmd} ${javacheckstyle_test}"
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        javacheckstyle_test_cmd = "${gitarro_local} ${javacheckstyle_test}"
+                    }
                 }
                 sh "${javacheckstyle_test_cmd}"
             }

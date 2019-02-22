@@ -61,7 +61,7 @@ pipeline {
                             runtest_oracle_cmd = "${gitarro_local} ${runtest_oracle}"
                     }
                 }
-                sh "$runtest_oracle"
+                sh "$runtest_oracle_cmd"
             }
         }
     }
