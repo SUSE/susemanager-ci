@@ -22,7 +22,7 @@ pipeline {
     agent { label 'suse-manager-unit-tests' }
 
     triggers {
-        cron('H/5 * * * *')
+        cron('H/10 * * * *')
     }
 
     stages {
@@ -33,7 +33,7 @@ pipeline {
                 echo 'Check out SCM'
                 checkout scm
                 script {
-                    if (params.GITARRO_PR_NUMBER != "") {
+                    if (params.GITARRO_PR_NUMBER != '') {
                         echo 'Check out Gitarro PR'
                         checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
                                   extensions       : [[$class: 'LocalBranch']],
@@ -60,7 +60,7 @@ pipeline {
 
                     contexts.each { context ->
                         commands = "${gitarro_cmd} ${check} -c ${context}"
-                        if (params.GITARRO_PR_NUMBER != "") {
+                        if (params.GITARRO_PR_NUMBER != '') {
                             commands = "${gitarro_local} ${check} -c ${context}"
                         }
                         PENDING = sh(
@@ -69,7 +69,15 @@ pipeline {
                             ).trim()
                         echo PENDING
                         if (PENDING.contains('TESTREQUIRED=true')) {
-                            build job: "manager-prs-${context}-pipeline",  parameters: [[$class: 'StringParameterValue', name: 'GITARRO_PR_NUMBER', value: params.GITARRO_PR_NUMBER]], wait: false
+                            PR_NUMBER = sh(script: "grep 'PR_NUMBER:' ${env.WORKSPACE}/.gitarro_vars | cut -d ':' -f2", returnStdout: true).trim()
+                            build(
+                                job: "manager-prs-${context}-pipeline",
+                                parameters: [
+                                             [$class: 'StringParameterValue', name: 'GITARRO_PR_NUMBER', value: params.GITARRO_PR_NUMBER], 
+                                             [$class: 'StringParameterValue', name: 'PR_NUMBER', value: PR_NUMBER]
+                                            ],
+                                wait: false
+                            )
                         }
                     }
                 }
