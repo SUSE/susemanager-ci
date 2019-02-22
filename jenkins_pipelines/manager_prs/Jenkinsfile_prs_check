@@ -32,6 +32,7 @@ pipeline {
                 script {
                     contexts = [
                             'backend_unittests_pgsql',
+                            'javascript_lint',
                             'changelog_test',
                             'java_lint_checkstyle',
                             'java_pgsql_tests',
