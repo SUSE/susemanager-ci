@@ -45,9 +45,11 @@ pipeline {
         stage('Run Javascript lint test') {
             steps {
                 echo 'Run JavaScript lint tests'
-                jslint_test_cmd = "${gitarro_cmd} ${jslint_test}"
-                if (params.GITARRO_PR_NUMBER != "") {
-                    jslint_test_cmd = "${gitarro_local} ${jslint_test}"
+                script {
+                    jslint_test_cmd = "${gitarro_cmd} ${jslint_test}"
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        jslint_test_cmd = "${gitarro_local} ${jslint_test}"
+                    }
                 }
                 sh "${jslint_test_cmd}"
             }
