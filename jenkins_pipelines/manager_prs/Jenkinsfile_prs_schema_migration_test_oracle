@@ -9,7 +9,8 @@ properties([
 pipeline {
 
     parameters {
-        string(defaultValue: "", description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
+        string(defaultValue: '', description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
+        string(defaultValue: '', description: 'SUSE Manager PR', name: 'PR_NUMBER')
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
 
@@ -43,7 +44,7 @@ pipeline {
                 echo 'Check out SCM'
                 checkout scm
                 script {
-                    if (params.GITARRO_PR_NUMBER != "") {
+                    if (params.GITARRO_PR_NUMBER != '') {
                         echo 'Check out Gitarro PR'
                         checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
                                   extensions       : [[$class: 'LocalBranch']],
@@ -57,9 +58,13 @@ pipeline {
                 echo 'Run schema tests oracle'
                 script {
                     runtest_oracle_cmd = "${gitarro_cmd} ${runtest_oracle}"
-                    if (params.GITARRO_PR_NUMBER != "") {
+                    if (params.GITARRO_PR_NUMBER != '') {
                             runtest_oracle_cmd = "${gitarro_local} ${runtest_oracle}"
                     }
+                    if (params.PR_NUMBER != '') {
+                        runtest_oracle_cmd = "${runtest_oracle_cmd} -P ${params.PR_NUMBER}"
+                        currentBuild.displayName = "PR: ${params.PR_NUMBER}"
+                    }                    
                 }
                 sh "$runtest_oracle_cmd"
             }
