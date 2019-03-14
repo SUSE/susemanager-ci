@@ -16,7 +16,7 @@ pipeline {
       repository = 'SUSE/spacewalk'
       gitarro_cmd = 'gitarro.ruby2.1'
       gitarro_local = 'ruby gitarro.rb'
-      check = " -r ${repository} -t placeholder --check --changed_since 3600"
+      check = " -r ${repository} -t placeholder --check --changed_since 172800"
     }
 
     agent { label 'suse-manager-unit-tests' }
