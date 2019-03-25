@@ -47,21 +47,20 @@ pipeline {
                 echo "Trigger pending tests"
                 script {
                     contexts = [
-                            'backend_unittests_pgsql',
-                            'javascript_lint',
-                            'changelog_test',
-                            'java_lint_checkstyle',
-                            'java_pgsql_tests',
-                            'ruby_rubocop',
-                            'schema_migration_test_oracle',
-                            'schema_migration_test_pgsql',
-                            'susemanager_unittests'
+                            'backend_unittests_pgsql' : 'backend/',
+                            'javascript_lint' : 'js/',
+                            'changelog_test' : 'notype',
+                            'java_lint_checkstyle' : 'java/',
+                            'java_pgsql_tests' : 'java/',
+                            'ruby_rubocop' : 'testsuite/',
+                            'schema_migration_test_oracle' : 'schema/spacewalk',
+                            'schema_migration_test_pgsql' : 'schema/spacewalk',
+                            'susemanager_unittests' : 'susemanager/'
                     ]
-
-                    contexts.each { context ->
-                        commands = "${gitarro_cmd} ${check} -c ${context}"
+                    contexts.each { context, filter ->
+                        commands = "${gitarro_cmd} ${check} -c ${context} -f ${filter}"
                         if (params.GITARRO_PR_NUMBER != '') {
-                            commands = "${gitarro_local} ${check} -c ${context}"
+                            commands = "${gitarro_local} ${check} -c ${context} -f ${filter}"
                         }
                         PENDING = sh(
                             script: "${commands}",
