@@ -1,0 +1,83 @@
+#!/usr/bin/env groovy
+
+// Configure the build properties
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+pipeline {
+
+    parameters {
+        string(defaultValue: 'Manager-3.2', description: 'Testsuite GitHub branch: It should match the value at manager-3.2-2obs', name: 'testsuite_branch')
+        string(defaultValue: '32/VARS-full-NUE.sh', description: 'Sumaform Test Runner environment to use', name: 'sumaform_env')
+        string(defaultValue: 'galaxy-ci@suse.de', description: 'Email address to be used as recipient for the report', name: 'mailto')
+    }
+
+    environment {
+      repository = 'SUSE/spacewalk'
+    }
+
+    agent { label 'sumaform-cucumber' }
+
+    triggers {
+        cron('H(0-30) 0-23/4 * * *')
+    }
+
+    stages {
+        stage('Deploy') {
+            steps {
+                checkout scm
+                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
+                sh "bash jenkins-deploy.sh ${params.sumaform_env} ${params.mailto} ${params.testsuite_branch}"
+            }
+        }
+
+        stage('Core - Setup') {
+            steps {
+                sh "TESTSUITE_SET=core bash jenkins-test-runner.sh ${params.sumaform_env}"
+            }
+        }
+
+        stage('Core - Initialize clients') {
+            steps {
+                sh "TESTSUITE_SET=init_clients RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
+            }
+        }
+        
+        stage('Secondary features') {
+            steps {
+                sh "TESTSUITE_SET=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                sh "TESTSUITE_SET=secondary_parallelizable RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
+            }
+        }
+
+        stage('Final features') {
+            steps{
+                sh "TESTSUITE_SET=finishing bash jenkins-test-runner.sh ${params.sumaform_env}"
+            }
+        }
+
+    }
+
+    post {
+        always{
+            publishHTML( target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: "results/build-${env.BUILD_NUMBER}/cucumber_report/",
+                    reportFiles: 'cucumber_report.html',
+                    reportName: "TestSuite Report"]
+            )
+        }
+        success{
+            script {
+                if (params.cleanWorkspace == true) {
+                    echo 'Clean up current workspace, when job success.'
+                    cleanWs()
+                }
+            }
+        }
+    }
+}
