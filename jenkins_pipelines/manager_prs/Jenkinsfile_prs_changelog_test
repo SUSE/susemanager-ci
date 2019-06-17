@@ -25,7 +25,7 @@ pipeline {
                 " -g \"${env.WORKSPACE}\" "
 
         gitarro_enable_merging = "-r ${repository}" +
-                " -c merge_enabled -d \"Merging enabled (requires changelog_test passing)\" " +
+                " --force_test -c merge_enabled -d \"Merging enabled (requires changelog_test passing)\" " +
                 " -u ${env.BUILD_URL}" +
                 " -g \"${env.WORKSPACE}\" "
     }
