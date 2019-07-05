@@ -16,6 +16,7 @@ pipeline {
 
     environment {
       repository = 'SUSE/spacewalk'
+      deployed = false
     }
 
     agent { label 'sumaform-cucumber' }
@@ -30,6 +31,9 @@ pipeline {
                 checkout scm
                 git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 sh "bash jenkins-deploy.sh ${params.sumaform_env} ${params.mailto} ${params.testsuite_branch}"
+                script {
+                    env.deployed = true
+                }
             }
         }
 
@@ -51,25 +55,23 @@ pipeline {
                 sh "TESTSUITE_SET=secondary_parallelizable RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
-
-        stage('Final features') {
-            steps{
-                sh "TESTSUITE_SET=finishing bash jenkins-test-runner.sh ${params.sumaform_env}"
-            }
-        }
-
     }
 
     post {
         always{
-            publishHTML( target: [
-                    allowMissing: true,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: "results/build-${env.BUILD_NUMBER}/cucumber_report/",
-                    reportFiles: 'cucumber_report.html',
-                    reportName: "TestSuite Report"]
-            )
+            script {
+                if (env.deployed == true){
+                    sh "TESTSUITE_SET=finishing bash jenkins-test-runner.sh ${params.sumaform_env}"
+                    publishHTML( target: [
+                                allowMissing: true,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: "results/build-${env.BUILD_NUMBER}/cucumber_report/",
+                                reportFiles: 'cucumber_report.html',
+                                reportName: "TestSuite Report"]
+                    )
+                }
+            }
         }
         success{
             script {
