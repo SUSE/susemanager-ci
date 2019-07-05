@@ -31,14 +31,12 @@ pipeline {
                 checkout scm
                 git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 sh "bash jenkins-deploy.sh ${params.sumaform_env} ${params.mailto} ${params.testsuite_branch}"
-                script {
-                    env.deployed = true
-                }
             }
         }
 
         stage('Core - Setup') {
             steps {
+                script { env.deployed = true }
                 sh "TESTSUITE_SET=core bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
