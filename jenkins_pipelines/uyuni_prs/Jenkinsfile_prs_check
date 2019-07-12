@@ -46,6 +46,7 @@ pipeline {
             steps {
                 script {
                     contexts = [
+			    'spacecmd_unittests': 'spacecmd/',
                             'backend_unittests_pgsql' : 'backend/',
                             'javascript_lint' : 'js/',
                             'changelog_test' : 'notype',
