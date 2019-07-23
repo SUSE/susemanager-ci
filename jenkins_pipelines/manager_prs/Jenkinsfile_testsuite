@@ -36,20 +36,26 @@ pipeline {
             }
         }
 
-        stage('Core - Setup') {
+        stage('Setup') {
             steps {
                 script { env.deployed = true }
                 sh "TESTSUITE_SET=core bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
 
-        stage('Core - Initialize clients') {
+        stage('Products & Channels synch') {
+            steps {
+                sh "TESTSUITE_SET=reposync bash jenkins-test-runner.sh ${params.sumaform_env}"
+            }
+        }
+
+        stage('Initialize clients') {
             steps {
                 sh "TESTSUITE_SET=init_clients RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
-        
-        stage('Secondary features') {
+
+        stage('Test features') {
             steps {
                 sh "TESTSUITE_SET=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                 sh "TESTSUITE_SET=secondary_parallelizable RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
