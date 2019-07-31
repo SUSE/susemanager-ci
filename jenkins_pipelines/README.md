@@ -4,12 +4,15 @@
 
 - 2) Manager performance testsuite
 
-- 3) Uyuni pipelines which are the same as 1)
+- 3) Manager and Uyuni testsuite pipelines for QA/QAM
+
+- 4) Uyuni pipelines which are the same as 1)
 
 
 This is not running anywhere, is only experimental code not in prod.
 
 - Manager Github pull-request cucumber functional tests
+
 
 ### Manager GitHub pull-request unit/tests
 
@@ -23,13 +26,19 @@ This pipelines use the same patterns, which is to use the gitarro tools for gith
 
 This dir contains pipelines related to scalabilty tests for suse-manager.
 
-#### How to make a pipeline from scratch 
+
+### Manager and Uyuni testsuite pipelines for QA/QAM
+
+This dir contains pipelines related to QA and QAM testsuites for suse-manager.
+
+
+### How to make a pipeline from scratch 
 
 If you are new to pipeline, start reading this:
 
 https://jenkins.io/doc/book/pipeline/getting-started/#defining-a-pipeline-in-scm
 
-##### Steps to create a pipeline:
+#### Steps to create a pipeline:
 
 0) Create a Jenkins Pipeline Job
 1) Configure Jenkins to clone from your custom PR Branch. ( in this way you can tests the pipeline before it get merged in master)  

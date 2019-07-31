@@ -11,12 +11,13 @@ def deployed = false
 pipeline {
 
     parameters {
-        string(defaultValue: 'Manager-3.2', description: 'Testsuite GitHub branch: It should match the value at manager-3.2-2obs', name: 'testsuite_branch')
+        // Note: We need to define this variable manually in our Jenkins configuration (to select the version we want to test)
+        // string(defaultValue: 'master', name: 'testsuite_branch')
         string(defaultValue: 'galaxy-ci@suse.de', description: 'Email address to be used as recipient for the report', name: 'mailto')
     }
 
     environment {
-      repository = 'SUSE/spacewalk'
+      repository = 'uyuni-project/uyuni'
       deployed = false
     }
 
