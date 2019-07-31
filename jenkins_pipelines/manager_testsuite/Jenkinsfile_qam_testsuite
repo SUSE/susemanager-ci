@@ -1,0 +1,86 @@
+#!/usr/bin/env groovy
+
+// Configure the build properties
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
+    disableConcurrentBuilds(),
+])
+
+def deployed = false
+
+pipeline {
+
+    parameters {
+        // Note: We need to define this variable manually in our Jenkins configuration (to select the version we want to test)
+        // string(defaultValue: 'Manager-4.0', name: 'testsuite_branch')
+        text(name: 'mu_repositories', defaultValue: '{"server" : "repo_url", "sle-client" : { "salt" : "repo_url" , "traditional" : "repo_url" }}', description: 'Salt & Traditional MU Repositories for each client, in json format')
+    }
+
+    environment {
+      repository = 'SUSE/spacewalk'
+      deployed = false
+    }
+
+    options { timestamps () }
+
+    agent { label 'sumaform-cucumber' }
+
+    stages {
+      
+        stage('Add MUs') {
+            steps {
+                script {
+                    echo 'Add custom channels and MU repositories'
+                    res_mu_repos = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_add_mu_repositories bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+                }
+            }
+        }
+
+        // Note: Due to the nature of QAM tests, is better to continue running even if some client has failed at some stage
+        stage('Bootstrap clients') {
+            steps {
+                script {
+                    res_init_clients = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_init_clients bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    echo "Init clients status code: ${res_init_clients}"
+                }
+            }
+        }
+
+        stage('Run Smoke Tests') {
+            steps {
+                script {
+                    echo 'Run Smoke tests'
+                    res_smoke_tests = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_smoke_tests bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    echo "Smoke tests status code: ${res_smoke_tests}"
+                }
+            }
+        }
+
+    }
+
+    post {
+        always{
+            script {
+                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                publishHTML( target: [
+                            allowMissing: true,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: true,
+                            reportDir: "results/build-${env.BUILD_NUMBER}/cucumber_report/",
+                            reportFiles: 'cucumber_report.html',
+                            reportName: "TestSuite Report"]
+                )
+                junit allowEmptyResults: true, testResults: "results/build-${env.BUILD_NUMBER}/results_junit/*.xml"
+            }
+        }
+        success{
+            script {
+                if (params.cleanWorkspace == true) {
+                    echo 'Clean up current workspace, when job success.'
+                    cleanWs()
+                }
+            }
+        }
+    }
+}
