@@ -9,6 +9,10 @@ properties([
 
 pipeline {
 
+    options {
+        timeout(time: 30, unit: 'MINUTES') 
+    }
+    
     parameters {
         string(defaultValue: '', description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
         string(defaultValue: '', description: 'SUSE Manager PR', name: 'PR_NUMBER')

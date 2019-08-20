@@ -8,6 +8,10 @@ properties([
 
 pipeline {
 
+    options {
+        timeout(time: 15, unit: 'MINUTES') 
+    }
+
     parameters {
         string(defaultValue: '', description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
         string(defaultValue: '', description: 'Uyuni PR', name: 'PR_NUMBER')
