@@ -10,11 +10,11 @@ def deployed = false
 
 pipeline {
 
-    parameters {
-        // Note: We need to define this variable manually in our Jenkins configuration (to select the version we want to test)
+    //parameters {
+        // Note: We need to define these variables manually in our Jenkins configuration (to select the version we want to test)
         // string(defaultValue: 'master', name: 'testsuite_branch')
-        string(defaultValue: 'galaxy-ci@suse.de', description: 'Email address to be used as recipient for the report', name: 'mailto')
-    }
+        // string(defaultValue: '40/VARS-full-PRV.sh', description: 'Sumaform environment', name: 'sumaform_env')
+    //}
 
     environment {
       repository = 'uyuni-project/uyuni'
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 checkout scm
                 git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
-                sh "bash jenkins-deploy.sh ${params.sumaform_env} ${params.mailto} ${params.testsuite_branch}"
+                sh "bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
                 script { deployed = true }
             }
         }
@@ -59,9 +59,9 @@ pipeline {
     }
 
     post {
-        always{
+        always {
             script {
-                if (deployed == true){
+                if (deployed == true) {
                     sh "TESTSUITE_SET=finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                     publishHTML( target: [
                                 allowMissing: true,
@@ -72,6 +72,9 @@ pipeline {
                                 reportName: "TestSuite Report"]
                     )
                     junit allowEmptyResults: true, testResults: "results/build-${env.BUILD_NUMBER}/results_junit/*.xml"
+                    sh "ERROR_SETUP=0 . ${env.WORKSPACE}/jenkins-utils.sh && . ${params.sumaform_env} && send_mail"
+                } else {
+                    sh "ERROR_SETUP=1 . ${env.WORKSPACE}/jenkins-utils.sh && . ${params.sumaform_env} && send_mail"
                 }
             }
         }
