@@ -1,17 +1,11 @@
 # Pipelines for SUSE-Manager
 
-- 1) Manager GitHub pull-request unit/tests 
-
-- 2) Manager performance testsuite
-
-- 3) Manager and Uyuni testsuite pipelines for QA/QAM
-
-- 4) Uyuni pipelines which are the same as 1)
-
-
-This is not running anywhere, is only experimental code not in prod.
-
-- Manager Github pull-request cucumber functional tests
+- [Manager testsuite pipelines for QA/QAM](manager_testsuite)
+- [Uyuni testsuite pipelines for QA/QAM](uyuni_testsuite)
+- [Manager PR Checks](manager_prs)
+- [Uyuni PR Checks](uyuni_prs)
+- [Manager performance testsuite](performance_testsuite)
+- [POC Cucumber Testsuite per PR](cucumber_per_prs)
 
 
 ### Manager GitHub pull-request unit/tests
