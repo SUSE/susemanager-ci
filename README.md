@@ -6,4 +6,4 @@ CI Automation for SUSE Manager.
 
 This dir contain the Jenkins pipeline we use for Jenkins.
 
-For details have look [here](jenkins_pipeline/README.md)
+For details have look [here](jenkins_pipelines/README.md)
