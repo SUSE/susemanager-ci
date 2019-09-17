@@ -22,7 +22,7 @@ pipeline {
         gitarro_local = 'ruby gitarro.rb'
         jslint_test = "-r uyuni-project/uyuni" +
                 " -c javascript_lint -d \"javascript-lint\" " +
-                " -f \".js\" " +
+                " -f \"web/\" " +
                 " -t susemanager-utils/testing/automation/javascript-lint.sh" +
                 " -u ${env.BUILD_URL} " +
                 " -g ${env.WORKSPACE} "
