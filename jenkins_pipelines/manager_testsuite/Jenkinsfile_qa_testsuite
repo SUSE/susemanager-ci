@@ -23,6 +23,8 @@ pipeline {
       deployed = false
     }
 
+    options { timestamps () }
+
     agent { label 'sumaform-cucumber' }
 
     triggers {
