@@ -14,8 +14,7 @@ pipeline {
         // Note: We need to define these variables manually in our Jenkins configuration (to select the version we want to test)
         // string(defaultValue: 'Manager-4.0', description: 'Testsuite GitHub branch', name: 'testsuite_branch')
         // string(defaultValue: '40/VARS-full-PRV.sh', description: 'Sumaform environment', name: 'sumaform_env')
-        string(defaultValue: 'testsuite-stable-with-new-fake-repos', description: 'Sumaform branch or commit', name: 'sumaform_branch')
-
+        //string(defaultValue: 'testsuite-stable-with-new-fake-repos', description: 'Sumaform branch or commit', name: 'sumaform_branch')
     }
 
     environment {
@@ -37,7 +36,11 @@ pipeline {
                 checkout scm
                 git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 script {
-                    sh "SUMAFORM_BRANCH=${params.sumaform_branch} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
+                    if (env.sumaform_branch != null){
+                      sh "SUMAFORM_BRANCH=${params.sumaform_branch} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
+                    } else {
+                      sh "bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
+                    }
                     deployed = true 
                 }
             }
