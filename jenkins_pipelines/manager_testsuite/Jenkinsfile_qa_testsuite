@@ -10,12 +10,12 @@ def deployed = false
 
 pipeline {
 
-    parameters {
+    //parameters {
         // Note: We need to define these variables manually in our Jenkins configuration (to select the version we want to test)
         // string(defaultValue: 'Manager-4.0', description: 'Testsuite GitHub branch', name: 'testsuite_branch')
         // string(defaultValue: '40/VARS-full-PRV.sh', description: 'Sumaform environment', name: 'sumaform_env')
-        //string(defaultValue: 'testsuite-stable-with-new-fake-repos', description: 'Sumaform branch or commit', name: 'sumaform_branch')
-    }
+        // string(defaultValue: 'testsuite-stable-with-new-fake-repos', description: 'Sumaform branch or commit', name: 'sumaform_branch')
+    //}
 
     environment {
       repository = 'SUSE/spacewalk'
