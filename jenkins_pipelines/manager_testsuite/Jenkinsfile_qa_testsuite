@@ -49,20 +49,20 @@ pipeline {
         stage('Core - Setup') {
             steps {
                 script { env.deployed = true }
-                sh "TESTSUITE_SET=core bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=core bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
 
         stage('Core - Initialize clients') {
             steps {
-                sh "TESTSUITE_SET=init_clients RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "RAKE_NAMESPACE=parallel RAKE_TASK=init_clients bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
         
         stage('Secondary features') {
             steps {
-                sh "TESTSUITE_SET=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
-                sh "TESTSUITE_SET=secondary_parallelizable RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                sh "RAKE_NAMESPACE=parallel RAKE_TASK=secondary_parallelizable bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
     }
@@ -71,7 +71,7 @@ pipeline {
         always {
             script {
                 if (deployed == true) {
-                    sh "TESTSUITE_SET=finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                    sh "RAKE_NAMESPACE=cucumber RAKE_TASK=finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                     publishHTML( target: [
                                 allowMissing: true,
                                 alwaysLinkToLastBuild: false,
