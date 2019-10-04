@@ -30,9 +30,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 checkout scm
-                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
-                script { 
-                }
+                git branch: 'qam-testsuite', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 script {
                     if (params.sumaform_branch != null){
                       sh "SUMAFORM_BRANCH=${params.sumaform_branch} MU_REPOS='${params.mu_repositories}' bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
@@ -61,6 +59,7 @@ pipeline {
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_reposync bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
+    }
         
     post {
         always{
