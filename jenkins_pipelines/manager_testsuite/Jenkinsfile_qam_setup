@@ -30,7 +30,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 checkout scm
-                git branch: 'qam-testsuite', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
+                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 script { 
                 }
                 script {
