@@ -41,7 +41,8 @@ pipeline {
                     } else {
                       sh "bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
                     }
-                    deployed = true 
+                    sh "bash create-snapshots.sh create_snapshots deploy"
+                    deployed = true
                 }
             }
         }
@@ -49,18 +50,23 @@ pipeline {
         stage('Core - Setup') {
             steps {
                 script { env.deployed = true }
+                sh "bash create-snapshots.sh revert_snapshots deploy"
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=core bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "bash create-snapshots.sh create_snapshots core_setup"
             }
         }
 
         stage('Core - Initialize clients') {
             steps {
+                sh "bash create-snapshots.sh revert_snapshots core_setup"
                 sh "RAKE_NAMESPACE=parallel RAKE_TASK=init_clients bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "bash create-snapshots.sh create_snapshots core_init_clients"
             }
         }
-        
+
         stage('Secondary features') {
             steps {
+                sh "bash create-snapshots.sh revert_snapshots core_init_clients"
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                 sh "RAKE_NAMESPACE=parallel RAKE_TASK=secondary_parallelizable bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
