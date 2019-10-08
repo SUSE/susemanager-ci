@@ -14,6 +14,7 @@ pipeline {
         // Note: We need to define these variables manually in our Jenkins configuration (to select the version we want to test)
         // string(defaultValue: 'master', name: 'testsuite_branch')
         // string(defaultValue: '40/VARS-full-PRV.sh', description: 'Sumaform environment', name: 'sumaform_env')
+        // string(defaultValue: 'testsuite-stable-with-new-fake-repos', description: 'Sumaform branch or commit', name: 'sumaform_branch')
     //}
 
     environment {
@@ -40,20 +41,20 @@ pipeline {
         stage('Core - Setup') {
             steps {
                 script { env.deployed = true }
-                sh "TESTSUITE_SET=core bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=core bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
 
         stage('Core - Initialize clients') {
             steps {
-                sh "TESTSUITE_SET=init_clients RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "RAKE_NAMESPACE=parallel RAKE_TASK=init_clients bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
         
         stage('Secondary features') {
             steps {
-                sh "TESTSUITE_SET=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
-                sh "TESTSUITE_SET=secondary_parallelizable RAKE_TASK=parallel bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                sh "RAKE_NAMESPACE=parallel RAKE_TASK=secondary_parallelizable bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
     }
@@ -62,7 +63,7 @@ pipeline {
         always {
             script {
                 if (deployed == true) {
-                    sh "TESTSUITE_SET=finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                    sh "RAKE_NAMESPACE=cucumber RAKE_TASK=finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                     publishHTML( target: [
                                 allowMissing: true,
                                 alwaysLinkToLastBuild: false,
