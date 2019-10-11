@@ -122,7 +122,7 @@ pipeline {
                 if (stage_counter_core_setup >= 0) {
                     sh "bash snapshots-tool.sh delete_snapshots core_setup"
                 }
-                if ( env.deployed = true ) {
+                if ( env.deployed == true ) {
                     sh "bash snapshots-tool.sh delete_snapshots deploy"
                 }
                 if (params.cleanWorkspace == true) {
