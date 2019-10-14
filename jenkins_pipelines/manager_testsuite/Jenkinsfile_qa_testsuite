@@ -56,10 +56,10 @@ pipeline {
             steps {
                 script {
                     env.deployed = true
-                    if (stage_counter_setup > 0) {
+                    if (${env.stage_counter_setup} > 0) {
                         sh "bash snapshots-tool.sh revert_snapshots deploy"
                     } else {
-                        stage_counter_setup++
+                        env.stage_counter_setup++
                         sh "RAKE_NAMESPACE=cucumber RAKE_TASK=core bash jenkins-test-runner.sh ${params.sumaform_env}"
                         sh "bash snapshots-tool.sh create_snapshots core_setup"
                     }
@@ -70,10 +70,10 @@ pipeline {
         stage('Core - Initialize clients') {
             steps {
                 script {
-                    if (stage_counter_init_clients > 0) {
+                    if (${env.stage_counter_init_clients} > 0) {
                         sh "bash snapshots-tool.sh revert_snapshots core_setup"
                     } else {
-                        stage_counter_init_clients++
+                        env.stage_counter_init_clients++
                         sh "RAKE_NAMESPACE=parallel RAKE_TASK=init_clients bash jenkins-test-runner.sh ${params.sumaform_env}"
                         sh "bash snapshots-tool.sh create_snapshots init_clients"
                     }
@@ -84,10 +84,10 @@ pipeline {
         stage('Secondary features') {
             steps {
                 script {
-                    if (stage_counter_secondary > 0) {
+                    if (${env.stage_counter_secondary} > 0) {
                         sh "bash snapshots-tool.sh revert_snapshots init_clients"
                     } else {
-                        stage_counter_secondary++
+                        env.stage_counter_secondary++
                         sh "RAKE_NAMESPACE=cucumber RAKE_TASK=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                         sh "RAKE_NAMESPACE=parallel RAKE_TASK=secondary_parallelizable bash jenkins-test-runner.sh ${params.sumaform_env}"
                     }
@@ -117,10 +117,10 @@ pipeline {
         }
         success{
             script {
-                if (stage_counter_init_clients >= 0) {
+                if (${env.stage_counter_init_clients} >= 0) {
                     sh "bash snapshots-tool.sh delete_snapshots init_clients"
                 }
-                if (stage_counter_core_setup >= 0) {
+                if (${env.stage_counter_core_setup} >= 0)
                     sh "bash snapshots-tool.sh delete_snapshots core_setup"
                 }
                 if ( env.deployed == true ) {
