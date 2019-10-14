@@ -20,6 +20,10 @@ pipeline {
     environment {
       repository = 'SUSE/spacewalk'
       deployed = false
+      int stage_counter_setup = 0
+      int stage_counter_init_clients = 0
+      int stage_counter_secondary = 0
+
     }
 
     options { timestamps () }
@@ -29,10 +33,6 @@ pipeline {
     triggers {
         cron('H(0-30) 0-23/4 * * *')
     }
-
-    int stage_counter_setup = 0
-    int stage_counter_init_clients = 0
-    int stage_counter_secondary = 0
 
     stages {
         stage('Deploy') {
