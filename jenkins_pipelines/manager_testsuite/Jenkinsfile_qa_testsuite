@@ -20,9 +20,9 @@ pipeline {
     environment {
       repository = 'SUSE/spacewalk'
       deployed = false
-      int stage_counter_setup = 0
-      int stage_counter_init_clients = 0
-      int stage_counter_secondary = 0
+      stage_counter_setup = 0
+      stage_counter_init_clients = 0
+      stage_counter_secondary = 0
 
     }
 
