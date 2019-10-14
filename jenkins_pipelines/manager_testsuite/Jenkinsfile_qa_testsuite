@@ -130,6 +130,7 @@ pipeline {
                     echo 'Clean up current workspace, when job success.'
                     cleanWs()
                 }
+                }
             }
         }
     }
