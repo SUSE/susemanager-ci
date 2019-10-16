@@ -20,6 +20,10 @@ pipeline {
     environment {
       repository = 'SUSE/spacewalk'
       deployed = false
+      stage_counter_setup = 0
+      stage_counter_init_clients = 0
+      stage_counter_secondary = 0
+
     }
 
     options { timestamps () }
@@ -34,35 +38,60 @@ pipeline {
         stage('Deploy') {
             steps {
                 checkout scm
-                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
+//                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
+                git branch: 'snapshots', url: 'https://gitlab.suse.de/ktsamis/sumaform-test-runner.git'
                 script {
-                    if (params.sumaform_branch != null){
+                    if (params.sumaform_branch != null) {
                       sh "SUMAFORM_BRANCH=${params.sumaform_branch} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
                     } else {
                       sh "bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
                     }
-                    deployed = true 
+                    sh "bash snapshots-tool.sh create_snapshots deploy"
+                    deployed = true
                 }
             }
         }
 
         stage('Core - Setup') {
             steps {
-                script { env.deployed = true }
-                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=core bash jenkins-test-runner.sh ${params.sumaform_env}"
+                script {
+                    env.deployed = true
+                    if (${env.stage_counter_setup} > 0) {
+                        sh "bash snapshots-tool.sh revert_snapshots deploy"
+                    } else {
+                        env.stage_counter_setup++
+                        sh "RAKE_NAMESPACE=cucumber RAKE_TASK=core bash jenkins-test-runner.sh ${params.sumaform_env}"
+                        sh "bash snapshots-tool.sh create_snapshots core_setup"
+                    }
+                }
             }
         }
 
         stage('Core - Initialize clients') {
             steps {
-                sh "RAKE_NAMESPACE=parallel RAKE_TASK=init_clients bash jenkins-test-runner.sh ${params.sumaform_env}"
+                script {
+                    if (${env.stage_counter_init_clients} > 0) {
+                        sh "bash snapshots-tool.sh revert_snapshots core_setup"
+                    } else {
+                        env.stage_counter_init_clients++
+                        sh "RAKE_NAMESPACE=parallel RAKE_TASK=init_clients bash jenkins-test-runner.sh ${params.sumaform_env}"
+                        sh "bash snapshots-tool.sh create_snapshots init_clients"
+                    }
+                }
             }
         }
-        
+
         stage('Secondary features') {
             steps {
-                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
-                sh "RAKE_NAMESPACE=parallel RAKE_TASK=secondary_parallelizable bash jenkins-test-runner.sh ${params.sumaform_env}"
+                script {
+                    if (${env.stage_counter_secondary} > 0) {
+                        sh "bash snapshots-tool.sh revert_snapshots init_clients"
+                    } else {
+                        env.stage_counter_secondary++
+                        sh "RAKE_NAMESPACE=cucumber RAKE_TASK=secondary bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                        sh "RAKE_NAMESPACE=parallel RAKE_TASK=secondary_parallelizable bash jenkins-test-runner.sh ${params.sumaform_env}"
+                    }
+                }
             }
         }
     }
@@ -85,13 +114,22 @@ pipeline {
                 } else {
                     sh "ERROR_SETUP=1 . ${env.WORKSPACE}/jenkins-utils.sh && . ${params.sumaform_env} && send_mail"
                 }
-            }
         }
         success{
             script {
+                if (${env.stage_counter_init_clients} >= 0) {
+                    sh "bash snapshots-tool.sh delete_snapshots init_clients"
+                }
+                if (${env.stage_counter_core_setup} >= 0) {
+                    sh "bash snapshots-tool.sh delete_snapshots core_setup"
+                }
+                if ( env.deployed == true ) {
+                    sh "bash snapshots-tool.sh delete_snapshots deploy"
+                }
                 if (params.cleanWorkspace == true) {
                     echo 'Clean up current workspace, when job success.'
                     cleanWs()
+                }
                 }
             }
         }
