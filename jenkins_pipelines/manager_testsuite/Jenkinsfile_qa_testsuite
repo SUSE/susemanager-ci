@@ -120,7 +120,7 @@ pipeline {
                 if (${env.stage_counter_init_clients} >= 0) {
                     sh "bash snapshots-tool.sh delete_snapshots init_clients"
                 }
-                if (${env.stage_counter_core_setup} >= 0)
+                if (${env.stage_counter_core_setup} >= 0) {
                     sh "bash snapshots-tool.sh delete_snapshots core_setup"
                 }
                 if ( env.deployed == true ) {
@@ -134,3 +134,4 @@ pipeline {
             }
         }
     }
+}
