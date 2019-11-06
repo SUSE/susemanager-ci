@@ -41,7 +41,7 @@ pipeline {
         stage('Clean Up Workspace') {
             steps {
                 echo 'Clean up previous workspace'
-                cleanWs(disableDeferredWipeout: true, deleteDirs: true)
+                cleanWs()
                 echo 'Check out SCM'
                 checkout scm
                 script {
@@ -77,7 +77,7 @@ pipeline {
 
     post {
         success {
-            cleanWs(disableDeferredWipeout: true, deleteDirs: true)
+            cleanWs()
         }
     }
 }
