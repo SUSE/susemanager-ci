@@ -50,13 +50,13 @@ pipeline {
             steps {
                 script {
                     contexts = [
-			    'spacecmd_unittests': 'spacecmd/',
-                            'backend_unittests_pgsql' : 'backend/',
-                            'javascript_lint' : 'web/',
                             'changelog_test' : 'notype',
                             'java_lint_checkstyle' : 'java/',
                             'java_pgsql_tests' : 'java/',
                             'ruby_rubocop' : 'testsuite/',
+                            'spacecmd_unittests': 'spacecmd/',
+                            'backend_unittests_pgsql' : 'backend/',
+                            'javascript_lint' : 'web/',
                             'schema_migration_test_pgsql' : 'schema/spacewalk',
                             'susemanager_unittests' : 'susemanager/'
                     ]
