@@ -4,7 +4,6 @@
 - [Uyuni testsuite pipelines for QA/QAM](uyuni_testsuite)
 - [Manager PR Checks](manager_prs)
 - [Uyuni PR Checks](uyuni_prs)
-- [Manager performance testsuite](performance_testsuite)
 - [POC Cucumber Testsuite per PR](cucumber_per_prs)
 
 
@@ -14,12 +13,6 @@ This directory contains all pipelines that are executed for testing prs for spac
 
 This pipelines use the same patterns, which is to use the gitarro tools for github PRS.
 1) Use gitarro https://github.com/openSUSE/gitarro
-
-
-### Manager performance testsuite
-
-This dir contains pipelines related to scalabilty tests for suse-manager.
-
 
 ### Manager and Uyuni testsuite pipelines for QA/QAM
 
