@@ -34,8 +34,14 @@ pipeline {
     stages {
         stage('Deploy') {
             steps {
+                script {
+                  env.test_runner_branch = 'master'
+                  if (params.sumaform_test_runner_branch != null){
+                    env.test_runner_branch = params.sumaform_test_runner_branch
+                  }
+                }
                 checkout scm
-                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
+                git branch: "${env.test_runner_branch}", url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 script {
                     if (params.sumaform_branch != null){
                       sh "SUMAFORM_BRANCH=${params.sumaform_branch} TERRAFORM=${params.terraform} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
