@@ -13,6 +13,7 @@ pipeline {
     parameters {
         // Note: We need to define this variable manually in our Jenkins configuration (to select the version we want to test)
         // string(defaultValue: 'Manager-4.0', name: 'testsuite_branch')
+        // string(defaultValue: 'master', description: 'Sumaform branch or commit', name: 'sumaform_branch')
         text(name: 'mu_repositories', defaultValue: '{"server" : "repo_url", "sle-client" : { "salt" : "repo_url" , "traditional" : "repo_url" }}', description: 'Salt & Traditional MU Repositories for each client, in json format')
     }
 
@@ -31,17 +32,21 @@ pipeline {
                 checkout scm
                 git branch: 'qam-testsuite', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 script { 
-                    sh "MU_REPOS='${params.mu_repositories}' bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
+                }
+                script {
+                    if (params.sumaform_branch != null){
+                      sh "SUMAFORM_BRANCH=${params.sumaform_branch} MU_REPOS='${params.mu_repositories}' bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
+                    } else {
+                      sh "MU_REPOS='${params.mu_repositories}' bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
+                    }
+                    deployed = true
                 }
             }
         }
 
         stage('Generate qam features') {
             steps {
-                script { 
-                    deployed = true
-                    sh "RAKE_NAMESPACE=utils RAKE_TASK=generate_features . ${env.WORKSPACE}/jenkins-utils.sh && . ${params.sumaform_env} && run_rake_task"
-                }
+                sh "RAKE_NAMESPACE=utils RAKE_TASK=generate_features . ${env.WORKSPACE}/jenkins-utils.sh && . ${params.sumaform_env} && run_rake_task"
             }
         }
 
