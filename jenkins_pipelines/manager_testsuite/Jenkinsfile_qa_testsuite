@@ -49,7 +49,6 @@ pipeline {
 
         stage('Core - Setup') {
             steps {
-                script { env.deployed = true }
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=core TERRAFORM=${params.terraform} bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
