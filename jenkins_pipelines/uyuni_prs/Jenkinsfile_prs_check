@@ -50,7 +50,6 @@ pipeline {
             steps {
                 script {
                     contexts = [
-                            'changelog_test' : 'notype',
                             'java_lint_checkstyle' : 'java/',
                             'java_pgsql_tests' : 'java/',
                             'ruby_rubocop' : 'testsuite/',
