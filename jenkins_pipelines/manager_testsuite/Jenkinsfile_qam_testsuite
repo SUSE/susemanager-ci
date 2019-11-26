@@ -13,7 +13,6 @@ pipeline {
     parameters {
         // Note: We need to define this variable manually in our Jenkins configuration (to select the version we want to test)
         // string(defaultValue: 'Manager-4.0', name: 'testsuite_branch')
-        text(name: 'mu_repositories', defaultValue: '{"server" : "repo_url", "sle-client" : { "salt" : "repo_url" , "traditional" : "repo_url" }}', description: 'Salt & Traditional MU Repositories for each client, in json format')
     }
 
     environment {
