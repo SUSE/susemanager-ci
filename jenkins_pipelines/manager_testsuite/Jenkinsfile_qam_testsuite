@@ -27,6 +27,8 @@ pipeline {
 
     stages {
       
+        // Note: Due to the nature of QAM tests, for now, is better to continue running even if some stage fails
+        
         stage('Add MUs') {
             steps {
                 script {
@@ -37,7 +39,16 @@ pipeline {
             }
         }
 
-        // Note: Due to the nature of QAM tests, is better to continue running even if some client has failed at some stage
+        stage('Bootstrap Proxy') {
+            steps {
+                script {
+                    echo 'Proxy register as minion with gui'
+                    res_init_proxy = sh(script: "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_init_proxy bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    echo "Init Proxy status code: ${res_init_proxy}"
+                }
+            }
+        }
+        
         stage('Bootstrap clients') {
             steps {
                 script {
