@@ -37,6 +37,16 @@ pipeline {
                 }
             }
         }
+        
+        stage('Add Activation Keys') {
+            steps {
+                script {
+                    echo 'Add Activation Keys'
+                    res_mu_repos = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_add_activation_keys bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    echo "Add Activation Keys status code: ${res_mu_repos}"
+                }
+            }
+        }
 
         stage('Bootstrap Proxy') {
             steps {
