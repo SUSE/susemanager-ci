@@ -34,7 +34,7 @@ pipeline {
             }
             steps {
                 checkout scm
-                git branch: 'qam-testsuite', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
+                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 script {
                     if (params.sumaform_branch != null){
                       sh "SUMAFORM_BRANCH=${params.sumaform_branch} MU_REPOS='${params.mu_repositories}' bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
