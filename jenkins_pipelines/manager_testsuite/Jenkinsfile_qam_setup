@@ -15,6 +15,7 @@ pipeline {
         // string(defaultValue: 'Manager-4.0', name: 'testsuite_branch')
         // string(defaultValue: 'master', description: 'Sumaform branch or commit', name: 'sumaform_branch')
         text(name: 'mu_repositories', defaultValue: '{"server" : "repo_url", "sle-client" : { "salt" : "repo_url" , "traditional" : "repo_url" }}', description: 'Salt & Traditional MU Repositories for each client, in json format')
+        booleanParam(name: 'MUST_DEPLOY', defaultValue: true, description: 'Deploy')
     }
 
     environment {
@@ -28,6 +29,9 @@ pipeline {
 
     stages {
         stage('Deploy') {
+            when {
+                expression { params.MUST_DEPLOY == true }
+            }
             steps {
                 checkout scm
                 git branch: 'qam-testsuite', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
