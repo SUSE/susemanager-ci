@@ -15,6 +15,9 @@ pipeline {
         // string(defaultValue: 'Manager-4.0', name: 'testsuite_branch')
         // string(defaultValue: 'master', description: 'Sumaform branch or commit', name: 'sumaform_branch')
         text(name: 'mu_repositories', defaultValue: '{"server" : "repo_url", "sle-client" : { "salt" : "repo_url" , "traditional" : "repo_url" }}', description: 'Salt & Traditional MU Repositories for each client, in json format')
+        booleanParam(name: 'MUST_DEPLOY', defaultValue: true, description: 'Deploy')
+        booleanParam(name: 'MUST_RUN_CORE', defaultValue: true, description: 'Run Core features')
+        booleanParam(name: 'MUST_SYNC', defaultValue: true, description: 'Sync. products and channels')
     }
 
     environment {
@@ -27,46 +30,55 @@ pipeline {
     agent { label 'sumaform-cucumber' }
 
     stages {
-        stage('Deploy') {
+        
+        stage('CheckOut') {
             steps {
                 checkout scm
-                git branch: 'qam-testsuite', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
-                script { 
-                }
+                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
+            }
+        }
+        
+        stage('Deploy') {
+            when {
+                expression { params.MUST_DEPLOY == true }
+            }
+            steps {
                 script {
                     if (params.sumaform_branch != null){
                       sh "SUMAFORM_BRANCH=${params.sumaform_branch} MU_REPOS='${params.mu_repositories}' bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
                     } else {
                       sh "MU_REPOS='${params.mu_repositories}' bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
                     }
+                    sh "RAKE_NAMESPACE=utils RAKE_TASK=generate_features . ${env.WORKSPACE}/jenkins-utils.sh && . ${params.sumaform_env} && run_rake_task"
                     deployed = true
                 }
             }
         }
 
-        stage('Generate qam features') {
-            steps {
-                sh "RAKE_NAMESPACE=utils RAKE_TASK=generate_features . ${env.WORKSPACE}/jenkins-utils.sh && . ${params.sumaform_env} && run_rake_task"
-            }
-        }
-
         stage('Run Core features') {
+            when {
+                expression { params.MUST_RUN_CORE == true }
+            }
             steps {
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_core bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
 
         stage('Sync. products and channels') {
+            when {
+                expression { params.MUST_SYNC == true }
+            }
             steps {
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_reposync bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
+    }
         
     post {
         always{
             script {
                 if (deployed == true){
-                    sh "RAKE_NAMESPACE=cucumber RAKE_TASK=finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                    sh "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                     publishHTML( target: [
                                 allowMissing: true,
                                 alwaysLinkToLastBuild: false,
