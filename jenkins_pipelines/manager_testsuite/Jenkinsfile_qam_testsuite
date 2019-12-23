@@ -30,6 +30,8 @@ pipeline {
         
         stage('Add MUs') {
             steps {
+                checkout scm
+                git branch: 'master', url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 script {
                     echo 'Add custom channels and MU repositories'
                     res_mu_repos = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_add_mu_repositories bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
