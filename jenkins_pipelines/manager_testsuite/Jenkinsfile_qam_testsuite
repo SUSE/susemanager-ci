@@ -110,6 +110,7 @@ pipeline {
         always{
             script {
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                sh "RAKE_NAMESPACE=utils RAKE_TASK=generate_test_report bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                 publishHTML( target: [
                             allowMissing: true,
                             alwaysLinkToLastBuild: false,
