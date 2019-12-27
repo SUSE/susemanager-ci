@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     echo 'Add custom channels and MU repositories'
-                    res_mu_repos = sh(script: "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_add_custom_repositories bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    res_mu_repos = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_add_custom_repositories bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                 }
             }
@@ -60,7 +60,7 @@ pipeline {
             steps {
                 script {
                     echo 'Add Activation Keys'
-                    res_add_keys = sh(script: "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_add_activation_keys bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    res_add_keys = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_add_activation_keys bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
                     echo "Add Activation Keys status code: ${res_add_keys}"
                 }
             }
@@ -73,7 +73,7 @@ pipeline {
             steps {
                 script {
                     echo 'Proxy register as minion with gui'
-                    res_init_proxy = sh(script: "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_init_proxy bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    res_init_proxy = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_init_proxy bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
                     echo "Init Proxy status code: ${res_init_proxy}"
                 }
             }
@@ -85,7 +85,7 @@ pipeline {
             }
             steps {
                 script {
-                    res_init_clients = sh(script: "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_init_clients bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    res_init_clients = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_init_clients bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
                     echo "Init clients status code: ${res_init_clients}"
                 }
             }
@@ -98,7 +98,7 @@ pipeline {
             steps {
                 script {
                     echo 'Run Smoke tests'
-                    res_smoke_tests = sh(script: "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_smoke_tests bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
+                    res_smoke_tests = sh(script: "RAKE_NAMESPACE=parallel RAKE_TASK=qam_smoke_tests bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus: true)
                     echo "Smoke tests status code: ${res_smoke_tests}"
                 }
             }
