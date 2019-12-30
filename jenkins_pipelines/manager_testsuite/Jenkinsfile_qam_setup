@@ -14,7 +14,7 @@ pipeline {
         // Note: We need to define this variable manually in our Jenkins configuration (to select the version we want to test)
         // string(defaultValue: 'Manager-4.0', name: 'testsuite_branch')
         // string(defaultValue: 'master', description: 'Sumaform branch or commit', name: 'sumaform_branch')
-        text(name: 'mu_repositories', defaultValue: '{"server" : "repo_url", "sle-client" : { "salt" : "repo_url" , "traditional" : "repo_url" }}', description: 'Salt & Traditional MU Repositories for each client, in json format')
+        text(name: 'mu_repositories', defaultValue: '{"server" : "", "proxy": "", "sle11sp4_minion" : { "salt" : "" }, "sle11sp4_client" : { "traditional" : "" }, "sle12sp4_minion" : { "salt" : "" }, "sle12sp4_client" : { "traditional" : "" }, "sle15_minion" : { "salt" : "" }, "sle15_client" : { "traditional" : "" }, "sle15sp1_minion" : { "salt" : "" }, "sle15sp1_client" : { "traditional" :  "" }, "ubuntu1804_minion" : { "salt" : "" }, "ceos7_minion" : { "salt" : "" }, "ceos7_client" : { "traditional" :  "" }}', description: 'Salt & Traditional MU Repositories for each client, in json format')
         booleanParam(name: 'MUST_DEPLOY', defaultValue: true, description: 'Deploy')
         booleanParam(name: 'MUST_RUN_CORE', defaultValue: true, description: 'Run Core features')
         booleanParam(name: 'MUST_SYNC', defaultValue: true, description: 'Sync. products and channels')
