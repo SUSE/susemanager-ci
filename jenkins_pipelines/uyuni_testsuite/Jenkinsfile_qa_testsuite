@@ -78,6 +78,8 @@ pipeline {
             script {
                 if (deployed == true) {
                     sh "RAKE_NAMESPACE=cucumber RAKE_TASK=finishing TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                    //sh "RAKE_NAMESPACE=utils RAKE_TASK=generate_test_report bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                    sh "bash jenkins-export-artifacts.sh ${params.sumaform_env} ${params.testsuite_branch}"
                     publishHTML( target: [
                                 allowMissing: true,
                                 alwaysLinkToLastBuild: false,
