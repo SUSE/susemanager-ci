@@ -111,6 +111,7 @@ pipeline {
             script {
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=qam_finishing bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
                 sh "RAKE_NAMESPACE=utils RAKE_TASK=generate_test_report bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
+                sh "bash jenkins-export-artifacts.sh ${params.sumaform_env} ${params.testsuite_branch}"
                 publishHTML( target: [
                             allowMissing: true,
                             alwaysLinkToLastBuild: false,
