@@ -49,7 +49,7 @@ pipeline {
                     } else {
                       sh "TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
                     }
-                    deployed = true 
+                    deployed = true
                 }
             }
         }
@@ -58,6 +58,7 @@ pipeline {
             steps {
                 script { env.deployed = true }
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=core TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env}"
+                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=reposync TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
 
@@ -66,7 +67,7 @@ pipeline {
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=init_clients TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env}"
             }
         }
-        
+
         stage('Secondary features') {
             steps {
                 sh "RAKE_NAMESPACE=cucumber RAKE_TASK=secondary TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
