@@ -13,6 +13,7 @@ pipeline {
     //parameters {
         // Note: We need to define these variables manually in our Jenkins configuration (to select the version we want to test)
         // string(defaultValue: 'Manager-4.0', description: 'Testsuite GitHub branch', name: 'testsuite_branch')
+        // string(defaultValue: '', name: 'testsuite_giturl')
         // string(defaultValue: '40/VARS-full-PRV.sh', description: 'Sumaform environment', name: 'sumaform_env')
         // string(defaultValue: 'testsuite-stable-with-new-fake-repos', description: 'Sumaform branch or commit', name: 'sumaform_branch')
         // string(defaultValue: '', description: 'Terraform binnary path', name: 'terraform')
@@ -48,7 +49,7 @@ pipeline {
                     if (params.sumaform_branch != null){
                       sh "SUMAFORM_BRANCH=${params.sumaform_branch} TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
                     } else {
-                      sh "TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
+                      sh "TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch} ${params.testsuite_giturl}"
                     }
                     deployed = true
                 }
