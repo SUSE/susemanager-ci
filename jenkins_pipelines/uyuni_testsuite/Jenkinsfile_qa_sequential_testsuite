@@ -46,7 +46,7 @@ pipeline {
                 git branch: "${env.test_runner_branch}", url: 'https://gitlab.suse.de/galaxy/sumaform-test-runner.git'
                 script {
                     if (params.sumaform_branch != null){
-                      sh "SUMAFORM_BRANCH=${params.sumaform_branch} TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch}"
+                      sh "SUMAFORM_BRANCH=${params.sumaform_branch} TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch} ${params.testsuite_giturl}"
                     } else {
                       sh "TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-deploy.sh ${params.sumaform_env} ${params.testsuite_branch} ${params.testsuite_giturl}"
                     }
