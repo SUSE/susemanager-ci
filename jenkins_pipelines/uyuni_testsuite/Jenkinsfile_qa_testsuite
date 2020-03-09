@@ -68,8 +68,11 @@ pipeline {
         
         stage('Secondary features') {
             steps {
-                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=secondary TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env} ||:"
-                sh "RAKE_NAMESPACE=parallel RAKE_TASK=secondary_parallelizable TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env}"
+                script {
+                    def statusCode1 = sh script:"RAKE_NAMESPACE=cucumber RAKE_TASK=secondary TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus:true
+                    def statusCode2 = sh script:"RAKE_NAMESPACE=cucumber RAKE_TASK=secondary_parallelizable TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env}", returnStatus:true
+                    sh "exit \$(( ${statusCode1}|${statusCode2} ))"
+                }
             }
         }
     }
