@@ -55,6 +55,12 @@ pipeline {
             }
         }
 
+        stage('Sanity Check') {
+            steps {
+                sh "RAKE_NAMESPACE=cucumber RAKE_TASK=sanity_check TERRAFORM=${params.terraform} TERRAFORM_PLUGINS=${params.terraform_plugins} bash jenkins-test-runner.sh ${params.sumaform_env}"
+            }
+        }
+        
         stage('Core - Setup') {
             steps {
                 script { env.deployed = true }
