@@ -1,0 +1,6 @@
+#################################################################
+# SUMMARY
+#################################################################
+Results: $urlprefix-$timestamp
+
+Environment failed to be created, so no spacewalk-debug tarball or cucumber results are available.
