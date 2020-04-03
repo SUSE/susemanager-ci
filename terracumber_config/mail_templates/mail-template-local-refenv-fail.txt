@@ -1,0 +1,8 @@
+#################################################################
+# SUMMARY
+#################################################################
+Results: $urlprefix-$timestamp
+
+Environment failed to be created. Some or all instances are maybe not available.
+
+Please check the console output or the results.

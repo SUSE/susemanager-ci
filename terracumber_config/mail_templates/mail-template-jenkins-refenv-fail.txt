@@ -1,0 +1,10 @@
+#################################################################
+# SUMMARY
+#################################################################
+Build:   $urlprefix/$timestamp
+Console: $urlprefix/$timestamp/console
+Results: $urlprefix/$timestamp/execution/node/4/ws/results/$timestamp
+
+Environment failed to be created. Some or all instances are maybe not available.
+
+Please check the console output or the results.
