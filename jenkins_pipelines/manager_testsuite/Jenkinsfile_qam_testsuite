@@ -18,7 +18,7 @@ pipeline {
         booleanParam(name: 'MUST_BOOT_PROXY', defaultValue: true, description: 'Bootstrap Proxy')
         booleanParam(name: 'MUST_BOOT_CLIENTS', defaultValue: true, description: 'Bootstrap clients')
         booleanParam(name: 'MUST_RUN_TESTS', defaultValue: true, description: 'Run Smoke Tests')
-        booleanParam(name: 'RAKE_NAMESPACE', defaultValue: 'parallel', description: 'Choose parallel or cucumber')
+        string(name: 'RAKE_NAMESPACE', defaultValue: 'parallel', description: 'Choose parallel or cucumber')
     }
 
     environment {
