@@ -3,7 +3,7 @@
 properties([
     buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5')),
     disableConcurrentBuilds(),
-    [pipelineTriggers([cron('H 1 * * *')])]
+    pipelineTriggers([cron('H 1 * * *')]),
     parameters([
         string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-Head-refenv-NUE.tf', description: 'Path to the tf file to be used'),
         string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
