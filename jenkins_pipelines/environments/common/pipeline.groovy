@@ -19,7 +19,7 @@ def run(params) {
             }
             stage('Deploy') {
                 // Provision the environment
-                if (params.terraform_bin_init) {
+                if (params.terraform_init) {
                     env.TERRAFORM_INIT = '--init'
                 } else {
                     env.TERRAFORM_INIT = ''
