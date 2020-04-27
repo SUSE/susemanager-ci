@@ -3,6 +3,7 @@
 properties([
     buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
     disableConcurrentBuilds(),
+    [pipelineTriggers([cron('H H/4 * * *')])]
     parameters([
         string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
         string(name: 'cucumber_ref', defaultValue: 'Manager-3.2', description: 'Testsuite Git reference (branch, tag...)'),
@@ -19,7 +20,6 @@ properties([
 ])
 
 node('sumaform-cucumber') {
-    cron('H H/4 * * *')
     stage('Checkout pipeline') {
         checkout scm
     }

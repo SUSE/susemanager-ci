@@ -3,6 +3,7 @@
 properties([
     buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5')),
     disableConcurrentBuilds(),
+    [pipelineTriggers([cron('H 2 * * *')])]
     parameters([
         string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.0-refenv-PRV.tf', description: 'Path to the tf file to be used'),
         string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
@@ -17,7 +18,6 @@ properties([
 ])
 
 node('sumaform-cucumber') {
-    cron('H 2 * * *')
     stage('Checkout pipeline') {
         checkout scm
     }
