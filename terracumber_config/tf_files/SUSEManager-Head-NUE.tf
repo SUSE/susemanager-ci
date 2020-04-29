@@ -95,7 +95,7 @@ module "cucumber_testsuite" {
   images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2", "ubuntu1804"]
 
   use_avahi    = false
-  name_prefix  = "suma-40-"
+  name_prefix  = "suma-head-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
