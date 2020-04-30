@@ -24,7 +24,7 @@ def run(params) {
                 } else {
                     env.TERRAFORM_INIT = ''
                 }
-                sh "set +x; source /home/jenkins/.credentials set -x; TERRAFORM=${params.terraform_bin} TERRAFORM_PLUGINS=${params.terraform_bin_plugins} ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                 deployed = true
             }
             stage('Sanity Check') {
