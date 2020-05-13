@@ -119,6 +119,14 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP2/"
       }
     }
+    pxy = {
+      provider_settings = {
+        mac = "AA:B2:93:00:00:B6"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP2/"
+      }
+    }
     cli-sles12sp4 = {
       image = "sles15sp1"
       name = "cli-sles15"
