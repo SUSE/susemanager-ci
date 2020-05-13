@@ -167,6 +167,10 @@ module "cucumber_testsuite" {
     min-centos7 = {
       provider_settings = {
         mac = "AA:B2:93:00:00:65"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Still researching, but it will do it for now
+        memory = 2048
+        vcpu = 2
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/RES7-SUSE-Manager-Tools/SUSE_RES-7_Update_standard/"
