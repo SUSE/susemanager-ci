@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-4.0"
+  default = "faster-clm"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -81,7 +81,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "4.0-nightly"
+  product_version = "head"
   
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2", "ubuntu1804"]
+  images = ["centos7", "opensuse150", "opensuse151", "sles15sp1", "sles15sp2", "ubuntu1804"]
 
   use_avahi    = false
   name_prefix  = "suma-testhexagon-"
@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:B0"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP1/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP2/"
       }
     }
     cli-sles12sp4 = {
