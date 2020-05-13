@@ -165,6 +165,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:01:05"
         memory = 2048
+        vcpu = 2
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/RES7-SUSE-Manager-Tools/SUSE_RES-7_Update_standard/"
