@@ -3,7 +3,7 @@
 #################################################################
 Build:   $urlprefix/$timestamp
 Console: $urlprefix/$timestamp/console
-Results: $urlprefix/$timestamp/execution/node/4/ws/results/$timestamp
+Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
 
 Environment failed to be created. Some or all instances are maybe not available.
 

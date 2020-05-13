@@ -3,6 +3,6 @@
 #################################################################
 Build:   $urlprefix/$timestamp
 Console: $urlprefix/$timestamp/console
-Results: $urlprefix/$timestamp/execution/node/4/ws/results/$timestamp
+Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
 
 Environment failed to be created, so no spacewalk-debug tarball or cucumber results are available.

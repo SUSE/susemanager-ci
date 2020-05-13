@@ -3,9 +3,9 @@
 #################################################################
 Build:   $urlprefix/$timestamp
 Console: $urlprefix/$timestamp/console
-Results: $urlprefix/$timestamp/execution/node/4/ws/results/$timestamp
-Report:  $urlprefix/$timestamp/execution/node/4/ws/results/$timestamp/cucumber_report/cucumber_report.html
-Logs:    $urlprefix/$timestamp/execution/node/4/ws/results/$timestamp/spacewalk-debug.tar.bz2
+Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
+Report:  $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/cucumber_report/cucumber_report.html
+Logs:    $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/spacewalk-debug.tar.bz2
 
 #################################################################
 # SCENARIOS
