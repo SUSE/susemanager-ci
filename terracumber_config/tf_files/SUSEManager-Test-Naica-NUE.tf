@@ -99,6 +99,7 @@ module "cucumber_testsuite" {
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
+  registry_uri = "registry.mgr.suse.de"
   portus_uri = "portus.mgr.suse.de:5000/cucutest"
   portus_username = "cucutest"
   portus_password = "cucusecret"
