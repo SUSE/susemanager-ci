@@ -104,6 +104,7 @@ module "cucumber_testsuite" {
   portus_uri = "portus.mgr.suse.de:5000/cucutest"
   portus_username = "cucutest"
   portus_password = "cucusecret"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/prv.suse.net"
 
   mirror = "minima-mirror.prv.suse.net"
   use_mirror_images = true
