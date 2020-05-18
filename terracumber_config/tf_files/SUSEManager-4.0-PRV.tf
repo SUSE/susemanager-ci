@@ -124,21 +124,21 @@ module "cucumber_testsuite" {
         mac = "52:54:00:00:00:07"
       }
     }
-    cli-sles12sp4 = {
+    cli-sles15sp1 = {
       image = "sles15sp1"
       name = "cli-sles15"
       provider_settings = {
         mac = "52:54:00:00:00:02"
       }
     }
-    min-sles12sp4 = {
+    min-sles15sp1 = {
       image = "sles15sp1"
       name = "min-sles15"
       provider_settings = {
         mac = "52:54:00:00:00:03"
       }
     }
-    minssh-sles12sp4 = {
+    minssh-sles15sp1 = {
       image = "sles15sp1"
       name = "minssh-sles15"
       provider_settings = {

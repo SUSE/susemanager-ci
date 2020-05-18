@@ -119,21 +119,21 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/openSUSE_Leap_15.1/"
       }
     }
-    cli-sles12sp4 = {
+    cli-sles15sp1 = {
       image = "sles15sp1"
       name = "cli-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:A1"
       }
     }
-    min-sles12sp4 = {
+    min-sles15sp1 = {
       image = "sles15sp1"
       name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:A3"
       }
     }
-    minssh-sles12sp4 = {
+    minssh-sles15sp1 = {
       image = "sles15sp1"
       name = "minssh-sles15"
       provider_settings = {

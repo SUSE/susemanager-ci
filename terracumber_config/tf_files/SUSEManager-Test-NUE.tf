@@ -131,7 +131,7 @@ module "cucumber_testsuite" {
         //Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST/SLE_15_SP2/"
       }
     }
-    cli-sles12sp4 = {
+    cli-sles15sp1 = {
       image = "sles15sp1"
       name = "cli-sles15"
       provider_settings = {
@@ -142,7 +142,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = ["python2-salt"]
     }
-    min-sles12sp4 = {
+    min-sles15sp1 = {
       image = "sles15sp1"
       name = "min-sles15"
       provider_settings = {
@@ -153,7 +153,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = ["python2-salt"]
     }
-    minssh-sles12sp4 = {
+    minssh-sles15sp1 = {
       image = "sles15sp1"
       name = "minssh-sles15"
       provider_settings = {
