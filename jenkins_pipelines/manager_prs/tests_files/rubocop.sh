@@ -2,4 +2,4 @@
 
 echo "running rubocop on step files"
 cd testsuite
-rubocop.ruby2.1 features/*
+rubocop.ruby2.5 features/*
