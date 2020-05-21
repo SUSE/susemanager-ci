@@ -52,7 +52,6 @@ pipeline {
                     contexts = [
                             'java_lint_checkstyle' : 'java/',
                             'java_pgsql_tests' : 'java/',
-                            'ruby_rubocop' : 'testsuite/',
                             'spacecmd_unittests': 'spacecmd/',
                             'backend_unittests_pgsql' : 'backend/',
                             'javascript_lint' : 'web/',
