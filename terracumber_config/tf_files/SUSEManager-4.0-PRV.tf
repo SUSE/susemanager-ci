@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   from_email   = "root@suse.de"
 
   registry_uri = "minima-mirror.prv.suse.net"
-  portus_uri = "portus.mgr.suse.de:5000/cucutest"
+  portus_uri = "minima-mirror.prv.suse.net:5000/cucutest"
   portus_username = "cucutest"
   portus_password = "cucusecret"
   git_profiles_repo = "https://github.com/mcalmer/uyuni.git#configure-registry:testsuite/features/profiles/prv.suse.net"
