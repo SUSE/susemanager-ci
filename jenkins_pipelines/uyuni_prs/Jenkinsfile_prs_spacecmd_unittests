@@ -29,7 +29,7 @@ pipeline {
         // the actual test is the git repo (inside spacewalk)
         test = "susemanager-utils/testing/automation/spacecmd-unittest.sh"
         gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
-        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro.rb'
         runtest = "${gitarro_common_params} -u ${env.BUILD_URL}"
 

@@ -18,7 +18,7 @@ pipeline {
     }
 
     environment {
-        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro.rb'
         jslint_test = "-r SUSE/spacewalk" +
                 " -c javascript_lint -d \"javascript-lint\" " +

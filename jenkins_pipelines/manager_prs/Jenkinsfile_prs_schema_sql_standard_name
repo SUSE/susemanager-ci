@@ -26,7 +26,7 @@ pipeline {
         filter = "schema/spacewalk"
         git_fs = "${env.WORKSPACE}"
         test = "${env.WORKSPACE}/jenkins_pipelines/manager_prs/tests_files/sql_schema_filename.py"
-        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro.rb'
         runtest = "-r ${repository}" +
                 " -c ${context} -d \"${description}\" " +

@@ -26,7 +26,7 @@ pipeline {
         filter = "schema/spacewalk"
         git_fs = "${env.WORKSPACE}"
         test = "susemanager-utils/testing/automation/schema-migration-test-pgsql.sh" 
-        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro.rb'
     // postgresql
         runtest_pg = "-r ${repository}" +
