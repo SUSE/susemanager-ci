@@ -30,7 +30,7 @@ pipeline {
         runtest = "${gitarro_common_params} -u ${env.BUILD_URL}"
 
     }
-    agent { label 'manager-sumadocker6' } // Temporary moved to this sumadocker which have rubocop 0.84 for rubocop.ruby2.5
+    agent { label 'suse-manager-unit-tests' }
 
     stages {
         stage('Clean Up Workspace') {
