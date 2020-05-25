@@ -18,7 +18,7 @@ pipeline {
     }
 
     environment {
-        gitarro_cmd = 'gitarro.ruby2.1'
+        gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro.rb'
         javacheckstyle_test = "-r SUSE/spacewalk" +
                 " -c java_lint_checkstyle -d \"java-checkstyle\" " +
