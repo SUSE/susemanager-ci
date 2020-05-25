@@ -169,6 +169,7 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:28"
       }
     }
+    min-pxeboot = {
       present = true
       image = "sles15sp1"
     }
