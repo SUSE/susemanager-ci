@@ -136,6 +136,18 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:22"
       }
     }
+    module "min-build" {
+      source                  = "./modules/minion"
+      base_configuration      = module.base.configuration
+      product_version         = "4.0-nightly"
+      name                    = "min-build"
+      image                   = "sles15sp1"
+      server_configuration    = module.srv.configuration
+
+      provider_settings = {
+        mac = "AA:B2:93:00:00:58"
+      }
+    }
     minssh-sles12sp4 = {
       image = "sles15sp1"
       name = "minssh-sles15"
@@ -157,7 +169,6 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:28"
       }
     }
-    min-pxeboot = {
       present = true
       image = "sles15sp1"
     }

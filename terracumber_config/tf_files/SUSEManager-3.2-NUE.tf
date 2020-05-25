@@ -134,6 +134,11 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:21:68"
       }
     }
+    min-build = {
+      provider_settings = {
+        mac = "AA:B2:93:00:00:7B"
+      }
+    }
     minssh-sles12sp4 = {
       name = "minssh-sles12"
       provider_settings = {

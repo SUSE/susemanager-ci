@@ -136,6 +136,19 @@ module "min-sles15" {
   }
 }
 
+module "min-build" {
+  source                  = "./modules/minion"
+  base_configuration      = module.base.configuration
+  product_version         = "head"
+  name                    = "min-build"
+  image                   = "sles15sp1"
+  server_configuration    = module.srv.configuration
+
+  provider_settings = {
+    mac = "AA:B2:93:00:00:39"
+  }
+}
+
 module "min-centos7" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration

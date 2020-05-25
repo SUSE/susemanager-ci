@@ -153,6 +153,17 @@ module "cucumber_testsuite" {
       }
       additional_packages = ["python2-salt"]
     }
+    min-build = {
+      image = "sles15sp1"
+      name = "min-build"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:73"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
+      }
+      additional_packages = ["python2-salt"]
+    }
     minssh-sles12sp4 = {
       image = "sles15sp1"
       name = "minssh-sles15"
