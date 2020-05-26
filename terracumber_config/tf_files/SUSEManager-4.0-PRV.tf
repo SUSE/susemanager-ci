@@ -138,6 +138,12 @@ module "cucumber_testsuite" {
         mac = "52:54:00:00:00:03"
       }
     }
+    min-build = {
+      image = "sles15sp1"
+      provider_settings = {
+        mac = "52:54:00:00:00:20"
+      }
+    }
     minssh-sles12sp4 = {
       image = "sles15sp1"
       name = "minssh-sles15"
