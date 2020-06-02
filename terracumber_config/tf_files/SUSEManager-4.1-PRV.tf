@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Manager-Head/job/manager-Head-cucumber-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.1/job/manager-4.1-cucumber-PRV"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "master"
+  default = "Manager-4.1"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = "string"
-  default = "Results Head $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 4.1-PRV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = "string"
-  default = "Results Head: Environment setup failed"
+  default = "Results 4.1-PRV: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -75,14 +75,15 @@ variable "GIT_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://ramrod.mgr.suse.de/system"
+  uri = "qemu+tcp://metropolis.prv.suse.net/system"
 }
+
 
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
-  
+  product_version = "4.1-nightly"
+
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
@@ -91,77 +92,73 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-
+  
   images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2", "ubuntu1804"]
 
-  use_avahi    = false
-  name_prefix  = "suma-head-"
-  domain       = "mgr.suse.de"
-  from_email   = "root@suse.de"
-
+  use_avahi = false
+  name_prefix = "suma-41-"
+  domain = "prv.suse.net"
+  from_email = "root@suse.de"
 
   portus_uri = "portus.mgr.suse.de:5000/cucutest"
   portus_username = "cucutest"
   portus_password = "cucusecret"
 
+  mirror = "minima-mirror.prv.suse.net"
+  use_mirror_images = true
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
   host_settings = {
     ctl = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:25"
+        mac = "52:54:00:00:00:26"
       }
     }
     srv = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:20"
+        mac = "52:54:00:00:00:31"
       }
     }
     pxy = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:26"
+        mac = "52:54:00:00:00:27"
       }
     }
     cli-sles12sp4 = {
       image = "sles15sp1"
       name = "cli-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:21"
+        mac = "52:54:00:00:00:22"
       }
     }
     min-sles12sp4 = {
       image = "sles15sp1"
       name = "min-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:22"
+        mac = "52:54:00:00:00:33"
       }
     }
     min-build = {
       image = "sles15sp1"
-      name = "min-build"
       provider_settings = {
-        mac = "AA:B2:93:00:00:58"
+        mac = "52:54:00:00:00:30"
       }
     }
     minssh-sles12sp4 = {
       image = "sles15sp1"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:23"
+        mac = "52:54:00:00:00:24"
       }
     }
     min-centos7 = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:24"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Still researching, but it will do it for now
-        memory = 2048
-        vcpu = 2
+        mac = "52:54:00:00:00:25"
       }
     }
     min-ubuntu1804 = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:28"
+        mac = "52:54:00:00:00:28"
       }
     }
     min-pxeboot = {
@@ -171,7 +168,7 @@ module "cucumber_testsuite" {
     min-kvm = {
       image = "sles15sp1"
       provider_settings = {
-        mac = "AA:B2:93:00:00:29"
+        mac = "52:54:00:00:00:29"
       }
     }
   }
@@ -179,10 +176,10 @@ module "cucumber_testsuite" {
     pool = "ssd"
     network_name = null
     bridge = "br0"
-    additional_network = "192.168.99.0/24"
+    additional_network = "192.168.41.0/24"
   }
 }
-
+  
 output "configuration" {
   value = module.cucumber_testsuite.configuration
 }
