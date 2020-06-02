@@ -143,6 +143,20 @@ module "min-sles12" {
   }
 }
 
+module "min-build" {
+  source                  = "./modules/minion"
+  base_configuration      = module.base.configuration
+  product_version         = "3.2-nightly"
+  name                    = "min-build"
+  image                   = "sles12sp4"
+  server_configuration    = module.srv.configuration
+
+  provider_settings = {
+    mac = "52:54:00:00:00:19"
+  }
+}
+
+
 module "min-centos7" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
