@@ -139,7 +139,7 @@ module "cucumber_testsuite" {
       }
     }
     min-build = {
-      image = "sles15sp1"
+      image = "sles15sp2"
       provider_settings = {
         mac = "52:54:00:00:00:30"
       }
@@ -163,7 +163,7 @@ module "cucumber_testsuite" {
     }
     min-pxeboot = {
       present = true
-      image = "sles15sp1"
+      image = "sles15sp2"
     }
     min-kvm = {
       image = "sles15sp1"
