@@ -151,7 +151,7 @@ module "cucumber_testsuite" {
       additional_packages = ["python2-salt"]
     }
     min-build = {
-      image = "sles15sp1"
+      image = "sles15sp2"
       name = "min-build"
       provider_settings = {
         mac = "AA:B2:93:00:01:09"
@@ -194,7 +194,7 @@ module "cucumber_testsuite" {
     }
     min-pxeboot = {
       present = true
-      image = "sles15sp1"
+      image = "sles15sp2"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
       }
