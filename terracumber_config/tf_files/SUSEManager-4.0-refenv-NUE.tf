@@ -81,7 +81,7 @@ module "base" {
   name_prefix = "suma-ref40-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["centos7", "sles15sp1", "ubuntu1804"]
+  images      = ["centos7", "sles15sp1", "sles15sp2", "ubuntu1804"]
 
   provider_settings = {
     pool         = "ssd"
@@ -142,7 +142,7 @@ module "min-build" {
   base_configuration      = module.base.configuration
   product_version         = "4.0-nightly"
   name                    = "min-build"
-  image                   = "sles15sp1"
+  image                   = "sles15sp2"
   server_configuration    = module.srv.configuration
 
   provider_settings = {
