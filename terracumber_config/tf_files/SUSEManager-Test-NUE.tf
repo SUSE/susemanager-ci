@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-4.0"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -81,7 +81,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "4.0-nightly"
+  product_version = "head"
   
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -127,9 +127,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:00:86"
       }
-      additional_repos = {
-        //Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST/SLE_15_SP2/"
-      }
     }
     cli-sles12sp4 = {
       image = "sles15sp1"
@@ -137,10 +134,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:00:61"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     min-sles12sp4 = {
       image = "sles15sp1"
@@ -148,10 +141,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:00:62"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     min-build = {
       image = "sles15sp1"
@@ -159,10 +148,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:00:73"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     minssh-sles12sp4 = {
       image = "sles15sp1"
@@ -170,10 +155,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:00:64"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     min-centos7 = {
       provider_settings = {
@@ -183,35 +164,21 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/RES7-SUSE-Manager-Tools/SUSE_RES-7_Update_standard/"
-      }
     }
     min-ubuntu1804 = {
       provider_settings = {
         mac = "AA:B2:93:00:00:68"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/Ubuntu18.04-SUSE-Manager-Tools/xUbuntu_18.04/"
-      }
     }
     min-pxeboot = {
       present = true
       image = "sles15sp1"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     min-kvm = {
       image = "sles15sp1"
       provider_settings = {
         mac = "AA:B2:93:00:00:69"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
   }
   provider_settings = {
