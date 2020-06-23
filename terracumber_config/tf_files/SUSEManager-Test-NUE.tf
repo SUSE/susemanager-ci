@@ -118,9 +118,9 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST/SLE_15_SP2/"
-//        Server_repo = "http://dist.nue.suse.com/ibs/SUSE:/SLE-15-SP2:/GA:/TEST/images/repo/SLE-15-SP2-Module-Server-Applications-POOL-x86_64-Media1/"
-//        Base_repo = "http://dist.nue.suse.com/ibs/SUSE:/SLE-15-SP2:/GA:/TEST/images/repo/SLE-15-SP2-Module-Basesystem-POOL-x86_64-Media1/"
-//        Web_repo = "http://dist.nue.suse.com/ibs/SUSE:/SLE-15-SP2:/GA:/TEST/images/repo/SLE-15-SP2-Module-Web-Scripting-POOL-x86_64-Media1/"
+        Server_repo = "http://dist.nue.suse.com/ibs/SUSE:/SLE-15-SP2:/GA:/TEST/images/repo/SLE-15-SP2-Module-Server-Applications-POOL-x86_64-Media1/"
+        Base_repo = "http://dist.nue.suse.com/ibs/SUSE:/SLE-15-SP2:/GA:/TEST/images/repo/SLE-15-SP2-Module-Basesystem-POOL-x86_64-Media1/"
+        Web_repo = "http://dist.nue.suse.com/ibs/SUSE:/SLE-15-SP2:/GA:/TEST/images/repo/SLE-15-SP2-Module-Web-Scripting-POOL-x86_64-Media1/"
       }
     }
     pxy = {
