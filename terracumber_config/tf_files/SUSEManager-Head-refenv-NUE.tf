@@ -99,6 +99,7 @@ module "srv" {
   disable_download_tokens = false
   from_email              = "root@suse.de"
   channels                = ["sle-product-sles15-sp1-pool-x86_64", "sle-product-sles15-sp1-updates-x86_64", "sle-module-basesystem15-sp1-pool-x86_64", "sle-module-basesystem15-sp1-updates-x86_64", "sle-module-containers15-sp1-pool-x86_64", "sle-module-containers15-sp1-updates-x86_64", "sle-manager-tools15-pool-x86_64-sp1"]
+  postgres_log_min_duration = 0
 
   provider_settings = {
     mac    = "AA:B2:93:00:00:30"
