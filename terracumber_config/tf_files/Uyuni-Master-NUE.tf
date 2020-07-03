@@ -168,6 +168,9 @@ module "cucumber_testsuite" {
     }
     min-kvm = {
       image = "opensuse151"
+      additional_repos = {
+          salt3000 = "https://download.suse.de/ibs/SUSE:/Maintenance:/15442/SUSE_Updates_SLE-Module-Basesystem_15-SP1_x86_64/"
+      }
       provider_settings = {
         mac = "AA:B2:93:00:00:07"
       }
