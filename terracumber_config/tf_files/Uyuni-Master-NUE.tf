@@ -167,7 +167,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2"
     }
     min-kvm = {
-      image = "opensuse152"
+      image = "opensuse152o"
     }
   }
   provider_settings = {
