@@ -168,6 +168,9 @@ module "cucumber_testsuite" {
     }
     min-kvm = {
       image = "opensuse152o"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:07"
+      }
     }
   }
   provider_settings = {
