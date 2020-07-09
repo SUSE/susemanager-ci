@@ -166,7 +166,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2"
     }
     min-kvm = {
-      image = "sles15sp1"
+      image = "sles15sp2"
       provider_settings = {
         mac = "52:54:00:00:00:29"
       }
