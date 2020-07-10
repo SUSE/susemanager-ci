@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2", "ubuntu1804"]
+  images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2o", "ubuntu1804"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -151,7 +151,7 @@ module "cucumber_testsuite" {
       additional_packages = ["python2-salt"]
     }
     min-build = {
-      image = "sles15sp2"
+      image = "sles15sp2o"
       name = "min-build"
       provider_settings = {
         mac = "AA:B2:93:00:01:09"
@@ -194,7 +194,7 @@ module "cucumber_testsuite" {
     }
     min-pxeboot = {
       present = true
-      image = "sles15sp2"
+      image = "sles15sp2o"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
       }
