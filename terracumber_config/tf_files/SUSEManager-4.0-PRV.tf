@@ -93,7 +93,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   
-  images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2", "ubuntu1804"]
+  images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2o", "ubuntu1804"]
 
   use_avahi = false
   name_prefix = "suma-40-"
@@ -139,7 +139,7 @@ module "cucumber_testsuite" {
       }
     }
     min-build = {
-      image = "sles15sp2"
+      image = "sles15sp2o"
       provider_settings = {
         mac = "52:54:00:00:00:20"
       }
@@ -163,7 +163,7 @@ module "cucumber_testsuite" {
     }
     min-pxeboot = {
       present = true
-      image = "sles15sp2"
+      image = "sles15sp2o"
     }
     min-kvm = {
       image = "sles15sp1"
