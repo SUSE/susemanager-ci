@@ -75,7 +75,7 @@ variable "GIT_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://ramrod.mgr.suse.de/system"
+  uri = "qemu+tcp://cokerunner.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
