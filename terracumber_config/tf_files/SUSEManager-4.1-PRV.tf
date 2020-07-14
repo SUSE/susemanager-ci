@@ -135,7 +135,7 @@ module "cucumber_testsuite" {
       image = "sles15sp1"
       name = "min-sles15"
       provider_settings = {
-        mac = "52:54:00:00:00:33"
+        mac = "52:54:00:00:00:23"
       }
     }
     min-build = {

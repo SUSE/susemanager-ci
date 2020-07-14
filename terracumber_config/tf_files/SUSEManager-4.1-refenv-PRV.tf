@@ -104,7 +104,7 @@ module "srv" {
   channels                = ["sle-product-sles15-sp1-pool-x86_64", "sle-product-sles15-sp1-updates-x86_64", "sle-module-basesystem15-sp1-pool-x86_64", "sle-module-basesystem15-sp1-updates-x86_64", "sle-module-containers15-sp1-pool-x86_64", "sle-module-containers15-sp1-updates-x86_64", "sle-manager-tools15-pool-x86_64-sp1", "sle-manager-tools15-updates-x86_64-sp1", "sle-manager-tools15-beta-pool-x86_64-sp1", "sle-manager-tools15-beta-updates-x86_64-sp1"]
 
   provider_settings = {
-    mac    = "52:54:00:00:00:31"
+    mac    = "52:54:00:00:00:32"
     memory = 8192
   }
 }
@@ -120,7 +120,7 @@ module "cli-sles15" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "52:54:00:00:00:32"
+    mac = "52:54:00:00:00:33"
   }
 }
 
@@ -135,7 +135,7 @@ module "min-sles15" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "52:54:00:00:00:33"
+    mac = "52:54:00:00:00:34"
   }
 }
 
@@ -148,7 +148,7 @@ module "min-build" {
   server_configuration    = module.srv.configuration
 
   provider_settings = {
-    mac = "52:54:00:00:00:39"
+    mac = "52:54:00:00:00:40"
   }
 }
 
@@ -163,7 +163,7 @@ module "min-centos7" {
   auto_connect_to_master = false
 
   provider_settings = {
-    mac = "52:54:00:00:00:35"
+    mac = "52:54:00:00:00:36"
   }
 }
 
@@ -176,6 +176,6 @@ module "min-ubuntu1804" {
   server_configuration = module.srv.configuration
 
   provider_settings = {
-    mac = "52:54:00:00:00:38"
+    mac = "52:54:00:00:00:39"
   }
 }
