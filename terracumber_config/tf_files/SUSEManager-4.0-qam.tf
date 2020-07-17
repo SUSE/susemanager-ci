@@ -681,5 +681,7 @@ module "ctl" {
 }
 
 output "configuration" {
-  value = module.ctl.configuration
+  value = {
+    ctl = module.ctl.configuration
+  }
 }
