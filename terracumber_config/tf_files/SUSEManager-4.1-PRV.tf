@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  
+
   images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2o", "ubuntu1804"]
 
   use_avahi = false
@@ -117,6 +117,10 @@ module "cucumber_testsuite" {
     srv = {
       provider_settings = {
         mac = "52:54:00:00:00:31"
+      }
+      additional_repos = {
+        devtools_product = "http://minima-mirror.prv.suse.net/SUSE/Products/SLE-Module-Development-Tools/15-SP2/x86_64/product/",
+        devtools_update  = "http://minima-mirror.prv.suse.net/SUSE/Updates/SLE-Module-Development-Tools/15-SP2/x86_64/update/"
       }
     }
     pxy = {
@@ -179,7 +183,7 @@ module "cucumber_testsuite" {
     additional_network = "192.168.41.0/24"
   }
 }
-  
+
 output "configuration" {
   value = module.cucumber_testsuite.configuration
 }
