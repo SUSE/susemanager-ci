@@ -59,7 +59,6 @@ def run(params) {
                 }
             }
         }
-        }
         finally {
             stage('Get results') {
                 def error = 0
