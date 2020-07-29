@@ -106,13 +106,13 @@ module "cucumber_testsuite" {
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
   host_settings = {
-    ctl = {
+    controller = {
       provider_settings = {
         mac    = "AA:B2:93:00:01:03"
       }
 //      branch = "fix-login"
     }
-    srv = {
+    server = {
       provider_settings = {
         mac = "AA:B2:93:00:01:00"
       }
@@ -120,7 +120,7 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP2/"
       }
     }
-    pxy = {
+    proxy = {
       provider_settings = {
         mac = "AA:B2:93:00:01:06"
       }
@@ -128,7 +128,7 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP2/"
       }
     }
-    cli-sles12sp4 = {
+    suse-client = {
       image = "sles15sp1"
       name = "cli-sles15"
       provider_settings = {
@@ -139,7 +139,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = ["python2-salt"]
     }
-    min-sles12sp4 = {
+    suse-minion = {
       image = "sles15sp1"
       name = "min-sles15"
       provider_settings = {
@@ -150,7 +150,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = ["python2-salt"]
     }
-    min-build = {
+    build-host = {
       image = "sles15sp2o"
       name = "min-build"
       provider_settings = {
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = ["python2-salt"]
     }
-    minssh-sles12sp4 = {
+    suse-sshminion = {
       image = "sles15sp1"
       name = "minssh-sles15"
       provider_settings = {
@@ -172,7 +172,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = ["python2-salt"]
     }
-    min-centos7 = {
+    redhat-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:01:05"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -184,7 +184,7 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/RES7-SUSE-Manager-Tools/SUSE_RES-7_Update_standard/"
       }
     }
-    min-ubuntu1804 = {
+    debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:01:07"
       }
@@ -192,15 +192,14 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/Ubuntu18.04-SUSE-Manager-Tools/xUbuntu_18.04/"
       }
     }
-    min-pxeboot = {
-      present = true
+    pxeboot-minion = {
       image = "sles15sp2o"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
       }
       additional_packages = ["python2-salt"]
     }
-    min-kvm = {
+    kvm-host = {
       image = "sles15sp1"
       provider_settings = {
         mac = "AA:B2:93:00:01:08"

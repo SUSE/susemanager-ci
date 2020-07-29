@@ -92,7 +92,7 @@ module "base" {
   }
 }
 
-module "srv" {
+module "server" {
   source                  = "./modules/server"
   base_configuration      = module.base.configuration
   product_version         = "4.1-nightly"
@@ -113,14 +113,14 @@ module "srv" {
   }
 }
 
-module "cli-sles15" {
+module "suse-client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   product_version    = "4.1-nightly"
   name               = "cli-sles15"
   image              = "sles15sp1"
 
-  server_configuration    = module.srv.configuration
+  server_configuration    = module.server.configuration
   use_os_released_updates = true
 
   provider_settings = {
@@ -128,14 +128,14 @@ module "cli-sles15" {
   }
 }
 
-module "min-sles15" {
+module "suse-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.1-nightly"
   name               = "min-sles15"
   image              = "sles15sp1"
 
-  server_configuration    = module.srv.configuration
+  server_configuration    = module.server.configuration
   use_os_released_updates = true
 
   provider_settings = {
@@ -143,27 +143,27 @@ module "min-sles15" {
   }
 }
 
-module "min-build" {
+module "build-host" {
   source                  = "./modules/minion"
   base_configuration      = module.base.configuration
   product_version         = "4.1-nightly"
   name                    = "min-build"
   image                   = "sles15sp1"
-  server_configuration    = module.srv.configuration
+  server_configuration    = module.server.configuration
 
   provider_settings = {
     mac = "52:54:00:00:00:40"
   }
 }
 
-module "min-centos7" {
+module "redhat-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.1-nightly"
   name               = "min-centos7"
   image              = "centos7"
 
-  server_configuration   = module.srv.configuration
+  server_configuration   = module.server.configuration
   auto_connect_to_master = false
 
   provider_settings = {
@@ -171,13 +171,13 @@ module "min-centos7" {
   }
 }
 
-module "min-ubuntu1804" {
+module "debian-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "4.1-nightly"
   name                 = "min-ubuntu1804"
   image                = "ubuntu1804"
-  server_configuration = module.srv.configuration
+  server_configuration = module.server.configuration
 
   provider_settings = {
     mac = "52:54:00:00:00:39"

@@ -106,13 +106,13 @@ module "cucumber_testsuite" {
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
   host_settings = {
-    ctl = {
+    controller = {
       provider_settings = {
         mac    = "AA:B2:93:00:00:63"
       }
 //      branch = "fix-login"
     }
-    srv = {
+    server = {
       provider_settings = {
         mac = "AA:B2:93:00:00:60"
       }
@@ -123,40 +123,40 @@ module "cucumber_testsuite" {
         Web_repo = "http://dist.nue.suse.com/ibs/SUSE:/SLE-15-SP2:/GA:/TEST/images/repo/SLE-15-SP2-Module-Web-Scripting-POOL-x86_64-Media1/"
       }
     }
-    pxy = {
+    proxy = {
       provider_settings = {
         mac = "AA:B2:93:00:00:86"
       }
     }
-    cli-sles12sp4 = {
+    suse-client = {
       image = "sles15sp1"
       name = "cli-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:61"
       }
     }
-    min-sles12sp4 = {
+    suse-minion = {
       image = "sles15sp1"
       name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:62"
       }
     }
-    min-build = {
+    build-host = {
       image = "sles15sp2o"
       name = "min-build"
       provider_settings = {
         mac = "AA:B2:93:00:00:73"
       }
     }
-    minssh-sles12sp4 = {
+    suse-sshminion = {
       image = "sles15sp1"
       name = "minssh-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:64"
       }
     }
-    min-centos7 = {
+    redhat-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:65"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -165,16 +165,15 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
     }
-    min-ubuntu1804 = {
+    debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:68"
       }
     }
-    min-pxeboot = {
-      present = true
+    pxeboot-minion = {
       image = "sles15sp2o"
     }
-    min-kvm = {
+    kvm-host = {
       image = "sles15sp1"
       provider_settings = {
         mac = "AA:B2:93:00:00:69"

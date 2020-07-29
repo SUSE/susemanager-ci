@@ -162,7 +162,7 @@ module "base3" {
   }
 }
 
-module "srv" {
+module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
   product_version    = "head"
@@ -197,7 +197,7 @@ module "srv" {
 
 }
 
-module "pxy" {
+module "proxy" {
   source             = "./modules/proxy"
   base_configuration = module.base.configuration
   product_version    = "head"
@@ -223,7 +223,7 @@ module "pxy" {
 
 }
 
-module "cli-sles12sp4" {
+module "sles12sp4-client" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -245,7 +245,7 @@ module "cli-sles12sp4" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "cli-sles11sp4" {
+module "sles11sp4-client" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -267,7 +267,7 @@ module "cli-sles11sp4" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "cli-sles15" {
+module "sles15-client" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -289,7 +289,7 @@ module "cli-sles15" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "cli-sles15sp1" {
+module "sles15sp1-client" {
   providers = {
     libvirt = libvirt.classic181
   }
@@ -311,7 +311,7 @@ module "cli-sles15sp1" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-//module "cli-centos7" {
+//module "centos7-client" {
 //  source             = "./modules/client"
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
@@ -330,7 +330,7 @@ module "cli-sles15sp1" {
 //  ssh_key_path  = "./salt/controller/id_rsa.pub"
 //}
 
-//module "cli-centos6" {
+//module "centos6-client" {
 //  source = "./modules/client"
 //  base_configuration = module.base.configuration
 //  product_version = "4.0-released"
@@ -343,7 +343,7 @@ module "cli-sles15sp1" {
 //  ssh_key_path = "./salt/controller/id_rsa.pub"
 //}
 
-module "min-sles12sp4" {
+module "sles12sp4-minion" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -365,7 +365,7 @@ module "min-sles12sp4" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "min-sles11sp4" {
+module "sles11sp4-minion" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -387,7 +387,7 @@ module "min-sles11sp4" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "min-sles15" {
+module "sles15-minion" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -409,7 +409,7 @@ module "min-sles15" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "min-sles15sp1" {
+module "sles15sp1-minion" {
   providers = {
     libvirt = libvirt.classic181
   }
@@ -431,7 +431,7 @@ module "min-sles15sp1" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-//module "min-centos7" {
+//module "centos7-minion" {
 //  source             = "./modules/minion"
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
@@ -448,7 +448,7 @@ module "min-sles15sp1" {
 //  ssh_key_path           = "./salt/controller/id_rsa.pub"
 //}
 
-//module "min-centos6" {
+//module "centos6-minion" {
 //  source = "./modules/minion"
 //  base_configuration = module.base.configuration
 //  product_version = "4.0-released"
@@ -462,7 +462,7 @@ module "min-sles15sp1" {
 //  ssh_key_path = "./salt/controller/id_rsa.pub"
 //}
 
-module "min-ubuntu1804" {
+module "ubuntu1804-minion" {
   providers = {
     libvirt = libvirt.classic181
   }
@@ -484,7 +484,7 @@ module "min-ubuntu1804" {
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
 
-//module "min-ubuntu1604" {
+//module "ubuntu1604-minion" {
 //  source = "./modules/minion"
 //  base_configuration = module.base.configuration
 //  product_version = "4.0-released"
@@ -498,7 +498,7 @@ module "min-ubuntu1804" {
 //  ssh_key_path = "./salt/controller/id_rsa.pub"
 //}
 
-module "minssh-sles12sp4" {
+module "sles12sp4-sshminion" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -517,7 +517,7 @@ module "minssh-sles12sp4" {
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
 
-module "minssh-sles11sp4" {
+module "sles11sp4-sshminion" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -535,7 +535,7 @@ module "minssh-sles11sp4" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "minssh-sles15" {
+module "sles15-sshminion" {
   providers = {
     libvirt = libvirt.classic179
   }
@@ -553,7 +553,7 @@ module "minssh-sles15" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "minssh-sles15sp1" {
+module "sles15sp1-sshminion" {
   providers = {
     libvirt = libvirt.classic181
   }
@@ -571,7 +571,7 @@ module "minssh-sles15sp1" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-//module "minssh-centos7" {
+//module "centos7-sshminion" {
 //  source             = "./modules/sshminion"
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
@@ -584,7 +584,7 @@ module "minssh-sles15sp1" {
 //  ssh_key_path = "./salt/controller/id_rsa.pub"
 //}
 
-//module "minssh-centos6" {
+//module "centos6-sshminion" {
 //  source = "./modules/sshminion"
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
@@ -596,7 +596,7 @@ module "minssh-sles15sp1" {
 //  ssh_key_path = "./salt/controller/id_rsa.pub"
 //}
 
-module "minssh-ubuntu1804" {
+module "ubuntu1804-sshminion" {
   providers = {
     libvirt = libvirt.classic181
   }
@@ -613,7 +613,7 @@ module "minssh-ubuntu1804" {
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
 
-//module "minssh-ubuntu1604" {
+//module "ubuntu1604-sshminion" {
 //  source = "./modules/sshminion"
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
@@ -626,7 +626,7 @@ module "minssh-ubuntu1804" {
 // }
 
 
-module "ctl" {
+module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base.configuration
   name               = "ctl"
@@ -642,46 +642,46 @@ module "ctl" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  server_configuration = module.srv.configuration
-  proxy_configuration  = module.pxy.configuration
+  server_configuration = module.server.configuration
+  proxy_configuration  = module.proxy.configuration
 
-  //  centos6_minion_configuration = module.min-centos6.configuration
-  //  centos6_sshminion_configuration = module.minssh-centos6.configuration
-  //  centos6_client_configuration = module.cli-centos6.configuration
+  //  centos6_client_configuration = module.centos6-client.configuration
+  //  centos6_minion_configuration = module.centos6-minion.configuration
+  //  centos6_sshminion_configuration = module.centos6-sshminion.configuration
 
-  //  centos7_minion_configuration    = module.min-centos7.configuration
-  //  centos7_sshminion_configuration = module.minssh-centos7.configuration
-  //  centos7_client_configuration    = module.cli-centos7.configuration
+  //  centos7_client_configuration    = module.centos7-client.configuration
+  //  centos7_minion_configuration    = module.centos7-minion.configuration
+  //  centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-  sle11sp4_minion_configuration    = module.min-sles11sp4.configuration
-  sle11sp4_sshminion_configuration = module.minssh-sles11sp4.configuration
-  sle11sp4_client_configuration    = module.cli-sles11sp4.configuration
+  sle11sp4_client_configuration    = module.sles11sp4-client.configuration
+  sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
+  sle11sp4_sshminion_configuration = module.sles11sp4-sshminion.configuration
 
-  sle12sp4_minion_configuration    = module.min-sles12sp4.configuration
-  sle12sp4_sshminion_configuration = module.minssh-sles12sp4.configuration
-  sle12sp4_client_configuration    = module.cli-sles12sp4.configuration
+  sle12sp4_client_configuration    = module.sles12sp4-client.configuration
+  sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
+  sle12sp4_sshminion_configuration = module.sles12sp4-sshminion.configuration
 
-  minion_configuration    = module.min-sles12sp4.configuration
-  sshminion_configuration = module.minssh-sles12sp4.configuration
-  client_configuration    = module.cli-sles12sp4.configuration
+  client_configuration    = module.sles12sp4-client.configuration
+  minion_configuration    = module.sles12sp4-minion.configuration
+  sshminion_configuration = module.sles12sp4-sshminion.configuration
 
-  sle15_minion_configuration    = module.min-sles15.configuration
-  sle15_sshminion_configuration = module.minssh-sles15.configuration
-  sle15_client_configuration    = module.cli-sles15.configuration
+  sle15_client_configuration    = module.sles15-client.configuration
+  sle15_minion_configuration    = module.sles15-minion.configuration
+  sle15_sshminion_configuration = module.sles15-sshminion.configuration
 
-  sle15sp1_minion_configuration    = module.min-sles15sp1.configuration
-  sle15sp1_sshminion_configuration = module.minssh-sles15sp1.configuration
-  sle15sp1_client_configuration    = module.cli-sles15sp1.configuration
+  sle15sp1_client_configuration    = module.sles15sp1-client.configuration
+  sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
+  sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
 
-  //  ubuntu1604_minion_configuration = module.min-ubuntu1604.configuration
-  //  ubuntu1604_sshminion_configuration = module.minssh-ubuntu1604.configuration
+  //  ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
+  //  ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
 
-  ubuntu1804_minion_configuration = module.min-ubuntu1804.configuration
-  ubuntu1804_sshminion_configuration = module.minssh-ubuntu1804.configuration
+  ubuntu1804_minion_configuration = module.ubuntu1804-minion.configuration
+  ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 }
 
 output "configuration" {
   value = {
-    ctl = module.ctl.configuration
+    controller = module.controller.configuration
   }
 }
