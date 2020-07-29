@@ -5,7 +5,8 @@ def run(params) {
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
+        sumaformdir = "${resultdir}/sumaform".replace("qam", "qam-setup") // HACK: Temporary hack, as Terraform needs the tfstate file from the first pipeline workspace
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${sumaformdir}"
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
                 // Create a directory for  to place the directory with the build results (if it does not exist)
