@@ -107,56 +107,55 @@ module "cucumber_testsuite" {
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
   host_settings = {
-    ctl = {
+    controller = {
       provider_settings = {
         mac = "AA:B2:93:00:00:71"
       }
     }
-    srv = {
+    server = {
       provider_settings = {
         mac = "AA:B2:93:00:00:66"
       }
     }
-    pxy = {
+    proxy = {
       provider_settings = {
         mac = "AA:B2:93:00:00:72"
       }
     }
-    cli-sles12sp4 = {
+    suse-client = {
       name = "cli-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:00:67"
       }
     }
-    min-sles12sp4 = {
+    suse-minion = {
       name = "min-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:21:68"
       }
     }
-    min-build = {
+    build-host = {
       provider_settings = {
         mac = "AA:B2:93:00:00:7B"
       }
     }
-    minssh-sles12sp4 = {
+    suse-sshminion = {
       name = "minssh-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:21:69"
       }
     }
-    min-centos7 = {
+    redhat-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:70"
       }
     }
-    min-ubuntu1804 = {
+    debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:7A"
       }
     }
-    min-pxeboot = {
-      present = true
+    pxeboot-minion = {
     }
   }
   provider_settings = {

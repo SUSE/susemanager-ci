@@ -89,7 +89,7 @@ module "base" {
   }
 }
 
-module "srv" {
+module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
   product_version    = "head"
@@ -107,14 +107,14 @@ module "srv" {
   }
 }
 
-module "cli-sles15" {
+module "suse-client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   product_version    = "head"
   name               = "cli-sles15"
   image              = "sles15sp1"
 
-  server_configuration    = module.srv.configuration
+  server_configuration    = module.server.configuration
   use_os_released_updates = true
 
   provider_settings = {
@@ -122,14 +122,14 @@ module "cli-sles15" {
   }
 }
 
-module "min-sles15" {
+module "suse-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "head"
   name               = "min-sles15"
   image              = "sles15sp1"
 
-  server_configuration    = module.srv.configuration
+  server_configuration    = module.server.configuration
   use_os_released_updates = true
 
   provider_settings = {
@@ -137,26 +137,26 @@ module "min-sles15" {
   }
 }
 
-module "min-build" {
+module "build-host" {
   source                  = "./modules/minion"
   base_configuration      = module.base.configuration
   product_version         = "head"
   name                    = "min-build"
   image                   = "sles15sp1"
-  server_configuration    = module.srv.configuration
+  server_configuration    = module.server.configuration
 
   provider_settings = {
     mac = "AA:B2:93:00:00:39"
   }
 }
 
-module "min-centos7" {
+module "redhat-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "head"
   name                 = "min-centos7"
   image                = "centos7"
-  server_configuration = module.srv.configuration
+  server_configuration = module.server.configuration
 
   provider_settings = {
     mac = "AA:B2:93:00:00:34"
@@ -167,13 +167,13 @@ module "min-centos7" {
   }
 }
 
-module "min-ubuntu1804" {
+module "debian-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "head"
   name                 = "min-ubuntu1804"
   image                = "ubuntu1804"
-  server_configuration = module.srv.configuration
+  server_configuration = module.server.configuration
 
   provider_settings = {
     mac = "AA:B2:93:00:00:37"

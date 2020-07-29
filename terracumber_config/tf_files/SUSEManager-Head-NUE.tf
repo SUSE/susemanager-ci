@@ -107,50 +107,50 @@ module "cucumber_testsuite" {
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
   host_settings = {
-    ctl = {
+    controller = {
       provider_settings = {
         mac = "AA:B2:93:00:00:25"
       }
     }
-    srv = {
+    server = {
       provider_settings = {
         mac = "AA:B2:93:00:00:20"
       }
     }
-    pxy = {
+    proxy = {
       provider_settings = {
         mac = "AA:B2:93:00:00:26"
       }
     }
-    cli-sles12sp4 = {
+    suse-client = {
       image = "sles15sp1"
       name = "cli-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:21"
       }
     }
-    min-sles12sp4 = {
+    suse-minion = {
       image = "sles15sp1"
       name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:22"
       }
     }
-    min-build = {
+    build-host = {
       image = "sles15sp2o"
       name = "min-build"
       provider_settings = {
         mac = "AA:B2:93:00:00:58"
       }
     }
-    minssh-sles12sp4 = {
+    suse-sshminion = {
       image = "sles15sp1"
       name = "minssh-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:23"
       }
     }
-    min-centos7 = {
+    redhat-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:24"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -159,16 +159,15 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
     }
-    min-ubuntu1804 = {
+    debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:28"
       }
     }
-    min-pxeboot = {
-      present = true
+    pxeboot-minion = {
       image = "sles15sp2o"
     }
-    min-kvm = {
+    kvm-host = {
       image = "sles15sp2o"
       provider_settings = {
         mac = "AA:B2:93:00:00:29"
