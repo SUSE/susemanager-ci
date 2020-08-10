@@ -645,7 +645,7 @@ module "centos8-sshminion" {
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "52:54:00:EA:AA:42"
+    mac                = "52:54:00:AE:F1:6C"
     memory             = 2048
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
@@ -695,23 +695,6 @@ module "ubuntu2004-sshminion" {
   image              = "ubuntu2004o"
   provider_settings = {
     mac                = "52:54:00:2A:47:D8"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path       = "./salt/controller/id_rsa.pub"
-}
-
-module "ubuntu1804-sshminion" {
-  providers = {
-    libvirt = libvirt.classic181
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
-  name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "52:54:00:8E:00:5A"
     memory             = 2048
   }
   use_os_released_updates = false
