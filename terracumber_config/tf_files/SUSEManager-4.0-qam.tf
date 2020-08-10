@@ -311,8 +311,11 @@ module "sles15sp1-client" {
 }
 
 module "centos7-client" {
+  providers = {
+    libvirt = libvirt.classic179
+  }
   source             = "./modules/client"
-  base_configuration = module.base.configuration
+  base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "cli-centos7"
   image              = "centos7o"
@@ -330,8 +333,11 @@ module "centos7-client" {
 }
 
 module "centos6-client" {
+  providers = {
+    libvirt = libvirt.classic179
+  }
   source             = "./modules/client"
-  base_configuration = module.base.configuration
+  base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "cli-centos6"
   image              = "centos6o"
@@ -432,9 +438,33 @@ module "sles15sp1-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "centos7-minion" {
+module "centos8-minion" {
+  providers = {
+    libvirt = libvirt.classic181
+  }
   source             = "./modules/minion"
-  base_configuration = module.base.configuration
+  base_configuration = module.base3.configuration
+  product_version    = "4.0-released"
+  name               = "min-centos8"
+  image              = "centos7o"
+  provider_settings = {
+    mac                = "52:54:00:99:CF:C8"
+    memory             = 2048
+  }
+  server_configuration = {
+    hostname = "qam-pip-40-pxy.qa.prv.suse.net"
+  }
+  auto_connect_to_master = false
+  use_os_released_updates = false
+  ssh_key_path           = "./salt/controller/id_rsa.pub"
+}
+
+module "centos7-minion" {
+  providers = {
+    libvirt = libvirt.classic179
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "min-centos7"
   image              = "centos7o"
@@ -451,8 +481,11 @@ module "centos7-minion" {
 }
 
 module "centos6-minion" {
+  providers = {
+    libvirt = libvirt.classic179
+  }
   source             = "./modules/minion"
-  base_configuration = module.base.configuration
+  base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "min-centos6"
   image              = "centos6o"
@@ -464,6 +497,28 @@ module "centos6-minion" {
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
+}
+
+module "ubuntu2004-minion" {
+  providers = {
+    libvirt = libvirt.classic181
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base3.configuration
+  product_version    = "4.0-released"
+  name               = "min-ubuntu2004"
+  image              = "ubuntu2004o"
+  provider_settings = {
+    mac                = "52:54:00:2A:47:D8"
+    memory             = 2048
+  }
+
+  server_configuration = {
+    hostname = "qam-pip-40-pxy.qa.prv.suse.net"
+  }
+  auto_connect_to_master = false
+  use_os_released_updates = false
+  ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
 
 module "ubuntu1804-minion" {
@@ -489,8 +544,11 @@ module "ubuntu1804-minion" {
 }
 
 module "ubuntu1604-minion" {
+  providers = {
+    libvirt = libvirt.classic181
+  }
   source             = "./modules/minion"
-  base_configuration = module.base.configuration
+  base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-ubuntu1604"
   image              = "ubuntu1604o"
@@ -577,9 +635,28 @@ module "sles15sp1-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "centos7-sshminion" {
+module "centos8-sshminion" {
+  providers = {
+    libvirt = libvirt.classic181
+  }
   source             = "./modules/sshminion"
-  base_configuration = module.base.configuration
+  base_configuration = module.base3.configuration
+  product_version    = "4.0-released"
+  name               = "minssh-centos7"
+  image              = "centos7o"
+  provider_settings = {
+    mac                = "52:54:00:EA:AA:42"
+    memory             = 2048
+  use_os_released_updates = false
+  ssh_key_path = "./salt/controller/id_rsa.pub"
+}
+
+module "centos7-sshminion" {
+  providers = {
+    libvirt = libvirt.classic179
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "minssh-centos7"
   image              = "centos7o"
@@ -591,17 +668,54 @@ module "centos7-sshminion" {
 }
 
 module "centos6-sshminion" {
+  providers = {
+    libvirt = libvirt.classic179
+  }
   source             = "./modules/sshminion"
-  base_configuration = module.base.configuration
+  base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "minssh-centos6"
   image              = "centos6o"
   provider_settings = {
-    mac = "52:54:00:96:6B:AC"
+    mac                = "52:54:00:96:6B:AC"
     memory             = 2048
   }
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
+}
+
+module "ubuntu2004-sshminion" {
+  providers = {
+    libvirt = libvirt.classic181
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base3.configuration
+  product_version    = "4.0-released"
+  name               = "minssh-ubuntu2004"
+  image              = "ubuntu2004o"
+  provider_settings = {
+    mac                = "52:54:00:2A:47:D8"
+    memory             = 2048
+  }
+  use_os_released_updates = false
+  ssh_key_path       = "./salt/controller/id_rsa.pub"
+}
+
+module "ubuntu1804-sshminion" {
+  providers = {
+    libvirt = libvirt.classic181
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base3.configuration
+  product_version    = "4.0-released"
+  name               = "minssh-ubuntu1804"
+  image              = "ubuntu1804o"
+  provider_settings = {
+    mac                = "52:54:00:8E:00:5A"
+    memory             = 2048
+  }
+  use_os_released_updates = false
+  ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
 
 module "ubuntu1804-sshminion" {
@@ -663,6 +777,9 @@ module "controller" {
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
+  centos8_minion_configuration    = module.centos8-minion.configuration
+  centos8_sshminion_configuration = module.centos8-sshminion.configuration
+
   sle11sp4_client_configuration    = module.sles11sp4-client.configuration
   sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
   sle11sp4_sshminion_configuration = module.sles11sp4-sshminion.configuration
@@ -688,6 +805,9 @@ module "controller" {
 
   ubuntu1804_minion_configuration = module.ubuntu1804-minion.configuration
   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
+
+  ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
+  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
 }
 
 output "configuration" {
