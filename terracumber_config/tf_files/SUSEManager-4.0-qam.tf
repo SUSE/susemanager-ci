@@ -97,7 +97,7 @@ module "base" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = ["sles15", "sles15sp1", "opensuse150"]
+  images      = [ "sles15o", "sles15sp1o", "opensuse150o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -123,7 +123,7 @@ module "base2" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = ["sles11sp4", "sles12sp4", "sles15", "sles15sp1"]
+  images      = [ "sles11sp4", "sles12sp4o", "sles15o", "sles15sp1o", "centos6o", "centos7o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = ["sles15sp1",  "ubuntu1804"]
+  images      = [ "sles15sp1o",  "ubuntu1804o", "ubuntu1604o", "ubuntu2004o", "centos8o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -167,7 +167,7 @@ module "base3" {
 module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
-  product_version    = "4.0-nightly"
+  product_version    = "4.0-released"
   name               = "srv"
   provider_settings = {
     mac                = "52:54:00:F6:5D:E8"
@@ -202,7 +202,7 @@ module "server" {
 module "proxy" {
   source             = "./modules/proxy"
   base_configuration = module.base.configuration
-  product_version    = "4.0-nightly"
+  product_version    = "4.0-released"
   name               = "pxy"
   provider_settings = {
     mac                = "52:54:00:F2:4D:7A"
@@ -232,7 +232,7 @@ module "sles12sp4-client" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "cli-sles12sp4"
-  image              = "sles12sp4"
+  image              = "sles12sp4o"
   provider_settings = {
     mac                = "52:54:00:0E:F8:ED"
     memory             = 2048
@@ -274,7 +274,7 @@ module "sles15-client" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "cli-sles15"
-  image              = "sles15"
+  image              = "sles15o"
   provider_settings = {
     mac                = "52:54:00:06:F2:85"
     memory             = 2048
@@ -296,7 +296,7 @@ module "sles15sp1-client" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "cli-sles15sp1"
-  image              = "sles15sp1"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "52:54:00:BA:1D:11"
     memory             = 2048
@@ -315,7 +315,7 @@ module "sles15sp1-client" {
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
 //  name               = "cli-centos7"
-//  image              = "centos7"
+//  image              = "centos7o"
 //  provider_settings = {
 //    mac                = "52:54:00:72:41:8A"
 //  }
@@ -334,7 +334,7 @@ module "sles15sp1-client" {
 //  base_configuration = module.base.configuration
 //  product_version = "4.0-released"
 //  name = "cli-centos6"
-//  image = "centos6"
+//  image = "centos6o"
 //  mac = "52:54:00:BA:ED:61"
 //  memory             = 2048
 //  use_os_released_updates = false
@@ -350,7 +350,7 @@ module "sles12sp4-minion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "min-sles12sp4"
-  image              = "sles12sp4"
+  image              = "sles12sp4o"
   provider_settings = {
     mac                = "52:54:00:B2:49:5C"
     memory             = 2048
@@ -394,7 +394,7 @@ module "sles15-minion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "min-sles15"
-  image              = "sles15"
+  image              = "sles15o"
   provider_settings = {
     mac                = "52:54:00:DA:C7:79"
     memory             = 2048
@@ -416,7 +416,7 @@ module "sles15sp1-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-sles15sp1"
-  image              = "sles15sp1"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "52:54:00:72:E5:BE"
     memory             = 2048
@@ -435,7 +435,7 @@ module "sles15sp1-minion" {
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
 //  name               = "min-centos7"
-//  image              = "centos7"
+//  image              = "centos7o"
 //  provider_settings = {
 //    mac                = "52:54:00:92:F9:D6"
 //  }
@@ -453,7 +453,7 @@ module "sles15sp1-minion" {
 //  base_configuration = module.base.configuration
 //  product_version = "4.0-released"
 //  name = "min-centos6"
-//  image = "centos6"
+//  image = "centos6o"
 //  mac = "52:54:00:7A:13:48"
 //  memory             = 2048
 //  server_configuration =  { hostname = "qam-pip-40-pxy.qa.prv.suse.net" }
@@ -470,7 +470,7 @@ module "ubuntu1804-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-ubuntu1804"
-  image              = "ubuntu1804"
+  image              = "ubuntu1804o"
   provider_settings = {
     mac                = "52:54:00:D2:5E:EC"
     memory             = 2048
@@ -489,7 +489,7 @@ module "ubuntu1804-minion" {
 //  base_configuration = module.base.configuration
 //  product_version = "4.0-released"
 //  name = "min-ubuntu1604"
-//  image = "ubuntu1604"
+//  image = "ubuntu1604o"
 //  mac = "52:54:00:12:33:D8"
 //  memory             = 2048
 //  server_configuration =  { hostname =  "qam-pip-40-pxy.qa.prv.suse.net" }
@@ -510,7 +510,7 @@ module "sles12sp4-sshminion" {
     memory             = 2048
   }
   name               = "minssh-sles12sp4"
-  image              = "sles12sp4"
+  image              = "sles12sp4o"
 
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
@@ -543,7 +543,7 @@ module "sles15-sshminion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "minssh-sles15"
-  image              = "sles15"
+  image              = "sles15o"
   provider_settings = {
     mac                = "52:54:00:62:D7:5D"
     memory             = 2048
@@ -561,7 +561,7 @@ module "sles15sp1-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "minssh-sles15sp1"
-  image              = "sles15sp1"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "52:54:00:26:7C:DE"
     memory             = 2048
@@ -576,7 +576,7 @@ module "sles15sp1-sshminion" {
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
 //  name               = "minssh-centos7"
-//  image              = "centos7"
+//  image              = "centos7o"
 //  provider_settings = {
 //    mac                = "52:54:00:EA:AA:42"
 //  memory             = 2048
@@ -589,7 +589,7 @@ module "sles15sp1-sshminion" {
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
 //  name = "minssh-centos6"
-//  image = "centos6"
+//  image = "centos6o"
 //  memory             = 2048
 //  mac = "52:54:00:96:6B:AC"
 //  use_os_released_updates = false
@@ -604,7 +604,7 @@ module "ubuntu1804-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804"
+  image              = "ubuntu1804o"
   provider_settings = {
     mac                = "52:54:00:8E:00:5A"
     memory             = 2048
@@ -618,7 +618,7 @@ module "ubuntu1804-sshminion" {
 //  base_configuration = module.base.configuration
 //  product_version    = "4.0-released"
 //  name = "minssh-ubuntu1604"
-//  image = "ubuntu1604"
+//  image = "ubuntu1604o"
 //  mac = "52:54:00:CE:FE:C8"
 //  memory             = 2048
 //  use_os_released_updates = false
@@ -641,7 +641,7 @@ module "controller" {
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
-  
+
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
 
