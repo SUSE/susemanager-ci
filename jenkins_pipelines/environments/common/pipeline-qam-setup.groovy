@@ -17,10 +17,18 @@ def run(params) {
                 // Clone sumaform
                 sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
             }
-            stage('Deploy') {
-                if(params.must_deploy) {
+            stage('Inject MU repositories in main.tf') {
+                if(params.must_deploy && params.mu_repositories) {
                     // Generate json file in the workspace
                     writeFile file: 'mu_repositories.json', text: params.mu_repositories, encoding: "UTF-8"
+                    // Run Terracumber to prepare the main.tf
+                    sh "set +x; source /home/jenkins/.credentials set -x;"
+                    sh "export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins};"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --mu-repositories ${WORKSPACE}/mu_repositories.json"
+                }
+            }
+            stage('Deploy') {
+                if(params.must_deploy) {
                     // Provision the environment
                     if (params.terraform_init) {
                         env.TERRAFORM_INIT = '--init'
@@ -31,17 +39,16 @@ def run(params) {
                     sh "set +x; source /home/jenkins/.credentials set -x;"
                     sh "export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins};"
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --mu-repositories ${WORKSPACE}/mu_repositories.json"
                     deployed = true
                 }
             }
             stage('Run Core features') {
-                if(params.must_run_core) {
+                if(params.must_run_core && deployed) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:qam_core'"
                 }
             }
             stage('Sync. products and channels') {
-                if(params.must_sync) {
+                if(params.must_sync && deployed) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:qam_reposync'"
                 }
             }
