@@ -637,9 +637,11 @@ module "centos8-sshminion" {
   provider_settings = {
     mac                = "52:54:00:AE:F1:6C"
     memory             = 2048
+  }
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
+
 
 module "centos7-sshminion" {
   providers = {
@@ -653,6 +655,7 @@ module "centos7-sshminion" {
   provider_settings = {
     mac                = "52:54:00:EA:AA:42"
     memory             = 2048
+  }
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
