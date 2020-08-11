@@ -167,7 +167,7 @@ module "base3" {
 module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "srv"
   provider_settings = {
     mac                = "52:54:00:46:86:8A"
@@ -202,7 +202,7 @@ module "server" {
 module "proxy" {
   source             = "./modules/proxy"
   base_configuration = module.base.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "pxy"
   provider_settings = {
     mac                = "52:54:00:FA:0A:A5"
@@ -230,7 +230,7 @@ module "sles12sp4-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "cli-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
@@ -251,7 +251,7 @@ module "sles11sp4-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "cli-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
@@ -272,14 +272,13 @@ module "sles15-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "cli-sles15"
   image              = "sles15o"
   provider_settings = {
     mac                = "52:54:00:56:49:43"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
@@ -294,14 +293,13 @@ module "sles15sp1-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "cli-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
     mac                = "52:54:00:7A:84:9E"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
@@ -316,14 +314,13 @@ module "centos7-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
     mac                = "52:54:00:8E:E6:5B"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
@@ -338,7 +335,7 @@ module "centos6-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "cli-centos6"
   image              = "centos6o"
   provider_settings = {
@@ -356,14 +353,13 @@ module "sles12sp4-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
     mac                = "52:54:00:9A:94:C9"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
@@ -378,14 +374,13 @@ module "sles11sp4-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
     mac                = "52:54:00:6A:52:82"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
@@ -400,7 +395,7 @@ module "sles15-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-sles15"
   image              = "sles15o"
   provider_settings = {
@@ -422,7 +417,7 @@ module "sles15sp1-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
@@ -444,9 +439,9 @@ module "centos8-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-centos8"
-  image              = "centos7o"
+  image              = "centos8o"
   provider_settings = {
     mac                = "52:54:00:11:EA:1D"
     memory             = 2048
@@ -465,7 +460,7 @@ module "centos7-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
@@ -486,7 +481,7 @@ module "centos6-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-centos6"
   image              = "centos6o"
   provider_settings = {
@@ -505,14 +500,13 @@ module "ubuntu2004-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
     mac                = "52:54:00:15:A7:50"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
@@ -527,14 +521,13 @@ module "ubuntu1804-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
     mac                = "52:54:00:7E:7D:ED"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
@@ -549,7 +542,7 @@ module "ubuntu1604-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "min-ubuntu1604"
   image              = "ubuntu1604o"
   provider_settings = {
@@ -568,7 +561,7 @@ module "sles12sp4-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
@@ -587,14 +580,13 @@ module "sles11sp4-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
     mac                = "52:54:00:56:0F:F7"
     memory             = 2048
   }
-
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -605,14 +597,13 @@ module "sles15-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-sles15"
   image              = "sles15o"
   provider_settings = {
     mac                = "52:54:00:8A:F9:39"
     memory             = 2048
   }
-
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -623,14 +614,13 @@ module "sles15sp1-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
     mac                = "52:54:00:EE:AD:30"
     memory             = 2048
   }
-
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -641,9 +631,9 @@ module "centos8-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
-  name               = "minssh-centos7"
-  image              = "centos7o"
+  product_version    = "4.1-released"
+  name               = "minssh-centos8"
+  image              = "centos8o"
   provider_settings = {
     mac                = "52:54:00:05:67:B3"
     memory             = 2048
@@ -657,7 +647,7 @@ module "centos7-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
@@ -673,7 +663,7 @@ module "centos6-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-centos6"
   image              = "centos6o"
   provider_settings = {
@@ -690,7 +680,7 @@ module "ubuntu2004-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
@@ -707,7 +697,7 @@ module "ubuntu1804-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
@@ -721,7 +711,7 @@ module "ubuntu1804-sshminion" {
 module "ubuntu1604-sshminion" {
   source = "./modules/sshminion"
   base_configuration = module.base.configuration
-  product_version    = "4.0-released"
+  product_version    = "4.1-released"
   name               = "minssh-ubuntu1604"
   image              = "ubuntu1604o"
   provider_settings = {

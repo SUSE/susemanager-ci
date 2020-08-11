@@ -279,7 +279,6 @@ module "sles15-client" {
     mac                = "52:54:00:06:F2:85"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-40-pxy.qa.prv.suse.net"
   }
@@ -301,7 +300,6 @@ module "sles15sp1-client" {
     mac                = "52:54:00:BA:1D:11"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-40-pxy.qa.prv.suse.net"
   }
@@ -323,7 +321,6 @@ module "centos7-client" {
     mac                = "52:54:00:72:41:8A"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-40-pxy.qa.prv.suse.net"
   }
@@ -407,7 +404,6 @@ module "sles15-minion" {
     mac                = "52:54:00:DA:C7:79"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-40-pxy.qa.prv.suse.net"
   }
@@ -446,7 +442,7 @@ module "centos8-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-centos8"
-  image              = "centos7o"
+  image              = "centos8o"
   provider_settings = {
     mac                = "52:54:00:99:CF:C8"
     memory             = 2048
@@ -512,7 +508,6 @@ module "ubuntu2004-minion" {
     mac                = "52:54:00:2A:47:D8"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-40-pxy.qa.prv.suse.net"
   }
@@ -534,7 +529,6 @@ module "ubuntu1804-minion" {
     mac                = "52:54:00:D2:5E:EC"
     memory             = 2048
   }
-
   server_configuration = {
     hostname = "qam-pip-40-pxy.qa.prv.suse.net"
   }
@@ -575,7 +569,6 @@ module "sles12sp4-sshminion" {
     mac                = "52:54:00:DA:AD:B0"
     memory             = 2048
   }
-
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
@@ -594,7 +587,6 @@ module "sles11sp4-sshminion" {
     mac                = "52:54:00:3A:0D:F9"
     memory             = 2048
   }
-
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -612,7 +604,6 @@ module "sles15-sshminion" {
     mac                = "52:54:00:62:D7:5D"
     memory             = 2048
   }
-
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -630,7 +621,6 @@ module "sles15sp1-sshminion" {
     mac                = "52:54:00:26:7C:DE"
     memory             = 2048
   }
-
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -642,8 +632,8 @@ module "centos8-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
-  name               = "minssh-centos7"
-  image              = "centos7o"
+  name               = "minssh-centos8"
+  image              = "centos8o"
   provider_settings = {
     mac                = "52:54:00:AE:F1:6C"
     memory             = 2048
