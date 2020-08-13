@@ -287,26 +287,26 @@ module "sles15-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp1-client" {
-  providers = {
-    libvirt = libvirt.classic181
-  }
-  source             = "./modules/client"
-  base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
-  name               = "cli-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "52:54:00:BA:1D:11"
-    memory             = 2048
-  }
-  server_configuration = {
-    hostname = "qam-pip-40-pxy.qa.prv.suse.net"
-  }
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+# module "sles15sp1-client" {
+#   providers = {
+#     libvirt = libvirt.classic181
+#   }
+#   source             = "./modules/client"
+#   base_configuration = module.base3.configuration
+#   product_version    = "4.0-released"
+#   name               = "cli-sles15sp1"
+#   image              = "sles15sp1o"
+#   provider_settings = {
+#     mac                = "52:54:00:BA:1D:11"
+#     memory             = 2048
+#   }
+#   server_configuration = {
+#     hostname = "qam-pip-40-pxy.qa.prv.suse.net"
+#   }
+#   auto_register           = false
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_rsa.pub"
+# }
 
 # module "centos7-client" {
 #   providers = {
@@ -412,27 +412,27 @@ module "sles15-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp1-minion" {
-  providers = {
-    libvirt = libvirt.classic181
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
-  name               = "min-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "52:54:00:72:E5:BE"
-    memory             = 2048
-  }
+# module "sles15sp1-minion" {
+#   providers = {
+#     libvirt = libvirt.classic181
+#   }
+#   source             = "./modules/minion"
+#   base_configuration = module.base3.configuration
+#   product_version    = "4.0-released"
+#   name               = "min-sles15sp1"
+#   image              = "sles15sp1o"
+#   provider_settings = {
+#     mac                = "52:54:00:72:E5:BE"
+#     memory             = 2048
+#   }
 
-  server_configuration = {
-    hostname = "qam-pip-40-pxy.qa.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+#   server_configuration = {
+#     hostname = "qam-pip-40-pxy.qa.prv.suse.net"
+#   }
+#   auto_connect_to_master  = false
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_rsa.pub"
+# }
 
 # module "centos8-minion" {
 #   providers = {
@@ -608,22 +608,22 @@ module "sles15-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp1-sshminion" {
-  providers = {
-    libvirt = libvirt.classic181
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
-  name               = "minssh-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "52:54:00:26:7C:DE"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+# module "sles15sp1-sshminion" {
+#   providers = {
+#     libvirt = libvirt.classic181
+#   }
+#   source             = "./modules/sshminion"
+#   base_configuration = module.base3.configuration
+#   product_version    = "4.0-released"
+#   name               = "minssh-sles15sp1"
+#   image              = "sles15sp1o"
+#   provider_settings = {
+#     mac                = "52:54:00:26:7C:DE"
+#     memory             = 2048
+#   }
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_rsa.pub"
+# }
 
 # module "centos8-sshminion" {
 #   providers = {
@@ -772,9 +772,9 @@ module "controller" {
   sle15_minion_configuration    = module.sles15-minion.configuration
   sle15_sshminion_configuration = module.sles15-sshminion.configuration
 
-  sle15sp1_client_configuration    = module.sles15sp1-client.configuration
-  sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
-  sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
+#   sle15sp1_client_configuration    = module.sles15sp1-client.configuration
+#   sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
+#   sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
 
   ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
   ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
