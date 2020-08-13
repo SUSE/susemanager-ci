@@ -537,24 +537,24 @@ module "centos6-minion" {
 #   ssh_key_path           = "./salt/controller/id_rsa.pub"
 # }
 
-module "ubuntu1604-minion" {
-  providers = {
-    libvirt = libvirt.classic181
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base3.configuration
-  product_version    = "4.0-released"
-  name               = "min-ubuntu1604"
-  image              = "ubuntu1604o"
-  provider_settings = {
-    mac                = "52:54:00:12:33:D8"
-    memory             = 2048
-  }
-  server_configuration =  { hostname =  "qam-pip-40-pxy.qa.prv.suse.net" }
-  auto_connect_to_master = false
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-}
+# module "ubuntu1604-minion" {
+#   providers = {
+#     libvirt = libvirt.classic181
+#   }
+#   source             = "./modules/minion"
+#   base_configuration = module.base3.configuration
+#   product_version    = "4.0-released"
+#   name               = "min-ubuntu1604"
+#   image              = "ubuntu1604o"
+#   provider_settings = {
+#     mac                = "52:54:00:12:33:D8"
+#     memory             = 2048
+#   }
+#   server_configuration =  { hostname =  "qam-pip-40-pxy.qa.prv.suse.net" }
+#   auto_connect_to_master = false
+#   use_os_released_updates = false
+#   ssh_key_path = "./salt/controller/id_rsa.pub"
+# }
 
 module "sles12sp4-sshminion" {
   providers = {
@@ -711,19 +711,19 @@ module "centos6-sshminion" {
 #   ssh_key_path       = "./salt/controller/id_rsa.pub"
 # }
 
-module "ubuntu1604-sshminion" {
-  source = "./modules/sshminion"
-  base_configuration = module.base.configuration
-  product_version    = "4.0-released"
-  name               = "minssh-ubuntu1604"
-  image              = "ubuntu1604o"
-  provider_settings = {
-    mac                = "52:54:00:CE:FE:C8"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-}
+# module "ubuntu1604-sshminion" {
+#   source = "./modules/sshminion"
+#   base_configuration = module.base.configuration
+#   product_version    = "4.0-released"
+#   name               = "minssh-ubuntu1604"
+#   image              = "ubuntu1604o"
+#   provider_settings = {
+#     mac                = "52:54:00:CE:FE:C8"
+#     memory             = 2048
+#   }
+#   use_os_released_updates = false
+#   ssh_key_path = "./salt/controller/id_rsa.pub"
+# }
 
 
 module "controller" {
@@ -776,8 +776,8 @@ module "controller" {
 #   sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
 #   sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
 
-  ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
-  ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
+#   ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
+#   ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
 
 #   ubuntu1804_minion_configuration = module.ubuntu1804-minion.configuration
 #   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
