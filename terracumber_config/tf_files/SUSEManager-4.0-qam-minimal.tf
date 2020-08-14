@@ -97,7 +97,7 @@ module "base" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "opensuse150o" ]
+  images      = [ "sles15o", "sles15sp1", "opensuse150o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -123,7 +123,7 @@ module "base2" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o", "sles15o", "sles15sp1o", "centos6o", "centos7o" ]
+  images      = [ "sles11sp4", "sles12sp4o", "sles15o", "sles15sp1", "centos6o", "centos7o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15sp1o",  "ubuntu1804o", "ubuntu1604o", "ubuntu2004o", "centos8o" ]
+  images      = [ "sles15sp1",  "ubuntu1804o", "ubuntu1604o", "ubuntu2004o", "centos8o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -168,6 +168,7 @@ module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
   product_version    = "4.0-released"
+  image              = "sles15sp1"
   name               = "srv"
   provider_settings = {
     mac                = "52:54:00:F6:5D:E8"
@@ -203,6 +204,7 @@ module "proxy" {
   source             = "./modules/proxy"
   base_configuration = module.base.configuration
   product_version    = "4.0-released"
+  image              = "sles15sp1"
   name               = "pxy"
   provider_settings = {
     mac                = "52:54:00:F2:4D:7A"
