@@ -81,7 +81,7 @@ module "base" {
   name_prefix = "suma-refhead-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["centos7o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
+  images      = ["centos7o", "sles15sp1", "sles15sp2o", "ubuntu1804o"]
   provider_settings = {
     pool         = "ssd"
     network_name = null
