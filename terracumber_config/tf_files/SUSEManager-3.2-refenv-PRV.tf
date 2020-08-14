@@ -81,7 +81,7 @@ module "base" {
   name_prefix       = "suma-ref32-"
   use_avahi         = false
   domain            = "prv.suse.net"
-  images            = ["centos7", "sles12sp4", "ubuntu1804"]
+  images            = ["centos7o", "sles12sp4o", "ubuntu1804o"]
   mirror            = "minima-mirror.prv.suse.net"
   use_mirror_images = true
 
@@ -118,7 +118,6 @@ module "suse-client" {
   base_configuration = module.base.configuration
   product_version    = "3.2-nightly"
   name               = "cli-sles12"
-  image              = "sles12sp4"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -133,7 +132,6 @@ module "suse-minion" {
   base_configuration = module.base.configuration
   product_version    = "3.2-nightly"
   name               = "min-sles12"
-  image              = "sles12sp4"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -148,7 +146,6 @@ module "build-host" {
   base_configuration      = module.base.configuration
   product_version         = "3.2-nightly"
   name                    = "min-build"
-  image                   = "sles12sp4"
   server_configuration    = module.server.configuration
 
   provider_settings = {
@@ -162,7 +159,6 @@ module "redhat-minion" {
   base_configuration = module.base.configuration
   product_version    = "3.2-nightly"
   name               = "min-centos7"
-  image              = "centos7"
 
   server_configuration = module.server.configuration
 
@@ -176,7 +172,6 @@ module "debian-minion" {
   base_configuration = module.base.configuration
   product_version    = "3.2-nightly"
   name               = "min-ubuntu1804"
-  image              = "ubuntu1804"
 
   server_configuration = module.server.configuration
 
