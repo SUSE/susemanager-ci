@@ -97,7 +97,7 @@ module "base" {
   name_prefix = "qam-pip-41-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "opensuse150o" ]
+  images      = [ "sles15o", "sles15sp1", "opensuse150o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -123,7 +123,7 @@ module "base2" {
   name_prefix = "qam-pip-41-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o", "sles15o", "sles15sp1o", "centos6o", "centos7o" ]
+  images      = [ "sles11sp4", "sles12sp4o", "sles15o", "sles15sp1", "centos6o", "centos7o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "qam-pip-41-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15sp1o",  "ubuntu1804o", "ubuntu1604o", "ubuntu2004o", "centos8o" ]
+  images      = [ "sles15sp1",  "ubuntu1804o", "ubuntu1604o", "ubuntu2004o", "centos8o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -295,7 +295,7 @@ module "sles15sp1-client" {
   base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "cli-sles15sp1"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
   provider_settings = {
     mac                = "52:54:00:7A:84:9E"
     memory             = 2048
@@ -419,7 +419,7 @@ module "sles15sp1-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "min-sles15sp1"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
   provider_settings = {
     mac                = "52:54:00:CA:F7:A9"
     memory             = 2048
@@ -616,7 +616,7 @@ module "sles15sp1-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "minssh-sles15sp1"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
   provider_settings = {
     mac                = "52:54:00:EE:AD:30"
     memory             = 2048

@@ -112,7 +112,7 @@ module "suse-client" {
   base_configuration = module.base.configuration
   product_version    = "head"
   name               = "cli-sles15"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -127,7 +127,7 @@ module "suse-minion" {
   base_configuration = module.base.configuration
   product_version    = "head"
   name               = "min-sles15"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -142,7 +142,7 @@ module "build-host" {
   base_configuration      = module.base.configuration
   product_version         = "head"
   name                    = "min-build"
-  image                   = "sles15sp1o"
+  image                   = "sles15sp1"
   server_configuration    = module.server.configuration
 
   provider_settings = {

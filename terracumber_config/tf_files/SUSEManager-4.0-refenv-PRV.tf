@@ -81,7 +81,7 @@ module "base" {
   name_prefix       = "suma-ref40-"
   use_avahi         = false
   domain            = "prv.suse.net"
-  images            = ["centos7o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
+  images            = ["centos7o", "sles15sp1", "sles15sp2o", "ubuntu1804o"]
   mirror            = "minima-mirror.prv.suse.net"
   use_mirror_images = true
 
@@ -114,7 +114,7 @@ module "suse-client" {
   base_configuration = module.base.configuration
   product_version    = "4.0-nightly"
   name               = "cli-sles15"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -129,7 +129,7 @@ module "suse-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.0-nightly"
   name               = "min-sles15"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true

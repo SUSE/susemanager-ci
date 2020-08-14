@@ -297,7 +297,7 @@ module "sles12sp4-client" {
 #   base_configuration = module.base3.configuration
 #   product_version    = "4.0-released"
 #   name               = "cli-sles15sp1"
-#   image              = "sles15sp1o"
+#   image              = "sles15sp1"
 #   provider_settings = {
 #     mac                = "52:54:00:BA:1D:11"
 #     memory             = 2048
@@ -422,7 +422,7 @@ module "sles12sp4-minion" {
 #   base_configuration = module.base3.configuration
 #   product_version    = "4.0-released"
 #   name               = "min-sles15sp1"
-#   image              = "sles15sp1o"
+#   image              = "sles15sp1"
 #   provider_settings = {
 #     mac                = "52:54:00:72:E5:BE"
 #     memory             = 2048
@@ -618,7 +618,7 @@ module "sles12sp4-sshminion" {
 #   base_configuration = module.base3.configuration
 #   product_version    = "4.0-released"
 #   name               = "minssh-sles15sp1"
-#   image              = "sles15sp1o"
+#   image              = "sles15sp1"
 #   provider_settings = {
 #     mac                = "52:54:00:26:7C:DE"
 #     memory             = 2048
