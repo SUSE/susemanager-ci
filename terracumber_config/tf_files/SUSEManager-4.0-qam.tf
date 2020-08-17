@@ -331,6 +331,7 @@ module "centos7-client" {
   ssh_key_path  = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos6-client" {
   providers = {
     libvirt = libvirt.classic179
@@ -349,6 +350,7 @@ module "centos6-client" {
   server_configuration =  { hostname = "qam-pip-40-pxy.qa.prv.suse.net" }
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
+*/
 
 module "sles12sp4-minion" {
   providers = {
@@ -437,6 +439,7 @@ module "sles15sp1-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos8-minion" {
   providers = {
     libvirt = libvirt.classic181
@@ -457,6 +460,7 @@ module "centos8-minion" {
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
+*/
 
 module "centos7-minion" {
   providers = {
@@ -479,6 +483,7 @@ module "centos7-minion" {
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos6-minion" {
   providers = {
     libvirt = libvirt.classic179
@@ -628,6 +633,7 @@ module "sles15sp1-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos8-sshminion" {
   providers = {
     libvirt = libvirt.classic181
@@ -644,7 +650,7 @@ module "centos8-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-
+*/
 
 module "centos7-sshminion" {
   providers = {
@@ -663,6 +669,7 @@ module "centos7-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos6-sshminion" {
   providers = {
     libvirt = libvirt.classic179
@@ -748,16 +755,16 @@ module "controller" {
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
 
-  centos6_client_configuration = module.centos6-client.configuration
-  centos6_minion_configuration = module.centos6-minion.configuration
-  centos6_sshminion_configuration = module.centos6-sshminion.configuration
+#  centos6_client_configuration = module.centos6-client.configuration
+#  centos6_minion_configuration = module.centos6-minion.configuration
+#  centos6_sshminion_configuration = module.centos6-sshminion.configuration
 
   centos7_client_configuration    = module.centos7-client.configuration
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-  centos8_minion_configuration    = module.centos8-minion.configuration
-  centos8_sshminion_configuration = module.centos8-sshminion.configuration
+#  centos8_minion_configuration    = module.centos8-minion.configuration
+#  centos8_sshminion_configuration = module.centos8-sshminion.configuration
 
   sle11sp4_client_configuration    = module.sles11sp4-client.configuration
   sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
