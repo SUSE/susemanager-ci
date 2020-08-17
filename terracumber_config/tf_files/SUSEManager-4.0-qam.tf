@@ -169,6 +169,7 @@ module "server" {
   base_configuration = module.base.configuration
   product_version    = "4.0-released"
   name               = "srv"
+  image              = "sles15sp1"
   provider_settings = {
     mac                = "52:54:00:F6:5D:E8"
     memory             = 40960
@@ -204,6 +205,7 @@ module "proxy" {
   base_configuration = module.base.configuration
   product_version    = "4.0-released"
   name               = "pxy"
+  image              = "sles15sp1"
   provider_settings = {
     mac                = "52:54:00:F2:4D:7A"
     memory             = 4096
