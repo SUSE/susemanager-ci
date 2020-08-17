@@ -97,7 +97,7 @@ module "base" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "opensuse150o" ]
+  images      = [ "sles15", "sles15sp1", "opensuse150" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -123,7 +123,7 @@ module "base2" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o", "sles15o", "sles15sp1o", "centos6o", "centos7o" ]
+  images      = [ "sles11sp4", "sles12sp4", "sles15", "sles15sp1", "centos6", "centos7" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "qam-pip-40-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15sp1o",  "ubuntu1804o", "ubuntu1604o", "ubuntu2004o", "centos8o" ]
+  images      = [ "sles15sp1",  "ubuntu1804", "ubuntu1604", "ubuntu2004", "centos8" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -232,7 +232,7 @@ module "sles12sp4-client" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "cli-sles12sp4"
-  image              = "sles12sp4o"
+  image              = "sles12sp4"
   provider_settings = {
     mac                = "52:54:00:0E:F8:ED"
     memory             = 2048
@@ -274,7 +274,7 @@ module "sles15-client" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "cli-sles15"
-  image              = "sles15o"
+  image              = "sles15"
   provider_settings = {
     mac                = "52:54:00:06:F2:85"
     memory             = 2048
@@ -295,7 +295,7 @@ module "sles15sp1-client" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "cli-sles15sp1"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
   provider_settings = {
     mac                = "52:54:00:BA:1D:11"
     memory             = 2048
@@ -316,7 +316,7 @@ module "centos7-client" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "cli-centos7"
-  image              = "centos7o"
+  image              = "centos7"
   provider_settings = {
     mac                = "52:54:00:72:41:8A"
     memory             = 2048
@@ -337,7 +337,7 @@ module "centos6-client" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "cli-centos6"
-  image              = "centos6o"
+  image              = "centos6"
   provider_settings = {
     mac                = "52:54:00:BA:ED:61"
     memory             = 2048
@@ -355,7 +355,7 @@ module "sles12sp4-minion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "min-sles12sp4"
-  image              = "sles12sp4o"
+  image              = "sles12sp4"
   provider_settings = {
     mac                = "52:54:00:B2:49:5C"
     memory             = 2048
@@ -399,7 +399,7 @@ module "sles15-minion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "min-sles15"
-  image              = "sles15o"
+  image              = "sles15"
   provider_settings = {
     mac                = "52:54:00:DA:C7:79"
     memory             = 2048
@@ -420,7 +420,7 @@ module "sles15sp1-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-sles15sp1"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
   provider_settings = {
     mac                = "52:54:00:72:E5:BE"
     memory             = 2048
@@ -442,7 +442,7 @@ module "centos8-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-centos8"
-  image              = "centos8o"
+  image              = "centos8"
   provider_settings = {
     mac                = "52:54:00:99:CF:C8"
     memory             = 2048
@@ -463,7 +463,7 @@ module "centos7-minion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "min-centos7"
-  image              = "centos7o"
+  image              = "centos7"
   provider_settings = {
     mac                = "52:54:00:92:F9:D6"
     memory             = 2048
@@ -484,7 +484,7 @@ module "centos6-minion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "min-centos6"
-  image              = "centos6o"
+  image              = "centos6"
   provider_settings = {
     mac                = "52:54:00:7A:13:48"
     memory             = 2048
@@ -503,7 +503,7 @@ module "ubuntu2004-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-ubuntu2004"
-  image              = "ubuntu2004o"
+  image              = "ubuntu2004"
   provider_settings = {
     mac                = "52:54:00:2A:47:D8"
     memory             = 2048
@@ -524,7 +524,7 @@ module "ubuntu1804-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-ubuntu1804"
-  image              = "ubuntu1804o"
+  image              = "ubuntu1804"
   provider_settings = {
     mac                = "52:54:00:D2:5E:EC"
     memory             = 2048
@@ -545,7 +545,7 @@ module "ubuntu1604-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "min-ubuntu1604"
-  image              = "ubuntu1604o"
+  image              = "ubuntu1604"
   provider_settings = {
     mac                = "52:54:00:12:33:D8"
     memory             = 2048
@@ -564,7 +564,7 @@ module "sles12sp4-sshminion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "minssh-sles12sp4"
-  image              = "sles12sp4o"
+  image              = "sles12sp4"
   provider_settings = {
     mac                = "52:54:00:DA:AD:B0"
     memory             = 2048
@@ -599,7 +599,7 @@ module "sles15-sshminion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "minssh-sles15"
-  image              = "sles15o"
+  image              = "sles15"
   provider_settings = {
     mac                = "52:54:00:62:D7:5D"
     memory             = 2048
@@ -616,7 +616,7 @@ module "sles15sp1-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "minssh-sles15sp1"
-  image              = "sles15sp1o"
+  image              = "sles15sp1"
   provider_settings = {
     mac                = "52:54:00:26:7C:DE"
     memory             = 2048
@@ -633,7 +633,7 @@ module "centos8-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "minssh-centos8"
-  image              = "centos8o"
+  image              = "centos8"
   provider_settings = {
     mac                = "52:54:00:AE:F1:6C"
     memory             = 2048
@@ -651,7 +651,7 @@ module "centos7-sshminion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "minssh-centos7"
-  image              = "centos7o"
+  image              = "centos7"
   provider_settings = {
     mac                = "52:54:00:EA:AA:42"
     memory             = 2048
@@ -668,7 +668,7 @@ module "centos6-sshminion" {
   base_configuration = module.base2.configuration
   product_version    = "4.0-released"
   name               = "minssh-centos6"
-  image              = "centos6o"
+  image              = "centos6"
   provider_settings = {
     mac                = "52:54:00:96:6B:AC"
     memory             = 2048
@@ -685,7 +685,7 @@ module "ubuntu2004-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "minssh-ubuntu2004"
-  image              = "ubuntu2004o"
+  image              = "ubuntu2004"
   provider_settings = {
     mac                = "52:54:00:2A:47:D8"
     memory             = 2048
@@ -702,7 +702,7 @@ module "ubuntu1804-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804o"
+  image              = "ubuntu1804"
   provider_settings = {
     mac                = "52:54:00:8E:00:5A"
     memory             = 2048
@@ -716,7 +716,7 @@ module "ubuntu1604-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.0-released"
   name               = "minssh-ubuntu1604"
-  image              = "ubuntu1604o"
+  image              = "ubuntu1604"
   provider_settings = {
     mac                = "52:54:00:CE:FE:C8"
     memory             = 2048
