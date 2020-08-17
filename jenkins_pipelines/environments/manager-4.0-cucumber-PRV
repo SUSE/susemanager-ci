@@ -9,9 +9,8 @@ node('sumaform-cucumber') {
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'Manager-4.0', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.0-PRV.tf', description: 'Path to the tf file to be used'),
-            // Temporary: should move to uyuni-project
-            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/calancha/sumaform.git', description: 'Sumaform Git Repository'),
-            string(name: 'sumaform_ref', defaultValue: 'disable-sles15sp1o', description: 'Sumaform Git reference (branch, tag...)'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
             choice(name: 'terraform_bin', choices: ['/usr/bin/terraform_bin'], description: 'Terraform binary path'),
             choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
