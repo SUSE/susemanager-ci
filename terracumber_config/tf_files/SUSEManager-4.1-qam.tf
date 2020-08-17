@@ -123,7 +123,7 @@ module "base2" {
   name_prefix = "qam-pip-41-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4", "sles15", "sles15sp1", "centos6", "centos7" ]
+  images      = [ "sles11sp4", "sles12sp4", "sles15", "sles15sp1", /* "centos6",*/ "centos7" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "qam-pip-41-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15sp1",  "ubuntu1804", "ubuntu1604", "ubuntu2004", "centos8" ]
+  images      = [ "sles15sp1",  "ubuntu1804" /*, "ubuntu1604", "ubuntu2004", "centos8" */ ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -329,6 +329,7 @@ module "centos7-client" {
   ssh_key_path  = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos6-client" {
   providers = {
     libvirt = libvirt.classic179
@@ -346,6 +347,7 @@ module "centos6-client" {
   server_configuration =  { hostname = "qam-pip-41-pxy.qa.prv.suse.net" }
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
+*/
 
 module "sles12sp4-minion" {
   providers = {
@@ -433,6 +435,7 @@ module "sles15sp1-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos8-minion" {
   providers = {
     libvirt = libvirt.classic181
@@ -453,6 +456,7 @@ module "centos8-minion" {
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
+*/
 
 module "centos7-minion" {
   providers = {
@@ -475,6 +479,7 @@ module "centos7-minion" {
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos6-minion" {
   providers = {
     libvirt = libvirt.classic179
@@ -514,6 +519,7 @@ module "ubuntu2004-minion" {
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
+*/
 
 module "ubuntu1804-minion" {
   providers = {
@@ -536,6 +542,7 @@ module "ubuntu1804-minion" {
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "ubuntu1604-minion" {
   providers = {
     libvirt = libvirt.classic181
@@ -554,6 +561,7 @@ module "ubuntu1604-minion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
+*/
 
 module "sles12sp4-sshminion" {
   providers = {
@@ -625,6 +633,7 @@ module "sles15sp1-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos8-sshminion" {
   providers = {
     libvirt = libvirt.classic181
@@ -641,6 +650,7 @@ module "centos8-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
+*/
 
 module "centos7-sshminion" {
   providers = {
@@ -659,6 +669,7 @@ module "centos7-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "centos6-sshminion" {
   providers = {
     libvirt = libvirt.classic179
@@ -692,6 +703,7 @@ module "ubuntu2004-sshminion" {
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
+*/
 
 module "ubuntu1804-sshminion" {
   providers = {
@@ -710,6 +722,7 @@ module "ubuntu1804-sshminion" {
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
 
+/*
 module "ubuntu1604-sshminion" {
   source = "./modules/sshminion"
   base_configuration = module.base.configuration
@@ -723,7 +736,7 @@ module "ubuntu1604-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-
+*/
 
 module "controller" {
   source             = "./modules/controller"
@@ -744,16 +757,16 @@ module "controller" {
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
 
-  centos6_client_configuration = module.centos6-client.configuration
-  centos6_minion_configuration = module.centos6-minion.configuration
-  centos6_sshminion_configuration = module.centos6-sshminion.configuration
+#  centos6_client_configuration = module.centos6-client.configuration
+#  centos6_minion_configuration = module.centos6-minion.configuration
+#  centos6_sshminion_configuration = module.centos6-sshminion.configuration
 
   centos7_client_configuration    = module.centos7-client.configuration
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-  centos8_minion_configuration    = module.centos8-minion.configuration
-  centos8_sshminion_configuration = module.centos8-sshminion.configuration
+#  centos8_minion_configuration    = module.centos8-minion.configuration
+#  centos8_sshminion_configuration = module.centos8-sshminion.configuration
 
   sle11sp4_client_configuration    = module.sles11sp4-client.configuration
   sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
@@ -775,14 +788,14 @@ module "controller" {
   sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
   sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
 
-  ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
-  ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
+#  ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
+#  ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
 
   ubuntu1804_minion_configuration = module.ubuntu1804-minion.configuration
   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
-  ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+#  ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
+#  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
 }
 
 output "configuration" {
