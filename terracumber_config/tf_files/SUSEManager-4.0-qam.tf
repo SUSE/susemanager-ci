@@ -342,6 +342,7 @@ module "centos6-client" {
     mac                = "52:54:00:BA:ED:61"
     memory             = 2048
   }
+  auto_register           = false
   use_os_released_updates = false
   server_configuration =  { hostname = "qam-pip-40-pxy.qa.prv.suse.net" }
   ssh_key_path = "./salt/controller/id_rsa.pub"
