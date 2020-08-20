@@ -713,7 +713,7 @@ module "ubuntu1804-sshminion" {
 
 module "ubuntu1604-sshminion" {
   source = "./modules/sshminion"
-  base_configuration = module.base.configuration
+  base_configuration = module.base3.configuration
   product_version    = "4.0-released"
   name               = "minssh-ubuntu1604"
   image              = "ubuntu1604o"
