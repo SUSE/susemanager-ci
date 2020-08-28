@@ -107,10 +107,6 @@ module "server" {
     mac    = "52:54:00:00:00:32"
     memory = 8192
   }
-  additional_repos = {
-    devtools_product = "http://minima-mirror.prv.suse.net/SUSE/Products/SLE-Module-Development-Tools/15-SP2/x86_64/product/",
-    devtools_update  = "http://minima-mirror.prv.suse.net/SUSE/Updates/SLE-Module-Development-Tools/15-SP2/x86_64/update/"
-  }
 }
 
 module "suse-client" {

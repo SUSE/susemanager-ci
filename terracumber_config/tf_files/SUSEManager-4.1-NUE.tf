@@ -116,10 +116,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:00:75"
       }
-      additional_repos = {
-        devtools_product = "http://minima-mirror.prv.suse.net/SUSE/Products/SLE-Module-Development-Tools/15-SP2/x86_64/product/",
-        devtools_update  = "http://minima-mirror.prv.suse.net/SUSE/Updates/SLE-Module-Development-Tools/15-SP2/x86_64/update/"
-      }
     }
     proxy = {
       provider_settings = {
