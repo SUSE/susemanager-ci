@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "faster-clm"
+  default = "Manager-4.1"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -81,7 +81,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "4.1-released"
   
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -139,28 +139,6 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:B3"
-      }
-    }
-    build-host = {
-      image = "sles15sp1"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B7"
-      }
-    }
-    suse-sshminion = {
-      image = "sles15sp1"
-      name = "minssh-sles15"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B5"
-      }
-    }
-    redhat-minion = {
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B2"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Still researching, but it will do it for now
-        memory = 2048
-        vcpu = 2
       }
     }
   }
