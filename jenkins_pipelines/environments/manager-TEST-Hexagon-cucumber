@@ -6,8 +6,9 @@ node('sumaform-cucumber') {
         disableConcurrentBuilds(),
         pipelineTriggers([cron('H H/4 * * *')]),
         parameters([
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            // Temporary: makes sense only for a specific PR at this point
+            string(name: 'cucumber_ref', defaultValue: 'Manager-4.1-MU-4.1.1', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-Test-Hexagon-NUE.tf', description: 'Path to the tf file to be used'),
             // Temporary: should move to uyuni-project
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/calancha/sumaform.git', description: 'Sumaform Git Repository'),
