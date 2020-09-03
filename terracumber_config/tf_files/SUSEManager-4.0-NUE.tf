@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2o", "ubuntu1804"]
+  images = ["centos7o", "opensuse150o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
 
   use_avahi    = false
   name_prefix  = "suma-40-"
@@ -123,14 +123,14 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:41"
       }
     }
     suse-minion = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:42"
@@ -143,7 +143,7 @@ module "cucumber_testsuite" {
       }
     }
     suse-sshminion = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:43"
@@ -163,7 +163,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
     }
     kvm-host = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       provider_settings = {
         mac = "AA:B2:93:00:00:48"
       }
