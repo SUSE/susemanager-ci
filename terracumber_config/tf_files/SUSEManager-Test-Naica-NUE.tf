@@ -126,12 +126,14 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
+      image = "sles12sp3"
       name = "cli-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:01:01"
       }
     }
     suse-minion = {
+      image = "sles12sp3"
       name = "min-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:01:02"
