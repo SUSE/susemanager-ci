@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "master"
+  default = "Manager-3.2"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -81,8 +81,8 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
-  
+  product_version = "3.2-released"
+
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2o", "ubuntu1804"]
+  images = ["centos7", "opensuse150", "sles12sp3", "sles12sp4", "ubuntu1804"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -117,60 +117,36 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:01:00"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP2/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_12_SP3/"
       }
     }
     proxy = {
       provider_settings = {
         mac = "AA:B2:93:00:01:06"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP2/"
-      }
     }
     suse-client = {
-      image = "sles15sp1"
-      name = "cli-sles15"
+      name = "cli-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:01:01"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     suse-minion = {
-      image = "sles15sp1"
-      name = "min-sles15"
+      name = "min-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:01:02"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     build-host = {
-      image = "sles15sp2o"
-      name = "min-build"
       provider_settings = {
         mac = "AA:B2:93:00:01:09"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     suse-sshminion = {
-      image = "sles15sp1"
-      name = "minssh-sles15"
+      name = "minssh-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:01:04"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
     redhat-minion = {
       provider_settings = {
@@ -180,34 +156,11 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/RES7-SUSE-Manager-Tools/SUSE_RES-7_Update_standard/"
-      }
     }
     debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:01:07"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/Ubuntu18.04-SUSE-Manager-Tools/xUbuntu_18.04/"
-      }
-    }
-    pxeboot-minion = {
-      image = "sles15sp2o"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
-    }
-    kvm-host = {
-      image = "sles15sp1"
-      provider_settings = {
-        mac = "AA:B2:93:00:01:08"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/SLE15-SUSE-Manager-Tools/SLE_15/"
-      }
-      additional_packages = ["python2-salt"]
     }
   }
   provider_settings = {
