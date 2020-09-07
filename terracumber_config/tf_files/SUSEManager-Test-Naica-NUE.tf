@@ -124,6 +124,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:01:06"
       }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_12_SP3/"
+      }
     }
     suse-client = {
       image = "sles12sp3"
@@ -137,12 +140,6 @@ module "cucumber_testsuite" {
       name = "min-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:01:02"
-      }
-    }
-    suse-sshminion = {
-      name = "minssh-sles12"
-      provider_settings = {
-        mac = "AA:B2:93:00:01:04"
       }
     }
   }
