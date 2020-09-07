@@ -14,8 +14,8 @@ node('sumaform-cucumber') {
             choice(name: 'terraform_bin', choices: ['/usr/bin/terraform_bin'], description: 'Terraform binary path'),
             choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
             // Temporary: should move to uyuni-project
-            string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git', description: 'Terracumber Git Repository'),
-            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/oscar-barrios/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'qam-support', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: false, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'must_add_channels', defaultValue: true, description: 'Add custom channels and MU repositories'),
             booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
