@@ -139,41 +139,11 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:62"
       }
     }
-    build-host = {
-      image = "sles15sp2o"
-      name = "min-build"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:73"
-      }
-    }
     suse-sshminion = {
       image = "sles15sp1"
       name = "minssh-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:64"
-      }
-    }
-    redhat-minion = {
-      provider_settings = {
-        mac = "AA:B2:93:00:00:65"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Still researching, but it will do it for now
-        memory = 2048
-        vcpu = 2
-      }
-    }
-    debian-minion = {
-      provider_settings = {
-        mac = "AA:B2:93:00:00:68"
-      }
-    }
-    pxeboot-minion = {
-      image = "sles15sp2o"
-    }
-    kvm-host = {
-      image = "sles15sp1"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:69"
       }
     }
   }
