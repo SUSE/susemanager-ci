@@ -107,7 +107,7 @@ module "base" {
   provider_settings = {
     pool        = "default"
     bridge      = "br0"
-    additional_network = "192.168.40.0/24"
+    additional_network = "192.168.41.0/24"
   }
 }
 
@@ -133,7 +133,7 @@ module "base2" {
   provider_settings = {
     pool        = "default"
     bridge      = "br0"
-    additional_network = "192.168.40.0/24"
+    additional_network = "192.168.41.0/24"
   }
 }
 
@@ -159,7 +159,7 @@ module "base3" {
   provider_settings = {
     pool        = "default"
     bridge      = "br0"
-    additional_network = "192.168.40.0/24"
+    additional_network = "192.168.41.0/24"
   }
 }
 
@@ -796,6 +796,23 @@ module "controller" {
 
 #  ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
 #  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+}
+
+resource "null_resource" "server_extra_nfs_mounts" {
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/ibs/SUSE/Updates/RES/6  /mirror/ibs/SUSE/Updates/RES/6  nfs   defaults  0 0' >> /etc/fstab",
+      "mount /mirror/ibs/SUSE/Updates/RES/6",
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/ibs/SUSE/Updates/RES/7  /mirror/ibs/SUSE/Updates/RES/7  nfs   defaults  0 0' >> /etc/fstab",
+      "mount /mirror/ibs/SUSE/Updates/RES/7"
+    ]
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "linux"
+      host     = "${module.server.configuration.hostname}"
+    }
+  }
 }
 
 output "configuration" {
