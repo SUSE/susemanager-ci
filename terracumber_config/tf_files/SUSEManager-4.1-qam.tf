@@ -747,6 +747,7 @@ module "controller" {
     memory             = 16384
     vcpu               = 6
   }
+  swap_file_size = null
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
