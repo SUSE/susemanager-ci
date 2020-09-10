@@ -164,6 +164,9 @@ module "redhat-minion" {
 
   provider_settings = {
     mac = "52:54:00:00:00:36"
+    // Openscap cannot run with less than 1.25 GB of RAM
+    memory = 1280
+    vcpu = 2
   }
 }
 

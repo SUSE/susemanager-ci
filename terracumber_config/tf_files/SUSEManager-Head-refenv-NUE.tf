@@ -161,7 +161,7 @@ module "redhat-minion" {
   provider_settings = {
     mac = "AA:B2:93:00:00:34"
     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-    // Still researching, but it will do it for now
+    // Also, openscap cannot run with less than 1.25 GB of RAM
     memory = 2048
     vcpu = 2
   }
