@@ -113,11 +113,13 @@ module "cucumber_testsuite" {
       }
     }
     server = {
+      image = "sles12sp4o"
       provider_settings = {
         mac = "AA:B2:93:00:00:66"
       }
     }
     proxy = {
+      image = "sles12sp4o"
       provider_settings = {
         mac = "AA:B2:93:00:00:72"
       }
