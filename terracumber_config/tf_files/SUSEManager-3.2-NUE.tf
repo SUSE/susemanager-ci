@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse150", "sles12sp3", "sles12sp4", "ubuntu1804"]
+  images = ["centos7o", "opensuse150o", "sles12sp3o", "sles12sp4o", "ubuntu1804o"]
 
   use_avahi    = false
   name_prefix  = "suma-32-"
@@ -145,11 +145,12 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:21:69"
       }
     }
-    redhat-minion = {
-      provider_settings = {
-        mac = "AA:B2:93:00:00:70"
-      }
-    }
+    # WORKAROUND disabled until salt problem is resolved
+    # redhat-minion = {
+    #   provider_settings = {
+    #     mac = "AA:B2:93:00:00:70"
+    #   }
+     }
     debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:7A"

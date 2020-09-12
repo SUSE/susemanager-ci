@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse150", "opensuse151", "opensuse152o", "sles15sp1", "sles15sp2", "ubuntu1804"]
+  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -122,50 +122,51 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:01"
       }
     }
     suse-minion = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:02"
       }
     }
     build-host = {
-      image = "sles15sp2"
+      image = "sles15sp2o"
       provider_settings = {
         mac = "AA:B2:93:00:00:09"
       }
     }
     suse-sshminion = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:03"
       }
     }
-    redhat-minion = {
-      image = "centos7"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:04"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
-        vcpu = 2
-      }
-    }
+    # WORKAROUND disabled until salt problem is resolved
+    # redhat-minion = {
+    #   image = "centos7o"
+    #   provider_settings = {
+    #     mac = "AA:B2:93:00:00:04"
+    #     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+    #     // Also, openscap cannot run with less than 1.25 GB of RAM
+    #     memory = 2048
+    #     vcpu = 2
+    #   }
+    # }
     debian-minion = {
-      image = "ubuntu1804"
+      image = "ubuntu1804o"
       provider_settings = {
         mac = "AA:B2:93:00:00:08"
       }
     }
     pxeboot-minion = {
-      image = "sles15sp2"
+      image = "sles15sp2o"
     }
     kvm-host = {
       image = "opensuse152o"
