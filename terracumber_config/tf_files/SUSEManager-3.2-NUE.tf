@@ -150,7 +150,7 @@ module "cucumber_testsuite" {
     #   provider_settings = {
     #     mac = "AA:B2:93:00:00:70"
     #   }
-     }
+    # }
     debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:7A"
