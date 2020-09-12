@@ -82,7 +82,7 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "4.0-nightly"
-  
+
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
@@ -92,13 +92,13 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse150o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
+  # temporary: custom CentOS image due to broken Salt
+  images = ["centos7", "opensuse150o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
 
   use_avahi    = false
   name_prefix  = "suma-40-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
-
 
   portus_uri = "portus.mgr.suse.de:5000/cucutest"
   portus_username = "cucutest"
@@ -150,6 +150,7 @@ module "cucumber_testsuite" {
       }
     }
     redhat-minion = {
+      image = "centos7"
       provider_settings = {
         mac = "AA:B2:93:00:00:44"
         // Openscap cannot run with less than 1.25 GB of RAM
@@ -172,9 +173,9 @@ module "cucumber_testsuite" {
     }
   }
   provider_settings = {
-    pool               = "ssd"
-    network_name       = null
-    bridge             = "br0"
+    pool = "ssd"
+    network_name = null
+    bridge = "br0"
     additional_network = "192.168.40.0/24"
   }
 }
