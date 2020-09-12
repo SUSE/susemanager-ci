@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse150", "sles12sp3", "sles12sp4", "ubuntu1804"]
+  images = ["centos7o", "opensuse150o", "sles12sp3o", "sles12sp4o", "ubuntu1804o"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -129,14 +129,14 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles12sp3"
+      image = "sles12sp3o"
       name = "cli-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:01:01"
       }
     }
     suse-minion = {
-      image = "sles12sp3"
+      image = "sles12sp3o"
       name = "min-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:01:02"
