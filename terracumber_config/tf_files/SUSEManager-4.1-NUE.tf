@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse150", "sles15sp1", "sles15sp2o", "ubuntu1804"]
+  images = ["centos7o", "opensuse150o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
 
   use_avahi    = false
   name_prefix  = "suma-41-"
@@ -123,14 +123,14 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:76"
       }
     }
     suse-minion = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:77"
@@ -143,19 +143,21 @@ module "cucumber_testsuite" {
       }
     }
     suse-sshminion = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:78"
       }
     }
-    redhat-minion = {
-      provider_settings = {
-        mac = "AA:B2:93:00:00:79"
-        // Openscap cannot run with less than 1.25 GB of RAM
-        memory = 1280
-      }
-    }
+    # WORKAROUND disabled until salt problem is resolved
+    # redhat-minion = {
+    #   image = "centos7o"
+    #   provider_settings = {
+    #     mac = "AA:B2:93:00:00:79"
+    #     // Openscap cannot run with less than 1.25 GB of RAM
+    #     memory = 1280
+    #   }
+    # }
     debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:82"
@@ -172,9 +174,9 @@ module "cucumber_testsuite" {
     }
   }
   provider_settings = {
-    pool               = "ssd"
-    network_name       = null
-    bridge             = "br0"
+    pool = "ssd"
+    network_name = null
+    bridge = "br0"
     additional_network = "192.168.41.0/24"
   }
 }

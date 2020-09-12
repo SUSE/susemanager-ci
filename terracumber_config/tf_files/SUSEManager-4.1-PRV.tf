@@ -93,7 +93,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse150o", "sles15sp1", "sles15sp2o", "ubuntu1804o"]
+  images = ["centos7o", "opensuse150o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
 
   use_avahi = false
   name_prefix = "suma-41-"
@@ -125,14 +125,14 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
         mac = "52:54:00:00:00:22"
       }
     }
     suse-minion = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
         mac = "52:54:00:00:00:23"
@@ -145,19 +145,21 @@ module "cucumber_testsuite" {
       }
     }
     suse-sshminion = {
-      image = "sles15sp1"
+      image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "52:54:00:00:00:24"
       }
     }
-    redhat-minion = {
-      provider_settings = {
-        mac = "52:54:00:00:00:25"
-        // Openscap cannot run with less than 1.25 GB of RAM
-        memory = 1280
-      }
-    }
+    # WORKAROUND disabled until salt problem is resolved
+    # redhat-minion = {
+    #   image = "centos7o"
+    #   provider_settings = {
+    #     mac = "52:54:00:00:00:25"
+    #     // Openscap cannot run with less than 1.25 GB of RAM
+    #     memory = 1280
+    #   }
+    # }
     debian-minion = {
       provider_settings = {
         mac = "52:54:00:00:00:28"
