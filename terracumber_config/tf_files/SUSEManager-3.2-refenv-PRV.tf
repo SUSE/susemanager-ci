@@ -81,7 +81,7 @@ module "base" {
   name_prefix       = "suma-ref32-"
   use_avahi         = false
   domain            = "prv.suse.net"
-  images            = ["centos7o", "sles12sp4o", "ubuntu1804o"]
+  images            = ["centos7o", "sles12sp4", "ubuntu1804o"]
   mirror            = "minima-mirror.prv.suse.net"
   use_mirror_images = true
 
