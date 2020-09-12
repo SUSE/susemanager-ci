@@ -97,6 +97,8 @@ module "server" {
   base_configuration      = module.base.configuration
   product_version         = "3.2-nightly"
   name                    = "srv"
+  image                   = "sles12sp4"
+
   monitored               = true
   use_os_released_updates = true
   disable_download_tokens = false
