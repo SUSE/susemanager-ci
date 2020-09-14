@@ -156,6 +156,7 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:01:09"
       }
     }
+/*
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
@@ -166,6 +167,7 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
     }
+*/
     debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:01:07"
