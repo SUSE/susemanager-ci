@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-3.2"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -81,7 +81,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "3.2-released"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse150o", "sles12sp3", "sles12sp4", "ubuntu1804o"]
+  images = ["centos7o", "opensuse150o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -129,24 +129,55 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles12sp3"
-      name = "cli-sles12"
+      image = "sles15sp1o"
+      name = "cli-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:01:01"
       }
     }
     suse-minion = {
-      image = "sles12sp3"
-      name = "min-sles12"
+      image = "sles15sp1o"
+      name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:01:02"
       }
     }
+    suse-sshminion = {
+      image = "sles15sp1o"
+      name = "minssh-sles15"
+      provider_settings = {
+        mac = "AA:B2:93:00:01:04"
+      }
+    }
+    build-host = {
+      image = "sles15sp2o"
+      name = "min-build"
+      provider_settings = {
+        mac = "AA:B2:93:00:01:09"
+      }
+    }
+    redhat-minion = {
+      image = "centos7o"
+      provider_settings = {
+        mac = "AA:B2:93:00:01:05"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Still researching, but it will do it for now
+        memory = 2048
+        vcpu = 2
+      }
+    }
+    debian-minion = {
+      provider_settings = {
+        mac = "AA:B2:93:00:01:07"
+      }
+    }
+
   }
   provider_settings = {
     pool               = "ssd"
     network_name       = null
     bridge             = "br0"
+    additional_network = "192.168.142.0/24"
   }
 }
 
