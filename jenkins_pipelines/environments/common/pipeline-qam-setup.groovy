@@ -33,12 +33,12 @@ def run(params) {
                 }
             }
             stage('Run Core features') {
-                if(params.must_run_core && deployed) {
+                if(params.must_run_core && (deployed || !params.must_deploy)) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:qam_core'"
                 }
             }
             stage('Sync. products and channels') {
-                if(params.must_sync && deployed) {
+                if(params.must_sync && (deployed || !params.must_deploy)) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:qam_reposync'"
                 }
             }
@@ -46,7 +46,7 @@ def run(params) {
         finally {
             stage('Get results') {
                 def error = 0
-                if (deployed) {
+                if (deployed || !params.must_deploy) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
                     } catch(Exception ex) {
@@ -56,7 +56,7 @@ def run(params) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
                     } catch(Exception ex) {
-                        println("ERROR: rake utils:generate_test_repor failed")
+                        println("ERROR: rake utils:generate_test_report failed")
                         error = 1
                     }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
