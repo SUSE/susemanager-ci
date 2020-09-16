@@ -148,17 +148,16 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:03"
       }
     }
-    # WORKAROUND disabled until salt problem is resolved
-    # redhat-minion = {
-    #   image = "centos7o"
-    #   provider_settings = {
-    #     mac = "AA:B2:93:00:00:04"
-    #     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-    #     // Also, openscap cannot run with less than 1.25 GB of RAM
-    #     memory = 2048
-    #     vcpu = 2
-    #   }
-    # }
+    redhat-minion = {
+      image = "centos7o"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:04"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        memory = 2048
+        vcpu = 2
+      }
+    }
     debian-minion = {
       image = "ubuntu1804o"
       provider_settings = {

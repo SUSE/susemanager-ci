@@ -93,7 +93,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   
-  images = ["centos7o", "opensuse150o", "sles12sp3", "sles12sp4o", "ubuntu1804o"]
+  images = ["centos7o", "opensuse150o", "sles12sp3o", "sles12sp4o", "ubuntu1804o"]
 
   use_avahi = false
   name_prefix = "suma-32-"
@@ -128,33 +128,36 @@ module "cucumber_testsuite" {
     }
     suse-client = {
       name = "cli-sles12"
+      image = "sles12sp3o"
       provider_settings = {
         mac = "52:54:00:55:bf:9b"
       }
     }
     suse-minion = {
       name = "min-sles12"
+      image = "sles12sp3o"
       provider_settings = {
         mac = "52:54:00:e7:1e:fa"
       }
     }
     build-host = {
+      image = "sles12sp3o"
       provider_settings = {
         mac = "52:54:00:00:00:18"
       }
     }
     suse-sshminion = {
       name = "minssh-sles12"
+      image = "sles12sp3o"
       provider_settings = {
         mac = "52:54:00:99:c9:f5"
       }
     }
-    # WORKAROUND disabled until salt problem is resolved
-    # redhat-minion = {
-    #   provider_settings = {
-    #     mac = "52:54:00:4f:17:48"
-    #   }
-    # }
+    redhat-minion = {
+      provider_settings = {
+        mac = "52:54:00:4f:17:48"
+      }
+    }
     debian-minion = {
       provider_settings = {
         mac = "52:54:00:4f:17:49"

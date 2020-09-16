@@ -149,15 +149,14 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:43"
       }
     }
-    # WORKAROUND disabled until salt problem is resolved
-    # redhat-minion = {
-    #   image = "centos7o"
-    #   provider_settings = {
-    #     mac = "AA:B2:93:00:00:44"
-    #     // Openscap cannot run with less than 1.25 GB of RAM
-    #     memory = 1280
-    #   }
-    # }
+    redhat-minion = {
+      image = "centos7o"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:44"
+        // Openscap cannot run with less than 1.25 GB of RAM
+        memory = 1280
+      }
+    }
     debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:47"

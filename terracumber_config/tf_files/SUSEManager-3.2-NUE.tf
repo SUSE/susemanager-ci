@@ -147,12 +147,11 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:21:69"
       }
     }
-    # WORKAROUND disabled until salt problem is resolved
-    # redhat-minion = {
-    #   provider_settings = {
-    #     mac = "AA:B2:93:00:00:70"
-    #   }
-    # }
+    redhat-minion = {
+      provider_settings = {
+        mac = "AA:B2:93:00:00:70"
+      }
+    }
     debian-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:7A"
