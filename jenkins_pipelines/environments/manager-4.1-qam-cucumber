@@ -5,19 +5,11 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30')),
         disableConcurrentBuilds(),
         parameters([
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'Manager-4.1', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.1-qam.tf', description: 'Path to the tf file to be used'),
-            // Temporary: should move to uyuni-project
-            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/calancha/sumaform.git', description: 'Sumaform Git Repository'),
-            string(name: 'sumaform_ref', defaultValue: 'revert-use-official', description: 'Sumaform Git reference (branch, tag...)'),
-            choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/calancha/sumaform#backend-choice)'),
-            choice(name: 'terraform_bin', choices: ['/usr/bin/terraform_bin'], description: 'Terraform binary path'),
-            choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
-            // Temporary: should move to uyuni-project
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/oscar-barrios/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'qam-support', description: 'Terracumber Git ref (branch, tag...)'),
-            booleanParam(name: 'terraform_init', defaultValue: false, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'must_add_channels', defaultValue: true, description: 'Add custom channels and MU repositories'),
             booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
             booleanParam(name: 'must_boot_proxy', defaultValue: true, description: 'Bootstrap Proxy'),
