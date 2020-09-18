@@ -176,7 +176,7 @@ module "server" {
     data_pool            = "default"
   }
 
-  repository_disk_size = 850
+  repository_disk_size = 1500
 
   auto_accept                    = false
   monitored                      = true
