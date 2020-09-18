@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "qam-pip-41-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15sp1",  "ubuntu1804" /*, "ubuntu1604", "ubuntu2004", "centos8" */ ]
+  images      = [ "sles15sp1",  "ubuntu1804", "centos8"  /*, "ubuntu1604", "ubuntu2004"*/ ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -435,7 +435,6 @@ module "sles15sp1-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-/*
 module "centos8-minion" {
   providers = {
     libvirt = libvirt.classic181
@@ -456,7 +455,6 @@ module "centos8-minion" {
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 }
-*/
 
 module "centos7-minion" {
   providers = {
@@ -633,7 +631,6 @@ module "sles15sp1-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-/*
 module "centos8-sshminion" {
   providers = {
     libvirt = libvirt.classic181
@@ -650,7 +647,6 @@ module "centos8-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-*/
 
 module "centos7-sshminion" {
   providers = {
@@ -766,8 +762,8 @@ module "controller" {
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-#  centos8_minion_configuration    = module.centos8-minion.configuration
-#  centos8_sshminion_configuration = module.centos8-sshminion.configuration
+  centos8_minion_configuration    = module.centos8-minion.configuration
+  centos8_sshminion_configuration = module.centos8-sshminion.configuration
 
   sle11sp4_client_configuration    = module.sles11sp4-client.configuration
   sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
