@@ -101,9 +101,9 @@ module "cucumber_testsuite" {
   from_email   = "root@suse.de"
 
   no_auth_registry = "registry.mgr.suse.de"
-  portus_uri = "portus.mgr.suse.de:5000/cucutest"
-  portus_username = "cucutest"
-  portus_password = "cucusecret"
+  auth_registry = "portus.mgr.suse.de:5000/cucutest"
+  auth_registry_username = "cucutest"
+  auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"

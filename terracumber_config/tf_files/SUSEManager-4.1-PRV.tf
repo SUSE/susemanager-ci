@@ -101,9 +101,9 @@ module "cucumber_testsuite" {
   from_email = "root@suse.de"
 
   no_auth_registry = "minima-mirror.prv.suse.net"
-  portus_uri = "minima-mirror.prv.suse.net:5000/cucutest"
-  portus_username = "cucutest"
-  portus_password = "cucusecret"
+  auth_registry = "minima-mirror.prv.suse.net:5000/cucutest"
+  auth_registry_username = "cucutest"
+  auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 
   mirror = "minima-mirror.prv.suse.net"
