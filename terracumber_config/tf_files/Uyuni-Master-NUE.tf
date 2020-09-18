@@ -103,7 +103,7 @@ module "cucumber_testsuite" {
   portus_uri      = "portus.mgr.suse.de:5000/cucutest"
   portus_username = "cucutest"
   portus_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/mgr.suse.de"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
