@@ -101,7 +101,7 @@ module "cucumber_testsuite" {
   domain       = "prv.suse.net"
   from_email   = "root@suse.de"
 
-  registry_uri = "minima-mirror.prv.suse.net"
+  no_auth_registry = "minima-mirror.prv.suse.net"
   portus_uri = "minima-mirror.prv.suse.net:5000/cucutest"
   portus_username = "cucutest"
   portus_password = "cucusecret"
