@@ -792,10 +792,15 @@ module "controller" {
 resource "null_resource" "server_extra_nfs_mounts" {
   provisioner "remote-exec" {
     inline = [
+      "mkdir -p /mirror/ibs/SUSE/Updates/RES/6",
       "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/ibs/SUSE/Updates/RES/6  /mirror/ibs/SUSE/Updates/RES/6  nfs   defaults  0 0' >> /etc/fstab",
       "mount /mirror/ibs/SUSE/Updates/RES/6",
+      "mkdir -p /mirror/ibs/SUSE/Updates/RES/7",
       "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/ibs/SUSE/Updates/RES/7  /mirror/ibs/SUSE/Updates/RES/7  nfs   defaults  0 0' >> /etc/fstab",
-      "mount /mirror/ibs/SUSE/Updates/RES/7"
+      "mount /mirror/ibs/SUSE/Updates/RES/7",
+      "mkdir -p /mirror/ibs/SUSE/Updates/RES/8",
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/ibs/SUSE/Updates/RES/8  /mirror/ibs/SUSE/Updates/RES/8  nfs   defaults  0 0' >> /etc/fstab",
+      "mount /mirror/ibs/SUSE/Updates/RES/8"
     ]
     connection {
       type     = "ssh"
