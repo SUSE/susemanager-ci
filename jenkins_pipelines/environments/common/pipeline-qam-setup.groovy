@@ -48,9 +48,9 @@ def run(params) {
                 def error = 0
                 if (deployed || !params.must_deploy) {
                     try {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:qam_finishing'"
                     } catch(Exception ex) {
-                        println("ERROR: rake cucumber:finishing failed")
+                        println("ERROR: rake cucumber:qam_finishing failed")
                         error = 1
                     }
                     try {
