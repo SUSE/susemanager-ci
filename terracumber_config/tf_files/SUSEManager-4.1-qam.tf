@@ -172,7 +172,7 @@ module "server" {
   provider_settings = {
     mac                = "52:54:00:46:86:8A"
     memory             = 40960
-    vcpu               = 6
+    vcpu               = 10
     data_pool            = "default"
   }
 
@@ -745,7 +745,7 @@ module "controller" {
   provider_settings = {
     mac                = "52:54:00:BA:9D:AD"
     memory             = 16384
-    vcpu               = 6
+    vcpu               = 8
   }
   swap_file_size = null
 
