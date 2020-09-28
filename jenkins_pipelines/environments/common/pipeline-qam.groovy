@@ -61,7 +61,7 @@ def run(params) {
             }
         }
         finally {
-            stage('Get results') {
+            stage('Reporting') {
                 def error = 0
                 try {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:qam_finishing'"
@@ -85,12 +85,12 @@ def run(params) {
                             reportName: "TestSuite Report"]
                 )
                 junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                // Send email
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                // Clean up old results
+                sh "./clean-old-results -r ${resultdir}"
+                sh "exit ${error}"
             }
-            // Send email
-            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
-            // Clean up old results
-            sh "./clean-old-results -r ${resultdir}"
-            sh "exit ${error}"
         }
     }
 }
