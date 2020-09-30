@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-4.1"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -81,7 +81,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-released"
+  product_version = "uyuni-master"
   
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
