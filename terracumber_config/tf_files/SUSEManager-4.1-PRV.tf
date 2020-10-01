@@ -97,7 +97,7 @@ module "cucumber_testsuite" {
 
   use_avahi = false
   name_prefix = "suma-41-"
-  domain = "mgr.prv.suse.net"
+  domain = "prv.suse.net"
   from_email = "root@suse.de"
 
   no_auth_registry = "minima-mirror.mgr.prv.suse.net"
@@ -179,7 +179,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool = "ssd"
     network_name = null
-    bridge = "br1"
+    bridge = "br0"
     additional_network = "192.168.41.0/24"
   }
 }
