@@ -123,7 +123,7 @@ module "base2" {
   name_prefix = "qam-pip-41-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4", "sles15", /*"centos6o", */ "centos7" ]
+  images      = [ "sles11sp4", "sles12sp4", "sles15", /*"centos6o", */ "centos7o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -316,7 +316,7 @@ module "centos7-client" {
   base_configuration = module.base2.configuration
   product_version    = "4.1-released"
   name               = "cli-centos7"
-  image              = "centos7"
+  image              = "centos7o"
   provider_settings = {
     mac                = "52:54:00:8E:E6:5B"
     memory             = 4096
@@ -466,7 +466,7 @@ module "centos7-minion" {
   base_configuration = module.base2.configuration
   product_version    = "4.1-released"
   name               = "min-centos7"
-  image              = "centos7"
+  image              = "centos7o"
   provider_settings = {
     mac                = "52:54:00:56:1E:C9"
     memory             = 4096
@@ -660,7 +660,7 @@ module "centos7-sshminion" {
   base_configuration = module.base2.configuration
   product_version    = "4.1-released"
   name               = "minssh-centos7"
-  image              = "centos7"
+  image              = "centos7o"
   provider_settings = {
     mac                = "52:54:00:32:A9:28"
     memory             = 4096
