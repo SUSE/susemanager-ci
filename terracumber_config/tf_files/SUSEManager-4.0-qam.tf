@@ -47,12 +47,12 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
 
 variable "MAIL_FROM" {
   type = "string"
-  default = "galaxy-ci@suse.de"
+  default = "galaxy-noise@suse.de"
 }
 
 variable "MAIL_TO" {
   type = "string"
-  default = "galaxy-ci@suse.de"
+  default = "galaxy-noise@suse.de"
 }
 
 // sumaform specific variables
