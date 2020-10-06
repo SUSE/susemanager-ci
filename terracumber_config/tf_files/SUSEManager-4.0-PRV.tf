@@ -75,7 +75,7 @@ variable "GIT_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://metropolis.prv.suse.net/system"
+  uri = "qemu+tcp://metropolis.mgr.prv.suse.net/system"
 }
 
 
@@ -98,7 +98,7 @@ module "cucumber_testsuite" {
 
   use_avahi    = false
   name_prefix  = "suma-40-"
-  domain       = "prv.suse.net"
+  domain       = "mgr.prv.suse.net"
   from_email   = "root@suse.de"
 
   no_auth_registry = "minima-mirror.mgr.prv.suse.net"
@@ -180,7 +180,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool = "ssd"
     network_name = null
-    bridge = "br0"
+    bridge = "br1"
     additional_network = "192.168.40.0/24"
   }
 }
