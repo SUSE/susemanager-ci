@@ -78,7 +78,6 @@ provider "libvirt" {
   uri = "qemu+tcp://selektah.mgr.prv.suse.net/system"
 }
 
-
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
@@ -92,13 +91,13 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  
-  images = ["centos7o", "opensuse152o", "sles12sp3o", "sles12sp4o", "ubuntu1804o"]
 
-  use_avahi = false
+  images = ["centos7o", "opensuse152o", "sles12sp3", "sles12sp4o", "ubuntu1804o"]
+
+  use_avahi   = false
   name_prefix = "suma-32-"
-  domain = "mgr.prv.suse.net"
-  from_email = "root@suse.de"
+  domain      = "mgr.prv.suse.net"
+  from_email  = "root@suse.de"
 
   no_auth_registry = "minima-mirror.mgr.prv.suse.net"
   auth_registry = "minima-mirror.mgr.prv.suse.net:5000/cucutest"
@@ -130,27 +129,27 @@ module "cucumber_testsuite" {
     }
     suse-client = {
       name = "cli-sles12"
-      image = "sles12sp3o"
+      image = "sles12sp3"
       provider_settings = {
         mac = "52:54:00:55:bf:9b"
       }
     }
     suse-minion = {
       name = "min-sles12"
-      image = "sles12sp3o"
+      image = "sles12sp3"
       provider_settings = {
         mac = "52:54:00:e7:1e:fa"
       }
     }
     build-host = {
-      image = "sles12sp3o"
+      image = "sles12sp3"
       provider_settings = {
         mac = "52:54:00:00:00:18"
       }
     }
     suse-sshminion = {
       name = "minssh-sles12"
-      image = "sles12sp3o"
+      image = "sles12sp3"
       provider_settings = {
         mac = "52:54:00:99:c9:f5"
       }
@@ -169,12 +168,12 @@ module "cucumber_testsuite" {
     }
   }
   provider_settings = {
-      pool = "ssd"
-      bridge = "br1"
-      additional_network = "192.168.32.0/24"
+    pool               = "ssd"
+    bridge             = "br1"
+    additional_network = "192.168.32.0/24"
   }
 }
-  
+
 output "configuration" {
   value = module.cucumber_testsuite.configuration
 }
