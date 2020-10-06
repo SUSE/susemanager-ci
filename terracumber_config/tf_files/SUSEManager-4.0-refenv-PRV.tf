@@ -69,7 +69,7 @@ variable "SCC_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://metropolis.prv.suse.net/system"
+  uri = "qemu+tcp://metropolis.mgr.prv.suse.net/system"
 }
 
 module "base" {
@@ -80,7 +80,7 @@ module "base" {
 
   name_prefix       = "suma-ref40-"
   use_avahi         = false
-  domain            = "prv.suse.net"
+  domain            = "mgr.prv.suse.net"
   images            = ["centos7o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
   mirror            = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
@@ -88,7 +88,7 @@ module "base" {
   provider_settings = {
     pool         = "ssd"
     network_name = null
-    bridge       = "br0"
+    bridge       = "br1"
   }
 }
 
