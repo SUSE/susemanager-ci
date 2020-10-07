@@ -157,6 +157,7 @@ module "cucumber_testsuite" {
     redhat-minion = {
       provider_settings = {
         mac = "52:54:00:4f:17:48"
+        memory = 3072        
       }
     }
     debian-minion = {

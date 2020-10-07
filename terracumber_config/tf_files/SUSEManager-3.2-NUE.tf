@@ -151,6 +151,7 @@ module "cucumber_testsuite" {
     redhat-minion = {
       provider_settings = {
         mac = "AA:B2:93:00:00:70"
+        memory = 3072        
       }
     }
     debian-minion = {

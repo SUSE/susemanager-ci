@@ -170,6 +170,7 @@ module "redhat-minion" {
 
   provider_settings = {
     mac = "52:54:00:33:1a:ad"
+    memory = 3072    
   }
 }
 
