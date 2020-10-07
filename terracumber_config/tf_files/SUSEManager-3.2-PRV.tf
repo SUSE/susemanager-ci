@@ -145,6 +145,7 @@ module "cucumber_testsuite" {
     min-centos7 = {
       provider_settings = {
         mac = "52:54:00:4f:17:48"
+        memory = 3072        
       }
     }
     min-ubuntu1804 = {
