@@ -792,13 +792,10 @@ module "controller" {
 resource "null_resource" "server_extra_nfs_mounts" {
   provisioner "remote-exec" {
     inline = [
-      "mkdir -p '/mirror/repo/$RCE/RES6/x86_64'",
       "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES6/x86_64  /mirror/repo/$RCE/RES6/x86_64  nfs   defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES6/x86_64'",
-      "mkdir -p '/mirror/repo/$RCE/RES7/x86_64'",
       "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES7/x86_64  /mirror/repo/$RCE/RES7/x86_64  nfs   defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES7/x86_64'",
-      "mkdir -p '/mirror/repo/$RCE/RES8/x86_64'",
       "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES8/x86_64  /mirror/repo/$RCE/RES8/x86_64  nfs   defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES8/x86_64'"
     ]
