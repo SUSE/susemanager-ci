@@ -798,15 +798,15 @@ module "controller" {
 resource "null_resource" "server_extra_nfs_mounts" {
   provisioner "remote-exec" {
     inline = [
-      "mkdir -p /mirror/ibs/SUSE/Updates/RES/6",
-      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/ibs/SUSE/Updates/RES/6  /mirror/ibs/SUSE/Updates/RES/6  nfs   defaults  0 0' >> /etc/fstab",
-      "mount /mirror/ibs/SUSE/Updates/RES/6",
-      "mkdir -p /mirror/ibs/SUSE/Updates/RES/7",
-      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/ibs/SUSE/Updates/RES/7  /mirror/ibs/SUSE/Updates/RES/7  nfs   defaults  0 0' >> /etc/fstab",
-      "mount /mirror/ibs/SUSE/Updates/RES/7",
-      "mkdir -p /mirror/ibs/SUSE/Updates/RES/8",
-      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/ibs/SUSE/Updates/RES/8  /mirror/ibs/SUSE/Updates/RES/8  nfs   defaults  0 0' >> /etc/fstab",
-      "mount /mirror/ibs/SUSE/Updates/RES/8"
+      "mkdir -p '/mirror/repo/$RCE/RES6/x86_64'",
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES6/x86_64  /mirror/repo/$RCE/RES6/x86_64  nfs   defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES6/x86_64'",
+      "mkdir -p '/mirror/repo/$RCE/RES7/x86_64'",
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES7/x86_64  /mirror/repo/$RCE/RES7/x86_64  nfs   defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES7/x86_64'",
+      "mkdir -p '/mirror/repo/$RCE/RES8/x86_64'",
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES8/x86_64  /mirror/repo/$RCE/RES8/x86_64  nfs   defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES8/x86_64'"
     ]
     connection {
       type     = "ssh"
