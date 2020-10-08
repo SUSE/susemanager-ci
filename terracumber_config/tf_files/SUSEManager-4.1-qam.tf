@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "qam-pip-41-"
   use_avahi   = false
   domain      = "qa.prv.suse.net"
-  images      = [ "sles15sp1", "ubuntu1604", "ubuntu1804o", "ubuntu2004o", "centos8o" ]
+  images      = [ "sles15sp1", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "centos8o" ]
 
   mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
@@ -525,7 +525,7 @@ module "ubuntu1804-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "min-ubuntu1804"
-  image              = "ubuntu1804"
+  image              = "ubuntu1804o"
   provider_settings = {
     mac                = "52:54:00:7E:7D:ED"
     memory             = 4096
@@ -705,7 +705,7 @@ module "ubuntu1804-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804"
+  image              = "ubuntu1804o"
   provider_settings = {
     mac                = "52:54:00:EE:EC:95"
     memory             = 4096
@@ -716,7 +716,7 @@ module "ubuntu1804-sshminion" {
 
 module "ubuntu1604-sshminion" {
   source = "./modules/sshminion"
-  base_configuration = module.base.configuration
+  base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "minssh-ubuntu1604"
   image              = "ubuntu1604o"
