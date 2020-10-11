@@ -75,17 +75,17 @@ variable "GIT_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://arrakis.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://classic176.qa.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "caladan"
-  uri = "qemu+tcp://caladan.mgr.prv.suse.net/system"
+  alias = "classic179"
+  uri = "qemu+tcp://classic179.qa.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "giediprime"
-  uri = "qemu+tcp://giediprime.mgr.prv.suse.net/system"
+  alias = "classic181"
+  uri = "qemu+tcp://classic181.qa.prv.suse.net/system"
 }
 
 
@@ -94,12 +94,12 @@ module "base" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "qam-pip-41-"
   use_avahi   = false
-  domain      = "mgr.prv.suse.net"
+  domain      = "qa.prv.suse.net"
   images      = ["sles15sp2o", "opensuse150o" ]
 
-  mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -113,19 +113,19 @@ module "base" {
 
 module "base2" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
 
   source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "qam-pip-41-"
   use_avahi   = false
-  domain      = "mgr.prv.suse.net"
+  domain      = "qa.prv.suse.net"
   images      = [ "sles11sp4", "sles12sp4", "sles15", "centos6o", "centos7o" ]
 
-  mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -139,19 +139,19 @@ module "base2" {
 
 module "base3" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
 
   source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "qam-pip-41-"
   use_avahi   = false
-  domain      = "mgr.prv.suse.net"
+  domain      = "qa.prv.suse.net"
   images      = [ "sles15sp1", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "centos8o" ]
 
-  mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  mirror = "minima-mirror.qa.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -209,7 +209,7 @@ module "proxy" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-srv.mgr.prv.suse.net"
+    hostname = "qam-pip-41-srv.qa.prv.suse.net"
     username = "admin"
     password = "admin"
   }
@@ -226,7 +226,7 @@ module "proxy" {
 
 module "sles12sp4-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
@@ -238,7 +238,7 @@ module "sles12sp4-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -247,7 +247,7 @@ module "sles12sp4-client" {
 
 module "sles11sp4-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
@@ -259,7 +259,7 @@ module "sles11sp4-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -268,7 +268,7 @@ module "sles11sp4-client" {
 
 module "sles15-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
@@ -280,7 +280,7 @@ module "sles15-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -289,7 +289,7 @@ module "sles15-client" {
 
 module "sles15sp1-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/client"
   base_configuration = module.base3.configuration
@@ -301,7 +301,7 @@ module "sles15sp1-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -310,7 +310,7 @@ module "sles15sp1-client" {
 
 module "centos7-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
@@ -322,7 +322,7 @@ module "centos7-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_register = false
   use_os_released_updates = false
@@ -331,7 +331,7 @@ module "centos7-client" {
 
 module "centos6-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/client"
   base_configuration = module.base2.configuration
@@ -343,13 +343,13 @@ module "centos6-client" {
     memory             = 4096
   }
   use_os_released_updates = false
-  server_configuration =  { hostname = "suma-qam-41-pxy.mgr.prv.suse.net" }
+  server_configuration =  { hostname = "qam-pip-41-pxy.qa.prv.suse.net" }
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
 
 module "sles12sp4-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
@@ -361,7 +361,7 @@ module "sles12sp4-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -370,7 +370,7 @@ module "sles12sp4-minion" {
 
 module "sles11sp4-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
@@ -382,7 +382,7 @@ module "sles11sp4-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -391,7 +391,7 @@ module "sles11sp4-minion" {
 
 module "sles15-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
@@ -404,7 +404,7 @@ module "sles15-minion" {
   }
 
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -413,7 +413,7 @@ module "sles15-minion" {
 
 module "sles15sp1-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
@@ -426,7 +426,7 @@ module "sles15sp1-minion" {
   }
 
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -435,7 +435,7 @@ module "sles15sp1-minion" {
 
 module "centos8-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
@@ -447,7 +447,7 @@ module "centos8-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -456,7 +456,7 @@ module "centos8-minion" {
 
 module "centos7-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
@@ -468,7 +468,7 @@ module "centos7-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -477,7 +477,7 @@ module "centos7-minion" {
 
 module "centos6-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/minion"
   base_configuration = module.base2.configuration
@@ -488,7 +488,7 @@ module "centos6-minion" {
     mac                = "52:54:00:76:EF:77"
     memory             = 4096
   }
-  server_configuration =  { hostname = "suma-qam-41-pxy.mgr.prv.suse.net" }
+  server_configuration =  { hostname = "qam-pip-41-pxy.qa.prv.suse.net" }
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
@@ -497,7 +497,7 @@ module "centos6-minion" {
 /*
 module "ubuntu2004-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
@@ -509,7 +509,7 @@ module "ubuntu2004-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -519,7 +519,7 @@ module "ubuntu2004-minion" {
 
 module "ubuntu1804-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
@@ -531,7 +531,7 @@ module "ubuntu1804-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "qam-pip-41-pxy.qa.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -540,7 +540,7 @@ module "ubuntu1804-minion" {
 
 module "ubuntu1604-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/minion"
   base_configuration = module.base3.configuration
@@ -551,7 +551,7 @@ module "ubuntu1604-minion" {
     mac                = "52:54:00:DA:F0:A0"
     memory             = 4096
   }
-  server_configuration =  { hostname =  "suma-qam-41-pxy.mgr.prv.suse.net" }
+  server_configuration =  { hostname =  "qam-pip-41-pxy.qa.prv.suse.net" }
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
@@ -559,7 +559,7 @@ module "ubuntu1604-minion" {
 
 module "sles12sp4-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
@@ -578,7 +578,7 @@ module "sles12sp4-sshminion" {
 
 module "sles11sp4-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
@@ -595,7 +595,7 @@ module "sles11sp4-sshminion" {
 
 module "sles15-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
@@ -612,7 +612,7 @@ module "sles15-sshminion" {
 
 module "sles15sp1-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
@@ -629,7 +629,7 @@ module "sles15sp1-sshminion" {
 
 module "centos8-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
@@ -646,7 +646,7 @@ module "centos8-sshminion" {
 
 module "centos7-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
@@ -663,7 +663,7 @@ module "centos7-sshminion" {
 
 module "centos6-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.classic179
   }
   source             = "./modules/sshminion"
   base_configuration = module.base2.configuration
@@ -681,7 +681,7 @@ module "centos6-sshminion" {
 /*
 module "ubuntu2004-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
@@ -699,7 +699,7 @@ module "ubuntu2004-sshminion" {
 
 module "ubuntu1804-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.classic181
   }
   source             = "./modules/sshminion"
   base_configuration = module.base3.configuration
@@ -792,11 +792,11 @@ module "controller" {
 resource "null_resource" "server_extra_nfs_mounts" {
   provisioner "remote-exec" {
     inline = [
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6/x86_64  /mirror/repo/$RCE/RES6/x86_64  nfs   defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES6/x86_64  /mirror/repo/$RCE/RES6/x86_64  nfs   defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES6/x86_64'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7/x86_64  /mirror/repo/$RCE/RES7/x86_64  nfs   defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES7/x86_64  /mirror/repo/$RCE/RES7/x86_64  nfs   defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES7/x86_64'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES8/x86_64  /mirror/repo/$RCE/RES8/x86_64  nfs   defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror2.qa.prv.suse.net:/srv/mirror/repo/$RCE/RES8/x86_64  /mirror/repo/$RCE/RES8/x86_64  nfs   defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES8/x86_64'"
     ]
     connection {
