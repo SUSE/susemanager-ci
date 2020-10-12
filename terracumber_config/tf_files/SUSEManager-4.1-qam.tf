@@ -195,7 +195,7 @@ module "server" {
   ssh_key_path                   = "./salt/controller/id_rsa.pub"
   from_email                     = "root@suse.de"
 
-  //srv_additional_repos
+  //server_additional_repos
 
 }
 
@@ -222,6 +222,8 @@ module "proxy" {
   use_os_released_updates   = true
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 
+  //proxy_additional_repos
+
 }
 
 module "sles12sp4-client" {
@@ -243,8 +245,10 @@ module "sles12sp4-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
 
+  //sle12sp4-client_additional_repos
+
+}
 module "sles11sp4-client" {
   providers = {
     libvirt = libvirt.classic179
@@ -264,6 +268,9 @@ module "sles11sp4-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle11sp4-client_additional_repos
+
 }
 
 module "sles15-client" {
@@ -285,6 +292,9 @@ module "sles15-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15-client_additional_repos
+
 }
 
 module "sles15sp1-client" {
@@ -306,6 +316,9 @@ module "sles15sp1-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp1-client_additional_repos
+
 }
 
 module "centos7-client" {
@@ -327,6 +340,9 @@ module "centos7-client" {
   auto_register = false
   use_os_released_updates = false
   ssh_key_path  = "./salt/controller/id_rsa.pub"
+
+  //ceos7-client_additional_repos
+
 }
 
 module "centos6-client" {
@@ -345,6 +361,9 @@ module "centos6-client" {
   use_os_released_updates = false
   server_configuration =  { hostname = "qam-pip-41-pxy.qa.prv.suse.net" }
   ssh_key_path = "./salt/controller/id_rsa.pub"
+
+  //ceos6-client_additional_repos
+
 }
 
 module "sles12sp4-minion" {
@@ -366,6 +385,9 @@ module "sles12sp4-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle12sp4-minion_additional_repos
+
 }
 
 module "sles11sp4-minion" {
@@ -387,6 +409,9 @@ module "sles11sp4-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle11sp4-minion_additional_repos
+
 }
 
 module "sles15-minion" {
@@ -409,6 +434,9 @@ module "sles15-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15-minion_additional_repos
+
 }
 
 module "sles15sp1-minion" {
@@ -431,6 +459,9 @@ module "sles15sp1-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp1-minion_additional_repos
+
 }
 
 module "centos8-minion" {
@@ -452,6 +483,9 @@ module "centos8-minion" {
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
+
+  //ceos8-minion_additional_repos
+
 }
 
 module "centos7-minion" {
@@ -473,6 +507,9 @@ module "centos7-minion" {
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
+
+  //ceos7-minion_additional_repos
+
 }
 
 module "centos6-minion" {
@@ -492,6 +529,9 @@ module "centos6-minion" {
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
+
+  //ceos6_minion_additional_repos
+
 }
 
 /*
@@ -514,6 +554,9 @@ module "ubuntu2004-minion" {
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
+
+  //ubuntu2004-minion_additional_repos
+
 }
 */
 
@@ -536,6 +579,9 @@ module "ubuntu1804-minion" {
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
+
+  //ubuntu1804-minion_additional_repos
+
 }
 
 module "ubuntu1604-minion" {
@@ -555,6 +601,9 @@ module "ubuntu1604-minion" {
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
+
+  //ubuntu1604-minion_additional_repos
+
 }
 
 module "sles12sp4-sshminion" {
