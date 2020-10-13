@@ -715,6 +715,9 @@ module "ubuntu1804-sshminion" {
 }
 
 module "ubuntu1604-sshminion" {
+  providers = {
+    libvirt = libvirt.classic181
+  }
   source = "./modules/sshminion"
   base_configuration = module.base3.configuration
   product_version    = "4.0-released"
