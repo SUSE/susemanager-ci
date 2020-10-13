@@ -57,7 +57,6 @@ pipeline {
                             'ruby_rubocop' : 'testsuite/',
                             'backend_unittests_pgsql' : 'backend/',
                             'javascript_lint' : 'web/',
-                            'schema_migration_test_oracle' : 'schema/spacewalk',
                             'schema_migration_test_pgsql' : 'schema/spacewalk',
                             'susemanager_unittests' : 'susemanager/'
                     ]
