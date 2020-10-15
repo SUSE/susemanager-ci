@@ -106,7 +106,7 @@ module "base" {
 
   provider_settings = {
     pool        = "default"
-    bridge      = "br0"
+    bridge      = "br1"
     additional_network = "192.168.40.0/24"
   }
 }
@@ -132,7 +132,7 @@ module "base2" {
 
   provider_settings = {
     pool        = "default"
-    bridge      = "br0"
+    bridge      = "br1"
     additional_network = "192.168.40.0/24"
   }
 }
@@ -158,7 +158,7 @@ module "base3" {
 
   provider_settings = {
     pool        = "default"
-    bridge      = "br0"
+    bridge      = "br1"
     additional_network = "192.168.40.0/24"
   }
 }
