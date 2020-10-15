@@ -94,7 +94,7 @@ module "cucumber_testsuite" {
   cc_password = var.SCC_PASSWORD
 
   # temporary: custom CentOS image due to broken Salt
-  images = ["centos7o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
+  images = ["centos7o", "opensuse150o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
 
   use_avahi    = false
   name_prefix  = "suma-40-"
