@@ -110,7 +110,7 @@ module "server" {
     "sle-module-containers12-updates-x86_64-sp4"]
 
   provider_settings = {
-    mac    = "52:54:00:c6:48:b9"
+    mac    = "aa:b2:92:c6:48:b9"
     memory = 8192
   }
 }
@@ -126,7 +126,7 @@ module "suse-client" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "52:54:00:93:17:5f"
+    mac = "aa:b2:92:93:17:5f"
   }
 }
 
@@ -141,7 +141,7 @@ module "suse-minion" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "52:54:00:a0:d0:ce"
+    mac = "aa:b2:92:a0:d0:ce"
   }
 }
 
@@ -154,7 +154,7 @@ module "build-host" {
   server_configuration    = module.server.configuration
 
   provider_settings = {
-    mac = "52:54:00:00:00:19"
+    mac = "aa:b2:92:00:00:19"
   }
 }
 
@@ -169,7 +169,7 @@ module "redhat-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "52:54:00:33:1a:ad"
+    mac = "aa:b2:92:33:1a:ad"
     memory = 3072    
   }
 }
@@ -184,6 +184,6 @@ module "debian-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "52:54:00:e0:ed:07"
+    mac = "aa:b2:92:e0:ed:07"
   }
 }

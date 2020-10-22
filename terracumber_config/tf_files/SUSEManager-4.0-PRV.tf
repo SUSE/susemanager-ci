@@ -114,57 +114,57 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "52:54:00:00:00:06"
+        mac = "aa:b2:92:00:00:06"
       }
     }
     server = {
       provider_settings = {
-        mac = "52:54:00:00:00:01"
+        mac = "aa:b2:92:00:00:01"
       }
     }
     proxy = {
       provider_settings = {
-        mac = "52:54:00:00:00:07"
+        mac = "aa:b2:92:00:00:07"
       }
     }
     suse-client = {
       image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
-        mac = "52:54:00:00:00:02"
+        mac = "aa:b2:92:00:00:02"
       }
     }
     suse-minion = {
       image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
-        mac = "52:54:00:00:00:03"
+        mac = "aa:b2:92:00:00:03"
       }
     }
     build-host = {
       image = "sles15sp2o"
       provider_settings = {
-        mac = "52:54:00:00:00:20"
+        mac = "aa:b2:92:00:00:20"
       }
     }
     suse-sshminion = {
       image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "52:54:00:00:00:04"
+        mac = "aa:b2:92:00:00:04"
       }
     }
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
-        mac = "52:54:00:00:00:05"
+        mac = "aa:b2:92:00:00:05"
         // Openscap cannot run with less than 1.25 GB of RAM
         memory = 1280
       }
     }
     debian-minion = {
       provider_settings = {
-        mac = "52:54:00:00:00:08"
+        mac = "aa:b2:92:00:00:08"
       }
     }
     pxeboot-minion = {
@@ -173,7 +173,7 @@ module "cucumber_testsuite" {
     kvm-host = {
       image = "sles15sp1o"
       provider_settings = {
-        mac = "52:54:00:00:00:09"
+        mac = "aa:b2:92:00:00:09"
       }
     }
   }
