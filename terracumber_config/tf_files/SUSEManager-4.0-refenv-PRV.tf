@@ -104,7 +104,7 @@ module "server" {
   channels                = ["sle-product-sles15-pool-x86_64", "sle-product-sles15-updates-x86_64", "sle-module-basesystem15-pool-x86_64", "sle-module-basesystem15-updates-x86_64", "sle-module-containers15-pool-x86_64", "sle-module-containers15-updates-x86_64"]
 
   provider_settings = {
-    mac    = "52:54:00:00:00:10"
+    mac    = "aa:b2:92:00:00:10"
     memory = 8192
   }
 }
@@ -120,7 +120,7 @@ module "suse-client" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "52:54:00:00:00:11"
+    mac = "aa:b2:92:00:00:11"
   }
 }
 
@@ -135,7 +135,7 @@ module "suse-minion" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "52:54:00:00:00:12"
+    mac = "aa:b2:92:00:00:12"
   }
 }
 
@@ -148,7 +148,7 @@ module "build-host" {
   server_configuration    = module.server.configuration
 
   provider_settings = {
-    mac = "52:54:00:00:00:21"
+    mac = "aa:b2:92:00:00:21"
   }
 }
 
@@ -163,7 +163,7 @@ module "redhat-minion" {
   auto_connect_to_master = false
 
   provider_settings = {
-    mac = "52:54:00:00:00:14"
+    mac = "aa:b2:92:00:00:14"
     // Openscap cannot run with less than 1.25 GB of RAM
     memory = 1280
   }
@@ -178,6 +178,6 @@ module "debian-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "52:54:00:00:00:17"
+    mac = "aa:b2:92:00:00:17"
   }
 }
