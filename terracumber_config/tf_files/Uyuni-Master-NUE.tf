@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
+  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
       }
     }
     debian-minion = {
-      image = "ubuntu1804o"
+      image = "ubuntu2004o"
       provider_settings = {
         mac = "AA:B2:93:00:00:08"
       }
