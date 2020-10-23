@@ -165,7 +165,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
       provider_settings = {
-        mac = "AA:B2:93:00:00:28"
+        mac = "AA:B2:93:00:20:28"
       }
     }
     pxeboot-minion = {
