@@ -162,6 +162,7 @@ module "cucumber_testsuite" {
       }
     }
     debian-minion = {
+      name = "min-ubuntu2004"
       image = "ubuntu2004o"
       provider_settings = {
         mac = "aa:b2:92:00:00:28"
