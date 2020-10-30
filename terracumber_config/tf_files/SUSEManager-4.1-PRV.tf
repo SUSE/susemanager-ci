@@ -177,6 +177,12 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:00:00:29"
       }
     }
+    xen-host = {
+      image = "sles15sp2o"
+      provider_settings = {
+        mac = "aa:b2:92:00:01:30"
+      }
+    }
   }
   provider_settings = {
     pool = "ssd"

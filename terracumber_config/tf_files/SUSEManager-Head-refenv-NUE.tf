@@ -179,3 +179,16 @@ module "debian-minion" {
     mac = "AA:B2:93:00:00:37"
   }
 }
+
+module "kvm-minion" {
+  source               = "./modules/virthost"
+  base_configuration   = module.base.configuration
+  product_version      = "head"
+  name                 = "min-kvm"
+  image                = "sles15sp2o"
+  server_configuration = module.server.configuration
+
+  provider_settings = {
+    mac = "AA:B2:93:00:01:40"
+  }
+}
