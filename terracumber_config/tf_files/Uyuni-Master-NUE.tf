@@ -176,6 +176,12 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:07"
       }
     }
+    xen-host = {
+      image = "opensuse152o"
+      provider_settings = {
+        mac = "AA:B2:93:00:01:08"
+      }
+    }
   }
   provider_settings = {
     pool               = "ssd"
