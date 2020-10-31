@@ -180,7 +180,7 @@ module "cucumber_testsuite" {
     xen-host = {
       image = "sles15sp2o"
       provider_settings = {
-        mac = "aa:b2:92:00:01:30"
+        mac = "aa:b2:92:00:01:31"
       }
     }
   }
