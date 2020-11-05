@@ -85,7 +85,7 @@ provider "libvirt" {
 
 provider "libvirt" {
   alias = "giediprime"
-  uri = "qemu+tcp://giediprime.mgr.suse.net/system"
+  uri = "qemu+tcp://giediprime.mgr.prv.suse.net/system"
 }
 
 
@@ -97,7 +97,7 @@ module "base" {
   name_prefix = "suma-qam-40-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1", "opensuse152o" ]
+  images      = [ "sles15o", "sles15sp1o", "opensuse152o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "suma-qam-40-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1o",  "ubuntu1804o", "ubuntu1604o", "ubuntu2004o", "centos8o" ]
+  images      = [ "sles15sp1o", "ubuntu1804o", "ubuntu1604o", "ubuntu2004o", "centos8o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -169,7 +169,7 @@ module "server" {
   base_configuration = module.base.configuration
   product_version    = "4.0-released"
   name               = "srv"
-  image              = "sles15sp1"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "aa:b2:92:f6:5d:e8"
     memory             = 40960
@@ -196,7 +196,7 @@ module "server" {
   ssh_key_path                   = "./salt/controller/id_rsa.pub"
   from_email                     = "root@suse.de"
 
-  //srv_additional_repos
+  //server_additional_repos
 
 }
 
@@ -205,7 +205,7 @@ module "proxy" {
   base_configuration = module.base.configuration
   product_version    = "4.0-released"
   name               = "pxy"
-  image              = "sles15sp1"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "aa:b2:92:f2:4d:7a"
     memory             = 4096
@@ -738,7 +738,7 @@ module "controller" {
   provider_settings = {
     mac                = "aa:b2:92:b2:cf:9b"
     memory             = 16384
-    vcpu               = 6
+    vcpu               = 10
   }
   swap_file_size = null
 

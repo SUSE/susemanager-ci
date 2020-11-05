@@ -1,4 +1,4 @@
-  // Mandatory variables for terracumber
+// Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
   default = "https://ci.suse.de/view/Manager/view/Manager-4.1/job/manager-4.1-qam-setup-cucumber"
@@ -97,7 +97,7 @@ module "base" {
   name_prefix = "suma-qam-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = ["sles15sp2o", "opensuse152o" ]
+  images      = [ "sles15sp2o", "opensuse152o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -149,7 +149,7 @@ module "base3" {
   name_prefix = "suma-qam-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "centos8o" ]
+  images      = [ "sles15sp1o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "centos8o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -305,7 +305,7 @@ module "sles15sp1-client" {
   base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "cli-sles15sp1"
-  image              = "sles15sp1"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "aa:b2:92:7a:84:9e"
     memory             = 4096
@@ -448,7 +448,7 @@ module "sles15sp1-minion" {
   base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "min-sles15sp1"
-  image              = "sles15sp1"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "aa:b2:92:ca:f7:a9"
     memory             = 4096
@@ -668,7 +668,7 @@ module "sles15sp1-sshminion" {
   base_configuration = module.base3.configuration
   product_version    = "4.1-released"
   name               = "minssh-sles15sp1"
-  image              = "sles15sp1"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "aa:b2:92:ee:ad:30"
     memory             = 4096
