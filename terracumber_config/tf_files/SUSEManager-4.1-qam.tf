@@ -123,7 +123,7 @@ module "base2" {
   name_prefix = "suma-qam-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4", "sles15o", "centos6o", "centos7o" ]
+  images      = [ "sles11sp4", "sles12sp4o", "sles15o", "centos6o", "centos7o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -234,7 +234,7 @@ module "sles12sp4-client" {
   base_configuration = module.base2.configuration
   product_version    = "4.1-released"
   name               = "cli-sles12sp4"
-  image              = "sles12sp4"
+  image              = "sles12sp4o"
   provider_settings = {
     mac                = "aa:b2:92:de:8b:4b"
     memory             = 4096
@@ -375,7 +375,7 @@ module "sles12sp4-minion" {
   base_configuration = module.base2.configuration
   product_version    = "4.1-released"
   name               = "min-sles12sp4"
-  image              = "sles12sp4"
+  image              = "sles12sp4o"
   provider_settings = {
     mac                = "aa:b2:92:9a:94:c9"
     memory             = 4096
@@ -615,7 +615,7 @@ module "sles12sp4-sshminion" {
   base_configuration = module.base2.configuration
   product_version    = "4.1-released"
   name               = "minssh-sles12sp4"
-  image              = "sles12sp4"
+  image              = "sles12sp4o"
   provider_settings = {
     mac                = "aa:b2:92:9a:51:7b"
     memory             = 4096
