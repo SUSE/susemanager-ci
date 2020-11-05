@@ -81,7 +81,7 @@ module "base" {
   name_prefix = "suma-refhead-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["centos7o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
+  images      = ["centos7o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1804o"]
   provider_settings = {
     pool         = "ssd"
     network_name = null
@@ -98,7 +98,6 @@ module "server" {
   use_os_released_updates = true
   disable_download_tokens = false
   from_email              = "root@suse.de"
-  channels                = ["sle-product-sles15-sp1-pool-x86_64", "sle-product-sles15-sp1-updates-x86_64", "sle-module-basesystem15-sp1-pool-x86_64", "sle-module-basesystem15-sp1-updates-x86_64", "sle-module-containers15-sp1-pool-x86_64", "sle-module-containers15-sp1-updates-x86_64", "sle-manager-tools15-pool-x86_64-sp1"]
   postgres_log_min_duration = 0
 
   provider_settings = {
@@ -185,7 +184,7 @@ module "kvm-minion" {
   base_configuration   = module.base.configuration
   product_version      = "head"
   name                 = "min-kvm"
-  image                = "sles15sp2o"
+  image                = "sles15sp3o"
   server_configuration = module.server.configuration
 
   provider_settings = {

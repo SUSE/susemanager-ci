@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-head-"
@@ -169,16 +169,16 @@ module "cucumber_testsuite" {
       }
     }
     pxeboot-minion = {
-      image = "sles15sp2o"
+      image = "sles15sp3o"
     }
     kvm-host = {
-      image = "sles15sp2o"
+      image = "sles15sp3o"
       provider_settings = {
         mac = "AA:B2:93:00:00:29"
       }
     }
     xen-host = {
-      image = "sles15sp2o"
+      image = "sles15sp3o"
       provider_settings = {
         mac = "AA:B2:93:00:01:30"
       }
