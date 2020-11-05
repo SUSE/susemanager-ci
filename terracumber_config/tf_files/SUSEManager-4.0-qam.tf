@@ -123,7 +123,7 @@ module "base2" {
   name_prefix = "suma-qam-40-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o", "sles15o", centos6o", "centos7o" ]
+  images      = [ "sles11sp4", "sles12sp4o", "sles15o", "centos6o", "centos7o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
