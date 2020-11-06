@@ -850,11 +850,11 @@ resource "null_resource" "server_extra_nfs_mounts" {
       "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7/x86_64         /mirror/repo/$RCE/RES7/x86_64         nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES7/x86_64'",
       "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES/8/x86_64     /mirror/SUSE/Updates/RES/8/x86_64     nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/SUSE/updates/RES/8/x86_64'",
+      "mount '/mirror/SUSE/Updates/RES/8/x86_64'",
       "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-CB/8/x86_64  /mirror/SUSE/Updates/RES-CB/8/x86_64  nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/SUSE/updates/RES-CB/8/x86_64'",
+      "mount '/mirror/SUSE/Updates/RES-CB/8/x86_64'",
       "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-AS/8/x86_64  /mirror/SUSE/Updates/RES-AS/8/x86_64  nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/SUSE/updates/RES-AS/8/x86_64'"
+      "mount '/mirror/SUSE/Updates/RES-AS/8/x86_64'"
     ]
     connection {
       type     = "ssh"
