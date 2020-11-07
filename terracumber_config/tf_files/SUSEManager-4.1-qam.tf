@@ -862,7 +862,7 @@ resource "null_resource" "server_extra_nfs_mounts" {
       "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-CB  /mirror/SUSE/Updates/RES-CB  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/SUSE/Updates/RES-CB'",
       "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-AS  /mirror/SUSE/Updates/RES-AS  nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/SUSE/Updates/RES-AS'"
+      "mount '/mirror/SUSE/Updates/RES-AS'",
       "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Products/RES  /mirror/SUSE/Products/RES  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/SUSE/Products/RES'"
     ]
