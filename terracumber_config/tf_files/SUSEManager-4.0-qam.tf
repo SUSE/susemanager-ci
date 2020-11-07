@@ -795,16 +795,26 @@ module "controller" {
 resource "null_resource" "server_extra_nfs_mounts" {
   provisioner "remote-exec" {
     inline = [
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6/x86_64         /mirror/repo/$RCE/RES6/x86_64         nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/repo/$RCE/RES6/x86_64'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7/x86_64         /mirror/repo/$RCE/RES7/x86_64         nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/repo/$RCE/RES7/x86_64'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES/8/x86_64     /mirror/SUSE/Updates/RES/8/x86_64     nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/SUSE/Updates/RES/8/x86_64'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-CB/8/x86_64  /mirror/SUSE/Updates/RES-CB/8/x86_64  nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/SUSE/Updates/RES-CB/8/x86_64'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-AS/8/x86_64  /mirror/SUSE/Updates/RES-AS/8/x86_64  nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/SUSE/Updates/RES-AS/8/x86_64'"
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6  /mirror/repo/$RCE/RES6  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES6'",
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6-SUSE-Manager-Tools  /mirror/repo/$RCE/RES6-SUSE-Manager-Tools  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES6-SUSE-Manager-Tools'",
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta  /mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta'",
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7  /mirror/repo/$RCE/RES7  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES7'",
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7-SUSE-Manager-Tools  /mirror/repo/$RCE/RES7-SUSE-Manager-Tools  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES7-SUSE-Manager-Tools'",
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7-SUSE-Manager-Tools-Beta  /mirror/repo/$RCE/RES7-SUSE-Manager-Tools-Beta  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/repo/$RCE/RES7-SUSE-Manager-Tools-Beta'",
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES  /mirror/SUSE/Updates/RES  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/SUSE/Updates/RES'",
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-CB  /mirror/SUSE/Updates/RES-CB  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/SUSE/Updates/RES-CB'",
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-AS  /mirror/SUSE/Updates/RES-AS  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/SUSE/Updates/RES-AS'"
+      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Products/RES  /mirror/SUSE/Products/RES  nfs  defaults  0 0' >> /etc/fstab",
+      "mount '/mirror/SUSE/Products/RES'"
     ]
     connection {
       type     = "ssh"
