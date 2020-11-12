@@ -50,7 +50,6 @@ pipeline {
             steps {
                 script {
                     contexts = [
-                            'java_lint_checkstyle' : 'java/',
                             'java_pgsql_tests' : 'java/',
                             'spacecmd_unittests': 'spacecmd/',
                             'backend_unittests_pgsql' : 'backend/',
