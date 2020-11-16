@@ -282,7 +282,7 @@ module "sles11sp4-client" {
   name               = "cli-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
-    mac                = "aa:b2:92:ce:b2:f6"
+    mac                = "aa:b2:92:ce:b2:f7"
     memory             = 4096
   }
   server_configuration = {
@@ -330,7 +330,7 @@ module "sles15sp1-client" {
   name               = "cli-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:7a:84:9e"
+    mac                = "aa:b2:92:7a:84:9f"
     memory             = 4096
   }
   server_configuration = {
@@ -378,7 +378,7 @@ module "centos6-client" {
   name               = "cli-centos6"
   image              = "centos6o"
   provider_settings = {
-    mac                = "aa:b2:92:ee:2d:80"
+    mac                = "aa:b2:92:ee:2d:81"
     memory             = 4096
   }
   auto_register = false
@@ -424,7 +424,7 @@ module "sles11sp4-minion" {
   name               = "min-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
-    mac                = "aa:b2:92:6a:52:82"
+    mac                = "aa:b2:92:6a:52:83"
     memory             = 4096
   }
   server_configuration = {
@@ -569,7 +569,7 @@ module "ubuntu2004-minion" {
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:15:a7:50"
+    mac                = "aa:b2:92:15:a7:51"
     memory             = 4096
   }
   server_configuration = {
@@ -618,7 +618,7 @@ module "ubuntu1604-minion" {
   name               = "min-ubuntu1604"
   image              = "ubuntu1604o"
   provider_settings = {
-    mac                = "aa:b2:92:da:f0:a0"
+    mac                = "aa:b2:92:da:f0:a1"
     memory             = 4096
   }
   server_configuration =  { hostname =  "suma-qam-41-pxy.mgr.prv.suse.net" }
@@ -693,7 +693,7 @@ module "sles15sp1-sshminion" {
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:ee:ad:30"
+    mac                = "aa:b2:92:ee:ad:31"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -727,7 +727,7 @@ module "centos7-sshminion" {
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:32:a9:28"
+    mac                = "aa:b2:92:32:a9:29"
     memory             = 4096
   }
   use_os_released_updates = false
