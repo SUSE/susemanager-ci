@@ -193,7 +193,7 @@ module "server" {
   product_version    = "4.1-released"
   name               = "srv"
   provider_settings = {
-    mac                = "aa:b2:92:35:80:a6"
+    mac                = "aa:b2:92:35:80:a7"
     memory             = 40960
     vcpu               = 10
     data_pool            = "default"
