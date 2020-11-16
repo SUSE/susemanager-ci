@@ -36,11 +36,11 @@ def run(params) {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; cd /root/spacewalk/testsuite; rake cucumber:reposync'"
             }
             stage('Core - Initialize clients') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; cd /root/spacewalk/testsuite; rake cucumber:init_clients'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
             }
             stage('Secondary features') {
                 def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; cd /root/spacewalk/testsuite; rake cucumber:secondary_parallelizable'", returnStatus:true
+                def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
                 sh "exit \$(( ${statusCode1}|${statusCode2} ))"
             }
         }
