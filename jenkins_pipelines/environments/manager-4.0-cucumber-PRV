@@ -15,7 +15,7 @@ node('sumaform-cucumber') {
             choice(name: 'terraform_bin', choices: ['/usr/bin/terraform_bin'], description: 'Terraform binary path'),
             choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
             // Temporary: should move to uyuni-project
-            string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/mcalmer/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: false, description: 'Call terraform init (needed if modules are added or changes)')
         ])
