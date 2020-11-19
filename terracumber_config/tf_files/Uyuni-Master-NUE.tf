@@ -179,7 +179,7 @@ module "cucumber_testsuite" {
     xen-host = {
       image = "opensuse152o"
       provider_settings = {
-        mac = "AA:B2:93:00:01:08"
+        mac = "AA:B2:93:00:00:0A"
       }
     }
   }
