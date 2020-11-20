@@ -172,13 +172,15 @@ module "cucumber_testsuite" {
       image = "sles15sp3o"
     }
     kvm-host = {
-      image = "sles15sp3o"
+      # temporary revert to SP2 because of SLES SP3 problems with libvirt
+      image = "sles15sp2o"
       provider_settings = {
         mac = "AA:B2:93:00:00:29"
       }
     }
     xen-host = {
-      image = "sles15sp3o"
+      # temporary revert to SP2 because of SLES SP3 problems with libvirt
+      image = "sles15sp2o"
       provider_settings = {
         mac = "AA:B2:93:00:01:30"
       }
