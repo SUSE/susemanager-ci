@@ -1,0 +1,11 @@
+#################################################################
+# SUMMARY
+#################################################################
+Build:   $urlprefix/$timestamp
+Console: $urlprefix/$timestamp/console
+Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
+
+Environment failed to be created, so no spacewalk-debug tarball or cucumber results are available.
+
+Please notice this is a staging area for test suite and CI refactorings,
+and a back up when Provo has problems. In normal times, this is not a production test suite.

@@ -1,0 +1,22 @@
+#################################################################
+# SUMMARY
+#################################################################
+Build:   $urlprefix/$timestamp
+Console: $urlprefix/$timestamp/console
+Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
+Report:  $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/cucumber_report/cucumber_report.html
+Logs:    $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/spacewalk-debug.tar.bz2
+
+Please notice this is a staging area for test suite and CI refactorings,
+and a back up when Provo has problems. In normal times, this is not a production test suite.
+
+#################################################################
+# SCENARIOS
+#################################################################
+Total:   $tests
+Passed:  $passed
+Failed:  $failures
+Errors:  $errors
+Skipped: $skipped
+
+$failures_log

@@ -27,12 +27,12 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = "string"
-  default = "Results 4.1-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 4.1-NUE (backup and staging) $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
   type = "string"
-  default = "../mail_templates/mail-template-jenkins.txt"
+  default = "../mail_templates/mail-template-jenkins-backup.txt"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
@@ -42,7 +42,7 @@ variable "MAIL_SUBJECT_ENV_FAIL" {
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = "string"
-  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
+  default = "../mail_templates/mail-template-jenkins-backupenv-fail.txt"
 }
 
 variable "MAIL_FROM" {
