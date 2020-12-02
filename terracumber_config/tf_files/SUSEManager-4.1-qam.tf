@@ -173,7 +173,7 @@ module "base_newsle_ubuntu" {
   name_prefix = "suma-qam-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
+  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -344,6 +344,30 @@ module "sles15sp1-client" {
 
 }
 
+module "sles15sp2-client" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.1-released"
+  name               = "cli-sles15sp2"
+  image              = "sles15sp2o"
+  provider_settings = {
+    mac                = "aa:b2:92:e9:7f:d7"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp2-client_additional_repos
+
+}
+
 module "centos7-client" {
   providers = {
     libvirt = libvirt.caladan
@@ -485,6 +509,31 @@ module "sles15sp1-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //sle15sp1-minion_additional_repos
+
+}
+
+module "sles15sp2-minion" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.1-released"
+  name               = "min-sles15sp2"
+  image              = "sles15sp2o"
+  provider_settings = {
+    mac                = "aa:b2:92:e9:7f:d8"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp2-minion_additional_repos
 
 }
 
@@ -700,6 +749,23 @@ module "sles15sp1-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "sles15sp2-sshminion" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.1-released"
+  name               = "minssh-sles15sp2"
+  image              = "sles15sp2o"
+  provider_settings = {
+    mac                = "aa:b2:92:e9:7f:d9"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "centos8-sshminion" {
   providers = {
     libvirt = libvirt.caladan
@@ -854,6 +920,10 @@ module "controller" {
   sle15sp1_client_configuration    = module.sles15sp1-client.configuration
   sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
   sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
+
+  sle15sp2_client_configuration    = module.sles15sp2-client.configuration
+  sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
+  sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
 
   ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
   ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
