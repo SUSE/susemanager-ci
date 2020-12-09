@@ -607,7 +607,6 @@ module "centos6-minion" {
 
 }
 
-/*
 module "ubuntu2004-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -631,7 +630,6 @@ module "ubuntu2004-minion" {
   //ubuntu2004-minion_additional_repos
 
 }
-*/
 
 module "ubuntu1804-minion" {
   providers = {
@@ -817,7 +815,6 @@ module "centos6-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
 
-/*
 module "ubuntu2004-sshminion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -834,7 +831,6 @@ module "ubuntu2004-sshminion" {
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
-*/
 
 module "ubuntu1804-sshminion" {
   providers = {
@@ -931,8 +927,8 @@ module "controller" {
   ubuntu1804_minion_configuration = module.ubuntu1804-minion.configuration
   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
-#  ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
-#  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+  ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
+  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {
