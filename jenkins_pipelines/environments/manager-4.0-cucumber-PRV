@@ -18,7 +18,8 @@ node('sumaform-cucumber') {
             string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: false, description: 'Call terraform init (needed if modules are added or changes)'),
-            choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)')
+            choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
+            choice(name: 'functional_scope', choices: ['default', 'smdba', 'spacecmd', 'spacewalk_utils', 'visualization', 'notification_message', 'virtual_host_manager',  'subscription_matching', 'formulas', 'sp_migration', 'cve_audit', 'onboarding', 'content_lifecycle_management', 'res', 'recurring_actions', 'maintenance_windows', 'cluster_management', 'building_container_images', 'kubernetes_integration', 'openscap', 'ubuntu', 'action_chains', 'salt_ssh', 'tomcat', 'changing_software_channels', 'monitoring', 'salt', 'cobbler', 'sumatoolbox', 'virtualization', 'hub', 'retail', 'configuration_channels', 'content_staging', 'proxy', 'traditional_client', 'xmlrpc', 'power_management'], description: 'Choose a functional scope and your job will only run tests of that scope')
         ])
     ])
 
