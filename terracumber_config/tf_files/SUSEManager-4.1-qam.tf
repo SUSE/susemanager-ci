@@ -375,7 +375,7 @@ module "sles15sp1-client" {
   //sle15sp1-client_additional_repos
 
 }
-
+/*
 module "sles15sp2-client" {
   providers = {
     libvirt = libvirt.giediprime
@@ -399,7 +399,7 @@ module "sles15sp2-client" {
   //sle15sp2-client_additional_repos
 
 }
-
+*/
 module "centos6-client" {
   providers = {
     libvirt = libvirt.caladan
@@ -543,7 +543,7 @@ module "sles15sp1-minion" {
   //sle15sp1-minion_additional_repos
 
 }
-
+/*
 module "sles15sp2-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -568,7 +568,7 @@ module "sles15sp2-minion" {
   //sle15sp2-minion_additional_repos
 
 }
-
+*/
 module "centos6-minion" {
   providers = {
     libvirt = libvirt.caladan
@@ -778,7 +778,7 @@ module "sles15sp1-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
+/*
 module "sles15sp2-sshminion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -795,7 +795,7 @@ module "sles15sp2-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
+*/
 module "centos6-sshminion" {
   providers = {
     libvirt = libvirt.caladan
@@ -992,7 +992,7 @@ module "sles15sp2-buildhost" {
   base_configuration = module.base_retail.configuration
   product_version    = "4.1-released"
   name               = "min-sles15sp2"
-  image              = "sles15sp2o"
+  image              = "sles15sp1o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:7e"
     memory             = 2048
@@ -1014,7 +1014,7 @@ module "sles15sp2-terminal" {
   base_configuration = module.base_retail.configuration
   product_version    = "4.1-released"
   name               = "terminal-sles15sp2"
-  image              = "sles15sp2o"
+  image              = "sles15sp1o"
   provider_settings = {
     memory             = 2048
     vcpu               = 2
@@ -1078,9 +1078,11 @@ module "controller" {
   sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
   sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
 
+/*
   sle15sp2_client_configuration    = module.sles15sp2-client.configuration
   sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
   sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
+*/
 
   ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
   ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
