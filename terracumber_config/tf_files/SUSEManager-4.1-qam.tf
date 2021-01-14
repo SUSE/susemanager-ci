@@ -151,7 +151,7 @@ module "base_res" {
   name_prefix = "suma-qam-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "centos6o", "centos7o", "centos8o" ]
+  images      = [ /*"centos6o",*/ "centos7o", "centos8o" ]
 
   mirror = "minima-mirror-qam2.mgr.prv.suse.net"
   use_mirror_images = true
@@ -176,7 +176,7 @@ module "base_newsle_ubuntu" {
   name_prefix = "suma-qam-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
+  images      = [/* "sles15o",*/ "sles15sp1o", "sles15sp2o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -327,7 +327,7 @@ module "sles12sp4-client" {
   //sle12sp4-client_additional_repos
 
 }
-
+/*
 module "sles15-client" {
   providers = {
     libvirt = libvirt.giediprime
@@ -351,7 +351,7 @@ module "sles15-client" {
   //sle15-client_additional_repos
 
 }
-
+*/
 module "sles15sp1-client" {
   providers = {
     libvirt = libvirt.giediprime
@@ -399,7 +399,7 @@ module "sles15sp2-client" {
   //sle15sp2-client_additional_repos
 
 }
-
+/*
 module "centos6-client" {
   providers = {
     libvirt = libvirt.caladan
@@ -421,7 +421,7 @@ module "centos6-client" {
   //ceos6-client_additional_repos
 
 }
-
+*/
 module "centos7-client" {
   providers = {
     libvirt = libvirt.caladan
@@ -493,7 +493,7 @@ module "sles12sp4-minion" {
   //sle12sp4-minion_additional_repos
 
 }
-
+/*
 module "sles15-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -518,7 +518,7 @@ module "sles15-minion" {
   //sle15-minion_additional_repos
 
 }
-
+*/
 module "sles15sp1-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -568,7 +568,7 @@ module "sles15sp2-minion" {
   //sle15sp2-minion_additional_repos
 
 }
-
+/*
 module "centos6-minion" {
   providers = {
     libvirt = libvirt.caladan
@@ -590,7 +590,7 @@ module "centos6-minion" {
   //ceos6_minion_additional_repos
 
 }
-
+*/
 module "centos7-minion" {
   providers = {
     libvirt = libvirt.caladan
@@ -744,7 +744,7 @@ module "sles12sp4-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
-
+/*
 module "sles15-sshminion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -761,7 +761,7 @@ module "sles15-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
+*/
 module "sles15sp1-sshminion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -795,7 +795,7 @@ module "sles15sp2-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
+/*
 module "centos6-sshminion" {
   providers = {
     libvirt = libvirt.caladan
@@ -812,7 +812,7 @@ module "centos6-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-
+*/
 module "centos7-sshminion" {
   providers = {
     libvirt = libvirt.caladan
@@ -1046,11 +1046,11 @@ module "controller" {
 
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
-
+/*
   centos6_client_configuration = module.centos6-client.configuration
   centos6_minion_configuration = module.centos6-minion.configuration
   centos6_sshminion_configuration = module.centos6-sshminion.configuration
-
+*/
   centos7_client_configuration    = module.centos7-client.configuration
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
@@ -1069,11 +1069,11 @@ module "controller" {
   client_configuration    = module.sles12sp4-client.configuration
   minion_configuration    = module.sles12sp4-minion.configuration
   sshminion_configuration = module.sles12sp4-sshminion.configuration
-
+/*
   sle15_client_configuration    = module.sles15-client.configuration
   sle15_minion_configuration    = module.sles15-minion.configuration
   sle15_sshminion_configuration = module.sles15-sshminion.configuration
-
+*/
   sle15sp1_client_configuration    = module.sles15sp1-client.configuration
   sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
   sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
