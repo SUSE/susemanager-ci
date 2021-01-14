@@ -1078,11 +1078,9 @@ module "controller" {
   sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
   sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
 
-/*
   sle15sp2_client_configuration    = module.sles15sp2-client.configuration
   sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
   sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
-*/
 
   ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
   ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
