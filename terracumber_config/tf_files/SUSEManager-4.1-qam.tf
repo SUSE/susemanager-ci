@@ -432,7 +432,7 @@ module "centos7-client" {
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:5b"
+    mac                = "aa:b2:92:42:00:57"
     memory             = 4096
   }
   server_configuration = {
