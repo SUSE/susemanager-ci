@@ -88,6 +88,11 @@ provider "libvirt" {
   uri = "qemu+tcp://giediprime.mgr.prv.suse.net/system"
 }
 
+provider "libvirt" {
+  alias = "coruscant"
+  uri = "qemu+tcp://coruscant.mgr.prv.suse.net/system"
+}
+
 module "base_core" {
   source = "./modules/base"
 
@@ -106,7 +111,6 @@ module "base_core" {
   provider_settings = {
     pool        = "default"
     bridge      = "br1"
-    additional_network = "192.168.40.0/24"
   }
 }
 
@@ -132,7 +136,6 @@ module "base_old_sle" {
   provider_settings = {
     pool        = "default"
     bridge      = "br1"
-    additional_network = "192.168.40.0/24"
   }
 }
 
@@ -183,6 +186,31 @@ module "base_newsle_ubuntu" {
   provider_settings = {
     pool        = "default"
     bridge      = "br1"
+  }
+}
+
+module "base_retail" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+
+  source = "./modules/base"
+
+  cc_username = var.SCC_USER
+  cc_password = var.SCC_PASSWORD
+  name_prefix = "suma-qam-41-"
+  use_avahi   = false
+  domain      = "mgr.prv.suse.net"
+  images      = [ "sles15sp2o", "opensuse152o", "sles11sp4", "sles12sp4o"]
+
+  mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  use_mirror_images = true
+
+  testsuite          = true
+
+  provider_settings = {
+    pool        = "default"
+    bridge      = "br1"
     additional_network = "192.168.40.0/24"
   }
 }
@@ -224,11 +252,15 @@ module "server" {
 }
 
 module "proxy" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
   source             = "./modules/proxy"
-  base_configuration = module.base_core.configuration
+  base_configuration = module.base_retail.configuration
   product_version    = "4.0-released"
   name               = "pxy"
   image              = "sles15sp1o"
+
   provider_settings = {
     mac                = "aa:b2:92:42:00:0a"
     memory             = 4096
@@ -869,6 +901,135 @@ module "ubuntu2004-sshminion" {
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
 
+module "sles11sp4-buildhost" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.0-released"
+  name               = "build-sles11sp4"
+  image              = "sles11sp4"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:41"
+    memory             = 2048
+    vcpu               = 2
+  }
+  server_configuration = {
+    hostname = "suma-qam-40-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles11sp3-terminal" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.0-released"
+  name               = "terminal-sles11sp4"
+  image              = "sles11sp4" # This is not a typo
+  provider_settings = {
+    memory             = 1024
+    vcpu               = 1
+  }
+  server_configuration = {
+    hostname = "suma-qam-40-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles12sp4-buildhost" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.0-released"
+  name               = "build-sles12sp4"
+  image              = "sles12sp4o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:42"
+    memory             = 2048
+    vcpu               = 2
+  }
+  server_configuration = {
+    hostname = "suma-qam-40-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles12sp4-terminal" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.0-released"
+  name               = "terminal-sles12sp4"
+  image              = "sles12sp4o"
+  provider_settings = {
+    memory             = 1024
+    vcpu               = 1
+  }
+  server_configuration = {
+    hostname = "suma-qam-40-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles15sp2-buildhost" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.0-released"
+  name               = "build-sles15sp2"
+  image              = "sles15sp2o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:43"
+    memory             = 2048
+    vcpu               = 2
+  }
+  server_configuration = {
+    hostname = "suma-qam-40-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles15sp2-terminal" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.1-released"
+  name               = "terminal-sles15sp2"
+  image              = "sles15sp2o"
+  provider_settings = {
+    memory             = 2048
+    vcpu               = 2
+  }
+  server_configuration = {
+    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
@@ -932,6 +1093,14 @@ module "controller" {
 
   ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+
+  sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
+  sle12sp4_buildhost_configuration = module.sles12sp4-buildhost.configuration
+  sle15sp2_buildhost_configuration = module.sles15sp2-buildhost.configuration
+
+  sle11sp3_terminal_configuration = module.sles11sp3-terminal.configuration
+  sle12sp4_terminal_configuration = module.sles12sp4-terminal.configuration
+  sle15sp2_terminal_configuration = module.sles15sp2-terminal.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {
