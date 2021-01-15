@@ -905,10 +905,10 @@ module "sles11sp4-buildhost" {
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   product_version    = "4.1-released"
-  name               = "buildhost-sles11sp4"
+  name               = "build-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7c"
+    mac                = "aa:b2:92:42:00:81"
     memory             = 2048
     vcpu               = 2
   }
@@ -948,10 +948,10 @@ module "sles12sp4-buildhost" {
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   product_version    = "4.1-released"
-  name               = "buildhost-sles12sp4"
+  name               = "build-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7d"
+    mac                = "aa:b2:92:42:00:82"
     memory             = 2048
     vcpu               = 2
   }
@@ -991,10 +991,10 @@ module "sles15sp2-buildhost" {
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   product_version    = "4.1-released"
-  name               = "min-sles15sp2"
+  name               = "build-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7e"
+    mac                = "aa:b2:92:42:00:83"
     memory             = 2048
     vcpu               = 2
   }
