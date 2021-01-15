@@ -53,7 +53,6 @@ pipeline {
                             'java_pgsql_tests' : 'java/',
                             'spacecmd_unittests': 'spacecmd/',
                             'backend_unittests_pgsql' : 'backend/',
-                            'javascript_lint' : 'web/',
                             'schema_migration_test_pgsql' : 'schema/spacewalk',
                             'susemanager_unittests' : 'susemanager/'
                     ]
