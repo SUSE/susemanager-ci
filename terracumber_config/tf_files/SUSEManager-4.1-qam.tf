@@ -327,7 +327,7 @@ module "sles12sp4-client" {
   //sle12sp4-client_additional_repos
 
 }
-/*
+
 module "sles15-client" {
   providers = {
     libvirt = libvirt.giediprime
@@ -351,7 +351,7 @@ module "sles15-client" {
   //sle15-client_additional_repos
 
 }
-*/
+
 module "sles15sp1-client" {
   providers = {
     libvirt = libvirt.giediprime
@@ -493,7 +493,7 @@ module "sles12sp4-minion" {
   //sle12sp4-minion_additional_repos
 
 }
-/*
+
 module "sles15-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -518,7 +518,7 @@ module "sles15-minion" {
   //sle15-minion_additional_repos
 
 }
-*/
+
 module "sles15sp1-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -744,7 +744,7 @@ module "sles12sp4-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
-/*
+
 module "sles15-sshminion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -761,7 +761,7 @@ module "sles15-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-*/
+
 module "sles15sp1-sshminion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -1069,11 +1069,11 @@ module "controller" {
   client_configuration    = module.sles12sp4-client.configuration
   minion_configuration    = module.sles12sp4-minion.configuration
   sshminion_configuration = module.sles12sp4-sshminion.configuration
-/*
+
   sle15_client_configuration    = module.sles15-client.configuration
   sle15_minion_configuration    = module.sles15-minion.configuration
   sle15_sshminion_configuration = module.sles15-sshminion.configuration
-*/
+
   sle15sp1_client_configuration    = module.sles15sp1-client.configuration
   sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
   sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
