@@ -176,7 +176,7 @@ module "base_newsle_ubuntu" {
   name_prefix = "suma-qam-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [/* "sles15o",*/ "sles15sp1o", "sles15sp2o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
+  images      = ["sles15o", "sles15sp1o", "sles15sp2o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
