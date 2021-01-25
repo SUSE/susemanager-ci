@@ -493,7 +493,7 @@ module "sles12sp4-minion" {
   //sle12sp4-minion_additional_repos
 
 }
-
+/*
 module "sles15-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -518,7 +518,7 @@ module "sles15-minion" {
   //sle15-minion_additional_repos
 
 }
-
+*/
 module "sles15sp1-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -1071,7 +1071,7 @@ module "controller" {
   sshminion_configuration = module.sles12sp4-sshminion.configuration
 
   sle15_client_configuration    = module.sles15-client.configuration
-  sle15_minion_configuration    = module.sles15-minion.configuration
+  //sle15_minion_configuration    = module.sles15-minion.configuration
   sle15_sshminion_configuration = module.sles15-sshminion.configuration
 
   sle15sp1_client_configuration    = module.sles15sp1-client.configuration
