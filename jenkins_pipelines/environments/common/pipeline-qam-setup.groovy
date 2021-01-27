@@ -30,18 +30,18 @@ def run(params) {
                     // Run Terracumber to deploy the environment
                     sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk|data_disk|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision"
                     // Generate features
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_qam_features'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_build_validation_features'"
                     deployed = true
                 }
             }
             stage('Run Core features') {
                 if(params.must_run_core && (deployed || !params.must_deploy)) {
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:qam_core'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_core'"
                 }
             }
             stage('Sync. products and channels') {
                 if(params.must_sync && (deployed || !params.must_deploy)) {
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:qam_reposync'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_reposync'"
                 }
             }
         }
@@ -50,9 +50,9 @@ def run(params) {
                 def error = 0
                 if (deployed || !params.must_deploy) {
                     try {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:qam_finishing'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
                     } catch(Exception ex) {
-                        println("ERROR: rake cucumber:qam_finishing failed")
+                        println("ERROR: rake cucumber:build_validation_finishing failed")
                         error = 1
                     }
                     try {
@@ -68,7 +68,7 @@ def run(params) {
                                 keepAll: true,
                                 reportDir: "${resultdirbuild}/cucumber_report/",
                                 reportFiles: 'cucumber_report.html',
-                                reportName: "Setup QAM Environment"]
+                                reportName: "Setup Build Validation Environment"]
                     )
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }

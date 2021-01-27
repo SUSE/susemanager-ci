@@ -257,7 +257,7 @@ module "sles12sp4-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
@@ -280,7 +280,7 @@ module "sles11sp4-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
@@ -304,7 +304,7 @@ module "sles15-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles15"
   image              = "sles15o"
   provider_settings = {
@@ -328,7 +328,7 @@ module "sles15sp1-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
@@ -352,7 +352,7 @@ module "sles15sp2-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
@@ -376,7 +376,7 @@ module "centos7-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
@@ -400,7 +400,7 @@ module "centos6-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-centos6"
   image              = "centos6o"
   provider_settings = {
@@ -422,7 +422,7 @@ module "sles12sp4-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
@@ -446,7 +446,7 @@ module "sles11sp4-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
@@ -470,7 +470,7 @@ module "sles15-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles15"
   image              = "sles15o"
   provider_settings = {
@@ -495,7 +495,7 @@ module "sles15sp1-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
@@ -520,7 +520,7 @@ module "sles15sp2-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles15sp2"
   image              = "sles15sp2o"
 
@@ -545,7 +545,7 @@ module "centos8-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-centos8"
   image              = "centos8o"
   provider_settings = {
@@ -569,7 +569,7 @@ module "centos7-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
@@ -593,7 +593,7 @@ module "centos6-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-centos6"
   image              = "centos6o"
   provider_settings = {
@@ -615,7 +615,7 @@ module "ubuntu2004-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
@@ -639,7 +639,7 @@ module "ubuntu1804-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
@@ -663,7 +663,7 @@ module "ubuntu1604-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-ubuntu1604"
   image              = "ubuntu1604o"
   provider_settings = {
@@ -685,7 +685,7 @@ module "sles12sp4-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
@@ -704,7 +704,7 @@ module "sles11sp4-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
@@ -721,7 +721,7 @@ module "sles15-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles15"
   image              = "sles15o"
   provider_settings = {
@@ -738,7 +738,7 @@ module "sles15sp1-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
@@ -755,7 +755,7 @@ module "sles15sp2-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
@@ -772,7 +772,7 @@ module "centos8-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-centos8"
   image              = "centos8o"
   provider_settings = {
@@ -789,7 +789,7 @@ module "centos7-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
@@ -806,7 +806,7 @@ module "centos6-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-centos6"
   image              = "centos6o"
   provider_settings = {
@@ -823,7 +823,7 @@ module "ubuntu2004-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
@@ -840,7 +840,7 @@ module "ubuntu1804-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
@@ -857,7 +857,7 @@ module "ubuntu1604-sshminion" {
   }
   source = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-ubuntu1604"
   image              = "ubuntu1604o"
   provider_settings = {
