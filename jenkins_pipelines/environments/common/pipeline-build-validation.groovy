@@ -1,3 +1,5 @@
+// NOTE: This pipeline is a refactor of pipeline-qam-setup.groovy and pipeline-qam.groovy, those will be deprecated.
+
 def run(params) {
     timestamps {
         deployed = false
@@ -41,6 +43,15 @@ def run(params) {
                 if(params.must_sync && (deployed || !params.must_deploy)) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_reposync'"
                     input message: 'Are the products synchronized?', ok: 'Yes'
+                }
+            }
+
+            stage('Add MUs') {
+                if(params.must_add_channels) {
+                    echo 'Add custom channels and MU repositories'
+                    res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_add_custom_repositories'", returnStatus: true)
+                    echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+                    input message: 'Are the custom channels synchronized?', ok: 'Yes'
                 }
             }
 
@@ -99,7 +110,7 @@ def run(params) {
                                 keepAll: true,
                                 reportDir: "${resultdirbuild}/cucumber_report/",
                                 reportFiles: 'cucumber_report.html',
-                                reportName: "Setup Build Validation Environment"]
+                                reportName: "Build Validation report"]
                     )
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
