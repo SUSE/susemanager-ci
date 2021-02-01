@@ -1110,6 +1110,7 @@ module "controller" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
+  grains = { build_validation = "true" }
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
 
