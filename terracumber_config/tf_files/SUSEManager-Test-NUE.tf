@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-4.1"
+  default = "Manager-4.1-MU-4.1.5"
 }
 
 variable "CUCUMBER_RESULTS" {
