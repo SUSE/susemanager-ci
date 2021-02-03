@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-4.0"
+  default = "Manager-4.1"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -81,7 +81,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "4.0-released"
+  product_version = "4.1-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -119,7 +119,13 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:60"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST/SLE_15_SP1/"
+        server_stack = "http://download.suse.de/ibs/SUSE:/Maintenance:/17859/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
+        salt15sp2_base = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Basesystem_15-SP2_x86_64/",
+        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
+        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/"
+        Test_repo = "https://download.suse.de/ibs/home:/brejoc:/branches:/SUSE:/Maintenance:/17878/SUSE_SLE-15-SP2_Update/"
+        sapformular = "http://download.suse.de/ibs/SUSE:/Maintenance:/17953/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/"
+        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/"
       }
     }
     proxy = {
@@ -127,7 +133,11 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:86"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST/SLE_15_SP1/"
+        proxy_stack = "http://download.suse.de/ibs/SUSE:/Maintenance:/17859/SUSE_Updates_SLE-Module-SUSE-Manager-Proxy_4.1_x86_64/",
+        salt15sp2_base = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Basesystem_15-SP2_x86_64/",
+        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
+        salt15sp2_proxy_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Proxy-Applications_15-SP2_x86_64/"
+        Test_repo = "https://download.suse.de/ibs/home:/brejoc:/branches:/SUSE:/Maintenance:/17878/SUSE_SLE-15-SP2_Update/"
       }
     }
     suse-client = {
@@ -136,12 +146,18 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "AA:B2:93:00:00:61"
       }
+      additional_repos = {
+        Test_repo = "https://download.suse.de/ibs/home:/brejoc:/branches:/SUSE:/Maintenance:/17876/SUSE_SLE-15-SP1_Update/"
+      }
     }
     suse-minion = {
       image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:62"
+      }
+      additional_repos = {
+        Test_repo = "https://download.suse.de/ibs/home:/brejoc:/branches:/SUSE:/Maintenance:/17876/SUSE_SLE-15-SP1_Update/"
       }
     }
   }
