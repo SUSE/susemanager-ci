@@ -111,6 +111,7 @@ module "base_core" {
   provider_settings = {
     pool        = "default"
     bridge      = "br1"
+    additional_network = "192.168.40.0/24"
   }
 }
 

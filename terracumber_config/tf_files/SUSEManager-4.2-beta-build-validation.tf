@@ -134,7 +134,6 @@ module "base_old_sle" {
   provider_settings = {
     pool        = "default"
     bridge      = "br1"
-    additional_network = "192.168.42.0/24"
   }
 }
 
@@ -185,7 +184,6 @@ module "base_newsle_ubuntu" {
   provider_settings = {
     pool        = "default"
     bridge      = "br1"
-    additional_network = "192.168.42.0/24"
   }
 }
 
