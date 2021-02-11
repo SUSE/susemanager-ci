@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.1/job/manager-4.1-qam-setup-cucumber"
+  default = "https://ci.suse.de/view/Manager/view/Manager-Head/job/manager-4.2-beta-build-validation"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-4.1"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = "string"
-  default = "Results 4.1 QAM $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Last Milestone Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = "string"
-  default = "Results 4.1 QAM: Environment setup failed"
+  default = "Results Last Milestone Build Validation: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -75,22 +75,22 @@ variable "GIT_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://arrakis.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://endor.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "caladan"
-  uri = "qemu+tcp://caladan.mgr.prv.suse.net/system"
+  alias = "tatooine"
+  uri = "qemu+tcp://tatooine.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "giediprime"
-  uri = "qemu+tcp://giediprime.mgr.prv.suse.net/system"
+  alias = "florina"
+  uri = "qemu+tcp://florina.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "coruscant"
-  uri = "qemu+tcp://coruscant.mgr.prv.suse.net/system"
+  alias = "terminus"
+  uri = "qemu+tcp://terminus.mgr.prv.suse.net/system"
 }
 
 module "base_core" {
@@ -98,10 +98,10 @@ module "base_core" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-qam-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp2o", "opensuse152o" ]
+  images      = [ "sles15sp3o", "opensuse152o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -111,20 +111,20 @@ module "base_core" {
   provider_settings = {
     pool        = "default"
     bridge      = "br1"
-    additional_network = "192.168.41.0/24"
+    additional_network = "192.168.42.0/24"
   }
 }
 
 module "base_old_sle" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
 
   source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-qam-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles11sp4", "sles12sp4o"]
@@ -142,14 +142,14 @@ module "base_old_sle" {
 
 module "base_res" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
 
   source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-qam-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "centos6o", "centos7o", "centos8o" ]
@@ -167,14 +167,14 @@ module "base_res" {
 
 module "base_newsle_ubuntu" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
 
   source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-qam-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
@@ -192,14 +192,14 @@ module "base_newsle_ubuntu" {
 
 module "base_retail" {
   providers = {
-    libvirt = libvirt.coruscant
+    libvirt = libvirt.terminus
   }
 
   source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-qam-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp2o", "opensuse152o", "sles11sp4", "sles12sp4o"]
@@ -212,17 +212,17 @@ module "base_retail" {
   provider_settings = {
     pool        = "default"
     bridge      = "br1"
-    additional_network = "192.168.41.0/24"
+    additional_network = "192.168.42.0/24"
   }
 }
 
 module "server" {
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "srv"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:49"
+    mac                = "aa:b2:92:42:00:89"
     memory             = 40960
     vcpu               = 10
     data_pool            = "default"
@@ -252,19 +252,16 @@ module "server" {
 }
 
 module "proxy" {
-  providers = {
-    libvirt = libvirt.coruscant
-  }
   source             = "./modules/proxy"
-  base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
+  base_configuration = module.base_core.configuration
+  product_version    = "4.2-beta"
   name               = "pxy"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:4a"
+    mac                = "aa:b2:92:42:00:8a"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-srv.mgr.prv.suse.net"
+    hostname = "suma-qam-42-srv.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }
@@ -281,21 +278,44 @@ module "proxy" {
 
 }
 
-module "sles11sp4-client" {
+module "sles12sp4-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
-  name               = "cli-sles11sp4"
-  image              = "sles11sp4"
+  product_version    = "4.2-beta"
+  name               = "cli-sles12sp4"
+  image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:50"
+    mac                = "aa:b2:92:42:00:91"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle12sp4-client_additional_repos
+
+}
+module "sles11sp4-client" {
+  providers = {
+    libvirt = libvirt.tatooine
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_old_sle.configuration
+  product_version    = "4.2-beta"
+  name               = "cli-sles11sp4"
+  image              = "sles11sp4"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:90"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -305,45 +325,21 @@ module "sles11sp4-client" {
 
 }
 
-module "sles12sp4-client" {
-  providers = {
-    libvirt = libvirt.caladan
-  }
-  source             = "./modules/client"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
-  name               = "cli-sles12sp4"
-  image              = "sles12sp4o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:51"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
-  }
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle12sp4-client_additional_repos
-
-}
-
 module "sles15-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:52"
+    mac                = "aa:b2:92:42:00:92"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -355,19 +351,19 @@ module "sles15-client" {
 
 module "sles15sp1-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:53"
+    mac                = "aa:b2:92:42:00:93"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -379,19 +375,19 @@ module "sles15sp1-client" {
 
 module "sles15sp2-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:54"
+    mac                = "aa:b2:92:42:00:94"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -403,19 +399,19 @@ module "sles15sp2-client" {
 
 module "sles15sp3-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:55"
+    mac                = "aa:b2:92:42:00:95"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -425,43 +421,21 @@ module "sles15sp3-client" {
 
 }
 
-module "centos6-client" {
-  providers = {
-    libvirt = libvirt.caladan
-  }
-  source             = "./modules/client"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
-  name               = "cli-centos6"
-  image              = "centos6o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:56"
-    memory             = 4096
-  }
-  auto_register = false
-  use_os_released_updates = false
-  server_configuration =  { hostname = "suma-qam-41-pxy.mgr.prv.suse.net" }
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-
-  //ceos6-client_additional_repos
-
-}
-
 module "centos7-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/client"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:57"
+    mac                = "aa:b2:92:42:00:97"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_register = false
   use_os_released_updates = false
@@ -471,45 +445,43 @@ module "centos7-client" {
 
 }
 
-module "sles11sp4-minion" {
+module "centos6-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
-  source             = "./modules/minion"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
-  name               = "min-sles11sp4"
-  image              = "sles11sp4"
+  source             = "./modules/client"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.2-beta"
+  name               = "cli-centos6"
+  image              = "centos6o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:60"
+    mac                = "aa:b2:92:42:00:96"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
+  auto_register = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  server_configuration =  { hostname = "suma-qam-42-pxy.mgr.prv.suse.net" }
+  ssh_key_path = "./salt/controller/id_rsa.pub"
 
-  //sle11sp4-minion_additional_repos
+  //ceos6-client_additional_repos
 
 }
 
 module "sles12sp4-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:61"
+    mac                = "aa:b2:92:42:00:a1"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -519,22 +491,46 @@ module "sles12sp4-minion" {
 
 }
 
+module "sles11sp4-minion" {
+  providers = {
+    libvirt = libvirt.tatooine
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_old_sle.configuration
+  product_version    = "4.2-beta"
+  name               = "min-sles11sp4"
+  image              = "sles11sp4"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:a0"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle11sp4-minion_additional_repos
+
+}
+
 module "sles15-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:62"
+    mac                = "aa:b2:92:42:00:a2"
     memory             = 4096
   }
 
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -546,20 +542,20 @@ module "sles15-minion" {
 
 module "sles15sp1-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:63"
+    mac                = "aa:b2:92:42:00:a3"
     memory             = 4096
   }
 
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -571,20 +567,20 @@ module "sles15sp1-minion" {
 
 module "sles15sp2-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles15sp2"
   image              = "sles15sp2o"
+
   provider_settings = {
-    mac                = "aa:b2:92:42:00:64"
+    mac                = "aa:b2:92:42:00:a4"
     memory             = 4096
   }
-
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -596,20 +592,20 @@ module "sles15sp2-minion" {
 
 module "sles15sp3-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-sles15sp3"
   image              = "sles15sp3o"
+
   provider_settings = {
-    mac                = "aa:b2:92:42:00:65"
+    mac                = "aa:b2:92:42:00:a5"
     memory             = 4096
   }
-
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -619,67 +615,21 @@ module "sles15sp3-minion" {
 
 }
 
-module "centos6-minion" {
-  providers = {
-    libvirt = libvirt.caladan
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
-  name               = "min-centos6"
-  image              = "centos6o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:66"
-    memory             = 4096
-  }
-  server_configuration =  { hostname = "suma-qam-41-pxy.mgr.prv.suse.net" }
-  auto_connect_to_master = false
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-
-  //ceos6_minion_additional_repos
-
-}
-
-module "centos7-minion" {
-  providers = {
-    libvirt = libvirt.caladan
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
-  name               = "min-centos7"
-  image              = "centos7o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:67"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master = false
-  use_os_released_updates = false
-  ssh_key_path           = "./salt/controller/id_rsa.pub"
-
-  //ceos7-minion_additional_repos
-
-}
-
 module "centos8-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:68"
+    mac                = "aa:b2:92:42:00:a8"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -689,67 +639,67 @@ module "centos8-minion" {
 
 }
 
-module "ubuntu1604-minion" {
+module "centos7-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
-  name               = "min-ubuntu1604"
-  image              = "ubuntu1604o"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.2-beta"
+  name               = "min-centos7"
+  image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:69"
-    memory             = 4096
-  }
-  server_configuration =  { hostname =  "suma-qam-41-pxy.mgr.prv.suse.net" }
-  auto_connect_to_master = false
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-
-  //ubuntu1604-minion_additional_repos
-
-}
-
-module "ubuntu1804-minion" {
-  providers = {
-    libvirt = libvirt.giediprime
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
-  name               = "min-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6a"
+    mac                = "aa:b2:92:42:00:a7"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 
-  //ubuntu1804-minion_additional_repos
+  //ceos7-minion_additional_repos
+
+}
+
+module "centos6-minion" {
+  providers = {
+    libvirt = libvirt.tatooine
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.2-beta"
+  name               = "min-centos6"
+  image              = "centos6o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:a6"
+    memory             = 4096
+  }
+  server_configuration =  { hostname = "suma-qam-42-pxy.mgr.prv.suse.net" }
+  auto_connect_to_master = false
+  use_os_released_updates = false
+  ssh_key_path = "./salt/controller/id_rsa.pub"
+
+  //ceos6_minion_additional_repos
 
 }
 
 module "ubuntu2004-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:6b"
+    mac                = "aa:b2:92:42:00:ab"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -759,34 +709,63 @@ module "ubuntu2004-minion" {
 
 }
 
-module "sles11sp4-sshminion" {
+module "ubuntu1804-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.florina
   }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-sles11sp4"
-  image              = "sles11sp4"
+  source             = "./modules/minion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.2-beta"
+  name               = "min-ubuntu1804"
+  image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:70"
+    mac                = "aa:b2:92:42:00:aa"
     memory             = 4096
   }
+  server_configuration = {
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path           = "./salt/controller/id_rsa.pub"
+
+  //ubuntu1804-minion_additional_repos
+
+}
+
+module "ubuntu1604-minion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.2-beta"
+  name               = "min-ubuntu1604"
+  image              = "ubuntu1604o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:a9"
+    memory             = 4096
+  }
+  server_configuration =  { hostname =  "suma-qam-42-pxy.mgr.prv.suse.net" }
+  auto_connect_to_master = false
+  use_os_released_updates = false
+  ssh_key_path = "./salt/controller/id_rsa.pub"
+
+  //ubuntu1604-minion_additional_repos
+
 }
 
 module "sles12sp4-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:71"
+    mac                = "aa:b2:92:42:00:b1"
     memory             = 4096
   }
 
@@ -795,17 +774,34 @@ module "sles12sp4-sshminion" {
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
 
+module "sles11sp4-sshminion" {
+  providers = {
+    libvirt = libvirt.tatooine
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_old_sle.configuration
+  product_version    = "4.2-beta"
+  name               = "minssh-sles11sp4"
+  image              = "sles11sp4"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:b0"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "sles15-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:72"
+    mac                = "aa:b2:92:42:00:b2"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -814,15 +810,15 @@ module "sles15-sshminion" {
 
 module "sles15sp1-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:73"
+    mac                = "aa:b2:92:42:00:b3"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -831,15 +827,15 @@ module "sles15sp1-sshminion" {
 
 module "sles15sp2-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:74"
+    mac                = "aa:b2:92:42:00:b4"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -848,32 +844,32 @@ module "sles15sp2-sshminion" {
 
 module "sles15sp3-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-sles15sp3"
-  image              = "sles15sp3o"
+  product_version    = "4.2-beta"
+  name               = "minssh-sles15sp2"
+  image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:75"
+    mac                = "aa:b2:92:42:00:b5"
     memory             = 4096
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "centos6-sshminion" {
+module "centos8-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-centos6"
-  image              = "centos6o"
+  product_version    = "4.2-beta"
+  name               = "minssh-centos8"
+  image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:76"
+    mac                = "aa:b2:92:42:00:b8"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -882,105 +878,106 @@ module "centos6-sshminion" {
 
 module "centos7-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:77"
+    mac                = "aa:b2:92:42:00:b7"
     memory             = 4096
   }
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
 
-module "centos8-sshminion" {
+module "centos6-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-centos8"
-  image              = "centos8o"
+  product_version    = "4.2-beta"
+  name               = "minssh-centos6"
+  image              = "centos6o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:78"
+    mac                = "aa:b2:92:42:00:b6"
     memory             = 4096
   }
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
-}
-
-module "ubuntu1604-sshminion" {
-  providers = {
-    libvirt = libvirt.giediprime
-  }
-  source = "./modules/sshminion"
-  base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-ubuntu1604"
-  image              = "ubuntu1604o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:79"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-}
-
-module "ubuntu1804-sshminion" {
-  providers = {
-    libvirt = libvirt.giediprime
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:7a"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
 
 module "ubuntu2004-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7b"
+    mac                = "aa:b2:92:42:00:bb"
     memory             = 4096
   }
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
 
+module "ubuntu1804-sshminion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.2-beta"
+  name               = "minssh-ubuntu1804"
+  image              = "ubuntu1804o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:ba"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path       = "./salt/controller/id_rsa.pub"
+}
+
+module "ubuntu1604-sshminion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source = "./modules/sshminion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.2-beta"
+  name               = "minssh-ubuntu1604"
+  image              = "ubuntu1604o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:b9"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path = "./salt/controller/id_rsa.pub"
+}
+
+
 module "sles11sp4-buildhost" {
   providers = {
-    libvirt = libvirt.coruscant
+    libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "build-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:81"
+    mac                = "aa:b2:92:42:00:c1"
     memory             = 2048
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -989,11 +986,11 @@ module "sles11sp4-buildhost" {
 
 module "sles11sp3-terminal" {
   providers = {
-    libvirt = libvirt.coruscant
+    libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "terminal-sles11sp4"
   image              = "sles11sp4" # This is not a typo
   provider_settings = {
@@ -1001,7 +998,7 @@ module "sles11sp3-terminal" {
     vcpu               = 1
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1010,20 +1007,20 @@ module "sles11sp3-terminal" {
 
 module "sles12sp4-buildhost" {
   providers = {
-    libvirt = libvirt.coruscant
+    libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "build-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:82"
+    mac                = "aa:b2:92:42:00:c2"
     memory             = 2048
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1032,11 +1029,11 @@ module "sles12sp4-buildhost" {
 
 module "sles12sp4-terminal" {
   providers = {
-    libvirt = libvirt.coruscant
+    libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "terminal-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
@@ -1044,7 +1041,7 @@ module "sles12sp4-terminal" {
     vcpu               = 1
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1053,20 +1050,20 @@ module "sles12sp4-terminal" {
 
 module "sles15sp2-buildhost" {
   providers = {
-    libvirt = libvirt.coruscant
+    libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "build-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:83"
+    mac                = "aa:b2:92:42:00:c3"
     memory             = 2048
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1075,11 +1072,11 @@ module "sles15sp2-buildhost" {
 
 module "sles15sp2-terminal" {
   providers = {
-    libvirt = libvirt.coruscant
+    libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
+  product_version    = "4.2-beta"
   name               = "terminal-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
@@ -1087,7 +1084,7 @@ module "sles15sp2-terminal" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1099,7 +1096,7 @@ module "controller" {
   base_configuration = module.base_core.configuration
   name               = "ctl"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:48"
+    mac                = "aa:b2:92:42:00:89"
     memory             = 16384
     vcpu               = 8
   }

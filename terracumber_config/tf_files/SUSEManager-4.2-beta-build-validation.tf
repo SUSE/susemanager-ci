@@ -1,5 +1,3 @@
-//TODO: Change the name_prefix and MAC addresses
-
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
@@ -77,22 +75,22 @@ variable "GIT_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://endor.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://arrakis.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "tatooine"
-  uri = "qemu+tcp://tatooine.mgr.prv.suse.net/system"
+  alias = "caladan"
+  uri = "qemu+tcp://caladan.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "florina"
-  uri = "qemu+tcp://florina.mgr.prv.suse.net/system"
+  alias = "giediprime"
+  uri = "qemu+tcp://giediprime.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "terminus"
-  uri = "qemu+tcp://terminus.mgr.prv.suse.net/system"
+  alias = "coruscant"
+  uri = "qemu+tcp://coruscant.mgr.prv.suse.net/system"
 }
 
 module "base_core" {
@@ -119,7 +117,7 @@ module "base_core" {
 
 module "base_old_sle" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
 
   source = "./modules/base"
@@ -144,7 +142,7 @@ module "base_old_sle" {
 
 module "base_res" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
 
   source = "./modules/base"
@@ -169,7 +167,7 @@ module "base_res" {
 
 module "base_newsle_ubuntu" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
 
   source = "./modules/base"
@@ -194,7 +192,7 @@ module "base_newsle_ubuntu" {
 
 module "base_retail" {
   providers = {
-    libvirt = libvirt.terminus
+    libvirt = libvirt.coruscant
   }
 
   source = "./modules/base"
@@ -282,7 +280,7 @@ module "proxy" {
 
 module "sles12sp4-client" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
@@ -305,7 +303,7 @@ module "sles12sp4-client" {
 }
 module "sles11sp4-client" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
@@ -329,7 +327,7 @@ module "sles11sp4-client" {
 
 module "sles15-client" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -353,7 +351,7 @@ module "sles15-client" {
 
 module "sles15sp1-client" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -377,7 +375,7 @@ module "sles15sp1-client" {
 
 module "sles15sp2-client" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -401,7 +399,7 @@ module "sles15sp2-client" {
 
 module "sles15sp3-client" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -425,7 +423,7 @@ module "sles15sp3-client" {
 
 module "centos7-client" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/client"
   base_configuration = module.base_res.configuration
@@ -449,7 +447,7 @@ module "centos7-client" {
 
 module "centos6-client" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/client"
   base_configuration = module.base_res.configuration
@@ -471,7 +469,7 @@ module "centos6-client" {
 
 module "sles12sp4-minion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
@@ -495,7 +493,7 @@ module "sles12sp4-minion" {
 
 module "sles11sp4-minion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
@@ -519,7 +517,7 @@ module "sles11sp4-minion" {
 
 module "sles15-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -544,7 +542,7 @@ module "sles15-minion" {
 
 module "sles15sp1-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -569,7 +567,7 @@ module "sles15sp1-minion" {
 
 module "sles15sp2-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -594,7 +592,7 @@ module "sles15sp2-minion" {
 
 module "sles15sp3-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -619,7 +617,7 @@ module "sles15sp3-minion" {
 
 module "centos8-minion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -643,7 +641,7 @@ module "centos8-minion" {
 
 module "centos7-minion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -667,7 +665,7 @@ module "centos7-minion" {
 
 module "centos6-minion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -689,7 +687,7 @@ module "centos6-minion" {
 
 module "ubuntu2004-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -713,7 +711,7 @@ module "ubuntu2004-minion" {
 
 module "ubuntu1804-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -737,7 +735,7 @@ module "ubuntu1804-minion" {
 
 module "ubuntu1604-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -759,7 +757,7 @@ module "ubuntu1604-minion" {
 
 module "sles12sp4-sshminion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
@@ -778,7 +776,7 @@ module "sles12sp4-sshminion" {
 
 module "sles11sp4-sshminion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
@@ -795,7 +793,7 @@ module "sles11sp4-sshminion" {
 
 module "sles15-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -812,7 +810,7 @@ module "sles15-sshminion" {
 
 module "sles15sp1-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -829,7 +827,7 @@ module "sles15sp1-sshminion" {
 
 module "sles15sp2-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -846,7 +844,7 @@ module "sles15sp2-sshminion" {
 
 module "sles15sp3-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -863,7 +861,7 @@ module "sles15sp3-sshminion" {
 
 module "centos8-sshminion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -880,7 +878,7 @@ module "centos8-sshminion" {
 
 module "centos7-sshminion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -897,7 +895,7 @@ module "centos7-sshminion" {
 
 module "centos6-sshminion" {
   providers = {
-    libvirt = libvirt.tatooine
+    libvirt = libvirt.caladan
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -914,7 +912,7 @@ module "centos6-sshminion" {
 
 module "ubuntu2004-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -931,7 +929,7 @@ module "ubuntu2004-sshminion" {
 
 module "ubuntu1804-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -948,7 +946,7 @@ module "ubuntu1804-sshminion" {
 
 module "ubuntu1604-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.giediprime
   }
   source = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
@@ -966,7 +964,7 @@ module "ubuntu1604-sshminion" {
 
 module "sles11sp4-buildhost" {
   providers = {
-    libvirt = libvirt.terminus
+    libvirt = libvirt.coruscant
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
@@ -988,7 +986,7 @@ module "sles11sp4-buildhost" {
 
 module "sles11sp3-terminal" {
   providers = {
-    libvirt = libvirt.terminus
+    libvirt = libvirt.coruscant
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
@@ -1009,7 +1007,7 @@ module "sles11sp3-terminal" {
 
 module "sles12sp4-buildhost" {
   providers = {
-    libvirt = libvirt.terminus
+    libvirt = libvirt.coruscant
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
@@ -1031,7 +1029,7 @@ module "sles12sp4-buildhost" {
 
 module "sles12sp4-terminal" {
   providers = {
-    libvirt = libvirt.terminus
+    libvirt = libvirt.coruscant
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
@@ -1052,7 +1050,7 @@ module "sles12sp4-terminal" {
 
 module "sles15sp2-buildhost" {
   providers = {
-    libvirt = libvirt.terminus
+    libvirt = libvirt.coruscant
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
@@ -1074,7 +1072,7 @@ module "sles15sp2-buildhost" {
 
 module "sles15sp2-terminal" {
   providers = {
-    libvirt = libvirt.terminus
+    libvirt = libvirt.coruscant
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
