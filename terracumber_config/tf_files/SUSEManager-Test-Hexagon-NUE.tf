@@ -156,7 +156,7 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:B1"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_15/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP2/"
       }
     }
     redhat-minion = {
