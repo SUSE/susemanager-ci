@@ -82,12 +82,6 @@ module "base_core" {
   source = "./modules/base"
 
   
-  // Cucumber repository configuration for the controller
-  git_username = var.GIT_USER
-  git_password = var.GIT_PASSWORD
-  git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_BRANCH
-
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
@@ -96,15 +90,6 @@ module "base_core" {
   use_avahi    = false
   name_prefix  = "suma-testhexagon-"
   domain       = "mgr.suse.de"
-  from_email   = "root@suse.de"
-
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "portus.mgr.suse.de:5000/cucutest"
-  auth_registry_username = "cucutest"
-  auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
-
-  server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
   provider_settings = {
     pool         = "ssd"
