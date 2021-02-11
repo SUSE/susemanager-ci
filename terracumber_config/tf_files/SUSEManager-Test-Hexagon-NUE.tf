@@ -109,9 +109,6 @@ module "server" {
   additional_repos = {
       Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
   }
-  server_configuration = {
-    hostname = "suma-testhexagon-srv.mgr.suse.de"
-  }
 
   auto_accept                    = false
   monitored                      = true
