@@ -160,9 +160,6 @@ module "proxy" {
 }
 
 module "sles12sp4-client" {
-  providers = {
-    libvirt = libvirt.caladan
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
@@ -186,9 +183,6 @@ module "sles12sp4-client" {
 
 }
 module "sles11sp4-client" {
-  providers = {
-    libvirt = libvirt.caladan
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
@@ -213,9 +207,6 @@ module "sles11sp4-client" {
 }
 
 module "sles15sp2-client" {
-  providers = {
-    libvirt = libvirt.giediprime
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
@@ -240,9 +231,6 @@ module "sles15sp2-client" {
 }
 
 module "centos7-client" {
-  providers = {
-    libvirt = libvirt.caladan
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
