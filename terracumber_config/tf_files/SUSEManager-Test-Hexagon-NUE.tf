@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
+  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu1804o", "sles12sp4o", "sles11sp4"]
 
   use_avahi    = false
   name_prefix  = "suma-testhexagon-"
@@ -136,11 +136,25 @@ module "cucumber_testsuite" {
         mac = "AA:B2:93:00:00:B1"
       }
     }
-    suse-minion = {
-      image = "sles15sp1o"
-      name = "min-sles15"
+    suse-client = {
+      image = "sles12sp4o"
+      name = "cli-sles12"
       provider_settings = {
         mac = "AA:B2:93:00:00:B3"
+      }
+    }
+    suse-client = {
+      image = "sles11sp4"
+      name = "cli-sles11"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:B5"
+      }
+    }
+    redhat-minion = {
+      image = "centos7o"
+      name = "cli-centos7"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:B2"
       }
     }
   }
