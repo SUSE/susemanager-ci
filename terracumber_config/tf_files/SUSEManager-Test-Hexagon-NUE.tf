@@ -153,7 +153,7 @@ module "cucumber_testsuite" {
       image = "sles11sp4"
       name = "min-build"
       provider_settings = {
-        mac = "AA:B2:93:00:00:B5"
+        mac = "AA:B2:93:00:00:B7"
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_11/"
