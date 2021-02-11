@@ -141,7 +141,7 @@ module "cucumber_testsuite" {
     }
     suse-client = {
       image = "sles12sp4o"
-      name = "cli-sles12"
+      name = "min-sles15"
       provider_settings = {
         mac = "AA:B2:93:00:00:B3"
       }
@@ -151,7 +151,7 @@ module "cucumber_testsuite" {
     }
     suse-client = {
       image = "sles11sp4"
-      name = "cli-sles11"
+      name = "min-build"
       provider_settings = {
         mac = "AA:B2:93:00:00:B5"
       }
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "centos7o"
-      name = "cli-centos7"
+      name = "min-centos7"
       provider_settings = {
         mac = "AA:B2:93:00:00:B2"
       }
