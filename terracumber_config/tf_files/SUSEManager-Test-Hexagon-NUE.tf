@@ -124,6 +124,9 @@ module "server" {
   additional_repos = {
       Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
   }
+  server_configuration = {
+    hostname = "suma-testhexagon-srv.mgr.suse.de"
+  }
 
   auto_accept                    = false
   monitored                      = true
@@ -154,6 +157,7 @@ module "proxy" {
     mac = "AA:B2:93:00:00:B6"
   }
   server_configuration = {
+    hostname = "suma-testhexagon-pxy.mgr.suse.de"
     username = "admin"
     password = "admin"
   }
@@ -185,6 +189,10 @@ module "sles12sp4-client" {
   provider_settings = {
     mac = "AA:B2:93:00:00:B3"
   }
+  server_configuration = {
+    hostname = "suma-testhexagon-cli-sles12.mgr.suse.de"
+  }
+
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -207,6 +215,10 @@ module "sles11sp4-client" {
   provider_settings = {
     mac = "AA:B2:93:00:00:B7"
   }
+  server_configuration = {
+    hostname = "suma-testhexagon-cli-sles11.mgr.suse.de"
+  }
+
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -230,6 +242,10 @@ module "sles15sp2-client" {
   provider_settings = {
     mac = "AA:B2:93:00:00:B1"
   }
+  server_configuration = {
+    hostname = "suma-testhexagon-cli-sles15.mgr.suse.de"
+  }
+
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -253,6 +269,10 @@ module "centos7-client" {
   provider_settings = {
     mac = "AA:B2:93:00:00:B2"
   }
+  server_configuration = {
+    hostname = "suma-testhexagon-cli-centos7.mgr.suse.de"
+  }
+
   auto_register = false
   use_os_released_updates = false
   ssh_key_path  = "./salt/controller/id_rsa.pub"
