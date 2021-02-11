@@ -163,13 +163,14 @@ module "sles12sp4-client" {
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
-  name               = "cli-sles12sp4"
+  //name               = "min-sles12sp4"
+  name               = "min-sles15"
   image              = "sles12sp4o"
   provider_settings = {
     mac = "AA:B2:93:00:00:B3"
   }
   server_configuration = {
-    hostname = "suma-testhexagon-cli-sles12.mgr.suse.de"
+    hostname = "suma-testhexagon-min-sles15.mgr.suse.de"
   }
 
   auto_register           = false
@@ -186,13 +187,14 @@ module "sles11sp4-client" {
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
-  name               = "cli-sles11sp4"
+  //name               = "cli-sles11sp4"
+  name               = "min-build"
   image              = "sles11sp4"
   provider_settings = {
     mac = "AA:B2:93:00:00:B7"
   }
   server_configuration = {
-    hostname = "suma-testhexagon-cli-sles11.mgr.suse.de"
+    hostname = "suma-testhexagon-min-build.mgr.suse.de"
   }
 
   auto_register           = false
@@ -210,7 +212,8 @@ module "sles15sp2-client" {
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
-  name               = "cli-sles15sp2"
+  //name               = "cli-sles15sp2"
+  name               = "cli-sles15"
   image              = "sles15sp2o"
   provider_settings = {
     mac = "AA:B2:93:00:00:B1"
@@ -234,13 +237,14 @@ module "centos7-client" {
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
-  name               = "cli-centos7"
+  //name               = "cli-centos7"
+  name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
     mac = "AA:B2:93:00:00:B2"
   }
   server_configuration = {
-    hostname = "suma-testhexagon-cli-centos7.mgr.suse.de"
+    hostname = "suma-testhexagon-min-centos7.mgr.suse.de"
   }
 
   auto_register = false
