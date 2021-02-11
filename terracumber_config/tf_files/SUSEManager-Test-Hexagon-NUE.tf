@@ -78,10 +78,9 @@ provider "libvirt" {
   uri = "qemu+tcp://cthulu.mgr.suse.de/system"
 }
 
-module "cucumber_testsuite" {
-  source = "./modules/cucumber_testsuite"
+module "base_core" {
+  source = "./modules/base"
 
-  product_version = "uyuni-master"
   
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -107,69 +106,6 @@ module "cucumber_testsuite" {
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
-  host_settings = {
-    controller = {
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B4"
-      }
-    }
-    server = {
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B0"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
-      }
-    }
-    proxy = {
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B6"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
-      }
-    }
-    suse-client = {
-      image = "sles12sp4o"
-      name = "min-sles15"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B3"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_12/"
-      }
-    }
-    suse-client = {
-      image = "sles11sp4"
-      name = "min-build"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B7"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_11/"
-      }
-    }
-    suse-client = {
-      image = "sles15sp1o"
-      name = "cli-sles15"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B1"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP2/"
-      }
-    }
-    redhat-minion = {
-      image = "centos7o"
-      name = "min-centos7"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B2"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-RES7/"
-      }
-    }
-  }
   provider_settings = {
     pool         = "ssd"
     network_name = null
@@ -177,6 +113,181 @@ module "cucumber_testsuite" {
   }
 }
 
+module "server" {
+  source             = "./modules/server"
+  base_configuration = module.base_core.configuration
+  product_version = "uyuni-master"
+  name               = "srv"
+  provider_settings = {
+    mac = "AA:B2:93:00:00:B0"
+  }
+  additional_repos = {
+      Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
+  }
+
+  auto_accept                    = false
+  monitored                      = true
+  disable_firewall               = false
+  allow_postgres_connections     = false
+  skip_changelog_import          = false
+  browser_side_less              = false
+  create_first_user              = false
+  mgr_sync_autologin             = false
+  create_sample_channel          = false
+  create_sample_activation_key   = false
+  create_sample_bootstrap_script = false
+  publish_private_ssl_key        = false
+  use_os_released_updates        = true
+  disable_download_tokens        = false
+  ssh_key_path                   = "./salt/controller/id_rsa.pub"
+  from_email                     = "root@suse.de"
+
+  //server_additional_repos
+}
+
+module "proxy" {
+  source             = "./modules/proxy"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "pxy"
+  provider_settings = {
+    mac = "AA:B2:93:00:00:B6"
+  }
+  server_configuration = {
+    username = "admin"
+    password = "admin"
+  }
+  auto_register             = false
+  auto_connect_to_master    = false
+  download_private_ssl_key  = false
+  auto_configure            = false
+  generate_bootstrap_script = false
+  publish_private_ssl_key   = false
+  use_os_released_updates   = true
+  ssh_key_path              = "./salt/controller/id_rsa.pub"
+
+  //proxy_additional_repos
+  additional_repos = {
+    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
+  }
+
+}
+
+module "sles12sp4-client" {
+  providers = {
+    libvirt = libvirt.caladan
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "cli-sles12sp4"
+  image              = "sles12sp4o"
+  provider_settings = {
+    mac = "AA:B2:93:00:00:B3"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle12sp4-client_additional_repos
+  additional_repos = {
+    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_12/"
+  }
+
+}
+module "sles11sp4-client" {
+  providers = {
+    libvirt = libvirt.caladan
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "cli-sles11sp4"
+  image              = "sles11sp4"
+  provider_settings = {
+    mac = "AA:B2:93:00:00:B7"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle11sp4-client_additional_repos
+  additional_repos = {
+    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_11/"
+  }
+
+}
+
+module "sles15sp2-client" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "cli-sles15sp2"
+  image              = "sles15sp2o"
+  provider_settings = {
+    mac = "AA:B2:93:00:00:B1"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp2-client_additional_repos
+  additional_repos = {
+    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP2/"
+  }
+
+}
+
+module "centos7-client" {
+  providers = {
+    libvirt = libvirt.caladan
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "cli-centos7"
+  image              = "centos7o"
+  provider_settings = {
+    mac = "AA:B2:93:00:00:B2"
+  }
+  auto_register = false
+  use_os_released_updates = false
+  ssh_key_path  = "./salt/controller/id_rsa.pub"
+
+  //ceos7-client_additional_repos
+  additional_repos = {
+    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-RES7/"
+  }
+}
+
+module "controller" { 
+  source             = "./modules/controller"
+  base_configuration = module.base_core.configuration
+  name               = "ctl"
+  provider_settings = {
+    mac = "AA:B2:93:00:00:B4"
+  }
+  swap_file_size = 2048
+
+  // Cucumber repository configuration for the controller
+  git_username = var.GIT_USER
+  git_password = var.GIT_PASSWORD
+  git_repo     = var.CUCUMBER_GITREPO
+  branch       = var.CUCUMBER_BRANCH
+  
+  server_configuration = module.server.configuration
+  proxy_configuration  = module.proxy.configuration
+
+  sle11sp4_client_configuration    = module.sles11sp4-client.configuration
+  sle12sp4_client_configuration    = module.sles12sp4-client.configuration
+  client_configuration             = module.sles15sp2-client.configuration
+  centos7_client_configuration    = module.centos7-client.configuration
+
+}
+
 output "configuration" {
-  value = module.cucumber_testsuite.configuration
+  value = module.controller.configuration
 }
