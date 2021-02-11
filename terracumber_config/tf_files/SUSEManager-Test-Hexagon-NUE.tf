@@ -130,16 +130,6 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1o"
-      name = "cli-sles15"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:B1"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_15/"
-      }
-    }
-    suse-client = {
       image = "sles12sp4o"
       name = "min-sles15"
       provider_settings = {
@@ -157,6 +147,16 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_11/"
+      }
+    }
+    suse-client = {
+      image = "sles15sp1o"
+      name = "cli-sles15"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:B1"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_15/"
       }
     }
     redhat-minion = {
