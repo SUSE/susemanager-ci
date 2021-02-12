@@ -283,5 +283,7 @@ module "controller" {
 }
 
 output "configuration" {
-  value = module.controller.configuration
+  value = {
+    controller = module.controller.configuration
+  }
 }
