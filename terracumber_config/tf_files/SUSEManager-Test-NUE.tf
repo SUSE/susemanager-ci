@@ -165,60 +165,69 @@ module "cucumber_testsuite" {
       }
     }
 
-//    build-host = {
-//      image = "sles15sp2o"
-//      provider_settings = {
-//        mac = "AA:B2:93:00:00:84"
-//      }
-//    }
-//    suse-sshminion = {
-//      image = "sles15sp1o"
-//      name = "minssh-sles15"
-//      provider_settings = {
-//        mac = "AA:B2:93:00:00:78"
-//      }
-//    }
-//    redhat-minion = {
-//      image = "centos7o"
-//      provider_settings = {
-//        mac = "AA:B2:93:00:00:79"
-//        // Openscap cannot run with less than 1.25 GB of RAM
-//        memory = 1280
-//      }
-//      additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/RES-7:/Update/standard/"
-//      }
-//    }
-//
-//    debian-minion = {
-//      name = "min-ubuntu2004"
-//      image = "ubuntu2004o"
-//      provider_settings = {
-//        mac = "AA:B2:93:00:20:82"
-//      }
-//      additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/Ubuntu-20.04:/Update:/Products:/ManagerTools:/Update/standard/"
-//      }
-//    }
-//    pxeboot-minion = {
-//      image = "sles15sp2o"
-//    }
-//    kvm-host = {
-//      image = "sles15sp2o"
-//      provider_settings = {
-//        mac = "AA:B2:93:00:00:83"
-//      }
-//      additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP1:/Update/standard/"
-//      }
-//    }
+    build-host = {
+      image = "sles15sp2o"
+      name = "min-build"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:73"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-sle15sp2/SUSE_SLE-15-SP2_Update/"
+      }
+    }
+    suse-sshminion = {
+      image = "sles15sp1o"
+      name = "minssh-sles15"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:64"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-sle15sp1/SUSE_SLE-15-SP1_Update/"
+      }
+    }
+    redhat-minion = {
+      image = "centos7o"
+      name = "min-centos7"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:65"
+        // Openscap cannot run with less than 1.25 GB of RAM
+        memory = 1280
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/RES-7:/Update/standard/"
+      }
+    }
+
+    debian-minion = {
+      image = "ubuntu1804o"
+      name = "min-ubuntu1804"
+      provider_settings = {
+        mac = "AA:B2:93:00:20:68"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/Ubuntu-20.04:/Update:/Products:/ManagerTools:/Update/standard/"
+      }
+    }
+    pxeboot-minion = {
+      image = "sles15sp2o"
+    }
+    kvm-host = {
+      image = "sles15sp2o"
+      name = "min-kvm"
+      provider_settings = {
+        mac = "AA:B2:93:00:00:69"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-sle15sp2/SUSE_SLE-15-SP2_Update/"
+      }
+    }
 //    xen-host = {
 //      image = "sles15sp2o"
 //      provider_settings = {
 //        mac = "AA:B2:93:00:01:84"
 //      }
 //      additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP1:/Update/standard/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-sle15sp2/SUSE_SLE-15-SP2_Update/"
 //      }
 //    }
   }
