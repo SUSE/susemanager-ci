@@ -849,8 +849,8 @@ module "sles15sp3-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
   product_version    = "4.2-beta"
-  name               = "minssh-sles15sp2"
-  image              = "sles15sp2o"
+  name               = "minssh-sles15sp3"
+  image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:b5"
     memory             = 4096
