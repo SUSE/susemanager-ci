@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Manager-Head/job/manager-4.2-beta-build-validation"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.2/job/manager-4.2-beta-build-validation"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -331,7 +331,7 @@ module "sles15-client" {
   }
   source             = "./modules/client"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.2-beta"
+  product_version    = "4.1-released"
   name               = "cli-sles15"
   image              = "sles15o"
   provider_settings = {
@@ -521,7 +521,7 @@ module "sles15-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.2-beta"
+  product_version    = "4.1-released"
   name               = "min-sles15"
   image              = "sles15o"
   provider_settings = {
@@ -797,7 +797,7 @@ module "sles15-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_newsle_ubuntu.configuration
-  product_version    = "4.2-beta"
+  product_version    = "4.1-released"
   name               = "minssh-sles15"
   image              = "sles15o"
   provider_settings = {
