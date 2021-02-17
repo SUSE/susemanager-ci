@@ -197,16 +197,16 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/RES-7:/Update/standard/"
       }
     }
-    debian-minion = {
-      image = "ubuntu1804o"
-      name = "min-ubuntu1804"
-      provider_settings = {
-        mac = "AA:B2:93:00:20:68"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/Ubuntu-18.04:/Update/standard/"
-      }
-    }
+//    debian-minion = {
+//      image = "ubuntu1804o"
+//      name = "min-ubuntu1804"
+//      provider_settings = {
+//        mac = "AA:B2:93:00:20:68"
+//      }
+//      additional_repos = {
+//        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/Ubuntu-18.04:/Update/standard/"
+//      }
+//    }
     pxeboot-minion = {
       image = "sles15sp2o"
     }
