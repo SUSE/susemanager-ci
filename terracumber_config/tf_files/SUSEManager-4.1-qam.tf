@@ -79,8 +79,8 @@ provider "libvirt" {
 }
 
 provider "libvirt" {
-  alias = "caladan"
-  uri = "qemu+tcp://caladan.mgr.prv.suse.net/system"
+  alias = "endor"
+  uri = "qemu+tcp://endor.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
@@ -117,7 +117,7 @@ module "base_core" {
 
 module "base_old_sle" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
 
   source = "./modules/base"
@@ -142,7 +142,7 @@ module "base_old_sle" {
 
 module "base_res" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
 
   source = "./modules/base"
@@ -283,7 +283,7 @@ module "proxy" {
 
 module "sles11sp4-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
@@ -307,7 +307,7 @@ module "sles11sp4-client" {
 
 module "sles12sp4-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
@@ -427,7 +427,7 @@ module "sles15sp3-client" {
 
 module "centos6-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/client"
   base_configuration = module.base_res.configuration
@@ -449,7 +449,7 @@ module "centos6-client" {
 
 module "centos7-client" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/client"
   base_configuration = module.base_res.configuration
@@ -473,7 +473,7 @@ module "centos7-client" {
 
 module "sles11sp4-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
@@ -497,7 +497,7 @@ module "sles11sp4-minion" {
 
 module "sles12sp4-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
@@ -621,7 +621,7 @@ module "sles15sp3-minion" {
 
 module "centos6-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -643,7 +643,7 @@ module "centos6-minion" {
 
 module "centos7-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -667,7 +667,7 @@ module "centos7-minion" {
 
 module "centos8-minion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -761,7 +761,7 @@ module "ubuntu2004-minion" {
 
 module "sles11sp4-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
@@ -778,7 +778,7 @@ module "sles11sp4-sshminion" {
 
 module "sles12sp4-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
@@ -865,7 +865,7 @@ module "sles15sp3-sshminion" {
 
 module "centos6-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -882,7 +882,7 @@ module "centos6-sshminion" {
 
 module "centos7-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -899,7 +899,7 @@ module "centos7-sshminion" {
 
 module "centos8-sshminion" {
   providers = {
-    libvirt = libvirt.caladan
+    libvirt = libvirt.endor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
