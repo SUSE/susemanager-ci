@@ -1,5 +1,16 @@
 def run(params) {
     timestamps {
+        // Retrieve the hash commit of the last product built in OBS/IBS and previous job
+        def prefix = env.JOB_BASE_NAME.split('-cucumber')[0]
+        def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
+        def requestJson = readJSON text: request.getContent()
+        def product_commit = requestJson.actions.lastBuiltRevision.SHA1.replaceAll("\\[|\\]", "")
+        def previous_commit = currentBuild.getPreviousBuild().displayName
+        // Rename build using product commit hash
+        node {
+            currentBuild.displayName =  "${product_commit}"
+        }
+        // Start pipeline
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
@@ -27,10 +38,12 @@ def run(params) {
                 sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                 deployed = true
             }
+            stage('Product changes') {
+                sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git rev-list --pretty=oneline ${previous_commit}..${product_commit}'", returnStatus:true
+            }
             stage('Sanity Check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
             }
-
             stage('Core - Setup') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; cd /root/spacewalk/testsuite; rake cucumber:core'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; export SERVICE_PACK_MIGRATION=${params.service_pack_migration}; cd /root/spacewalk/testsuite; rake cucumber:reposync'"
