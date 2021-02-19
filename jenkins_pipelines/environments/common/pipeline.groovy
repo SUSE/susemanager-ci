@@ -2,13 +2,23 @@ def run(params) {
     timestamps {
         // Retrieve the hash commit of the last product built in OBS/IBS and previous job
         def prefix = env.JOB_BASE_NAME.split('-cucumber')[0]
-        def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
-        def requestJson = readJSON text: request.getContent()
-        def product_commit = requestJson.actions.lastBuiltRevision.SHA1.replaceAll("\\[|\\]", "")
-        def previous_commit = currentBuild.getPreviousBuild().displayName
-        // Rename build using product commit hash
-        node {
-            currentBuild.displayName =  "${product_commit}"
+        if (prefix.contains("manager")) {
+            def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
+            def requestJson = readJSON text: request.getContent()
+            def product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
+            product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
+            print "Current product commit: ${product_commit}"
+            def previous_commit = currentBuild.getPreviousBuild().description
+            if (previous_commit == null) {
+                previous_commit = product_commit
+            } else {
+                previous_commit = previous_commit.substring(previous_commit.indexOf('[') + 1, previous_commit.indexOf(']'));
+            }
+            print "Previous product commit: ${previous_commit}"
+            // Rename build using product commit hash
+            node {
+                currentBuild.description =  "[${product_commit}]"
+            }
         }
         // Start pipeline
         deployed = false
@@ -39,7 +49,9 @@ def run(params) {
                 deployed = true
             }
             stage('Product changes') {
-                sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git rev-list --pretty=oneline ${previous_commit}..${product_commit}'", returnStatus:true
+                if (prefix.contains("manager")) {
+                    sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git rev-list --pretty=oneline ${previous_commit}..${product_commit}'", returnStatus:true
+                }
             }
             stage('Sanity Check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
