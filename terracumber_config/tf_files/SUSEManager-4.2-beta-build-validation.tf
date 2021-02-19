@@ -178,6 +178,8 @@ module "base_newsle_ubuntu" {
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
+// TODO: When we enable debian in sumaform enable these
+//  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -755,6 +757,59 @@ module "ubuntu1604-minion" {
 
 }
 
+// TODO: When we enable debian in sumaform enable these
+/*
+module "debian9-minion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.2-beta"
+  name               = "min-debian9"
+  image              = "debian9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:d1:bd"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //debian9-minion_additional_repos
+
+}
+
+module "debian10-minion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.2-beta"
+  name               = "min-debian10"
+  image              = "debian10o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:55:04"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-qam-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //debian10-minion_additional_repos
+
+}
+
+*/
 module "sles12sp4-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -961,6 +1016,42 @@ module "ubuntu1604-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
 
+// TODO: When we enable debian in sumaform enable these
+/*
+module "debian9-sshminion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.2-beta"
+  name               = "minssh-debian9"
+  image              = "debian9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:8d:75"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "debian10-sshminion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_newsle_ubuntu.configuration
+  product_version    = "4.2-beta"
+  name               = "minssh-debian10"
+  image              = "debian10o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:7b:05"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+*/
 
 module "sles11sp4-buildhost" {
   providers = {
@@ -1159,6 +1250,14 @@ module "controller" {
   ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
 
+// TODO: When we enable debian in sumaform enable these
+/*
+  debian9_minion_configuration = module.debian9-minion.configuration
+  debian9_sshminion_configuration = module.debian9-sshminion.configuration
+
+  debian10_minion_configuration = module.debian10-minion.configuration
+  debian10_sshminion_configuration = module.debian10-sshminion.configuration
+*/
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp4_buildhost_configuration = module.sles12sp4-buildhost.configuration
   sle15sp2_buildhost_configuration = module.sles15sp2-buildhost.configuration
