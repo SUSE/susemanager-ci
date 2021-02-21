@@ -50,7 +50,16 @@ def run(params) {
                 deployed = true
             }
             stage('Product changes') {
-                sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git rev-list --pretty=oneline ${previous_commit}..${product_commit}'", returnStatus:true
+                sh """
+                    echo '-------------------'
+                    echo 'Comparison between:'
+                    echo ' - the previous git revision of spacewalk (or uyuni) repository pushed in IBS (or OBS)'
+                    echo ' - the git revision of the current spacewalk (or uyuni) repository pushed in IBS (or OBS)'
+                    echo 'Note: This is a trade-off, we should be comparing the git revisions of all the packages composing our product'
+                    echo '      For that extra mile, we need a new tag in the repo metadata of each built, with the git revision of the related repository.'
+                    echo '-------------------'
+                """
+                sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\"%h %<(16,trunc)%cn  %s  %d\" ${previous_commit}..${product_commit}'", returnStatus:true
             }
             stage('Sanity Check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
