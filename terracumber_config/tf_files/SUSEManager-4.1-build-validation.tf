@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.1/job/manager-4.1-qam-setup-cucumber"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.1/job/manager-4.1-build-validation"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = "string"
-  default = "Results 4.1 QAM $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 4.1 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = "string"
-  default = "Results 4.1 QAM: Environment setup failed"
+  default = "Results 4.1 Build Validation: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
