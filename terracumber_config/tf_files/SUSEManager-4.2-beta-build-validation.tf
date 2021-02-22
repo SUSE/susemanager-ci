@@ -103,8 +103,8 @@ module "base_core" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp3o", "opensuse152o" ]
 
-  mirror = "minima-mirror-qam.mgr.prv.suse.net"
-  use_mirror_images = true
+  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // use_mirror_images = true
 
   testsuite          = true
 
@@ -129,8 +129,8 @@ module "base_old_sle" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles11sp4", "sles12sp4o"]
 
-  mirror = "minima-mirror-qam.mgr.prv.suse.net"
-  use_mirror_images = true
+  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // use_mirror_images = true
 
   testsuite          = true
 
@@ -154,8 +154,8 @@ module "base_res" {
   domain      = "mgr.prv.suse.net"
   images      = [ "centos6o", "centos7o", "centos8o" ]
 
-  mirror = "minima-mirror-qam2.mgr.prv.suse.net"
-  use_mirror_images = true
+  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // use_mirror_images = true
 
   testsuite          = true
 
@@ -181,8 +181,8 @@ module "base_newsle_debian" {
 // TODO: When we enable debian in sumaform enable these
 //  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
 
-  mirror = "minima-mirror-qam.mgr.prv.suse.net"
-  use_mirror_images = true
+  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // use_mirror_images = true
 
   testsuite          = true
 
@@ -206,8 +206,8 @@ module "base_retail" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp2o", "opensuse152o", "sles11sp4", "sles12sp4o"]
 
-  mirror = "minima-mirror-qam.mgr.prv.suse.net"
-  use_mirror_images = true
+  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // use_mirror_images = true
 
   testsuite          = true
 
@@ -230,6 +230,7 @@ module "server" {
     data_pool            = "default"
   }
 
+  server_mounted_mirror = "minima-mirror-qam.mgr.prv.suse.net"
   repository_disk_size = 1500
 
   auto_accept                    = false
