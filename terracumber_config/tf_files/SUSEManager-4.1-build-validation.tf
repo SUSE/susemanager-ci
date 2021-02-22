@@ -98,7 +98,7 @@ module "base_core" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp2o", "opensuse152o" ]
@@ -124,10 +124,10 @@ module "base_old_sle" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o"]
+  images      = [ "sles11sp4", "sles12sp4o", "sles12sp5o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -149,7 +149,7 @@ module "base_res" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "centos6o", "centos7o", "centos8o" ]
@@ -174,7 +174,7 @@ module "base_newsle_debian" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
@@ -199,7 +199,7 @@ module "base_retail" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-qam-41-"
+  name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp2o", "opensuse152o", "sles11sp4", "sles12sp4o"]
@@ -264,7 +264,7 @@ module "proxy" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-41-srv.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }
@@ -295,7 +295,7 @@ module "sles11sp4-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -319,13 +319,37 @@ module "sles12sp4-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //sle12sp4-client_additional_repos
+
+}
+
+module "sles12sp5-client" {
+  providers = {
+    libvirt = libvirt.endor
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_old_sle.configuration
+  product_version    = "4.1-released"
+  name               = "cli-sles12sp5"
+  image              = "sles12sp5o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:52"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle12sp5-client_additional_repos
 
 }
 
@@ -339,11 +363,11 @@ module "sles15-client" {
   name               = "cli-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:52"
+    mac                = "aa:b2:92:42:00:53"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -363,11 +387,11 @@ module "sles15sp1-client" {
   name               = "cli-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:53"
+    mac                = "aa:b2:92:42:00:54"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -387,11 +411,11 @@ module "sles15sp2-client" {
   name               = "cli-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:54"
+    mac                = "aa:b2:92:42:00:55"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -411,11 +435,11 @@ module "sles15sp3-client" {
   name               = "cli-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:55"
+    mac                = "aa:b2:92:42:00:56"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -435,12 +459,12 @@ module "centos6-client" {
   name               = "cli-centos6"
   image              = "centos6o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:56"
+    mac                = "aa:b2:92:42:00:57"
     memory             = 4096
   }
   auto_register = false
   use_os_released_updates = false
-  server_configuration =  { hostname = "suma-qam-41-pxy.mgr.prv.suse.net" }
+  server_configuration =  { hostname = "suma-bv-41-pxy.mgr.prv.suse.net" }
   ssh_key_path = "./salt/controller/id_rsa.pub"
 
   //ceos6-client_additional_repos
@@ -457,11 +481,11 @@ module "centos7-client" {
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:57"
+    mac                = "aa:b2:92:42:00:58"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_register = false
   use_os_released_updates = false
@@ -485,7 +509,7 @@ module "sles11sp4-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -509,13 +533,37 @@ module "sles12sp4-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //sle12sp4-minion_additional_repos
+
+}
+
+module "sles12sp5-minion" {
+  providers = {
+    libvirt = libvirt.endor
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_old_sle.configuration
+  product_version    = "4.1-released"
+  name               = "min-sles12sp5"
+  image              = "sles12sp5o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:62"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle12sp5-minion_additional_repos
 
 }
 
@@ -529,12 +577,12 @@ module "sles15-minion" {
   name               = "min-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:62"
+    mac                = "aa:b2:92:42:00:63"
     memory             = 4096
   }
 
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -554,12 +602,12 @@ module "sles15sp1-minion" {
   name               = "min-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:63"
+    mac                = "aa:b2:92:42:00:64"
     memory             = 4096
   }
 
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -579,12 +627,12 @@ module "sles15sp2-minion" {
   name               = "min-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:64"
+    mac                = "aa:b2:92:42:00:65"
     memory             = 4096
   }
 
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -604,12 +652,12 @@ module "sles15sp3-minion" {
   name               = "min-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:65"
+    mac                = "aa:b2:92:42:00:66"
     memory             = 4096
   }
 
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -629,10 +677,10 @@ module "centos6-minion" {
   name               = "min-centos6"
   image              = "centos6o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:66"
+    mac                = "aa:b2:92:42:00:67"
     memory             = 4096
   }
-  server_configuration =  { hostname = "suma-qam-41-pxy.mgr.prv.suse.net" }
+  server_configuration =  { hostname = "suma-bv-41-pxy.mgr.prv.suse.net" }
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
@@ -651,11 +699,11 @@ module "centos7-minion" {
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:67"
+    mac                = "aa:b2:92:42:00:68"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -675,11 +723,11 @@ module "centos8-minion" {
   name               = "min-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:68"
+    mac                = "aa:b2:92:42:00:69"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -699,10 +747,10 @@ module "ubuntu1604-minion" {
   name               = "min-ubuntu1604"
   image              = "ubuntu1604o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:69"
+    mac                = "aa:b2:92:42:00:6a"
     memory             = 4096
   }
-  server_configuration =  { hostname =  "suma-qam-41-pxy.mgr.prv.suse.net" }
+  server_configuration =  { hostname =  "suma-bv-41-pxy.mgr.prv.suse.net" }
   auto_connect_to_master = false
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
@@ -721,11 +769,11 @@ module "ubuntu1804-minion" {
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:6a"
+    mac                = "aa:b2:92:42:00:6b"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -745,11 +793,11 @@ module "ubuntu2004-minion" {
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:6b"
+    mac                = "aa:b2:92:42:00:6c"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master = false
   use_os_released_updates = false
@@ -795,6 +843,25 @@ module "sles12sp4-sshminion" {
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
 
+module "sles12sp5-sshminion" {
+  providers = {
+    libvirt = libvirt.endor
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_old_sle.configuration
+  product_version    = "4.1-released"
+  name               = "minssh-sles12sp5"
+  image              = "sles12sp5o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:72"
+    memory             = 4096
+  }
+
+  use_os_released_updates = false
+  ssh_key_path = "./salt/controller/id_rsa.pub"
+  gpg_keys     = ["default/gpg_keys/galaxy.key"]
+}
+
 module "sles15-sshminion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -805,7 +872,7 @@ module "sles15-sshminion" {
   name               = "minssh-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:72"
+    mac                = "aa:b2:92:42:00:73"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -822,7 +889,7 @@ module "sles15sp1-sshminion" {
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:73"
+    mac                = "aa:b2:92:42:00:74"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -839,7 +906,7 @@ module "sles15sp2-sshminion" {
   name               = "minssh-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:74"
+    mac                = "aa:b2:92:42:00:75"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -856,7 +923,7 @@ module "sles15sp3-sshminion" {
   name               = "minssh-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:75"
+    mac                = "aa:b2:92:42:00:76"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -873,7 +940,7 @@ module "centos6-sshminion" {
   name               = "minssh-centos6"
   image              = "centos6o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:76"
+    mac                = "aa:b2:92:42:00:77"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -890,7 +957,7 @@ module "centos7-sshminion" {
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:77"
+    mac                = "aa:b2:92:42:00:78"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -907,7 +974,7 @@ module "centos8-sshminion" {
   name               = "minssh-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:78"
+    mac                = "aa:b2:92:42:00:79"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -924,7 +991,7 @@ module "ubuntu1604-sshminion" {
   name               = "minssh-ubuntu1604"
   image              = "ubuntu1604o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:79"
+    mac                = "aa:b2:92:42:00:7a"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -941,7 +1008,7 @@ module "ubuntu1804-sshminion" {
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7a"
+    mac                = "aa:b2:92:42:00:7b"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -958,7 +1025,7 @@ module "ubuntu2004-sshminion" {
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7b"
+    mac                = "aa:b2:92:42:00:7c"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -975,12 +1042,12 @@ module "sles11sp4-buildhost" {
   name               = "build-sles11sp4"
   image              = "sles11sp4"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:81"
+    mac                = "aa:b2:92:42:00:80"
     memory             = 2048
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1001,7 +1068,7 @@ module "sles11sp3-terminal" {
     vcpu               = 1
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1018,12 +1085,12 @@ module "sles12sp4-buildhost" {
   name               = "build-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:82"
+    mac                = "aa:b2:92:42:00:81"
     memory             = 2048
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1044,7 +1111,7 @@ module "sles12sp4-terminal" {
     vcpu               = 1
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1066,7 +1133,7 @@ module "sles15sp2-buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1087,7 +1154,7 @@ module "sles15sp2-terminal" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-qam-41-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1132,6 +1199,10 @@ module "controller" {
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
   sle12sp4_sshminion_configuration = module.sles12sp4-sshminion.configuration
+
+  sle12sp5_client_configuration    = module.sles12sp5-client.configuration
+  sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
 
   client_configuration    = module.sles12sp4-client.configuration
   minion_configuration    = module.sles12sp4-minion.configuration
