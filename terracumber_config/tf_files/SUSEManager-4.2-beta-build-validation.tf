@@ -769,7 +769,7 @@ module "debian9-minion" {
   name               = "min-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:d1:bd"
+    mac                = "aa:b2:92:42:00:ac"
     memory             = 4096
   }
 
@@ -794,7 +794,7 @@ module "debian10-minion" {
   name               = "min-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:55:04"
+    mac                = "aa:b2:92:42:00:ad"
     memory             = 4096
   }
 
@@ -1028,7 +1028,7 @@ module "debian9-sshminion" {
   name               = "minssh-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:8d:75"
+    mac                = "aa:b2:92:42:00:bc"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1045,7 +1045,7 @@ module "debian10-sshminion" {
   name               = "minssh-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:7b:05"
+    mac                = "aa:b2:92:42:00:bd"
     memory             = 4096
   }
   use_os_released_updates = false
