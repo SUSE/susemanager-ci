@@ -1289,7 +1289,11 @@ module "controller" {
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
   sle12sp4_sshminion_configuration = module.sles12sp4-sshminion.configuration
-
+/*
+  sle12sp5_client_configuration    = module.sles12sp5-client.configuration
+  sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+*/
   client_configuration    = module.sles12sp4-client.configuration
   minion_configuration    = module.sles12sp4-minion.configuration
   sshminion_configuration = module.sles12sp4-sshminion.configuration
