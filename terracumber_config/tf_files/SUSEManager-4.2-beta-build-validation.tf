@@ -373,7 +373,9 @@ module "sles15-client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //sle15-client_additional_repos
+  additional_repos = {
+    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
+  }
 
 }
 
@@ -397,7 +399,9 @@ module "sles15sp1-client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //sle15sp1-client_additional_repos
+  additional_repos = {
+    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
+  }
 
 }
 
@@ -588,7 +592,9 @@ module "sles15-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //sle15-minion_additional_repos
+  additional_repos = {
+    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
+  }
 
 }
 
@@ -613,7 +619,9 @@ module "sles15sp1-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //sle15sp1-minion_additional_repos
+  additional_repos = {
+    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
+  }
 
 }
 
@@ -712,7 +720,7 @@ module "centos7-minion" {
   //ceos7-minion_additional_repos
 
 }
-
+/*
 module "centos8-minion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -736,7 +744,7 @@ module "centos8-minion" {
   //ceos8-minion_additional_repos
 
 }
-
+*/
 module "ubuntu1604-minion" {
   providers = {
     libvirt = libvirt.florina
@@ -915,6 +923,7 @@ module "sles12sp5-sshminion" {
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
 */
+
 module "sles15-sshminion" {
   providers = {
     libvirt = libvirt.florina
@@ -930,6 +939,10 @@ module "sles15-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_repos = {
+    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
+  }
 }
 
 module "sles15sp1-sshminion" {
@@ -947,6 +960,10 @@ module "sles15sp1-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_repos = {
+    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
+  }
 }
 
 module "sles15sp2-sshminion" {
@@ -1016,7 +1033,7 @@ module "centos7-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-
+/*
 module "centos8-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -1033,7 +1050,7 @@ module "centos8-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-
+*/
 module "ubuntu1604-sshminion" {
   providers = {
     libvirt = libvirt.florina
@@ -1278,10 +1295,10 @@ module "controller" {
   centos7_client_configuration    = module.centos7-client.configuration
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
-
+/*
   centos8_minion_configuration    = module.centos8-minion.configuration
   centos8_sshminion_configuration = module.centos8-sshminion.configuration
-
+*/
   sle11sp4_client_configuration    = module.sles11sp4-client.configuration
   sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
   sle11sp4_sshminion_configuration = module.sles11sp4-sshminion.configuration
