@@ -127,7 +127,7 @@ module "base_old_sle" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o", "sles12sp5o" ]
+  images      = [ "sles11sp4", "sles12sp4o"/*, "sles12sp5o" */]
 
   // mirror = "minima-mirror-qam.mgr.prv.suse.net"
   // use_mirror_images = true
@@ -328,7 +328,7 @@ module "sles12sp4-client" {
   //sle12sp4-client_additional_repos
 
 }
-
+/*
 module "sles12sp5-client" {
   providers = {
     libvirt = libvirt.tatooine
@@ -352,7 +352,7 @@ module "sles12sp5-client" {
   //sle12sp5-client_additional_repos
 
 }
-
+*/
 module "sles15-client" {
   providers = {
     libvirt = libvirt.florina
@@ -542,7 +542,7 @@ module "sles12sp4-minion" {
   //sle12sp4-minion_additional_repos
 
 }
-
+/*
 module "sles12sp5-minion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -566,7 +566,7 @@ module "sles12sp5-minion" {
   //sle12sp4-minion_additional_repos
 
 }
-
+*/
 module "sles15-minion" {
   providers = {
     libvirt = libvirt.florina
@@ -895,7 +895,7 @@ module "sles12sp4-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
-
+/*
 module "sles12sp5-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -914,7 +914,7 @@ module "sles12sp5-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
-
+*/
 module "sles15-sshminion" {
   providers = {
     libvirt = libvirt.florina
