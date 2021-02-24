@@ -1273,7 +1273,7 @@ module "controller" {
   base_configuration = module.base_core.configuration
   name               = "ctl"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:89"
+    mac                = "aa:b2:92:42:00:88"
     memory             = 16384
     vcpu               = 8
   }
