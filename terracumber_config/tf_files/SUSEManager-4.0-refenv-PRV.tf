@@ -101,7 +101,7 @@ module "server" {
   use_os_released_updates = true
   disable_download_tokens = false
   from_email              = "root@suse.de"
-  channels                = ["sle-product-sles15-pool-x86_64", "sle-product-sles15-updates-x86_64", "sle-module-basesystem15-pool-x86_64", "sle-module-basesystem15-updates-x86_64", "sle-module-containers15-pool-x86_64", "sle-module-containers15-updates-x86_64"]
+  channels                = ["sle-product-sles15-sp1-pool-x86_64", "sle-product-sles15-sp1-updates-x86_64", "sle-module-basesystem15-sp1-pool-x86_64", "sle-module-basesystem15-sp1-updates-x86_64", "sle-module-containers15-sp1-pool-x86_64", "sle-module-containers15-sp1-updates-x86_64", "sle-manager-tools15-pool-x86_64-sp1", "sle-manager-tools15-updates-x86_64-sp1"]
 
   provider_settings = {
     mac    = "aa:b2:92:00:00:10"
