@@ -177,7 +177,7 @@ module "base_newsle_debian" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
+  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o" ]
 // TODO: When we enable debian in sumaform enable these
 //  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
 
@@ -790,7 +790,7 @@ module "ubuntu1804-minion" {
   //ubuntu1804-minion_additional_repos
 
 }
-
+/*
 module "ubuntu2004-minion" {
   providers = {
     libvirt = libvirt.florina
@@ -814,7 +814,7 @@ module "ubuntu2004-minion" {
   //ubuntu2004-minion_additional_repos
 
 }
-
+*/
 // TODO: When we enable debian in sumaform enable these
 /*
 module "debian9-minion" {
@@ -1084,7 +1084,7 @@ module "ubuntu1804-sshminion" {
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
-
+/*
 module "ubuntu2004-sshminion" {
   providers = {
     libvirt = libvirt.florina
@@ -1101,7 +1101,7 @@ module "ubuntu2004-sshminion" {
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
-
+*/
 // TODO: When we enable debian in sumaform enable these
 /*
 module "debian9-sshminion" {
@@ -1337,11 +1337,11 @@ module "controller" {
   ubuntu1804_minion_configuration = module.ubuntu1804-minion.configuration
   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
+// TODO: When we enable debian in sumaform enable these
+/*
   ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
 
-// TODO: When we enable debian in sumaform enable these
-/*
   debian9_minion_configuration = module.debian9-minion.configuration
   debian9_sshminion_configuration = module.debian9-sshminion.configuration
 

@@ -177,7 +177,7 @@ module "base_newsle_debian" {
   name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o" ]
+  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o" /*, "ubuntu2004o" */ ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -782,7 +782,7 @@ module "ubuntu1804-minion" {
   //ubuntu1804-minion_additional_repos
 
 }
-
+/*
 module "ubuntu2004-minion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -806,7 +806,7 @@ module "ubuntu2004-minion" {
   //ubuntu2004-minion_additional_repos
 
 }
-
+*/
 module "sles11sp4-sshminion" {
   providers = {
     libvirt = libvirt.endor
@@ -1014,7 +1014,7 @@ module "ubuntu1804-sshminion" {
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
-
+/*
 module "ubuntu2004-sshminion" {
   providers = {
     libvirt = libvirt.giediprime
@@ -1031,7 +1031,7 @@ module "ubuntu2004-sshminion" {
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
-
+*/
 module "sles11sp4-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
@@ -1230,8 +1230,8 @@ module "controller" {
   ubuntu1804_minion_configuration = module.ubuntu1804-minion.configuration
   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
-  ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+  //ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
+  //ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
 
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp4_buildhost_configuration = module.sles12sp4-buildhost.configuration
