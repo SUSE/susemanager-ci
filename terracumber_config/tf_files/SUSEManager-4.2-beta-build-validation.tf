@@ -255,6 +255,9 @@ module "server" {
 }
 
 module "proxy" {
+  providers = {
+    libvirt = libvirt.terminus
+  }
   source             = "./modules/proxy"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-beta"
