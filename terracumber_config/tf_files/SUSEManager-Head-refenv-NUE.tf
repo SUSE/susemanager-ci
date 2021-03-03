@@ -81,7 +81,7 @@ module "base" {
   name_prefix = "suma-refhead-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["centos7o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1804o"]
+  images      = ["centos7o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
   provider_settings = {
     pool         = "ssd"
     network_name = null
@@ -99,6 +99,7 @@ module "server" {
   disable_download_tokens = false
   from_email              = "root@suse.de"
   postgres_log_min_duration = 0
+  channels                = ["sle-product-sles15-sp3-pool-x86_64", "sle-product-sles15-sp3-updates-x86_64", "sle-module-basesystem15-sp3-pool-x86_64", "sle-module-basesystem15-sp3-updates-x86_64", "sle-module-containers15-sp3-pool-x86_64", "sle-module-containers15-sp3-updates-x86_64", "sle-manager-tools15-pool-x86_64-sp3", "sle-manager-tools15-updates-x86_64-sp3", "sle-module-server-applications15-sp1-pool-x86_64", "sle-module-server-applications15-sp1-updates-x86_64"]
 
   provider_settings = {
     mac    = "AA:B2:93:00:00:30"
@@ -111,7 +112,7 @@ module "suse-client" {
   base_configuration = module.base.configuration
   product_version    = "head"
   name               = "cli-sles15"
-  image              = "sles15sp1o"
+  image              = "sles15sp3o"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -126,7 +127,7 @@ module "suse-minion" {
   base_configuration = module.base.configuration
   product_version    = "head"
   name               = "min-sles15"
-  image              = "sles15sp1o"
+  image              = "sles15sp3o"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -141,7 +142,7 @@ module "build-host" {
   base_configuration      = module.base.configuration
   product_version         = "head"
   name                    = "min-build"
-  image                   = "sles15sp1o"
+  image                   = "sles15sp3o"
   server_configuration    = module.server.configuration
 
   provider_settings = {
@@ -171,7 +172,7 @@ module "debian-minion" {
   base_configuration   = module.base.configuration
   product_version      = "head"
   name                 = "min-ubuntu1804"
-  image                = "ubuntu1804o"
+  image                = "ubuntu2004o"
   server_configuration = module.server.configuration
 
   provider_settings = {
