@@ -109,7 +109,7 @@ module "base_core" {
   testsuite          = true
 
   provider_settings = {
-    pool        = "default"
+    pool        = "ssd"
     bridge      = "br1"
     additional_network = "192.168.41.0/24"
   }
@@ -135,7 +135,7 @@ module "base_old_sle" {
   testsuite          = true
 
   provider_settings = {
-    pool        = "default"
+    pool        = "ssd"
     bridge      = "br1"
   }
 }
@@ -160,7 +160,7 @@ module "base_res" {
   testsuite          = true
 
   provider_settings = {
-    pool        = "default"
+    pool        = "ssd"
     bridge      = "br1"
   }
 }
@@ -185,7 +185,7 @@ module "base_newsle_debian" {
   testsuite          = true
 
   provider_settings = {
-    pool        = "default"
+    pool        = "ssd"
     bridge      = "br1"
   }
 }
@@ -210,7 +210,7 @@ module "base_retail" {
   testsuite          = true
 
   provider_settings = {
-    pool        = "default"
+    pool        = "ssd"
     bridge      = "br1"
     additional_network = "192.168.41.0/24"
   }
@@ -225,7 +225,7 @@ module "server" {
     mac                = "aa:b2:92:42:00:49"
     memory             = 40960
     vcpu               = 10
-    data_pool            = "default"
+    data_pool          = "ssd"
   }
 
   repository_disk_size = 1500
