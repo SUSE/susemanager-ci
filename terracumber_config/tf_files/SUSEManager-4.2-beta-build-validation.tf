@@ -93,6 +93,11 @@ provider "libvirt" {
   uri = "qemu+tcp://terminus.mgr.prv.suse.net/system"
 }
 
+provider "libvirt" {
+  alias = "trantor"
+  uri = "qemu+tcp://trantor.mgr.prv.suse.net/system"
+}
+
 module "base_core" {
   source = "./modules/base"
 
@@ -165,7 +170,7 @@ module "base_res" {
   }
 }
 
-module "base_newsle_debian" {
+module "base_new_sle" {
   providers = {
     libvirt = libvirt.florina
   }
@@ -177,9 +182,7 @@ module "base_newsle_debian" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o" ]
-// TODO: When we enable debian in sumaform enable these
-//  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
+  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o" ]
 
   // mirror = "minima-mirror-qam.mgr.prv.suse.net"
   // use_mirror_images = true
@@ -215,6 +218,33 @@ module "base_retail" {
     pool        = "ssd"
     bridge      = "br1"
     additional_network = "192.168.42.0/24"
+  }
+}
+
+module "base_debian" {
+  providers = {
+    libvirt = libvirt.trantor
+  }
+
+  source = "./modules/base"
+
+  cc_username = var.SCC_USER
+  cc_password = var.SCC_PASSWORD
+  name_prefix = "suma-bv-42-"
+  use_avahi   = false
+  domain      = "mgr.prv.suse.net"
+  images      = [ "ubuntu1604o", "ubuntu1804o" ]
+// TODO: When we enable debian in sumaform enable these
+//  images      = [ "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
+
+  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // use_mirror_images = true
+
+  testsuite          = true
+
+  provider_settings = {
+    pool        = "ssd"
+    bridge      = "br1"
   }
 }
 
@@ -361,7 +391,7 @@ module "sles15-client" {
     libvirt = libvirt.florina
   }
   source             = "./modules/client"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "cli-sles15"
   image              = "sles15o"
@@ -387,7 +417,7 @@ module "sles15sp1-client" {
     libvirt = libvirt.florina
   }
   source             = "./modules/client"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "cli-sles15sp1"
   image              = "sles15sp1o"
@@ -413,7 +443,7 @@ module "sles15sp2-client" {
     libvirt = libvirt.florina
   }
   source             = "./modules/client"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "cli-sles15sp2"
   image              = "sles15sp2o"
@@ -437,7 +467,7 @@ module "sles15sp3-client" {
     libvirt = libvirt.florina
   }
   source             = "./modules/client"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "cli-sles15sp3"
   image              = "sles15sp3o"
@@ -579,7 +609,7 @@ module "sles15-minion" {
     libvirt = libvirt.florina
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "min-sles15"
   image              = "sles15o"
@@ -606,7 +636,7 @@ module "sles15sp1-minion" {
     libvirt = libvirt.florina
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "min-sles15sp1"
   image              = "sles15sp1o"
@@ -633,7 +663,7 @@ module "sles15sp2-minion" {
     libvirt = libvirt.florina
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "min-sles15sp2"
   image              = "sles15sp2o"
@@ -658,7 +688,7 @@ module "sles15sp3-minion" {
     libvirt = libvirt.florina
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "min-sles15sp3"
   image              = "sles15sp3o"
@@ -750,10 +780,10 @@ module "centos8-minion" {
 */
 module "ubuntu1604-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "min-ubuntu1604"
   image              = "ubuntu1604o"
@@ -772,10 +802,10 @@ module "ubuntu1604-minion" {
 
 module "ubuntu1804-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
@@ -796,10 +826,10 @@ module "ubuntu1804-minion" {
 /*
 module "ubuntu2004-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
@@ -822,10 +852,10 @@ module "ubuntu2004-minion" {
 /*
 module "debian9-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "min-debian9"
   image              = "debian9o"
@@ -847,10 +877,10 @@ module "debian9-minion" {
 
 module "debian10-minion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "min-debian10"
   image              = "debian10o"
@@ -932,7 +962,7 @@ module "sles15-sshminion" {
     libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "minssh-sles15"
   image              = "sles15o"
@@ -953,7 +983,7 @@ module "sles15sp1-sshminion" {
     libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
@@ -974,7 +1004,7 @@ module "sles15sp2-sshminion" {
     libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "minssh-sles15sp2"
   image              = "sles15sp2o"
@@ -991,7 +1021,7 @@ module "sles15sp3-sshminion" {
     libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.2-beta"
   name               = "minssh-sles15sp3"
   image              = "sles15sp3o"
@@ -1056,10 +1086,10 @@ module "centos8-sshminion" {
 */
 module "ubuntu1604-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "minssh-ubuntu1604"
   image              = "ubuntu1604o"
@@ -1073,10 +1103,10 @@ module "ubuntu1604-sshminion" {
 
 module "ubuntu1804-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
@@ -1090,10 +1120,10 @@ module "ubuntu1804-sshminion" {
 /*
 module "ubuntu2004-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
@@ -1109,10 +1139,10 @@ module "ubuntu2004-sshminion" {
 /*
 module "debian9-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "minssh-debian9"
   image              = "debian9o"
@@ -1126,10 +1156,10 @@ module "debian9-sshminion" {
 
 module "debian10-sshminion" {
   providers = {
-    libvirt = libvirt.florina
+    libvirt = libvirt.trantor
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.2-beta"
   name               = "minssh-debian10"
   image              = "debian10o"
