@@ -93,6 +93,11 @@ provider "libvirt" {
   uri = "qemu+tcp://coruscant.mgr.prv.suse.net/system"
 }
 
+provider "libvirt" {
+  alias = "mandalore"
+  uri = "qemu+tcp://mandalore.mgr.prv.suse.net/system"
+}
+
 module "base_core" {
   source = "./modules/base"
 
