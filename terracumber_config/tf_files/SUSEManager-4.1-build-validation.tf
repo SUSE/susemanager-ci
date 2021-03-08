@@ -170,7 +170,7 @@ module "base_res" {
   }
 }
 
-module "base_newsle_debian" {
+module "base_new_sle" {
   providers = {
     libvirt = libvirt.giediprime
   }
@@ -182,7 +182,7 @@ module "base_newsle_debian" {
   name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1604o", "ubuntu1804o" /*, "ubuntu2004o" */ ]
+  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o" ]
 
   mirror = "minima-mirror-qam.mgr.prv.suse.net"
   use_mirror_images = true
@@ -221,6 +221,31 @@ module "base_retail" {
   }
 }
 
+module "base_debian" {
+  providers = {
+    libvirt = libvirt.mandalore
+  }
+
+  source = "./modules/base"
+
+  cc_username = var.SCC_USER
+  cc_password = var.SCC_PASSWORD
+  name_prefix = "suma-bv-41-"
+  use_avahi   = false
+  domain      = "mgr.prv.suse.net"
+  images      = [ "ubuntu1604o", "ubuntu1804o" /*, "ubuntu2004o" */ ]
+
+  mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  use_mirror_images = true
+
+  testsuite          = true
+
+  provider_settings = {
+    pool        = "ssd"
+    bridge      = "br1"
+  }
+}
+
 module "server" {
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
@@ -233,6 +258,7 @@ module "server" {
     data_pool          = "ssd"
   }
 
+  server_mounted_mirror = "minima-mirror-qam.mgr.prv.suse.net"
   repository_disk_size = 1500
 
   auto_accept                    = false
@@ -363,7 +389,7 @@ module "sles15-client" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/client"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "cli-sles15"
   image              = "sles15o"
@@ -387,7 +413,7 @@ module "sles15sp1-client" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/client"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "cli-sles15sp1"
   image              = "sles15sp1o"
@@ -411,7 +437,7 @@ module "sles15sp2-client" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/client"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "cli-sles15sp2"
   image              = "sles15sp2o"
@@ -435,7 +461,7 @@ module "sles15sp3-client" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/client"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "cli-sles15sp3"
   image              = "sles15sp3o"
@@ -577,7 +603,7 @@ module "sles15-minion" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "min-sles15"
   image              = "sles15o"
@@ -602,7 +628,7 @@ module "sles15sp1-minion" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "min-sles15sp1"
   image              = "sles15sp1o"
@@ -627,7 +653,7 @@ module "sles15sp2-minion" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "min-sles15sp2"
   image              = "sles15sp2o"
@@ -652,7 +678,7 @@ module "sles15sp3-minion" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "min-sles15sp3"
   image              = "sles15sp3o"
@@ -744,10 +770,10 @@ module "centos8-minion" {
 
 module "ubuntu1604-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.mandalore
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.1-released"
   name               = "min-ubuntu1604"
   image              = "ubuntu1604o"
@@ -766,10 +792,10 @@ module "ubuntu1604-minion" {
 
 module "ubuntu1804-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.mandalore
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.1-released"
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
@@ -790,10 +816,10 @@ module "ubuntu1804-minion" {
 /*
 module "ubuntu2004-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.mandalore
   }
   source             = "./modules/minion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.1-released"
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
@@ -872,7 +898,7 @@ module "sles15-sshminion" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "minssh-sles15"
   image              = "sles15o"
@@ -889,7 +915,7 @@ module "sles15sp1-sshminion" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
@@ -906,7 +932,7 @@ module "sles15sp2-sshminion" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "minssh-sles15sp2"
   image              = "sles15sp2o"
@@ -923,7 +949,7 @@ module "sles15sp3-sshminion" {
     libvirt = libvirt.giediprime
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_new_sle.configuration
   product_version    = "4.1-released"
   name               = "minssh-sles15sp3"
   image              = "sles15sp3o"
@@ -988,10 +1014,10 @@ module "centos8-sshminion" {
 
 module "ubuntu1604-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.mandalore
   }
   source = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.1-released"
   name               = "minssh-ubuntu1604"
   image              = "ubuntu1604o"
@@ -1005,10 +1031,10 @@ module "ubuntu1604-sshminion" {
 
 module "ubuntu1804-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.mandalore
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.1-released"
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
@@ -1022,10 +1048,10 @@ module "ubuntu1804-sshminion" {
 /*
 module "ubuntu2004-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.mandalore
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_newsle_debian.configuration
+  base_configuration = module.base_debian.configuration
   product_version    = "4.1-released"
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
