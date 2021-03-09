@@ -159,7 +159,7 @@ module "base_res" {
   domain      = "mgr.prv.suse.net"
   images      = [ "centos6o", "centos7o", "centos8o" ]
 
-  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // mirror = "minima-mirror-qam2.mgr.prv.suse.net"
   // use_mirror_images = true
 
   testsuite          = true
