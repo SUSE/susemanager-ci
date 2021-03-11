@@ -108,7 +108,7 @@ module "base_core" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp3o", "opensuse152o" ]
 
-  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
   // use_mirror_images = true
 
   testsuite          = true
@@ -134,7 +134,7 @@ module "base_old_sle" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles11sp4", "sles12sp4o"/*, "sles12sp5o"*/ ]
 
-  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
   // use_mirror_images = true
 
   testsuite          = true
@@ -159,7 +159,7 @@ module "base_res" {
   domain      = "mgr.prv.suse.net"
   images      = [ "centos6o", "centos7o", "centos8o" ]
 
-  // mirror = "minima-mirror-qam2.mgr.prv.suse.net"
+  // mirror = "minima-mirror-bv2.mgr.prv.suse.net"
   // use_mirror_images = true
 
   testsuite          = true
@@ -184,7 +184,7 @@ module "base_new_sle" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o" ]
 
-  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
   // use_mirror_images = true
 
   testsuite          = true
@@ -209,7 +209,7 @@ module "base_retail" {
   domain      = "mgr.prv.suse.net"
   images      = [ "opensuse152o", "sles11sp4", "sles12sp4o", "sles15sp2o", "sles15sp3o" ]
 
-  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
   // use_mirror_images = true
 
   testsuite          = true
@@ -237,7 +237,7 @@ module "base_debian" {
 // TODO: When we enable debian in sumaform enable these
 //  images      = [ "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
 
-  // mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
   // use_mirror_images = true
 
   testsuite          = true
@@ -260,7 +260,7 @@ module "server" {
     data_pool          = "ssd"
   }
 
-  server_mounted_mirror = "minima-mirror-qam.mgr.prv.suse.net"
+  server_mounted_mirror = "minima-mirror-bv.mgr.prv.suse.net"
   repository_disk_size = 1500
 
   auto_accept                    = false
@@ -1392,25 +1392,25 @@ module "controller" {
 resource "null_resource" "server_extra_nfs_mounts" {
   provisioner "remote-exec" {
     inline = [
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6  /mirror/repo/$RCE/RES6  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6  /mirror/repo/$RCE/RES6  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES6'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6-SUSE-Manager-Tools  /mirror/repo/$RCE/RES6-SUSE-Manager-Tools  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6-SUSE-Manager-Tools  /mirror/repo/$RCE/RES6-SUSE-Manager-Tools  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES6-SUSE-Manager-Tools'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta  /mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta  /mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7  /mirror/repo/$RCE/RES7  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7  /mirror/repo/$RCE/RES7  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES7'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7-SUSE-Manager-Tools  /mirror/repo/$RCE/RES7-SUSE-Manager-Tools  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7-SUSE-Manager-Tools  /mirror/repo/$RCE/RES7-SUSE-Manager-Tools  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES7-SUSE-Manager-Tools'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7-SUSE-Manager-Tools-Beta  /mirror/repo/$RCE/RES7-SUSE-Manager-Tools-Beta  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7-SUSE-Manager-Tools-Beta  /mirror/repo/$RCE/RES7-SUSE-Manager-Tools-Beta  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES7-SUSE-Manager-Tools-Beta'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES  /mirror/SUSE/Updates/RES  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES  /mirror/SUSE/Updates/RES  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/SUSE/Updates/RES'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-CB  /mirror/SUSE/Updates/RES-CB  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-CB  /mirror/SUSE/Updates/RES-CB  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/SUSE/Updates/RES-CB'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-AS  /mirror/SUSE/Updates/RES-AS  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/SUSE/Updates/RES-AS  /mirror/SUSE/Updates/RES-AS  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/SUSE/Updates/RES-AS'",
-      "echo 'minima-mirror-qam2.mgr.prv.suse.net:/srv/mirror/SUSE/Products/RES  /mirror/SUSE/Products/RES  nfs  defaults  0 0' >> /etc/fstab",
+      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/SUSE/Products/RES  /mirror/SUSE/Products/RES  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/SUSE/Products/RES'"
     ]
     connection {
