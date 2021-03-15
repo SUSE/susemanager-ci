@@ -22,6 +22,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
             booleanParam(name: 'must_add_channels', defaultValue: true, description: 'Add custom channels for Ubuntu and RES'),
             booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
+            booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
             booleanParam(name: 'must_boot_proxy', defaultValue: true, description: 'Bootstrap Proxy'),
             booleanParam(name: 'must_boot_clients', defaultValue: true, description: 'Bootstrap clients'),
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
