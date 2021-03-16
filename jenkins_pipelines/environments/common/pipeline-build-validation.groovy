@@ -57,6 +57,13 @@ def run(params) {
                 }
             }
 
+            stage('Wait for all reposyncs') {
+                if(params.must_wait_reposync) {
+                    echo 'Wait for all reposyncs'
+                    res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_reposync'", returnStatus: true)
+                    echo "Wait for all reposyncs status code: ${res_wait_reposync}"
+                }
+            }
             stage('Add Activation Keys') {
                 if(params.must_add_keys) {
                     echo 'Add Activation Keys'
