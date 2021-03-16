@@ -64,6 +64,7 @@ def run(params) {
                     echo "Wait for all reposyncs status code: ${res_wait_reposync}"
                 }
             }
+
             stage('Add Activation Keys') {
                 if(params.must_add_keys) {
                     echo 'Add Activation Keys'
