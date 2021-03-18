@@ -856,7 +856,7 @@ module "debian9-minion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 
-  //debian9o-minion_additional_repos
+  //debian9-minion_additional_repos
 
 }
 
@@ -878,7 +878,7 @@ module "debian10-minion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 
-  //debian9o-minion_additional_repos
+  //debian10-minion_additional_repos
 
 }
 
