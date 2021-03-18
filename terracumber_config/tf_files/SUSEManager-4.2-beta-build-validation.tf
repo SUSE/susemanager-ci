@@ -233,9 +233,7 @@ module "base_debian" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1604o", "ubuntu1804o" /*, "ubuntu2004o" */ ]
-// TODO: When we enable debian in sumaform enable these
-//  images      = [ "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
+  images      = [ "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
 
   // mirror = "minima-mirror-bv.mgr.prv.suse.net"
   // use_mirror_images = true
@@ -823,7 +821,7 @@ module "ubuntu1804-minion" {
   //ubuntu1804-minion_additional_repos
 
 }
-/*
+
 module "ubuntu2004-minion" {
   providers = {
     libvirt = libvirt.trantor
@@ -847,9 +845,7 @@ module "ubuntu2004-minion" {
   //ubuntu2004-minion_additional_repos
 
 }
-*/
-// TODO: When we enable debian in sumaform enable these
-/*
+
 module "debian9-minion" {
   providers = {
     libvirt = libvirt.trantor
@@ -899,7 +895,6 @@ module "debian10-minion" {
   //debian10-minion_additional_repos
 
 }
-*/
 
 module "sles11sp4-sshminion" {
   providers = {
@@ -1117,7 +1112,7 @@ module "ubuntu1804-sshminion" {
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
-/*
+
 module "ubuntu2004-sshminion" {
   providers = {
     libvirt = libvirt.trantor
@@ -1134,9 +1129,7 @@ module "ubuntu2004-sshminion" {
   use_os_released_updates = false
   ssh_key_path       = "./salt/controller/id_rsa.pub"
 }
-*/
-// TODO: When we enable debian in sumaform enable these
-/*
+
 module "debian9-sshminion" {
   providers = {
     libvirt = libvirt.trantor
@@ -1170,7 +1163,6 @@ module "debian10-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-*/
 
 module "sles11sp4-buildhost" {
   providers = {
@@ -1364,22 +1356,21 @@ module "controller" {
   sle15sp3_minion_configuration    = module.sles15sp3-minion.configuration
   sle15sp3_sshminion_configuration = module.sles15sp3-sshminion.configuration
 
-  ubuntu1604_minion_configuration = module.ubuntu1604-minion.configuration
+  ubuntu1604_minion_configuration    = module.ubuntu1604-minion.configuration
   ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
 
-  ubuntu1804_minion_configuration = module.ubuntu1804-minion.configuration
+  ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
-  //ubuntu2004_minion_configuration = module.ubuntu2004-minion.configuration
-  //ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
-// TODO: When we enable debian in sumaform enable these
-/*
-  debian9_minion_configuration = module.debian9-minion.configuration
-  debian9_sshminion_configuration = module.debian9-sshminion.configuration
+  ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
+  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
 
-  debian10_minion_configuration = module.debian10-minion.configuration
-  debian10_sshminion_configuration = module.debian10-sshminion.configuration
-*/
+  debian9_minion_configuration      = module.debian9-minion.configuration
+  debian9_sshminion_configuration   = module.debian9-sshminion.configuration
+
+  debian10_minion_configuration     = module.debian10-minion.configuration
+  debian10_sshminion_configuration  = module.debian10-sshminion.configuration
+
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp4_buildhost_configuration = module.sles12sp4-buildhost.configuration
   sle15sp2_buildhost_configuration = module.sles15sp2-buildhost.configuration
