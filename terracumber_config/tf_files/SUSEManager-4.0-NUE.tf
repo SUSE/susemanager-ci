@@ -111,50 +111,44 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:45"
+        mac = "aa:b2:93:01:00:90"
       }
     }
     server = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:40"
+        mac = "aa:b2:93:01:00:91"
       }
     }
     proxy = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:46"
+        mac = "aa:b2:93:01:00:92"
       }
     }
     suse-client = {
       image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:41"
+        mac = "aa:b2:93:01:00:94"
       }
     }
     suse-minion = {
       image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:42"
-      }
-    }
-    build-host = {
-      image = "sles15sp2o"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:49"
+        mac = "aa:b2:93:01:00:96"
       }
     }
     suse-sshminion = {
       image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:43"
+        mac = "aa:b2:93:01:00:98"
       }
     }
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
-        mac = "AA:B2:93:00:00:44"
+        mac = "aa:b2:93:01:00:99"
         // Openscap cannot run with less than 1.25 GB of RAM
         memory = 1280
       }
@@ -163,7 +157,13 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
       provider_settings = {
-        mac = "AA:B2:93:00:20:47"
+        mac = "aa:b2:93:01:00:9c"
+      }
+    }
+    build-host = {
+      image = "sles15sp2o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:9d"
       }
     }
     pxeboot-minion = {
@@ -172,13 +172,13 @@ module "cucumber_testsuite" {
     kvm-host = {
       image = "sles15sp1o"
       provider_settings = {
-        mac = "AA:B2:93:00:00:48"
+        mac = "aa:b2:93:01:00:9e"
       }
     }
     xen-host = {
       image = "sles15sp1o"
       provider_settings = {
-        mac = "AA:B2:93:00:01:49"
+        mac = "aa:b2:93:01:00:9f"
       }
     }
   }

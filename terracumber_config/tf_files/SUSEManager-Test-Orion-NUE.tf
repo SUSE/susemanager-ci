@@ -110,12 +110,12 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:A4"
+        mac = "aa:b2:93:01:00:70"
       }
     }
     server = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:A0"
+        mac = "aa:b2:93:01:00:71"
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/openSUSE_Leap_15.2/"
@@ -125,32 +125,26 @@ module "cucumber_testsuite" {
       image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:A1"
+        mac = "aa:b2:93:01:00:74"
       }
     }
     suse-minion = {
       image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:A3"
-      }
-    }
-    build-host = {
-      image = "sles15sp1o"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:A7"
+        mac = "aa:b2:93:01:00:76"
       }
     }
     suse-sshminion = {
       image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:A5"
+        mac = "aa:b2:93:01:00:78"
       }
     }
     redhat-minion = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:A2"
+        mac = "aa:b2:93:01:00:79"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Still researching, but it will do it for now
         memory = 2048
@@ -159,7 +153,13 @@ module "cucumber_testsuite" {
     }
     debian-minion = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:A6"
+        mac = "aa:b2:93:01:00:7b"
+      }
+    }
+    build-host = {
+      image = "sles15sp1o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:7d"
       }
     }
   }

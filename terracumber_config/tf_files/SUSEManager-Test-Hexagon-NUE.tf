@@ -104,7 +104,7 @@ module "server" {
   product_version = "uyuni-master"
   name               = "srv"
   provider_settings = {
-    mac = "AA:B2:93:00:00:B0"
+    mac = "aa:b2:93:01:00:51"
   }
   additional_repos = {
       Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
@@ -136,7 +136,7 @@ module "proxy" {
   product_version    = "uyuni-master"
   name               = "pxy"
   provider_settings = {
-    mac = "AA:B2:93:00:00:B6"
+    mac = "aa:b2:93:01:00:52"
   }
   server_configuration = {
     hostname = "suma-testhexagon-pxy.mgr.suse.de"
@@ -156,7 +156,6 @@ module "proxy" {
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
   }
-
 }
 
 module "sles12sp4-client" {
@@ -164,13 +163,13 @@ module "sles12sp4-client" {
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
   //name               = "min-sles12sp4"
-  name               = "min-sles15"
+  name               = "min-sles12"
   image              = "sles12sp4o"
   provider_settings = {
-    mac = "AA:B2:93:00:00:B3"
+    mac = "aa:b2:93:01:00:55"
   }
   server_configuration = {
-    hostname = "suma-testhexagon-min-sles15.mgr.suse.de"
+    hostname = "suma-testhexagon-min-sles12.mgr.suse.de"
   }
 
   auto_register           = false
@@ -181,8 +180,8 @@ module "sles12sp4-client" {
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_12/"
   }
-
 }
+
 module "sles11sp4-client" {
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
@@ -191,7 +190,7 @@ module "sles11sp4-client" {
   name               = "min-build"
   image              = "sles11sp4"
   provider_settings = {
-    mac = "AA:B2:93:00:00:B7"
+    mac = "aa:b2:93:01:00:5d"
   }
   server_configuration = {
     hostname = "suma-testhexagon-min-build.mgr.suse.de"
@@ -205,7 +204,6 @@ module "sles11sp4-client" {
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_11/"
   }
-
 }
 
 module "sles15sp2-client" {
@@ -216,7 +214,7 @@ module "sles15sp2-client" {
   name               = "cli-sles15"
   image              = "sles15sp2o"
   provider_settings = {
-    mac = "AA:B2:93:00:00:B1"
+    mac = "aa:b2:93:01:00:54"
   }
   server_configuration = {
     hostname = "suma-testhexagon-cli-sles15.mgr.suse.de"
@@ -230,7 +228,6 @@ module "sles15sp2-client" {
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP2/"
   }
-
 }
 
 module "centos7-client" {
@@ -241,7 +238,7 @@ module "centos7-client" {
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac = "AA:B2:93:00:00:B2"
+    mac = "aa:b2:93:01:00:59"
   }
   server_configuration = {
     hostname = "suma-testhexagon-min-centos7.mgr.suse.de"
@@ -262,7 +259,7 @@ module "controller" {
   base_configuration = module.base_core.configuration
   name               = "ctl"
   provider_settings = {
-    mac = "AA:B2:93:00:00:B4"
+    mac = "aa:b2:93:01:00:50"
   }
   swap_file_size = 2048
 
@@ -279,7 +276,6 @@ module "controller" {
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   client_configuration             = module.sles15sp2-client.configuration
   centos7_client_configuration    = module.centos7-client.configuration
-
 }
 
 output "configuration" {

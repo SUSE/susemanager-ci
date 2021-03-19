@@ -112,57 +112,57 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:02:f0:55"
+        mac = "aa:b2:92:03:00:60"
       }
     }
     server = {
       image = "sles12sp4o"
       provider_settings = {
-        mac = "aa:b2:92:01:37:28"
+        mac = "aa:b2:92:03:00:61"
       }
     }
     proxy = {
       image = "sles12sp4o"
       provider_settings = {
-        mac = "aa:b2:92:1d:af:5a"
+        mac = "aa:b2:92:03:00:62"
       }
     }
     suse-client = {
       name = "cli-sles12"
       image = "sles12sp3"
       provider_settings = {
-        mac = "aa:b2:92:55:bf:9b"
+        mac = "aa:b2:92:03:00:63"
       }
     }
     suse-minion = {
       name = "min-sles12"
       image = "sles12sp3"
       provider_settings = {
-        mac = "aa:b2:92:e7:1e:fa"
-      }
-    }
-    build-host = {
-      image = "sles12sp3"
-      provider_settings = {
-        mac = "aa:b2:92:00:00:18"
+        mac = "aa:b2:92:03:00:65"
       }
     }
     suse-sshminion = {
       name = "minssh-sles12"
       image = "sles12sp3"
       provider_settings = {
-        mac = "aa:b2:92:99:c9:f5"
+        mac = "aa:b2:92:03:00:67"
       }
     }
     redhat-minion = {
       provider_settings = {
-        mac = "aa:b2:92:4f:17:48"
+        mac = "aa:b2:92:03:00:69"
         memory = 3072        
       }
     }
     debian-minion = {
       provider_settings = {
-        mac = "aa:b2:92:4f:17:49"
+        mac = "aa:b2:92:03:00:6b"
+      }
+    }
+    build-host = {
+      image = "sles12sp3"
+      provider_settings = {
+        mac = "aa:b2:92:03:00:6d"
       }
     }
     pxeboot-minion = {

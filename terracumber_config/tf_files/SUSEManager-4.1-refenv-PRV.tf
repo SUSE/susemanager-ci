@@ -104,7 +104,7 @@ module "server" {
   channels                = ["sle-product-sles15-sp1-pool-x86_64", "sle-product-sles15-sp1-updates-x86_64", "sle-module-basesystem15-sp1-pool-x86_64", "sle-module-basesystem15-sp1-updates-x86_64", "sle-module-containers15-sp1-pool-x86_64", "sle-module-containers15-sp1-updates-x86_64", "sle-manager-tools15-pool-x86_64-sp1", "sle-manager-tools15-updates-x86_64-sp1"]
 
   provider_settings = {
-    mac    = "aa:b2:92:00:00:32"
+    mac = "aa:b2:92:03:00:b1"
     memory = 8192
   }
 }
@@ -120,7 +120,7 @@ module "suse-client" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "aa:b2:92:00:00:33"
+    mac = "aa:b2:92:03:00:b4"
   }
 }
 
@@ -135,20 +135,7 @@ module "suse-minion" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "aa:b2:92:00:00:34"
-  }
-}
-
-module "build-host" {
-  source                  = "./modules/minion"
-  base_configuration      = module.base.configuration
-  product_version         = "4.1-nightly"
-  name                    = "min-build"
-  image                   = "sles15sp1o"
-  server_configuration    = module.server.configuration
-
-  provider_settings = {
-    mac = "aa:b2:92:00:00:40"
+    mac = "aa:b2:92:03:00:b6"
   }
 }
 
@@ -163,7 +150,7 @@ module "redhat-minion" {
   auto_connect_to_master = false
 
   provider_settings = {
-    mac = "aa:b2:92:00:00:36"
+    mac = "aa:b2:92:03:00:b9"
     // Openscap cannot run with less than 1.25 GB of RAM
     memory = 1280
     vcpu = 2
@@ -179,6 +166,19 @@ module "debian-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "aa:b2:92:00:00:39"
+    mac = "aa:b2:92:03:00:bb"
+  }
+}
+
+module "build-host" {
+  source                  = "./modules/minion"
+  base_configuration      = module.base.configuration
+  product_version         = "4.1-nightly"
+  name                    = "min-build"
+  image                   = "sles15sp1o"
+  server_configuration    = module.server.configuration
+
+  provider_settings = {
+    mac = "aa:b2:92:03:00:bd"
   }
 }
