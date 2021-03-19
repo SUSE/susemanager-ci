@@ -102,7 +102,7 @@ module "server" {
   channels                = ["sle-product-sles15-sp3-pool-x86_64", "sle-product-sles15-sp3-updates-x86_64", "sle-module-basesystem15-sp3-pool-x86_64", "sle-module-basesystem15-sp3-updates-x86_64", "sle-module-containers15-sp3-pool-x86_64", "sle-module-containers15-sp3-updates-x86_64", "sle-manager-tools15-pool-x86_64-sp3", "sle-manager-tools15-updates-x86_64-sp3", "sle-module-server-applications15-sp1-pool-x86_64", "sle-module-server-applications15-sp1-updates-x86_64"]
 
   provider_settings = {
-    mac    = "AA:B2:93:00:00:30"
+    mac = "aa:b2:93:01:00:c1"
     memory = 8192
   }
 }
@@ -118,7 +118,7 @@ module "suse-client" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "AA:B2:93:00:00:31"
+    mac = "aa:b2:93:01:00:c4"
   }
 }
 
@@ -133,20 +133,7 @@ module "suse-minion" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "AA:B2:93:00:00:32"
-  }
-}
-
-module "build-host" {
-  source                  = "./modules/minion"
-  base_configuration      = module.base.configuration
-  product_version         = "head"
-  name                    = "min-build"
-  image                   = "sles15sp3o"
-  server_configuration    = module.server.configuration
-
-  provider_settings = {
-    mac = "AA:B2:93:00:00:39"
+    mac = "aa:b2:93:01:00:c6"
   }
 }
 
@@ -159,7 +146,7 @@ module "redhat-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "AA:B2:93:00:00:34"
+    mac = "aa:b2:93:01:00:c9"
     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
     // Also, openscap cannot run with less than 1.25 GB of RAM
     memory = 2048
@@ -176,7 +163,20 @@ module "debian-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "AA:B2:93:00:00:37"
+    mac = "aa:b2:93:01:00:cb"
+  }
+}
+
+module "build-host" {
+  source                  = "./modules/minion"
+  base_configuration      = module.base.configuration
+  product_version         = "head"
+  name                    = "min-build"
+  image                   = "sles15sp3o"
+  server_configuration    = module.server.configuration
+
+  provider_settings = {
+    mac = "aa:b2:93:01:00:cd"
   }
 }
 
@@ -189,6 +189,6 @@ module "kvm-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "AA:B2:93:00:01:40"
+    mac = "aa:b2:93:01:00:ce"
   }
 }

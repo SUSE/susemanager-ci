@@ -110,13 +110,13 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac    = "AA:B2:93:00:01:03"
+        mac = "aa:b2:93:01:00:60"
       }
 //      branch = "fix-login"
     }
     server = {
       provider_settings = {
-        mac = "AA:B2:93:00:01:00"
+        mac = "aa:b2:93:01:00:61"
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP2/"
@@ -124,7 +124,7 @@ module "cucumber_testsuite" {
     }
     proxy = {
       provider_settings = {
-        mac = "AA:B2:93:00:01:06"
+        mac = "aa:b2:93:01:00:62"
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP2/"
@@ -134,35 +134,28 @@ module "cucumber_testsuite" {
       image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:01:01"
+        mac = "aa:b2:93:01:00:64"
       }
     }
     suse-minion = {
       image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:01:02"
+        mac = "aa:b2:93:01:00:66"
       }
     }
     suse-sshminion = {
       image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:01:04"
-      }
-    }
-    build-host = {
-      image = "sles15sp2o"
-      name = "min-build"
-      provider_settings = {
-        mac = "AA:B2:93:00:01:09"
+        mac = "aa:b2:93:01:00:68"
       }
     }
 /*
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
-        mac = "AA:B2:93:00:01:05"
+        mac = "aa:b2:93:01:00:69"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Still researching, but it will do it for now
         memory = 2048
@@ -172,10 +165,16 @@ module "cucumber_testsuite" {
 */
     debian-minion = {
       provider_settings = {
-        mac = "AA:B2:93:00:01:07"
+        mac = "aa:b2:93:01:00:6b"
       }
     }
-
+    build-host = {
+      image = "sles15sp2o"
+      name = "min-build"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:6d"
+      }
+    }
   }
   provider_settings = {
     pool               = "ssd"

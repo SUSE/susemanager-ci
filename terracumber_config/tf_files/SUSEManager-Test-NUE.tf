@@ -110,13 +110,13 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac    = "AA:B2:93:00:00:63"
+        mac = "aa:b2:93:01:00:40"
       }
 //      branch = "fix-login"
     }
     server = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:60"
+        mac = "aa:b2:93:01:00:41"
       }
       additional_repos = {
 //        server_stack = "http://download.suse.de/ibs/SUSE:/Maintenance:/17859/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
@@ -130,7 +130,7 @@ module "cucumber_testsuite" {
     }
     proxy = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:86"
+        mac = "aa:b2:93:01:00:42"
       }
       additional_repos = {
 //        proxy_stack = "http://download.suse.de/ibs/SUSE:/Maintenance:/17859/SUSE_Updates_SLE-Module-SUSE-Manager-Proxy_4.1_x86_64/",
@@ -144,7 +144,7 @@ module "cucumber_testsuite" {
       image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:61"
+        mac = "aa:b2:93:01:00:44"
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp1/standard/"
@@ -154,28 +154,17 @@ module "cucumber_testsuite" {
       image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:62"
+        mac = "aa:b2:93:01:00:46"
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp1/standard/"
-      }
-    }
-
-    build-host = {
-      image = "sles15sp2o"
-      name = "min-build"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:73"
-      }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
     }
     suse-sshminion = {
       image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:64"
+        mac = "aa:b2:93:01:00:48"
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp1/standard/"
@@ -185,7 +174,7 @@ module "cucumber_testsuite" {
       image = "centos7o"
       name = "min-centos7"
       provider_settings = {
-        mac = "AA:B2:93:00:00:65"
+        mac = "aa:b2:93:01:00:49"
         // Openscap cannot run with less than 1.25 GB of RAM
         memory = 1280
       }
@@ -197,12 +186,22 @@ module "cucumber_testsuite" {
 //      image = "ubuntu1804o"
 //      name = "min-ubuntu1804"
 //      provider_settings = {
-//        mac = "AA:B2:93:00:20:68"
+//        mac = "aa:b2:93:01:00:4b"
 //      }
 //      additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-ubuntu18.04/standard/"
 //      }
 //    }
+    build-host = {
+      image = "sles15sp2o"
+      name = "min-build"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:4d"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
+      }
+    }
     pxeboot-minion = {
       image = "sles15sp2o"
     }
@@ -210,7 +209,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "min-kvm"
       provider_settings = {
-        mac = "AA:B2:93:00:00:69"
+        mac = "aa:b2:93:01:00:4e"
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
@@ -218,8 +217,9 @@ module "cucumber_testsuite" {
     }
 //    xen-host = {
 //      image = "sles15sp2o"
+//      name = "min-xen"
 //      provider_settings = {
-//        mac = "AA:B2:93:00:01:84"
+//        mac = "aa:b2:93:01:00:4f"
 //      }
 //      additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"

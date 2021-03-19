@@ -110,50 +110,44 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:05"
+        mac = "aa:b2:93:01:00:d0"
       }
     }
     server = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:00"
+        mac = "aa:b2:93:01:00:d1"
       }
     }
     proxy = {
       provider_settings = {
-        mac = "AA:B2:93:00:00:06"
+        mac = "aa:b2:93:01:00:d2"
       }
     }
     suse-client = {
       image = "sles15sp1o"
       name = "cli-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:01"
+        mac = "aa:b2:93:01:00:d4"
       }
     }
     suse-minion = {
       image = "sles15sp1o"
       name = "min-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:02"
-      }
-    }
-    build-host = {
-      image = "sles15sp2o"
-      provider_settings = {
-        mac = "AA:B2:93:00:00:09"
+        mac = "aa:b2:93:01:00:d6"
       }
     }
     suse-sshminion = {
       image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "AA:B2:93:00:00:03"
+        mac = "aa:b2:93:01:00:d8"
       }
     }
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
-        mac = "AA:B2:93:00:00:04"
+        mac = "aa:b2:93:01:00:d9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         memory = 2048
@@ -164,7 +158,13 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
       provider_settings = {
-        mac = "AA:B2:93:00:20:08"
+        mac = "aa:b2:93:01:00:dc"
+      }
+    }
+    build-host = {
+      image = "sles15sp2o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:dd"
       }
     }
     pxeboot-minion = {
@@ -173,13 +173,13 @@ module "cucumber_testsuite" {
     kvm-host = {
       image = "opensuse152o"
       provider_settings = {
-        mac = "AA:B2:93:00:00:07"
+        mac = "aa:b2:93:01:00:de"
       }
     }
     xen-host = {
       image = "opensuse152o"
       provider_settings = {
-        mac = "AA:B2:93:00:00:0A"
+        mac = "aa:b2:93:01:00:df"
       }
     }
   }
