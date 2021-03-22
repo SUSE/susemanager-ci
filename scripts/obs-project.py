@@ -4,6 +4,7 @@ import os
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
+import datetime
 
 parser = argparse.ArgumentParser(description="This utility helps you manage an obs project for a Pull Request")
 parser.add_argument('--api', help="Build Service API, defaults to https://api.opensuse.org", default="https://api.opensuse.org")
@@ -12,6 +13,7 @@ parser.add_argument('--prproject', help="Project to branch to \"branch\", defaul
 parser.add_argument('pullnumber', help="Pull Request number, for example 1")
 parser.add_argument('--username', help="Username in the build service, defaults to OBS_USER environment variable", default="")
 parser.add_argument('--password', help="Password in the build service, defaults to OBS_PASSWORD environment variable", default="")
+parser.add_argument('--setmaintainer', help="Set maintainer", default="")
 
 args = parser.parse_args()
 api = args.api
@@ -30,7 +32,7 @@ if (auth_passwd == ""):
         print("Please set OBS_PASSWORD environment variable or pass it as a parameter")
         sys.exit(-1)
     auth_passwd = os.environ["OBS_PASSWORD"]
-
+maintainer=args.setmaintainer
 pr_project = pr_project + ":" + pull_number
 
 print("DEBUG: getting api version for debugging purposes")
@@ -55,11 +57,20 @@ root = ET.fromstring(data)
 result = root.find("title").text
 print("DEBUG: found metadata for project with title {}".format(result))
 
-print("DEBUG: adapting project meta for new project")
+print("DEBUG: adapting project meta for new project {}".format(pr_project))
+root.set("name", pr_project)
 new_title = "Build for Pull Request #" + pull_number
 print("DEBUG: setting title to {}".format(new_title))
-root.set("name", pr_project)
 root.find("title").text = new_title 
+
+if (maintainer!=""):
+    print("DEBUG: Adding user {} as maintainer".format(auth_user))
+    new_person = ET.fromstring("<person userid=\"{}\" role=\"maintainer\"/>".format(auth_user))
+    root.append(new_person)
+
+root.find("description").text=str(datetime.datetime.now())
+
+print("DEBUG: adapting list of repositories")
 for repo in root.findall("repository"):
     if repo.get("name") == "images":
         print("DEBUG: skipping images repo")
