@@ -2,7 +2,6 @@
 import argparse
 import os
 import sys
-from lxml.etree import tounicode
 import urllib.request
 import xml.etree.ElementTree as ET
 
