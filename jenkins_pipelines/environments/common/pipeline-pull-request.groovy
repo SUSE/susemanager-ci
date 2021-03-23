@@ -13,18 +13,20 @@ def run(params) {
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
         try {
             stage('Build product') {
-                dir("product") {
-                    //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
-                    //      Inside userRemoteConfigs add credentialsId: 'github'
-                    checkout([  
-                                $class: 'GitSCM', 
-                                branches: [[name: "pr/${params.pull_request_number}"]], 
-                                userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
-                            ])
-                    sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} ${params.pull_request_number} --configfile $HOME/.oscrc"
-                    sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
-                    input message: 'Is the building process completed?', ok: 'Yes!' //TODO: To be replace for a proper automatic waiting using osc results -w
-                    built = true
+                if(params.must_build) {
+                    dir("product") {
+                        //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
+                        //      Inside userRemoteConfigs add credentialsId: 'github'
+                        checkout([  
+                                    $class: 'GitSCM', 
+                                    branches: [[name: "pr/${params.pull_request_number}"]], 
+                                    userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
+                                ])
+                        sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} ${params.pull_request_number} --configfile $HOME/.oscrc"
+                        sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
+                        input message: 'Is the building process completed?', ok: 'Yes!' //TODO: To be replace for a proper automatic waiting using osc results -w
+                        built = true
+                    }
                 }
             }
             stage('Checkout CI tools') {
@@ -66,7 +68,7 @@ def run(params) {
         finally {
             stage('Get results') {
                 def error = 0
-                if (built) {
+                if (built  || !params.must_build) {
                     //TODO: remove the builder project
                     echo "Here we should remove the builder project: ${params.obs_project}:${params.pull_request_number}"
                 }
