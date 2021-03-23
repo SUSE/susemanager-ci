@@ -25,7 +25,12 @@ def run(params) {
                                     ])
                             sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} add ${params.pull_request_number} --configfile $HOME/.oscrc"
                             sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
-                            input message: 'Is the building process completed?', ok: 'Yes!' //TODO: To be replace for a proper automatic waiting using osc results -w
+                            sh """
+                                for i in $(osc -a ${params.builder_api} -c $HOME/.oscrc ls ${params.builder_project}:${params.pull_request_number});do
+                                  echo \"Checking ${params.builder_project}:${params.pull_request_number}/$i\"
+                                  osc -a $api -c $HOME/.oscrc results ${params.builder_project}:${params.pull_request_number} $i -w
+                                done
+                            """
                             built = true
                         }
                     }
