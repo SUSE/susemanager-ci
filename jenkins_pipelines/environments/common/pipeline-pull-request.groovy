@@ -14,10 +14,12 @@ def run(params) {
         try {
             stage('Build product') {
                 dir("product") {
+                    //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
+                    //      Inside userRemoteConfigs add credentialsId: 'github'
                     checkout([  
                                 $class: 'GitSCM', 
                                 branches: [[name: "pr/${params.pull_request_number}"]], 
-                                userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', credentialsId: 'github', url: "${params.pull_request_repo}"]]
+                                userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                             ])
                     sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} ${params.pull_request_number} --configfile $HOME/.oscrc"
                     sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
