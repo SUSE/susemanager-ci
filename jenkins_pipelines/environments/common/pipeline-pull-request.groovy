@@ -23,7 +23,7 @@ def run(params) {
                                         branches: [[name: "pr/${params.pull_request_number}"]], 
                                         userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                                     ])
-                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} add ${params.pull_request_number} --configfile $HOME/.oscrc"
+                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add ${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
                             def list = sh(returnStdout: true, script: "osc -a ${params.builder_api} -c $HOME/.oscrc ls ${params.builder_project}:${params.pull_request_number}").trim()
                             for (i in list) {
@@ -77,7 +77,7 @@ def run(params) {
             stage('Get results') {
                 def error = 0
                 if (built  || !params.must_build) {
-                    sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} remove --noninteractive ${params.pull_request_number} --configfile $HOME/.oscrc"
+                    sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                 }
                 if (deployed) {
                     try {
