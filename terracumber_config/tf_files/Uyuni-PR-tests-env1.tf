@@ -74,6 +74,11 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+// Repository containing the build for the tested Uyuni Pull Request
+variable "PULL_REQUEST_REPO" {
+  type = "string"
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://romulus.mgr.prv.suse.net/system"
 }
@@ -117,10 +122,16 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:01"
       }
+      additional_repos = {
+        pull_request_repo = var.PULL_REQUEST_REPO,
+      }
     }
     proxy = {
       provider_settings = {
         mac = "aa:b2:92:04:00:02"
+      }
+      additional_repos = {
+        pull_request_repo = var.PULL_REQUEST_REPO,
       }
     }
     suse-client = {
