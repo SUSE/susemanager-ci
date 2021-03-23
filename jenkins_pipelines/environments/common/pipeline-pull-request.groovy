@@ -1,6 +1,6 @@
 def run(params) {
     timestamps {
-        node {
+        node('suse-manager-unit-tests') {
             currentBuild.description =  "${params.builder_project}:${params.pull_request_number}"
         }
         // Start pipeline
