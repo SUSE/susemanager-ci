@@ -1,6 +1,6 @@
 def run(params) {
     timestamps {
-        node('suse-manager-unit-tests') {
+        node('sumaform-cucumber') {
             currentBuild.description =  "${params.builder_project}:${params.pull_request_number}"
         }
         // Start pipeline
@@ -70,7 +70,7 @@ def run(params) {
                 def error = 0
                 if (built  || !params.must_build) {
                     //TODO: remove the builder project
-                    echo "Here we should remove the builder project: ${params.obs_project}:${params.pull_request_number}"
+                    echo "Here we should remove the builder project: ${params.builder_project}:${params.pull_request_number}"
                 }
                 if (deployed) {
                     try {
@@ -92,7 +92,7 @@ def run(params) {
                                 keepAll: true,
                                 reportDir: "${resultdirbuild}/cucumber_report/",
                                 reportFiles: 'cucumber_report.html',
-                                reportName: "TestSuite Report for Pull Request ${params.obs_project}:${params.pull_request_number}"]
+                                reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
                     )
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
