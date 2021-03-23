@@ -6,11 +6,6 @@ def run(params) {
         // Start pipeline
         built = false
         deployed = false
-        env.resultdir = "${WORKSPACE}/results"
-        env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-        // The junit plugin doesn't affect full paths
-        junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
         try {
             node('manager-jenkins-node') {
                 stage('Build product') {
@@ -37,12 +32,34 @@ def run(params) {
             }
             node('sumaform-cucumber'){
                 stage('Checkout CI tools') {
+
                     // Create a directory for  to place the directory with the build results (if it does not exist)
                     sh "mkdir -p ${resultdir}"
                     git url: params.terracumber_gitrepo, branch: params.terracumber_ref
                     dir("susemanager-ci") {
                         checkout scm
                     }
+
+                    // Pick a free environment
+                    for (env_number = 1; env_number <= 6; env_number++) {
+                        env.env_file="/tmp/suma-pr${env_number}.lock"
+                        env_status = sh(script: "test -f ${env_file} && echo 'locked' || echo 'free' ", returnStdout: true).trim()
+                        if(env_status == 'free'){
+                            echo "Using environment suma-pr${env_number}"
+                            sh "touch ${env_file}"
+                            break;
+                        } 
+                        if(env_number == 6){
+                            error('Aborting the build. All our environments are busy.')
+                        } 
+                    }
+
+                    // Define test environment parameters
+                    env.resultdir = "${WORKSPACE}/results"
+                    env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+                    env.tf_file = "susemanager-ci/terracumber_config/tf_files/Uyuni-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
+                    env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
+
                     // Clone sumaform
                     sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
                 }
@@ -101,7 +118,7 @@ def run(params) {
                                 reportFiles: 'cucumber_report.html',
                                 reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
                     )
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                    junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
                 }
                 // Send email
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
