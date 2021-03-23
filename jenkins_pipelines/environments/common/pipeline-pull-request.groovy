@@ -1,7 +1,7 @@
 def run(params) {
     timestamps {
         node {
-            currentBuild.description =  "${params.obs_project}:${params.pull_request_number}"
+            currentBuild.description =  "${params.builder_project}:${params.pull_request_number}"
         }
         // Start pipeline
         built = false
@@ -20,7 +20,7 @@ def run(params) {
                                 userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', credentialsId: 'github', url: "${params.pull_request_repo}"]]
                             ])
                     sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} ${params.pull_request_number} --configfile $HOME/.oscrc"
-                    sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.obs_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
+                    sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
                     input message: 'Is the building process completed?', ok: 'Yes!' //TODO: To be replace for a proper automatic waiting using osc results -w
                     built = true
                 }
