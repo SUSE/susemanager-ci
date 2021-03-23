@@ -20,9 +20,10 @@ def run(params) {
                                     ])
                             sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add ${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
-                            def list = sh(returnStdout: true, script: "osc -A ${params.builder_api} -c $HOME/.oscrc ls ${params.builder_project}:${params.pull_request_number}").trim()
+                            list = sh(returnStdout: true, script: "osc -A ${params.builder_api} -c $HOME/.oscrc ls ${params.builder_project}:${params.pull_request_number}")
+                            echo "List of packages: ${list}"
                             for (i in list) {
-                               println "Checking ${params.builder_project}:${params.pull_request_number} > $i"
+                               echo "Checking ${params.builder_project}:${params.pull_request_number} > $i"
                                sh "osc -A ${params.builder_api} -c $HOME/.oscrc results ${params.builder_project}:${params.pull_request_number} $i -w"
                             }
                             built = true
