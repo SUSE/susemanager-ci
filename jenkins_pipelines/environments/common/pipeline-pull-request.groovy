@@ -29,9 +29,6 @@ def run(params) {
             }
             node('sumaform-cucumber'){
                 stage('Checkout CI tools') {
-
-                    // Create a directory for  to place the directory with the build results (if it does not exist)
-                    sh "mkdir -p ${resultdir}"
                     git url: params.terracumber_gitrepo, branch: params.terracumber_ref
                     dir("susemanager-ci") {
                         checkout scm
@@ -56,6 +53,9 @@ def run(params) {
                     env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
                     env.tf_file = "susemanager-ci/terracumber_config/tf_files/Uyuni-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
                     env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
+
+                    // Create a directory for  to place the directory with the build results (if it does not exist)
+                    sh "mkdir -p ${resultdir}"
 
                     // Clone sumaform
                     sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
@@ -88,13 +88,18 @@ def run(params) {
             }
         }
         finally {
-            node('sumaform-cucumber'){
-                stage('Get results') {
-                    def error = 0
+            node('manager-jenkins-node') {
+                stage('Remove build project') {
                     if (built  || !params.must_build) {
                         sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                     }
+                }
+            }
+            node('sumaform-cucumber'){
+                stage('Get test results') {
+                    def error = 0
                     if (deployed) {
+                        sh "rm ${env_file}"
                         try {
                             sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
                         } catch(Exception ex) {
@@ -117,11 +122,11 @@ def run(params) {
                                     reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
                         )
                         junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
+                        // Send email
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                        // Clean up old results
+                        sh "./clean-old-results -r ${resultdir}"
                     }
-                    // Send email
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
-                    // Clean up old results
-                    sh "./clean-old-results -r ${resultdir}"
                     sh "exit ${error}"
                 }
             }
