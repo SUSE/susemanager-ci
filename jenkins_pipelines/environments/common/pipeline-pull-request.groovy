@@ -88,40 +88,42 @@ def run(params) {
             }
         }
         finally {
-            stage('Get results') {
-                def error = 0
-                if (built  || !params.must_build) {
-                    sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
-                }
-                if (deployed) {
-                    try {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
-                    } catch(Exception ex) {
-                        println("ERROR: rake cucumber:finishing failed")
-                        error = 1
+            node('sumaform-cucumber'){
+                stage('Get results') {
+                    def error = 0
+                    if (built  || !params.must_build) {
+                        sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                     }
-                    try {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
-                    } catch(Exception ex) {
-                        println("ERROR: rake utils:generate_test_repor failed")
-                        error = 1
+                    if (deployed) {
+                        try {
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
+                        } catch(Exception ex) {
+                            println("ERROR: rake cucumber:finishing failed")
+                            error = 1
+                        }
+                        try {
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
+                        } catch(Exception ex) {
+                            println("ERROR: rake utils:generate_test_repor failed")
+                            error = 1
+                        }
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                        publishHTML( target: [
+                                    allowMissing: true,
+                                    alwaysLinkToLastBuild: false,
+                                    keepAll: true,
+                                    reportDir: "${resultdirbuild}/cucumber_report/",
+                                    reportFiles: 'cucumber_report.html',
+                                    reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
+                        )
+                        junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
                     }
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                    publishHTML( target: [
-                                allowMissing: true,
-                                alwaysLinkToLastBuild: false,
-                                keepAll: true,
-                                reportDir: "${resultdirbuild}/cucumber_report/",
-                                reportFiles: 'cucumber_report.html',
-                                reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
-                    )
-                    junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
+                    // Send email
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                    // Clean up old results
+                    sh "./clean-old-results -r ${resultdir}"
+                    sh "exit ${error}"
                 }
-                // Send email
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
-                // Clean up old results
-                sh "./clean-old-results -r ${resultdir}"
-                sh "exit ${error}"
             }
         }
     }
