@@ -17,10 +17,6 @@ def run(params) {
             previous_commit = previous_commit.substring(previous_commit.indexOf('[') + 1, previous_commit.indexOf(']'));
         }
         print "Previous product commit: ${previous_commit}"
-        // Rename build using product commit hash
-        node {
-            currentBuild.description =  "[${product_commit}]"
-        }
         // Start pipeline
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
@@ -30,6 +26,9 @@ def run(params) {
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
+                // Rename build using product commit hash
+                currentBuild.description =  "[${product_commit}]"
+                
                 // Create a directory for  to place the directory with the build results (if it does not exist)
                 sh "mkdir -p ${resultdir}"
                 git url: params.terracumber_gitrepo, branch: params.terracumber_ref
