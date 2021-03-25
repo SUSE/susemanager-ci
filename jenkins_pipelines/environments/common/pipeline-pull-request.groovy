@@ -13,6 +13,7 @@ def run(params) {
                         checkout([  
                                     $class: 'GitSCM', 
                                     branches: [[name: "pr/${params.pull_request_number}"]], 
+                                    extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
                                     userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                                 ])
                         sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add ${params.pull_request_number}"
