@@ -195,7 +195,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool               = "ssd"
     network_name       = null
-    bridge             = "br0"
+    bridge             = "br1"
     additional_network = "192.168.106.0/24"
   }
 }
