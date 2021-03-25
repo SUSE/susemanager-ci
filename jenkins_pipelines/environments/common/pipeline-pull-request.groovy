@@ -5,7 +5,7 @@ def run(params) {
         deployed = false
         try {
             stage('Build product') {
-                currentBuild.description =  "${params.builder_project}:${params.pull_request_number}\nFunctional scopes: ${params.functional_scopes}"
+                currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br><b>Functional scopes:</b>${params.functional_scopes}"
                 if(params.must_build) {
                     dir("product") {
                         //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
