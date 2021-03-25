@@ -89,7 +89,7 @@ def run(params) {
         finally {
             stage('Remove build project') {
                 if (built  || !params.must_build) {
-                    sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
+                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                 }
             }
             stage('Get test results') {
