@@ -1,8 +1,19 @@
 def run(params) {
     timestamps {
-        // Start pipeline
+        // Start pipeline with default values
         built = false
         deployed = false
+        sumaform_gitrepo = 'https://github.com/uyuni-project/sumaform.git'
+        sumaform_ref = 'master'
+        sumaform_backend = 'libvirt'
+        terraform_bin = '/usr/bin/terraform_bin'
+        terraform_bin_plugins = '/usr/bin'
+        long_tests = true
+        service_pack_migration = true
+        terracumber_gitrepo = 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git'
+        terracumber_ref = 'master'
+        terraform_init = true
+        rake_namespace = 'cucumber'
         try {
             stage('Build product') {
                 currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>[${params.functional_scopes}]"
@@ -26,7 +37,7 @@ def run(params) {
             }
             stage('Checkout CI tools') {
                 if(params.must_test) {
-                    git url: params.terracumber_gitrepo, branch: params.terracumber_ref
+                    git url: terracumber_gitrepo, branch: terracumber_ref
                     dir("susemanager-ci") {
                         checkout scm
                     }
@@ -55,7 +66,7 @@ def run(params) {
                     sh "mkdir -p ${resultdir}"
 
                     // Clone sumaform
-                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${sumaform_gitrepo} --gitref ${sumaform_ref} --runstep gitsync"
                 }
             }
             stage('Deploy') {
@@ -65,12 +76,12 @@ def run(params) {
                     env.PULL_REQUEST_REPO = "http://download.opensuse.org/repositories/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/"
 
                     // Provision the environment
-                    if (params.terraform_init) {
+                    if (terraform_init) {
                         env.TERRAFORM_INIT = '--init'
                     } else {
                         env.TERRAFORM_INIT = ''
                     }
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                     deployed = true
                 }
             }
@@ -81,19 +92,19 @@ def run(params) {
             }
             stage('Core - Setup') {
                 if(params.must_test) {
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; cd /root/spacewalk/testsuite; rake cucumber:core'"
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; export SERVICE_PACK_MIGRATION=${params.service_pack_migration}; cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${long_tests}; cd /root/spacewalk/testsuite; rake cucumber:core'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${long_tests}; export SERVICE_PACK_MIGRATION=${service_pack_migration}; cd /root/spacewalk/testsuite; rake cucumber:reposync'"
                 }
             }
             stage('Core - Initialize clients') {
                 if(params.must_test) {
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; export SERVICE_PACK_MIGRATION=${params.service_pack_migration}; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${long_tests}; export SERVICE_PACK_MIGRATION=${service_pack_migration}; cd /root/spacewalk/testsuite; rake ${rake_namespace}:init_clients'"
                 }
             }
             stage('Secondary features') {
                 if(params.must_test) {
-                    def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; export PROFILE=${params.functional_scopes}; cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                    def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${params.long_tests}; export PROFILE=${params.functional_scopes}; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
+                    def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${long_tests}; export PROFILE=${params.functional_scopes}; cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
+                    def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export LONG_TESTS=${long_tests}; export PROFILE=${params.functional_scopes}; cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus:true
                     sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                 }
             }
