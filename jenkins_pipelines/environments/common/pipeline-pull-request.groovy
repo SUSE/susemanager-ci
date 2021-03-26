@@ -142,7 +142,8 @@ def run(params) {
                     )
                     junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
                     // Send email
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                    // TODO: We must find a way to obtain the e-mail of the PR author and set it in TF_VAR_MAIL_TO
+                    // sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                     // Clean up old results
                     sh "./clean-old-results -r ${resultdir}"
                 }
