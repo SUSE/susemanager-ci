@@ -7,7 +7,7 @@ node('pull-request-test') {
             string(name: 'pull_request_repo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Pull Request repository'),
             string(name: 'pull_request_number', defaultValue: '', description: 'Uyuni Pull Request Number'),
             string(name: 'builder_api', defaultValue: 'https://api.opensuse.org', description: 'Builder API'),
-            string(name: 'builder_project', defaultValue: 'home:jordimassaguerpla:systemsmanagement:Uyuni:Master:PR', description: 'Builder Project'),
+            string(name: 'builder_project', defaultValue: 'systemsmanagement:Uyuni:Master:PR', description: 'Builder Project'),
             booleanParam(name: 'must_build', defaultValue: true, description: 'Build project'),
             booleanParam(name: 'must_test', defaultValue: true, description: 'Run tests'),
             booleanParam(name: 'must_remove_build', defaultValue: true, description: 'Remove project built'),
