@@ -62,7 +62,7 @@ def run(params) {
                 if(params.must_test) {
                     // Passing the built repository by parameter using a environment variable to terraform file
                     // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                    env.PULL_REQUEST_REPO = "http://download.opensuse.org/repositories/${params.builder_project}/${params.pull_request_number}/openSUSE_Leap_15.2/"
+                    env.PULL_REQUEST_REPO = "http://download.opensuse.org/repositories/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/"
 
                     // Provision the environment
                     if (params.terraform_init) {
