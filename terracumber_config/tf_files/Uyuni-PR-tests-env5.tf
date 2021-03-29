@@ -52,7 +52,7 @@ variable "MAIL_FROM" {
 
 variable "MAIL_TO" {
   type = "string"
-  default = null // Must be sent to the author of the Pull Request
+  default = "galaxy-ci@suse.de"
 }
 
 // sumaform specific variables
