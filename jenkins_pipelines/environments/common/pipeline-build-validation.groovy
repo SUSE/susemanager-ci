@@ -1,5 +1,3 @@
-// NOTE: This pipeline is a refactor of pipeline-qam-setup.groovy and pipeline-qam.groovy, those will be deprecated.
-
 def run(params) {
     timestamps {
         deployed = false
@@ -104,7 +102,7 @@ def run(params) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
                     } catch(Exception ex) {
-                        println("ERROR: rake cucumber:qam_finishing failed")
+                        println("ERROR: rake cucumber:build_validation_finishing failed")
                         error = 1
                     }
                     try {
