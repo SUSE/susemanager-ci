@@ -1,0 +1,26 @@
+reviewers:
+  # Reviewer groups each of which has a list of GitHub usernames
+  groups:
+    qa:
+      - ktsamis
+      - atighineanu
+      - maximenoel8
+      - lkotek
+      - srbarrios
+      - Bischoff
+      - calancha
+
+files:
+  # Keys are glob expressions.
+  # You can assign groups defined above as well as GitHub usernames.
+  'terracumber_config/tf_files/*beta-build-validation.tf':
+    - qa
+  'jenkins_pipelines/environments/common/pipeline-build-validation.groovy'
+    - qa
+
+options:
+  ignore_draft: true
+  ignored_keywords:
+    - WIP
+    - DRAFT
+  enable_group_assignment: true
