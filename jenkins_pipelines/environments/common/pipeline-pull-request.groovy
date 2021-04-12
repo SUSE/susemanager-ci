@@ -117,8 +117,10 @@ def run(params) {
             }
             stage('Get test results') {
                 def error = 0
-                if (deployed) {
+                if (env.env_file) {
                     sh "rm ${env_file}"
+                }
+                if (deployed) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
                     } catch(Exception ex) {
