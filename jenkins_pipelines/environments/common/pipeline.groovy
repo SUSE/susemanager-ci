@@ -5,7 +5,7 @@ def run(params) {
         if (prefix == "uyuni-master") {
             prefix = "manager-Head"
         }
-        def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
+        def request = httpRequest "https://ci.suse.de/job/${prefix}-releng-2obs/lastBuild/api/json"
         def requestJson = readJSON text: request.getContent()
         def product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
         product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
