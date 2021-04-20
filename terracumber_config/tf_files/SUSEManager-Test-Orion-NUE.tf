@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Orion-cucumber"
+  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Orion-acceptance-tests"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
