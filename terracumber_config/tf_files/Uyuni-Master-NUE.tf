@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-cucumber-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-NUE"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
