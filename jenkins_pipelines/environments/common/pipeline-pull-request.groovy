@@ -112,6 +112,7 @@ def run(params) {
         finally {
             stage('Remove build project') {
                 if (params.must_remove_build) {
+                    sh "osc unlock ${params.builder_project}"
                     sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                 }
             }
