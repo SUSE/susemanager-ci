@@ -112,14 +112,13 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:60"
       }
-//      branch = "fix-login"
     }
     server = {
       provider_settings = {
         mac = "aa:b2:93:01:00:61"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP2/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP3/"
       }
     }
     proxy = {
@@ -127,7 +126,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:62"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP2/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP3/"
       }
     }
     suse-client = {
@@ -143,6 +142,10 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:66"
       }
+      additional_repos = {
+        Test_repo = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/ansible/SLE_15/"
+      }
+      additional_packages = [ "less", "aaa_base-extras", "ansible" ]
     }
     suse-sshminion = {
       image = "sles15sp1o"
