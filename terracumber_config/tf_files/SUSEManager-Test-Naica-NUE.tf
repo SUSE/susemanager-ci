@@ -153,6 +153,10 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:68"
       }
+      additional_repos = {
+        Test_repo = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/ansible/SLE_15/"
+      }
+      additional_packages = [ "ansible" ]
     }
 /*
     redhat-minion = {
