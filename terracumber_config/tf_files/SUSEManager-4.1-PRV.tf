@@ -120,6 +120,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:a1"
       }
+      additional_repos = { java11 = "https://download.opensuse.org/repositories/Java:/Factory/SLE_15_SP2/" }
     }
     proxy = {
       provider_settings = {

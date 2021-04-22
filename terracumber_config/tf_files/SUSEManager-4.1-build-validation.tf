@@ -279,7 +279,7 @@ module "server" {
   from_email                     = "root@suse.de"
 
   //server_additional_repos
-
+  additional_repos = { java11 = "https://download.opensuse.org/repositories/Java:/Factory/SLE_15_SP2/" }
 }
 
 module "proxy" {
