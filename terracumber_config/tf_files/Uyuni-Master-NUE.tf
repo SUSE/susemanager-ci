@@ -82,7 +82,7 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "uyuni-master"
-  
+
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
@@ -117,6 +117,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d1"
       }
+      additional_repos = { java11 = "http://download.suse.de/ibs/home:/fstrba:/branches:/SUSE:/SLE-15:/Update/SUSE_SLE-15_Update/" }
     }
     proxy = {
       provider_settings = {
