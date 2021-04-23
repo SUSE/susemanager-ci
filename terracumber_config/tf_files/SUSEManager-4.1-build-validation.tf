@@ -279,7 +279,7 @@ module "server" {
   from_email                     = "root@suse.de"
 
   //server_additional_repos
-  additional_repos = { java11 = "https://download.suse.de/ibs/home:/fstrba:/branches:/SUSE:/SLE-15:/Update/SUSE_SLE-15_Update/" }
+  additional_repos = { java11 = "http://download.suse.de/ibs/home:/fstrba:/branches:/SUSE:/SLE-15:/Update/SUSE_SLE-15_Update/" }
 }
 
 module "proxy" {
