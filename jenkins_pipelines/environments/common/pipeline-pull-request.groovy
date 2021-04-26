@@ -106,6 +106,10 @@ def run(params) {
             }
             stage('Core - Initialize clients') {
                 if(params.must_test) {
+                    def exports = ""
+                    if (long_tests){
+                      exports += "export LONG_TESTS=${long_tests}; "
+                    }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:init_clients'"
                 }
             }
