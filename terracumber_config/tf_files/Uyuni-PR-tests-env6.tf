@@ -79,6 +79,10 @@ variable "PULL_REQUEST_REPO" {
   type = "string"
 }
 
+variable "MASTER_REPO" {
+  type = "string"
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://hyperion.mgr.prv.suse.net/system"
 }
@@ -124,6 +128,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
+        master_repo = var.MASTER_REPO,
       }
     }
     proxy = {
@@ -132,6 +137,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
+        master_repo = var.MASTER_REPO,
       }
     }
     suse-client = {
