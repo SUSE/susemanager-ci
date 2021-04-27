@@ -16,7 +16,7 @@ def run(params) {
         rake_namespace = 'cucumber'
         try {
             stage('Build product') {
-                currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>[${params.functional_scopes}]"
+                currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
                 if(params.must_build) {
                     dir("product") {
                         //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
