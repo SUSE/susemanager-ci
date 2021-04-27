@@ -27,6 +27,7 @@ def run(params) {
                                     extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
                                     userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                                 ])
+                        sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
                         sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number}"
                         sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
                         echo "Checking ${params.builder_project}:${params.pull_request_number}"
@@ -74,6 +75,7 @@ def run(params) {
                     // Passing the built repository by parameter using a environment variable to terraform file
                     // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
                     env.PULL_REQUEST_REPO = "http://download.opensuse.org/repositories/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/"
+                    env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/openSUSE_Leap_15.2"
 
                     // Provision the environment
                     if (terraform_init) {
@@ -81,7 +83,7 @@ def run(params) {
                     } else {
                         env.TERRAFORM_INIT = ''
                     }
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                     deployed = true
                 }
             }
@@ -132,6 +134,7 @@ def run(params) {
             stage('Remove build project') {
                 if (params.must_remove_build) {
                     sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
+                    sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
                     sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                 }
             }
