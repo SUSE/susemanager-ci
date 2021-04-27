@@ -44,7 +44,7 @@ def run(params) {
                                     extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
                                     userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                                 ])
-                        sh "osc lock ${params.source_project}:TEST:${env_number}:CR"
+                        sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
                         sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number}"
                         sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc"
                         echo "Checking ${params.builder_project}:${params.pull_request_number}"
