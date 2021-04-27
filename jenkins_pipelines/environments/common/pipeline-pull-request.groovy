@@ -14,7 +14,24 @@ def run(params) {
         terracumber_ref = 'master'
         terraform_init = true
         rake_namespace = 'cucumber'
+        env_number = 6
         try {
+            stage('Get environment') {
+                  // Pick a free environment
+                  for (env_number = 1; env_number <= 6; env_number++) {
+                      env.env_file="/tmp/suma-pr${env_number}.lock"
+                      env_status = sh(script: "test -f ${env_file} && echo 'locked' || echo 'free' ", returnStdout: true).trim()
+                      if(env_status == 'free'){
+                          echo "Using environment suma-pr${env_number}"
+                          sh "touch ${env_file}"
+                          break;
+                      }
+                      if(env_number == 6){
+                          error('Aborting the build. All our environments are busy.')
+                      }
+                  }
+
+            }
             stage('Build product') {
                 currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
                 if(params.must_build) {
@@ -41,20 +58,6 @@ def run(params) {
                     git url: terracumber_gitrepo, branch: terracumber_ref
                     dir("susemanager-ci") {
                         checkout scm
-                    }
-
-                    // Pick a free environment
-                    for (env_number = 1; env_number <= 6; env_number++) {
-                        env.env_file="/tmp/suma-pr${env_number}.lock"
-                        env_status = sh(script: "test -f ${env_file} && echo 'locked' || echo 'free' ", returnStdout: true).trim()
-                        if(env_status == 'free'){
-                            echo "Using environment suma-pr${env_number}"
-                            sh "touch ${env_file}"
-                            break;
-                        } 
-                        if(env_number == 6){
-                            error('Aborting the build. All our environments are busy.')
-                        } 
                     }
 
                     // Define test environment parameters
