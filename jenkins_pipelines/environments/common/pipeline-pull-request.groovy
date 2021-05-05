@@ -16,7 +16,7 @@ def run(params) {
         rake_namespace = 'cucumber'
         env_number = 6
         repo_dir = '/home/jenkins/jenkins-build/workspace/'
-        fqdn_jenkins_node = env.BUILD_URL.split('/')[2].split(':')[0]
+        fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
         try {
             stage('Get environment') {
                   // Pick a free environment
