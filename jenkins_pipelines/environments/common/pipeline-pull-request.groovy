@@ -19,6 +19,7 @@ def run(params) {
         try {
             stage('Get environment') {
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
+                  echo "DEBUG: fqdn_jenkins_node: ${fqdn_jenkins_node}"
                   // Pick a free environment
                   for (env_number = 1; env_number <= 6; env_number++) {
                       env.env_file="/tmp/suma-pr${env_number}.lock"
