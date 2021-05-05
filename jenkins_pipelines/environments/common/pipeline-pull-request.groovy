@@ -53,7 +53,7 @@ def run(params) {
                         echo "Checking ${params.builder_project}:${params.pull_request_number}"
                         sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
                         echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r openSUSE_Leap_15.2 -a x86_64 -d \"${repo_dir}/${params.builder_project}:${params.pull_request_number}\""
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r openSUSE_Leap_15.2 -a x86_64 -d \"${repo_dir}\""
                         built = true
                     }
                 }
