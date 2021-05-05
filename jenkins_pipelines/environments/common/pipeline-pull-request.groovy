@@ -47,13 +47,19 @@ def run(params) {
                                     userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                                 ])
                         sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
-                        sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
+                        if(params.publish_in_host) {
+                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
+                        } else {
+                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
+                        }
                         sh "osc linkpac ${params.source_project}:TEST:${env_number}:CR release-notes-uyuni ${params.builder_project}:${params.pull_request_number}"
                         sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}:TEST:${env_number}:CR\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e"
                         echo "Checking ${params.builder_project}:${params.pull_request_number}"
                         sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r openSUSE_Leap_15.2 -a x86_64 -d \"${repo_dir}\""
+                        if(params.publish_in_host) {
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r openSUSE_Leap_15.2 -a x86_64 -d \"${repo_dir}\""
+                        }
                         built = true
                     }
                 }
@@ -82,7 +88,11 @@ def run(params) {
                 if(params.must_test) {
                     // Passing the built repository by parameter using a environment variable to terraform file
                     // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                    env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
+                    if(params.publish_in_host) {
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
+                    } else {
+                        env.PULL_REQUEST_REPO= "http://download.opensuse.org/repositories/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/"
+                    }
                     env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/openSUSE_Leap_15.2"
 
                     // Provision the environment
