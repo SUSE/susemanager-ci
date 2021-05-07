@@ -1,0 +1,34 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
+        disableConcurrentBuilds(),
+        pipelineTriggers([cron('H H/4 * * *')]),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'Manager-4.2', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.2-PRV.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
+            choice(name: 'terraform_bin', choices: ['/usr/bin/terraform_bin'], description: 'Terraform binary path'),
+            choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
+            booleanParam(name: 'long_tests', defaultValue: true, description: 'This will enable the execution of long tests'),
+            // Temporary: should move to uyuni-project
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            booleanParam(name: 'terraform_init', defaultValue: false, description: 'Call terraform init (needed if modules are added or changes)'),
+            choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
+            extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ',', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_smdba,@scope_spacecmd,@scope_spacewalk_utils,@scope_visualization,@scope_notification_message,@scope_virtual_host_manager,@scope_subscription_matching,@scope_formulas,@scope_sp_migration,@scope_cve_audit,@scope_onboarding,@scope_content_lifecycle_management,@scope_res,@scope_recurring_actions,@scope_maintenance_windows,@scope_cluster_management,@scope_building_container_images,@scope_kubernetes_integration,@scope_openscap,@scope_ubuntu,@scope_action_chains,@scope_salt_ssh,@scope_tomcat,@scope_changing_software_channels,@scope_monitoring,@scope_salt,@scope_cobbler,@scope_sumatoolbox,@scope_virtualization,@scope_hub,@scope_retail,@scope_configuration_channels,@scope_content_staging,@scope_proxy,@scope_traditional_client,@scope_xmlrpc,@scope_power_management,@scope_retracted_patches', description: 'Choose the functional scopes that you want to test')
+        ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    timeout(activity: false, time: 12, unit: 'HOURS') {
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline.groovy"
+        pipeline.run(params)
+    }
+}
