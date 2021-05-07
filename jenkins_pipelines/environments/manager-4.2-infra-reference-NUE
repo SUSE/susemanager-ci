@@ -2,13 +2,11 @@
 
 node('sumaform-cucumber') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
+        buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5')),
         disableConcurrentBuilds(),
-        pipelineTriggers([cron('H 20 * * 6')]),
+        pipelineTriggers([cron('H 1 * * *')]),
         parameters([
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'Manager-3.2', description: 'Testsuite Git reference (branch, tag...)'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-3.2-NUE.tf', description: 'Path to the tf file to be used'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.2-refenv-NUE.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
@@ -26,7 +24,7 @@ node('sumaform-cucumber') {
         checkout scm
     }
     timeout(activity: false, time: 10, unit: 'HOURS') {
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline.groovy"
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-reference.groovy"
         pipeline.run(params)
     }
 }

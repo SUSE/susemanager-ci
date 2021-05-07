@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Manager-3.2/job/manager-3.2-cucumber-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.2/job/manager-4.2-dev-acceptance-tests-PRV"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-3.2"
+  default = "Manager-4.2"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = "string"
-  default = "Results 3.2-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 4.2-PRV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = "string"
-  default = "Results 3.2-NUE: Environment setup failed"
+  default = "Results 4.2-PRV: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -75,13 +75,14 @@ variable "GIT_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://cokerunner.mgr.suse.de/system"
+  uri = "qemu+tcp://metropolis.mgr.prv.suse.net/system"
 }
+
 
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "3.2-nightly"
+  product_version = "4.2-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -92,80 +93,102 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "sles12sp3", "sles12sp4o", "ubuntu1804o"]
+  images = ["centos7o", "opensuse152o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
-  use_avahi    = false
-  name_prefix  = "suma-32-"
-  domain       = "mgr.suse.de"
-  from_email   = "root@suse.de"
+  use_avahi = false
+  name_prefix = "suma-42-"
+  domain = "mgr.prv.suse.net"
+  from_email = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "portus.mgr.suse.de:5000/cucutest"
+  no_auth_registry = "registry.mgr.prv.suse.net"
+  auth_registry = "registry.mgr.prv.suse.net:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 
-  server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
+  mirror = "minima-mirror.mgr.prv.suse.net"
+  use_mirror_images = true
+  server_http_proxy = "galaxy-proxy.mgr.prv.suse.net:3128"
 
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:80"
+        mac = "aa:b2:92:03:00:c0"
       }
     }
     server = {
-      image = "sles12sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:81"
+        mac = "aa:b2:92:03:00:c1"
       }
     }
     proxy = {
-      image = "sles12sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:82"
+        mac = "aa:b2:92:03:00:c2"
       }
     }
     suse-client = {
-      name = "cli-sles12"
+      image = "sles15sp1o"
+      name = "cli-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:00:83"
+        mac = "aa:b2:92:03:00:c4"
       }
     }
     suse-minion = {
-      name = "min-sles12"
+      image = "sles15sp1o"
+      name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:00:85"
+        mac = "aa:b2:92:03:00:c6"
       }
     }
     suse-sshminion = {
-      name = "minssh-sles12"
+      image = "sles15sp1o"
+      name = "minssh-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:00:87"
+        mac = "aa:b2:92:03:00:c8"
       }
     }
     redhat-minion = {
+      image = "centos7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:89"
-        memory = 3072        
+        mac = "aa:b2:92:03:00:c9"
+        // Openscap cannot run with less than 1.25 GB of RAM
+        memory = 1280
       }
     }
     debian-minion = {
+      name = "min-ubuntu2004"
+      image = "ubuntu2004o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:8b"
+        mac = "aa:b2:92:03:00:cc"
       }
     }
     build-host = {
+      image = "sles15sp2o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:8d"
+        mac = "aa:b2:92:03:00:cd"
       }
     }
     pxeboot-minion = {
+      image = "sles15sp3o"
+    }
+    kvm-host = {
+      image = "sles15sp3o"
+      provider_settings = {
+        mac = "aa:b2:92:03:00:ce"
+      }
+    }
+    xen-host = {
+      image = "sles15sp3o"
+      provider_settings = {
+        mac = "aa:b2:92:03:00:cf"
+      }
     }
   }
   provider_settings = {
-    pool               = "ssd"
-    bridge             = "br2"
-    additional_network = "192.168.32.0/24"
+    pool = "ssd"
+    network_name = null
+    bridge = "br1"
+    additional_network = "192.168.42.0/24"
   }
 }
 
