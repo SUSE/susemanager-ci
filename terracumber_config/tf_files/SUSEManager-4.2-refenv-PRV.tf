@@ -120,7 +120,7 @@ module "suse-client" {
   use_os_released_updates = true
 
   provider_settings = {
-    mac = "aa:b2:92:03:00:d2"
+    mac = "aa:b2:92:03:00:d4"
   }
 }
 
