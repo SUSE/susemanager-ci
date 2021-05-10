@@ -101,7 +101,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "opensuse152", "sles15sp1o", "sles15sp2o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "opensuse152-ci-pr", "sles15sp1o", "sles15sp2o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr2-"
@@ -130,7 +130,7 @@ module "cucumber_testsuite" {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
       }
-      image = "opensuse152"
+      image = "opensuse152-ci-pr"
     }
     proxy = {
       provider_settings = {
