@@ -3,8 +3,7 @@
 // WARNING: This pipeline is working progress, the test is not finished. So please, don't add to the list of PR Checks
 
 properties([
-        buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
-        disableConcurrentBuilds(),
+        buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4'))
 ])
 
 pipeline {
