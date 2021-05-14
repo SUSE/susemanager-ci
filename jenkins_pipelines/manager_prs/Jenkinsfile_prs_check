@@ -2,8 +2,7 @@
 
 // Configure the build properties
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4')),
-    disableConcurrentBuilds(),
+    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4'))
 ])
 
 pipeline {
