@@ -157,7 +157,7 @@ module "base_res" {
   name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "centos6o", "centos7o", "centos8o" ]
+  images      = [ "centos7o", "centos8o" ]
 
   // mirror = "minima-mirror-bv2.mgr.prv.suse.net"
   // use_mirror_images = true
@@ -233,7 +233,7 @@ module "base_debian" {
   name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1604o", "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
+  images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
 
   // mirror = "minima-mirror-bv.mgr.prv.suse.net"
   // use_mirror_images = true
@@ -480,28 +480,6 @@ module "sles15sp3-client" {
 
 }
 
-module "centos6-client" {
-  providers = {
-    libvirt = libvirt.endor
-  }
-  source             = "./modules/client"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
-  name               = "cli-centos6"
-  image              = "centos6o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:57"
-    memory             = 4096
-  }
-  auto_register = false
-  use_os_released_updates = false
-  server_configuration =  { hostname = "suma-bv-41-pxy.mgr.prv.suse.net" }
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-
-  //ceos6-client_additional_repos
-
-}
-
 module "centos7-client" {
   providers = {
     libvirt = libvirt.endor
@@ -698,28 +676,6 @@ module "sles15sp3-minion" {
 
 }
 
-module "centos6-minion" {
-  providers = {
-    libvirt = libvirt.endor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
-  name               = "min-centos6"
-  image              = "centos6o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:67"
-    memory             = 4096
-  }
-  server_configuration =  { hostname = "suma-bv-41-pxy.mgr.prv.suse.net" }
-  auto_connect_to_master = false
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-
-  //ceos6_minion_additional_repos
-
-}
-
 module "centos7-minion" {
   providers = {
     libvirt = libvirt.endor
@@ -765,28 +721,6 @@ module "centos8-minion" {
   ssh_key_path           = "./salt/controller/id_rsa.pub"
 
   //ceos8-minion_additional_repos
-
-}
-
-module "ubuntu1604-minion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.1-released"
-  name               = "min-ubuntu1604"
-  image              = "ubuntu1604o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6a"
-    memory             = 4096
-  }
-  server_configuration =  { hostname =  "suma-bv-41-pxy.mgr.prv.suse.net" }
-  auto_connect_to_master = false
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-
-  //ubuntu1604-minion_additional_repos
 
 }
 
@@ -1005,23 +939,6 @@ module "sles15sp3-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "centos6-sshminion" {
-  providers = {
-    libvirt = libvirt.endor
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-centos6"
-  image              = "centos6o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:77"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-}
-
 module "centos7-sshminion" {
   providers = {
     libvirt = libvirt.endor
@@ -1050,23 +967,6 @@ module "centos8-sshminion" {
   image              = "centos8o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:79"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-}
-
-module "ubuntu1604-sshminion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-ubuntu1604"
-  image              = "ubuntu1604o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:7a"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1290,10 +1190,6 @@ module "controller" {
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
 
-  centos6_client_configuration = module.centos6-client.configuration
-  centos6_minion_configuration = module.centos6-minion.configuration
-  centos6_sshminion_configuration = module.centos6-sshminion.configuration
-
   centos7_client_configuration    = module.centos7-client.configuration
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
@@ -1333,9 +1229,6 @@ module "controller" {
   sle15sp3_minion_configuration    = module.sles15sp3-minion.configuration
   sle15sp3_sshminion_configuration = module.sles15sp3-sshminion.configuration
 
-  ubuntu1604_minion_configuration    = module.ubuntu1604-minion.configuration
-  ubuntu1604_sshminion_configuration = module.ubuntu1604-sshminion.configuration
-
   ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
@@ -1360,12 +1253,6 @@ module "controller" {
 resource "null_resource" "server_extra_nfs_mounts" {
   provisioner "remote-exec" {
     inline = [
-      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6  /mirror/repo/$RCE/RES6  nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/repo/$RCE/RES6'",
-      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6-SUSE-Manager-Tools  /mirror/repo/$RCE/RES6-SUSE-Manager-Tools  nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/repo/$RCE/RES6-SUSE-Manager-Tools'",
-      "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta  /mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta  nfs  defaults  0 0' >> /etc/fstab",
-      "mount '/mirror/repo/$RCE/RES6-SUSE-Manager-Tools-Beta'",
       "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7  /mirror/repo/$RCE/RES7  nfs  defaults  0 0' >> /etc/fstab",
       "mount '/mirror/repo/$RCE/RES7'",
       "echo 'minima-mirror-bv2.mgr.prv.suse.net:/srv/mirror/repo/$RCE/RES7-SUSE-Manager-Tools  /mirror/repo/$RCE/RES7-SUSE-Manager-Tools  nfs  defaults  0 0' >> /etc/fstab",
