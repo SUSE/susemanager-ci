@@ -3,8 +3,6 @@ def run(params) {
         // Start pipeline with default values
         built = false
         deployed = false
-        sumaform_gitrepo = 'https://github.com/uyuni-project/sumaform.git'
-        sumaform_ref = 'master'
         sumaform_backend = 'libvirt'
         terraform_bin = '/usr/bin/terraform_bin'
         terraform_bin_plugins = '/usr/bin'
