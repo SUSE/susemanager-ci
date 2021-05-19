@@ -48,6 +48,7 @@ def run(params) {
                                         userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                                     ])
                             sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
+                            sh "osc rdelete -rf -m 'removing project before creating it again' ${params.builder_project}:${params.pull_request_number}"
                             if(params.publish_in_host) {
                                 sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
                             } else {
