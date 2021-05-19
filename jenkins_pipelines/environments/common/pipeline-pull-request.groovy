@@ -34,10 +34,9 @@ def run(params) {
                   }
 
             }
-            stage('Build product') {
+            stage('Checkout project') {
                 ws(environment_workspace){
-                    currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
-                    if(params.must_build) {
+                    if(params.must_build || params.must_remove_build) {
                         sh "rm -rf ${WORKSPACE}/product"
                         dir("product") {
                             //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
@@ -48,6 +47,15 @@ def run(params) {
                                         extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
                                         userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                                     ])
+                        }
+                    }
+                }
+            }
+            stage('Build product') {
+                ws(environment_workspace){
+                    currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
+                    if(params.must_build) {
+                        dir("product") {
                             sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
                             if(params.publish_in_host) {
                                 sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
