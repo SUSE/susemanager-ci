@@ -12,14 +12,14 @@ def run(params) {
         terracumber_ref = 'master'
         terraform_init = true
         rake_namespace = 'cucumber'
-        env_number = 6
+        total_envs = 6
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         try {
             stage('Get environment') {
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
                   echo "DEBUG: fqdn_jenkins_node: ${fqdn_jenkins_node}"
                   // Pick a free environment
-                  for (env_number = 1; env_number <= 6; env_number++) {
+                  for (env_number = 1; env_number <= total_envs; env_number++) {
                       env.env_file="/tmp/suma-pr${env_number}.lock"
                       env_status = sh(script: "test -f ${env_file} && echo 'locked' || echo 'free' ", returnStdout: true).trim()
                       if(env_status == 'free'){
@@ -28,7 +28,7 @@ def run(params) {
                           environment_workspace = "${jenkins_workspace}suma-pr${env_number}"
                           break;
                       }
-                      if(env_number == 6){
+                      if(env_number == total_envs){
                           error('Aborting the build. All our environments are busy.')
                       }
                   }
@@ -38,6 +38,7 @@ def run(params) {
                 ws(environment_workspace){
                     currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
                     if(params.must_build) {
+                        sh "rm -rf ${WORKSPACE}/product"
                         dir("product") {
                             //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
                             //      Inside userRemoteConfigs add credentialsId: 'github'
@@ -175,6 +176,7 @@ def run(params) {
                         sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
                         sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                     }
+                    sh "rm -rf ${WORKSPACE}/product"
                 }
             }
             stage('Get test results') {
