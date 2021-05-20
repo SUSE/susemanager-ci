@@ -495,7 +495,7 @@ module "centos7-client" {
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:98"
+    mac                = "aa:b2:92:42:00:97"
     memory             = 4096
   }
   server_configuration = {
@@ -695,7 +695,7 @@ module "centos7-minion" {
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a8"
+    mac                = "aa:b2:92:42:00:a7"
     memory             = 4096
   }
   server_configuration = {
@@ -719,7 +719,7 @@ module "centos8-minion" {
   name               = "min-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a9"
+    mac                = "aa:b2:92:42:00:a8"
     memory             = 4096
   }
   server_configuration = {
@@ -744,7 +744,7 @@ module "ubuntu1804-minion" {
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ab"
+    mac                = "aa:b2:92:42:00:a9"
     memory             = 4096
   }
   server_configuration = {
@@ -768,7 +768,7 @@ module "ubuntu2004-minion" {
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ac"
+    mac                = "aa:b2:92:42:00:aa"
     memory             = 4096
   }
   server_configuration = {
@@ -792,7 +792,7 @@ module "debian9-minion" {
   name               = "min-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ad"
+    mac                = "aa:b2:92:42:00:ab"
     memory             = 4096
   }
 
@@ -817,7 +817,7 @@ module "debian10-minion" {
   name               = "min-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ae"
+    mac                = "aa:b2:92:42:00:ac"
     memory             = 4096
   }
 
@@ -974,7 +974,7 @@ module "centos7-sshminion" {
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b8"
+    mac                = "aa:b2:92:42:00:b7"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -991,7 +991,7 @@ module "centos8-sshminion" {
   name               = "minssh-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b9"
+    mac                = "aa:b2:92:42:00:b8"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1009,7 +1009,7 @@ module "ubuntu1804-sshminion" {
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bb"
+    mac                = "aa:b2:92:42:00:b9"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1026,7 +1026,7 @@ module "ubuntu2004-sshminion" {
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bc"
+    mac                = "aa:b2:92:42:00:ba"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1043,7 +1043,7 @@ module "debian9-sshminion" {
   name               = "minssh-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bd"
+    mac                = "aa:b2:92:42:00:bb"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1060,7 +1060,7 @@ module "debian10-sshminion" {
   name               = "minssh-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:be"
+    mac                = "aa:b2:92:42:00:bc"
     memory             = 4096
   }
   use_os_released_updates = false
