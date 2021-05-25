@@ -2,7 +2,7 @@
 
 node('pull-request-test') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '3')),
+        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '4')),
         parameters([
             string(name: 'pull_request_repo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Pull Request repository'),
             string(name: 'pull_request_number', defaultValue: '', description: 'Uyuni Pull Request Number'),
