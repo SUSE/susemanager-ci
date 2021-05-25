@@ -405,10 +405,6 @@ module "sles15-client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
-  }
-
 }
 
 module "sles15sp1-client" {
@@ -430,10 +426,6 @@ module "sles15sp1-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
-  }
 
 }
 
@@ -602,10 +594,6 @@ module "sles15-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
-  }
-
 }
 
 module "sles15sp1-minion" {
@@ -628,10 +616,6 @@ module "sles15sp1-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
-  }
 
 }
 
@@ -904,9 +888,6 @@ module "sles15-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
-  }
 }
 
 module "sles15sp1-sshminion" {
@@ -925,9 +906,6 @@ module "sles15sp1-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
-  }
 }
 
 module "sles15sp2-sshminion" {
