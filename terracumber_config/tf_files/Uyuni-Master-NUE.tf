@@ -117,10 +117,16 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d1"
       }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP2/"
+      }
     }
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:d2"
+      }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP2/"
       }
     }
     suse-client = {
@@ -129,6 +135,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d4"
       }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP1/"
+      }
     }
     suse-minion = {
       image = "sles15sp1o"
@@ -136,12 +145,18 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
       }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP1/"
+      }
     }
     suse-sshminion = {
       image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
+      }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP1/"
       }
     }
     redhat-minion = {
@@ -166,20 +181,32 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:dd"
       }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP2/"
+      }
     }
     pxeboot-minion = {
       image = "sles15sp2o"
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP2/"
+      }
     }
     kvm-host = {
       image = "opensuse152o"
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
       }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/openSUSE_Leap_15.2/"
+      }
     }
     xen-host = {
       image = "opensuse152o"
       provider_settings = {
         mac = "aa:b2:93:01:00:df"
+      }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/openSUSE_Leap_15.2/"
       }
     }
   }
