@@ -69,7 +69,7 @@ variable "SCC_PASSWORD" {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://metropolis.mgr.prv.suse.net/system"
+  uri = "qemu+tcp:///selektah.mgr.prv.suse.netsystem"
 }
 
 module "base" {
