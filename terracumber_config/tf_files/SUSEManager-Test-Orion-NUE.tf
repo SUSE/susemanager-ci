@@ -118,7 +118,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:71"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/openSUSE_Leap_15.2/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/openSUSE_Leap_15.3/"
       }
     }
     suse-client = {
