@@ -71,9 +71,9 @@ def run(params) {
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
                             if(params.publish_in_host) {
-                              echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
-                              sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64\""
-                              sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r openSUSE_Leap_15.2 -a x86_64 -d \"${jenkins_workspace}\""
+                              echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.3/x86_64"
+                              sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.3/x86_64\""
+                              sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r openSUSE_Leap_15.3 -a x86_64 -d \"${jenkins_workspace}\""
                             }
                             built = true
                         }
@@ -108,11 +108,11 @@ def run(params) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
                         if(params.publish_in_host) {
-                            env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
+                            env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.3/x86_64"
                         } else {
-                            env.PULL_REQUEST_REPO= "http://download.opensuse.org/repositories/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/"
+                            env.PULL_REQUEST_REPO= "http://download.opensuse.org/repositories/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.3/"
                         }
-                        env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/openSUSE_Leap_15.2"
+                        env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/openSUSE_Leap_15.3"
 
                         // Provision the environment
                         if (terraform_init) {
