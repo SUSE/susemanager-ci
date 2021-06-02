@@ -279,6 +279,7 @@ module "server" {
   from_email                     = "root@suse.de"
 
   //server_additional_repos
+
 }
 
 module "proxy" {
@@ -1251,6 +1252,8 @@ module "controller" {
   sle12sp5_client_configuration    = module.sles12sp5-client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+*/
+/* TODO do we need the following ones at all? - ebischoff
 */
   client_configuration    = module.sles12sp4-client.configuration
   minion_configuration    = module.sles12sp4-minion.configuration
