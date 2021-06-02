@@ -405,6 +405,8 @@ module "sles15-client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
+  //sle15-client_additional_repos
+
 }
 
 module "sles15sp1-client" {
@@ -426,6 +428,8 @@ module "sles15sp1-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp1-client_additional_repos
 
 }
 
@@ -594,6 +598,8 @@ module "sles15-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
+  //sle15-minion_additional_repos
+
 }
 
 module "sles15sp1-minion" {
@@ -616,6 +622,8 @@ module "sles15sp1-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp1-minion_additional_repos
 
 }
 
@@ -692,7 +700,7 @@ module "centos7-minion" {
   //ceos7-minion_additional_repos
 
 }
-/*
+
 module "centos8-minion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -716,7 +724,6 @@ module "centos8-minion" {
   //ceos8-minion_additional_repos
 
 }
-*/
 
 module "ubuntu1804-minion" {
   providers = {
@@ -958,7 +965,7 @@ module "centos7-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-/*
+
 module "centos8-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -975,7 +982,6 @@ module "centos8-sshminion" {
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-*/
 
 module "ubuntu1804-sshminion" {
   providers = {
@@ -1197,10 +1203,10 @@ module "controller" {
   centos7_client_configuration    = module.centos7-client.configuration
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
-/*
+
   centos8_minion_configuration    = module.centos8-minion.configuration
   centos8_sshminion_configuration = module.centos8-sshminion.configuration
-*/
+
   sle11sp4_client_configuration    = module.sles11sp4-client.configuration
   sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
   sle11sp4_sshminion_configuration = module.sles11sp4-sshminion.configuration
@@ -1212,6 +1218,8 @@ module "controller" {
   sle12sp5_client_configuration    = module.sles12sp5-client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+*/
+/* TODO do we need the following ones at all? - ebischoff
 */
   client_configuration    = module.sles12sp4-client.configuration
   minion_configuration    = module.sles12sp4-minion.configuration
