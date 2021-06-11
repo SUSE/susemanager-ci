@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp1o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -124,7 +124,7 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d4"
@@ -134,7 +134,7 @@ module "cucumber_testsuite" {
       }
     }
     suse-minion = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
@@ -144,7 +144,7 @@ module "cucumber_testsuite" {
       }
     }
     suse-sshminion = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
