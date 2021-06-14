@@ -56,6 +56,10 @@ def run(params) {
                     currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
                     if(params.must_build) {
                         dir("product") {
+                            // force remove, to clean up previous build
+                            sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
+                            sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
+                            sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number} || true"
                             sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
                             if(params.publish_in_host) {
                                 sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
