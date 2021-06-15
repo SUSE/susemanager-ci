@@ -39,6 +39,9 @@ def run(params) {
                     if(params.must_build || params.must_remove_build) {
                         sh "rm -rf ${WORKSPACE}/product"
                         dir("product") {
+                            env.GIT_COMMITTER_NAME = "jenkins"
+                            env.GIT_AUTHOR_NAME = "jenkins"
+                            env.GIT_EMAIL = "jenkins@a.b"
                             //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
                             //      Inside userRemoteConfigs add credentialsId: 'github'
                             checkout([  
