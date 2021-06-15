@@ -39,6 +39,7 @@ def run(params) {
                     if(params.must_build || params.must_remove_build) {
                         sh "rm -rf ${WORKSPACE}/product"
                         dir("product") {
+                            // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
                             env.GIT_COMMITTER_NAME = "jenkins"
                             env.GIT_AUTHOR_NAME = "jenkins"
                             env.GIT_EMAIL = "jenkins@a.b"
