@@ -45,8 +45,18 @@ def run(params) {
                                         $class: 'GitSCM', 
                                         branches: [[name: "pr/${params.pull_request_number}"]], 
                                         extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
-                                        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
-                                    ])
+                                        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]],
+                                        extensions: [
+                                        [
+                                            $class: 'PreBuildMerge',
+                                            options: [
+                                                 fastForwardMode: 'NO_FF',
+                                                 mergeRemote: 'origin',
+                                                 mergeStrategy: 'MergeCommand.Strategy',
+                                                 mergeTarget: 'master'
+                                           ]
+                                         ]]
+                                       ])
                         }
                     }
                 }
