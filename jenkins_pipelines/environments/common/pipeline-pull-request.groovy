@@ -52,7 +52,6 @@ def run(params) {
                                             options: [
                                                  fastForwardMode: 'NO_FF',
                                                  mergeRemote: 'origin',
-                                                 mergeStrategy: 'MergeCommand.Strategy',
                                                  mergeTarget: 'master'
                                            ]
                                          ]]
