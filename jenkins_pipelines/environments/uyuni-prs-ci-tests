@@ -13,7 +13,6 @@ node('pull-request-test') {
             booleanParam(name: 'must_test', defaultValue: true, description: 'Run tests'),
             booleanParam(name: 'must_remove_build', defaultValue: true, description: 'Remove project built'),
             booleanParam(name: 'skip_secondary_tests', defaultValue: false, description: 'Skip secondary tests'),
-            booleanParam(name: 'publish_in_host', defaultValue: false, description: 'Experimental: Publish in host instead of in the build service'),
             booleanParam(name: 'parallel_build', defaultValue: false, description: 'Experimental: Run build in parallel'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),

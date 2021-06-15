@@ -65,12 +65,8 @@ def run(params) {
                             sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
                             sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number} || true"
                             sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
+                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
                             sh "osc rdelete -rf -m 'removing project before creating it again' ${params.builder_project}:${params.pull_request_number}"
-                            if(params.publish_in_host) {
-                                sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
-                            } else {
-                                sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number}"
-                            }
                             sh "osc linkpac ${params.source_project}:TEST:${env_number}:CR release-notes-uyuni ${params.builder_project}:${params.pull_request_number}"
                             if (params.parallel_build) {
                               sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}:TEST:${env_number}:CR\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e -x"
@@ -79,15 +75,13 @@ def run(params) {
                             }
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
+                            sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r ${params.build_repo} -a x86_64 -d \"${jenkins_workspace}\""
                             // fail if packages are not building correctly
                             sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
                             // fail if packages are unresolvable
                             sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
-                            if(params.publish_in_host) {
-                              echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
-                              sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
-                              sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r ${params.build_repo} -a x86_64 -d \"${jenkins_workspace}\""
-                            }
                             built = true
                         }
                     }
@@ -120,13 +114,8 @@ def run(params) {
                     if(params.must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        if(params.publish_in_host) {
-                            env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
-                        } else {
-                            env.PULL_REQUEST_REPO= "http://download.opensuse.org/repositories/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/"
-                        }
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
                         env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/${params.build_repo}"
-
                         // Provision the environment
                         if (terraform_init) {
                             env.TERRAFORM_INIT = '--init'
