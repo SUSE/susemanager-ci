@@ -173,7 +173,7 @@ def run(params) {
             }
             stage('Secondary features') {
                 ws(environment_workspace){
-                    if(params.must_test) {
+                    if(params.must_test && !params.skip_secondary_tests) {
                         def exports = ""
                         if (params.functional_scopes){
                           exports += "export TAGS=${params.functional_scopes}; "
