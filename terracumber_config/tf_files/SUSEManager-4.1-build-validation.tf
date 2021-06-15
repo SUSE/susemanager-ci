@@ -207,7 +207,7 @@ module "base_retail" {
   name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse152o", "sles11sp4", "sles12sp4o", "sles15sp2o" ]
+  images      = [ "opensuse152o", "sles11sp4", "sles12sp4o", "sles15sp2o", "sles12sp5o" ]
 
   // mirror = "minima-mirror-bv.mgr.prv.suse.net"
   // use_mirror_images = true
@@ -279,6 +279,7 @@ module "server" {
   from_email                     = "root@suse.de"
 
   //server_additional_repos
+
 }
 
 module "proxy" {
@@ -490,7 +491,7 @@ module "centos7-client" {
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:58"
+    mac                = "aa:b2:92:42:00:57"
     memory             = 4096
   }
   server_configuration = {
@@ -686,7 +687,7 @@ module "centos7-minion" {
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:68"
+    mac                = "aa:b2:92:42:00:67"
     memory             = 4096
   }
   server_configuration = {
@@ -710,7 +711,7 @@ module "centos8-minion" {
   name               = "min-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:69"
+    mac                = "aa:b2:92:42:00:68"
     memory             = 4096
   }
   server_configuration = {
@@ -734,7 +735,7 @@ module "ubuntu1804-minion" {
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:6b"
+    mac                = "aa:b2:92:42:00:69"
     memory             = 4096
   }
   server_configuration = {
@@ -758,7 +759,7 @@ module "ubuntu2004-minion" {
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:6c"
+    mac                = "aa:b2:92:42:00:6a"
     memory             = 4096
   }
   server_configuration = {
@@ -782,7 +783,7 @@ module "debian9-minion" {
   name               = "min-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:6d"
+    mac                = "aa:b2:92:42:00:6b"
     memory             = 4096
   }
   server_configuration =  { hostname =  "suma-bv-41-pxy.mgr.prv.suse.net" }
@@ -804,7 +805,7 @@ module "debian10-minion" {
   name               = "min-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:6e"
+    mac                = "aa:b2:92:42:00:6c"
     memory             = 4096
   }
   server_configuration =  { hostname =  "suma-bv-41-pxy.mgr.prv.suse.net" }
@@ -949,7 +950,7 @@ module "centos7-sshminion" {
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:78"
+    mac                = "aa:b2:92:42:00:77"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -966,7 +967,7 @@ module "centos8-sshminion" {
   name               = "minssh-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:79"
+    mac                = "aa:b2:92:42:00:78"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -983,7 +984,7 @@ module "ubuntu1804-sshminion" {
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7b"
+    mac                = "aa:b2:92:42:00:79"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1000,7 +1001,7 @@ module "ubuntu2004-sshminion" {
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7c"
+    mac                = "aa:b2:92:42:00:7a"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1017,7 +1018,7 @@ module "debian9-sshminion" {
   name               = "minssh-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7d"
+    mac                = "aa:b2:92:42:00:7b"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1034,7 +1035,7 @@ module "debian10-sshminion" {
   name               = "minssh-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:7e"
+    mac                = "aa:b2:92:42:00:7c"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1115,6 +1116,49 @@ module "sles12sp4-terminal" {
   product_version    = "4.1-released"
   name               = "terminal-sles12sp4"
   image              = "sles12sp4o"
+  provider_settings = {
+    memory             = 1024
+    vcpu               = 1
+  }
+  server_configuration = {
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles12sp5-buildhost" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.1-released"
+  name               = "build-sles12sp5"
+  image              = "sles12sp5o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:82"
+    memory             = 2048
+    vcpu               = 2
+  }
+  server_configuration = {
+    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles12sp5-terminal" {
+  providers = {
+    libvirt = libvirt.coruscant
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.1-released"
+  name               = "terminal-sles12sp5"
+  image              = "sles12sp5o"
   provider_settings = {
     memory             = 1024
     vcpu               = 1
@@ -1209,6 +1253,8 @@ module "controller" {
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
 */
+/* TODO do we need the following ones at all? - ebischoff
+*/
   client_configuration    = module.sles12sp4-client.configuration
   minion_configuration    = module.sles12sp4-minion.configuration
   sshminion_configuration = module.sles12sp4-sshminion.configuration
@@ -1243,10 +1289,12 @@ module "controller" {
 
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp4_buildhost_configuration = module.sles12sp4-buildhost.configuration
+  sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp2_buildhost_configuration = module.sles15sp2-buildhost.configuration
 
   sle11sp3_terminal_configuration = module.sles11sp3-terminal.configuration
   sle12sp4_terminal_configuration = module.sles12sp4-terminal.configuration
+  sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp2_terminal_configuration = module.sles15sp2-terminal.configuration
 }
 

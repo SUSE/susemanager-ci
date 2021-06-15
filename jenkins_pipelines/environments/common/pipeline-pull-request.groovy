@@ -12,14 +12,14 @@ def run(params) {
         terracumber_ref = 'master'
         terraform_init = true
         rake_namespace = 'cucumber'
-        env_number = 6
+        total_envs = 6
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         try {
             stage('Get environment') {
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
                   echo "DEBUG: fqdn_jenkins_node: ${fqdn_jenkins_node}"
                   // Pick a free environment
-                  for (env_number = 1; env_number <= 6; env_number++) {
+                  for (env_number = 1; env_number <= total_envs; env_number++) {
                       env.env_file="/tmp/suma-pr${env_number}.lock"
                       env_status = sh(script: "test -f ${env_file} && echo 'locked' || echo 'free' ", returnStdout: true).trim()
                       if(env_status == 'free'){
@@ -28,16 +28,16 @@ def run(params) {
                           environment_workspace = "${jenkins_workspace}suma-pr${env_number}"
                           break;
                       }
-                      if(env_number == 6){
+                      if(env_number == total_envs){
                           error('Aborting the build. All our environments are busy.')
                       }
                   }
 
             }
-            stage('Build product') {
+            stage('Checkout project') {
                 ws(environment_workspace){
-                    currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
-                    if(params.must_build) {
+                    if(params.must_build || params.must_remove_build) {
+                        sh "rm -rf ${WORKSPACE}/product"
                         dir("product") {
                             //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
                             //      Inside userRemoteConfigs add credentialsId: 'github'
@@ -47,8 +47,26 @@ def run(params) {
                                         extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
                                         userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
                                     ])
+                        }
+                    }
+                }
+            }
+            stage('Build product') {
+                ws(environment_workspace){
+                    currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
+                    if(params.must_build) {
+                        dir("product") {
+                            // fail if packages are not building correctly
+                            sh "osc pr ${params.source_project}:TEST:${env_number}:CR -s 'F' | awk '{print}END{exit NR>1}'"
+                            // fail if packages are unresolvable
+                            sh "osc pr ${params.source_project}:TEST:${env_number}:CR -s 'U' | awk '{print}END{exit NR>1}'"
+                            // force remove, to clean up previous build
+                            sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
+                            sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
+                            sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number} || true"
                             sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
                             sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
+                            sh "osc rdelete -rf -m 'removing project before creating it again' ${params.builder_project}:${params.pull_request_number}"
                             sh "osc linkpac ${params.source_project}:TEST:${env_number}:CR release-notes-uyuni ${params.builder_project}:${params.pull_request_number}"
                             if (params.parallel_build) {
                               sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}:TEST:${env_number}:CR\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e -x"
@@ -57,9 +75,13 @@ def run(params) {
                             }
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
-                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
-                            sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64\""
-                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r openSUSE_Leap_15.2 -a x86_64 -d \"${jenkins_workspace}\""
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
+                            sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r ${params.build_repo} -a x86_64 -d \"${jenkins_workspace}\""
+                            // fail if packages are not building correctly
+                            sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
+                            // fail if packages are unresolvable
+                            sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
                             built = true
                         }
                     }
@@ -92,9 +114,8 @@ def run(params) {
                     if(params.must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/openSUSE_Leap_15.2/x86_64"
-                        env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/openSUSE_Leap_15.2"
-
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
+                        env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/${params.build_repo}"
                         // Provision the environment
                         if (terraform_init) {
                             env.TERRAFORM_INIT = '--init'
@@ -142,7 +163,7 @@ def run(params) {
             }
             stage('Secondary features') {
                 ws(environment_workspace){
-                    if(params.must_test) {
+                    if(params.must_test && !params.skip_secondary_tests) {
                         def exports = ""
                         if (params.functional_scopes){
                           exports += "export TAGS=${params.functional_scopes}; "
@@ -165,46 +186,49 @@ def run(params) {
                         sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
                         sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                     }
+                    sh "rm -rf ${WORKSPACE}/product"
                 }
             }
             stage('Get test results') {
-                ws(environment_workspace){
-                    def error = 0
-                    if (env.env_file) {
-                        sh "rm ${env_file}"
+                if(environment_workspace){
+                    ws(environment_workspace){
+                        def error = 0
+                        if (env.env_file) {
+                            sh "rm ${env_file}"
+                        }
+                        if (deployed) {
+                            try {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing_pr'"
+                            } catch(Exception ex) {
+                                println("ERROR: rake cucumber:finishing_pr failed")
+                                error = 1
+                            }
+                            try {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
+                            } catch(Exception ex) {
+                                println("ERROR: rake utils:generate_test_repor failed")
+                                error = 1
+                            }
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                            publishHTML( target: [
+                                        allowMissing: true,
+                                        alwaysLinkToLastBuild: false,
+                                        keepAll: true,
+                                        reportDir: "${resultdirbuild}/cucumber_report/",
+                                        reportFiles: 'cucumber_report.html',
+                                        reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
+                            )
+                            junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
+                            if (params.email_to != '') {
+                                // Send email
+                                // TODO: We must find a way to obtain the e-mail of the PR author and set it in TF_VAR_MAIL_TO
+                                sh " export TF_VAR_MAIL_TO=${params.email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                            }
+                            // Clean up old results
+                            sh "./clean-old-results -r ${resultdir}"
+                        }
+                        sh "exit ${error}"
                     }
-                    if (deployed) {
-                        try {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing_pr'"
-                        } catch(Exception ex) {
-                            println("ERROR: rake cucumber:finishing_pr failed")
-                            error = 1
-                        }
-                        try {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
-                        } catch(Exception ex) {
-                            println("ERROR: rake utils:generate_test_repor failed")
-                            error = 1
-                        }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                        publishHTML( target: [
-                                    allowMissing: true,
-                                    alwaysLinkToLastBuild: false,
-                                    keepAll: true,
-                                    reportDir: "${resultdirbuild}/cucumber_report/",
-                                    reportFiles: 'cucumber_report.html',
-                                    reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
-                        )
-                        junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
-                        if (params.email_to != '') {
-                            // Send email
-                            // TODO: We must find a way to obtain the e-mail of the PR author and set it in TF_VAR_MAIL_TO
-                            sh " export TF_VAR_MAIL_TO=${params.email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
-                        }
-                        // Clean up old results
-                        sh "./clean-old-results -r ${resultdir}"
-                    }
-                    sh "exit ${error}"
                 }
             }
         }

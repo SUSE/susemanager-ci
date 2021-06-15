@@ -107,7 +107,7 @@ module "server" {
     mac = "aa:b2:93:01:00:51"
   }
   additional_repos = {
-      Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
+      Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.3/"
   }
 
   auto_accept                    = false
@@ -154,7 +154,7 @@ module "proxy" {
 
   //proxy_additional_repos
   additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.2/"
+    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.3/"
   }
 }
 

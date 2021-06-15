@@ -2,7 +2,7 @@
 
 node('pull-request-test') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
+        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '4')),
         parameters([
             string(name: 'pull_request_repo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Pull Request repository'),
             string(name: 'pull_request_number', defaultValue: '', description: 'Uyuni Pull Request Number'),
@@ -12,13 +12,14 @@ node('pull-request-test') {
             booleanParam(name: 'must_build', defaultValue: true, description: 'Build project'),
             booleanParam(name: 'must_test', defaultValue: true, description: 'Run tests'),
             booleanParam(name: 'must_remove_build', defaultValue: true, description: 'Remove project built'),
+            booleanParam(name: 'skip_secondary_tests', defaultValue: false, description: 'Skip secondary tests'),
             booleanParam(name: 'parallel_build', defaultValue: false, description: 'Experimental: Run build in parallel'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Change this by your repo, only if you changed the tests in your PR'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Change this by your branch, only if you changed the tests in your PR'),
             string(name: 'email_to', defaultValue: '', description: 'Receive a report to your e-mail when it finish'),
-            string(name: 'build_repo', defaultValue: 'openSUSE_Leap_15.2', description: 'Repository to build the packages for'),
+            string(name: 'build_repo', defaultValue: 'openSUSE_Leap_15.3', description: 'Repository to build the packages for'),
             extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ',', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_smdba,@scope_spacecmd,@scope_spacewalk_utils,@scope_visualization,@scope_notification_message,@scope_virtual_host_manager,@scope_subscription_matching,@scope_formulas,@scope_sp_migration,@scope_cve_audit,@scope_onboarding,@scope_content_lifecycle_management,@scope_res,@scope_recurring_actions,@scope_maintenance_windows,@scope_cluster_management,@scope_building_container_images,@scope_kubernetes_integration,@scope_openscap,@scope_ubuntu,@scope_action_chains,@scope_salt_ssh,@scope_tomcat,@scope_changing_software_channels,@scope_monitoring,@scope_salt,@scope_cobbler,@scope_sumatoolbox,@scope_virtualization,@scope_hub,@scope_retail,@scope_configuration_channels,@scope_content_staging,@scope_proxy,@scope_traditional_client,@scope_xmlrpc,@scope_power_management,@scope_retracted_patches', description: 'Choose the functional scopes that you want to test')
         ])
     ])

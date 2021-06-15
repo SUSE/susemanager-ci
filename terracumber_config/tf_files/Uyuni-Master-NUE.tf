@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp1o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -129,6 +129,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d4"
       }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP1/"
+      }
     }
     suse-minion = {
       image = "sles15sp1o"
@@ -136,12 +139,18 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
       }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP1/"
+      }
     }
     suse-sshminion = {
       image = "sles15sp1o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
+      }
+      additional_repos = {
+          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP1/"
       }
     }
     redhat-minion = {
@@ -162,22 +171,22 @@ module "cucumber_testsuite" {
       }
     }
     build-host = {
-      image = "sles15sp2o"
+      image = "sles15sp3o"
       provider_settings = {
         mac = "aa:b2:93:01:00:dd"
       }
     }
     pxeboot-minion = {
-      image = "sles15sp2o"
+      image = "sles15sp3o"
     }
     kvm-host = {
-      image = "opensuse152o"
+      image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
       }
     }
     xen-host = {
-      image = "opensuse152o"
+      image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:93:01:00:df"
       }

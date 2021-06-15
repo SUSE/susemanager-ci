@@ -66,7 +66,7 @@ def run(params) {
             stage('Create bootstrap repositories') {
                 if(params.must_create_bootstrap_repos) {
                     echo 'Create bootstrap repositories'
-                    res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repositories'", returnStatus: true)
+                    res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repositories'", returnStatus: true)
                     echo "Create bootstrap repositories code: ${res_create_bootstrap_repos}"
                 }
             }

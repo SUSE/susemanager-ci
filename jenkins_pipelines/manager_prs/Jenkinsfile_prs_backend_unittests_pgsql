@@ -67,7 +67,7 @@ pipeline {
                 }
                 sh "set +e; ${commands}; TESTS_RESULT=\$?; set -e;"
                 echo 'Collecting JUnit Test reports'
-                junit allowEmptyResults: true, testResults: "**/backend/reports/pgsql_tests.xml"
+                junit allowEmptyResults: true, testResults: "**/backend/reports/*_tests.xml"
                 sh "exit \$TESTS_RESULT"
             }
         }

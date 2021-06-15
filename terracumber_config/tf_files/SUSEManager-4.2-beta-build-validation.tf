@@ -108,8 +108,8 @@ module "base_core" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp3o", "opensuse152o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -132,10 +132,10 @@ module "base_old_sle" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o"/*, "sles12sp5o"*/ ]
+  images      = [ "sles11sp4", "sles12sp4o", "sles12sp5o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -159,8 +159,8 @@ module "base_res" {
   domain      = "mgr.prv.suse.net"
   images      = [ "centos7o", "centos8o" ]
 
-  // mirror = "minima-mirror-bv2.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv2.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -184,8 +184,8 @@ module "base_new_sle" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -209,8 +209,8 @@ module "base_retail" {
   domain      = "mgr.prv.suse.net"
   images      = [ "opensuse152o", "sles11sp4", "sles12sp4o", "sles15sp2o", "sles15sp3o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -235,8 +235,8 @@ module "base_debian" {
   domain      = "mgr.prv.suse.net"
   images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -360,7 +360,7 @@ module "sles12sp4-client" {
   //sle12sp4-client_additional_repos
 
 }
-/*
+
 module "sles12sp5-client" {
   providers = {
     libvirt = libvirt.tatooine
@@ -384,7 +384,7 @@ module "sles12sp5-client" {
   //sle12sp5-client_additional_repos
 
 }
-*/
+
 module "sles15-client" {
   providers = {
     libvirt = libvirt.florina
@@ -405,9 +405,7 @@ module "sles15-client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
-  }
+  //sle15-client_additional_repos
 
 }
 
@@ -431,9 +429,7 @@ module "sles15sp1-client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
-  }
+  //sle15sp1-client_additional_repos
 
 }
 
@@ -495,7 +491,7 @@ module "centos7-client" {
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:98"
+    mac                = "aa:b2:92:42:00:97"
     memory             = 4096
   }
   server_configuration = {
@@ -556,7 +552,7 @@ module "sles12sp4-minion" {
   //sle12sp4-minion_additional_repos
 
 }
-/*
+
 module "sles12sp5-minion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -580,7 +576,7 @@ module "sles12sp5-minion" {
   //sle12sp5-minion_additional_repos
 
 }
-*/
+
 module "sles15-minion" {
   providers = {
     libvirt = libvirt.florina
@@ -602,9 +598,7 @@ module "sles15-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
-  }
+  //sle15-minion_additional_repos
 
 }
 
@@ -629,9 +623,7 @@ module "sles15sp1-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
-  }
+  //sle15sp1-minion_additional_repos
 
 }
 
@@ -695,7 +687,7 @@ module "centos7-minion" {
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a8"
+    mac                = "aa:b2:92:42:00:a7"
     memory             = 4096
   }
   server_configuration = {
@@ -708,7 +700,7 @@ module "centos7-minion" {
   //ceos7-minion_additional_repos
 
 }
-/*
+
 module "centos8-minion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -719,7 +711,7 @@ module "centos8-minion" {
   name               = "min-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a9"
+    mac                = "aa:b2:92:42:00:a8"
     memory             = 4096
   }
   server_configuration = {
@@ -732,7 +724,6 @@ module "centos8-minion" {
   //ceos8-minion_additional_repos
 
 }
-*/
 
 module "ubuntu1804-minion" {
   providers = {
@@ -744,7 +735,7 @@ module "ubuntu1804-minion" {
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ab"
+    mac                = "aa:b2:92:42:00:a9"
     memory             = 4096
   }
   server_configuration = {
@@ -768,7 +759,7 @@ module "ubuntu2004-minion" {
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ac"
+    mac                = "aa:b2:92:42:00:aa"
     memory             = 4096
   }
   server_configuration = {
@@ -792,7 +783,7 @@ module "debian9-minion" {
   name               = "min-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ad"
+    mac                = "aa:b2:92:42:00:ab"
     memory             = 4096
   }
 
@@ -817,7 +808,7 @@ module "debian10-minion" {
   name               = "min-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ae"
+    mac                = "aa:b2:92:42:00:ac"
     memory             = 4096
   }
 
@@ -867,7 +858,7 @@ module "sles12sp4-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
-/*
+
 module "sles12sp5-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -886,7 +877,6 @@ module "sles12sp5-sshminion" {
   ssh_key_path = "./salt/controller/id_rsa.pub"
   gpg_keys     = ["default/gpg_keys/galaxy.key"]
 }
-*/
 
 module "sles15-sshminion" {
   providers = {
@@ -904,9 +894,6 @@ module "sles15-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-LTSS/x86_64/update/"
-  }
 }
 
 module "sles15sp1-sshminion" {
@@ -925,9 +912,6 @@ module "sles15sp1-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_repos = {
-    ltss_repo = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1-LTSS/x86_64/update/"
-  }
 }
 
 module "sles15sp2-sshminion" {
@@ -974,13 +958,13 @@ module "centos7-sshminion" {
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b8"
+    mac                = "aa:b2:92:42:00:b7"
     memory             = 4096
   }
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-/*
+
 module "centos8-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -991,13 +975,12 @@ module "centos8-sshminion" {
   name               = "minssh-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b9"
+    mac                = "aa:b2:92:42:00:b8"
     memory             = 4096
   }
   use_os_released_updates = false
   ssh_key_path = "./salt/controller/id_rsa.pub"
 }
-*/
 
 module "ubuntu1804-sshminion" {
   providers = {
@@ -1009,7 +992,7 @@ module "ubuntu1804-sshminion" {
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bb"
+    mac                = "aa:b2:92:42:00:b9"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1026,7 +1009,7 @@ module "ubuntu2004-sshminion" {
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bc"
+    mac                = "aa:b2:92:42:00:ba"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1043,7 +1026,7 @@ module "debian9-sshminion" {
   name               = "minssh-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bd"
+    mac                = "aa:b2:92:42:00:bb"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1060,7 +1043,7 @@ module "debian10-sshminion" {
   name               = "minssh-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:be"
+    mac                = "aa:b2:92:42:00:bc"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1219,10 +1202,10 @@ module "controller" {
   centos7_client_configuration    = module.centos7-client.configuration
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
-/*
+
   centos8_minion_configuration    = module.centos8-minion.configuration
   centos8_sshminion_configuration = module.centos8-sshminion.configuration
-*/
+
   sle11sp4_client_configuration    = module.sles11sp4-client.configuration
   sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
   sle11sp4_sshminion_configuration = module.sles11sp4-sshminion.configuration
@@ -1230,10 +1213,12 @@ module "controller" {
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
   sle12sp4_sshminion_configuration = module.sles12sp4-sshminion.configuration
-/*
+
   sle12sp5_client_configuration    = module.sles12sp5-client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+
+/* TODO do we need the following ones at all? - ebischoff
 */
   client_configuration    = module.sles12sp4-client.configuration
   minion_configuration    = module.sles12sp4-minion.configuration
