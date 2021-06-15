@@ -56,6 +56,10 @@ def run(params) {
                     currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
                     if(params.must_build) {
                         dir("product") {
+                            // fail if packages are not building correctly
+                            sh "osc pr ${params.source_project}:TEST:${env_number}:CR -s 'F' | awk '{print}END{exit NR>1}'"
+                            // fail if packages are unresolvable
+                            sh "osc pr ${params.source_project}:TEST:${env_number}:CR -s 'U' | awk '{print}END{exit NR>1}'"
                             // force remove, to clean up previous build
                             sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
                             sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
@@ -74,6 +78,10 @@ def run(params) {
                             }
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
+                            // fail if packages are not building correctly
+                            sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
+                            // fail if packages are unresolvable
+                            sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
                             if(params.publish_in_host) {
                               echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
                               sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
