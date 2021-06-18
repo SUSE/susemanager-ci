@@ -39,14 +39,27 @@ def run(params) {
                     if(params.must_build || params.must_remove_build) {
                         sh "rm -rf ${WORKSPACE}/product"
                         dir("product") {
+                            // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
+                            env.GIT_COMMITTER_NAME = "jenkins"
+                            env.GIT_AUTHOR_NAME = "jenkins"
+                            env.GIT_EMAIL = "jenkins@a.b"
                             //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
                             //      Inside userRemoteConfigs add credentialsId: 'github'
                             checkout([  
                                         $class: 'GitSCM', 
                                         branches: [[name: "pr/${params.pull_request_number}"]], 
                                         extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
-                                        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
-                                    ])
+                                        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]],
+                                        extensions: [
+                                        [
+                                            $class: 'PreBuildMerge',
+                                            options: [
+                                                 fastForwardMode: 'NO_FF',
+                                                 mergeRemote: 'origin',
+                                                 mergeTarget: 'master'
+                                           ]
+                                         ]]
+                                       ])
                         }
                     }
                 }
