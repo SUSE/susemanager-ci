@@ -16,11 +16,16 @@ def run(params) {
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         try {
             stage('Get environment') {
+                  env.suma-pr-lockfile = "/tmp/suma-pr${params.pull_request_number}"
+                  running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma-pr-lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
+                  if(running_same_pr == "yes") {
+                      error('Aborting the build. Already running a test for Pull Request ${params.pull_request_number}')
+                  }
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
                   echo "DEBUG: fqdn_jenkins_node: ${fqdn_jenkins_node}"
                   // Pick a free environment
                   for (env_number = 1; env_number <= total_envs; env_number++) {
-                      env.env_file="/tmp/suma-pr${env_number}.lock"
+                      env.env_file="/tmp/env-suma-pr-${env_number}.lock"
                       env_status = sh(script: "lockfile -001 -r1 -! ${env_file} && echo 'locked' || echo 'free' ", returnStdout: true).trim()
                       if(env_status == 'free'){
                           echo "Using environment suma-pr${env_number}"
@@ -202,6 +207,9 @@ def run(params) {
                 }
             }
             stage('Get test results') {
+                if(running_same_pr == "no"){
+                      sh(script: "rm -f ${env.suma-pr-lockfile}")
+                }
                 if(environment_workspace){
                     ws(environment_workspace){
                         def error = 0
