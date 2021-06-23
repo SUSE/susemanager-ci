@@ -26,7 +26,7 @@ def run(params) {
                   // Pick a free environment
                   for (env_number = 1; env_number <= total_envs; env_number++) {
                       env.env_file="/tmp/env-suma-pr-${env_number}.lock"
-                      env_status = sh(script: "lockfile -001 -r1 -! ${env_file} && echo 'locked' || echo 'free' ", returnStdout: true).trim()
+                      env_status = sh(script: "lockfile -001 -r1 -! ${env_file} 2>/dev/null && echo 'locked' || echo 'free' ", returnStdout: true).trim()
                       if(env_status == 'free'){
                           echo "Using environment suma-pr${env_number}"
                           environment_workspace = "${jenkins_workspace}suma-pr${env_number}"
