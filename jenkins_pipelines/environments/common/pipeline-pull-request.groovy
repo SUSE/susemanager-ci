@@ -16,8 +16,8 @@ def run(params) {
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         try {
             stage('Get environment') {
-                  env.suma-pr-lockfile = "/tmp/suma-pr${params.pull_request_number}"
-                  running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma-pr-lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
+                  env.suma_pr_lockfile = "/tmp/suma-pr${params.pull_request_number}"
+                  running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
                   if(running_same_pr == "yes") {
                       error('Aborting the build. Already running a test for Pull Request ${params.pull_request_number}')
                   }
@@ -208,7 +208,7 @@ def run(params) {
             }
             stage('Get test results') {
                 if(running_same_pr == "no"){
-                      sh(script: "rm -f ${env.suma-pr-lockfile}")
+                      sh(script: "rm -f ${env.suma_pr_lockfile}")
                 }
                 if(environment_workspace){
                     ws(environment_workspace){
