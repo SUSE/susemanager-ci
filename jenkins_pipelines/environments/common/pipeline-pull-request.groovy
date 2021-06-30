@@ -12,6 +12,7 @@ def run(params) {
         terracumber_ref = 'master'
         terraform_init = true
         rake_namespace = 'cucumber'
+        rake_parallel_namespace = 'parallel'
         total_envs = 6
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         try {
@@ -181,7 +182,12 @@ def run(params) {
                         if (long_tests){
                           exports += "export LONG_TESTS=${long_tests}; "
                         }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:init_clients'"
+                        if (!params.parallel_client_tests) {
+                          namespace = rake_namespace
+                        } else {
+                          namespace = rake_parallel_namespace
+                        }
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
                     }
                 }
             }
