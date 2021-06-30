@@ -46,7 +46,8 @@ def run(params) {
                             // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
                             env.GIT_COMMITTER_NAME = "jenkins"
                             env.GIT_AUTHOR_NAME = "jenkins"
-                            env.GIT_EMAIL = "jenkins@a.b"
+                            env.GIT_AUTHOR_EMAIL = "jenkins@a.b"
+                            env.GIT_COMMITTER_EMAIL = "jenkins@a.b"
                             //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
                             //      Inside userRemoteConfigs add credentialsId: 'github'
                             checkout([  
