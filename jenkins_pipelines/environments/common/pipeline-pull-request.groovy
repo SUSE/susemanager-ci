@@ -21,6 +21,10 @@ def run(params) {
                   if(running_same_pr == "yes") {
                       error('Aborting the build. Already running a test for Pull Request ${params.pull_request_number}')
                   }
+                  if(params.pull_request_number == '') {
+                      error('Aborting the build. Pull Request number can't be empty')
+                  }
+
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
                   echo "DEBUG: fqdn_jenkins_node: ${fqdn_jenkins_node}"
                   // Pick a free environment
