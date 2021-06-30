@@ -22,7 +22,7 @@ def run(params) {
                       error('Aborting the build. Already running a test for Pull Request ${params.pull_request_number}')
                   }
                   if(params.pull_request_number == '') {
-                      error('Aborting the build. Pull Request number can't be empty')
+                      error('Aborting the build. Pull Request number can\'t be empty')
                   }
 
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
