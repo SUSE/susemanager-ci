@@ -168,7 +168,7 @@ def run(params) {
                     if(params.must_test) {
                         def export = "";
                         if(params.shorten_scc_sync) {
-                          exports+ = "export TEST_REPOSYNC_TIMEOUT=600;"
+                          exports+ = "export TYPE_ENVIRONMENT=PULL_REQUEST_TESTING;"
                         }
                         if (long_tests){
                           exports += "export LONG_TESTS=${long_tests}; "
