@@ -12,19 +12,28 @@ def run(params) {
         terracumber_ref = 'master'
         terraform_init = true
         rake_namespace = 'cucumber'
+        rake_parallel_namespace = 'parallel'
         total_envs = 6
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         try {
             stage('Get environment') {
+                  env.suma_pr_lockfile = "/tmp/suma-pr${params.pull_request_number}"
+                  running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
+                  if(running_same_pr == "yes") {
+                      error('Aborting the build. Already running a test for Pull Request ${params.pull_request_number}')
+                  }
+                  if(params.pull_request_number == '') {
+                      error('Aborting the build. Pull Request number can\'t be empty')
+                  }
+
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
                   echo "DEBUG: fqdn_jenkins_node: ${fqdn_jenkins_node}"
                   // Pick a free environment
                   for (env_number = 1; env_number <= total_envs; env_number++) {
-                      env.env_file="/tmp/suma-pr${env_number}.lock"
-                      env_status = sh(script: "test -f ${env_file} && echo 'locked' || echo 'free' ", returnStdout: true).trim()
+                      env.env_file="/tmp/env-suma-pr-${env_number}.lock"
+                      env_status = sh(script: "lockfile -001 -r1 -! ${env_file} 2>/dev/null && echo 'locked' || echo 'free' ", returnStdout: true).trim()
                       if(env_status == 'free'){
                           echo "Using environment suma-pr${env_number}"
-                          sh "touch ${env_file}"
                           environment_workspace = "${jenkins_workspace}suma-pr${env_number}"
                           break;
                       }
@@ -39,14 +48,30 @@ def run(params) {
                     if(params.must_build || params.must_remove_build) {
                         sh "rm -rf ${WORKSPACE}/product"
                         dir("product") {
+                            // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
+                            env.GIT_COMMITTER_NAME = "jenkins"
+                            env.GIT_AUTHOR_NAME = "jenkins"
+                            env.GIT_AUTHOR_EMAIL = "jenkins@a.b"
+                            env.GIT_COMMITTER_EMAIL = "jenkins@a.b"
+                            sh "git config --global user.email 'galaxy-noise@suse.de'"
+                            sh "git config --global user.name 'jenkins'"
                             //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
                             //      Inside userRemoteConfigs add credentialsId: 'github'
                             checkout([  
                                         $class: 'GitSCM', 
                                         branches: [[name: "pr/${params.pull_request_number}"]], 
                                         extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
-                                        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]]
-                                    ])
+                                        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.pull_request_repo}"]],
+                                        extensions: [
+                                        [
+                                            $class: 'PreBuildMerge',
+                                            options: [
+                                                 fastForwardMode: 'NO_FF',
+                                                 mergeRemote: 'origin',
+                                                 mergeTarget: 'master'
+                                           ]
+                                         ]]
+                                       ])
                         }
                     }
                 }
@@ -56,12 +81,17 @@ def run(params) {
                     currentBuild.description =  "${params.builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
                     if(params.must_build) {
                         dir("product") {
+                            // fail if packages are not building correctly
+                            sh "osc pr ${params.source_project}:TEST:${env_number}:CR -s 'F' | awk '{print}END{exit NR>1}'"
+                            // fail if packages are unresolvable
+                            sh "osc pr ${params.source_project}:TEST:${env_number}:CR -s 'U' | awk '{print}END{exit NR>1}'"
+                            // force remove, to clean up previous build
+                            sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
+                            sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
+                            sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number} || true"
                             sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
-                            if(params.publish_in_host) {
-                                sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
-                            } else {
-                                sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number}"
-                            }
+                            sh "osc rdelete -rf -m 'removing project before creating it again' ${params.builder_project}:${params.pull_request_number} || true"
+                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
                             sh "osc linkpac ${params.source_project}:TEST:${env_number}:CR release-notes-uyuni ${params.builder_project}:${params.pull_request_number}"
                             if (params.parallel_build) {
                               sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}:TEST:${env_number}:CR\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e -x"
@@ -70,11 +100,13 @@ def run(params) {
                             }
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
-                            if(params.publish_in_host) {
-                              echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
-                              sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
-                              sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r ${params.build_repo} -a x86_64 -d \"${jenkins_workspace}\""
-                            }
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
+                            sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r ${params.build_repo} -a x86_64 -d \"${jenkins_workspace}\""
+                            // fail if packages are not building correctly
+                            sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
+                            // fail if packages are unresolvable
+                            sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
                             built = true
                         }
                     }
@@ -107,13 +139,8 @@ def run(params) {
                     if(params.must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        if(params.publish_in_host) {
-                            env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
-                        } else {
-                            env.PULL_REQUEST_REPO= "http://download.opensuse.org/repositories/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/"
-                        }
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
                         env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/${params.build_repo}"
-
                         // Provision the environment
                         if (terraform_init) {
                             env.TERRAFORM_INIT = '--init'
@@ -155,13 +182,18 @@ def run(params) {
                         if (long_tests){
                           exports += "export LONG_TESTS=${long_tests}; "
                         }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:init_clients'"
+                        if (!params.parallel_client_tests) {
+                          namespace = rake_namespace
+                        } else {
+                          namespace = rake_parallel_namespace
+                        }
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
                     }
                 }
             }
             stage('Secondary features') {
                 ws(environment_workspace){
-                    if(params.must_test) {
+                    if(params.must_test && !params.skip_secondary_tests) {
                         def exports = ""
                         if (params.functional_scopes){
                           exports += "export TAGS=${params.functional_scopes}; "
@@ -188,11 +220,14 @@ def run(params) {
                 }
             }
             stage('Get test results') {
+                if(running_same_pr == "no"){
+                      sh(script: "rm -f ${env.suma_pr_lockfile}")
+                }
                 if(environment_workspace){
                     ws(environment_workspace){
                         def error = 0
                         if (env.env_file) {
-                            sh "rm ${env_file}"
+                            sh "rm -f ${env_file}"
                         }
                         if (deployed) {
                             try {

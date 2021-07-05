@@ -147,9 +147,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:33"
       }
-      additional_repos = {
-          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP2/"
-      }
     }
     suse-minion = {
       image = "sles15sp2o"
@@ -157,18 +154,12 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:34"
       }
-      additional_repos = {
-          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP2/"
-      }
     }
     suse-sshminion = {
       image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:35"
-      }
-      additional_repos = {
-          salt3002_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products/SLE_15_SP2/"
       }
     }
     redhat-minion = {
