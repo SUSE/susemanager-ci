@@ -166,7 +166,7 @@ def run(params) {
             stage('Core - Setup') {
                 ws(environment_workspace){
                     if(params.must_test) {
-                        def export = "";
+                        def exports = "";
                         if(params.shorten_scc_sync) {
                           exports += "export TYPE_ENVIRONMENT=PULL_REQUEST_TESTING;"
                         }
