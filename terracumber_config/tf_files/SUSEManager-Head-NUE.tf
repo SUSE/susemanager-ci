@@ -105,6 +105,8 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
+  mirror = "minima-mirror.mgr.suse.de"
+  use_mirror_images = true
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
   host_settings = {
