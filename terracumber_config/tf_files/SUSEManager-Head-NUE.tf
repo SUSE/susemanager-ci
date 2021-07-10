@@ -109,9 +109,6 @@ module "cucumber_testsuite" {
   use_mirror_images = true
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
-  hvm_disk_image = "http://minima-mirror.mgr.suse.de/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/opensuse151.x86_64.qcow2"
-  hvm_disk_image_hash = "http://minima-mirror.mgr.suse.de/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/opensuse151.x86_64.qcow2.sha256"
- 
   host_settings = {
     controller = {
       provider_settings = {
