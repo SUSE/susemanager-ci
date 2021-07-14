@@ -105,8 +105,6 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  mirror = "minima-mirror.mgr.suse.de"
-  use_mirror_images = true
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
   host_settings = {
@@ -175,16 +173,12 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "sles15sp3o"
-      hvm_disk_image = "http://minima-mirror.mgr.suse.de/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/opensuse151.x86_64.qcow2"
-      hvm_disk_image_hash = "http://minima-mirror.mgr.suse.de/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/opensuse151.x86_64.qcow2.sha256"
       provider_settings = {
-         mac = "aa:b2:93:01:00:be"
+        mac = "aa:b2:93:01:00:be"
       }
     }
     xen-host = {
       image = "sles15sp3o"
-      hvm_disk_image = "http://minima-mirror.mgr.suse.de/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/opensuse151.x86_64.qcow2"
-      hvm_disk_image_hash = "http://minima-mirror.mgr.suse.de/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/opensuse151.x86_64.qcow2.sha256"
       provider_settings = {
         mac = "aa:b2:93:01:00:bf"
       }
