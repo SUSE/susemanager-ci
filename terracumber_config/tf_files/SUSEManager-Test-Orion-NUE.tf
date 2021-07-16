@@ -125,21 +125,21 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:74"
       }
     }
     suse-minion = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:76"
       }
     }
     suse-sshminion = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:78"
@@ -160,7 +160,7 @@ module "cucumber_testsuite" {
       }
     }
     build-host = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       provider_settings = {
         mac = "aa:b2:93:01:00:7d"
       }
