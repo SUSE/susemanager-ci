@@ -1179,6 +1179,54 @@ module "sles15sp2-terminal" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "min-xen" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/virthost"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.2-released"
+  name               = "min-xen"
+  image              = "sles15sp1o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c5"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp1-minion_additional_repos
+
+}
+
+module "min-kvm" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/virthost"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.2-released"
+  name               = "min-xen"
+  image              = "sles15sp1o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c4"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+  }
+  auto_register           = false
+  use_os_released_updates = true
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp1-minion_additional_repos
+
+}
+
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
@@ -1259,6 +1307,9 @@ module "controller" {
   sle11sp3_terminal_configuration = module.sles11sp3-terminal.configuration
   sle12sp4_terminal_configuration = module.sles12sp4-terminal.configuration
   sle15sp2_terminal_configuration = module.sles15sp2-terminal.configuration
+
+  min_xen_configuration = module.min-xen.configuration
+  min_kvm_configuration = module.min-kvm.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {
