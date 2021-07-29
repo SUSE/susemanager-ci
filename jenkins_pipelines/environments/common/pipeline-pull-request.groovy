@@ -213,13 +213,15 @@ def run(params) {
         }
         finally {
             stage('Remove build project') {
-                ws(environment_workspace){
-                    if (params.must_remove_build) {
-                        sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
-                        sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
-                        sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
-                    }
-                    sh "rm -rf ${WORKSPACE}/product"
+                if(environment_workspace){
+                  ws(environment_workspace){
+                      if (params.must_remove_build) {
+                          sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
+                          sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
+                          sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
+                      }
+                      sh "rm -rf ${WORKSPACE}/product"
+                  }
                 }
             }
             stage('Get test results') {
