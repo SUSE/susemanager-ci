@@ -185,11 +185,7 @@ def run(params) {
                         if (long_tests){
                           exports += "export LONG_TESTS=${long_tests}; "
                         }
-                        if (!params.parallel_client_tests) {
-                          namespace = rake_namespace
-                        } else {
-                          namespace = rake_parallel_namespace
-                        }
+                        namespace = rake_namespace
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
                     }
                 }
