@@ -14,7 +14,6 @@ node('pull-request-test') {
             booleanParam(name: 'must_remove_build', defaultValue: true, description: 'Remove project built'),
             booleanParam(name: 'skip_secondary_tests', defaultValue: false, description: 'Skip secondary tests'),
             booleanParam(name: 'parallel_build', defaultValue: false, description: 'Experimental: Run build in parallel'),
-            booleanParam(name: 'shorten_scc_sync', defaultValue: false, description: 'Experimental: Shorten SCC sync'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Change this by your repo, only if you changed the tests in your PR'),
