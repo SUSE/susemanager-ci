@@ -93,11 +93,7 @@ def run(params) {
                             sh "osc rdelete -rf -m 'removing project before creating it again' ${params.builder_project}:${params.pull_request_number} || true"
                             sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
                             sh "osc linkpac ${params.source_project}:TEST:${env_number}:CR release-notes-uyuni ${params.builder_project}:${params.pull_request_number}"
-                            if (params.parallel_build) {
-                              sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}:TEST:${env_number}:CR\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e -x"
-                            } else {
-                              sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}:TEST:${env_number}:CR\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e"
-                            }
+                            sh "bash susemanager-utils/testing/automation/push-to-obs.sh -v -t -d \"${params.builder_api}|${params.source_project}:TEST:${env_number}:CR\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e -x"
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
                             echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
@@ -167,9 +163,6 @@ def run(params) {
                 ws(environment_workspace){
                     if(params.must_test) {
                         def exports = "";
-                        if(params.shorten_scc_sync) {
-                          exports += "export TYPE_ENVIRONMENT=PULL_REQUEST_TESTING;"
-                        }
                         if (long_tests){
                           exports += "export LONG_TESTS=${long_tests}; "
                         }
@@ -185,11 +178,7 @@ def run(params) {
                         if (long_tests){
                           exports += "export LONG_TESTS=${long_tests}; "
                         }
-                        if (!params.parallel_client_tests) {
-                          namespace = rake_namespace
-                        } else {
-                          namespace = rake_parallel_namespace
-                        }
+                        namespace = rake_namespace
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
                     }
                 }
