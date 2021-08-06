@@ -1185,7 +1185,7 @@ module "controller" {
   name               = "ctl"
   provider_settings = {
     mac                = "aa:b2:92:42:00:88"
-    memory             = 4096
+    memory             = 16384
     vcpu               = 8
   }
   swap_file_size = null
