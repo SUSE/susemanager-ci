@@ -182,21 +182,6 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:6d"
       }
     }
-    pxeboot-minion = {
-      image = "sles15sp3o"
-  }
-    kvm-host = {
-      image = "sles15sp3o"
-  provider_settings = {
-        mac = "aa:b2:93:01:00:6e"
-      }
-    }
-    xen-host = {
-      image = "sles15sp3o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:6f"
-      }
-    }
   }
   provider_settings = {
     pool               = "ssd"
