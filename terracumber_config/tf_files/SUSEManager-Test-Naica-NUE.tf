@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1804o"]
+  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -130,14 +130,14 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:64"
       }
     }
     suse-minion = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:66"
@@ -148,7 +148,7 @@ module "cucumber_testsuite" {
       additional_packages = [ "less", "aaa_base-extras", "ansible" ]
     }
     suse-sshminion = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:68"
@@ -158,19 +158,19 @@ module "cucumber_testsuite" {
       }
       additional_packages = [ "ansible" ]
     }
-/*
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:69"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Still researching, but it will do it for now
+        // Also, openscap cannot run with less than 1.25 GB of RAM
         memory = 2048
         vcpu = 2
       }
     }
-*/
     debian-minion = {
+      name = "min-ubuntu2004"
+      image = "ubuntu2004o"
       provider_settings = {
         mac = "aa:b2:93:01:00:6b"
       }
