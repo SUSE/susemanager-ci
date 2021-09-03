@@ -15,6 +15,7 @@ def run(params) {
         rake_parallel_namespace = 'parallel'
         total_envs = 6
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
+        environment_workspace = null
         try {
             stage('Get environment') {
                   env.suma_pr_lockfile = "/tmp/suma-pr${params.pull_request_number}"
