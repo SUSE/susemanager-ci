@@ -202,6 +202,18 @@ def run(params) {
             }
         }
         finally {
+            stage('Clean up lockfiles') {
+                if(running_same_pr == "no"){
+                      sh(script: "rm -f ${env.suma_pr_lockfile}")
+                }
+                if(environment_workspace){
+                    ws(environment_workspace){
+                        if (env.env_file) {
+                            sh "rm -f ${env_file}"
+                        }
+                    }
+                }
+            }
             stage('Remove build project') {
                 if(environment_workspace){
                   ws(environment_workspace){
@@ -215,15 +227,9 @@ def run(params) {
                 }
             }
             stage('Get test results') {
-                if(running_same_pr == "no"){
-                      sh(script: "rm -f ${env.suma_pr_lockfile}")
-                }
                 if(environment_workspace){
                     ws(environment_workspace){
                         def error = 0
-                        if (env.env_file) {
-                            sh "rm -f ${env_file}"
-                        }
                         if (deployed) {
                             try {
                                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing_pr'"
