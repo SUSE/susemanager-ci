@@ -147,6 +147,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:33"
       }
+      additional_repos = {
+        client_repo = var.SLE_CLIENT_REPO,
+      }
     }
     suse-minion = {
       image = "sles15sp2o"
@@ -154,12 +157,18 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:34"
       }
+      additional_repos = {
+        client_repo = var.SLE_CLIENT_REPO,
+      }
     }
     suse-sshminion = {
       image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:35"
+      }
+      additional_repos = {
+        client_repo = var.SLE_CLIENT_REPO,
       }
     }
     redhat-minion = {
@@ -169,6 +178,9 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
+      additional_repos = {
+        client_repo = var.CENTOS_CLIENT_REPO,
+      }
     }
     debian-minion = {
       name = "min-ubuntu2004"
@@ -176,11 +188,17 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:38"
       }
+      additional_repos = {
+        client_repo = var.UBUNTU_CLIENT_REPO,
+      }
     }
     build-host = {
       image = "sles15sp3o"
       provider_settings = {
         mac = "aa:b2:92:04:00:39"
+      }
+      additional_repos = {
+        client_repo = var.SLE_CLIENT_REPO,
       }
     }
     pxeboot-minion = {
@@ -191,11 +209,17 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:3a"
       }
+      additional_repos = {
+        client_repo = var.OPENSUSE_CLIENT_REPO,
+      }
     }
     xen-host = {
       image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:92:04:00:3b"
+      }
+      additional_repos = {
+        client_repo = var.OPENSUSE_CLIENT_REPO,
       }
     }
   }

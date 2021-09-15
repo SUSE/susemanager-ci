@@ -138,13 +138,17 @@ def run(params) {
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
                         env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
                         env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/${params.build_repo}"
+                        env.SLE_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:SLE15-Uyuni-Client-Tools/SLE_15"
+                        env.CENTOS_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:CentOS7-Uyuni-Client-Tools/CentOS_7"
+                        env.UBUNTU_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_16.04/"
+                        env.OPENSUSE_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0"
                         // Provision the environment
                         if (terraform_init) {
                             env.TERRAFORM_INIT = '--init'
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_CENTOS_CLIENT_REPO=${CENTOS_CLIENT_REPO};export TF_VAR_UBUNTU_CLIENT_REPO=${UBUNTU_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
                     }
                 }
