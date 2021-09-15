@@ -279,6 +279,9 @@ module "server" {
   from_email                     = "root@suse.de"
 
   //server_additional_repos
+  additional_repos = {
+    java_TEST = "http://download.suse.de/ibs/home:/fstrba:/branches:/SUSE:/SLE-15:/Update/SUSE_SLE-15_Update/"
+  }
 
 }
 

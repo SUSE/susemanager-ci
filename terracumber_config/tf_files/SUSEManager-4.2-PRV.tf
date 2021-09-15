@@ -119,6 +119,9 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:92:03:00:c1"
+        additional_repos = {
+            java_TEST = "http://download.suse.de/ibs/home:/fstrba:/branches:/SUSE:/SLE-15:/Update/SUSE_SLE-15_Update/"
+        }
       }
     }
     proxy = {
