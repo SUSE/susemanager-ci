@@ -22,14 +22,18 @@ def run(params) {
         print "Previous product commit: ${previous_commit}"
         // Start pipeline
         deployed = false
-        env.resultdir = "${WORKSPACE}/results"
-        env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-        // The junit plugin doesn't affect full paths
-        junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
                 ws(environment_workspace){
+
+                    // Init path env variables
+                    env.resultdir = "${WORKSPACE}/results"
+                    env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+                    
+                    // The junit plugin doesn't affect full paths
+                    junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
+                    env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
+
                     // Rename build using product commit hash
                     currentBuild.description =  "[${product_commit}]"
                     
