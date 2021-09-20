@@ -1,8 +1,13 @@
 def run(params) {
     timestamps {
-        def job_name = env.JOB_BASE_NAME.split('@')[0]
-        environment_workspace = "workspace/${job_name}"
-        
+        // Init path env variables
+        env.resultdir = "${WORKSPACE}/results"
+        env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+            
+        // The junit plugin doesn't affect full paths
+        junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
+
         // Retrieve the hash commit of the last product built in OBS/IBS and previous job
         def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
         if (prefix == "uyuni-master-dev") {
@@ -26,126 +31,101 @@ def run(params) {
         deployed = false
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
-                ws(environment_workspace){
-
-                    // Init path env variables
-                    env.resultdir = "${WORKSPACE}/results"
-                    env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-                    
-                    // The junit plugin doesn't affect full paths
-                    junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-                    env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
-
-                    // Rename build using product commit hash
-                    currentBuild.description =  "[${product_commit}]"
-                    
-                    // Create a directory for  to place the directory with the build results (if it does not exist)
-                    sh "mkdir -p ${resultdir}"
-                    git url: params.terracumber_gitrepo, branch: params.terracumber_ref
-                    dir("susemanager-ci") {
-                        checkout scm
-                    }
-                    // Clone sumaform
-                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+                // Rename build using product commit hash
+                currentBuild.description =  "[${product_commit}]"
+                
+                // Create a directory for  to place the directory with the build results (if it does not exist)
+                sh "mkdir -p ${resultdir}"
+                git url: params.terracumber_gitrepo, branch: params.terracumber_ref
+                dir("susemanager-ci") {
+                    checkout scm
                 }
+                // Clone sumaform
+                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
             }
             stage('Deploy') {
-                ws(environment_workspace){
-                    // Provision the environment
-                    if (params.terraform_init) {
-                        env.TERRAFORM_INIT = '--init'
-                    } else {
-                        env.TERRAFORM_INIT = ''
-                    }
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
-                    deployed = true
+                // Provision the environment
+                if (params.terraform_init) {
+                    env.TERRAFORM_INIT = '--init'
+                } else {
+                    env.TERRAFORM_INIT = ''
                 }
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                deployed = true
             }
             stage('Product changes') {
-                ws(environment_workspace){
-                    sh """
-                        # Comparison between:
-                        #  - the previous git revision of spacewalk (or uyuni) repository pushed in IBS (or OBS)
-                        #  - the git revision of the current spacewalk (or uyuni) repository pushed in IBS (or OBS)
-                        # Note: This is a trade-off, we should be comparing the git revisions of all the packages composing our product
-                        #       For that extra mile, we need a new tag in the repo metadata of each built, with the git revision of the related repository.
-                    """
-                    sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\"%h %<(16,trunc)%cn  %s  %d\" ${previous_commit}..${product_commit}'", returnStatus:true
-                }
+                sh """
+                    # Comparison between:
+                    #  - the previous git revision of spacewalk (or uyuni) repository pushed in IBS (or OBS)
+                    #  - the git revision of the current spacewalk (or uyuni) repository pushed in IBS (or OBS)
+                    # Note: This is a trade-off, we should be comparing the git revisions of all the packages composing our product
+                    #       For that extra mile, we need a new tag in the repo metadata of each built, with the git revision of the related repository.
+                """
+                sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\"%h %<(16,trunc)%cn  %s  %d\" ${previous_commit}..${product_commit}'", returnStatus:true
             }
             stage('Sanity Check') {
-                ws(environment_workspace){
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
-                }
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
             }
             stage('Core - Setup') {
-                ws(environment_workspace){
-                    def exports = ""
-                    if (params.long_tests){
-                      exports += "export LONG_TESTS=${params.long_tests}; "
-                    }
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:core'"
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+                def exports = ""
+                if (params.long_tests){
+                  exports += "export LONG_TESTS=${params.long_tests}; "
                 }
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:core'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:reposync'"
             }
             stage('Core - Initialize clients') {
-                ws(environment_workspace){
-                    def exports = ""
-                    if (params.long_tests){
-                      exports += "export LONG_TESTS=${params.long_tests}; "
-                    }
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
+                def exports = ""
+                if (params.long_tests){
+                  exports += "export LONG_TESTS=${params.long_tests}; "
                 }
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
             }
             stage('Secondary features') {
-                ws(environment_workspace){
-                    def exports = ""
-                    if (params.functional_scopes){
-                      exports += "export TAGS=${params.functional_scopes}; "
-                    }
-                    if (params.long_tests){
-                      exports += "export LONG_TESTS=${params.long_tests}; "
-                    }
-                    def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                    def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
-                    sh "exit \$(( ${statusCode1}|${statusCode2} ))"
+                def exports = ""
+                if (params.functional_scopes){
+                  exports += "export TAGS=${params.functional_scopes}; "
                 }
+                if (params.long_tests){
+                  exports += "export LONG_TESTS=${params.long_tests}; "
+                }
+                def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
+                def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
+                sh "exit \$(( ${statusCode1}|${statusCode2} ))"
             }
         }
         finally {
             stage('Get results') {
-                ws(environment_workspace){
-                    def error = 0
-                    if (deployed) {
-                        try {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
-                        } catch(Exception ex) {
-                            println("ERROR: rake cucumber:finishing failed")
-                            error = 1
-                        }
-                        try {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
-                        } catch(Exception ex) {
-                            println("ERROR: rake utils:generate_test_repor failed")
-                            error = 1
-                        }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                        publishHTML( target: [
-                                    allowMissing: true,
-                                    alwaysLinkToLastBuild: false,
-                                    keepAll: true,
-                                    reportDir: "${resultdirbuild}/cucumber_report/",
-                                    reportFiles: 'cucumber_report.html',
-                                    reportName: "TestSuite Report"]
-                        )
-                        junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                def error = 0
+                if (deployed) {
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
+                    } catch(Exception ex) {
+                        println("ERROR: rake cucumber:finishing failed")
+                        error = 1
                     }
-                    // Send email
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
-                    // Clean up old results
-                    sh "./clean-old-results -r ${resultdir}"
-                    sh "exit ${error}"
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
+                    } catch(Exception ex) {
+                        println("ERROR: rake utils:generate_test_repor failed")
+                        error = 1
+                    }
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                    publishHTML( target: [
+                                allowMissing: true,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: "${resultdirbuild}/cucumber_report/",
+                                reportFiles: 'cucumber_report.html',
+                                reportName: "TestSuite Report"]
+                    )
+                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
+                // Send email
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                // Clean up old results
+                sh "./clean-old-results -r ${resultdir}"
+                sh "exit ${error}"
             }
         }
     }
