@@ -1,6 +1,6 @@
 def run(params) {
     timestamps {
-        environment_workspace = "workspace/${env.JOB_BASE_NAME}"
+        environment_workspace = "workspace/${env.JOB_BASE_NAME.split('@')[0]}"
         // Retrieve the hash commit of the last product built in OBS/IBS and previous job
         def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
         if (prefix == "uyuni-master-dev") {
