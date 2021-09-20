@@ -157,6 +157,7 @@ module "cucumber_testsuite" {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
       }
+      image = "opensuse153-ci-pr-client"
     }
     suse-client = {
       image = "sles15sp2o"
