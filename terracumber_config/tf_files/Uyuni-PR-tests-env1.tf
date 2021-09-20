@@ -138,6 +138,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:00"
       }
+      image = "opensuse153-ci-pr-client"
     }
     server = {
       provider_settings = {
