@@ -16,6 +16,14 @@ def run(params) {
                 }
                 // Clone sumaform
                 sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+            
+                // Restore Terraform states from artifacts
+                copyArtifacts projectName: "${env.JOB_NAME}", target: "results/sumaform/", optional: true
+
+                //Use a clean Terraform state
+                if (params.terraform_clean_state) {
+                    sh "cd ${resultdir}/sumaform/; rm -rf .terraform; rm -f terraform.tfstate ||:"
+                }
             }
             stage('Deploy') {
                 if(params.must_deploy) {
@@ -96,6 +104,12 @@ def run(params) {
             }
         }
         finally {
+            stage('Save TF state') {
+                archiveArtifacts( 
+                    artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*", 
+                    allowEmptyArchive: true
+                )
+            }
             stage('Get results') {
                 def error = 0
                 if (deployed || !params.must_deploy) {
