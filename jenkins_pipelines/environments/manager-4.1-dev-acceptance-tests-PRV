@@ -2,7 +2,7 @@
 
 node('sumaform-cucumber') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         pipelineTriggers([cron('0 0,4,8,12,16,20 * * *')]),
         parameters([
@@ -19,6 +19,7 @@ node('sumaform-cucumber') {
             string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
             choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
             extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ',', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_smdba,@scope_spacecmd,@scope_spacewalk_utils,@scope_visualization,@scope_notification_message,@scope_virtual_host_manager,@scope_subscription_matching,@scope_formulas,@scope_sp_migration,@scope_cve_audit,@scope_onboarding,@scope_content_lifecycle_management,@scope_res,@scope_recurring_actions,@scope_maintenance_windows,@scope_cluster_management,@scope_building_container_images,@scope_kubernetes_integration,@scope_openscap,@scope_ubuntu,@scope_action_chains,@scope_salt_ssh,@scope_tomcat,@scope_changing_software_channels,@scope_monitoring,@scope_salt,@scope_cobbler,@scope_sumatoolbox,@scope_virtualization,@scope_hub,@scope_retail,@scope_configuration_channels,@scope_content_staging,@scope_proxy,@scope_traditional_client,@scope_xmlrpc,@scope_power_management,@scope_retracted_patches', description: 'Choose the functional scopes that you want to test')
         ])
