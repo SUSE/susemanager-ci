@@ -83,6 +83,23 @@ variable "MASTER_REPO" {
   type = "string"
 }
 
+// Repositories containing the client tools RPMs
+variable "SLE_CLIENT_REPO" {
+  type = "string"
+}
+
+variable "CENTOS_CLIENT_REPO" {
+  type = "string"
+}
+
+variable "UBUNTU_CLIENT_REPO" {
+  type = "string"
+}
+
+variable "OPENSUSE_CLIENT_REPO" {
+  type = "string"
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://romulus.mgr.prv.suse.net/system"
 }
