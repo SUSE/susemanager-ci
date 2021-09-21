@@ -152,7 +152,7 @@ def run(params) {
                         env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/${params.build_repo}"
                         env.SLE_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:SLE15-Uyuni-Client-Tools/SLE_15"
                         env.CENTOS_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:CentOS7-Uyuni-Client-Tools/CentOS_7"
-                        env.UBUNTU_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_16.04/"
+                        env.UBUNTU_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/"
                         env.OPENSUSE_CLIENT_REPO = "https://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0"
                         // Provision the environment
                         if (terraform_init) {
