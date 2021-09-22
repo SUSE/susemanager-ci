@@ -120,13 +120,14 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:41"
       }
       additional_repos = {
-        server_stack = "https://download.opensuse.org/repositories/home:/SchoolGuy:/branches:/systemsmanagement:/Uyuni:/Master/openSUSE_Leap_15.3/",
+//        server_stack = "https://download.opensuse.org/repositories/home:/SchoolGuy:/branches:/systemsmanagement:/Uyuni:/Master/openSUSE_Leap_15.3/",
 //        salt15sp2_base = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Basesystem_15-SP2_x86_64/",
 //        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
 //        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
 //        sapformular = "http://download.suse.de/ibs/SUSE:/Maintenance:/17953/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
 //        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/"
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/SLE_15_SP3/"
       }
     }
     proxy = {
@@ -139,6 +140,7 @@ module "cucumber_testsuite" {
 //        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
 //        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/SLE_15_SP3/"
       }
     }
     suse-client = {
@@ -149,6 +151,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp1/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/SLE_15_SP1/"
       }
     }
     suse-minion = {
@@ -159,6 +162,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp1/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/SLE_15_SP1/"
       }
     }
     suse-sshminion = {
@@ -169,6 +173,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp1/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/SLE_15_SP1/"
       }
     }
     redhat-minion = {
@@ -181,6 +186,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/res7/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/CentOS_7/"
       }
     }
 //    debian-minion = {
@@ -201,6 +207,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/SLE_15_SP2/"
       }
     }
     pxeboot-minion = {
@@ -214,6 +221,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/SLE_15_SP2/"
       }
     }
 //    xen-host = {
