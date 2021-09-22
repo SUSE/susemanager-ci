@@ -7,18 +7,17 @@ variable "URL_PREFIX" {
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = "string"
-  // default = "export PRODUCT='SUSE-Manager' && run-testsuite"
-  default = ""
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "Manager-4.1"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -82,7 +81,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-master"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -93,7 +92,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp1o", "sles15sp2o", "ubuntu1804o"]
+  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-"
@@ -144,7 +143,7 @@ module "cucumber_testsuite" {
       }
     }
     suse-client = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:44"
@@ -155,7 +154,7 @@ module "cucumber_testsuite" {
       }
     }
     suse-minion = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:46"
@@ -166,7 +165,7 @@ module "cucumber_testsuite" {
       }
     }
     suse-sshminion = {
-      image = "sles15sp1o"
+      image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:48"
@@ -178,11 +177,12 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "centos7o"
-      name = "min-centos7"
       provider_settings = {
         mac = "aa:b2:93:01:00:49"
-        // Openscap cannot run with less than 1.25 GB of RAM
-        memory = 1280
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        memory = 2048
+        vcpu = 2
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/res7/standard/"
@@ -210,11 +210,10 @@ module "cucumber_testsuite" {
       }
     }
     pxeboot-minion = {
-      image = "sles15sp2o"
+      image = "sles15sp3o"
     }
     kvm-host = {
-      image = "sles15sp2o"
-      name = "min-kvm"
+      image = "sles15sp3o"
       provider_settings = {
         mac = "aa:b2:93:01:00:4e"
       }
