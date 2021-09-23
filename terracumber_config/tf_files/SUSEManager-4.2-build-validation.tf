@@ -256,7 +256,7 @@ module "base_arm" {
     libvirt = libvirt.overdrive4
   }
 
-  source = "./sumaform/modules/base"
+  source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
@@ -1220,19 +1220,9 @@ module "opensuse153arm-minion" {
   name               = "min-opensuse153arm"
   image              = "opensuse153armo"
   provider_settings = {
-    mac                = "aa:b2:92:xx:xx:xx"
-    memory             = 4096
-  }
-
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  provider_settings = {
-    xslt = <<EOT
+    memory             = 2048
+    vcpu               = 2
+    xslt               = <<EOT
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- XSL transformation for aarch64 -->
 
@@ -1317,6 +1307,12 @@ module "opensuse153arm-minion" {
 </xsl:stylesheet>
 EOT
   }
+  server_configuration = {
+    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //sle15sp3arm-minion_additional_repos
 
