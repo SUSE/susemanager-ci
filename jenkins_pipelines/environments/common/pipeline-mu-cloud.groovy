@@ -6,43 +6,42 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
-        try {
-            stage('Clone terracumber, susemanager-ci and sumaform') {
-                // Create a directory for  to place the directory with the build results (if it does not exist)
-                sh "mkdir -p ${resultdir}"
-                git url: params.terracumber_gitrepo, branch: params.terracumber_ref
-                dir("susemanager-ci") {
-                    checkout scm
-                }
-                // Clone sumaform
-                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+        stage('Clone terracumber, susemanager-ci and sumaform') {
+            // Create a directory for  to place the directory with the build results (if it does not exist)
+            sh "mkdir -p ${resultdir}"
+            git url: params.terracumber_gitrepo, branch: params.terracumber_ref
+            dir("susemanager-ci") {
+                checkout scm
             }
-            stage('Deploy') {
-                if (params.must_deploy) {
-                    // Provision the environment
-                    if (params.terraform_init) {
-                        env.TERRAFORM_INIT = '--init'
-                    } else {
-                        env.TERRAFORM_INIT = ''
-                    }
-                    repositories = "storage:\n" +
-                            "  type: file\n" +
-                            "  path: /srv/mirror\n" +
-                            "\n" +
-                            "http:"
-                    params.MU_repositories.each { item ->
-                        repositories = "${repositories}\n\n" +
-                                "  - url: ${item}\n" +
-                                "    archs: [x86_64]"
-                    }
-                    // Generate json file in the workspace
+            // Clone sumaform
+            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+        }
+        stage('Deploy') {
+            if (params.must_deploy) {
+                // Provision the environment
+                if (params.terraform_init) {
+                    env.TERRAFORM_INIT = '--init'
+                } else {
+                    env.TERRAFORM_INIT = ''
+                }
+                repositories = "storage:\n" +
+                        "  type: file\n" +
+                        "  path: /srv/mirror\n" +
+                        "\n" +
+                        "http:"
+                params.MU_repositories.each { item ->
+                    repositories = "${repositories}\n\n" +
+                            "  - url: ${item}\n" +
+                            "    archs: [x86_64]"
+                }
+                // Generate json file in the workspace
 
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk|data_disk|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision"
-                    // Generate features
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake utils:generate_build_validation_features'"
-                    deployed = true
-                }
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk|data_disk|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision"
+                // Generate features
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake utils:generate_build_validation_features'"
+                deployed = true
             }
+        }
 
 
 //            stage('Add MUs') {
@@ -63,7 +62,6 @@ def run(params) {
 //            }
 
 
-        }
     }
 }
 
