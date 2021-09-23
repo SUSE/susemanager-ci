@@ -1,3 +1,60 @@
+// Mandatory variables for terracumber
+variable "URL_PREFIX" {
+  type = "string"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-manager-mu-cloud"
+}
+
+// Not really used as this is for --runall parameter, and we run cucumber step by step
+variable "CUCUMBER_COMMAND" {
+  type = "string"
+  default = "export PRODUCT='Uyuni' && run-testsuite"
+}
+
+variable "CUCUMBER_GITREPO" {
+  type = "string"
+  default = "https://github.com/uyuni-project/uyuni.git"
+}
+
+variable "CUCUMBER_BRANCH" {
+  type = "string"
+  default = "master"
+}
+
+variable "CUCUMBER_RESULTS" {
+  type = "string"
+  default = "/root/spacewalk/testsuite"
+}
+
+variable "MAIL_SUBJECT" {
+  type = "string"
+  default = "Results Uyuni-Master $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+}
+
+variable "MAIL_TEMPLATE" {
+  type = "string"
+  default = "../mail_templates/mail-template-jenkins.txt"
+}
+
+variable "MAIL_SUBJECT_ENV_FAIL" {
+  type = "string"
+  default = "Results Uyuni-Master: Environment setup failed"
+}
+
+variable "MAIL_TEMPLATE_ENV_FAIL" {
+  type = "string"
+  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
+}
+
+variable "MAIL_FROM" {
+  type = "string"
+  default = "mnoel@suse.de"
+}
+
+variable "MAIL_TO" {
+  type = "string"
+  default = "mnoel@suse.de"
+}
+
 // sumaform specific variables
 variable "SCC_USER" {
   type = "string"
@@ -16,7 +73,6 @@ variable "GIT_PASSWORD" {
   type = "string"
   default = null // Not needed for master, as it is public
 }
-
 provider "libvirt" {
   uri = "qemu+tcp://yuggoth.mgr.prv.suse.net/system"
 }
