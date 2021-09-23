@@ -30,7 +30,7 @@ module "base" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "mno-"
+  name_prefix  = "uyuni-mu-"
   images = ["opensuse152o"]
   provider_settings = {
     pool = local.pool
