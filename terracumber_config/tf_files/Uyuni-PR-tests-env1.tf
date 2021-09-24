@@ -83,6 +83,10 @@ variable "MASTER_REPO" {
   type = "string"
 }
 
+variable "MASTER_OTHER_REPO" {
+  type = "string"
+}
+
 // Repositories containing the client tools RPMs
 variable "SLE_CLIENT_REPO" {
   type = "string"
@@ -107,7 +111,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-master"
+  product_version = "uyuni-pr"
   
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -146,6 +150,7 @@ module "cucumber_testsuite" {
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
+        master_repo_other = var.MASTER_OTHER_REPO,
       }
       image = "opensuse153-ci-pr"
     }
@@ -156,6 +161,7 @@ module "cucumber_testsuite" {
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
+        master_repo_other = var.MASTER_OTHER_REPO,
       }
       image = "opensuse153o"
     }
@@ -221,6 +227,9 @@ module "cucumber_testsuite" {
     }
     pxeboot-minion = {
       image = "sles15sp3o"
+      additional_repos = {
+        client_repo = var.SLE_CLIENT_REPO,
+      }
     }
     kvm-host = {
       image = "opensuse153o"

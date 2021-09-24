@@ -83,35 +83,48 @@ def run(params) {
                     if(params.must_build) {
                         dir("product") {
                             // fail if packages are not building correctly
-                            sh "osc pr ${params.source_project}:TEST:${env_number}:CR -s 'F' | awk '{print}END{exit NR>1}'"
+                            sh "osc pr -r ${params.build_repo} ${params.source_project} -s 'F' | awk '{print}END{exit NR>1}'"
                             // fail if packages are unresolvable
-                            sh "osc pr ${params.source_project}:TEST:${env_number}:CR -s 'U' | awk '{print}END{exit NR>1}'"
+                            sh "osc pr -r ${params.build_repo} ${params.source_project} -s 'U' | awk '{print}END{exit NR>1}'"
                             // force remove, to clean up previous build
                             sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
-                            sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
-
-                            sh "osc unlock ${params.source_project}:TEST:${env_number}:CR:SLE15-Uyuni-Client-Tools -m 'unlock to rebuild' 2> /dev/null || true "
-                            sh "osc unlock ${params.source_project}:TEST:${env_number}:CR:CentOS7-Uyuni-Client-Tools -m 'unlock to rebuild' 2> /dev/null || true "
-                            sh "osc unlock ${params.source_project}:TEST:${env_number}:CR:Ubuntu2004-Uyuni-Client-Tools -m 'unlock to rebuild' 2> /dev/null || true "
-                            sh "osc unlock ${params.source_project}:TEST:${env_number}:CR:openSUSE_Leap_15-Uyuni-Client-Tools -m 'unlock to rebuild' 2> /dev/null || true "
 
                             sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number} || true"
-                            sh "osc lock ${params.source_project}:TEST:${env_number}:CR 2> /dev/null || true"
-
-                            sh "osc lock ${params.source_project}:TEST:${env_number}:CR:SLE15-Uyuni-Client-Tools 2> /dev/null || true "
-                            sh "osc lock ${params.source_project}:TEST:${env_number}:CR:CentOS7-Uyuni-Client-Tools 2> /dev/null || true "
-                            sh "osc lock ${params.source_project}:TEST:${env_number}:CR:Ubuntu2004-Uyuni-Client-Tools 2> /dev/null || true "
-                            sh "osc lock ${params.source_project}:TEST:${env_number}:CR:openSUSE_Leap_15-Uyuni-Client-Tools 2> /dev/null || true "
 
                             sh "osc rdelete -rf -m 'removing project before creating it again' ${params.builder_project}:${params.pull_request_number} || true"
                             sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
-                            sh "osc linkpac ${params.source_project}:TEST:${env_number}:CR release-notes-uyuni ${params.builder_project}:${params.pull_request_number}"
-                            sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${params.builder_api}|${params.source_project}:TEST:${env_number}:CR\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e"
+                            sh "osc linkpac ${params.source_project} release-notes-uyuni ${params.builder_project}:${params.pull_request_number}"
+                            sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${params.builder_api}|${params.source_project}\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e"
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
-                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
-                            sh "bash -c \"rm -rf ${jenkins_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
-                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r ${params.build_repo} -a x86_64 -d \"${jenkins_workspace}\""
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
+                            // We clean up the previous repo because the pull request repo gets recreated each time, so we have no control on the build numbers.
+                            sh "bash -c \"rm -rf ${environment_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r ${params.build_repo} -a x86_64 -d \"${environment_workspace}\""
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}/${params.build_repo}/x86_64"
+                            // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.source_project}\" -r ${params.build_repo} -a x86_64 -d \"${environment_workspace}\" -q 000product:Uyuni-Server-release -q 000product:Uyuni-Proxy-release"
+                            
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:Other/${params.build_repo}/x86_64"
+                            // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.source_project}:Other\" -r ${params.build_repo} -a x86_64 -d \"${environment_workspace}\""
+                            
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/x86_64"
+                            // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.source_project}:CentOS7-Uyuni-Client-Tools\" -r CentOS_7 -a x86_64 -d \"${environment_workspace}\""
+
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:SLE15-Uyuni-Client-Tools/SLE_15/x86_64"
+                            // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.source_project}:SLE15-Uyuni-Client-Tools\" -r SLE_15 -a x86_64 -d \"${environment_workspace}\""
+
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/x86_64"
+                            // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.source_project}:openSUSE_Leap_15-Uyuni-Client-Tools\" -r openSUSE_Leap_15.0 -a x86_64 -d \"${environment_workspace}\""
+
+                            echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64"
+                            // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                            sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.source_project}:Ubuntu2004-Uyuni-Client-Tools\" -r xUbuntu_20.04 -a x86_64 -d \"${environment_workspace}\""
+
                             // fail if packages are not building correctly
                             sh "osc pr ${params.builder_project}:${params.pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
                             // fail if packages are unresolvable
@@ -148,19 +161,21 @@ def run(params) {
                     if(params.must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
-                        env.MASTER_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR/${params.build_repo}"
-                        env.SLE_CLIENT_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:SLE15-Uyuni-Client-Tools/SLE_15"
-                        env.CENTOS_CLIENT_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:CentOS7-Uyuni-Client-Tools/CentOS_7"
-                        env.UBUNTU_CLIENT_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/"
-                        env.OPENSUSE_CLIENT_REPO = "http://download.opensuse.org/repositories/${params.source_project}:TEST:${env_number}:CR:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0"
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
+                        env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}/${params.build_repo}/x86_64"
+                        env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:Other/${params.build_repo}/x86_64"
+                        env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:SLE15-Uyuni-Client-Tools/SLE_15/x86_64"
+                        env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/x86_64"
+                        env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64"
+                        env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/x86_64"
+
                         // Provision the environment
                         if (terraform_init) {
                             env.TERRAFORM_INIT = '--init'
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_CENTOS_CLIENT_REPO=${CENTOS_CLIENT_REPO};export TF_VAR_UBUNTU_CLIENT_REPO=${UBUNTU_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_CENTOS_CLIENT_REPO=${CENTOS_CLIENT_REPO};export TF_VAR_UBUNTU_CLIENT_REPO=${UBUNTU_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
                     }
                 }
@@ -235,12 +250,6 @@ def run(params) {
                   ws(environment_workspace){
                       if (params.must_remove_build) {
                           sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
-                          sh "osc unlock ${params.source_project}:TEST:${env_number}:CR -m 'unlock to rebuild' 2> /dev/null || true "
-
-                          sh "osc unlock ${params.source_project}:TEST:${env_number}:CR:SLE15-Uyuni-Client-Tools -m 'unlock to rebuild' 2> /dev/null || true "
-                          sh "osc unlock ${params.source_project}:TEST:${env_number}:CR:CentOS7-Uyuni-Client-Tools -m 'unlock to rebuild' 2> /dev/null || true "
-                          sh "osc unlock ${params.source_project}:TEST:${env_number}:CR:Ubuntu2004-Uyuni-Client-Tools -m 'unlock to rebuild' 2> /dev/null || true "
-                          sh "osc unlock ${params.source_project}:TEST:${env_number}:CR:openSUSE_Leap_15-Uyuni-Client-Tools -m 'unlock to rebuild' 2> /dev/null || true "
 
                           sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                       }
