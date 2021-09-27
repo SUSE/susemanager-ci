@@ -78,7 +78,7 @@ provider "libvirt" {
 }
 
 locals {
-  pool = "mnoel_disks"
+  pool = "ssd"
 }
 
 module "base" {
@@ -90,8 +90,8 @@ module "base" {
   images = ["opensuse152o"]
   provider_settings = {
     pool = local.pool
-    bridge = "br0"
-    additional_network = "192.168.4.0/24"
+    bridge = "br1"
+    additional_network = "192.168.40.0/24"
   }
 }
 
