@@ -90,7 +90,8 @@ module "base" {
   images = ["opensuse152o"]
   provider_settings = {
     pool = local.pool
-    bridge = "br0"
+    network_name = null
+    bridge = "br1"
     additional_network = "192.168.40.0/24"
   }
 }
