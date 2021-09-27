@@ -82,7 +82,7 @@ locals {
 }
 
 module "base" {
-  source = "./sumaform/modules/base"
+  source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
@@ -98,7 +98,7 @@ module "base" {
 
 
 module "mirror" {
-  source = "./sumaform/modules/mirror"
+  source = "./modules/mirror"
 
   base_configuration = module.base.configuration
   customize_minima_file = "mirror/etc/minima-customize.yaml"
