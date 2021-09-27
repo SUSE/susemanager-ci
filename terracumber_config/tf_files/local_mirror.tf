@@ -92,7 +92,7 @@ module "base" {
     pool = local.pool
     network_name = null
     bridge = "br1"
-    additional_network = "192.168.40.0/24"
+    additional_network = "192.168.80.0/24"
   }
 }
 
