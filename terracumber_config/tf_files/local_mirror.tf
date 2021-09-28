@@ -91,7 +91,7 @@ module "base" {
   provider_settings = {
     pool = local.pool
     network_name = null
-    bridge = "br1"
+    bridge = "br0"
     additional_network = "192.168.80.0/24"
   }
 }
