@@ -74,7 +74,7 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 provider "libvirt" {
-  uri = "qemu+tcp://yuggoth.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
 }
 
 locals {
