@@ -118,7 +118,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153-ci-pr", "opensuse153-ci-pr-client", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153-ci-pr", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr1-"
@@ -157,7 +157,7 @@ module "cucumber_testsuite" {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
       }
-      image = "opensuse153-ci-pr-client"
+      image = "opensuse153o"
     }
     suse-client = {
       image = "sles15sp2o"
@@ -223,7 +223,7 @@ module "cucumber_testsuite" {
       image = "sles15sp3o"
     }
     kvm-host = {
-      image = "opensuse153-ci-pr-client"
+      image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:92:04:00:0a"
       }
@@ -232,7 +232,7 @@ module "cucumber_testsuite" {
       }
     }
     xen-host = {
-      image = "opensuse153-ci-pr-client"
+      image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:92:04:00:0b"
       }
