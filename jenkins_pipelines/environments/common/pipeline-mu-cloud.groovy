@@ -23,12 +23,13 @@ def run(params) {
             } else {
                 env.TERRAFORM_INIT = ''
             }
+            String[] repositories_split = params.mu_repositories.split("\n")
             env.repositories = "storage:\n" +
                     "  type: file\n" +
                     "  path: /srv/mirror\n" +
                     "\n" +
                     "http:"
-            params.mu_repositories.each { item ->
+            repositories_split.each { item ->
                 env.repositories = "${env.repositories}\n\n" +
                         "  - url: ${item}\n" +
                         "    archs: [x86_64]"
