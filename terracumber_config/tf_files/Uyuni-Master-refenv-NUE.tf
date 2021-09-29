@@ -94,7 +94,7 @@ module "server" {
   base_configuration = module.base.configuration
   product_version    = "uyuni-master"
   name               = "srv"
-
+  monitored               = true
   use_os_released_updates = true
   disable_download_tokens = false
   from_email              = "root@suse.de"
