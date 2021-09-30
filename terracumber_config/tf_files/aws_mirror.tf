@@ -175,9 +175,9 @@ output "aws_server_mirrors_public_name" {
 //output "mirror_hosts" {
 //  value = lookup(module.base.configuration, "mirror", null)
 //}
-output "aws_server_private_name" {
-  value = module.server.configuration.hostname
-}
+//output "aws_server_private_name" {
+//  value = module.server.configuration.hostname
+//}
 //
 //output "aws_minion_private_names" {
 //  value = module.minion.configuration.hostnames
