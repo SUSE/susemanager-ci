@@ -1240,7 +1240,7 @@ module "opensuse153arm-minion" {
       <xsl:element name="loader">
         <xsl:attribute name="type"> <xsl:text>pflash</xsl:text> </xsl:attribute>
         <xsl:attribute name="readonly"> <xsl:text>yes</xsl:text> </xsl:attribute>
-        <xsl:text>/usr/share/AAVMF/AAVMF_CODE.fd</xsl:text>
+        <xsl:text>/usr/share/qemu/aavmf-aarch64-code.bin</xsl:text>
       </xsl:element>
     </xsl:copy>
   </xsl:template>
