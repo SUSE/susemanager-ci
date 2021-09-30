@@ -1220,7 +1220,7 @@ module "opensuse153arm-minion" {
   name               = "min-opensuse153arm"
   image              = "opensuse153armo"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ad"
+    mac                = "aa:b2:92:42:01:ad"
     memory             = 2048
     vcpu               = 2
     xslt               = <<EOT
