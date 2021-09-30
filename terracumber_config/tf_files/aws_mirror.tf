@@ -75,11 +75,6 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
-variable "GIT_PASSWORD" {
-  type = "string"
-  default = null // Not needed for master, as it is public
-}
-
 variable "REGION" {
   type = "string"
   default = "eu-central-1"
