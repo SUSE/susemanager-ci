@@ -82,36 +82,33 @@ variable "GIT_PASSWORD" {
 
 variable "REGION" {
   type = "string"
-  default = "eu-central-1" // Not needed for master, as it is public"
+  default = "eu-central-1"
 }
 
 variable "AVAILABILITY_ZONE" {
   type = "string"
-  default = "eu-central-1a" // Not needed for master, as it is public
+  default = "eu-central-1a"
 }
 
 variable "KEY_FILE" {
   type = "string"
-  default = "/home/jenkins/.ssh/testing-suma.pem" // Not needed for master, as it is public
+  default = "/home/jenkins/.ssh/testing-suma.pem"
 }
 
 variable "KEY_NAME" {
   type = "string"
-  default = "testing-suma" // Not needed for master, as it is public
+  default = "testing-suma"
 }
-
 
 variable "ACCESS_KEY" {
   type = "string"
   default = null
 }
 
-
 variable "SECRET_KEY" {
   type = "string"
   default = null
 }
-
 
 locals {
   region            = var.REGION
@@ -127,7 +124,7 @@ provider "aws" {
 }
 
 module "base" {
-  source = "./sumaform/modules/base"
+  source = "./modules/base"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
@@ -143,11 +140,8 @@ module "base" {
 }
 
 
-
-
-// ================= END MIRROR =================
 module "mirror" {
-  source = "./sumaform/modules/mirror"
+  source = "./modules/mirror"
   base_configuration = module.base.configuration
   provider_settings = {
     public_instance = true
