@@ -110,15 +110,8 @@ variable "SECRET_KEY" {
   default = null
 }
 
-locals {
-  region            = var.REGION
-  availability_zone = var.AVAILABILITY_ZONE
-  key_file          = var.KEY_FILE
-  key_name          = var.KEY_NAME
-}
-
 provider "aws" {
-  region     = local.region
+  region     = var.REGION
   access_key = var.ACCESS_KEY
   secret_key = var.SECRET_KEY
 }
@@ -131,11 +124,11 @@ module "base" {
   name_prefix  = "uyuni-mu-aws-"
   //  mirror = "ip-172-16-1-50.eu-central-1.compute.internal"
   provider_settings = {
-    availability_zone = local.availability_zone
-    region            = local.region
+    availability_zone = var.AVAILABILITY_ZONE
+    region            = var.REGION
     ssh_allowed_ips   = ["202.180.93.210", "65.132.116.252"]
-    key_name          = local.key_name
-    key_file          = local.key_file
+    key_name          = var.KEY_NAME
+    key_file          = var.KEY_FILE
   }
 }
 
@@ -157,13 +150,13 @@ output "bastion_public_name" {
   value = lookup(module.base.configuration, "bastion_host", null)
 }
 //
-output "aws_server_mirrors_private_name" {
-  value = module.mirror.configuration["hostnames"][0]
-}
-
-output "aws_server_mirrors_public_name" {
-  value = module.mirror.configuration["public_names"][0]
-}
+//output "aws_server_mirrors_private_name" {
+//  value = module.mirror.configuration["hostnames"][0]
+//}
+//
+//output "aws_server_mirrors_public_name" {
+//  value = module.mirror.configuration["public_names"][0]
+//}
 
 //
 //output "mirror_hosts" {
