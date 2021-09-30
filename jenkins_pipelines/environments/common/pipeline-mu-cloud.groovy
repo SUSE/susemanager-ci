@@ -1,11 +1,13 @@
 def run(params) {
     timestamps {
-        deployed = false
+        deployed_local = false
+        deployed_aws = false
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
+        env.local_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
+        env.aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create a directory for  to place the directory with the build results (if it does not exist)
             sh "mkdir -p ${resultdir}"
@@ -14,29 +16,43 @@ def run(params) {
                 checkout scm
             }
             // Clone sumaform
-            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${local_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
         }
-        stage('Deploy') {
+//        stage('Create local mirror with MU') {
+//            // Provision the environment
+//            if (params.terraform_init) {
+//                env.TERRAFORM_INIT = '--init'
+//            } else {
+//                env.TERRAFORM_INIT = ''
+//            }
+//            String[] repositories_split = params.mu_repositories.split("\n")
+//            env.repositories = "storage:\n" +
+//                    "  type: file\n" +
+//                    "  path: /srv/mirror\n" +
+//                    "\n" +
+//                    "http:"
+//            repositories_split.each { item ->
+//                env.repositories = "${env.repositories}\n\n" +
+//                        "  - url: ${item}\n" +
+//                        "    archs: [x86_64]"
+//            }
+//            writeFile file: "${env.resultdir}/sumaform-local/salt/mirror/etc/minima-customize.yaml", text: env.repositories, encoding: "UTF-8"
+//            sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-local.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+//            deployed_local = true
+//
+//        }
+
+
+        stage('Create empty AWS mirror ') {
             // Provision the environment
             if (params.terraform_init) {
                 env.TERRAFORM_INIT = '--init'
             } else {
                 env.TERRAFORM_INIT = ''
             }
-            String[] repositories_split = params.mu_repositories.split("\n")
-            env.repositories = "storage:\n" +
-                    "  type: file\n" +
-                    "  path: /srv/mirror\n" +
-                    "\n" +
-                    "http:"
-            repositories_split.each { item ->
-                env.repositories = "${env.repositories}\n\n" +
-                        "  - url: ${item}\n" +
-                        "    archs: [x86_64]"
-            }
-            writeFile file: "${env.resultdir}/sumaform/salt/mirror/etc/minima-customize.yaml", text: env.repositories, encoding: "UTF-8"
-            sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
-            deployed = true
+            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+            deployed_aws = true
 
         }
 
