@@ -16,8 +16,8 @@ def run(params) {
                 checkout scm
             }
             // Clone sumaform
-            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${local_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${env.local_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend libvirt"
+            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${env.aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
         }
 //        stage('Create local mirror with MU') {
 //            // Provision the environment
