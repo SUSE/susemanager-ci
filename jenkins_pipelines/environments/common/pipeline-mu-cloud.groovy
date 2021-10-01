@@ -22,7 +22,7 @@ def run(params) {
         stage('Create mirrors') {
             parallel {
                 def mirror_deployments = [:]
-                mirror_deployments[create_local_mirror_with_mu] = {
+                mirror_deployments["create_local_mirror_with_mu"] = {
                     stage("Create local mirror with MU") {
                         // Provision the environment
                         if (params.terraform_init) {
@@ -48,7 +48,7 @@ def run(params) {
                     }
                 }
 
-                mirror_deployments[create_empty_aws_mirror] = {
+                mirror_deployments["create_empty_aws_mirror"] = {
                     stage("Create empty AWS mirror") {
                         // Provision the environment
                         if (params.terraform_init) {
