@@ -20,7 +20,6 @@ def run(params) {
             sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${env.aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
         }
         stage('Create mirrors') {
-            parallel
             def mirror_deployments = [:]
             mirror_deployments["create_local_mirror_with_mu"] = {
                 stage("Create local mirror with MU") {
