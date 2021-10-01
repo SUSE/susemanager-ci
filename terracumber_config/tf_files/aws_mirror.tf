@@ -121,7 +121,7 @@ module "base" {
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region            = var.REGION
-    ssh_allowed_ips   = ["202.180.93.210", "65.132.116.252"]
+    ssh_allowed_ips   = ["202.180.93.210", "65.132.116.252","195.135.221.27"]
     key_name          = var.KEY_NAME
     key_file          = var.KEY_FILE
   }
