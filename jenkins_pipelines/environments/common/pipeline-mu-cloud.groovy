@@ -60,8 +60,8 @@ def run(params) {
 
                 }
             }
+            parallel mirror_deployments
         }
-        parallel mirror_deployments
 
     }
 }
