@@ -83,6 +83,10 @@ variable "MASTER_REPO" {
   type = "string"
 }
 
+variable "MASTER_OTHER_REPO" {
+  type = "string"
+}
+
 // Repositories containing the client tools RPMs
 variable "SLE_CLIENT_REPO" {
   type = "string"
@@ -107,7 +111,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-master"
+  product_version = "uyuni-pr"
   
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -118,7 +122,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153-ci-pr", "opensuse153-ci-pr-client", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153o", "opensuse153-ci-pr", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr4-"
@@ -146,6 +150,7 @@ module "cucumber_testsuite" {
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
+        master_repo_other = var.MASTER_OTHER_REPO,
       }
       image = "opensuse153-ci-pr"
     }
@@ -156,8 +161,9 @@ module "cucumber_testsuite" {
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
+        master_repo_other = var.MASTER_OTHER_REPO,
       }
-      image = "opensuse153-ci-pr-client"
+      image = "opensuse153o"
     }
     suse-client = {
       image = "sles15sp2o"
@@ -221,9 +227,12 @@ module "cucumber_testsuite" {
     }
     pxeboot-minion = {
       image = "sles15sp3o"
+      additional_repos = {
+        client_repo = var.SLE_CLIENT_REPO,
+      }
     }
     kvm-host = {
-      image = "opensuse153-ci-pr-client"
+      image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:92:04:00:2e"
       }
@@ -232,7 +241,7 @@ module "cucumber_testsuite" {
       }
     }
     xen-host = {
-      image = "opensuse153-ci-pr-client"
+      image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:92:04:00:2f"
       }
