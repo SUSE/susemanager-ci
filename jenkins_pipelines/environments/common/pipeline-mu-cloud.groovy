@@ -62,8 +62,7 @@ def run(params) {
                     }
                 }
             }
-            parallel mirror_deployment
-            Thread.start
+            parallel mirror_deployments
 
         }
     }
