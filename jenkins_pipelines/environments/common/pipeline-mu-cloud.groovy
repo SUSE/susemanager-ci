@@ -63,6 +63,7 @@ def run(params) {
                 }
             }
             parallel mirror_deployment
+            Thread.start
 
         }
     }
@@ -87,7 +88,7 @@ def run(params) {
 //            }
 
 
-}
+
 
 
 return this
