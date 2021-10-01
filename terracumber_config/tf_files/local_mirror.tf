@@ -103,7 +103,8 @@ module "mirror" {
 
   base_configuration = module.base.configuration
   customize_minima_file = "mirror/etc/minima-customize.yaml"
-  immediate_synchronization = true
+  synchronize_immediately = true
+  disable_cron = true
   volume_provider_settings = {
     pool = local.pool
     // uncomment next line to use existing snapshot as starting point
