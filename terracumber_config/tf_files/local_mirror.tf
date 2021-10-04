@@ -111,10 +111,10 @@ module "mirror" {
     //    volume_snapshot_id = data.aws_ebs_snapshot.data_disk_snapshot.id
   }
 }
-//
-//output "server_mirrors_public_name" {
-//  value = module.mirror.configuration["hostnames"][0]
-//}
+
+output "server_mirrors_public_name" {
+  value = module.mirror.configuration["hostnames"][0]
+}
 output "mirror_hosts" {
   value = lookup(module.base.configuration, "mirror", null)
 }
