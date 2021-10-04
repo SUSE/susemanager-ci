@@ -113,7 +113,7 @@ module "mirror" {
 }
 
 output "server_mirrors_public_name" {
-  value = module.mirror.configuration.hostnames[0]
+  value = module.mirror.configuration.hostnames
 }
 
 output "mirror_hosts" {
