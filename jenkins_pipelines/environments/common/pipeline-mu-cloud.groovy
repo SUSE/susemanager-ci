@@ -90,7 +90,7 @@ def run(params) {
             )
 
         }
-        
+
         stage("Upload ssh key to local mirror") {
             mirror_hostname_local = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-local/terraform.tfstate | jq -r ''.resources[3].instances[0].attributes.network_interface[0].addresses[0]'' ",
                     returnStdout: true)
@@ -99,12 +99,13 @@ def run(params) {
 
             def remote = [:]
             remote.name = 'local_mirror'
-            remote.host = ${mirror_hostname_local}
+            remote.host = $ { mirror_hostname_local }
             remote.user = 'root'
             remote.password = 'linux'
             sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${remote.host} echo ${env.ssh_key} > /root/.ssh/testing-suma.pem"
             sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${remote.host} chmod 0400 /root/.ssh/testing-suma.pem"
             sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${remote.host} scp -R -i /root/.ssh/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws}:/srv/mirror"
+        }
     }
 }
 
