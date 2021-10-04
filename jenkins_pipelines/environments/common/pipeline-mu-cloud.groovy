@@ -47,49 +47,49 @@ def run(params) {
             sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${env.aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
         }
 
-        stage('Create mirrors') {
-            parallel(
-                    "create_local_mirror_with_mu": {
-                        stage("Create local mirror with MU") {
-                            // Provision the environment
-                            if (params.terraform_init) {
-                                env.TERRAFORM_INIT = '--init'
-                            } else {
-                                env.TERRAFORM_INIT = ''
-                            }
-                            String[] repositories_split = params.mu_repositories.split("\n")
-                            env.repositories = "storage:\n" +
-                                    "  type: file\n" +
-                                    "  path: /srv/mirror\n" +
-                                    "\n" +
-                                    "http:"
-                            repositories_split.each { item ->
-                                env.repositories = "${env.repositories}\n\n" +
-                                        "  - url: ${item}\n" +
-                                        "    archs: [x86_64]"
-                            }
-                            writeFile file: "${env.resultdir}/sumaform-local/salt/mirror/etc/minima-customize.yaml", text: env.repositories, encoding: "UTF-8"
-                            sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_common_params} --logfile ${resultdirbuild}/sumaform-local.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend libvirt"
-                            deployed_local = true
-
-                        }
-                    },
-                    "create_empty_aws_mirror": {
-                        stage("Create empty AWS mirror") {
-                            // Provision the environment
-                            if (params.terraform_init) {
-                                env.TERRAFORM_INIT = '--init'
-                            } else {
-                                env.TERRAFORM_INIT = ''
-                            }
-                            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
-                            deployed_aws = true
-
-                        }
-                    }
-            )
-
-        }
+//        stage('Create mirrors') {
+//            parallel(
+//                    "create_local_mirror_with_mu": {
+//                        stage("Create local mirror with MU") {
+//                            // Provision the environment
+//                            if (params.terraform_init) {
+//                                env.TERRAFORM_INIT = '--init'
+//                            } else {
+//                                env.TERRAFORM_INIT = ''
+//                            }
+//                            String[] repositories_split = params.mu_repositories.split("\n")
+//                            env.repositories = "storage:\n" +
+//                                    "  type: file\n" +
+//                                    "  path: /srv/mirror\n" +
+//                                    "\n" +
+//                                    "http:"
+//                            repositories_split.each { item ->
+//                                env.repositories = "${env.repositories}\n\n" +
+//                                        "  - url: ${item}\n" +
+//                                        "    archs: [x86_64]"
+//                            }
+//                            writeFile file: "${env.resultdir}/sumaform-local/salt/mirror/etc/minima-customize.yaml", text: env.repositories, encoding: "UTF-8"
+//                            sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_common_params} --logfile ${resultdirbuild}/sumaform-local.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend libvirt"
+//                            deployed_local = true
+//
+//                        }
+//                    },
+//                    "create_empty_aws_mirror": {
+//                        stage("Create empty AWS mirror") {
+//                            // Provision the environment
+//                            if (params.terraform_init) {
+//                                env.TERRAFORM_INIT = '--init'
+//                            } else {
+//                                env.TERRAFORM_INIT = ''
+//                            }
+//                            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
+//                            deployed_aws = true
+//
+//                        }
+//                    }
+//            )
+//
+//        }
 
         stage("Upload ssh key to local mirror") {
             mirror_hostname_local = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-local/terraform.tfstate | jq -r ''.resources[3].instances[0].attributes.network_interface[0].addresses[0]'' ",
@@ -99,12 +99,11 @@ def run(params) {
 
             def remote = [:]
             remote.name = 'local_mirror'
-            remote.host = $ { mirror_hostname_local }
             remote.user = 'root'
             remote.password = 'linux'
-            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${remote.host} echo ${env.ssh_key} > /root/.ssh/testing-suma.pem"
-            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${remote.host} chmod 0400 /root/.ssh/testing-suma.pem"
-            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${remote.host} scp -R -i /root/.ssh/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws}:/srv/mirror"
+            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} echo ${env.ssh_key} > /root/.ssh/testing-suma.pem"
+            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} chmod 0400 /root/.ssh/testing-suma.pem"
+            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} scp -R -i /root/.ssh/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws}:/srv/mirror"
         }
     }
 }
