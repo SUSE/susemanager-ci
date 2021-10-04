@@ -111,3 +111,7 @@ module "mirror" {
     //    volume_snapshot_id = data.aws_ebs_snapshot.data_disk_snapshot.id
   }
 }
+
+output "server_mirrors_public_name" {
+  value = module.mirror.configuration["public_names"][0]
+}

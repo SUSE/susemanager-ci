@@ -145,6 +145,10 @@ module "mirror" {
 output "bastion_public_name" {
   value = lookup(module.base.configuration, "bastion_host", null)
 }
+
+output "aws_server_mirrors_public_name" {
+  value = module.mirror.configuration["public_names"][0]
+}
 //
 //output "aws_server_mirrors_private_name" {
 //  value = module.mirror.configuration["hostnames"][0]
