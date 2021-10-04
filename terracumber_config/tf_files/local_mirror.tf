@@ -113,8 +113,9 @@ module "mirror" {
 }
 
 output "server_mirrors_public_name" {
-  value = module.mirror.configuration["hostnames"][0]
+  value = module.mirror.configuration.hostnames[0]
 }
+
 output "mirror_hosts" {
   value = lookup(module.base.configuration, "mirror", null)
 }
