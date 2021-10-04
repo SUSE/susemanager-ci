@@ -8,6 +8,33 @@ def run(params) {
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.local_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
         env.aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
+        env.ssh_key = "-----BEGIN RSA PRIVATE KEY-----\n" +
+                "MIIEowIBAAKCAQEAgIlqypvO51HIfsFSyjqYMJihRXk2HRS+W9ilNfhWtnE/RBvg\n" +
+                "flxMIz5r9eLtScdVDhJY5QqlnQ9P3jmJNOO42NJY4Wu3SifK/MI/E9NLwwgziLQi\n" +
+                "keAzDR6hGcZOqeptY8voqoy73vYFyeGyrEWK9sjwaBYCYZ6dgn7Nc95UUN+DTMu1\n" +
+                "3DsKB7I6aczjKjbVkm3I9umVUHirzcm69otJ/F/RjSP8lGe1oYZYf1OFD5OdpZBS\n" +
+                "8+xo+MtsSHVdF/mBVACC1xz7Cbm7ZpH5pxXmdiA03uBhxf50sw0vHEE97lm5JwCv\n" +
+                "Bi9Id6YzVtL2DhYXW46TIqYgu0rUXSN42xpk/QIDAQABAoIBACQDXHJr+SqClYQ+\n" +
+                "Mi4LAL0M5pKKhYjcWQFuz8sxS0pOrIUuslV1ErgFM0ZvUECNot0QcuupcgFxWtVO\n" +
+                "lYzGCPJm7RQrk+0o/QyYeAfb+awpThcNMWphwKv6WvTXxQ6Caie95/BxAepUUAbi\n" +
+                "P6dYzLicUA85q20ifcskL/g44LLPpE35XfaQ0YdDdCdyZ93a1EDfGejqTi3hS19y\n" +
+                "IM7ITr1B/ph0FQozdGutwgE0MiwywOCxSV/cXYtdK86sFwg6uQHC9RgC4UTs28Of\n" +
+                "P4GohLsiYQSkm0VhHN9ps94EpaJLwxQrntyfY5mreP+sh183FSvoBDPfbWeYfXUJ\n" +
+                "JSZtsdkCgYEA55QDLAnGjVpT0rwdUrlq4XsWKdMgOqOI05CEmdRPP0cm3gf1LWJg\n" +
+                "GQzh92l2BU+gok/ZWr+7GyfZs9UoW+i86hlDrUna5V0K+O98e0sZuuVjXoHzvFRc\n" +
+                "i0aI61Ygbz5B3SwpmjQ9D6QVJSHnWzXrl/N3tEgxnvkdUL4/56feDMsCgYEAjheQ\n" +
+                "hVyUcL3rAKnixKnA2rF+Aa4ythp/ymYSIGyHawYvuUr67MarssnCDUgUt6ascu+E\n" +
+                "zk59kviyRNGpG8f1f35iSLKmiByiQhUAwqJAZWalTSk7ub5Opcx008Tk4+Tpzd8k\n" +
+                "VSTzzujTsCq/1z53AU2HC4ZHimNf8OdEPL8WpFcCgYEAp+rydd9MwrhpqZfP52kd\n" +
+                "cAxRYNh/OSXVlBrpm6WQJQER1NOOW29G4UMvIris5GL9xlQB9kSqhqFZwYVhs2tK\n" +
+                "eLEDGsc/2yqhRypYaApnyNaGPEQcmUXOqQrnQ0X7VM6e8aIRNIiGci33SyqPWNr7\n" +
+                "Tv4yoV3r5Ssbr62UJwTZBQsCgYB9e/gInqMFEeP4+Q8oKNYFDJzANSvZwHs8rnmx\n" +
+                "osbQ0GzTEZGaCzXUtfMmsZKCQbKn6jj5zT1+zxz4Q8Q5oZSAHIgFtaf2KnttKok6\n" +
+                "WfnO0yCGjTSOq69fIrnFz2toi1+jjT3T58dc4icYvBghqauFPgdWOSby4yH2aPbN\n" +
+                "QuBnDwKBgDqO1qBv/UaGdmR7fDQxIrg3U2+TVvZ9jA+7UWwJjHkgENOj+QPeiGx9\n" +
+                "pk0MGrfcPk55l17Ntr/Ql/oo6QBSuuADsB3k/ssqlrhwX3CdKnhsNvpA51tsztGo\n" +
+                "W4j4gwTswc1SO4+1uE/qIS+dRNJOR10vfN4ixeLgel11Amotcqnj\n" +
+                "-----END RSA PRIVATE KEY-----\n"
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create a directory for  to place the directory with the build results (if it does not exist)
             sh "mkdir -p ${resultdir}"
@@ -62,6 +89,23 @@ def run(params) {
                     }
             )
 
+        }
+        stage("Upload ssh key to local mirror") {
+            mirror_hostname_local = sh("cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-local/terraform.tfstate | jq -r '.outputs.local_mirrors_public_name.value[0]",
+                    returnStdout: true)
+            mirror_hostname_aws = sh("cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]",
+                    returnStdout: true)
+
+            def remote = [:]
+            remote.name = 'local_mirror'
+            remote.host = 'test.domain.com'
+            remote.user = 'root'
+            remote.password = 'linux'
+            remote.allowAnyHosts = true
+            sshCommand remote: remote, command: "echo ${env.ssh_key} > /root/.ssh/testing-suma.pem"
+            sshCommand remote: remote, command: 'chmod 0400 /root/.ssh/testing-suma.pem'
+            sshCommand remote: remote, command: "scp -R -i /root/.ssh/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws}:/srv/mirror"
+            
         }
     }
 }

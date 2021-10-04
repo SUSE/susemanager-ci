@@ -112,7 +112,7 @@ module "mirror" {
   }
 }
 
-output "server_mirrors_public_name" {
+output "local_mirrors_public_name" {
   value = module.mirror.configuration.hostnames
 }
 

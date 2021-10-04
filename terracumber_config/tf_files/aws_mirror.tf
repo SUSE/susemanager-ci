@@ -153,13 +153,13 @@ output "mirror_hosts" {
   value = lookup(module.base.configuration, "mirror", null)
 }
 //
-output "aws_server_mirrors_private_name" {
+output "aws_mirrors_private_name" {
   value = module.mirror.configuration.hostnames
 }
 
-//output "aws_server_mirrors_public_name" {
-//  value = module.mirror.configuration["public_names"][0]
-//}
+output "aws_mirrors_public_name" {
+  value = module.mirror.configuration.public_names
+}
 
 //
 //output "mirror_hosts" {
