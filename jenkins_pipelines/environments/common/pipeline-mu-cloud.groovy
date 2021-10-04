@@ -102,9 +102,11 @@ def run(params) {
             remote.user = 'root'
             remote.password = 'linux'
             remote.allowAnyHosts = true
-            sshCommand remote: remote, command: "echo ${env.ssh_key} > /root/.ssh/testing-suma.pem"
-            sshCommand remote: remote, command: 'chmod 0400 /root/.ssh/testing-suma.pem'
-            sshCommand remote: remote, command: "scp -R -i /root/.ssh/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws}:/srv/mirror"
+            steps {
+                sshCommand remote: remote, command: "echo ${env.ssh_key} > /root/.ssh/testing-suma.pem"
+                sshCommand remote: remote, command: 'chmod 0400 /root/.ssh/testing-suma.pem'
+                sshCommand remote: remote, command: "scp -R -i /root/.ssh/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws}:/srv/mirror"
+            }
 
         }
     }
