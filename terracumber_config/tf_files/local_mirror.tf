@@ -112,6 +112,6 @@ module "mirror" {
   }
 }
 
-//output "server_mirrors_public_name" {
-//  value = module.mirror.configuration["public_names"][0]
-//}
+output "server_mirrors_public_name" {
+  value = module.mirror.configuration["hostnames"][0]
+}
