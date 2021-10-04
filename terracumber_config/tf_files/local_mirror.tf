@@ -73,9 +73,17 @@ variable "GIT_PASSWORD" {
   type = "string"
   default = null // Not needed for master, as it is public
 }
+
+variable "SSH_KEY" {
+  type = string
+  default = "/home/jenkins/.ssh/id_rsa.pub"
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
 }
+
+
 
 locals {
   pool = "ssd"
@@ -83,7 +91,7 @@ locals {
 
 module "base" {
   source = "./modules/base"
-
+  ssh_key_path = var.SSH_KEY
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   name_prefix  = "uyuni-mu-"
