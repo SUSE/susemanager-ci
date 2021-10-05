@@ -75,6 +75,7 @@ def run(params) {
             remote.user = 'root'
             remote.password = 'linux'
             sh "hostname"
+            sh "users"
             sh "scp -o StrictHostKeyChecking=no /home/jenkins/.ssh/testing-suma.pem ${remote.user}@${mirror_hostname_local}:/root/"
             sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
             sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'scp -R -i /root/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws}:/srv/mirror' "
