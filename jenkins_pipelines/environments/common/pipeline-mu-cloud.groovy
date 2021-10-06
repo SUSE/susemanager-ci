@@ -66,9 +66,9 @@ def run(params) {
 
         stage("Upload ssh key to local mirror") {
             mirror_hostname_local = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-local/terraform.tfstate | jq -r ''.resources[3].instances[0].attributes.network_interface[0].addresses[0]'' ",
-                    returnStdout: true)
+                    returnStdout: true).trim()
             mirror_hostname_aws = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
-                    returnStdout: true)
+                    returnStdout: true).trim()
 
             def remote = [:]
             remote.name = 'local_mirror'
