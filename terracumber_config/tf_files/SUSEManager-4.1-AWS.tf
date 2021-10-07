@@ -106,7 +106,6 @@ variable "SECRET_KEY" {
 }
 
 variable "ADDITIONAL_REPOSITORIES_LIST" {
-  type = "string"
   default = {}
 }
 
