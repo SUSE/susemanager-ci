@@ -30,11 +30,11 @@ def run(params) {
                             } else {
                                 env.TERRAFORM_INIT = ''
                             }
-                            String[] repositories_split_tmp = params.mu_repositories.split("\n")
-                            env.test = params.mu_repositories.split("\n")
-                            env.repositories_split = repositories_split_tmp
-                            sh "echo ${env.test}"
-                            sh "echo ${env.repositories_split}"
+                            String[] repositories_split = params.mu_repositories.split("\n")
+                            environment {
+                                String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
+                            }
+                            sh "echo ${env.REPOSITORIES_LIST}"
                             env.repositories = "storage:\n" +
                                     "  type: file\n" +
                                     "  path: /srv/mirror\n" +
@@ -54,11 +54,6 @@ def run(params) {
                     "create_empty_aws_mirror": {
                         stage("Create empty AWS mirror") {
                             // Provision the environment
-                            if (params.terraform_init) {
-                                env.TERRAFORM_INIT = '--init'
-                            } else {
-                                env.TERRAFORM_INIT = ''
-                            }
 //                            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
                             deployed_aws = true
 
