@@ -30,7 +30,7 @@ def run(params) {
                             } else {
                                 env.TERRAFORM_INIT = ''
                             }
-                            String[] env.repositories_split = params.mu_repositories.split("\n")
+                            String[] repositories_split = params.mu_repositories.split("\n")
                             env.repositories = "storage:\n" +
                                     "  type: file\n" +
                                     "  path: /srv/mirror\n" +
@@ -55,7 +55,7 @@ def run(params) {
                             } else {
                                 env.TERRAFORM_INIT = ''
                             }
-                            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
+//                            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
                             deployed_aws = true
 
                         }
@@ -84,7 +84,7 @@ def run(params) {
         stage("Deploy") {
 //            env.repositories_split = params.mu_repositories.split("\n")
             aws_repositories = "additional_repos = {\n"
-            env.repositories_split.each { item ->
+            repositories_split.each { item ->
                 aws_repositories = aws_repositories + item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
             }
         }
