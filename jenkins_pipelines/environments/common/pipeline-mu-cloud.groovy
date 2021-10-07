@@ -30,7 +30,7 @@ def run(params) {
 //                            } else {
 //                                env.TERRAFORM_INIT = ''
 //                            }
-//                            String[] env.repositories_split = params.mu_repositories.split("\n")
+//                            String[] env.repositories_split = params.mu_repositories.split("\n").trim()
 //                            env.repositories = "storage:\n" +
 //                                    "  type: file\n" +
 //                                    "  path: /srv/mirror\n" +
@@ -82,6 +82,7 @@ def run(params) {
         }
 
         stage("Deploy") {
+            String[] env.repositories_split = params.mu_repositories.split("\n").trim()
             aws_repositories = "additional_repos = {\n"
             env.repositories_split.each { item ->
                 aws_repositories = aws_repositories + item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
