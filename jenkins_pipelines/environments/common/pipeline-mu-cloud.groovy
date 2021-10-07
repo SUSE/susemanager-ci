@@ -81,18 +81,17 @@ def run(params) {
 //            sh "ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo cp -R /home/ec2-user/repositories /srv/mirror' "
         }
 
-        stage("Deploy"){
+        stage("Deploy") {
             env.mirror_repositories = ""
-            new File( "${env.resultdir}/sumaform-aws/terraform.tfvars" ).withWriter { w ->
-                w << "additional_repos = {" + System.getProperty("line.separator")
-                env.repositories_split.each { item ->
-                    w << item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + "," +  System.getProperty("line.separator")
-                }
-                w << "}"
+            w << "additional_repos = {\n"
+            env.repositories_split.each { item ->
+                w << item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
             }
         }
-
+        w << "}\n"
+        writeFile file: "${env.resultdir}/sumaform-aws/terraform.tvars", text: w, encoding: "UTF-8"
     }
+
 }
 
 
