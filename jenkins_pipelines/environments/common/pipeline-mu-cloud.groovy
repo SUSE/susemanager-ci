@@ -35,23 +35,20 @@ def run(params) {
         }
 
         stage('Create mirrors') {
-            sh "echo ${deployed_local}"
-            sh "echo ${TERRAFORM_INIT}"
-            sh "echo ${REPOSITORIES_LIST}"
             parallel(
                     "create_local_mirror_with_mu": {
                         stage("Create local mirror with MU") {
-                            env.repositories = "storage:\n" +
+                            repositories = "storage:\n" +
                                     "  type: file\n" +
                                     "  path: /srv/mirror\n" +
                                     "\n" +
                                     "http:"
                             REPOSITORIES_LIST.each { item ->
-                                env.repositories = "${env.repositories}\n\n" +
+                                repositories = "${repositories}\n\n" +
                                         "  - url: ${item}\n" +
                                         "    archs: [x86_64]"
                             }
-                            writeFile file: "${env.resultdir}/sumaform-local/salt/mirror/etc/minima-customize.yaml", text: env.repositories, encoding: "UTF-8"
+                            writeFile file: "${env.resultdir}/sumaform-local/salt/mirror/etc/minima-customize.yaml", text: repositories, encoding: "UTF-8"
 //                            sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_common_params} --logfile ${resultdirbuild}/sumaform-local.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend libvirt"
 //                            deployed_local = true
 
@@ -90,7 +87,7 @@ def run(params) {
 //            env.repositories_split = params.mu_repositories.split("\n")
             aws_repositories = "additional_repos = {\n"
             REPOSITORIES_LIST.each { item ->
-                aws_repositories = aws_repositories + item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
+                aws_repositories = aws_repositories + item.replaceAll('download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
             }
         }
         aws_repositories = aws_repositories + "}\n"
