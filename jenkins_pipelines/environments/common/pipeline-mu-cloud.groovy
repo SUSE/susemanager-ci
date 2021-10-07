@@ -2,6 +2,12 @@ def run(params) {
 
     timestamps {
 
+        // Environment variable
+        env.resultdir = "${WORKSPACE}/results"
+        env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+        // The junit plugin doesn't affect full paths
+        junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
+
         //Deployment variable
         deployed_local = false
         deployed_aws = false
@@ -13,15 +19,7 @@ def run(params) {
             TERRAFORM_INIT = ''
         }
 
-        // Environment variable
-        env.resultdir = "${WORKSPACE}/results"
-        env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-        // The junit plugin doesn't affect full paths
-        junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.local_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
-        env.aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
-
-        // MU repositories list
+       // MU repositories list
         String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
 
         stage('Clone terracumber, susemanager-ci and sumaform') {
