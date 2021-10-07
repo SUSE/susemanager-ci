@@ -8,6 +8,15 @@ def run(params) {
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.local_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
         env.aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
+        String[] repositories_split = params.mu_repositories.split("\n")
+        environment {
+            String[] REPOSITORIES_LIST = repositories_split
+            if (params.terraform_init) {
+                TERRAFORM_INIT = '--init'
+            } else {
+                TERRAFORM_INIT = ''
+            }
+        }
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create a directory for  to place the directory with the build results (if it does not exist)
             sh "mkdir -p ${resultdir}"
@@ -21,26 +30,17 @@ def run(params) {
         }
 
         stage('Create mirrors') {
+            sh "echo ${env.TERRAFORM_INIT}"
+            sh "echo ${env.REPOSITORIES_LIST}"
             parallel(
                     "create_local_mirror_with_mu": {
                         stage("Create local mirror with MU") {
-                            // Provision the environment
-                            if (params.terraform_init) {
-                                env.TERRAFORM_INIT = '--init'
-                            } else {
-                                env.TERRAFORM_INIT = ''
-                            }
-                            String[] repositories_split = params.mu_repositories.split("\n")
-                            environment {
-                                String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
-                            }
-                            sh "echo ${env.REPOSITORIES_LIST}"
                             env.repositories = "storage:\n" +
                                     "  type: file\n" +
                                     "  path: /srv/mirror\n" +
                                     "\n" +
                                     "http:"
-                            env.repositories_split.each { item ->
+                            env.REPOSITORIES_LIST.each { item ->
                                 env.repositories = "${env.repositories}\n\n" +
                                         "  - url: ${item}\n" +
                                         "    archs: [x86_64]"
