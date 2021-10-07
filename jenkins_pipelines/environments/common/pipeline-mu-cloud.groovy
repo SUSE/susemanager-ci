@@ -1,4 +1,14 @@
 def run(params) {
+    String[] repositories_split = params.mu_repositories.split("\n")
+    environment {
+        String[] REPOSITORIES_LIST = repositories_split
+        TEST = "roro"
+        if (params.terraform_init) {
+            TERRAFORM_INIT = '--init'
+        } else {
+            TERRAFORM_INIT = ''
+        }
+    }
     timestamps {
         deployed_local = false
         deployed_aws = false
@@ -8,16 +18,7 @@ def run(params) {
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.local_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
         env.aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
-        String[] repositories_split = params.mu_repositories.split("\n")
-        environment {
-            String[] REPOSITORIES_LIST = repositories_split
-            TEST = "roro"
-            if (params.terraform_init) {
-                TERRAFORM_INIT = '--init'
-            } else {
-                TERRAFORM_INIT = ''
-            }
-        }
+
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create a directory for  to place the directory with the build results (if it does not exist)
             sh "mkdir -p ${resultdir}"
@@ -32,6 +33,7 @@ def run(params) {
 
         stage('Create mirrors') {
             sh "echo ${env.TEST}"
+            sh "echo ${deployed_local}"
             sh "echo ${env.TERRAFORM_INIT}"
             sh "echo ${env.REPOSITORIES_LIST}"
             parallel(
