@@ -30,7 +30,8 @@ def run(params) {
                             } else {
                                 env.TERRAFORM_INIT = ''
                             }
-                            String[] repositories_split = params.mu_repositories.split("\n")
+                            String[] repositories_split_tmp = params.mu_repositories.split("\n")
+                            env.repositories_split = repositories_split_tmp
                             env.repositories = "storage:\n" +
                                     "  type: file\n" +
                                     "  path: /srv/mirror\n" +
