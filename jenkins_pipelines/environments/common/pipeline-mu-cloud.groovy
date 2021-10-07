@@ -87,7 +87,7 @@ def run(params) {
                 aws_repositories = ${aws_repositories} + item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
             }
         }
-        aws_repositories = "}\n"
+        aws_repositories = ${aws_repositories} + "}\n"
         writeFile file: "${env.resultdir}/sumaform-aws/terraform.tvars", text: aws_repositories, encoding: "UTF-8"
     }
 
