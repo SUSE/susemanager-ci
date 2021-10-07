@@ -33,8 +33,8 @@ def run(params) {
                             String[] repositories_split_tmp = params.mu_repositories.split("\n")
                             env.test = params.mu_repositories.split("\n")
                             env.repositories_split = repositories_split_tmp
-                            sh "echo ${env.repositories_split}"
                             sh "echo ${env.test}"
+                            sh "echo ${env.repositories_split}"
                             env.repositories = "storage:\n" +
                                     "  type: file\n" +
                                     "  path: /srv/mirror\n" +
