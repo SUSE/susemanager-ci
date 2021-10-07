@@ -82,13 +82,13 @@ def run(params) {
         }
 
         stage("Deploy") {
-            env.aws_repositories = "additional_repos = {\n"
+            aws_repositories = "additional_repos = {\n"
             env.repositories_split.each { item ->
-                env.aws_repositories = ${env.aws_repositories} + item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
+                aws_repositories = aws_repositories + item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
             }
         }
-        env.aws_repositories = ${env.aws_repositories} + "}\n"
-        writeFile file: "${env.resultdir}/sumaform-aws/terraform.tvars", text: env.aws_repositories, encoding: "UTF-8"
+        aws_repositories = aws_repositories + "}\n"
+        writeFile file: "${env.resultdir}/sumaform-aws/terraform.tvars", text: aws_repositories, encoding: "UTF-8"
     }
 
 }
