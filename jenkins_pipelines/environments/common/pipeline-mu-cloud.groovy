@@ -19,7 +19,7 @@ def run(params) {
             TERRAFORM_INIT = ''
         }
 
-       // MU repositories list
+        // MU repositories list
         String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
 
         stage('Clone terracumber, susemanager-ci and sumaform') {
@@ -77,10 +77,10 @@ def run(params) {
             remote.name = 'local_mirror'
             remote.user = 'root'
             remote.password = 'linux'
-//            sh "scp -o StrictHostKeyChecking=no /home/jenkins/.ssh/testing-suma.pem ${remote.user}@${mirror_hostname_local}:/root/"
-//            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
-//            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -r -i /root/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
-//            sh "ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo cp -R /home/ec2-user/repositories /srv/mirror' "
+            sh "scp -o StrictHostKeyChecking=no /home/jenkins/.ssh/testing-suma.pem ${remote.user}@${mirror_hostname_local}:/root/"
+            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
+            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -r -i /root/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
+            sh "ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo cp -R /home/ec2-user/mirror/* /srv/mirror' "
         }
 
         stage("Deploy") {
