@@ -30,7 +30,6 @@ def run(params) {
                             } else {
                                 env.TERRAFORM_INIT = ''
                             }
-                            sh "echo ${params.mu_repositories}"
                             String[] repositories_split_tmp = params.mu_repositories.split("\n")
                             sh "echo ${repositories_split_tmp}"
                             env.repositories_split = repositories_split_tmp
