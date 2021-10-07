@@ -1,23 +1,28 @@
 def run(params) {
-    String[] repositories_split = params.mu_repositories.split("\n")
-    environment {
-        String[] REPOSITORIES_LIST = repositories_split
-        TEST = "roro"
+
+    timestamps {
+
+        //Deployment variable
+        deployed_local = false
+        deployed_aws = false
+        env.local_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
+        env.aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
         if (params.terraform_init) {
             TERRAFORM_INIT = '--init'
         } else {
             TERRAFORM_INIT = ''
         }
-    }
-    timestamps {
-        deployed_local = false
-        deployed_aws = false
+
+        // Environment variable
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.local_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
         env.aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
+
+        // MU repositories list
+        String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
 
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create a directory for  to place the directory with the build results (if it does not exist)
@@ -32,10 +37,9 @@ def run(params) {
         }
 
         stage('Create mirrors') {
-            sh "echo ${env.TEST}"
             sh "echo ${deployed_local}"
-            sh "echo ${env.TERRAFORM_INIT}"
-            sh "echo ${env.REPOSITORIES_LIST}"
+            sh "echo ${TERRAFORM_INIT}"
+            sh "echo ${REPOSITORIES_LIST}"
             parallel(
                     "create_local_mirror_with_mu": {
                         stage("Create local mirror with MU") {
@@ -44,7 +48,7 @@ def run(params) {
                                     "  path: /srv/mirror\n" +
                                     "\n" +
                                     "http:"
-                            env.REPOSITORIES_LIST.each { item ->
+                            REPOSITORIES_LIST.each { item ->
                                 env.repositories = "${env.repositories}\n\n" +
                                         "  - url: ${item}\n" +
                                         "    archs: [x86_64]"
@@ -87,7 +91,7 @@ def run(params) {
         stage("Deploy") {
 //            env.repositories_split = params.mu_repositories.split("\n")
             aws_repositories = "additional_repos = {\n"
-            env.repositories_split.each { item ->
+            REPOSITORIES_LIST.each { item ->
                 aws_repositories = aws_repositories + item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
             }
         }
