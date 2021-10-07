@@ -11,6 +11,7 @@ def run(params) {
         String[] repositories_split = params.mu_repositories.split("\n")
         environment {
             String[] REPOSITORIES_LIST = repositories_split
+            TEST = "roro"
             if (params.terraform_init) {
                 TERRAFORM_INIT = '--init'
             } else {
@@ -30,6 +31,7 @@ def run(params) {
         }
 
         stage('Create mirrors') {
+            sh "echo ${env.TEST}"
             sh "echo ${env.TERRAFORM_INIT}"
             sh "echo ${env.REPOSITORIES_LIST}"
             parallel(
