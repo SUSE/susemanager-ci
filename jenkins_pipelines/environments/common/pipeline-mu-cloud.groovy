@@ -83,7 +83,6 @@ def run(params) {
 
         stage("Deploy"){
             env.mirror_repositories = ""
-            terraform.tfvars
             new File( "${env.resultdir}/sumaform-aws/terraform.tfvars" ).withWriter { w ->
                 w << "additional_repos = {" + System.getProperty("line.separator")
                 env.repositories_split.each { item ->
