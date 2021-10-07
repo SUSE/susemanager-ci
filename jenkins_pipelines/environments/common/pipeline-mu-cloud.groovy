@@ -30,7 +30,7 @@ def run(params) {
 //                            } else {
 //                                env.TERRAFORM_INIT = ''
 //                            }
-//                            String[] repositories_split = params.mu_repositories.split("\n")
+//                            String[] env.repositories_split = params.mu_repositories.split("\n")
 //                            env.repositories = "storage:\n" +
 //                                    "  type: file\n" +
 //                                    "  path: /srv/mirror\n" +
@@ -67,20 +67,32 @@ def run(params) {
         stage("Upload ssh key to local mirror") {
             mirror_hostname_local = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-local/terraform.tfstate | jq -r ''.resources[3].instances[0].attributes.network_interface[0].addresses[0]'' ",
                     returnStdout: true).trim()
-            mirror_hostname_aws = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
+            mirror_hostname_aws_public = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
                     returnStdout: true).trim()
-
+            env.mirror_hostname_aws_private = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
+                    returnStdout: true).trim()
             def remote = [:]
             remote.name = 'local_mirror'
             remote.user = 'root'
             remote.password = 'linux'
-            sh "hostname"
-            sh "users"
-            sh "scp -o StrictHostKeyChecking=no /home/jenkins/.ssh/testing-suma.pem ${remote.user}@${mirror_hostname_local}:/root/"
-            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
-            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -r -i /root/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws}:/home/ec2-user/' "
-            sh "ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws} 'sudo cp -R /home/ec2-user/repositories /srv/mirror' "
+//            sh "scp -o StrictHostKeyChecking=no /home/jenkins/.ssh/testing-suma.pem ${remote.user}@${mirror_hostname_local}:/root/"
+//            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
+//            sh "ssh -o StrictHostKeyChecking=no ${remote.user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -r -i /root/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
+//            sh "ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo cp -R /home/ec2-user/repositories /srv/mirror' "
         }
+
+        stage("Deploy"){
+            env.mirror_repositories = ""
+            terraform.tfvars
+            new File( "${env.resultdir}/sumaform-aws/terraform.tfvars" ).withWriter { w ->
+                w << "additional_repos = {" + System.getProperty("line.separator")
+                env.repositories_split.each { item ->
+                    w << item.replaceAll('http://download.suse.de', "${mirror_hostname_aws_private}") + "," +  System.getProperty("line.separator")
+                }
+                w << "}"
+            }
+        }
+
     }
 }
 
