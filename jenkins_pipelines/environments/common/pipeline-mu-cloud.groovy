@@ -58,7 +58,7 @@ def run(params) {
                     "create_empty_aws_mirror": {
                         stage("Create empty AWS mirror") {
                             // Provision the environment
-                            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_mirror_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
+                            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_mirror_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
                             deployed_aws = true
 
                         }
@@ -95,7 +95,7 @@ def run(params) {
         aws_repositories = aws_repositories + "}\n"
         writeFile file: "${env.resultdir}/sumaform-aws/terraform.tvars", text: aws_repositories, encoding: "UTF-8"
 //        sh "cp ${WORKSPACE}/susemanager-ci/terracumber_config/tf_files/SUSEManager-4.1-AWS.tf ${env.resultdir}/sumaform-aws/main.tf"
-        sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x;export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
+        sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
 
     }
 }
