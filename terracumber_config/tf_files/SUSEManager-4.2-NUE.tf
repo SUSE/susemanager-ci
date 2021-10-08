@@ -100,7 +100,7 @@ module "cucumber_testsuite" {
   from_email   = "root@suse.de"
 
   no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "portus.mgr.suse.de:5000/cucutest"
+  auth_registry = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
