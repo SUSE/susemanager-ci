@@ -88,12 +88,12 @@ def run(params) {
             int count = 0
             aws_repositories = "ADDITIONAL_REPOSITORIES_LIST = {\n"
             REPOSITORIES_LIST.each { item ->
-                aws_repositories = aws_repositories + "repo${count} = " + item.replaceAll('download.suse.de', "${mirror_hostname_aws_private}") + ",\n"
+                aws_repositories = aws_repositories + "repo${count} = \"" + item.replaceAll('download.suse.de', "${mirror_hostname_aws_private}") + "\",\n"
                 count = count + 1
             }
         }
         aws_repositories = aws_repositories + "}\n"
-        writeFile file: "${env.resultdir}/sumaform-aws/terraform.tvars", text: aws_repositories, encoding: "UTF-8"
+        writeFile file: "${env.resultdir}/sumaform-aws/terraform.tfvars", text: aws_repositories, encoding: "UTF-8"
 //        sh "cp ${WORKSPACE}/susemanager-ci/terracumber_config/tf_files/SUSEManager-4.1-AWS.tf ${env.resultdir}/sumaform-aws/main.tf"
         sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
 
