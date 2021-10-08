@@ -84,7 +84,6 @@ provider "libvirt" {
 }
 
 
-
 locals {
   pool = "ssd"
 }

@@ -131,7 +131,6 @@ module "base" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   name_prefix  = "uyuni-mu-aws-"
-  //  mirror = "ip-172-16-1-50.eu-central-1.compute.internal"
   server_registration_code = var.SERVER_REGISTRATION_CODE
   proxy_registration_code = var.PROXY_REGISTRATION_CODE
 
@@ -162,7 +161,6 @@ module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
   name               = "server"
-  //  image           = "sles15sp2o"
   product_version = "4.1-released"
   repository_disk_size = 150
   additional_repos = var.ADDITIONAL_REPOSITORIES_LIST
