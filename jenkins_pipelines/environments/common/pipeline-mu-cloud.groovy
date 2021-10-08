@@ -35,7 +35,7 @@ def run(params) {
             sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${env.aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
         }
 
-        stage('Create mirrors') {
+//        stage('Create mirrors') {
             parallel(
                     "create_local_mirror_with_mu": {
                         stage("Create local mirror with MU") {
@@ -65,7 +65,7 @@ def run(params) {
                     }
             )
 
-        }
+//        }
 
         stage("Upload ssh key to local mirror") {
             mirror_hostname_local = sh(script: "cat /home/jenkins/jenkins-build/workspace/uyuni-manager-mu-cloud/results/sumaform-local/terraform.tfstate | jq -r ''.resources[3].instances[0].attributes.network_interface[0].addresses[0]'' ",
@@ -94,29 +94,11 @@ def run(params) {
         }
         aws_repositories = aws_repositories + "}\n"
         writeFile file: "${env.resultdir}/sumaform-aws/terraform.tfvars", text: aws_repositories, encoding: "UTF-8"
-//        sh "cp ${WORKSPACE}/susemanager-ci/terracumber_config/tf_files/SUSEManager-4.1-AWS.tf ${env.resultdir}/sumaform-aws/main.tf"
         sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
 
     }
 }
 
-
-//            stage('Add MUs') {
-//                if(params.must_add_channels) {
-//                    echo 'Add custom channels and MU repositories'
-//                    res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_add_custom_repositories'", returnStatus: true)
-//                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'"
-//                    echo "Custom channels and MU repositories status code: ${res_mu_repos}"
-//                }
-//            }
-
-//            stage('Add Activation Keys') {
-//                if(params.must_add_keys) {
-//                    echo 'Add Activation Keys'
-//                    res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_add_activation_keys'", returnStatus: true)
-//                    echo "Add Activation Keys status code: ${res_add_keys}"
-//                }
-//            }
 
 
 return this
