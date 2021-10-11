@@ -95,7 +95,7 @@ module "base" {
   ssh_key_path = var.SSH_KEY
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-mu-"
+  name_prefix = "4.1-mu-aws-"
   images = [
     "opensuse152o"]
   provider_settings = {
