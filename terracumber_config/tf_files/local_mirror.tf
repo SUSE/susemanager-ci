@@ -66,12 +66,14 @@ variable "SCC_PASSWORD" {
 
 variable "GIT_USER" {
   type = "string"
-  default = null // Not needed for master, as it is public
+  default = null
+  // Not needed for master, as it is public
 }
 
 variable "GIT_PASSWORD" {
   type = "string"
-  default = null // Not needed for master, as it is public
+  default = null
+  // Not needed for master, as it is public
 }
 
 variable "SSH_KEY" {
@@ -93,8 +95,9 @@ module "base" {
   ssh_key_path = var.SSH_KEY
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix  = "uyuni-mu-"
-  images = ["opensuse152o"]
+  name_prefix = "uyuni-mu-"
+  images = [
+    "opensuse152o"]
   provider_settings = {
     pool = local.pool
     network_name = null
@@ -102,7 +105,6 @@ module "base" {
     additional_network = "192.168.80.0/24"
   }
 }
-
 
 
 module "mirror" {
@@ -121,8 +123,4 @@ module "mirror" {
 
 output "local_mirrors_public_name" {
   value = module.mirror.configuration.hostnames
-}
-
-output "mirror_hosts" {
-  value = lookup(module.base.configuration, "mirror", null)
 }

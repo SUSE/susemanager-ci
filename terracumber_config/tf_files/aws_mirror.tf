@@ -1,24 +1,23 @@
-
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-manager-mu-cloud"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.1/job/SUSEManager-4.1-AWS"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = "string"
-  default = "export PRODUCT='Uyuni' && run-testsuite"
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
   type = "string"
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = "string"
-  default = "master"
+  default = "Manager-4.1"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -28,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = "string"
-  default = "Results Uyuni-Master $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Manager4.1-Master-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -67,12 +66,14 @@ variable "SCC_PASSWORD" {
 
 variable "GIT_USER" {
   type = "string"
-  default = null // Not needed for master, as it is public
+  default = null
+  // Not needed for master, as it is public
 }
 
 variable "GIT_PASSWORD" {
   type = "string"
-  default = null // Not needed for master, as it is public
+  default = null
+  // Not needed for master, as it is public
 }
 
 variable "REGION" {
@@ -105,6 +106,13 @@ variable "SECRET_KEY" {
   default = null
 }
 
+variable "SSH_ALLOWED_IPS" {
+  default = [
+    "202.180.93.210",
+    "65.132.116.252",
+    "195.135.221.27"]
+}
+
 variable "SERVER_REGISTRATION_CODE" {
   type = "string"
   default = null
@@ -116,7 +124,7 @@ variable "PROXY_REGISTRATION_CODE" {
 }
 
 provider "aws" {
-  region     = var.REGION
+  region = var.REGION
   access_key = var.ACCESS_KEY
   secret_key = var.SECRET_KEY
 }
@@ -128,14 +136,14 @@ module "base" {
   cc_password = var.SCC_PASSWORD
   server_registration_code = var.SERVER_REGISTRATION_CODE
   proxy_registration_code = var.PROXY_REGISTRATION_CODE
-  name_prefix  = "uyuni-mu-aws-"
+  name_prefix = "4.1-mu-aws-"
   //  mirror = "ip-172-16-1-50.eu-central-1.compute.internal"
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
-    region            = var.REGION
-    ssh_allowed_ips   = ["202.180.93.210", "65.132.116.252","195.135.221.27"]
-    key_name          = var.KEY_NAME
-    key_file          = var.KEY_FILE
+    region = var.REGION
+    ssh_allowed_ips = var.SSH_ALLOWED_IPS
+    key_name = var.KEY_NAME
+    key_file = var.KEY_FILE
   }
 }
 
@@ -147,24 +155,13 @@ module "mirror" {
   provider_settings = {
     public_instance = true
   }
-  volume_provider_settings = {
-    # uncomment the following line if you want to reuse an data disk snapshot
-    //    volume_snapshot_id = data.aws_ebs_snapshot.data_disk_snapshot.id
-  }
 }
 
 
 output "bastion_public_name" {
   value = lookup(module.base.configuration, "bastion_host", null)
 }
-//
-//output "aws_mirrors_public_name" {
-//  value = module.mirror.configuration["public_names"][0]
-//}
-output "mirror_hosts" {
-  value = lookup(module.base.configuration, "mirror", null)
-}
-//
+
 output "aws_mirrors_private_name" {
   value = module.mirror.configuration.hostnames
 }
@@ -172,15 +169,3 @@ output "aws_mirrors_private_name" {
 output "aws_mirrors_public_name" {
   value = module.mirror.configuration.public_names
 }
-
-//
-//output "mirror_hosts" {
-//  value = lookup(module.base.configuration, "mirror", null)
-//}
-//output "aws_server_private_name" {
-//  value = module.server.configuration.hostname
-//}
-//
-//output "aws_minion_private_names" {
-//  value = module.minion.configuration.hostnames
-//}

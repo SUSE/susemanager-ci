@@ -18,8 +18,11 @@ node('sumaform-cucumber') {
             string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: false, description: 'Call terraform init (needed if modules are added or changes)'),
+            string("region": 'eu-central-1', description: 'AWS region'),
+            string("availability_zone": 'eu-central-1a'), description: 'AWS availability zone',
+            text("ssh_allowed_ips" : '195.135.221.27', description: 'List of IP to add to the ingress separated by new line. Keep the default one (Jenkins worker)'),
             text(name: 'mu_repositories',
-                    description: 'List of  MU repositories')
+                    description: 'List of  MU repositories for the server, the MU are described as a list of string separated by new line')
         ])
     ])
 
