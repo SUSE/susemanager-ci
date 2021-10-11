@@ -27,7 +27,7 @@ node('sumaform-cucumber') {
         checkout scm
     }
     timeout(activity: false, time: 10, unit: 'HOURS') {
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline-mu-cloud.groovy"
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-mu-aws.groovy"
         pipeline.run(params)
     }
 }
