@@ -1,0 +1,33 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/local_mirror.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/maximenoel8/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'minimaformu', description: 'Sumaform Git reference (branch, tag...)'),
+            choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
+            choice(name: 'terraform_bin', choices: ['/usr/bin/terraform_bin'], description: 'Terraform binary path'),
+            choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
+            booleanParam(name: 'long_tests', defaultValue: false, description: 'This will enable the execution of long tests'),
+            // Temporary: should move to uyuni-project
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            booleanParam(name: 'terraform_init', defaultValue: false, description: 'Call terraform init (needed if modules are added or changes)'),
+            text(name: 'mu_repositories',
+                    description: 'List of  MU repositories for the server, the MU are described as a list of string separated by new line')
+        ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    timeout(activity: false, time: 10, unit: 'HOURS') {
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-mu-cloud.groovy"
+        pipeline.run(params)
+    }
+}
