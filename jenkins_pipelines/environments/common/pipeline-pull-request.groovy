@@ -99,7 +99,8 @@ def run(params) {
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
                             echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
                             // Clean up previous errors
-                            sh "bash -c \"rm -rf ${environment_workspace}/publish_logs/*\""
+                            sh "bash -c \"rm -rf ${environment_workspace}/publish_logs\""
+                            sh "bash -c \"mkdir ${environment_workspace}/publish_logs\""
                             // We clean up the previous repo because the pull request repo gets recreated each time, so we have no control on the build numbers.
                             sh "bash -c \"rm -rf ${environment_workspace}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64\""
                             sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${params.builder_project}:${params.pull_request_number}\" -r ${params.build_repo} -a x86_64 -d \"${environment_workspace}\" > ${environment_workspace}/publish_logs/${params.builder_project}_${params.pull_request_number} 2>&1 || touch ${environment_workspace}/publish_logs/${params.builder_project}_${params.pull_request_number}.error &"
