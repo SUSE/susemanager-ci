@@ -263,6 +263,7 @@ def run(params) {
                           sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
                       }
                       sh "rm -rf ${WORKSPACE}/product"
+                      sh "rm -rf ${params.builder_project}:${params.pull_request_number}" 
                   }
                 }
             }
