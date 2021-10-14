@@ -23,6 +23,9 @@ def run(params) {
         // MU repositories list
         String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
 
+        // Public IP for AWS ingress
+        String[] ALLOWED_IPS = params.allowed_IP.split("\n")
+
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create the directory for the build results
             sh "mkdir -p ${resultdir}"
@@ -59,6 +62,17 @@ def run(params) {
                 },
                 "create_empty_aws_mirror": {
                     stage("Create empty AWS mirror") {
+                        env.aws_configuration = "REGION = ${params.aws_region}\n" +
+                                "AVAILABILITY = ${params.aws_availability_zone}\n" +
+                                "ALLOWED_IPS = [ \n"
+
+                        ALLOWED_IPS.each { ip ->
+                            env.aws_configuration = aws_configuration + "    ${ip},\n"
+                        }
+
+                        env.aws_configuration = aws_configuration + "]\n"
+                        writeFile file: "${resultdir}/sumaform-aws/terraform.tfvars", text: aws_configuration, encoding: "UTF-8"
+
                         // Deploy empty AWS mirror
                         sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_mirror_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
                         deployed_aws = true
@@ -94,7 +108,7 @@ def run(params) {
                 count = count + 1
             }
 
-            aws_repositories = aws_repositories + "}\n"
+            aws_repositories = aws_repositories + "}\n" + aws_configuration
             writeFile file: "${resultdir}/sumaform-aws/terraform.tfvars", text: aws_repositories, encoding: "UTF-8"
 
             // Deploying AWS server using MU repositories

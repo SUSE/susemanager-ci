@@ -119,7 +119,7 @@ variable "PROXY_REGISTRATION_CODE" {
   default = null
 }
 
-variable "SSH_ALLOWED_IPS" {
+variable "ALLOWED_IPS" {
   default = [
     "202.180.93.210",
     "65.132.116.252",
@@ -144,7 +144,7 @@ module "base" {
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region            = var.REGION
-    ssh_allowed_ips = var.SSH_ALLOWED_IPS
+    ssh_allowed_ips = var.ALLOWED_IPS
     key_name          = var.KEY_NAME
     key_file          = var.KEY_FILE
   }
