@@ -24,7 +24,7 @@ def run(params) {
         String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
 
         // Public IP for AWS ingress
-        String[] ALLOWED_IPS = params.allowed_IP.split("\n")
+        String[] ALLOWED_IPS = params.allowed_IPS.split("\n")
 
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create the directory for the build results
