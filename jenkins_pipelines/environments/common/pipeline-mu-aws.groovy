@@ -67,7 +67,7 @@ def run(params) {
                                 "ALLOWED_IPS = [ \n"
 
                         ALLOWED_IPS.each { ip ->
-                            env.aws_configuration = aws_configuration + "    ${ip},\n"
+                            env.aws_configuration = aws_configuration + "    \"${ip}\",\n"
                         }
 
                         env.aws_configuration = aws_configuration + "]\n"
