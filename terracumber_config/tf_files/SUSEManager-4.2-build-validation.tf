@@ -262,7 +262,7 @@ module "base_arm" {
   cc_password = var.SCC_PASSWORD
   name_prefix = "suma-bv-42-"
   use_avahi   = false
-  domain      = "arch.suse.de"
+  domain      = "mgr.prv.suse.net"
   images      = [ "opensuse153armo" ]
 
   # TODO: enable mirror for ARM
