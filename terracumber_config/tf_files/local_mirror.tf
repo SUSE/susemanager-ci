@@ -85,7 +85,6 @@ provider "libvirt" {
   uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
 }
 
-
 locals {
   pool = "ssd"
 }
@@ -105,7 +104,6 @@ module "base" {
     additional_network = "192.168.80.0/24"
   }
 }
-
 
 module "mirror" {
   source = "./modules/mirror"
