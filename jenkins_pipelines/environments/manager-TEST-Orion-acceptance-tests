@@ -8,7 +8,7 @@ node('sumaform-cucumber') {
         pipelineTriggers([cron('H 17 * * *')]),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/mcalmer/uyuni.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'new-reboot-needed-installhint', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'cucumber_ref', defaultValue: 'bootstrap-ui-for-reactivation', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-Test-Orion-NUE.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),

@@ -81,8 +81,8 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  //product_version = "uyuni-master"
-  product_version = "head"
+  product_version = "uyuni-master"
+  //product_version = "head"
   
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -120,8 +120,8 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:71"
       }
       additional_repos = {
-        //Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/openSUSE_Leap_15.3/"
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP3/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/openSUSE_Leap_15.3/"
+        //Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP3/"
       }
     }
     suse-client = {
