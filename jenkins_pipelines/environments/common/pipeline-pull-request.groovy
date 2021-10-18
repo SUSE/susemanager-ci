@@ -97,7 +97,7 @@ def run(params) {
                             sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${params.builder_api}|${params.source_project}\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e"
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${params.builder_api} -c $HOME/.oscrc -p ${params.builder_project}:${params.pull_request_number}"
-                            sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${env.number}/ ${environment_workspace}/repos"
+                            sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ ${environment_workspace}/repos"
 
                             echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
                             // Clean up previous errors
