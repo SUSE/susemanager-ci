@@ -40,8 +40,8 @@ def run(params) {
         parallel(
                 "create_local_mirror_with_mu": {
                     stage("Create local mirror with MU") {
-                        writeFile file: "${aws_mirror_dir}/custom_repositories.json", text: params.custom_repositories, encoding: "UTF-8"
-                        mu_repositories = sh(script: "cat ${aws_mirror_dir}/custom_repositories.json | jq -r ' to_entries[] |  \" \\(.value)\"' | jq -r ' to_entries[] |  \" \\(.value)\"'",
+                        writeFile file: "$custom_repositories.json", text: params.custom_repositories, encoding: "UTF-8"
+                        mu_repositories = sh(script: "cat ${WORKSPACE}/custom_repositories.json | jq -r ' to_entries[] |  \" \\(.value)\"' | jq -r ' to_entries[] |  \" \\(.value)\"'",
                                 returnStdout: true).trim()
                         String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
                         // Create simplify minima file to only synchronize MU
@@ -67,7 +67,7 @@ def run(params) {
                     stage("Create empty AWS mirror") {
                         env.aws_configuration = "REGION = \"${params.aws_region}\"\n" +
                                 "AVAILABILITY_ZONE = \"${params.aws_availability_zone}\"\n" +
-                                "NAME_PREFIX = \"${env.JOB_NAME}\"\n" +
+                                "NAME_PREFIX = \"${env.JOB_NAME}-\"\n" +
                                 "ALLOWED_IPS = [ \n"
 
                         ALLOWED_IPS.each { ip ->
@@ -106,10 +106,10 @@ def run(params) {
         stage("Deploy AWS with MU") {
             int count = 0
             // Replace internal repositories by mirror repositories
-            sh "sed -i 's/download.suse.de/${mirror_hostname_aws_private}/g' ${aws_mirror_dir}/custom_repositories.json"
+            sh "sed -i 's/download.suse.de/${mirror_hostname_aws_private}/g' ${WORKSPACE}/custom_repositories.json"
 
             // Deploying AWS server using MU repositories
-            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*'  --custom-repositories ${aws_mirror_dir}/custom_repositories.json --runstep provision --sumaform-backend aws"
+            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*'  --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws"
         }
     }
 }

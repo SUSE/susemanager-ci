@@ -19,8 +19,7 @@ node('sumaform-cucumber') {
             string(name: 'aws_region', defaultValue: 'eu-central-1', description: 'Describe the AWS region where to deploy the server'),
             string(name: 'aws_availability_zone', defaultValue: 'eu-central-1a', description: 'Describe the AWS availability zone to deploy the server'),
             text(name: 'allowed_IPS', defaultValue: '195.135.221.27', description: 'Add the public IPs to add to AWS ingress security group ( keep default Jenkins address ) separated by new line' ),
-            text(name: 'mu_repositories',
-                    description: 'List of  MU repositories for the server, the MU are described as a list of string separated by new line')
+            text(name: 'custom_repositories', defaultValue: '{"server":{"server_stack":"","salt15sp2_base":"","salt15sp2_python2_module":"","salt15sp2_server_apps_module":"","extra_sle_that_affects_suma_srv":""},"proxy":{"salt":"","salt15sp2":"","client_tools":"","extra_sle_that_affects_suma_proxy":""},"sle11sp4_minion":{"salt":""},"sle11sp4_client":{"traditional":""},"sle12sp4_minion":{"salt":""},"sle12sp4_client":{"traditional":""},"sle15_minion":{"salt":""},"sle15_client":{"traditional":""},"sle15sp1_minion":{"salt":"","python":"","server_apps":""},"sle15sp1_client":{"traditional":""},"ubuntu1804_minion":{"salt":""},"ubuntu2004_minion":{"salt":""},"ceos7_minion":{"salt":""},"ceos7_client":{"traditional":""},"ceos8_minion":{"salt":""},"ceos8_client":{"traditional":""}}', description: 'Salt & Traditional MU Repositories for each client, in json format')
         ])
     ])
 
