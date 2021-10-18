@@ -172,13 +172,13 @@ def run(params) {
                     if(params.must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
-                        env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}/${params.build_repo}/x86_64"
-                        env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:Other/${params.build_repo}/x86_64"
-                        env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:SLE15-Uyuni-Client-Tools/SLE_15/x86_64"
-                        env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/x86_64"
-                        env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64"
-                        env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/${params.source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/x86_64"
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${params.builder_project}:${params.pull_request_number}/${params.build_repo}/x86_64"
+                        env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${params.source_project}/${params.build_repo}/x86_64"
+                        env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${params.source_project}:Other/${params.build_repo}/x86_64"
+                        env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${params.source_project}:SLE15-Uyuni-Client-Tools/SLE_15/x86_64"
+                        env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${params.source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/x86_64"
+                        env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${params.source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64"
+                        env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${params.source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/x86_64"
 
                         // Provision the environment
                         if (terraform_init) {
