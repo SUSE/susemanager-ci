@@ -106,10 +106,6 @@ variable "SECRET_KEY" {
   default = null
 }
 
-variable "ADDITIONAL_REPOSITORIES_LIST" {
-  default = {}
-}
-
 variable "SERVER_REGISTRATION_CODE" {
   type = "string"
   default = null
@@ -170,7 +166,6 @@ module "server" {
   name                 = "server"
   product_version      = "4.1-released"
   repository_disk_size = 1500
-  additional_repos     = var.ADDITIONAL_REPOSITORIES_LIST
 
   auto_accept                    = false
   monitored                      = true
