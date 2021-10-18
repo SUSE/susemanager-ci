@@ -40,7 +40,7 @@ def run(params) {
         parallel(
                 "create_local_mirror_with_mu": {
                     stage("Create local mirror with MU") {
-                        writeFile file: "$custom_repositories.json", text: params.custom_repositories, encoding: "UTF-8"
+                        writeFile file: "custom_repositories.json", text: params.custom_repositories, encoding: "UTF-8"
                         mu_repositories = sh(script: "cat ${WORKSPACE}/custom_repositories.json | jq -r ' to_entries[] |  \" \\(.value)\"' | jq -r ' to_entries[] |  \" \\(.value)\"'",
                                 returnStdout: true)
                         sh "echo ${mu_repositories}"
