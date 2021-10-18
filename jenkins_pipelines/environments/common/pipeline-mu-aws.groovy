@@ -67,7 +67,7 @@ def run(params) {
                     stage("Create empty AWS mirror") {
                         env.aws_configuration = "REGION = \"${params.aws_region}\"\n" +
                                 "AVAILABILITY_ZONE = \"${params.aws_availability_zone}\"\n" +
-                                "NAME_PREFIX = \"${env.JOB_NAME}\""
+                                "NAME_PREFIX = \"${env.JOB_NAME}\"\n"
                                 "ALLOWED_IPS = [ \n"
 
                         ALLOWED_IPS.each { ip ->
