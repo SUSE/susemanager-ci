@@ -77,18 +77,19 @@ variable "GIT_PASSWORD" {
 
 variable "REGION" {
   type = "string"
-  default = "eu-central-1"
+  default = null
 }
 
 variable "AVAILABILITY_ZONE" {
   type = "string"
-  default = "eu-central-1a"
+  default = null
 }
 
 variable "KEY_FILE" {
   type = "string"
   default = "/home/jenkins/.ssh/testing-suma.pem"
 }
+
 
 variable "KEY_NAME" {
   type = "string"
@@ -120,10 +121,13 @@ variable "PROXY_REGISTRATION_CODE" {
 }
 
 variable "ALLOWED_IPS" {
-  default = [
-    "202.180.93.210",
-    "65.132.116.252",
-    "195.135.221.27"]
+  type = list(string)
+  default = []
+}
+
+variable "NAME_PREFIX" {
+  type = string
+  default = null
 }
 
 provider "aws" {
@@ -135,16 +139,16 @@ provider "aws" {
 module "base" {
   source = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix  = "4.1-mu-aws-"
+  cc_username              = var.SCC_USER
+  cc_password              = var.SCC_PASSWORD
+  name_prefix              = var.NAME_PREFIX
   server_registration_code = var.SERVER_REGISTRATION_CODE
-  proxy_registration_code = var.PROXY_REGISTRATION_CODE
+  proxy_registration_code  = var.PROXY_REGISTRATION_CODE
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region            = var.REGION
-    ssh_allowed_ips = var.ALLOWED_IPS
+    ssh_allowed_ips   = var.ALLOWED_IPS
     key_name          = var.KEY_NAME
     key_file          = var.KEY_FILE
   }
@@ -161,12 +165,50 @@ module "mirror" {
 }
 
 module "server" {
-  source             = "./modules/server"
+  source               = "./modules/server"
+  base_configuration   = module.base.configuration
+  name                 = "server"
+  product_version      = "4.1-released"
+  repository_disk_size = 1500
+  additional_repos     = var.ADDITIONAL_REPOSITORIES_LIST
+
+  auto_accept                    = false
+  monitored                      = true
+  disable_firewall               = false
+  allow_postgres_connections     = false
+  skip_changelog_import          = false
+  browser_side_less              = false
+  create_first_user              = false
+  mgr_sync_autologin             = false
+  create_sample_channel          = false
+  create_sample_activation_key   = false
+  create_sample_bootstrap_script = false
+  publish_private_ssl_key        = false
+  use_os_released_updates        = true
+  disable_download_tokens        = false
+
+  //server_additional_repos
+
+}
+
+module "proxy" {
+
+  source             = "./modules/proxy"
   base_configuration = module.base.configuration
-  name               = "server"
-  product_version = "4.1-released"
-  repository_disk_size = 150
-  additional_repos = var.ADDITIONAL_REPOSITORIES_LIST
+  product_version    = "4.1-released"
+  name               = "proxy"
+
+  auto_register             = false
+  auto_connect_to_master    = false
+  download_private_ssl_key  = false
+  install_proxy_pattern     = false
+  auto_configure            = false
+  generate_bootstrap_script = false
+  publish_private_ssl_key   = false
+  use_os_released_updates   = true
+
+  //proxy_additional_repos
+
 }
 
 output "bastion_public_name" {

@@ -78,12 +78,12 @@ variable "GIT_PASSWORD" {
 
 variable "REGION" {
   type = "string"
-  default = "eu-central-1"
+  default = null
 }
 
 variable "AVAILABILITY_ZONE" {
   type = "string"
-  default = "eu-central-1a"
+  default = null
 }
 
 variable "KEY_FILE" {
@@ -107,10 +107,8 @@ variable "SECRET_KEY" {
 }
 
 variable "ALLOWED_IPS" {
-  default = [
-    "202.180.93.210",
-    "65.132.116.252",
-    "195.135.221.27"]
+  type = list(string)
+  default = []
 }
 
 variable "SERVER_REGISTRATION_CODE" {
@@ -123,6 +121,11 @@ variable "PROXY_REGISTRATION_CODE" {
   default = null
 }
 
+variable "NAME_PREFIX" {
+  type = string
+  default = null
+}
+
 provider "aws" {
   region = var.REGION
   access_key = var.ACCESS_KEY
@@ -132,11 +135,12 @@ provider "aws" {
 module "base" {
   source = "./modules/base"
 
+  images = [ "opensuse152o", "sles15sp2o" ]
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   server_registration_code = var.SERVER_REGISTRATION_CODE
   proxy_registration_code = var.PROXY_REGISTRATION_CODE
-  name_prefix = "4.1-mu-aws-"
+  name_prefix = var.NAME_PREFIX
   //  mirror = "ip-172-16-1-50.eu-central-1.compute.internal"
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -152,9 +156,9 @@ module "mirror" {
   source = "./modules/mirror"
   base_configuration = module.base.configuration
   disable_cron = true
-  provider_settings = {
-    public_instance = true
-  }
+//  provider_settings = {
+//    public_instance = true
+//  }
 }
 
 

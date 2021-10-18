@@ -7,21 +7,20 @@ def run(params) {
         resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
+        local_mirror_dir = "${resultdir}/sumaform-local"
+        aws_mirror_dir = "${resultdir}/sumaform-aws"
 
         //Deployment variables
         deployed_local = false
         deployed_aws = false
-        local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
-        aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
-        aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/${env.JOB_NAME}.tf --gitfolder ${resultdir}/sumaform-aws"
+        local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir}"
+        aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir}"
+        aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/${env.JOB_NAME}.tf --gitfolder ${aws_mirror_dir}"
         if (params.terraform_init) {
             TERRAFORM_INIT = '--init'
         } else {
             TERRAFORM_INIT = ''
         }
-
-        // MU repositories list
-        String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
 
         // Public IP for AWS ingress
         String[] ALLOWED_IPS = params.allowed_IPS.split("\n")
@@ -41,6 +40,10 @@ def run(params) {
         parallel(
                 "create_local_mirror_with_mu": {
                     stage("Create local mirror with MU") {
+                        writeFile file: "${aws_mirror_dir}/custom_repositories.json", text: params.custom_repositories, encoding: "UTF-8"
+                        mu_repositories = sh(script: "cat ${aws_mirror_dir}/custom_repositories.json | jq -r ' to_entries[] |  \" \\(.value)\"' | jq -r ' to_entries[] |  \" \\(.value)\"'",
+                                returnStdout: true).trim()
+                        String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
                         // Create simplify minima file to only synchronize MU
                         repositories = "storage:\n" +
                                 "  type: file\n" +
@@ -52,7 +55,7 @@ def run(params) {
                                     "  - url: ${item}\n" +
                                     "    archs: [x86_64]"
                         }
-                        writeFile file: "${resultdir}/sumaform-local/salt/mirror/etc/minima-customize.yaml", text: repositories, encoding: "UTF-8"
+                        writeFile file: "${local_mirror_dir}/salt/mirror/etc/minima-customize.yaml", text: repositories, encoding: "UTF-8"
 
                         // Deploy local mirror
                         sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_mirror_params} --logfile ${resultdirbuild}/sumaform-local.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend libvirt"
@@ -64,6 +67,7 @@ def run(params) {
                     stage("Create empty AWS mirror") {
                         env.aws_configuration = "REGION = \"${params.aws_region}\"\n" +
                                 "AVAILABILITY_ZONE = \"${params.aws_availability_zone}\"\n" +
+                                "NAME_PREFIX = \"${env.JOB_NAME}\""
                                 "ALLOWED_IPS = [ \n"
 
                         ALLOWED_IPS.each { ip ->
@@ -71,7 +75,7 @@ def run(params) {
                         }
 
                         env.aws_configuration = aws_configuration + "]\n"
-                        writeFile file: "${resultdir}/sumaform-aws/terraform.tfvars", text: aws_configuration, encoding: "UTF-8"
+                        writeFile file: "${aws_mirror_dir}/terraform.tfvars", text: aws_configuration, encoding: "UTF-8"
 
                         // Deploy empty AWS mirror
                         sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x;source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_mirror_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
@@ -85,11 +89,11 @@ def run(params) {
         stage("Upload local mirror data to AWS mirror") {
 
             // Get local and aws hostname
-            mirror_hostname_local = sh(script: "cat ${resultdir}/sumaform-local/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
+            mirror_hostname_local = sh(script: "cat ${local_mirror_dir}/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
                     returnStdout: true).trim()
-            mirror_hostname_aws_public = sh(script: "cat ${resultdir}/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
+            mirror_hostname_aws_public = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
                     returnStdout: true).trim()
-            env.mirror_hostname_aws_private = sh(script: "cat ${resultdir}/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
+            env.mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                     returnStdout: true).trim()
 
             user = 'root'
@@ -101,18 +105,11 @@ def run(params) {
 
         stage("Deploy AWS with MU") {
             int count = 0
-            // Create tfvars file with additionnal repositories using the AWS mirror
-            aws_repositories = "ADDITIONAL_REPOSITORIES_LIST = {\n"
-            REPOSITORIES_LIST.each { item ->
-                aws_repositories = aws_repositories + "repo${count} = \"" + item.replaceAll('download.suse.de', "${mirror_hostname_aws_private}") + "\",\n"
-                count = count + 1
-            }
-
-            aws_repositories = aws_repositories + "}\n" + aws_configuration
-            writeFile file: "${resultdir}/sumaform-aws/terraform.tfvars", text: aws_repositories, encoding: "UTF-8"
+            // Replace internal repositories by mirror repositories
+            sh "sed -i 's/download.suse.de/${mirror_hostname_aws_private}/g' ${aws_mirror_dir}/custom_repositories.json"
 
             // Deploying AWS server using MU repositories
-            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
+            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*'  --custom-repositories ${aws_mirror_dir}/custom_repositories.json --runstep provision --sumaform-backend aws"
         }
     }
 }
