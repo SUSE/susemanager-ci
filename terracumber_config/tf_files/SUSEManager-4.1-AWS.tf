@@ -190,6 +190,7 @@ module "proxy" {
 
   source             = "./modules/proxy"
   base_configuration = module.base.configuration
+  server_configuration = module.server.configuration
   product_version    = "4.1-released"
   name               = "proxy"
 
