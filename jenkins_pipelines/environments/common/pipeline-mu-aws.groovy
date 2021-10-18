@@ -13,7 +13,7 @@ def run(params) {
         deployed_aws = false
         local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${resultdir}/sumaform-local"
         aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${resultdir}/sumaform-aws"
-        aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/SUSEManager-4.1-AWS.tf --gitfolder ${resultdir}/sumaform-aws"
+        aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/${env.JOB_NAME}.tf --gitfolder ${resultdir}/sumaform-aws"
         if (params.terraform_init) {
             TERRAFORM_INIT = '--init'
         } else {
@@ -85,11 +85,11 @@ def run(params) {
         stage("Upload local mirror data to AWS mirror") {
 
             // Get local and aws hostname
-            mirror_hostname_local = sh(script: "cat /home/jenkins/jenkins-build/workspace/SUSEManager-4.1-AWS/results/sumaform-local/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
+            mirror_hostname_local = sh(script: "cat ${resultdir}/sumaform-local/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
                     returnStdout: true).trim()
-            mirror_hostname_aws_public = sh(script: "cat /home/jenkins/jenkins-build/workspace/SUSEManager-4.1-AWS/results/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
+            mirror_hostname_aws_public = sh(script: "cat ${resultdir}/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
                     returnStdout: true).trim()
-            env.mirror_hostname_aws_private = sh(script: "cat /home/jenkins/jenkins-build/workspace/SUSEManager-4.1-AWS/results/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
+            env.mirror_hostname_aws_private = sh(script: "cat ${resultdir}/sumaform-aws/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                     returnStdout: true).trim()
 
             user = 'root'

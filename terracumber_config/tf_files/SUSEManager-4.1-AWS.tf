@@ -38,7 +38,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = "string"
-  default = "Results Uyuni-Master: Environment setup failed"
+  default = "Results Manager4.1-Master-MU: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
