@@ -42,7 +42,7 @@ def run(params) {
                     stage("Create local mirror with MU") {
                         writeFile file: "$custom_repositories.json", text: params.custom_repositories, encoding: "UTF-8"
                         mu_repositories = sh(script: "cat ${WORKSPACE}/custom_repositories.json | jq -r ' to_entries[] |  \" \\(.value)\"' | jq -r ' to_entries[] |  \" \\(.value)\"'",
-                                returnStdout: true).trim()
+                                returnStdout: true)
                         sh "echo ${mu_repositories}"
                         String[] REPOSITORIES_LIST = params.mu_repositories.split("\n")
                         // Create simplify minima file to only synchronize MU
