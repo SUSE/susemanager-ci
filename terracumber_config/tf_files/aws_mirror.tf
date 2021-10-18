@@ -156,9 +156,9 @@ module "mirror" {
   source = "./modules/mirror"
   base_configuration = module.base.configuration
   disable_cron = true
-//  provider_settings = {
-//    public_instance = true
-//  }
+  provider_settings = {
+    public_instance = true
+  }
 }
 
 
