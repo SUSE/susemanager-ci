@@ -265,9 +265,8 @@ module "base_arm" {
   domain      = "mgr.prv.suse.net"
   images      = [ "opensuse153armo" ]
 
-  # TODO: enable mirror for ARM
-  # mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  # use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite = true
 
