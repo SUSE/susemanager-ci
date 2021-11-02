@@ -135,7 +135,7 @@ provider "aws" {
 module "base" {
   source = "./modules/base"
 
-  images = [ "opensuse152o", "sles15sp2o" ]
+  images = [ "opensuse153o", "sles15sp2o" ]
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   server_registration_code = var.SERVER_REGISTRATION_CODE
