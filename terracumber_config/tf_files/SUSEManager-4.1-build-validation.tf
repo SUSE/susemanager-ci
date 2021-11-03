@@ -246,31 +246,6 @@ module "base_debian" {
   }
 }
 
-module "base_arm" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
-
-  source = "./modules/base"
-
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-41-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse153armo" ]
-
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  use_mirror_images = true
-
-  testsuite = true
-
-  provider_settings = {
-    pool        = "ssd"
-    bridge      = "br0"
-  }
-}
-
 module "server" {
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
@@ -1238,116 +1213,6 @@ module "sles15sp2-terminal" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// TODO: no ARM support for openSUSE on 4.1 branch, this should be SLES instead
-module "opensuse153arm-minion" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.1-released"
-  name               = "min-opensuse153arm"
-  image              = "opensuse153armo"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6d"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = <<EOT
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- XSL transformation for aarch64 -->
-
-  <xsl:output omit-xml-declaration="yes" />
-
-  <!-- no IDE on aarch64, use SCSI instead -->
-  <xsl:template match="@bus[.='ide']">
-    <xsl:attribute name="bus"> <xsl:text>scsi</xsl:text> </xsl:attribute>
-  </xsl:template>
-
-  <!-- provide flash for booting -->
-  <xsl:template match="os">
-    <xsl:copy>
-      <xsl:apply-templates select="*|@*" />
-      <xsl:element name="loader">
-        <xsl:attribute name="type"> <xsl:text>pflash</xsl:text> </xsl:attribute>
-        <xsl:attribute name="readonly"> <xsl:text>yes</xsl:text> </xsl:attribute>
-        <xsl:text>/usr/share/qemu/aavmf-aarch64-code.bin</xsl:text>
-      </xsl:element>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- change machine type -->
-  <xsl:template match="type">
-    <xsl:element name="type">
-      <xsl:attribute name="machine"> <xsl:text>virt</xsl:text> </xsl:attribute>
-      <xsl:text>hvm</xsl:text>
-    </xsl:element>
-  </xsl:template>
-
-  <!-- use host passthrough mode for CPU -->
-  <xsl:template match="cpu">
-    <xsl:element name="cpu">
-      <xsl:attribute name="mode"> <xsl:text>host-passthrough</xsl:text> </xsl:attribute>
-      <xsl:attribute name="check"> <xsl:text>none</xsl:text> </xsl:attribute>
-    </xsl:element>
-  </xsl:template>
-
-  <!-- work around https://gitlab.com/libvirt/libvirt/-/issues/177
-       for <controller type="virtio-serial"> -->
-  <!-- no LSI logic on aarch64, use virtio-scsi instead -->
-  <xsl:template match="devices">
-    <xsl:copy>
-      <xsl:apply-templates select="*|@*" />
-      <xsl:element name="controller">
-        <xsl:attribute name="type"> <xsl:text>virtio-serial</xsl:text> </xsl:attribute>
-        <xsl:element name="address">
-          <xsl:attribute name="type"> <xsl:text>virtio-mmio</xsl:text> </xsl:attribute>
-        </xsl:element>
-      </xsl:element>
-      <xsl:element name="controller">
-        <xsl:attribute name="type"> <xsl:text>scsi</xsl:text> </xsl:attribute>
-        <xsl:attribute name="model"> <xsl:text>virtio-scsi</xsl:text> </xsl:attribute>
-        <xsl:element name="address">
-          <xsl:attribute name="type"> <xsl:text>virtio-mmio</xsl:text> </xsl:attribute>
-        </xsl:element>
-      </xsl:element>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- work around https://gitlab.com/libvirt/libvirt/-/issues/177
-       for <disk type="volume"> -->
-  <xsl:template match="disk[@type='volume']">
-    <xsl:copy>
-      <xsl:apply-templates select="*|@*" />
-      <xsl:element name="address">
-        <xsl:attribute name="type"> <xsl:text>virtio-mmio</xsl:text> </xsl:attribute>
-      </xsl:element>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- work around https://gitlab.com/libvirt/libvirt/-/issues/177
-       for <rng> -->
-  <xsl:template match="rng" />
-
-  <!-- just copy the rest -->
-  <xsl:template match="node()|@*">
-    <xsl:copy>
-      <xsl:apply-templates select="node()|@*" />
-    </xsl:copy>
-  </xsl:template>
-</xsl:stylesheet>
-EOT
-  }
-  server_configuration = {
-    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //opensuse153arm-minion_additional_repos
-
-}
-
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
@@ -1424,9 +1289,6 @@ module "controller" {
   sle12sp4_terminal_configuration = module.sles12sp4-terminal.configuration
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp2_terminal_configuration = module.sles15sp2-terminal.configuration
-
-  // TODO: no ARM support for openSUSE on 4.1 branch, this should be SLES instead
-  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {
