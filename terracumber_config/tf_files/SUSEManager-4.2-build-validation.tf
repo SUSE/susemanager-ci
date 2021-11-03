@@ -1313,7 +1313,7 @@ EOT
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //opensuse153arm-minion_additional_repos
+  //sle15sp3arm-minion_additional_repos
 
 }
 
