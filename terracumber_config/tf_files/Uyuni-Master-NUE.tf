@@ -7,8 +7,7 @@ variable "URL_PREFIX" {
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = "string"
-  # default = "export PRODUCT='Uyuni' && run-testsuite"
-  default = "export PRODUCT='Uyuni'"
+  default = "export PRODUCT='Uyuni' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
