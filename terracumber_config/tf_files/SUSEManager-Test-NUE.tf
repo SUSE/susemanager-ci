@@ -81,7 +81,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "4.2-nightly"
+  product_version = "4.1-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -119,13 +119,13 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:41"
       }
       additional_repos = {
-//        server_stack = "http://download.suse.de/ibs/home:/SchoolGuy:/branches:/Devel:/Galaxy:/Manager:/4.1/SLE_15_SP2/",
+        server_stack = "http://download.suse.de/ibs/home:/SchoolGuy:/branches:/Devel:/Galaxy:/Manager:/4.1/SLE_15_SP2/",
 //        salt15sp2_base = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Basesystem_15-SP2_x86_64/",
 //        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
 //        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
 //        sapformular = "http://download.suse.de/ibs/SUSE:/Maintenance:/17953/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
 //        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/"
-       Test_repo = "http://download.suse.de/ibs/home:/agraul/SLE_15_SP3/"
+//       Test_repo = "http://download.suse.de/ibs/home:/agraul/SLE_15_SP3/"
       }
     }
     proxy = {
