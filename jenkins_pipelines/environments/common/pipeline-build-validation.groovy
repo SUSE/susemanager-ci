@@ -39,6 +39,9 @@ def run(params) {
                     deployed = true
                 }
             }
+            stage('Sanity Check') {
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:build_validation_sanity_check'"
+            }
             stage('Run Core features') {
                 if(params.must_run_core && (deployed || !params.must_deploy)) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_core'"
