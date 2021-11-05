@@ -28,8 +28,8 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_boot_clients', defaultValue: true, description: 'Bootstrap clients'),
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             choice(name: 'rake_namespace', choices: ['parallel', 'cucumber'], description: 'Choose parallel or cucumber'),
-            string(name: 'capybara_timeout', defaultValue: '10', description: 'Capybara max. waiting time'),
-            string(name: 'default_timeout', defaultValue: '250', description: 'Default timeout used in our Test Framework'),
+            string(name: 'capybara_timeout', defaultValue: '30', description: 'Capybara max. waiting time'),
+            string(name: 'default_timeout', defaultValue: '300', description: 'Default timeout used in our Test Framework'),
             text(name: 'custom_repositories', defaultValue: '{"server":{"server_stack":"","salt15sp2_base":"","salt15sp2_python2_module":"","salt15sp2_server_apps_module":"","extra_sle_that_affects_suma_srv":""},"proxy":{"salt":"","salt15sp2":"","client_tools":"","extra_sle_that_affects_suma_proxy":""},"sle11sp4_minion":{"salt":""},"sle11sp4_client":{"traditional":""},"sle12sp4_minion":{"salt":""},"sle12sp4_client":{"traditional":""},"sle15_minion":{"salt":""},"sle15_client":{"traditional":""},"sle15sp1_minion":{"salt":"","python":"","server_apps":""},"sle15sp1_client":{"traditional":""},"ubuntu1804_minion":{"salt":""},"ubuntu2004_minion":{"salt":""},"ceos7_minion":{"salt":""},"ceos7_client":{"traditional":""},"ceos8_minion":{"salt":""},"ceos8_client":{"traditional":""}}', description: 'Salt & Traditional MU Repositories for each client, in json format')
             ])
     ])
