@@ -8,7 +8,7 @@ def run(params) {
         terraform_bin_plugins = '/usr/bin'
         long_tests = true
         service_pack_migration = false
-        terracumber_gitrepo = 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git'
+        terracumber_gitrepo = 'https://github.com/uyuni-project/terracumber.git'
         terracumber_ref = 'master'
         terraform_init = true
         rake_namespace = 'cucumber'
