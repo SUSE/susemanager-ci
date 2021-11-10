@@ -1,71 +1,71 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
-  type = "string"
+  type = string
   default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-infra-reference-NUE"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
-  type = "string"
+  type = string
   default = "export PRODUCT='Uyuni' && run-testsuite"
 }
 
 // Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_GITREPO" {
-  type = "string"
+  type = string
   default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 // Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_BRANCH" {
-  type = "string"
+  type = string
   default = "master"
 }
 
 // Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_RESULTS" {
-  type = "string"
+  type = string
   default = "/root/spacewalk/testsuite"
 }
 
 // Not really used in this pipeline, as we do not send emails on success (no cucumber results)
 variable "MAIL_SUBJECT" {
-  type = "string"
+  type = string
   default = "Results Uyuni RefMaster-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
-  type = "string"
+  type = string
   default = "../mail_templates/mail-template-jenkins.txt"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
-  type = "string"
+  type = string
   default = "Results Uyuni RefMaster-NUE: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
-  type = "string"
+  type = string
   default = "../mail_templates/mail-template-jenkins-refenv-fail.txt"
 }
 
 variable "MAIL_FROM" {
-  type = "string"
+  type = string
   default = "galaxy-ci@suse.de"
 }
 
 variable "MAIL_TO" {
-  type = "string"
+  type = string
   default = "galaxy-ci@suse.de"
 }
 
 // sumaform specific variables
 variable "SCC_USER" {
-  type = "string"
+  type = string
 }
 
 variable "SCC_PASSWORD" {
-  type = "string"
+  type = string
 }
 
 provider "libvirt" {
