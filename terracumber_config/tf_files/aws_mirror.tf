@@ -1,108 +1,108 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
-  type = "string"
+  type = string
   default = "https://ci.suse.de/view/Manager/view/Manager-4.1/job/SUSEManager-4.1-AWS"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
-  type = "string"
+  type = string
   default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
-  type = "string"
+  type = string
   default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
-  type = "string"
+  type = string
   default = "Manager-4.1"
 }
 
 variable "CUCUMBER_RESULTS" {
-  type = "string"
+  type = string
   default = "/root/spacewalk/testsuite"
 }
 
 variable "MAIL_SUBJECT" {
-  type = "string"
+  type = string
   default = "Results Manager4.1-Master-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
-  type = "string"
+  type = string
   default = "../mail_templates/mail-template-jenkins.txt"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
-  type = "string"
+  type = string
   default = "Results Uyuni-Master: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
-  type = "string"
+  type = string
   default = "../mail_templates/mail-template-jenkins-env-fail.txt"
 }
 
 variable "MAIL_FROM" {
-  type = "string"
+  type = string
   default = "mnoel@suse.de"
 }
 
 variable "MAIL_TO" {
-  type = "string"
+  type = string
   default = "mnoel@suse.de"
 }
 
 // sumaform specific variables
 variable "SCC_USER" {
-  type = "string"
+  type = string
 }
 
 variable "SCC_PASSWORD" {
-  type = "string"
+  type = string
 }
 
 variable "GIT_USER" {
-  type = "string"
+  type = string
   default = null
   // Not needed for master, as it is public
 }
 
 variable "GIT_PASSWORD" {
-  type = "string"
+  type = string
   default = null
   // Not needed for master, as it is public
 }
 
 variable "REGION" {
-  type = "string"
+  type = string
   default = null
 }
 
 variable "AVAILABILITY_ZONE" {
-  type = "string"
+  type = string
   default = null
 }
 
 variable "KEY_FILE" {
-  type = "string"
+  type = string
   default = "/home/jenkins/.ssh/testing-suma.pem"
 }
 
 variable "KEY_NAME" {
-  type = "string"
+  type = string
   default = "testing-suma"
 }
 
 variable "ACCESS_KEY" {
-  type = "string"
+  type = string
   default = null
 }
 
 variable "SECRET_KEY" {
-  type = "string"
+  type = string
   default = null
 }
 
@@ -112,12 +112,12 @@ variable "ALLOWED_IPS" {
 }
 
 variable "SERVER_REGISTRATION_CODE" {
-  type = "string"
+  type = string
   default = null
 }
 
 variable "PROXY_REGISTRATION_CODE" {
-  type = "string"
+  type = string
   default = null
 }
 
