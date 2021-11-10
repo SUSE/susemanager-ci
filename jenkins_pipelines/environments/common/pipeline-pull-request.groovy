@@ -4,7 +4,7 @@ def run(params) {
         built = false
         deployed = false
         sumaform_backend = 'libvirt'
-        terraform_bin = '/usr/bin/terraform_bin'
+        terraform_bin = '/usr/bin/terraform'
         terraform_bin_plugins = '/usr/bin'
         long_tests = true
         service_pack_migration = false
