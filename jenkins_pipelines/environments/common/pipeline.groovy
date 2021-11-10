@@ -8,31 +8,35 @@ def run(params) {
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
-        // Retrieve the hash commit of the last product built in OBS/IBS and previous job
-        def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
-        if (prefix == "uyuni-master-dev") {
-            prefix = "manager-Head-dev"
+        if (params.show_product_changes) {
+            // Retrieve the hash commit of the last product built in OBS/IBS and previous job
+            def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
+            if (prefix == "uyuni-master-dev") {
+                prefix = "manager-Head-dev"
+            }
+            // The 2obs jobs are releng, not dev
+            prefix = prefix.replaceAll("-dev", "-releng")
+            def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
+            def requestJson = readJSON text: request.getContent()
+            def product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
+            product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
+            print "Current product commit: ${product_commit}"
+            def previous_commit = currentBuild.getPreviousBuild().description
+            if (previous_commit == null) {
+                previous_commit = product_commit
+            } else {
+                previous_commit = previous_commit.substring(previous_commit.indexOf('[') + 1, previous_commit.indexOf(']'));
+            }
+            print "Previous product commit: ${previous_commit}"
         }
-        // The 2obs jobs are releng, not dev
-        prefix = prefix.replaceAll("-dev", "-releng")
-        def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
-        def requestJson = readJSON text: request.getContent()
-        def product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
-        product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
-        print "Current product commit: ${product_commit}"
-        def previous_commit = currentBuild.getPreviousBuild().description
-        if (previous_commit == null) {
-            previous_commit = product_commit
-        } else {
-            previous_commit = previous_commit.substring(previous_commit.indexOf('[') + 1, previous_commit.indexOf(']'));
-        }
-        print "Previous product commit: ${previous_commit}"
         // Start pipeline
         deployed = false
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
-                // Rename build using product commit hash
-                currentBuild.description =  "[${product_commit}]"
+                if (params.show_product_changes) {
+                    // Rename build using product commit hash
+                    currentBuild.description =  "[${product_commit}]"
+                }
                 
                 // Create a directory for  to place the directory with the build results (if it does not exist)
                 sh "mkdir -p ${resultdir}"
@@ -59,14 +63,18 @@ def run(params) {
                 deployed = true
             }
             stage('Product changes') {
-                sh """
-                    # Comparison between:
-                    #  - the previous git revision of spacewalk (or uyuni) repository pushed in IBS (or OBS)
-                    #  - the git revision of the current spacewalk (or uyuni) repository pushed in IBS (or OBS)
-                    # Note: This is a trade-off, we should be comparing the git revisions of all the packages composing our product
-                    #       For that extra mile, we need a new tag in the repo metadata of each built, with the git revision of the related repository.
-                """
-                sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\"%h %<(16,trunc)%cn  %s  %d\" ${previous_commit}..${product_commit}'", returnStatus:true
+                if (params.show_product_changes) {
+                    sh """
+                        # Comparison between:
+                        #  - the previous git revision of spacewalk (or uyuni) repository pushed in IBS (or OBS)
+                        #  - the git revision of the current spacewalk (or uyuni) repository pushed in IBS (or OBS)
+                        # Note: This is a trade-off, we should be comparing the git revisions of all the packages composing our product
+                        #       For that extra mile, we need a new tag in the repo metadata of each built, with the git revision of the related repository.
+                    """
+                    sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\"%h %<(16,trunc)%cn  %s  %d\" ${previous_commit}..${product_commit}'", returnStatus:true
+                } else {
+                    println("Product changes disabled, checkbox 'show_product_changes' was not enabled'")
+                }
             }
             stage('Sanity Check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
