@@ -16,7 +16,7 @@ node('sumaform-cucumber') {
             choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
             booleanParam(name: 'long_tests', defaultValue: true, description: 'This will enable the execution of long tests'),
             // Temporary: should move to uyuni-project
-            string(name: 'terracumber_gitrepo', defaultValue: 'https://gitlab.suse.de/juliogonzalezgil/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
