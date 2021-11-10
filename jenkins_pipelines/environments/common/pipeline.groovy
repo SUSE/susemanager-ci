@@ -8,6 +8,8 @@ def run(params) {
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
+        def previous_commit = null
+        def product_commit = null
         if (params.show_product_changes) {
             // Retrieve the hash commit of the last product built in OBS/IBS and previous job
             def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
@@ -18,10 +20,10 @@ def run(params) {
             prefix = prefix.replaceAll("-dev", "-releng")
             def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
             def requestJson = readJSON text: request.getContent()
-            def product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
+            product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
             product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
             print "Current product commit: ${product_commit}"
-            def previous_commit = currentBuild.getPreviousBuild().description
+            previous_commit = currentBuild.getPreviousBuild().description
             if (previous_commit == null) {
                 previous_commit = product_commit
             } else {
