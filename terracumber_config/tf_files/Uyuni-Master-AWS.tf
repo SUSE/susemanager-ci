@@ -96,6 +96,7 @@ variable "KEY_NAME" {
 
 variable "MY_IP" {
   type = string
+  default = ""
 }
 
 provider "aws" {
