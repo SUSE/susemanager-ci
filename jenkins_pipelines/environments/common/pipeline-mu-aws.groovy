@@ -89,7 +89,7 @@ def run(params) {
         stage("Upload local mirror data to AWS mirror") {
 
             // Get local and aws hostname
-            mirror_hostname_local = sh(script: "cat ${local_mirror_dir}/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
+            mirror_hostname_local = sh(script: "cat ${local_mirror_dir}/terraform.tfstate | jq -r '.resources[3].instances[0].attributes.network_interface[0].addresses[0]' ",
                     returnStdout: true).trim()
             mirror_hostname_aws_public = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
                     returnStdout: true).trim()
