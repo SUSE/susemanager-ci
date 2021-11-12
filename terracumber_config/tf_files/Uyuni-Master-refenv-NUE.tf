@@ -99,15 +99,6 @@ module "base" {
   }
 }
 
-terraform {
-  required_providers {
-    libvirt = {
-      source = "dmacvicar/libvirt"
-      version = "0.6.3"
-    }
-  }
-}
-
 module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
