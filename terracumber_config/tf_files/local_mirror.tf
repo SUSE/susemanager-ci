@@ -132,7 +132,3 @@ module "mirror" {
 output "local_mirrors_public_name" {
   value = module.mirror.configuration.hostnames
 }
-
-output "local_mirrors_public_ip" {
-  value = module.mirror.configuration.ipaddrs
-}
