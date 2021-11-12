@@ -95,7 +95,7 @@ variable "KEY_NAME" {
 }
 
 variable "MY_IP" {
-  type = "string"
+  type = string
 }
 
 provider "aws" {
