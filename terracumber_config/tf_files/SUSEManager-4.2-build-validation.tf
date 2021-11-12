@@ -74,6 +74,16 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+terraform {
+  required_version = "1.0.10"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.3"
+    }
+  }
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://caladan.mgr.prv.suse.net/system"
 }

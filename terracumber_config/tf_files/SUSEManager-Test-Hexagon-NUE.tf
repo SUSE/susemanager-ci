@@ -78,14 +78,24 @@ provider "libvirt" {
   uri = "qemu+tcp://cthulu.mgr.suse.de/system"
 }
 
+terraform {
+  required_version = "1.0.10"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.3"
+    }
+  }
+}
+
 module "base_core" {
   source = "./modules/base"
 
-  
+
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse150o", "opensuse151o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu1804o", "sles12sp4o", "sles11sp4"]
+  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o"]
 
   use_avahi    = false
   name_prefix  = "suma-testhexagon-"
@@ -105,9 +115,6 @@ module "server" {
   name               = "srv"
   provider_settings = {
     mac = "aa:b2:93:01:00:51"
-  }
-  additional_repos = {
-      Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.3/"
   }
 
   auto_accept                    = false
@@ -151,43 +158,30 @@ module "proxy" {
   use_os_released_updates   = true
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 
-  //proxy_additional_repos
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/openSUSE_Leap_15.3/"
-  }
+
 }
 
-module "sles12sp4-client" {
-  source             = "./modules/client"
+module "suse-sshminion" {
+  source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
-  //name               = "min-sles12sp4"
-  name               = "min-sles12"
-  image              = "sles12sp4o"
+  name               = "minssh-sles15"
+  image              = "sles15sp2o"
   provider_settings = {
     mac = "aa:b2:93:01:00:55"
   }
-  server_configuration = {
-    hostname = "suma-testhexagon-min-sles12.mgr.suse.de"
-  }
 
-  auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //sle12sp4-client_additional_repos
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_12/"
-  }
 }
 
-module "sles11sp4-client" {
-  source             = "./modules/client"
+module "suse-minion" {
+  source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
-  //name               = "cli-sles11sp4"
-  name               = "min-build"
-  image              = "sles11sp4"
+  name               = "min-sles15"
+  image              = "sles15sp2o"
   provider_settings = {
     mac = "aa:b2:93:01:00:5d"
   }
@@ -195,14 +189,9 @@ module "sles11sp4-client" {
     hostname = "suma-testhexagon-min-build.mgr.suse.de"
   }
 
-  auto_register           = false
+  auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle11sp4-client_additional_repos
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-SLE_11/"
-  }
 }
 
 module "sles15sp2-client" {
@@ -222,18 +211,12 @@ module "sles15sp2-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp2-client_additional_repos
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP2/"
-  }
 }
 
-module "centos7-client" {
-  source             = "./modules/client"
+module "redhat-minion" {
+  source = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
-  //name               = "cli-centos7"
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
@@ -243,17 +226,12 @@ module "centos7-client" {
     hostname = "suma-testhexagon-min-centos7.mgr.suse.de"
   }
 
-  auto_register = false
+  auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path  = "./salt/controller/id_rsa.pub"
-
-  //ceos7-client_additional_repos
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/CLIENT-RES7/"
-  }
 }
 
-module "controller" { 
+module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
   name               = "ctl"
@@ -267,14 +245,14 @@ module "controller" {
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
-  
+
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
 
-  sle11sp4_client_configuration    = module.sles11sp4-client.configuration
-  sle12sp4_client_configuration    = module.sles12sp4-client.configuration
-  client_configuration             = module.sles15sp2-client.configuration
-  centos7_client_configuration    = module.centos7-client.configuration
+  client_configuration    = module.sles15sp2-client.configuration
+  minion_configuration    = module.suse-minion.configuration
+  sshminion_configuration = module.suse-sshminion.configuration
+  redhat_configuration    = module.redhat-minion.configuration
 }
 
 output "configuration" {

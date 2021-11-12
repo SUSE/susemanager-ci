@@ -74,6 +74,16 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+terraform {
+  required_version = "1.0.10"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.3"
+    }
+  }
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://ramrod.mgr.suse.de/system"
 }
@@ -82,7 +92,7 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "4.1-nightly"
-  
+
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
