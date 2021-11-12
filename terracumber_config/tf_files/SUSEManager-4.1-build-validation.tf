@@ -78,6 +78,16 @@ provider "libvirt" {
   uri = "qemu+tcp://arrakis.mgr.prv.suse.net/system"
 }
 
+terraform {
+  required_version = "1.0.10"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.3"
+    }
+  }
+}
+
 provider "libvirt" {
   alias = "endor"
   uri = "qemu+tcp://endor.mgr.prv.suse.net/system"

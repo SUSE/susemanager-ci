@@ -104,6 +104,16 @@ variable "OPENSUSE_CLIENT_REPO" {
   type = string
 }
 
+terraform {
+  required_version = "1.0.10"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.3"
+    }
+  }
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://vulcan.mgr.prv.suse.net/system"
 }
@@ -112,7 +122,7 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "uyuni-pr"
-  
+
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD

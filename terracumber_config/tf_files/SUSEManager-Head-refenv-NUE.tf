@@ -68,6 +68,16 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+terraform {
+  required_version = "1.0.10"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.3"
+    }
+  }
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://cokerunner.mgr.suse.de/system"
 }
