@@ -273,37 +273,38 @@ def run(params) {
                 if(environment_workspace){
                     ws(environment_workspace){
                         def error = 0
-                        if (deployed) {
-                            try {
-                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing_pr'"
-                            } catch(Exception ex) {
-                                println("ERROR: rake cucumber:finishing_pr failed")
-                                error = 1
+                        if(params.must_test) {
+                            if (deployed) {
+                                try {
+                                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing_pr'"
+                                } catch(Exception ex) {
+                                    println("ERROR: rake cucumber:finishing_pr failed")
+                                    error = 1
+                                }
+                                try {
+                                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
+                                } catch(Exception ex) {
+                                    println("ERROR: rake utils:generate_test_repor failed")
+                                    error = 1
+                                }
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                                publishHTML( target: [
+                                            allowMissing: true,
+                                            alwaysLinkToLastBuild: false,
+                                            keepAll: true,
+                                            reportDir: "${resultdirbuild}/cucumber_report/",
+                                            reportFiles: 'cucumber_report.html',
+                                            reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
+                                )
+                                junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
                             }
-                            try {
-                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
-                            } catch(Exception ex) {
-                                println("ERROR: rake utils:generate_test_repor failed")
-                                error = 1
-                            }
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                            publishHTML( target: [
-                                        allowMissing: true,
-                                        alwaysLinkToLastBuild: false,
-                                        keepAll: true,
-                                        reportDir: "${resultdirbuild}/cucumber_report/",
-                                        reportFiles: 'cucumber_report.html',
-                                        reportName: "TestSuite Report for Pull Request ${params.builder_project}:${params.pull_request_number}"]
-                            )
-                            junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
+                            archiveArtifacts artifacts: "results/${BUILD_NUMBER}/**/*"
                             if (params.email_to != '') {
-                                // Send email
-                                // TODO: We must find a way to obtain the e-mail of the PR author and set it in TF_VAR_MAIL_TO
                                 sh " export TF_VAR_MAIL_TO=${params.email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
-                            // Clean up old results
-                            sh "./clean-old-results -r ${resultdir}"
                         }
+                        // Clean up old results
+                        sh "./clean-old-results -r ${resultdir}"
                         sh "exit ${error}"
                     }
                 }

@@ -1,0 +1,16 @@
+#################################################################
+# SUMMARY
+#################################################################
+Build:   $urlprefix/$timestamp
+Console: $urlprefix/$timestamp/console
+Results: $urlprefix/$timestamp/artifact/results/$timestamp
+Pipeline: https://ci.suse.de/blue/organizations/jenkins/uyuni-prs-ci-tests/detail/uyuni-prs-ci-tests/$timestamp/pipeline
+
+Environment failed to be created, so no spacewalk-debug tarball or cucumber results are available.
+
+Do you need help? Ask for help at our slack channel https://app.slack.com/client/T02863RC2AC/C02DRMDU69E
+
+See troubleshooting guide at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting
+
+Please let us know how you liked it at https://forms.office.com/r/tAcUe98vAZ . Your feedback will be used for improving the system.
+
