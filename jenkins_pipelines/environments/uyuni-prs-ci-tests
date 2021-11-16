@@ -11,7 +11,6 @@ node('pull-request-test') {
             string(name: 'source_project', defaultValue: 'systemsmanagement:Uyuni:Master', description: 'We are building packages into `builder_project` that have changed in `source_project`'),
             booleanParam(name: 'must_build', defaultValue: true, description: 'Build project'),
             booleanParam(name: 'must_test', defaultValue: true, description: 'Run tests'),
-            booleanParam(name: 'must_remove_build', defaultValue: true, description: 'Remove project built'),
             booleanParam(name: 'skip_secondary_tests', defaultValue: false, description: 'Skip secondary tests'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),

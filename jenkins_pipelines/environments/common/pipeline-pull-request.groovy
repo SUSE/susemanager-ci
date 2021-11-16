@@ -46,7 +46,7 @@ def run(params) {
             }
             stage('Checkout project') {
                 ws(environment_workspace){
-                    if(params.must_build || params.must_remove_build) {
+                    if(params.must_build) {
                         sh "rm -rf ${WORKSPACE}/product"
                         dir("product") {
                             // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
@@ -93,6 +93,8 @@ def run(params) {
 
                             sh "osc rdelete -rf -m 'removing project before creating it again' ${params.builder_project}:${params.pull_request_number} || true"
                             sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc add --repo ${params.build_repo} ${params.pull_request_number} --disablepublish"
+                            // Autocleanup in 3 days from obs
+                            sh "osc dr --accept-in-hours=$(( 24 * 3 )) --all -m 'Autocleanup' ${params.builder_project}:${params.pull_request_number}"
                             sh "osc linkpac ${params.source_project} release-notes-uyuni ${params.builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${params.builder_api}|${params.source_project}\" -n \"${params.builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e"
                             echo "Checking ${params.builder_project}:${params.pull_request_number}"
@@ -259,11 +261,6 @@ def run(params) {
             stage('Remove build project') {
                 if(environment_workspace){
                   ws(environment_workspace){
-                      if (params.must_remove_build) {
-                          sh "osc unlock ${params.builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
-
-                          sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${params.builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number}"
-                      }
                       sh "rm -rf ${WORKSPACE}/product"
                       sh "rm -rf ${params.builder_project}:${params.pull_request_number}" 
                   }
