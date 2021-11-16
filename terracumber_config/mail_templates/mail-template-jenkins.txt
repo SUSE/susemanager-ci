@@ -6,6 +6,7 @@ Console: $urlprefix/$timestamp/console
 Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
 Report:  $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/cucumber_report/cucumber_report.html
 Logs:    $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/spacewalk-debug.tar.bz2
+Pipeline: https://ci.suse.de/blue/organizations/jenkins/uyuni-prs-ci-tests/detail/uyuni-prs-ci-tests/$timestamp/pipeline
 
 #################################################################
 # SCENARIOS
