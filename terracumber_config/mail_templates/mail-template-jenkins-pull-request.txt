@@ -18,10 +18,24 @@ Skipped: $skipped
 
 $failures_log
 
+Compare the test results with master tests results and see if your PR
+fixed some or whether your failing tests are also failing in master:
 
-Do you need help? Ask for help at our slack channel https://app.slack.com/client/T02863RC2AC/C02DRMDU69E
+https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-NUE/
 
-See troubleshooting guide at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting
 
-Please let us know how you liked it at https://forms.office.com/r/tAcUe98vAZ . Your feedback will be used for improving the system.
+Do you need help? Ask for help at our slack channel
+
+https://app.slack.com/client/T02863RC2AC/C02DRMDU69E
+
+
+See troubleshooting guide at
+
+https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting
+
+Please let us know how you liked it at
+
+https://forms.office.com/r/tAcUe98vAZ .
+
+Your feedback will be used for improving the system.
 
