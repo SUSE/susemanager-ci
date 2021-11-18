@@ -4,22 +4,17 @@ node('pull-request-test') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '4')),
         parameters([
-            string(name: 'pull_request_repo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Pull Request repository'),
-            string(name: 'pull_request_number', defaultValue: '', description: 'Uyuni Pull Request Number'),
-            string(name: 'builder_api', defaultValue: 'https://api.opensuse.org', description: 'Builder API'),
-            string(name: 'builder_project', defaultValue: 'systemsmanagement:Uyuni:Master:PR', description: 'Builder Project'),
-            string(name: 'source_project', defaultValue: 'systemsmanagement:Uyuni:Master', description: 'We are building packages into `builder_project` that have changed in `source_project`'),
-            booleanParam(name: 'must_build', defaultValue: true, description: 'Build project'),
-            booleanParam(name: 'must_test', defaultValue: true, description: 'Run tests'),
-            booleanParam(name: 'must_remove_build', defaultValue: true, description: 'Remove project built'),
-            booleanParam(name: 'skip_secondary_tests', defaultValue: false, description: 'Skip secondary tests. List of secondary tests: https://github.com/uyuni-project/uyuni/blob/master/testsuite/features/secondary/ '),
-            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
-            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Change this by your repo, only if you changed the tests in your PR'),
-            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Change this by your branch, only if you changed the tests in your PR'),
-            string(name: 'email_to', defaultValue: '', description: 'Receive a report to your e-mail when it finish'),
-            string(name: 'build_repo', defaultValue: 'openSUSE_Leap_15.3', description: 'Repository to build the packages for'),
-            extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ',', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_smdba,@scope_spacecmd,@scope_spacewalk_utils,@scope_visualization,@scope_notification_message,@scope_virtual_host_manager,@scope_subscription_matching,@scope_formulas,@scope_sp_migration,@scope_cve_audit,@scope_onboarding,@scope_content_lifecycle_management,@scope_res,@scope_recurring_actions,@scope_maintenance_windows,@scope_cluster_management,@scope_building_container_images,@scope_kubernetes_integration,@scope_openscap,@scope_ubuntu,@scope_action_chains,@scope_salt_ssh,@scope_tomcat,@scope_changing_software_channels,@scope_monitoring,@scope_salt,@scope_cobbler,@scope_sumatoolbox,@scope_virtualization,@scope_hub,@scope_retail,@scope_configuration_channels,@scope_content_staging,@scope_proxy,@scope_traditional_client,@scope_xmlrpc,@scope_power_management,@scope_retracted_patches', description: 'Choose the functional scopes that you want to test')
+            string(name: 'pull_request_number', defaultValue: '', description: 'Required: Uyuni Pull Request Number'),
+            string(name: 'email_to', defaultValue: '', description: 'Recommended: Receive a report to your e-mail when it finishes with links to the results, artifacts and logs'),
+            booleanParam(name: 'run_all_scopes', defaultValue: false, description: 'Secondary tests: Check to run all functional scopes. List of secondary tests: https://github.com/uyuni-project/uyuni/blob/master/testsuite/features/secondary/ '),
+            choice(name: 'functional_scopes',  choices: ['@scope_smdba','@scope_spacecmd','@scope_spacewalk_utils','@scope_visualization','@scope_notification_message','@scope_virtual_host_manager','@scope_subscription_matching','@scope_formulas','@scope_sp_migration','@scope_cve_audit','@scope_onboarding','@scope_content_lifecycle_management','@scope_res','@scope_recurring_actions','@scope_maintenance_windows','@scope_cluster_management','@scope_building_container_images','@scope_kubernetes_integration','@scope_openscap','@scope_ubuntu','@scope_action_chains','@scope_salt_ssh','@scope_tomcat','@scope_changing_software_channels','@scope_monitoring','@scope_salt','@scope_cobbler','@scope_sumatoolbox','@scope_virtualization','@scope_hub','@scope_retail','@scope_configuration_channels','@scope_content_staging','@scope_proxy','@scope_traditional_client','@scope_xmlrpc','@scope_power_management','@scope_retracted_patches'], description: 'Secondary tests: choose the functional scopes that you want to test.')
+            booleanParam(name: 'must_build', defaultValue: true, description: 'Advanced: Uncheck this if you want to reuse a previous build packages from the build service'),
+            booleanParam(name: 'must_test', defaultValue: true, description: 'Advanced: Uncheck this if you do not want to run any tests'),
+            booleanParam(name: 'must_remove_build', defaultValue: true, description: 'Advanced: Uncheck this to not remove project in the build service, so that you can debug or reuse them'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Advanced: Sumaform Git Repository, only if you want to test changes in sumaform'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Advanced: Sumaform Git reference (branch, tag...), only if you want to test changes in sumaform'),
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Advanced: Change this by your repo, only if you changed the tests in your PR'),
+            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Advanced: Change this by your branch, only if you changed the tests in your PR'),
             booleanParam(name: 'force_pr_lock_cleanup', defaultValue: false, description: 'Advanced: Check this parameter to force a cleanup of the locks associated with this PR. Be careful, only do this if you are certain no one else is running a test for the same PR. More at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting'),
         ])
     ])
