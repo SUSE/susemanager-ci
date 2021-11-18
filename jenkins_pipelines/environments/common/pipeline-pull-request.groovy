@@ -24,6 +24,9 @@ def run(params) {
         try {
             stage('Get environment') {
                   env.suma_pr_lockfile = "/tmp/suma-pr${params.pull_request_number}"
+                  if(params.force_pr_lock_cleanup) {
+                    sh "rm -rf ${env.suma_pr_lockfile}"
+                  }
                   running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
                   if(running_same_pr == "yes") {
                       error('Aborting the build. Already running a test for Pull Request ${params.pull_request_number}')
