@@ -87,7 +87,7 @@ def run(params) {
             }
             stage('Build product') {
                 ws(environment_workspace){
-                    currentBuild.description =  "${builder_project}:${params.pull_request_number}<br>${params.functional_scopes}"
+                    currentBuild.description =  "${builder_project}:${params.pull_request_number}<br>${params.email_to}<br>${params.functional_scopes}"
                     if(params.must_build) {
                         dir("product") {
                             sh "[ -L /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ /home/jenkins/jenkins-build/workspace/suma-pr/${env_number}/repos"
