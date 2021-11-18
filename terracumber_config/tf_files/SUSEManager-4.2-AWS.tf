@@ -2,12 +2,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-<<<<<<< HEAD
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.2/job/SUSEManager-4.2-AWS"
-=======
   default = "https://ci.suse.de/view/Manager/view/Manager-4.1/job/SUSEManager-4.1-AWS"
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.2/job/SUSEManager-4.2-AWS"
->>>>>>> 350a90d... Add SUMA 4.2 terraform file for AWS
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -33,11 +28,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-<<<<<<< HEAD
-  default = "Results Manager4.2-WS-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
-=======
   default = "Results Manager4.1-Master-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
->>>>>>> 350a90d... Add SUMA 4.2 terraform file for AWS
 }
 
 variable "MAIL_TEMPLATE" {
@@ -47,11 +38,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-<<<<<<< HEAD
-  default = "Results Manager4.2-AWS-MU: Environment setup failed"
-=======
   default = "Results Manager4.1-Master-MU: Environment setup failed"
->>>>>>> 350a90d... Add SUMA 4.2 terraform file for AWS
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -151,11 +138,6 @@ module "base" {
   cc_username              = var.SCC_USER
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
-<<<<<<< HEAD
-=======
-  server_registration_code = var.SERVER_REGISTRATION_CODE
-  proxy_registration_code  = var.PROXY_REGISTRATION_CODE
->>>>>>> 350a90d... Add SUMA 4.2 terraform file for AWS
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -182,10 +164,7 @@ module "server" {
   name                 = "server"
   product_version      = "4.2-released"
   repository_disk_size = 1500
-<<<<<<< HEAD
   server_registration_code = var.SERVER_REGISTRATION_CODE
-=======
->>>>>>> 350a90d... Add SUMA 4.2 terraform file for AWS
 
   auto_accept                    = false
   monitored                      = true
@@ -212,10 +191,7 @@ module "proxy" {
   server_configuration = module.server.configuration
   product_version    = "4.2-released"
   name               = "proxy"
-<<<<<<< HEAD
   proxy_registration_code  = var.PROXY_REGISTRATION_CODE
-=======
->>>>>>> 350a90d... Add SUMA 4.2 terraform file for AWS
 
   auto_register             = false
   auto_connect_to_master    = false
@@ -230,30 +206,6 @@ module "proxy" {
 
 }
 
-<<<<<<< HEAD
-module "controller" {
-  source             = "./modules/controller"
-  base_configuration = module.base.configuration
-  name               = "ctl"
-  provider_settings = {
-    memory             = 16384
-    vcpu               = 8
-  }
-  swap_file_size = null
-
-  // Cucumber repository configuration for the controller
-  git_username = var.GIT_USER
-  git_password = var.GIT_PASSWORD
-  git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_BRANCH
-
-  server_configuration = module.server.configuration
-  proxy_configuration  = module.proxy.configuration
-
-}
-
-=======
->>>>>>> 350a90d... Add SUMA 4.2 terraform file for AWS
 output "bastion_public_name" {
   value = lookup(module.base.configuration, "bastion_host", null)
 }
@@ -265,15 +217,3 @@ output "aws_mirrors_private_name" {
 output "aws_mirrors_public_name" {
   value = module.mirror.configuration.public_names
 }
-<<<<<<< HEAD
-
-output "configuration" {
-  value = {
-    controller = module.controller.configuration
-    bastion = {
-      hostname = lookup(module.base.configuration, "bastion_host", null)
-    }
-  }
-}
-=======
->>>>>>> 350a90d... Add SUMA 4.2 terraform file for AWS
