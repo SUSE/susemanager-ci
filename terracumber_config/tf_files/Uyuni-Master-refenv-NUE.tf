@@ -92,6 +92,9 @@ module "base" {
   use_avahi   = false
   domain      = "mgr.suse.de"
   images      = ["centos7o", "opensuse153o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1804o"]
+
+  install_salt_bundle = true
+
   provider_settings = {
     pool         = "ssd"
     network_name = null

@@ -117,6 +117,8 @@ module "cucumber_testsuite" {
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
+  install_salt_bundle = true
+
   host_settings = {
     controller = {
       provider_settings = {
