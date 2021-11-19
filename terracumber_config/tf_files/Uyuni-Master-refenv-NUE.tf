@@ -93,8 +93,6 @@ module "base" {
   domain      = "mgr.suse.de"
   images      = ["centos7o", "opensuse153o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1804o"]
 
-  install_salt_bundle = true
-
   provider_settings = {
     pool         = "ssd"
     network_name = null
@@ -137,6 +135,7 @@ module "suse-client" {
     mac = "aa:b2:93:01:00:e4"
   }
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "suse-minion" {
@@ -153,6 +152,7 @@ module "suse-minion" {
     mac = "aa:b2:93:01:00:e6"
   }
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "redhat-minion" {
@@ -171,6 +171,7 @@ module "redhat-minion" {
     vcpu = 2
   }
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian-minion" {
@@ -199,6 +200,7 @@ module "build-host" {
     mac = "aa:b2:93:01:00:ed"
   }
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "kvm-minion" {
@@ -213,4 +215,5 @@ module "kvm-minion" {
     mac = "aa:b2:93:01:00:ee"
   }
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }

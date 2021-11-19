@@ -117,8 +117,6 @@ module "cucumber_testsuite" {
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
 
-  install_salt_bundle = true
-
   host_settings = {
     controller = {
       provider_settings = {
@@ -135,6 +133,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:d2"
       }
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp2o"
@@ -143,6 +142,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:d4"
       }
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp2o"
@@ -151,6 +151,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:d6"
       }
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "sles15sp2o"
@@ -159,6 +160,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:d8"
       }
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     redhat-minion = {
       image = "centos7o"
@@ -170,6 +172,7 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2004"
@@ -185,10 +188,12 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:dd"
       }
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     pxeboot-minion = {
       image = "sles15sp3o"
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     kvm-host = {
       image = "opensuse153o"
@@ -196,6 +201,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:de"
       }
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     xen-host = {
       image = "opensuse153o"
@@ -203,6 +209,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:df"
       }
       additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
   }
   provider_settings = {
