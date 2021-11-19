@@ -134,6 +134,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d2"
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
     suse-client = {
       image = "sles15sp2o"
@@ -141,6 +142,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d4"
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
     suse-minion = {
       image = "sles15sp2o"
@@ -148,6 +150,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
     suse-sshminion = {
       image = "sles15sp2o"
@@ -155,6 +158,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
     redhat-minion = {
       image = "centos7o"
@@ -165,6 +169,7 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
     debian-minion = {
       name = "min-ubuntu2004"
@@ -172,27 +177,32 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:dc"
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
     build-host = {
       image = "sles15sp3o"
       provider_settings = {
         mac = "aa:b2:93:01:00:dd"
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
     pxeboot-minion = {
       image = "sles15sp3o"
+      additional_packages = [ "venv-salt-minion" ]
     }
     kvm-host = {
       image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
     xen-host = {
       image = "opensuse153o"
       provider_settings = {
         mac = "aa:b2:93:01:00:df"
       }
+      additional_packages = [ "venv-salt-minion" ]
     }
   }
   provider_settings = {

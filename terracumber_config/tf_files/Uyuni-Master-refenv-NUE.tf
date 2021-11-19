@@ -136,6 +136,7 @@ module "suse-client" {
   provider_settings = {
     mac = "aa:b2:93:01:00:e4"
   }
+  additional_packages = [ "venv-salt-minion" ]
 }
 
 module "suse-minion" {
@@ -151,6 +152,7 @@ module "suse-minion" {
   provider_settings = {
     mac = "aa:b2:93:01:00:e6"
   }
+  additional_packages = [ "venv-salt-minion" ]
 }
 
 module "redhat-minion" {
@@ -168,6 +170,7 @@ module "redhat-minion" {
     memory = 2048
     vcpu = 2
   }
+  additional_packages = [ "venv-salt-minion" ]
 }
 
 module "debian-minion" {
@@ -181,6 +184,7 @@ module "debian-minion" {
   provider_settings = {
     mac = "aa:b2:93:01:00:eb"
   }
+  additional_packages = [ "venv-salt-minion" ]
 }
 
 module "build-host" {
@@ -194,6 +198,7 @@ module "build-host" {
   provider_settings = {
     mac = "aa:b2:93:01:00:ed"
   }
+  additional_packages = [ "venv-salt-minion" ]
 }
 
 module "kvm-minion" {
@@ -207,4 +212,5 @@ module "kvm-minion" {
   provider_settings = {
     mac = "aa:b2:93:01:00:ee"
   }
+  additional_packages = [ "venv-salt-minion" ]
 }
