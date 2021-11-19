@@ -24,6 +24,9 @@ fixed some or whether your failing tests are also failing in master:
 https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-NUE/
 
 
+In case of failure, you can connect to the server host. See $urlprefix/$timestamp for connection details.
+
+
 Do you need help? Ask for help at our slack channel
 
 https://app.slack.com/client/T02863RC2AC/C02DRMDU69E
@@ -32,6 +35,7 @@ https://app.slack.com/client/T02863RC2AC/C02DRMDU69E
 See troubleshooting guide at
 
 https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting
+
 
 Please let us know how you liked it at
 
