@@ -73,6 +73,8 @@ def run(params) {
                                         branches: [[name: "pr/${params.pull_request_number}"]], 
                                         extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
                                         userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
+                                        extensions: [
+                                        []]
                                        ])
                             // Get changelogs from master so we do not cancel the build for conflicts on those fils
                             sh "for i in \$(find . -name *.changes);do echo \$i;git checkout origin/master $i;done"
