@@ -55,7 +55,9 @@ def run(params) {
             stage('Checkout project') {
                 ws(environment_workspace){
                     if(params.must_build) {
-                        sh "rm -rf ${WORKSPACE}/product"
+                        // Remove previous product built.
+                        // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
+                        sh "docker run -ti --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs rm -rf /manager/product"
                         dir("product") {
                             // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
                             env.GIT_COMMITTER_NAME = "jenkins"
