@@ -265,7 +265,7 @@ def run(params) {
                 if(environment_workspace){
                     ws(environment_workspace){
                         if (env.env_file) {
-                            if (currentBuild.currentResult == 'SUCCESS '){
+                            if (currentBuild.currentResult == 'SUCCESS' || !deployed){
                                 sh "rm -f ${env_file}"
                             }else{
                                 println("Keep the environment locked for one extra hour so you can debug")
