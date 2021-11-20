@@ -74,12 +74,15 @@ def run(params) {
                                         extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
                                         userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
                                         extensions: [
-                                        []]
+                                        [
+                                            $class: 'PreBuildMerge',
+                                            options: [
+                                                 fastForwardMode: 'NO_FF',
+                                                 mergeRemote: 'origin',
+                                                 mergeTarget: 'master'
+                                           ]
+                                         ]]
                                        ])
-                            // Get changelogs from master so we do not cancel the build for conflicts on those fils
-                            sh "for i in $(find . -name *.changes);do echo $i;git checkout origin/master $i;done"
-                            // Get latest changes from master
-                            sh "git merge origin/master"
                         }
                     }
                 }
