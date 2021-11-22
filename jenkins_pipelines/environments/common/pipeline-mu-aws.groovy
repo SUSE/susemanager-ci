@@ -97,6 +97,7 @@ def run(params) {
                     returnStdout: true).trim()
 
             user = 'root'
+            sh "ssh-keygen -R ${mirror_hostname_local} -f /home/jenkins/.ssh/known_hosts"
             sh "scp -o StrictHostKeyChecking=no /home/jenkins/.ssh/testing-suma.pem ${user}@${mirror_hostname_local}:/root/"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -r -i /root/testing-suma.pem /srv/mirror ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
