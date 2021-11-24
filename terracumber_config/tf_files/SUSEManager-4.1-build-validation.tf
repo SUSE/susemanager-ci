@@ -1267,7 +1267,7 @@ module "opensuse153arm-minion" {
     mac                = "aa:b2:92:42:00:6d"
     memory             = 2048
     vcpu               = 2
-    xslt               = file("./common/tune-aarch64.xslt")
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
     hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
@@ -1363,7 +1363,7 @@ module "controller" {
 
 resource "null_resource" "server_extra_nfs_mounts" {
   provisioner "remote-exec" {
-    script = "./common/nfs-mounts.sh"
+    script = "../../susemanager-ci/terracumber_config/tf_files/common/nfs-mounts.sh"
     connection {
       type     = "ssh"
       user     = "root"
