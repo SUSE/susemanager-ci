@@ -217,3 +217,7 @@ output "aws_mirrors_private_name" {
 output "aws_mirrors_public_name" {
   value = module.mirror.configuration.public_names
 }
+
+output "configuration" {
+  value = module.server.configuration
+}
