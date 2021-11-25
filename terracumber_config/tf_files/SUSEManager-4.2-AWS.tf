@@ -206,6 +206,27 @@ module "proxy" {
 
 }
 
+module "controller" {
+  source             = "./modules/controller"
+  base_configuration = module.base_core.configuration
+  name               = "ctl"
+  provider_settings = {
+    memory             = 16384
+    vcpu               = 8
+  }
+  swap_file_size = null
+
+  // Cucumber repository configuration for the controller
+  git_username = var.GIT_USER
+  git_password = var.GIT_PASSWORD
+  git_repo     = var.CUCUMBER_GITREPO
+  branch       = var.CUCUMBER_BRANCH
+
+  server_configuration = module.server.configuration
+  proxy_configuration  = module.proxy.configuration
+
+}
+
 output "bastion_public_name" {
   value = lookup(module.base.configuration, "bastion_host", null)
 }
@@ -219,5 +240,7 @@ output "aws_mirrors_public_name" {
 }
 
 output "configuration" {
-  value = module.server.configuration
+  value = {
+    controller = module.controller.configuration
+  }
 }
