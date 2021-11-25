@@ -208,7 +208,7 @@ module "proxy" {
 
 module "controller" {
   source             = "./modules/controller"
-  base_configuration = module.base_core.configuration
+  base_configuration = module.base.configuration
   name               = "ctl"
   provider_settings = {
     memory             = 16384
