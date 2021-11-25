@@ -106,7 +106,7 @@ def run(params) {
                             sh "osc rdelete -rf -m 'removing project before creating it again' ${builder_project}:${params.pull_request_number} || true"
                             sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${builder_project} --configfile $HOME/.oscrc add --repo ${build_repo} ${params.pull_request_number} --disablepublish"
                             // Autocleanup in 3 days from obs
-                            sh "osc dr --accept-in-hours=\$(( 24 * 3 )) --all -m 'Autocleanup' ${builder_project}:${params.pull_request_number}"                          
+                            sh "osc dr --accept-in-hours=\$(( 24 * 7 )) --all -m 'Autocleanup' ${builder_project}:${params.pull_request_number}"                          
                             sh "osc linkpac ${source_project} release-notes-uyuni ${builder_project}:${params.pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${builder_api}|${source_project}\" -n \"${builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e"
                             echo "Checking ${builder_project}:${params.pull_request_number}"
