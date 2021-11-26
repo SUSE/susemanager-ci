@@ -14,9 +14,11 @@ for dir in 'repo/$RCE/RES7' \
 done
 
 for dir in 'distribution/leap/15.3' \
-           'repositories/systemsmanagement:/sumaform:/tools/openSUSE_Leap_15.3' \
+           'updates/leap/15.3' \
            'SUSE/Updates/SLE-Manager-Tools/15/aarch64' \
-           'SUSE/Updates/SLE-Manager-Tools/15-BETA/aarch64'; do
+           'SUSE/Updates/SLE-Manager-Tools/15-BETA/aarch64' \
+           'repositories/systemsmanagement:/sumaform:/tools/openSUSE_Leap_15.3' \
+           '/repositories/systemsmanagement:/Uyuni:/Stable:/openSUSE_Leap_15-Uyuni-Client-Tools'; do
   echo "minima-mirror-bv3.mgr.prv.suse.net:/srv/mirror/$dir  /mirror/$dir  nfs  defaults  0 0" >> /etc/fstab
   mount "/mirror/$dir"
 done
