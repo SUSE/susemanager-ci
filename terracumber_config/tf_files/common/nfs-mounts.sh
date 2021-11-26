@@ -14,7 +14,7 @@ for dir in 'repo/$RCE/RES7' \
 done
 
 for dir in 'distribution/leap/15.3' \
-           'updates/leap/15.3' \
+           'update/leap/15.3' \
            'SUSE/Updates/SLE-Manager-Tools/15/aarch64' \
            'SUSE/Updates/SLE-Manager-Tools/15-BETA/aarch64' \
            'repositories/systemsmanagement:/sumaform:/tools/openSUSE_Leap_15.3' \
