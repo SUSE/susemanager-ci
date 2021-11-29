@@ -123,8 +123,8 @@ module "base_core" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp2o", "opensuse152o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -149,8 +149,8 @@ module "base_old_sle" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles11sp4", "sles12sp4o", "sles12sp5o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -174,8 +174,8 @@ module "base_res" {
   domain      = "mgr.prv.suse.net"
   images      = [ "centos7o", "centos8o" ]
 
-  // mirror = "minima-mirror-bv2.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv2.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -199,8 +199,8 @@ module "base_new_sle" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -224,8 +224,8 @@ module "base_retail" {
   domain      = "mgr.prv.suse.net"
   images      = [ "opensuse152o", "sles11sp4", "sles12sp4o", "sles15sp2o", "sles12sp5o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -250,8 +250,8 @@ module "base_debian" {
   domain      = "mgr.prv.suse.net"
   images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
 
-  // mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -275,8 +275,8 @@ module "base_arm" {
   domain      = "mgr.prv.suse.net"
   images      = [ "opensuse153armo" ]
 
-  // mirror = "minima-mirror-bv3.mgr.prv.suse.net"
-  // use_mirror_images = true
+  mirror = "minima-mirror-bv3.mgr.prv.suse.net"
+  use_mirror_images = true
 
   testsuite = true
 
