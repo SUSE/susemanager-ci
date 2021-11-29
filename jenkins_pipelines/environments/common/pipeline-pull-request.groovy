@@ -265,7 +265,7 @@ def run(params) {
                 if(environment_workspace){
                     ws(environment_workspace){
                         if (env.env_file) {
-                            if (currentBuild.currentResult == 'SUCCESS '){
+                            if (currentBuild.currentResult == 'SUCCESS' || !deployed){
                                 sh "rm -f ${env_file}"
                             }else{
                                 println("Keep the environment locked for one extra hour so you can debug")
@@ -316,10 +316,10 @@ def run(params) {
                             if (params.email_to != '') {
                                 sh " export TF_VAR_MAIL_TO=${params.email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
+                            // Clean up old results
+                            sh "./clean-old-results -r ${resultdir}"
+                            sh "exit ${error}"
                         }
-                        // Clean up old results
-                        sh "./clean-old-results -r ${resultdir}"
-                        sh "exit ${error}"
                     }
                 }
             }
