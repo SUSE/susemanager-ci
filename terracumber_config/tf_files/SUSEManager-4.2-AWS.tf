@@ -242,5 +242,8 @@ output "aws_mirrors_public_name" {
 output "configuration" {
   value = {
     controller = module.controller.configuration
+    bastion = {
+      hostname = lookup(module.base.configuration, "bastion_host", null)
+    }
   }
 }
