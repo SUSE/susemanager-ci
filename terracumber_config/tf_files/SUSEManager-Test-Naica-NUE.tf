@@ -7,7 +7,7 @@ variable "URL_PREFIX" {
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
+  default = "export PRODUCT='Uyuni' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "uyuni-master"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
