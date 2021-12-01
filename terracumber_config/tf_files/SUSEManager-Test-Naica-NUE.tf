@@ -128,7 +128,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:61"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP3/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP4/"
       }
     }
     proxy = {
@@ -136,7 +136,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:62"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP3/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP4/"
       }
     }
     suse-client = {
