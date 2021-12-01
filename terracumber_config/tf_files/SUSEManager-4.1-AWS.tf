@@ -138,8 +138,6 @@ module "base" {
   cc_username              = var.SCC_USER
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
-  server_registration_code = var.SERVER_REGISTRATION_CODE
-  proxy_registration_code  = var.PROXY_REGISTRATION_CODE
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -166,6 +164,7 @@ module "server" {
   name                 = "server"
   product_version      = "4.1-released"
   repository_disk_size = 1500
+  server_registration_code = var.SERVER_REGISTRATION_CODE
 
   auto_accept                    = false
   monitored                      = true
@@ -192,6 +191,7 @@ module "proxy" {
   server_configuration = module.server.configuration
   product_version    = "4.1-released"
   name               = "proxy"
+  proxy_registration_code  = var.PROXY_REGISTRATION_CODE
 
   auto_register             = false
   auto_connect_to_master    = false
