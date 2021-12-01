@@ -222,7 +222,7 @@ module "base_retail" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse152o", "sles11sp4", "sles12sp4o", "sles15sp2o", "sles15sp3o" ]
+  images      = [ "opensuse152o", "sles11sp4", "sles12sp4o", "sles15sp3o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -1175,15 +1175,15 @@ module "sles12sp4-terminal" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp2-buildhost" {
+module "sles15sp3-buildhost" {
   providers = {
     libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   product_version    = "4.2-released"
-  name               = "build-sles15sp2"
-  image              = "sles15sp2o"
+  name               = "build-sles15sp3"
+  image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:c3"
     memory             = 2048
@@ -1197,15 +1197,15 @@ module "sles15sp2-buildhost" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp2-terminal" {
+module "sles15sp3-terminal" {
   providers = {
     libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   product_version    = "4.2-released"
-  name               = "terminal-sles15sp2"
-  image              = "sles15sp2o"
+  name               = "terminal-sles15sp3"
+  image              = "sles15sp3o"
   provider_settings = {
     memory             = 2048
     vcpu               = 2
@@ -1313,11 +1313,11 @@ module "controller" {
 
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp4_buildhost_configuration = module.sles12sp4-buildhost.configuration
-  sle15sp2_buildhost_configuration = module.sles15sp2-buildhost.configuration
+  sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
 
   sle11sp3_terminal_configuration = module.sles11sp3-terminal.configuration
   sle12sp4_terminal_configuration = module.sles12sp4-terminal.configuration
-  sle15sp2_terminal_configuration = module.sles15sp2-terminal.configuration
+  sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
 
   opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
 }
