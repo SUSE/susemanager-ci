@@ -131,6 +131,7 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/openSUSE_Leap_15.3/"
       }
     }
+    /*
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:62"
@@ -139,6 +140,7 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/openSUSE_Leap_15.3/"
       }
     }
+    */
     suse-client = {
       image = "sles15sp2o"
       name = "cli-sles15"
