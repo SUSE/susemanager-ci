@@ -15,6 +15,8 @@ node('pull-request-test') {
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Advanced: Change this by your repo, only if you changed the tests in your PR'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Advanced: Change this by your branch, only if you changed the tests in your PR'),
             booleanParam(name: 'force_pr_lock_cleanup', defaultValue: false, description: 'Advanced: Check this parameter to force a cleanup of the locks associated with this PR. Be careful, only do this if you are certain no one else is running a test for the same PR. More at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting'),
+            booleanParam(name: 'keep_env_extra_time', defaultValue: false, description: '[BETA] Advanced: Check this parameter to keep your environment (vms) for 24h. Use this for keeping it overnight, so you can debug it next day.  Note this will remove any previous environment you are using'),
+            booleanParam(name: 'keep_env_extra_weekend_time', defaultValue: false, description: '[BETA] Advanced: Check this parameter to keep your environment (vms) for 72h. Use this for keeping it over the weekend so you can debug on Monday. Note this will remove any previous environment you are using'),
         ])
     ])
 

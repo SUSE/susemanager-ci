@@ -37,6 +37,13 @@ def run(params) {
 
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
                   echo "DEBUG: fqdn_jenkins_node: ${fqdn_jenkins_node}"
+                  if (params.keep_env_extra_time || params.keep_env_extra_weekend_time) {
+                      if (params.email_to == '') {
+                          error("Sorry, in order to use the extra time for environments feature, you need to provide an email")
+                      }
+                      echo "Cleaning up previous environments for this user"
+                      sh "for i in \$(grep user:${email_to} /tmp/env-suma-pr-* | cut -d: -f1 | rev | cut -d. -f1 --complement | rev);do;rm \$i;done"
+                  }
                   // Pick a free environment
                   for (env_number = 1; env_number <= total_envs; env_number++) {
                       env.env_file="/tmp/env-suma-pr-${env_number}.lock"
@@ -274,9 +281,22 @@ def run(params) {
                             if (currentBuild.currentResult == 'SUCCESS' || !deployed){
                                 sh "rm -f ${env_file}*"
                             }else{
-                                println("Keep the environment locked for one extra hour so you can debug")
-                                sh "echo \"rm -f ${env_file}*\" | at now +1 hour"
-                                sh "echo keep:1h >> ${env_file}.info"
+                                if (params.keep_env_extra_weekend_time) {
+                                    println("Keep the environment locked for 72 extra hours so you can debug")
+                                    sh "echo \"rm -f ${env_file}*\" | at now +72 hours"
+                                    sh "echo keep:72h >> ${env_file}.info"
+                                    sh "echo 72 >> /srv/www/htdocs/metrics/keep_envs_in_hours"
+                                } else if (params.keep_env_extra_time) {
+                                    println("Keep the environment locked for 24 extra hours so you can debug")
+                                    sh "echo \"rm -f ${env_file}*\" | at now +24 hours"
+                                    sh "echo keep:24h >> ${env_file}.info"
+                                    sh "echo 24 >> /srv/www/htdocs/metrics/keep_envs_in_hours"
+                                } else { // no extra time, keep for one hor
+                                    println("Keep the environment locked for one extra hour so you can debug")
+                                    sh "echo \"rm -f ${env_file}*\" | at now +1 hour"
+                                    sh "echo keep:1h >> ${env_file}.info"
+                                    sh "echo 1 >> /srv/www/htdocs/metrics/keep_envs_in_hours"
+                                }
                             }
                         }
                     }
