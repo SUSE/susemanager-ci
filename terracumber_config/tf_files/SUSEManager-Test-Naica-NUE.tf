@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -128,7 +128,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:61"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP4/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/openSUSE_Leap_15.3/"
       }
     }
     proxy = {
@@ -136,7 +136,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:62"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP4/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/openSUSE_Leap_15.3/"
       }
     }
     suse-client = {
