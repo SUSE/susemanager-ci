@@ -44,6 +44,8 @@ def run(params) {
                       if(env_status == 'free'){
                           echo "Using environment suma-pr${env_number}"
                           environment_workspace = "${jenkins_workspace}suma-pr${env_number}"
+                          sh "echo user:${params.email_to} >> ${env_file}.info"
+                          sh "echo PR:${params.pull_request_number} >> ${env_file}.info"
                           break;
                       }
                       if(env_number == total_envs){
@@ -269,10 +271,10 @@ def run(params) {
                     ws(environment_workspace){
                         if (env.env_file) {
                             if (currentBuild.currentResult == 'SUCCESS' || !deployed){
-                                sh "rm -f ${env_file}"
+                                sh "rm -f ${env_file}*"
                             }else{
                                 println("Keep the environment locked for one extra hour so you can debug")
-                                sh "echo \"rm -f ${env_file}\" | at now +1 hour"
+                                sh "echo \"rm -f ${env_file}*\" | at now +1 hour"
                             }
                         }
                     }
