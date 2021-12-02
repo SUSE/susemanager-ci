@@ -58,33 +58,34 @@ def run(params) {
                         // Remove previous product built.
                         // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
                         sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs rm -rf /manager/product"
-                        dir("product") {
-                            // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
-                            env.GIT_COMMITTER_NAME = "jenkins"
-                            env.GIT_AUTHOR_NAME = "jenkins"
-                            env.GIT_AUTHOR_EMAIL = "jenkins@a.b"
-                            env.GIT_COMMITTER_EMAIL = "jenkins@a.b"
-                            sh "git config --global user.email 'galaxy-noise@suse.de'"
-                            sh "git config --global user.name 'jenkins'"
-                            //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
-                            //      Inside userRemoteConfigs add credentialsId: 'github'
-                            checkout([  
-                                        $class: 'GitSCM', 
-                                        branches: [[name: "pr/${params.pull_request_number}"]], 
-                                        extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
-                                        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
-                                        extensions: [
-                                        [
-                                            $class: 'PreBuildMerge',
-                                            options: [
-                                                 fastForwardMode: 'NO_FF',
-                                                 mergeRemote: 'origin',
-                                                 mergeTarget: 'master'
-                                           ]
-                                         ]]
-                                       ])
-                        }
                     }
+                    dir("product") {
+                        // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
+                        env.GIT_COMMITTER_NAME = "jenkins"
+                        env.GIT_AUTHOR_NAME = "jenkins"
+                        env.GIT_AUTHOR_EMAIL = "jenkins@a.b"
+                        env.GIT_COMMITTER_EMAIL = "jenkins@a.b"
+                        sh "git config --global user.email 'galaxy-noise@suse.de'"
+                        sh "git config --global user.name 'jenkins'"
+                        //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
+                        //      Inside userRemoteConfigs add credentialsId: 'github'
+                        checkout([  
+                                    $class: 'GitSCM', 
+                                    branches: [[name: "pr/${params.pull_request_number}"]], 
+                                    extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
+                                    userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
+                                    extensions: [
+                                    [
+                                        $class: 'PreBuildMerge',
+                                        options: [
+                                             fastForwardMode: 'NO_FF',
+                                             mergeRemote: 'origin',
+                                             mergeTarget: 'master'
+                                       ]
+                                     ]]
+                                   ])
+                    }
+                    
                 }
             }
             stage('Build product') {
@@ -153,8 +154,11 @@ def run(params) {
                         echo "Wait for all publishers to finish...This could take a while ..."
                         sh "bash -c \"while ( ps -C publish-rpms.sh > /dev/null 2>/dev/null );do sleep 1; done\" "
 
+                        echo "DEBUG"
+                        sh "pwd"
+                        sh "ls"
                         echo "Check for publishing failures"
-                        sh "bash -c \"if [ -f ${environment_workspace}/repos/publish_logs/*.error ];then echo 'There was an error publishing';cat ${environment_workspace}/repos/publish_logs/*;exit -1;fi \""
+                        sh "bash -c \"if ls ${environment_workspace}/repos/publish_logs/*.error 1>/dev/null 2>&1;then echo 'There was an error publishing';cat ${environment_workspace}/repos/publish_logs/*;exit -1;fi \""
                     }
                 }
             }
