@@ -1185,7 +1185,7 @@ module "sles15sp3-buildhost" {
   name               = "build-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:c3"
+    mac                = "aa:b2:92:42:00:c2"
     memory             = 2048
     vcpu               = 2
   }

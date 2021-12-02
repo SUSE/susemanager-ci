@@ -1139,7 +1139,7 @@ module "sles12sp5-buildhost" {
   name               = "build-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:82"
+    mac                = "aa:b2:92:42:00:81"
     memory             = 2048
     vcpu               = 2
   }
@@ -1182,7 +1182,7 @@ module "sles15sp3-buildhost" {
   name               = "build-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:83"
+    mac                = "aa:b2:92:42:00:82"
     memory             = 2048
     vcpu               = 2
   }
