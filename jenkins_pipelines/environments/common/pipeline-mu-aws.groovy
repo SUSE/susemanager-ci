@@ -111,7 +111,7 @@ def run(params) {
             sh "sed -i 's/download.suse.de/${mirror_hostname_aws_private}/g' ${WORKSPACE}/custom_repositories.json"
 
             // Deploying AWS server using MU repositories
-            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*'  --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws"
+            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*'  --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws --bastion_ssh_key /home/jenkins/.ssh/testing-suma.pem"
         }
     }
 }
