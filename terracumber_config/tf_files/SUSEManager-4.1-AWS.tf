@@ -138,8 +138,6 @@ module "base" {
   cc_username              = var.SCC_USER
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
-  server_registration_code = var.SERVER_REGISTRATION_CODE
-  proxy_registration_code  = var.PROXY_REGISTRATION_CODE
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -166,6 +164,7 @@ module "server" {
   name                 = "server"
   product_version      = "4.1-released"
   repository_disk_size = 1500
+  server_registration_code = var.SERVER_REGISTRATION_CODE
 
   auto_accept                    = false
   monitored                      = true
@@ -192,6 +191,7 @@ module "proxy" {
   server_configuration = module.server.configuration
   product_version    = "4.1-released"
   name               = "proxy"
+  proxy_registration_code  = var.PROXY_REGISTRATION_CODE
 
   auto_register             = false
   auto_connect_to_master    = false
@@ -206,6 +206,28 @@ module "proxy" {
 
 }
 
+
+module "controller" {
+  source             = "./modules/controller"
+  base_configuration = module.base.configuration
+  name               = "ctl"
+  provider_settings = {
+    memory             = 16384
+    vcpu               = 8
+  }
+  swap_file_size = null
+
+  // Cucumber repository configuration for the controller
+  git_username = var.GIT_USER
+  git_password = var.GIT_PASSWORD
+  git_repo     = var.CUCUMBER_GITREPO
+  branch       = var.CUCUMBER_BRANCH
+
+  server_configuration = module.server.configuration
+  proxy_configuration  = module.proxy.configuration
+
+}
+
 output "bastion_public_name" {
   value = lookup(module.base.configuration, "bastion_host", null)
 }
@@ -217,4 +239,14 @@ output "aws_mirrors_private_name" {
 output "aws_mirrors_public_name" {
   value = module.mirror.configuration.public_names
 }
+
+output "configuration" {
+  value = {
+    controller = module.controller.configuration
+    bastion = {
+      hostname = lookup(module.base.configuration, "bastion_host", null)
+    }
+  }
+}
+
 
