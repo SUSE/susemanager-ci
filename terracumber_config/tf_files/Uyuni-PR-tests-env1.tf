@@ -174,6 +174,8 @@ module "cucumber_testsuite" {
         master_repo_other = var.MASTER_OTHER_REPO,
       }
       image = "opensuse153o"
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp2o"
@@ -184,6 +186,8 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp2o"
@@ -194,6 +198,8 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "sles15sp2o"
@@ -204,6 +210,8 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     redhat-minion = {
       image = "centos7o"
@@ -215,6 +223,8 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.CENTOS_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2004"
@@ -225,6 +235,10 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.UBUNTU_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      // FIXME: cloudl-init fails if venv-salt-minion is not avaiable
+      // We can set "install_salt_bundle = true" as soon as venv-salt-minion is available Uyuni:Stable
+      install_salt_bundle = false
     }
     build-host = {
       image = "sles15sp3o"
@@ -234,12 +248,16 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     pxeboot-minion = {
       image = "sles15sp3o"
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     kvm-host = {
       image = "opensuse153o"
@@ -249,6 +267,8 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.OPENSUSE_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     xen-host = {
       image = "opensuse153o"
@@ -258,6 +278,8 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.OPENSUSE_CLIENT_REPO,
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
   }
   provider_settings = {

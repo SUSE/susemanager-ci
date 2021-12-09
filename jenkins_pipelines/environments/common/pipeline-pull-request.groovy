@@ -152,6 +152,8 @@ def run(params) {
 
                         echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                        // Clean up previous Packages.gz
+                        sh "rm -f ${environment_workspace}/repos/systemsmanagement:Uyuni:Master:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64/Packages.gz"
                         sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Ubuntu2004-Uyuni-Client-Tools\" -r xUbuntu_20.04 -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2004-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2004-Uyuni-Client-Tools.error &"
 
                         echo "Wait for all publishers to finish...This could take a while ..."
