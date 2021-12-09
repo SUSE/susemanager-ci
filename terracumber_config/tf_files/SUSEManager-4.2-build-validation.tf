@@ -222,7 +222,7 @@ module "base_retail" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse152o", "sles11sp4", "sles12sp4o", "sles15sp3o" ]
+  images      = [ "opensuse152o", "sles11sp4", "sles12sp5o", "sles15sp3o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -316,6 +316,7 @@ module "server" {
   disable_download_tokens        = false
   ssh_key_path                   = "./salt/controller/id_rsa.pub"
   from_email                     = "root@suse.de"
+  accept_all_ssl_protocols       = true
 
   //server_additional_repos
 
@@ -347,6 +348,7 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = true
   ssh_key_path              = "./salt/controller/id_rsa.pub"
+  accept_all_ssl_protocols  = true
 
   //proxy_additional_repos
 
@@ -536,9 +538,9 @@ module "centos7-client" {
   server_configuration = {
     hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
   }
-  auto_register = false
+  auto_register           = false
   use_os_released_updates = false
-  ssh_key_path  = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //ceos7-client_additional_repos
 
@@ -732,9 +734,9 @@ module "centos7-minion" {
   server_configuration = {
     hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
   }
-  auto_connect_to_master = false
+  auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path           = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //ceos7-minion_additional_repos
 
@@ -756,9 +758,9 @@ module "centos8-minion" {
   server_configuration = {
     hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
   }
-  auto_connect_to_master = false
+  auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path           = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //ceos8-minion_additional_repos
 
@@ -780,9 +782,9 @@ module "ubuntu1804-minion" {
   server_configuration = {
     hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
   }
-  auto_connect_to_master = false
+  auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path           = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //ubuntu1804-minion_additional_repos
 
@@ -804,9 +806,9 @@ module "ubuntu2004-minion" {
   server_configuration = {
     hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
   }
-  auto_connect_to_master = false
+  auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path           = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //ubuntu2004-minion_additional_repos
 
@@ -894,8 +896,8 @@ module "sles12sp4-sshminion" {
   }
 
   use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-  gpg_keys     = ["default/gpg_keys/galaxy.key"]
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  gpg_keys                = ["default/gpg_keys/galaxy.key"]
 }
 
 module "sles12sp5-sshminion" {
@@ -913,8 +915,8 @@ module "sles12sp5-sshminion" {
   }
 
   use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
-  gpg_keys     = ["default/gpg_keys/galaxy.key"]
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  gpg_keys                = ["default/gpg_keys/galaxy.key"]
 }
 
 module "sles15-sshminion" {
@@ -1001,7 +1003,7 @@ module "centos7-sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "centos8-sshminion" {
@@ -1018,7 +1020,7 @@ module "centos8-sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "ubuntu1804-sshminion" {
@@ -1035,7 +1037,7 @@ module "ubuntu1804-sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path       = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "ubuntu2004-sshminion" {
@@ -1052,7 +1054,7 @@ module "ubuntu2004-sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path       = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "debian9-sshminion" {
@@ -1132,15 +1134,15 @@ module "sles11sp3-terminal" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles12sp4-buildhost" {
+module "sles12sp5-buildhost" {
   providers = {
     libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   product_version    = "4.2-released"
-  name               = "build-sles12sp4"
-  image              = "sles12sp4o"
+  name               = "build-sles12sp5"
+  image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:c1"
     memory             = 2048
@@ -1154,15 +1156,15 @@ module "sles12sp4-buildhost" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles12sp4-terminal" {
+module "sles12sp5-terminal" {
   providers = {
     libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   product_version    = "4.2-released"
-  name               = "terminal-sles12sp4"
-  image              = "sles12sp4o"
+  name               = "terminal-sles12sp5"
+  image              = "sles12sp5o"
   provider_settings = {
     memory             = 1024
     vcpu               = 1
@@ -1185,7 +1187,7 @@ module "sles15sp3-buildhost" {
   name               = "build-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:c3"
+    mac                = "aa:b2:92:42:00:c2"
     memory             = 2048
     vcpu               = 2
   }
@@ -1228,7 +1230,7 @@ module "opensuse153arm-minion" {
   name               = "min-opensuse153arm"
   image              = "opensuse153armo"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ad"
+    mac                = "aa:b2:92:42:00:ae"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1312,11 +1314,11 @@ module "controller" {
   debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
-  sle12sp4_buildhost_configuration = module.sles12sp4-buildhost.configuration
+  sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
 
   sle11sp3_terminal_configuration = module.sles11sp3-terminal.configuration
-  sle12sp4_terminal_configuration = module.sles12sp4-terminal.configuration
+  sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
 
   opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration

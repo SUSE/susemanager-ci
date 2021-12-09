@@ -138,8 +138,6 @@ module "base" {
   images = [ "opensuse153o", "sles15sp2o" ]
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  server_registration_code = var.SERVER_REGISTRATION_CODE
-  proxy_registration_code = var.PROXY_REGISTRATION_CODE
   name_prefix = var.NAME_PREFIX
   //  mirror = "ip-172-16-1-50.eu-central-1.compute.internal"
   provider_settings = {

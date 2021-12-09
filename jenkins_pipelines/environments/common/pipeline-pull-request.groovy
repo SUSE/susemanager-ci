@@ -44,6 +44,9 @@ def run(params) {
                       if(env_status == 'free'){
                           echo "Using environment suma-pr${env_number}"
                           environment_workspace = "${jenkins_workspace}suma-pr${env_number}"
+                          sh "echo user:${params.email_to} >> ${env_file}.info"
+                          sh "echo PR:${params.pull_request_number} >> ${env_file}.info"
+                          sh "echo started:\$(date) >> ${env_file}.info"
                           break;
                       }
                       if(env_number == total_envs){
@@ -90,7 +93,7 @@ def run(params) {
             }
             stage('Build product') {
                 ws(environment_workspace){
-                    currentBuild.description =  "${builder_project}:${params.pull_request_number}<br>${params.email_to}<br>${params.functional_scopes}<br><b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
+                    currentBuild.description =  "${builder_project}:${params.pull_request_number}<br>${params.email_to}<br>environment: ${env_number}<br>${params.functional_scopes}<br><b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
                     dir("product") {
                         if(params.must_build) {
                             sh "[ -L /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos"
@@ -271,10 +274,11 @@ def run(params) {
                     ws(environment_workspace){
                         if (env.env_file) {
                             if (currentBuild.currentResult == 'SUCCESS' || !deployed){
-                                sh "rm -f ${env_file}"
+                                sh "rm -f ${env_file}*"
                             }else{
                                 println("Keep the environment locked for one extra hour so you can debug")
-                                // sh "echo \"rm -f ${env_file}\" | at now +1 hour"
+                                sh "echo \"rm -f ${env_file}*\" | at now +1 hour"
+                                sh "echo keep:1h >> ${env_file}.info"
                             }
                         }
                     }
