@@ -95,9 +95,9 @@ def run(params) {
                 ws(environment_workspace){
                     currentBuild.description =  "${builder_project}:${params.pull_request_number}<br>${params.email_to}<br>environment: ${env_number}<br>"
                     if (params.run_all_scopes) {
-                        currentBuild.description = "{currentBuild.description} Run all scopes<br>"
+                        currentBuild.description = "${currentBuild.description} Run all scopes<br>"
                     } else {
-                        currentBuild.description = "${¢urrentBuild.description}${params.functional_scopes}<br>"
+                        currentBuild.description = "${currentBuild.description}${params.functional_scopes}<br>"
                     }
                     currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
                     dir("product") {
