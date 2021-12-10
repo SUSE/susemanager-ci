@@ -93,7 +93,13 @@ def run(params) {
             }
             stage('Build product') {
                 ws(environment_workspace){
-                    currentBuild.description =  "${builder_project}:${params.pull_request_number}<br>${params.email_to}<br>environment: ${env_number}<br>${params.functional_scopes}<br><b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
+                    currentBuild.description =  "${builder_project}:${params.pull_request_number}<br>${params.email_to}<br>environment: ${env_number}<br>"
+                    if (params.run_all_scopes) {
+                        currentBuild.description = "{currentBuild.description} Run all scopes<br>"
+                    } else {
+                        currentBuild.description = "${¢urrentBuild.description}${params.functional_scopes}<br>"
+                    }
+                    currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
                     dir("product") {
                         if(params.must_build) {
                             sh "[ -L /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos"
