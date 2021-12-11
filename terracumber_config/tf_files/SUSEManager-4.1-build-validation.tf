@@ -863,6 +863,31 @@ module "debian10-minion" {
 
 }
 
+module "debian11-minion" {
+  providers = {
+    libvirt = libvirt.mandalore
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "4.1-released"
+  name               = "min-debian11"
+  image              = "debian11o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:6d"
+    memory             = 4096
+  }
+  server_configuration =
+  {
+    hostname =  "suma-bv-41-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //debian11-minion_additional_repos
+
+}
+
 module "sles11sp4-sshminion" {
   providers = {
     libvirt = libvirt.endor
@@ -1082,6 +1107,23 @@ module "debian10-sshminion" {
   image              = "debian10o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:7c"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "debian11-sshminion" {
+  providers = {
+    libvirt = libvirt.mandalore
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "4.1-released"
+  name               = "minssh-debian11"
+  image              = "debian11o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:7d"
     memory             = 4096
   }
   use_os_released_updates = false
