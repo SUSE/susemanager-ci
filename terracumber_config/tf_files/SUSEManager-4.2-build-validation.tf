@@ -1162,7 +1162,7 @@ module "sles11sp3-terminal" {
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   product_version    = "4.2-released"
-  name               = "terminal-sles11sp4"
+  name               = "terminal-sles11sp3"
   image              = "sles11sp4" # This is not a typo
   provider_settings = {
     memory             = 1024
