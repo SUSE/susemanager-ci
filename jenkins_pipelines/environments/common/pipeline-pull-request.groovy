@@ -13,7 +13,7 @@ def run(params) {
         terraform_init = true
         rake_namespace = 'cucumber'
         rake_parallel_namespace = 'parallel'
-        total_envs = 6
+        total_envs = 12
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         pull_request_repo = 'https://github.com/uyuni-project/uyuni.git'
         builder_api = 'https://api.opensuse.org'
