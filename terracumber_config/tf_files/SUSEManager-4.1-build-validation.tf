@@ -109,8 +109,8 @@ provider "libvirt" {
 }
 
 provider "libvirt" {
-  alias = "overdrive3"
-  uri = "qemu+tcp://overdrive3.arch.suse.de/system"
+  alias = "overdrive4"
+  uri = "qemu+tcp://overdrive4.arch.suse.de/system"
 }
 
 module "base_core" {
@@ -263,7 +263,7 @@ module "base_debian" {
 
 module "base_arm" {
   providers = {
-    libvirt = libvirt.overdrive3
+    libvirt = libvirt.overdrive4
   }
 
   source = "./modules/base"
@@ -1260,7 +1260,7 @@ module "sles15sp3-terminal" {
 // TODO: no ARM support for openSUSE on 4.1 branch, this should be SLES instead
 module "opensuse153arm-minion" {
   providers = {
-    libvirt = libvirt.overdrive3
+    libvirt = libvirt.overdrive4
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
