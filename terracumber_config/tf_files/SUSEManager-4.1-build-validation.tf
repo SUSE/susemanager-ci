@@ -222,7 +222,7 @@ module "base_retail" {
   name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse152o", "sles11sp4", "sles12sp5o", "sles15sp3o" ]
+  images      = [ "opensuse152o", "sles11sp4", "sles12sp5o", "sles15sp2o", "sles15sp3o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
