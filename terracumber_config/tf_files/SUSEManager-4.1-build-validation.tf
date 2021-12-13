@@ -851,8 +851,7 @@ module "debian10-minion" {
     mac                = "aa:b2:92:42:00:6c"
     memory             = 4096
   }
-  server_configuration =
-  {
+  server_configuration = {
     hostname =  "suma-bv-41-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
