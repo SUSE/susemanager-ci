@@ -283,7 +283,7 @@ def run(params) {
                                 sh "rm -f ${env_file}*"
                             }else{
                                 println("Keep the environment locked for one extra hour so you can debug")
-                                sh "echo \"rm -f ${env_file}*\" | at now +1 hour"
+                                sh "echo \"rm -f ${env_file}*\" | at now +24 hour"
                                 sh "echo keep:1h >> ${env_file}.info"
                             }
                         }

@@ -26,6 +26,8 @@ https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests
 
 In case of failure, you can connect to the server host. See $urlprefix/$timestamp for connection details.
 
+Your environment will be kept for 24h.
+
 
 Do you need help? Ask for help at our slack channel
 
