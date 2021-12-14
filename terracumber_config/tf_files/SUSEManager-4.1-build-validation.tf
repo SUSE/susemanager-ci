@@ -1351,6 +1351,9 @@ module "controller" {
   debian10_minion_configuration    = module.debian10-minion.configuration
   debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
+  debian11_minion_configuration    = module.debian11-minion.configuration
+  debian11_sshminion_configuration = module.debian11-sshminion.configuration
+
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
