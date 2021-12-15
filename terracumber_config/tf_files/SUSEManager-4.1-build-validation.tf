@@ -348,7 +348,6 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = true
   ssh_key_path              = "./salt/controller/id_rsa.pub"
-  accept_all_ssl_protocols  = true
 
   //proxy_additional_repos
 
