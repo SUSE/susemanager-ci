@@ -2,7 +2,7 @@
 
 node('pull-request-test') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '4')),
+        buildDiscarder(logRotator(numToKeepStr: '30', daysToKeepStr: '5')),
         parameters([
             string(name: 'pull_request_number', defaultValue: '', description: 'Required: Uyuni Pull Request Number'),
             string(name: 'email_to', defaultValue: '', description: 'Recommended: Receive a report to your e-mail when it finishes with links to the results, artifacts and logs'),
