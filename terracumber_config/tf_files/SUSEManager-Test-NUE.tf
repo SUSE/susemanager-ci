@@ -134,8 +134,8 @@ module "cucumber_testsuite" {
 //        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
 //        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
 //        sapformular = "http://download.suse.de/ibs/SUSE:/Maintenance:/17953/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
-//        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/"
-//       Test_repo = "http://download.suse.de/ibs/home:/agraul/SLE_15_SP3/"
+//        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
+       Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/Devel:/Galaxy:/Manager:/Head:/Other/SLE_15_SP4/"
       }
     }
     proxy = {
@@ -167,7 +167,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:46"
       }
       additional_repos = {
-//       Test_repo = "http://download.suse.de/ibs/home:/agraul/SLE_15_SP2/"
+       Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/Devel:/Galaxy:/Manager:/Head:/Other/SLE_15_SP4/"
       }
     }
     suse-sshminion = {
