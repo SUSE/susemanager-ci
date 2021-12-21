@@ -321,19 +321,6 @@ resource "null_resource" "add_test_information" {
       host     = "${module.cucumber_testsuite.configuration.server.hostname}"
     }
   }
-  provisioner "remote-exec" {
-    inline = [
-       "echo hola > /tmp/hola",
-       "chmod +x /tmp/set_custom_header.sh",
-      "/tmp/set_custom_header.sh -e ${var.ENVIRONMENT} -y ${var.HYPER} -m ${var.MAIL_TO} -t 24",
-    ]
-    connection {
-      type     = "ssh"
-      user     = "root"
-      password = "linux"
-      host     = "${module.cucumber_testsuite.configuration.server.hostname}"
-    }
-  }
 }
 
 

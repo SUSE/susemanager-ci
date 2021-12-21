@@ -218,9 +218,6 @@ def run(params) {
                         }
                         sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_CENTOS_CLIENT_REPO=${CENTOS_CLIENT_REPO};export TF_VAR_UBUNTU_CLIENT_REPO=${UBUNTU_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
-                        println("Keep the environment locked for 24 hours so you can debug")
-                        sh "echo \"rm -f ${env_file}*\" | at now +24 hour"
-                        sh "echo keep:24h >> ${env_file}.info"
                     }
                 }
             }
@@ -285,7 +282,13 @@ def run(params) {
                     ws(environment_workspace){
                         if (env.env_file) {
                             if (currentBuild.currentResult == 'SUCCESS' || !deployed){
+                                println("Unlock environment")
                                 sh "rm -f ${env_file}*"
+                            } else {
+                                println("Keep the environment locked for 24 hours so you can debug")
+                                sh "echo \"rm -f ${env_file}*\" | at now +24 hour"
+                                sh "echo keep:24h >> ${env_file}.info"
+                                sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --comand=\"/tmp/set_custom_header.sh -e ${env_number} -m ${params.email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-srv.mgr.prv.suse.net"
                             }
                         }
                     }
