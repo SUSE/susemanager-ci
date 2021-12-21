@@ -225,16 +225,16 @@ module "cucumber_testsuite" {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
     }
-    xen-host = {
-      image = "sles15sp3o"
-      name = "min-xen"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:4f"
-      }
-      additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-      }
-    }
+//    xen-host = {
+//      image = "sles15sp3o"
+//      name = "min-xen"
+//      provider_settings = {
+//        mac = "aa:b2:93:01:00:4f"
+//      }
+//      additional_repos = {
+////        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
+//      }
+//    }
   }
   provider_settings = {
     pool               = "ssd"
