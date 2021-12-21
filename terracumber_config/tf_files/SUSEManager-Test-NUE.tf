@@ -232,7 +232,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:4f"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
     }
   }
