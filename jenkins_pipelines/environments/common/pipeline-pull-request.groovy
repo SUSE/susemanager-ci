@@ -3,6 +3,7 @@ def run(params) {
         // Start pipeline with default values
         built = false
         deployed = false
+        tests_passed = false
         sumaform_backend = 'libvirt'
         terraform_bin = '/usr/bin/terraform'
         terraform_bin_plugins = '/usr/bin'
@@ -271,6 +272,7 @@ def run(params) {
                         sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                     }
                 }
+            tests_passed = true
             }
         }
         finally {
@@ -281,7 +283,7 @@ def run(params) {
                 if(environment_workspace){
                     ws(environment_workspace){
                         if (env.env_file) {
-                            if (currentBuild.currentResult == 'SUCCESS' || !deployed){
+                            if (tests_passed || !deployed){
                                 println("Unlock environment")
                                 sh "rm -f ${env_file}*"
                             } else {
