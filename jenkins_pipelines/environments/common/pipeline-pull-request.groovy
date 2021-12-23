@@ -290,7 +290,7 @@ def run(params) {
                                 println("Keep the environment locked for 24 hours so you can debug")
                                 sh "echo \"rm -f ${env_file}*\" | at now +24 hour"
                                 sh "echo keep:24h >> ${env_file}.info"
-                                sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --comand=\"/tmp/set_custom_header.sh -e ${env_number} -m ${params.email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-srv.mgr.prv.suse.net"
+                                sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${params.email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-srv.mgr.prv.suse.net"
                             }
                         }
                     }
