@@ -1,12 +1,11 @@
 ENV="1"
-HYPERVISOR="server.kvm.lan"
 FILE="/usr/share/rhn/config-defaults/rhn_java.conf"
 HOURS=24;
 EMAIL="a@b.com"
 DEADLINE_TIME=$(date -d "$(date) + 24 hours")
 
 usage() {
-  echo "Usage: $0 -m email -h hours -y hypervisor -f file -e environment"
+  echo "Usage: $0 -m email -h hours -f file -e environment"
   echo "Example: $0 -m a@b.com -h 24 -h server.kvm.lan -f /usr/share/rhn/config-defaults/rhn_java.conf -e 1"
   echo "Parameters are option. If not specified, you will get the defaults from the example"
   exit -1
@@ -23,11 +22,6 @@ while [[ $# -gt 0 ]];do
         -t|--time)
             HOURS=$2
 	    DEADLINE_TIME=$(date -d "$(date) + $HOURS hours")
-            shift
-            shift
-            ;;
-        -y|--hypervisor)
-            HYPERVISOR=$2
             shift
             shift
             ;;
@@ -53,6 +47,5 @@ sed -e "s%java.custom_header =.*%java.custom_header = \
      Otherwise, this server will be removed at the end of the pipeline. \
      Test environment for ${EMAIL}. \
      Run on environment ${ENV}. \
-     On hypervisor ${HYPERVISOR}. \
     %g" -i ${FILE}
 spacewalk-service restart
