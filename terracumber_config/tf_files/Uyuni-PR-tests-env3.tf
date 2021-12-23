@@ -45,6 +45,16 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
   default = "../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
 }
 
+variable "ENVIRONMENT" {
+  type = string
+  default = "3"
+}
+
+variable "HYPER" {
+  type = string
+  default = "vulcan.mgr.prv.suse.net"
+}
+
 variable "MAIL_FROM" {
   type = string
   default = "galaxy-ci@suse.de"
@@ -114,8 +124,9 @@ terraform {
   }
 }
 
+
 provider "libvirt" {
-  uri = "qemu+tcp://vulcan.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://${var.HYPER}/system"
 }
 
 module "cucumber_testsuite" {
@@ -132,10 +143,10 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153o", "opensuse153-ci-pr", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153-ci-pr", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
-  name_prefix  = "suma-pr3-"
+  name_prefix  = "suma-pr${var.ENVIRONMENT}-"
   domain       = "mgr.prv.suse.net"
   from_email   = "root@suse.de"
 
@@ -295,6 +306,24 @@ module "cucumber_testsuite" {
     additional_network = "192.168.103.0/24"
   }
 }
+
+
+resource "null_resource" "add_test_information" {
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+ provisioner "file" {
+    source      = "../../susemanager-ci/terracumber_config/scripts/set_custom_header.sh"
+    destination = "/tmp/set_custom_header.sh"
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "linux"
+      host     = "${module.cucumber_testsuite.configuration.server.hostname}"
+    }
+  }
+}
+
 
 output "configuration" {
   value = module.cucumber_testsuite.configuration

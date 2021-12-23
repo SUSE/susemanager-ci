@@ -3,6 +3,7 @@ def run(params) {
         // Start pipeline with default values
         built = false
         deployed = false
+        tests_passed = false
         sumaform_backend = 'libvirt'
         terraform_bin = '/usr/bin/terraform'
         terraform_bin_plugins = '/usr/bin'
@@ -271,6 +272,7 @@ def run(params) {
                         sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                     }
                 }
+            tests_passed = true
             }
         }
         finally {
@@ -281,12 +283,14 @@ def run(params) {
                 if(environment_workspace){
                     ws(environment_workspace){
                         if (env.env_file) {
-                            if (currentBuild.currentResult == 'SUCCESS' || !deployed){
+                            if (tests_passed || !deployed){
+                                println("Unlock environment")
                                 sh "rm -f ${env_file}*"
-                            }else{
-                                println("Keep the environment locked for one extra hour so you can debug")
+                            } else {
+                                println("Keep the environment locked for 24 hours so you can debug")
                                 sh "echo \"rm -f ${env_file}*\" | at now +24 hour"
-                                sh "echo keep:1h >> ${env_file}.info"
+                                sh "echo keep:24h >> ${env_file}.info"
+                                sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${params.email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-srv.mgr.prv.suse.net"
                             }
                         }
                     }
