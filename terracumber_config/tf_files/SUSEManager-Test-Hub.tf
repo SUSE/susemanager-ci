@@ -78,7 +78,7 @@ terraform {
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.6.3"
+      version = "0.6.14"
     }
   }
 }
@@ -202,7 +202,7 @@ module "controller" {
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
-  
+
   server_configuration = module.prh1.configuration
 
   sle15sp3_minion_configuration = module.min-sles15sp3.configuration
