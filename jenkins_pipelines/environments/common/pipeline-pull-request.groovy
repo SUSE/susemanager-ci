@@ -333,7 +333,9 @@ def run(params) {
                                 )
                                 junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
                             }
-                            archiveArtifacts artifacts: "results/${BUILD_NUMBER}/**/*"
+                            if (fileExists("results/${BUILD_NUMBER}")) {
+                                archiveArtifacts artifacts: "results/${BUILD_NUMBER}/**/*"
+                            }
                             if (params.email_to != '') {
                                 sh " export TF_VAR_MAIL_TO=${params.email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
