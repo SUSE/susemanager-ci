@@ -168,10 +168,17 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:89"
       }
+      additional_repos_only = true
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
         master_repo_other = var.MASTER_OTHER_REPO,
+        Update_repository_of_openSUSE_Backports = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/backports/",
+        Non_Oss_Repository = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
+        Main_Repository = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        Update_repository_with_updates_from_SUSE_Linux_Enterprise_15 = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/sle/",
+        Update_Repository_Non_Oss = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/non-oss/",
+        Main_Update_Repository = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/oss",
       }
       image = "opensuse153-ci-pr"
     }
@@ -179,10 +186,17 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:8a"
       }
+      additional_repos_only = true
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
         master_repo_other = var.MASTER_OTHER_REPO,
+        Update_repository_of_openSUSE_Backports = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/backports/",
+        Non_Oss_Repository = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
+        Main_Repository = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        Update_repository_with_updates_from_SUSE_Linux_Enterprise_15 = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/sle/",
+        Update_Repository_Non_Oss = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/non-oss/",
+        Main_Update_Repository = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/oss",
       }
       image = "opensuse153o"
       additional_packages = [ "venv-salt-minion" ]
@@ -279,8 +293,15 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:92"
       }
+      additional_repos_only = true
       additional_repos = {
         client_repo = var.OPENSUSE_CLIENT_REPO,
+        Update_repository_of_openSUSE_Backports = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/backports/",
+        Non_Oss_Repository = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
+        Main_Repository = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        Update_repository_with_updates_from_SUSE_Linux_Enterprise_15 = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/sle/",
+        Update_Repository_Non_Oss = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/non-oss/",
+        Main_Update_Repository = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/oss",
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -296,8 +317,15 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:93"
       }
+      additional_repos_only = true
       additional_repos = {
         client_repo = var.OPENSUSE_CLIENT_REPO,
+        Update_repository_of_openSUSE_Backports = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/backports/",
+        Non_Oss_Repository = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
+        Main_Repository = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        Update_repository_with_updates_from_SUSE_Linux_Enterprise_15 = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/sle/",
+        Update_Repository_Non_Oss = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/non-oss/",
+        Main_Update_Repository = "http://minima-mirror.mgr.prv.suse.net/update/leap/15.3/oss",
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
