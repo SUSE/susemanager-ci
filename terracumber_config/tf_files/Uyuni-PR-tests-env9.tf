@@ -97,6 +97,14 @@ variable "MASTER_OTHER_REPO" {
   type = string
 }
 
+variable "MASTER_SUMAFORM_TOOLS_REPO" {
+  type = string
+}
+
+variable "TEST_PACKAGES_REPO" {
+  type = string
+}
+
 // Repositories containing the client tools RPMs
 variable "SLE_CLIENT_REPO" {
   type = string
@@ -143,7 +151,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153-ci-pr", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153-ci-pr", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -168,10 +176,17 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:89"
       }
+      additional_repos_only = true
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
         master_repo_other = var.MASTER_OTHER_REPO,
+        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
+        test_packages_repo = var.TEST_PACKAGES_REPO,
+        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
+        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        os_update = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/",
+
       }
       image = "opensuse153-ci-pr"
     }
@@ -179,12 +194,18 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:8a"
       }
+      additional_repos_only = true
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
         master_repo_other = var.MASTER_OTHER_REPO,
+        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
+        test_packages_repo = var.TEST_PACKAGES_REPO,
+        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
+        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        os_update = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/",
       }
-      image = "opensuse153o"
+      image = "opensuse153-ci-pr"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -271,7 +292,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse153o"
+      image = "opensuse153-ci-pr"
       additional_grains = {
         hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
         hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
@@ -279,14 +300,20 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:92"
       }
+      additional_repos_only = true
       additional_repos = {
         client_repo = var.OPENSUSE_CLIENT_REPO,
+        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
+        test_packages_repo = var.TEST_PACKAGES_REPO,
+        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
+        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        os_update = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/",
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     xen-host = {
-      image = "opensuse153o"
+      image = "opensuse153-ci-pr"
       additional_grains = {
         xen_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2"
         xen_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2.sha256"
@@ -296,8 +323,15 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:93"
       }
+      additional_repos_only = true
       additional_repos = {
         client_repo = var.OPENSUSE_CLIENT_REPO,
+        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
+        test_packages_repo = var.TEST_PACKAGES_REPO,
+        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
+        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        os_update = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/",
+        
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true

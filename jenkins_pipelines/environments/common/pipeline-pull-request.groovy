@@ -19,6 +19,8 @@ def run(params) {
         builder_api = 'https://api.opensuse.org'
         builder_project = 'systemsmanagement:Uyuni:Master:PR'
         source_project = 'systemsmanagement:Uyuni:Master'
+        sumaform_tools_project = 'systemsmanagement:sumaform:tools'
+        test_packages_project = 'systemsmanagement:Uyuni:Test-Packages:Pool'
         build_repo = 'openSUSE_Leap_15.3'
         environment_workspace = null
         try {
@@ -149,7 +151,15 @@ def run(params) {
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                         sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Other\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Other 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Other.error &"
                         
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/${arch}"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/x86_64"
+                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${sumaform_tools_project}\" -r ${build_repo} -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${sumaform_tools_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${sumaform_tools_project}.error &"
+
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${test_packages_project}/rpm"
+                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${test_packages_project}\" -r rpm -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${test_packages_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${test_packages_project}.error &"
+
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/x86_64"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                         sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:CentOS7-Uyuni-Client-Tools\" -r CentOS_7 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_CentOS7-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_CentOS7-Uyuni-Client-Tools.error &"
 
@@ -211,6 +221,8 @@ def run(params) {
                         env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/${arch}"
                         env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
                         env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/${arch}"
+                        env.MASTER_SUMAFORM_TOOLS_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/${arch}"
+                        env.TEST_PACKAGES_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${test_packages_project}/rpm/${arch}"
                         env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/${arch}"
                         env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/${arch}"
                         env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/${arch}"
@@ -222,7 +234,7 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_CENTOS_CLIENT_REPO=${CENTOS_CLIENT_REPO};export TF_VAR_UBUNTU_CLIENT_REPO=${UBUNTU_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_CENTOS_CLIENT_REPO=${CENTOS_CLIENT_REPO};export TF_VAR_UBUNTU_CLIENT_REPO=${UBUNTU_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
                     }
                 }
