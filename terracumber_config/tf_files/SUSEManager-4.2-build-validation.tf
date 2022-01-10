@@ -248,7 +248,7 @@ module "base_debian" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
+  images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o", "debian11o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
