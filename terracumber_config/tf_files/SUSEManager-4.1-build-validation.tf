@@ -248,7 +248,8 @@ module "base_debian" {
   name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o", "debian11o" ]
+  images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
+  # Debian 11 is not supported yet by 4.1
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -861,29 +862,7 @@ module "debian10-minion" {
 
 }
 
-module "debian11-minion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.1-released"
-  name               = "min-debian11"
-  image              = "debian11o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6d"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname =  "suma-bv-41-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //debian11-minion_additional_repos
-
-}
+# Debian 11 is not supported yet by 4.1
 
 module "sles11sp4-sshminion" {
   providers = {
@@ -1110,22 +1089,7 @@ module "debian10-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian11-sshminion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.1-released"
-  name               = "minssh-debian11"
-  image              = "debian11o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:7d"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+# Debian 11 is not supported yet by 4.1
 
 module "sles11sp4-buildhost" {
   providers = {
@@ -1350,8 +1314,7 @@ module "controller" {
   debian10_minion_configuration    = module.debian10-minion.configuration
   debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
-  debian11_minion_configuration    = module.debian11-minion.configuration
-  debian11_sshminion_configuration = module.debian11-sshminion.configuration
+  # Debian 11 is not supported yet by 4.1
 
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
