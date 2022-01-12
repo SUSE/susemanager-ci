@@ -114,6 +114,26 @@ variable "OPENSUSE_CLIENT_REPO" {
   type = string
 }
 
+variable "hvm_disk_image" {
+  description = "URL to the disk image to use for KVM guests"
+  default     = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
+}
+
+variable "hvm_disk_image_hash" {
+  description = "Hash of the HVM disk image, either a URL or the hash itself. See salt's file.managed source_hash documentations"
+  default     = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+}
+
+variable "xen_disk_image" {
+  description = "URL to the disk image to use for Xen PV guests"
+  default     = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2"
+}
+
+variable "xen_disk_image_hash" {
+  description = "Hash of the Xen PV disk image, either a URL or the hash itself. See salt's file.managed source_hash documentations"
+  default     = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2.sha256"
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -272,8 +292,6 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "opensuse153o"
-      hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
-      hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
       provider_settings = {
         mac = "aa:b2:92:04:00:2e"
       }
@@ -285,10 +303,6 @@ module "cucumber_testsuite" {
     }
     xen-host = {
       image = "opensuse153o"
-      xen_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2"
-      xen_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2.sha256"
-      hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
-      hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
       provider_settings = {
         mac = "aa:b2:92:04:00:2f"
       }
