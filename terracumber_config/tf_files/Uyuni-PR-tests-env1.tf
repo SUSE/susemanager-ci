@@ -185,8 +185,6 @@ module "cucumber_testsuite" {
         master_repo_other = var.MASTER_OTHER_REPO,
       }
       image = "opensuse153o"
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp2o"
