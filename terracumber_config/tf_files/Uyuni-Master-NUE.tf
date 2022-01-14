@@ -132,6 +132,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d2"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp2o"
