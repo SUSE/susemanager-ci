@@ -260,7 +260,6 @@ module "suse-sshminion" {
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //sle15sp3-minion_additional_repos
 
