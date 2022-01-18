@@ -189,6 +189,7 @@ module "server" {
   publish_private_ssl_key        = false
   use_os_released_updates        = true
   disable_download_tokens        = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //server_additional_repos
 
@@ -211,6 +212,7 @@ module "proxy" {
   generate_bootstrap_script = false
   publish_private_ssl_key   = false
   use_os_released_updates   = true
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //proxy_additional_repos
 
@@ -258,6 +260,7 @@ module "suse-sshminion" {
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //sle15sp3-minion_additional_repos
 
