@@ -75,8 +75,8 @@ def run(params) {
                         //      Inside userRemoteConfigs add credentialsId: 'github'
                         checkout([  
                                     $class: 'GitSCM', 
-                                    branches: [[name: "pr/${params.pull_request_number}"]], 
-                                    extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
+                                    branches: [[name: "pr/${params.pull_request_number}"]],
+                                    extensions: [[$class: 'CloneOption', depth: 1, shallow: true, timeout: 30]],
                                     userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
                                     extensions: [
                                     [
