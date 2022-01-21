@@ -23,6 +23,14 @@ node('pull-request-test') {
         checkout scm
     }
     timeout(activity: false, time: 20, unit: 'HOURS') {
+        // set default values
+        first_env = 1;
+        last_env = 10;
+        // load values to override default ones
+        pr_env_filename = "jenkins_pipelines/environments/common/pipeline-pull-request-envs.groovy"
+        if (fileExists(pr_env_filename)) {
+            load pr_env_filename
+        }
         def pipeline = load "jenkins_pipelines/environments/common/pipeline-pull-request.groovy"
         pipeline.run(params)
     }

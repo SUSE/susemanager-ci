@@ -14,7 +14,6 @@ def run(params) {
         terraform_init = true
         rake_namespace = 'cucumber'
         rake_parallel_namespace = 'parallel'
-        total_envs = 12
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         pull_request_repo = 'https://github.com/uyuni-project/uyuni.git'
         builder_api = 'https://api.opensuse.org'
@@ -24,6 +23,8 @@ def run(params) {
         environment_workspace = null
         try {
             stage('Get environment') {
+                  echo "DEBUG: first environment: ${first_env}"
+                  echo "DEBUG: last environment: ${last_env}"
                   env.suma_pr_lockfile = "/tmp/suma-pr${params.pull_request_number}"
                   if(params.force_pr_lock_cleanup) {
                     sh "rm -rf ${env.suma_pr_lockfile}"
@@ -39,7 +40,7 @@ def run(params) {
                   fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
                   echo "DEBUG: fqdn_jenkins_node: ${fqdn_jenkins_node}"
                   // Pick a free environment
-                  for (env_number = 1; env_number <= total_envs; env_number++) {
+                  for (env_number = first_env; env_number <= last_env; env_number++) {
                       env.env_file="/tmp/env-suma-pr-${env_number}.lock"
                       env_status = sh(script: "lockfile -001 -r1 -! ${env_file} 2>/dev/null && echo 'locked' || echo 'free' ", returnStdout: true).trim()
                       if(env_status == 'free'){
@@ -50,7 +51,7 @@ def run(params) {
                           sh "echo started:\$(date) >> ${env_file}.info"
                           break;
                       }
-                      if(env_number == total_envs){
+                      if(env_number == last_env){
                           error('Aborting the build. All our environments are busy.')
                       }
                   }
