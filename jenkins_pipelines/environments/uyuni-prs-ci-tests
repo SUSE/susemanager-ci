@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('manager-jenkins-worker-prs-2') {
+node('pull-request-test') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '30', daysToKeepStr: '5')),
         parameters([
