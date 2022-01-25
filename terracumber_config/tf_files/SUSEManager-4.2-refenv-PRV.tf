@@ -181,7 +181,7 @@ module "debian-minion" {
 }
 
 module "build-host" {
-  source                  = "./modules/minion"
+  source                  = "./modules/build_host"
   base_configuration      = module.base.configuration
   product_version         = "4.2-nightly"
   name                    = "min-build"
