@@ -12,8 +12,6 @@ node('pull-request-test') {
             booleanParam(name: 'must_test', defaultValue: true, description: 'Advanced: Uncheck this if you do not want to run any tests'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Advanced: Sumaform Git Repository, only if you want to test changes in sumaform'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Advanced: Sumaform Git reference (branch, tag...), only if you want to test changes in sumaform'),
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Advanced: Change this by your repo, only if you changed the tests in your PR'),
-            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Advanced: Change this by your branch, only if you changed the tests in your PR'),
             booleanParam(name: 'force_pr_lock_cleanup', defaultValue: false, description: 'Advanced: Check this parameter to force a cleanup of the locks associated with this PR. Be careful, only do this if you are certain no one else is running a test for the same PR. More at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting'),
             booleanParam(name: 'skip_package_build_check', defaultValue: false, description: 'Advanced: Check this parameter to skip checking if packages build correctly in systemsmanagement:Uyuni:Master. Do this when you are fixing a package build with your PR.'), 
         ])
