@@ -1136,7 +1136,7 @@ module "sles11sp4-buildhost" {
   providers = {
     libvirt = libvirt.terminus
   }
-  source             = "./modules/minion"
+  source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.2-released"
   name               = "build-sles11sp4"
@@ -1179,7 +1179,7 @@ module "sles12sp5-buildhost" {
   providers = {
     libvirt = libvirt.terminus
   }
-  source             = "./modules/minion"
+  source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.2-released"
   name               = "build-sles12sp5"
@@ -1222,7 +1222,7 @@ module "sles15sp3-buildhost" {
   providers = {
     libvirt = libvirt.terminus
   }
-  source             = "./modules/minion"
+  source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.2-released"
   name               = "build-sles15sp3"

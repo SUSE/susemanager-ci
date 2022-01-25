@@ -193,7 +193,7 @@ module "debian-minion" {
 }
 
 module "build-host" {
-  source                  = "./modules/minion"
+  source                  = "./modules/build_host"
   base_configuration      = module.base.configuration
   product_version         = "uyuni-master"
   name                    = "min-build"
