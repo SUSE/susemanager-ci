@@ -3,6 +3,6 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     last_env = 12;
 } else {
     first_env = 1;
-    last_env = 10;
+    last_env = 6;
 }
 
