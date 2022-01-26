@@ -161,12 +161,12 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:60"
+        mac = "aa:b2:92:04:00:88"
       }
     }
     server = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:61"
+        mac = "aa:b2:92:04:00:89"
       }
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
@@ -177,7 +177,7 @@ module "cucumber_testsuite" {
     }
     proxy = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:62"
+        mac = "aa:b2:92:04:00:8a"
       }
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
@@ -192,7 +192,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "cli-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:63"
+        mac = "aa:b2:92:04:00:8b"
       }
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
@@ -204,7 +204,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:64"
+        mac = "aa:b2:92:04:00:8c"
       }
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
@@ -216,7 +216,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:65"
+        mac = "aa:b2:92:04:00:8d"
       }
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
@@ -227,7 +227,7 @@ module "cucumber_testsuite" {
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
-        mac = "aa:b2:92:04:00:66"
+        mac = "aa:b2:92:04:00:8e"
         memory = 2048
         vcpu = 2
       }
@@ -241,7 +241,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
       provider_settings = {
-        mac = "aa:b2:92:04:00:68"
+        mac = "aa:b2:92:04:00:90"
       }
       additional_repos = {
         client_repo = var.UBUNTU_CLIENT_REPO,
@@ -254,7 +254,7 @@ module "cucumber_testsuite" {
     build-host = {
       image = "sles15sp3o"
       provider_settings = {
-        mac = "aa:b2:92:04:00:69"
+        mac = "aa:b2:92:04:00:91"
       }
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
@@ -277,7 +277,7 @@ module "cucumber_testsuite" {
         hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
       }
       provider_settings = {
-        mac = "aa:b2:92:04:00:6a"
+        mac = "aa:b2:92:04:00:92"
       }
       additional_repos = {
         client_repo = var.OPENSUSE_CLIENT_REPO,
@@ -294,7 +294,7 @@ module "cucumber_testsuite" {
         hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
       }
       provider_settings = {
-        mac = "aa:b2:92:04:00:6b"
+        mac = "aa:b2:92:04:00:93"
       }
       additional_repos = {
         client_repo = var.OPENSUSE_CLIENT_REPO,
