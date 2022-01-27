@@ -306,7 +306,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool               = "default"
     network_name       = null
-    bridge             = "br1"
+    bridge             = "br0"
     additional_network = "192.168.109.0/24"
   }
 }
