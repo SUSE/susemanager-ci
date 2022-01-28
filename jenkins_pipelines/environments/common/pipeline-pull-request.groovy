@@ -7,7 +7,6 @@ def run(params) {
         sumaform_backend = 'libvirt'
         terraform_bin = '/usr/bin/terraform'
         terraform_bin_plugins = '/usr/bin'
-        long_tests = true
         service_pack_migration = false
         terracumber_gitrepo = 'https://github.com/uyuni-project/terracumber.git'
         terracumber_ref = 'master'
@@ -226,10 +225,6 @@ def run(params) {
             stage('Sanity Check') {
                 ws(environment_workspace){
                     if(params.must_test) {
-                        def exports = ""
-                        if (long_tests){
-                          exports += "export LONG_TESTS=${long_tests}; "
-                        }
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
                     }
                 }
@@ -237,24 +232,16 @@ def run(params) {
             stage('Core - Setup') {
                 ws(environment_workspace){
                     if(params.must_test) {
-                        def exports = "";
-                        if (long_tests){
-                          exports += "export LONG_TESTS=${long_tests}; "
-                        }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:core'"
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
                     }
                 }
             }
             stage('Core - Initialize clients') {
                 ws(environment_workspace){
                     if(params.must_test) {
-                        def exports = ""
-                        if (long_tests){
-                          exports += "export LONG_TESTS=${long_tests}; "
-                        }
                         namespace = rake_namespace
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
                     }
                 }
             }
@@ -264,9 +251,6 @@ def run(params) {
                         def exports = ""
                         if (params.functional_scopes){
                           exports += "export TAGS=${params.functional_scopes}; "
-                        }
-                        if (long_tests){
-                          exports += "export LONG_TESTS=${long_tests}; "
                         }
                         def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
                         def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus:true
