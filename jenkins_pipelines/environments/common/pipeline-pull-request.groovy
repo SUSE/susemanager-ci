@@ -11,6 +11,8 @@ def run(params) {
         service_pack_migration = false
         terracumber_gitrepo = 'https://github.com/uyuni-project/terracumber.git'
         terracumber_ref = 'master'
+        sumaform_gitrepo = 'https://github.com/uyuni-project/sumaform.git'
+        sumaform_ref = 'master'
         terraform_init = true
         rake_namespace = 'cucumber'
         rake_parallel_namespace = 'parallel'
