@@ -1,4 +1,12 @@
-def run(params) {
+node('sumaform-cucumber') {
+    properties([
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'git_repo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Tested Git Repository'),
+            string(name: 'git_branch', defaultValue: 'master', description: 'Tested branch')
+        ])
+    ])
+
     stage('Clone project') {
         git url: params.git_repo, branch: params.git_branch
     }
@@ -23,5 +31,3 @@ def run(params) {
         }
     }
 }
-
-return this
