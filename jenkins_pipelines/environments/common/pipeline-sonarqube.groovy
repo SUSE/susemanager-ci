@@ -7,7 +7,7 @@ def run(params) {
             sh "./susemanager-utils/testing/automation/java-unittests-pgsql.sh -t test-coverage-report"
         }
     }
-    stage("SonarQube scanner') {
+    stage('SonarQube scanner') {
         dir("uyuni") {
             sh "set +x; source /home/jenkins/.credentials; set -x; " +
                 "docker run --rm -v $PWD:/usr/src " +
