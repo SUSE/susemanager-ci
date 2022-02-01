@@ -9,9 +9,6 @@ node('sumaform-cucumber') {
 
     stage('Clone project') {
         git url: params.git_repo, branch: params.git_branch
-        dir("uyuni") {
-            checkout scm
-        }
     }
     stage('JUnit tests coverage') {
         dir("uyuni") {
