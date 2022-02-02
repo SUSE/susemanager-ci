@@ -31,6 +31,7 @@ node('sumadocker-nue') {
     }
     stage('Clean up') {
         dir("uyuni") {
+            sh "docker run --rm -v \$PWD:/usr/src sonarsource/sonar-scanner-cli sh -c 'rm -rf .scannerwork'"
             sh "git clean -dxf"
         }
     }
