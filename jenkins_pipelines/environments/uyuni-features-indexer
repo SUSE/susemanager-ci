@@ -9,12 +9,14 @@ node('sumadocker-nue') {
 
     stage('Clone project') {
       dir("uyuni") {
-         checkout([  
-          $class: 'GitSCM', 
-          branches: [[name: "${params.git_branch}"]], 
-          extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
-          userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.git_repo}"]]
-        ])
+        checkout([$class: 'GitSCM', 
+            branches: [[name: "${params.git_branch}"]], 
+            doGenerateSubmoduleConfigurations: false,
+            extensions: [
+                [$class: 'SparseCheckoutPaths',  sparseCheckoutPaths:[[$class:'SparseCheckoutPath', path:'testsuite/']]]
+                        ],
+            submoduleCfg: [],
+            userRemoteConfigs: [[url: "${params.git_repo}"]]])
       }
     }
     stage('Prepare Feature Indexer') {
