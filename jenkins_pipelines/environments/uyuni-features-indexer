@@ -12,16 +12,18 @@ node('sumadocker-nue') {
         sh "cd uyuni; git sparse-checkout init --cone; git sparse-checkout set testsuite; git checkout"
     }
     stage('Prepare Feature Indexer') {
-      checkout([  
-        $class: 'GitSCM', 
-        branches: [[name: "stable"]], 
-        extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
-        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "https://codeberg.org/japh/Feature_Indexer.git"]]
-      ])
-      sh "perl Makefile.PL; make"
+      dir('indexer'){
+          checkout([  
+            $class: 'GitSCM', 
+            branches: [[name: "stable"]], 
+            extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
+            userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "https://codeberg.org/japh/Feature_Indexer.git"]]
+          ])
+          sh "perl Makefile.PL; make"
+      }
     }
     stage('Generate Index') {
-       sh "perl build/gfindex --md --html --dir uyuni/testsuite/features"
+       sh "perl indexer/build/gfindex --md --html --dir uyuni/testsuite/features"
        publishHTML( target: [
                               allowMissing: true,
                               alwaysLinkToLastBuild: false,
