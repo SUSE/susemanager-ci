@@ -91,8 +91,8 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-master"
-  //product_version = "head"
+  //product_version = "uyuni-master"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -104,7 +104,7 @@ module "cucumber_testsuite" {
   cc_password = var.SCC_PASSWORD
 
   images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
-  //images = ["centos7o", "opensuse152o",                 "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-testorion-"
@@ -130,8 +130,8 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:71"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/openSUSE_Leap_15.3/"
-        //Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
+        //Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/openSUSE_Leap_15.3/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
       }
     }
     suse-client = {
