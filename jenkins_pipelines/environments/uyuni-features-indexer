@@ -29,12 +29,12 @@ node('sumadocker-nue') {
       sh "perl Makefile.PL; make"
     }
     stage('Generate Index') {
-       sh "perl build/gfindex --md --html --dir uyuni/testsuite/features"
+       sh "perl build/gfindex --md --html"
        publishHTML( target: [
                               allowMissing: true,
                               alwaysLinkToLastBuild: false,
                               keepAll: true,
-                              reportDir: "testsuite/features",
+                              reportDir: "features",
                               reportFiles: 'index.html',
                               reportName: "Features Index"]
                   )
