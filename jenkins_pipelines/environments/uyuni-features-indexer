@@ -1,15 +1,8 @@
 node('sumadocker-nue') {
-    properties([
-        disableConcurrentBuilds(),
-        parameters([
-            string(name: 'git_repo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Tested Git Repository'),
-            string(name: 'git_branch', defaultValue: 'master', description: 'Tested branch')
-        ])
-    ])
-
     stage('Clone project') {
-        sh "git clone --depth 1 --no-checkout --branch ${params.git_branch} ${params.git_repo}"
-        sh "cd uyuni; git sparse-checkout init --cone; git sparse-checkout set testsuite; git checkout"
+        sh 'rm -rf uyuni'
+        sh 'git clone --depth 1 --no-checkout --branch master $https://github.com/uyuni-project/uyuni.git'
+        sh 'cd uyuni; git sparse-checkout init --cone; git sparse-checkout set testsuite; git checkout'
     }
     stage('Prepare Feature Indexer') {
       dir('indexer'){
@@ -31,6 +24,7 @@ node('sumadocker-nue') {
                               reportDir: "uyuni/testsuite/features",
                               reportFiles: 'index.html',
                               reportName: "Features Index"]
-                  )
+       )
+       archiveArtifacts artifacts: 'uyuni/testsuite/features/index.md'
     }
 }
