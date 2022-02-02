@@ -8,16 +8,8 @@ node('sumadocker-nue') {
     ])
 
     stage('Clone project') {
-      dir("uyuni") {
-        checkout([$class: 'GitSCM', 
-            branches: [[name: "${params.git_branch}"]], 
-            doGenerateSubmoduleConfigurations: false,
-            extensions: [
-                [$class: 'SparseCheckoutPaths',  sparseCheckoutPaths:[[$class:'SparseCheckoutPath', path:'testsuite/']]]
-                        ],
-            submoduleCfg: [],
-            userRemoteConfigs: [[url: "${params.git_repo}"]]])
-      }
+        sh "git clone --depth 100 --no-checkout --branch ${params.git_branch} ${params.git_repo}"
+        sh "cd uyuni; git sparse-checkout init --cone; git sparse-checkout set testsuite; git checkout"
     }
     stage('Prepare Feature Indexer') {
       checkout([  
