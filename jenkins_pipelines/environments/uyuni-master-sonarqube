@@ -15,9 +15,9 @@ node('sumadocker-nue') {
     }
     stage('SonarQube scanner') {
         sh "set +x; source /home/jenkins/.sonar-credentials; set -x; " +
-            "docker run --rm -v $PWD:/usr/src " +
+            "docker run --rm -v \$PWD:/usr/src " +
             "-e SONAR_HOST_URL=http://dockerhost0.mgr.suse.de:9090 " +
-            "-e SONAR_LOGIN=$SONAR_LOGIN " +
+            "-e SONAR_LOGIN=\$SONAR_LOGIN " +
             "-e sonar.projectKey=uyuni-project_uyuni " +
             "-e sonar.sources=. " +
             "-e sonar.java.binaries=java/build/classes/ " +
