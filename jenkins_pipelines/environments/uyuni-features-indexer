@@ -1,7 +1,7 @@
 node('sumadocker-nue') {
     stage('Clone project') {
         sh 'rm -rf uyuni'
-        sh 'git clone --depth 1 --no-checkout --branch master $https://github.com/uyuni-project/uyuni.git'
+        sh 'git clone --depth 1 --no-checkout --branch master https://github.com/uyuni-project/uyuni.git'
         sh 'cd uyuni; git sparse-checkout init --cone; git sparse-checkout set testsuite; git checkout'
     }
     stage('Prepare Feature Indexer') {
