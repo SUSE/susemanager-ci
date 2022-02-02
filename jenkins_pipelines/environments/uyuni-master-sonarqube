@@ -1,4 +1,4 @@
-node('sumaform-cucumber') {
+node('sumadocker-nue') {
     properties([
         disableConcurrentBuilds(),
         parameters([
@@ -14,7 +14,7 @@ node('sumaform-cucumber') {
         sh "./susemanager-utils/testing/automation/java-unittests-pgsql.sh -t test-coverage-report"
     }
     stage('SonarQube scanner') {
-        sh "set +x; source /home/jenkins/.credentials; set -x; " +
+        sh "set +x; source /home/jenkins/.sonar-credentials; set -x; " +
             "docker run --rm -v $PWD:/usr/src " +
             "-e SONAR_HOST_URL=http://dockerhost0.mgr.suse.de:9090 " +
             "-e SONAR_LOGIN=$SONAR_LOGIN " +
