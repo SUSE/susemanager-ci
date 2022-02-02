@@ -1,0 +1,40 @@
+node('sumadocker-nue') {
+    properties([
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'git_repo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Tested Git Repository'),
+            string(name: 'git_branch', defaultValue: 'master', description: 'Tested branch')
+        ])
+    ])
+
+    stage('Clone project') {
+      dir("uyuni") {
+         checkout([  
+          $class: 'GitSCM', 
+          branches: [[name: "${params.git_branch}"]], 
+          extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
+          userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${params.git_repo}"]]
+        ])
+      }
+    }
+    stage('Prepare Feature Indexer') {
+      checkout([  
+        $class: 'GitSCM', 
+        branches: [[name: "stable"]], 
+        extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
+        userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "https://codeberg.org/japh/Feature_Indexer.git"]]
+      ])
+      sh "perl Makefile.PL; make"
+    }
+    stage('Generate Index') {
+       sh "perl build/gfindex --md --html --dir uyuni/testsuite/features"
+       publishHTML( target: [
+                              allowMissing: true,
+                              alwaysLinkToLastBuild: false,
+                              keepAll: true,
+                              reportDir: "testsuite/features",
+                              reportFiles: 'index.html',
+                              reportName: "Features Index"]
+                  )
+    }
+}
