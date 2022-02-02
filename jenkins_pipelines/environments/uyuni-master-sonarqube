@@ -8,7 +8,7 @@ node('sumadocker-nue') {
     ])
 
     stage('Clone project') {
-        sh "mkdir uyuni"
+        sh "mkdir -p uyuni"
         dir("uyuni") {
             git url: params.git_repo, branch: params.git_branch
         }
@@ -22,8 +22,8 @@ node('sumadocker-nue') {
         sh "mkdir -p .sonar"
         dir("uyuni") {
             sh "set +x; source /home/jenkins/.sonar-credentials; set -x; " +
-                "docker run --rm -v \$PWD/uyuni:/usr/src " +
-                "-v \$PWD/../.sonar:/opt/sonar-scanner/.sonar" +
+                "docker run --rm -v \$PWD:/usr/src " +
+                "-v \$PWD/../.sonar:/opt/sonar-scanner/.sonar " +
                 "-e SONAR_HOST_URL=http://dockerhost0.mgr.suse.de:9090 " +
                 "-e SONAR_LOGIN=\$SONAR_LOGIN " +
                 "sonarsource/sonar-scanner-cli"
