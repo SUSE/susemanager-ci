@@ -26,7 +26,6 @@ node('sumadocker-nue') {
                 "-v \$PWD/../.sonar:/opt/sonar-scanner/.sonar" +
                 "-e SONAR_HOST_URL=http://dockerhost0.mgr.suse.de:9090 " +
                 "-e SONAR_LOGIN=\$SONAR_LOGIN " +
-                "-e SONAR_USER_HOME=/usr/src/.sonar"
                 "sonarsource/sonar-scanner-cli"
         }
     }
