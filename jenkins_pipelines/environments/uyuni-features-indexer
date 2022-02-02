@@ -8,7 +8,7 @@ node('sumadocker-nue') {
     ])
 
     stage('Clone project') {
-        sh "git clone --depth 100 --no-checkout --branch ${params.git_branch} ${params.git_repo}"
+        sh "git clone --depth 1 --no-checkout --branch ${params.git_branch} ${params.git_repo}"
         sh "cd uyuni; git sparse-checkout init --cone; git sparse-checkout set testsuite; git checkout"
     }
     stage('Prepare Feature Indexer') {
