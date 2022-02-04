@@ -284,12 +284,22 @@ def run(params) {
             stage('Secondary features') {
                 ws(environment_workspace){
                     if(must_test && ( params.functional_scopes || run_all_scopes) ) {
-                        def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                        def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus:true
-                        sh "exit \$(( ${statusCode1}|${statusCode2} ))"
+                        if (params.functional_scopes){
+                            list_scopes = params.functional_scopes.tokenize(' or ')
+                        } else {
+                            list_scopes = list_functional_scopes.tokenize(',')
+                        }
+                        list_scopes.each { functional_scope ->
+                            stage("${functional_scope.replace('@scope_', '')}") {
+                                def exports = "export TAGS=${functional_scope}; "
+                                def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
+                                def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary_parallelizable'", returnStatus:true
+                                sh "exit \$(( ${statusCode1}|${statusCode2} ))"
+                            }
+                        }
                     }
                 }
-            tests_passed = true
+                tests_passed = true
             }
         }
         finally {

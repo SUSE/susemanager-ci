@@ -107,14 +107,19 @@ def run(params) {
             stage('Core - Initialize clients') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
             }
-            stage('Secondary features') {
-                def exports = ""
-                if (params.functional_scopes){
-                  exports += "export TAGS=${params.functional_scopes}; "
+
+            if (params.functional_scopes){
+                list_scopes = params.functional_scopes.tokenize(' or ')
+            } else {
+                list_scopes = list_functional_scopes.tokenize(',')
+            }
+            list_scopes.each { functional_scope ->
+                stage("${functional_scope.replace('@scope_', '')}") {
+                    def exports = "export TAGS=${functional_scope}; "
+                    def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
+                    def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
+                    sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                 }
-                def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
-                sh "exit \$(( ${statusCode1}|${statusCode2} ))"
             }
         }
         finally {
