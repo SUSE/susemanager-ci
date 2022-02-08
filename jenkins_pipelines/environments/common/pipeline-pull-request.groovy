@@ -61,7 +61,7 @@ def run(params) {
                     if(params.must_build) {
                         // Make sure files are owned by jenkins user.
                         // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
-                        sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product"
+                        sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product || true"
                     }
                     dir("product") {
                         // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
