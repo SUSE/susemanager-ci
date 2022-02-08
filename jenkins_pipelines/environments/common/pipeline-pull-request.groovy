@@ -59,9 +59,9 @@ def run(params) {
             stage('Checkout project') {
                 ws(environment_workspace){
                     if(params.must_build) {
-                        // Remove previous product built.
+                        // Make sure files are owned by jenkins user.
                         // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
-                        sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs rm -rf /manager/product"
+                        sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product"
                     }
                     dir("product") {
                         // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
@@ -190,6 +190,9 @@ def run(params) {
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/Uyuni-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
                         env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
 
+                        // Clean up old results
+                        sh "./clean-old-results -r ${resultdir}"
+
                         // Create a directory for  to place the directory with the build results (if it does not exist)
                         sh "mkdir -p ${resultdir}"
 
@@ -284,7 +287,6 @@ def run(params) {
             stage('Remove build project') {
                 if(environment_workspace){
                   ws(environment_workspace){
-                      sh "rm -rf ${WORKSPACE}/product"
                       sh "rm -rf ${builder_project}:${params.pull_request_number}" 
                   }
                 }
