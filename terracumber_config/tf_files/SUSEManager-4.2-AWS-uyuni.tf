@@ -170,7 +170,10 @@ module "mirror" {
 
 module "server" {
   source               = "./modules/server"
-  base_configuration   = module.base.configuration
+  base_configuration = merge(module.base.configuration,
+  {
+    mirror = null
+  })
   name                 = "server"
   product_version      = "4.2-released"
   repository_disk_size = 1500
@@ -198,7 +201,10 @@ module "server" {
 module "proxy" {
 
   source             = "./modules/proxy"
-  base_configuration = module.base.configuration
+  base_configuration = merge(module.base.configuration,
+  {
+    mirror = null
+  })
   server_configuration = module.server.configuration
   product_version    = "4.2-released"
   name               = "proxy"
