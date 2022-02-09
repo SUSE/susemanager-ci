@@ -249,7 +249,7 @@ module "base_debian" {
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o" ]
-  # Debian 11 is not supported yet by 4.1
+  // Debian 11 is not supported yet by 4.1
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -1266,7 +1266,7 @@ module "controller" {
   debian10_minion_configuration    = module.debian10-minion.configuration
   debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
-  # Debian 11 is not supported yet by 4.1
+  // Debian 11 is not supported yet by 4.1
 
   sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
