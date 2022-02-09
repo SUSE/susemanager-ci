@@ -203,7 +203,7 @@ def run(params) {
                         env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
 
                         // Clean up old results
-                        sh "./clean-old-results -r ${resultdir}"
+                        sh "if [ -d ${resultdir} ];then ./clean-old-results -r ${resultdir};fi"
 
                         // Create a directory for  to place the directory with the build results (if it does not exist)
                         sh "mkdir -p ${resultdir}"
