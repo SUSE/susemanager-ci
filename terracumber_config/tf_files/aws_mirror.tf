@@ -139,7 +139,8 @@ module "base" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   name_prefix = var.NAME_PREFIX
-  //  mirror = "ip-172-16-1-50.eu-central-1.compute.internal"
+  testsuite                = true
+  use_avahi                = false
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region = var.REGION
