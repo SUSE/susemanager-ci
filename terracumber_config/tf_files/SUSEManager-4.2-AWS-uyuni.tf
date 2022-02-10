@@ -149,6 +149,8 @@ module "base" {
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
+  testsuite                = true
+  use_avahi                = false
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region            = var.REGION
