@@ -167,7 +167,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:46"
       }
       additional_repos = {
-       Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/Devel:/Galaxy:/Manager:/Head:/Other/SLE_15_SP4/"
+//       Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/Devel:/Galaxy:/Manager:/Head:/Other/SLE_15_SP4/"
       }
     }
     suse-sshminion = {
