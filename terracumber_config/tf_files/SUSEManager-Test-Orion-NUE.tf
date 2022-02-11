@@ -103,8 +103,8 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  //images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
-  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
+  images = ["opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  //images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-testorion-"
@@ -155,6 +155,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:78"
       }
     }
+/*
     redhat-minion = {
       provider_settings = {
         mac = "aa:b2:93:01:00:79"
@@ -164,6 +165,7 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
     }
+*/
     debian-minion = {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
