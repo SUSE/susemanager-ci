@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-head-"
@@ -152,6 +152,16 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:b8"
+      }
+    }
+    redhat-minion = {
+      image = "centos7o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:b9"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        memory = 2048
+        vcpu = 2
       }
     }
     debian-minion = {
