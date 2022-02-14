@@ -167,6 +167,9 @@ module "cucumber_testsuite" {
       }
     }
 */
+    pxeboot-minion = {
+      image = "sles15sp3o"
+    }
     debian-minion = {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
