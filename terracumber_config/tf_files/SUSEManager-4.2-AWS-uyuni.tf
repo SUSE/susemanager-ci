@@ -283,10 +283,7 @@ module "redhat-minion"  {
     vcpu = 2
   }
   source             = "./modules/minion"
-  base_configuration = merge(module.base.configuration,
-  {
-    mirror = null
-  })
+  base_configuration = module.base.configuration
   product_version    = "4.2-released"
   server_configuration = module.server.configuration
   auto_connect_to_master = false
