@@ -237,7 +237,7 @@ module "suse-client" {
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
-  use_os_released_updates = true
+  use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   //  product_version = "4.2-released"
 }
