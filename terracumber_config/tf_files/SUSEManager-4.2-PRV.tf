@@ -127,6 +127,7 @@ module "cucumber_testsuite" {
       }
     }
     server = {
+      additional_repos = { cobbler = "http://download.suse.de/ibs/SUSE:/Maintenance:/22865/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.2_x86_64/" }
       provider_settings = {
         mac = "aa:b2:92:03:00:c1"
       }
