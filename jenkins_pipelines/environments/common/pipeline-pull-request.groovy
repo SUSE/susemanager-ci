@@ -63,6 +63,7 @@ def run(params) {
                         // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
                         sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product || true"
                     }
+                    sh 'rm -rf product'
                     dir("product") {
                         // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
                         env.GIT_COMMITTER_NAME = "jenkins"
