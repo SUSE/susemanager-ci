@@ -148,7 +148,7 @@ module "cucumber_testsuite" {
 //        salt15sp2_base = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Basesystem_15-SP2_x86_64/",
 //        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
 //        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP4/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP4/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -160,7 +160,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:44"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -172,7 +172,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:46"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -185,34 +185,39 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp1/standard/"
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-//    redhat-minion = {
-//      image = "centos7o"
-//      provider_settings = {
-//        mac = "aa:b2:93:01:00:49"
-//        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-//        // Also, openscap cannot run with less than 1.25 GB of RAM
-//        memory = 2048
-//        vcpu = 2
-//      }
-//      additional_repos = {
-////        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/res7/standard/"
-//      }
-//    }
-//    debian-minion = {
-//      image = "ubuntu1804o"
-//      name = "min-ubuntu1804"
-//      provider_settings = {
-//        mac = "aa:b2:93:01:00:4b"
-//      }
-//      additional_repos = {
+    redhat-minion = {
+      image = "centos7o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:49"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        memory = 2048
+        vcpu = 2
+      }
+      additional_repos = {
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/res7/standard/"
+      }
+    }
+    debian-minion = {
+      image = "ubuntu1804o"
+      name = "min-ubuntu1804"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:4b"
+      }
+      additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-ubuntu18.04/standard/"
-//      }
-//    }
+      }
+      additional_packages = [ "venv-salt-minion" ]
+
+      // FIXME: cloudl-init fails if venv-salt-minion is not avaiable
+      // We can set "install_salt_bundle = true" as soon as venv-salt-minion is available Uyuni:Stable
+      install_salt_bundle = false
+    }
     build-host = {
       image = "sles15sp2o"
       name = "min-build"
@@ -221,7 +226,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -238,21 +243,23 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP3/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP3/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-//    xen-host = {
-//      image = "sles15sp3o"
-//      name = "min-xen"
-//      provider_settings = {
-//        mac = "aa:b2:93:01:00:4f"
-//      }
-//      additional_repos = {
-////        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-//      }
-//    }
+    xen-host = {
+      image = "sles15sp3o"
+      name = "min-xen"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:4f"
+      }
+      additional_repos = {
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
   }
   provider_settings = {
     pool               = "ssd"
