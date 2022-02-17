@@ -214,10 +214,7 @@ module "cucumber_testsuite" {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-ubuntu18.04/standard/"
       }
       additional_packages = [ "venv-salt-minion" ]
-
-      // FIXME: cloudl-init fails if venv-salt-minion is not avaiable
-      // We can set "install_salt_bundle = true" as soon as venv-salt-minion is available Uyuni:Stable
-      install_salt_bundle = false
+      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp2o"
