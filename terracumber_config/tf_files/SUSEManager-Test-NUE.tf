@@ -184,7 +184,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:48"
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp1/standard/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -199,7 +199,7 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/res7/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/RES7-SUSE-Manager-Tools:/SaltBundle/SUSE_RES-7_Update_standard/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
