@@ -129,6 +129,7 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:92:03:00:c1"
+        memory = 10240
       }
     }
     proxy = {

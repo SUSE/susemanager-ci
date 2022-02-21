@@ -115,7 +115,7 @@ module "server" {
 
   provider_settings = {
     mac = "aa:b2:92:03:00:d1"
-    memory = 8192
+    memory = 10240
   }
 }
 
