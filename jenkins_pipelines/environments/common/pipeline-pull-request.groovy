@@ -1,7 +1,7 @@
 def run(params) {
     timestamps {
         // Start pipeline with default values
-        arch= 'x86_84'
+        arch= 'x86_64'
         built = false
         deployed = false
         tests_passed = false
