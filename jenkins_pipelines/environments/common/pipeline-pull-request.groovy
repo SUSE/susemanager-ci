@@ -1,6 +1,7 @@
 def run(params) {
     timestamps {
         // Start pipeline with default values
+        arch= 'x86_84'
         built = false
         deployed = false
         tests_passed = false
@@ -108,9 +109,9 @@ def run(params) {
                            if(!params.skip_package_build_check) {
 
                               // fail if packages are not building correctly
-                              sh "osc pr -r ${build_repo} ${source_project} -s 'F' | awk '{print}END{exit NR>1}'"
+                              sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'F' | awk '{print}END{exit NR>1}'"
                               // fail if packages are unresolvable
-                              sh "osc pr -r ${build_repo} ${source_project} -s 'U' | awk '{print}END{exit NR>1}'"
+                              sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'U' | awk '{print}END{exit NR>1}'"
                             }
                             // force remove, to clean up previous build
                             sh "osc unlock ${builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
@@ -133,38 +134,38 @@ def run(params) {
                         } // params.must_buid
                         sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ ${environment_workspace}/repos"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/x86_64"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/${arch}"
                         // Clean up previous errors
                         sh "bash -c \"rm -rf ${environment_workspace}/repos/publish_logs\""
                         sh "bash -c \"mkdir ${environment_workspace}/repos/publish_logs\""
                         // We clean up the previous repo because the pull request repo gets recreated each time, so we have no control on the build numbers.
-                        sh "bash -c \"rm -rf ${environment_workspace}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/x86_64\""
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${builder_project}:${params.pull_request_number}\" -r ${build_repo} -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${builder_project}_${params.pull_request_number} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${builder_project}_${params.pull_request_number}.error &"
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/x86_64"
+                        sh "bash -c \"rm -rf ${environment_workspace}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/${arch}\""
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${builder_project}:${params.pull_request_number}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${builder_project}_${params.pull_request_number} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${builder_project}_${params.pull_request_number}.error &"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}\" -r ${build_repo} -a x86_64 -d \"${environment_workspace}/repos\" -q 000product:Uyuni-Server-release -q 000product:Uyuni-Proxy-release > ${environment_workspace}/repos/publish_logs/${source_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}.error &"
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" -q 000product:Uyuni-Server-release -q 000product:Uyuni-Proxy-release > ${environment_workspace}/repos/publish_logs/${source_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}.error &"
                         
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/x86_64"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Other\" -r ${build_repo} -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Other 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Other.error &"
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Other\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Other 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Other.error &"
                         
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/x86_64"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:CentOS7-Uyuni-Client-Tools\" -r CentOS_7 -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_CentOS7-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_CentOS7-Uyuni-Client-Tools.error &"
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:CentOS7-Uyuni-Client-Tools\" -r CentOS_7 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_CentOS7-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_CentOS7-Uyuni-Client-Tools.error &"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/x86_64"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:SLE15-Uyuni-Client-Tools\" -r SLE_15 -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_SLE15-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_SLE15-Uyuni-Client-Tools.error &"
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:SLE15-Uyuni-Client-Tools\" -r SLE_15 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_SLE15-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_SLE15-Uyuni-Client-Tools.error &"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/x86_64"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools\" -r openSUSE_Leap_15.0 -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_openSUSE_Leap_15-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_openSUSE_Leap_15-Uyuni-Client-Tools.error &"
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools\" -r openSUSE_Leap_15.0 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_openSUSE_Leap_15-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_openSUSE_Leap_15-Uyuni-Client-Tools.error &"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                         // Clean up previous Packages.gz
-                        sh "rm -f ${environment_workspace}/repos/systemsmanagement:Uyuni:Master:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64/Packages.gz"
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Ubuntu2004-Uyuni-Client-Tools\" -r xUbuntu_20.04 -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2004-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2004-Uyuni-Client-Tools.error &"
+                        sh "rm -f ${environment_workspace}/repos/systemsmanagement:Uyuni:Master:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/${arch}/Packages.gz"
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Ubuntu2004-Uyuni-Client-Tools\" -r xUbuntu_20.04 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2004-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2004-Uyuni-Client-Tools.error &"
 
                         echo "Wait for all publishers to finish...This could take a while ..."
                         sh "bash -c \"while ( ps -C publish-rpms.sh > /dev/null 2>/dev/null );do sleep 1; done\" "
@@ -207,13 +208,13 @@ def run(params) {
                     if(params.must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/x86_64"
-                        env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/x86_64"
-                        env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/x86_64"
-                        env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/x86_64"
-                        env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/x86_64"
-                        env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/x86_64"
-                        env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/x86_64"
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/${arch}"
+                        env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
+                        env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/${arch}"
+                        env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/${arch}"
+                        env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/${arch}"
+                        env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/${arch}"
+                        env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/${arch}"
 
                         // Provision the environment
                         if (terraform_init) {
