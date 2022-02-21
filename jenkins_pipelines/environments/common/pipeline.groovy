@@ -97,8 +97,11 @@ def run(params) {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
             }
             stage('Core - Setup') {
+                println "try to understand 1"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
+                println "try to understand 2"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+                println "try to understand 3"
             }
             stage('Core - Initialize clients') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
@@ -115,10 +118,12 @@ def run(params) {
         }
         finally {
             stage('Save TF state') {
+                    println "try to understand 4"
                     archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
             }
 
             stage('Get results') {
+                println "try to understand 5"
                 def error = 0
                 if (deployed) {
                     try {
