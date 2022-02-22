@@ -135,6 +135,14 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
       }
     }
+    proxy = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:72"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
+      }
+    }
     suse-client = {
       image = "sles15sp2o"
       name = "cli-sles15"
