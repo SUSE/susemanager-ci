@@ -24,7 +24,7 @@ node('pull-request-test') {
         // set default values
         first_env = 1;
         last_env = 10;
-        sumaform_gitrepo = "git@github.com:uyuni-project/sumaform.git";
+        sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
         sumaform_ref = "master";
         // load values to override default ones
         pr_env_filename = "jenkins_pipelines/environments/common/pipeline-pull-request-envs.groovy"
