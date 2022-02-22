@@ -130,7 +130,7 @@ module "cucumber_testsuite" {
   // auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  // server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
+  // server_http_proxy = "http-proxy.mgr.suse.de:3128"
 
   host_settings = {
     controller = {
