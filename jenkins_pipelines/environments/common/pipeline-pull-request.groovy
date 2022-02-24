@@ -80,7 +80,7 @@ def run(params) {
                         checkout([  
                                     $class: 'GitSCM', 
                                     branches: [[name: "pr/${params.pull_request_number}"]], 
-                                    extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
+                                    extensions: [[$class: 'CloneOption', depth: 1, timeout: 30, shallow: true]],
                                     userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
                                    ])
                     }
