@@ -115,6 +115,8 @@ module "server" {
     mac = "aa:b2:93:01:00:c1"
     memory = 8192
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "suse-client" {
@@ -130,6 +132,8 @@ module "suse-client" {
   provider_settings = {
     mac = "aa:b2:93:01:00:c4"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "suse-minion" {
@@ -145,6 +149,8 @@ module "suse-minion" {
   provider_settings = {
     mac = "aa:b2:93:01:00:c6"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian-minion" {
@@ -158,6 +164,8 @@ module "debian-minion" {
   provider_settings = {
     mac = "aa:b2:93:01:00:cb"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "build-host" {
@@ -171,6 +179,8 @@ module "build-host" {
   provider_settings = {
     mac = "aa:b2:93:01:00:cd"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "kvm-minion" {
@@ -184,4 +194,6 @@ module "kvm-minion" {
   provider_settings = {
     mac = "aa:b2:93:01:00:ce"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }

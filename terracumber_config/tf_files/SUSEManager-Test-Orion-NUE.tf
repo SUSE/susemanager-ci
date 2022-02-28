@@ -142,6 +142,8 @@ module "cucumber_testsuite" {
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp2o"
@@ -149,6 +151,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:74"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp2o"
@@ -156,6 +160,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:76"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "sles15sp2o"
@@ -163,6 +169,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:78"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
 /*
     redhat-minion = {
@@ -173,6 +181,8 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
 */
     pxeboot-minion = {
@@ -184,12 +194,16 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:7b"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp2o"
       provider_settings = {
         mac = "aa:b2:93:01:00:7d"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
   }
   provider_settings = {

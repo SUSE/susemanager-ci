@@ -133,6 +133,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:b2"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp2o"
@@ -140,6 +142,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:b4"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp2o"
@@ -147,6 +151,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:b6"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "sles15sp2o"
@@ -154,6 +160,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:b8"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2004"
@@ -161,6 +169,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:bc"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp2o"
@@ -168,6 +178,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:bd"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     pxeboot-minion = {
       image = "sles15sp3o"
@@ -177,12 +189,16 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:be"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     xen-host = {
       image = "sles15sp3o"
       provider_settings = {
         mac = "aa:b2:93:01:00:bf"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
   }
   provider_settings = {
