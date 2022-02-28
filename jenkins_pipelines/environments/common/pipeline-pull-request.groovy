@@ -27,15 +27,15 @@ def run(params) {
             stage('Get environment') {
                   echo "DEBUG: first environment: ${first_env}"
                   echo "DEBUG: last environment: ${last_env}"
-                  env.suma_pr_lockfile = "/tmp/suma-pr${params.pull_request_number}"
+                  env.suma_pr_lockfile = "/tmp/suma-pr${pull_request_number}"
                   if(params.force_pr_lock_cleanup) {
                     sh "rm -rf ${env.suma_pr_lockfile}"
                   }
                   running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
                   if(running_same_pr == "yes") {
-                      error('Aborting the build. Already running a test for Pull Request ${params.pull_request_number}')
+                      error('Aborting the build. Already running a test for Pull Request ${pull_request_number}')
                   }
-                  if(params.pull_request_number == '') {
+                  if(pull_request_number == '') {
                       error('Aborting the build. Pull Request number can\'t be empty')
                   }
 
@@ -48,8 +48,8 @@ def run(params) {
                       if(env_status == 'free'){
                           echo "Using environment suma-pr${env_number}"
                           environment_workspace = "${jenkins_workspace}suma-pr${env_number}"
-                          sh "echo user:${params.email_to} >> ${env_file}.info"
-                          sh "echo PR:${params.pull_request_number} >> ${env_file}.info"
+                          sh "echo user:${email_to} >> ${env_file}.info"
+                          sh "echo PR:${pull_request_number} >> ${env_file}.info"
                           sh "echo started:\$(date) >> ${env_file}.info"
                           break;
                       }
@@ -79,7 +79,7 @@ def run(params) {
                         //      Inside userRemoteConfigs add credentialsId: 'github'
                         checkout([  
                                     $class: 'GitSCM', 
-                                    branches: [[name: "pr/${params.pull_request_number}"]], 
+                                    branches: [[name: "pr/${pull_request_number}"]], 
                                     extensions: [[$class: 'CloneOption', depth: 1, timeout: 30, shallow: true, noTags: true, honorRefspec: true]],
                                     userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
                                    ])
@@ -89,7 +89,7 @@ def run(params) {
             }
             stage('Build product') {
                 ws(environment_workspace){
-                    currentBuild.description =  "${builder_project}:${params.pull_request_number}<br>${params.email_to}<br>environment: ${env_number}<br>"
+                    currentBuild.description =  "${builder_project}:${pull_request_number}<br>${email_to}<br>environment: ${env_number}<br>"
                     if (params.run_all_scopes) {
                         currentBuild.description = "${currentBuild.description} Run all scopes<br>"
                     } else {
@@ -107,33 +107,33 @@ def run(params) {
                               sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'U' | awk '{print}END{exit NR>1}'"
                             }
                             // force remove, to clean up previous build
-                            sh "osc unlock ${builder_project}:${params.pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
+                            sh "osc unlock ${builder_project}:${pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
 
-                            sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${builder_project} --configfile $HOME/.oscrc remove --noninteractive ${params.pull_request_number} || true"
+                            sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${builder_project} --configfile $HOME/.oscrc remove --noninteractive ${pull_request_number} || true"
 
-                            sh "osc rdelete -rf -m 'removing project before creating it again' ${builder_project}:${params.pull_request_number} || true"
-                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${builder_project} --configfile $HOME/.oscrc add --repo ${build_repo} ${params.pull_request_number} --disablepublish --setmaintainer zypp-team"
+                            sh "osc rdelete -rf -m 'removing project before creating it again' ${builder_project}:${pull_request_number} || true"
+                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${builder_project} --configfile $HOME/.oscrc add --repo ${build_repo} ${pull_request_number} --disablepublish --setmaintainer zypp-team"
                             // Autocleanup in 3 days from obs
-                            sh "osc dr --accept-in-hours=\$(( 24 * 7 )) --all -m 'Autocleanup' ${builder_project}:${params.pull_request_number}"                          
-                            sh "osc linkpac ${source_project} release-notes-uyuni ${builder_project}:${params.pull_request_number}"
-                            sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${builder_api}|${source_project}\" -n \"${builder_project}:${params.pull_request_number}\" -c $HOME/.oscrc -e"
-                            echo "Checking ${builder_project}:${params.pull_request_number}"
-                            sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${builder_api} -c $HOME/.oscrc -p ${builder_project}:${params.pull_request_number}"
+                            sh "osc dr --accept-in-hours=\$(( 24 * 7 )) --all -m 'Autocleanup' ${builder_project}:${pull_request_number}"                          
+                            sh "osc linkpac ${source_project} release-notes-uyuni ${builder_project}:${pull_request_number}"
+                            sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${builder_api}|${source_project}\" -n \"${builder_project}:${pull_request_number}\" -c $HOME/.oscrc -e"
+                            echo "Checking ${builder_project}:${pull_request_number}"
+                            sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${builder_api} -c $HOME/.oscrc -p ${builder_project}:${pull_request_number}"
                             // fail if packages are not building correctly
-                            sh "osc pr ${builder_project}:${params.pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
+                            sh "osc pr ${builder_project}:${pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
                             // fail if packages are unresolvable
-                            sh "osc pr ${builder_project}:${params.pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
+                            sh "osc pr ${builder_project}:${pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
                             built = true
                         } // params.must_buid
                         sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ ${environment_workspace}/repos"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/${arch}"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
                         // Clean up previous errors
                         sh "bash -c \"rm -rf ${environment_workspace}/repos/publish_logs\""
                         sh "bash -c \"mkdir ${environment_workspace}/repos/publish_logs\""
                         // We clean up the previous repo because the pull request repo gets recreated each time, so we have no control on the build numbers.
-                        sh "bash -c \"rm -rf ${environment_workspace}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/${arch}\""
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${builder_project}:${params.pull_request_number}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${builder_project}_${params.pull_request_number} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${builder_project}_${params.pull_request_number}.error &"
+                        sh "bash -c \"rm -rf ${environment_workspace}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}\""
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${builder_project}:${pull_request_number}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${builder_project}_${pull_request_number} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${builder_project}_${pull_request_number}.error &"
                         echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                         sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" -q 000product:Uyuni-Server-release -q 000product:Uyuni-Proxy-release > ${environment_workspace}/repos/publish_logs/${source_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}.error &"
@@ -209,7 +209,7 @@ def run(params) {
                     if(params.must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${params.pull_request_number}/${build_repo}/${arch}"
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
                         env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
                         env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/${arch}"
                         env.MASTER_SUMAFORM_TOOLS_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/${arch}"
@@ -283,7 +283,7 @@ def run(params) {
                                 println("Keep the environment locked for 24 hours so you can debug")
                                 sh "echo \"rm -f ${env_file}*\" | at now +24 hour"
                                 sh "echo keep:24h >> ${env_file}.info"
-                                sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${params.email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-srv.mgr.prv.suse.net"
+                                sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-srv.mgr.prv.suse.net"
                             }
                         }
                     }
@@ -292,7 +292,7 @@ def run(params) {
             stage('Remove build project') {
                 if(environment_workspace){
                   ws(environment_workspace){
-                      sh "rm -rf ${builder_project}:${params.pull_request_number}" 
+                      sh "rm -rf ${builder_project}:${pull_request_number}" 
                   }
                 }
             }
@@ -321,15 +321,15 @@ def run(params) {
                                             keepAll: true,
                                             reportDir: "${resultdirbuild}/cucumber_report/",
                                             reportFiles: 'cucumber_report.html',
-                                            reportName: "TestSuite Report for Pull Request ${builder_project}:${params.pull_request_number}"]
+                                            reportName: "TestSuite Report for Pull Request ${builder_project}:${pull_request_number}"]
                                 )
                                 junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
                             }
                             if (fileExists("results/${BUILD_NUMBER}")) {
                                 archiveArtifacts artifacts: "results/${BUILD_NUMBER}/**/*"
                             }
-                            if (params.email_to != '') {
-                                sh " export TF_VAR_MAIL_TO=${params.email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                            if (email_to != '') {
+                                sh " export TF_VAR_MAIL_TO=${email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
                             // Clean up old results
                             sh "./clean-old-results -r ${resultdir}"

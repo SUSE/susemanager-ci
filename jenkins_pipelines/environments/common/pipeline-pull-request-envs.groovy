@@ -6,12 +6,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     sumaform_ref = "master";
 } else {
     if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
-        if (params.email_to == '') {
-            params.email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
-        }
-        if (params.pull_request_number == '') {
-            params.pull_request_number = "4886";
-        }
+        email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
+        pull_request_number = "4886";
         first_env = 1;
         last_env = 8;
     } else { //not jordi, not reference
