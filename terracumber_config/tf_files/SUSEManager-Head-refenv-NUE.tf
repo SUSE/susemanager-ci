@@ -91,7 +91,7 @@ module "base" {
   name_prefix = "suma-refhead-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
+  images      = ["centos7o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
   provider_settings = {
     pool         = "ssd"
     network_name = null
@@ -151,6 +151,23 @@ module "suse-minion" {
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+}
+
+module "redhat-minion" {
+  source               = "./modules/minion"
+  base_configuration   = module.base.configuration
+  product_version      = "head"
+  name                 = "min-centos7"
+  image                = "centos7o"
+  server_configuration = module.server.configuration
+
+  provider_settings = {
+    mac = "aa:b2:93:01:00:c9"
+    // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+    // Also, openscap cannot run with less than 1.25 GB of RAM
+    memory = 2048
+    vcpu = 2
+  }
 }
 
 module "debian-minion" {
