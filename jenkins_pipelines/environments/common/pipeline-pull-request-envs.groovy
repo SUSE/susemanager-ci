@@ -5,7 +5,18 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     sumaform_gitrepo = "https://github.com/jordimassaguerpla/sumaform.git";
     sumaform_ref = "master";
 } else {
-    first_env = 1;
-    last_env = 8;
+    if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
+        if (params.email_to == '') {
+            params.email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
+        }
+        if (params.pull_request_number == '') {
+            params.pull_request_number = "4886";
+        }
+        first_env = 1;
+        last_env = 8;
+    } else { //not jordi, not reference
+        first_env = 1;
+        last_env = 8;
+    }
 }
 
