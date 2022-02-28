@@ -172,6 +172,8 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2004"

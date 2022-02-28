@@ -168,6 +168,8 @@ module "redhat-minion" {
     memory = 2048
     vcpu = 2
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian-minion" {
