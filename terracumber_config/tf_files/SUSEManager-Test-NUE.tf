@@ -122,7 +122,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:40"
       }
-      branch = "master-test-deadlock"
+  //    branch = "master-test-deadlock"
     }
     server = {
       provider_settings = {
