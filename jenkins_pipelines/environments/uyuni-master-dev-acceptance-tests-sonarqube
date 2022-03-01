@@ -1,0 +1,141 @@
+node('sumaform-cucumber') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4', artifactNumToKeepStr: '3')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/Uyuni-PR-tests-env8.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
+            choice(name: 'terraform_bin', choices: ['/usr/bin/terraform'], description: 'Terraform binary path'),
+            choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
+            booleanParam(name: 'terraform_taint', defaultValue: true, description: 'Call terraform taint (so the resources, except volumes, are recreated)'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
+            booleanParam(name: 'show_product_changes', defaultValue: true, description: 'Show the product changes since the last build'),
+            choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
+            extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ',', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_smdba,@scope_spacecmd,@scope_spacewalk_utils,@scope_visualization,@scope_notification_message,@scope_virtual_host_manager,@scope_subscription_matching,@scope_formulas,@scope_sp_migration,@scope_cve_audit,@scope_onboarding,@scope_content_lifecycle_management,@scope_res,@scope_recurring_actions,@scope_maintenance_windows,@scope_cluster_management,@scope_building_container_images,@scope_kubernetes_integration,@scope_openscap,@scope_ubuntu,@scope_action_chains,@scope_salt_ssh,@scope_tomcat,@scope_changing_software_channels,@scope_monitoring,@scope_salt,@scope_cobbler,@scope_sumatoolbox,@scope_virtualization,@scope_hub,@scope_retail,@scope_configuration_channels,@scope_content_staging,@scope_proxy,@scope_traditional_client,@scope_xmlrpc,@scope_power_management,@scope_retracted_patches', description: 'Choose the functional scopes that you want to test')
+        ])
+    ])
+
+    timestamps {
+        // Init path env variables
+        env.resultdir = "${WORKSPACE}/results"
+        env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+
+        // The junit plugin doesn't affect full paths
+        junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
+
+        // Start pipeline
+        deployed = false
+        try {
+            stage('Clone terracumber, susemanager-ci and sumaform') {
+                // Create a directory for  to place the directory with the build results (if it does not exist)
+                sh "mkdir -p ${resultdir}"
+                git url: params.terracumber_gitrepo, branch: params.terracumber_ref
+                dir("susemanager-ci") {
+                    checkout scm
+                }
+                // Clone sumaform
+                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+            
+                // Restore Terraform states from artifacts
+                if (params.use_previous_terraform_state) {
+                    copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                }
+            }
+
+            stage('Deploy') {
+                // Provision the environment
+                if (params.terraform_init) {
+                    env.TERRAFORM_INIT = '--init'
+                } else {
+                    env.TERRAFORM_INIT = ''
+                }
+                env.TERRAFORM_TAINT = ''
+                if (params.terraform_taint) {
+                    switch(params.sumaform_backend) {
+                        case "libvirt":
+                            env.TERRAFORM_TAINT = " --taint '.*(domain|main_disk).*'";
+                            break;
+                        case "aws":
+                            env.TERRAFORM_TAINT = " --taint '.*(host).*'";
+                            break;
+                        default:
+                            println("ERROR: Unknown backend ${params.sumaform_backend}");
+                            sh "exit 1";
+                            break;
+                    }
+                }
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                deployed = true
+            }
+
+            stage('Enable JaCoCo Agent') {
+                def url = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh $SERVER \'wget ${url} -O /tmp/jacocoagent.jar\' "
+                def regex = "sed -i 's/.$/ -javaagent:\/tmp\/jacocoagent.jar=output=tcpserver,address=*,port=6300" /' /etc/sysconfig/tomcat"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh $SERVER \'${regex}\' "
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh $SERVER \'systemctl restart tomcat.service\' "
+            }
+
+            stage('Sanity Check') {
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
+            }
+
+            stage('Core - Setup') {
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
+            }
+
+            stage('Dump Test Coverage results') {
+                def url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.7/org.jacoco.cli-0.8.7-nodeps.jar"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'wget ${url} -O /tmp/jacococli.jar'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'java -jar /tmp/jacococli.jar dump --address $SERVER --destfile /root/spacewalk/testsuite/jacoco.exec --port 6300 --reset'"
+            }
+        }
+
+        finally {
+            stage('Save TF state') {
+                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+            }
+
+            stage('Get results') {
+                def error = 0
+                if (deployed) {
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
+                    } catch(Exception ex) {
+                        println("ERROR: rake cucumber:finishing failed")
+                        error = 1
+                    }
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
+                    } catch(Exception ex) {
+                        println("ERROR: rake utils:generate_test_repor failed")
+                        error = 1
+                    }
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                    publishHTML( target: [
+                                allowMissing: true,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: "${resultdirbuild}/cucumber_report/",
+                                reportFiles: 'cucumber_report.html',
+                                reportName: "TestSuite Report"]
+                    )
+                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                }
+                // Send email
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                // Clean up old results
+                sh "./clean-old-results -r ${resultdir}"
+                sh "exit ${error}"
+            }
+        }
+    }
+}
