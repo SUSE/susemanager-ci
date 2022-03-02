@@ -77,15 +77,29 @@ provider "libvirt" {
   uri = "qemu+tcp://salzbreze.mgr.suse.de/system"
 }
 
+
 module "base" {
   source = "./modules/base"
-  images = ["centos7o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
+  images = ["centos7o", "sles15sp4o", "ubuntu2004o"]
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 }
 
+module "hub-server" {
+  source = "./modules/server"
+  image = "sles15sp4o"
+  base_configuration = module.base.configuration
+  product_version = "head"
+  name = "hub-server"
+  use_os_released_updates = false
+  additional_repos = {
+    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
+  }
+}
+
 module "server-2" {
   source = "./modules/server"
+  image = "sles15sp4o"
   base_configuration = module.base.configuration
   name = "slave-2"
   product_version = "head"
@@ -99,23 +113,13 @@ module "server-2" {
 
 module "server-3" {
   source = "./modules/server"
+  image = "sles15sp4o"
   base_configuration = module.base.configuration
   name = "slave-3"
   product_version = "head"
   use_os_released_updates = false
   register_to_server = module.hub-server.configuration.hostname
   auto_accept = false
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
-  }
-}
-
-module "hub-server" {
-  source = "./modules/server"
-  base_configuration = module.base.configuration
-  product_version = "head"
-  name = "hub-server"
-  use_os_released_updates = false
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
@@ -136,7 +140,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
+  images = ["centos7o", "sles15sp4o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-tests-hub-"
