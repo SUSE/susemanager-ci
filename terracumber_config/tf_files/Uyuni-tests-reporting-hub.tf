@@ -90,7 +90,7 @@ module "hub-server" {
   image = "sles15sp4o"
   base_configuration = module.base.configuration
   product_version = "head"
-  name = "hub-server"
+  name = "uyuni-tests-hub-server"
   use_os_released_updates = false
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
@@ -101,7 +101,7 @@ module "server-2" {
   source = "./modules/server"
   image = "sles15sp4o"
   base_configuration = module.base.configuration
-  name = "slave-2"
+  name = "uyuni-tests-hub-slave-2"
   product_version = "head"
   use_os_released_updates = false
   register_to_server = module.hub-server.configuration.hostname
@@ -115,7 +115,7 @@ module "server-3" {
   source = "./modules/server"
   image = "sles15sp4o"
   base_configuration = module.base.configuration
-  name = "slave-3"
+  name = "uyuni-tests-hub-slave-3"
   product_version = "head"
   use_os_released_updates = false
   register_to_server = module.hub-server.configuration.hostname
