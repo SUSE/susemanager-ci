@@ -60,16 +60,18 @@ def run(params) {
             }
 
             stage('Add Common Channels') {
+                if(params.must_add_common_channels) {
                     echo 'Add common channels'
                     res_common_channels = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_add_common_channels'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_common_channels}"
                     res_sync_common_channels = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
                     echo "Common channels synchronization status code: ${res_sync_common_channels}"
                     sh "exit \$(( ${res_common_channels}|${res_sync_common_channels} ))"
+                }
             }
             
             stage('Add MUs') {
-                if(params.must_add_channels) {
+                if(params.must_add_custom_channels) {
                     echo 'Add custom channels and MU repositories'
                     res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_add_custom_repositories'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_mu_repos}"
