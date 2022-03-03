@@ -28,7 +28,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Manager4.2-WS-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Manager4.2-AWS-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -48,7 +48,7 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
 
 variable "MAIL_FROM" {
   type = string
-  default = "mnoel@suse.de"
+  default = "galaxy-ci@suse.de"
 }
 
 variable "MAIL_TO" {
@@ -77,7 +77,6 @@ variable "GIT_PASSWORD" {
 
 variable "MIRROR"{
   type = string
-  default = null
 }
 
 variable "REGION" {
@@ -160,7 +159,6 @@ module "base" {
   }
 }
 
-
 module "mirror" {
   source = "./modules/mirror"
   base_configuration = module.base.configuration
@@ -225,7 +223,6 @@ module "proxy" {
   //proxy_additional_repos
 
 }
-
 
 module "suse-client" {
 
@@ -342,7 +339,6 @@ module "controller" {
   debian_configuration    = module.debian-minion.configuration
 
 }
-
 
 output "bastion_public_name" {
   value = lookup(module.base.configuration, "bastion_host", null)
