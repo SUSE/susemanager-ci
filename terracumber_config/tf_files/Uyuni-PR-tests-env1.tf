@@ -189,6 +189,7 @@ module "cucumber_testsuite" {
 
       }
       image = "opensuse153-ci-pr"
+      server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
     }
     proxy = {
       provider_settings = {
