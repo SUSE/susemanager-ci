@@ -139,6 +139,7 @@ module "cucumber_testsuite" {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP4/"
         Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/openSUSE.org:/systemsmanagement/SLE_15_SP4/"
       }
+      additional_packages = [ "cobbler" ]
     }
     proxy = {
       provider_settings = {
