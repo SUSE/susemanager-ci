@@ -172,7 +172,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-/*
     redhat-minion = {
       provider_settings = {
         mac = "aa:b2:93:01:00:79"
@@ -184,7 +183,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-*/
     pxeboot-minion = {
       image = "sles15sp3o"
     }
