@@ -101,6 +101,10 @@ variable "MASTER_SUMAFORM_TOOLS_REPO" {
   type = string
 }
 
+variable "UPDATE_REPO" {
+  type = string
+}
+
 variable "TEST_PACKAGES_REPO" {
   type = string
 }
@@ -185,7 +189,7 @@ module "cucumber_testsuite" {
         test_packages_repo = var.TEST_PACKAGES_REPO,
         non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
-        os_update = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/",
+        os_update = var.UPDATE_REPO,
 
       }
       image = "opensuse153-ci-pr"
@@ -204,7 +208,7 @@ module "cucumber_testsuite" {
         test_packages_repo = var.TEST_PACKAGES_REPO,
         non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
-        os_update = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/",
+        os_update = var.UPDATE_REPO,
       }
       image = "opensuse153-ci-pr"
       additional_packages = [ "venv-salt-minion" ]
@@ -308,7 +312,7 @@ module "cucumber_testsuite" {
         test_packages_repo = var.TEST_PACKAGES_REPO,
         non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
-        os_update = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/",
+        os_update = var.UPDATE_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -331,7 +335,7 @@ module "cucumber_testsuite" {
         test_packages_repo = var.TEST_PACKAGES_REPO,
         non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
-        os_update = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/",
+        os_update = var.UPDATE_REPO,
         
       }
       additional_packages = [ "venv-salt-minion" ]
