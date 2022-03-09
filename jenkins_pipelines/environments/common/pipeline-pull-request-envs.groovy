@@ -7,7 +7,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
 } else {
     if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
         email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
-        pull_request_number = "4886";
+        pull_request_number = "master";
         first_env = 1;
         last_env = 8;
     } else { //not jordi, not reference
