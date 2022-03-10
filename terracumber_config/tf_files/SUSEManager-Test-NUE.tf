@@ -130,7 +130,7 @@ module "cucumber_testsuite" {
         memory = 10240
       }
       additional_repos = {
-//        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST/SLE_15_SP4/"
+        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST/images/repo/SLE-Module-SUSE-Manager-Server-4.3-POOL-x86_64-Media1/"
 //        salt15sp2_base = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Basesystem_15-SP2_x86_64/",
 //        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
 //        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
