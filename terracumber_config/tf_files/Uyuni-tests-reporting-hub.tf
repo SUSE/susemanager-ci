@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-tests-hub-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-TEST-reportdb-hub-tests"
 }
 
 variable "CUCUMBER_COMMAND" {
@@ -77,76 +77,101 @@ provider "libvirt" {
   uri = "qemu+tcp://salzbreze.mgr.suse.de/system"
 }
 
-
-module "base" {
+module "base_core" {
   source = "./modules/base"
-  images = ["centos7o", "sles15sp4o", "ubuntu2004o"]
+
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+
+  images = ["centos7o", "opensuse152o", "opensuse153o","sles15sp3o", "sles15sp4o"]
+  name_prefix  = "reportdb-"
+  domain       = "mgr.suse.de"
+
+  provider_settings = {
+    pool         = "ssd"
+    network_name = null
+    bridge       = "br0"
+  }
 }
 
 module "hub-server" {
   source = "./modules/server"
-  image = "sles15sp4o"
-  base_configuration = module.base.configuration
+  base_configuration = module.base_core.configuration
+  name = "hub-server"
   product_version = "head"
-  name = "uyuni-tests-hub-server"
-  use_os_released_updates = false
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
+  image = "sles15sp4o"
 }
 
-module "server-2" {
+module "slave1" {
   source = "./modules/server"
-  image = "sles15sp4o"
-  base_configuration = module.base.configuration
-  name = "uyuni-tests-hub-slave-2"
+  base_configuration = module.base_core.configuration
   product_version = "head"
-  use_os_released_updates = false
-  register_to_server = module.hub-server.configuration.hostname
-  auto_accept = false
+  name = "slave1"
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
+  auto_accept                    = true
+  use_os_released_updates        = false
+  from_email                     = "root@suse.de"
+  register_to_server = module.hub-server.configuration.hostname
+  image = "sles15sp4o"
 }
 
-module "server-3" {
+module "slave2" {
   source = "./modules/server"
-  image = "sles15sp4o"
-  base_configuration = module.base.configuration
-  name = "uyuni-tests-hub-slave-3"
+  base_configuration = module.base_core.configuration
   product_version = "head"
-  use_os_released_updates = false
-  register_to_server = module.hub-server.configuration.hostname
-  auto_accept = false
+  name = "slave2"
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
+  auto_accept                    = false
+  use_os_released_updates        = false
+  from_email                     = "root@suse.de"
+  register_to_server = module.hub-server.configuration.hostname
+  image = "sles15sp4o"
 }
 
-
-module "cucumber_testsuite" {
-  source = "./modules/cucumber_testsuite"
-  
+module "slave3" {
+  source = "./modules/server"
+  base_configuration = module.base_core.configuration
   product_version = "head"
+  name = "slave3"
+  additional_repos = {
+    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
+  }
+  auto_accept                    = false
+  use_os_released_updates        = false
+  from_email                     = "root@suse.de"
+  register_to_server = module.hub-server.configuration.hostname
+  image = "sles15sp4o"
+}
 
-  // Cucumber repository configuration for the controller
-  git_username = var.GIT_USER
-  git_password = var.GIT_PASSWORD
-  git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_BRANCH
+module "min-sles15sp3" {
+  source = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  name = "min-sles15sp3"
+  image = "sles15sp3o"
+  server_configuration = module.slave1.configuration
+  use_os_released_updates = false
+}
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
+module "min-centos7" {
+  source = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  name = "min-centos7"
+  image = "centos7o"
+  server_configuration = module.slave1.configuration
+  use_os_released_updates = false
+}
 
-  images = ["centos7o", "sles15sp4o", "ubuntu2004o"]
-
-  use_avahi    = false
-  name_prefix  = "uyuni-tests-hub-"
-  domain       = "mgr.suse.de"
-  from_email   = "root@suse.de"
-
+module "controller" {
+  source = "./modules/controller"
+  base_configuration = module.base_core.configuration
+  name = "controller"
   no_auth_registry = "registry.mgr.suse.de"
   auth_registry = "portus.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
@@ -159,46 +184,13 @@ module "cucumber_testsuite" {
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
+  
+  server_configuration = module.slave1.configuration
 
-  host_settings = {
-    server = {
-      name = "slave-1"
-      image = "sles15sp4o"
-      additional_repos = {
-          Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
-      }
-      use_os_released_updates = false
-      register_to_server = module.hub-server.configuration.hostname
-      auto_accept = true
-    }
-    suse-minion = {
-      image = "sles15s4o"
-      name = "min-sles15"
-    }
-    suse-sshminion = {
-      image = "sles15sp4o"
-      name = "minssh-sles15"
-    }
-    redhat-minion = {
-      provider_settings = {
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Still researching, but it will do it for now
-        memory = 2048
-        vcpu = 2
-      }
-    }
-    debian-minion = {
-      name = "min-ubuntu2004"
-      image = "ubuntu2004o"
-    }
-  }
-  provider_settings = {
-    pool         = "ssd"
-    network_name = null
-    bridge       = "br0"
-  }
+  sle15sp3_minion_configuration = module.min-sles15sp3.configuration
+  centos7_minion_configuration = module.min-centos7.configuration
 }
 
 output "configuration" {
-  value = module.cucumber_testsuite.configuration
+  value = module.controller.configuration
 }
