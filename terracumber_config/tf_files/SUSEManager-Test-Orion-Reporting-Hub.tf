@@ -85,10 +85,10 @@ module "base_core" {
   }
 }
 
-module "hub-server" {
+module "hub-srv" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
-  name = "hub-server"
+  name = "hub-srv"
   product_version = "head"
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
@@ -98,7 +98,7 @@ module "hub-server" {
     mac = "aa:b2:93:01:00:e1"
   }
   server_configuration = {
-    hostname = "suma-reportdb-hub-server.mgr.suse.de"
+    hostname = "suma-reportdb-hub-srv.mgr.suse.de"
   }
 }
 
@@ -113,7 +113,7 @@ module "peripheral1" {
   auto_accept                    = true
   use_os_released_updates        = false
   from_email                     = "root@suse.de"
-  register_to_server = module.hub-server.configuration.hostname
+  register_to_server = module.hub-srv.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:00:e2"
@@ -134,7 +134,7 @@ module "peripheral2" {
   auto_accept                    = false
   use_os_released_updates        = false
   from_email                     = "root@suse.de"
-  register_to_server = module.hub-server.configuration.hostname
+  register_to_server = module.hub-srv.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:00:e3"
