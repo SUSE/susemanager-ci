@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-TEST-reportdb-hub-tests"
+  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-reportdb-hub-tests"
 }
 
 variable "CUCUMBER_COMMAND" {
@@ -26,7 +26,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = "string"
-  default = "Results Uyuni Tests Hub $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results TEST-HUB $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -36,7 +36,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = "string"
-  default = "Results Uyuni Tests Hub: Environment setup failed"
+  default = "Results TEST-HUB : Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
