@@ -102,11 +102,11 @@ module "hub-server" {
   }
 }
 
-module "slave1" {
+module "peripheral1" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
   product_version = "head"
-  name = "slave1"
+  name = "peripheral1"
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
@@ -119,15 +119,15 @@ module "slave1" {
     mac = "aa:b2:93:01:00:e2"
   }
   server_configuration = {
-    hostname = "suma-reportdb-slave1.mgr.suse.de"
+    hostname = "suma-reportdb-peripheral1.mgr.suse.de"
   }
 }
 
-module "slave2" {
+module "peripheral2" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
   product_version = "head"
-  name = "slave2"
+  name = "peripheral2"
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
@@ -140,7 +140,7 @@ module "slave2" {
     mac = "aa:b2:93:01:00:e3"
   }
   server_configuration = {
-    hostname = "suma-reportdb-slave2.mgr.suse.de"
+    hostname = "suma-reportdb-peripheral2.mgr.suse.de"
   }
 }
 
@@ -150,7 +150,7 @@ module "min-sles15sp3" {
   base_configuration = module.base_core.configuration
   name = "min-sles15sp3"
   image = "sles15sp3o"
-  server_configuration = module.slave1.configuration
+  server_configuration = module.peripheral1.configuration
   use_os_released_updates = false
   provider_settings = {
     mac = "aa:b2:93:01:00:e4"
@@ -165,7 +165,7 @@ module "min-centos7" {
   base_configuration = module.base_core.configuration
   name = "min-centos7"
   image = "centos7o"
-  server_configuration = module.slave1.configuration
+  server_configuration = module.peripheral1.configuration
   use_os_released_updates = false
   provider_settings = {
     mac = "aa:b2:93:01:00:e5"
@@ -187,12 +187,12 @@ module "controller" {
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_BRANCH
+  branch       = var.CUCUMBER_RANCH
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
   
-  server_configuration = module.slave1.configuration
+  server_configuration = module.peripheral1.configuration
 
   sle15sp3_minion_configuration = module.min-sles15sp3.configuration
   centos7_minion_configuration = module.min-centos7.configuration
