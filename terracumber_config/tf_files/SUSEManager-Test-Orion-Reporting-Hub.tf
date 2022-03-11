@@ -44,16 +44,6 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
   default = "../mail_templates/mail-template-jenkins-env-fail.txt"
 }
 
-variable "MAIL_FROM" {
-  type = "string"
-  default = "galaxy-ci@suse.de"
-}
-
-variable "MAIL_TO" {
-  type = "string"
-  default = "galaxy-ci@suse.de"
-}
-
 // sumaform specific variables
 variable "SCC_USER" {
   type = "string"
