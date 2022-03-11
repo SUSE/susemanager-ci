@@ -84,7 +84,8 @@ module "base_core" {
   cc_password = var.SCC_PASSWORD
 
   images = ["centos7o", "opensuse152o", "opensuse153o","sles15sp3o", "sles15sp4o"]
-  name_prefix  = "reportdb-"
+  use_avahi    = false
+  name_prefix  = "suma-reportdb-"
   domain       = "mgr.suse.de"
 
   provider_settings = {
@@ -103,6 +104,12 @@ module "hub-server" {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
   image = "sles15sp4o"
+  provider_settings = {
+    mac = "aa:b2:93:01:00:e1"
+  }
+  server_configuration = {
+    hostname = "suma-reportdb-hub-server.mgr.suse.de"
+  }
 }
 
 module "slave1" {
@@ -118,6 +125,12 @@ module "slave1" {
   from_email                     = "root@suse.de"
   register_to_server = module.hub-server.configuration.hostname
   image = "sles15sp4o"
+  provider_settings = {
+    mac = "aa:b2:93:01:00:e2"
+  }
+  server_configuration = {
+    hostname = "suma-reportdb-slave1.mgr.suse.de"
+  }
 }
 
 module "slave2" {
@@ -133,22 +146,14 @@ module "slave2" {
   from_email                     = "root@suse.de"
   register_to_server = module.hub-server.configuration.hostname
   image = "sles15sp4o"
+  provider_settings = {
+    mac = "aa:b2:93:01:00:e3"
+  }
+  server_configuration = {
+    hostname = "suma-reportdb-slave2.mgr.suse.de"
+  }
 }
 
-module "slave3" {
-  source = "./modules/server"
-  base_configuration = module.base_core.configuration
-  product_version = "head"
-  name = "slave3"
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
-  }
-  auto_accept                    = false
-  use_os_released_updates        = false
-  from_email                     = "root@suse.de"
-  register_to_server = module.hub-server.configuration.hostname
-  image = "sles15sp4o"
-}
 
 module "min-sles15sp3" {
   source = "./modules/minion"
@@ -157,6 +162,12 @@ module "min-sles15sp3" {
   image = "sles15sp3o"
   server_configuration = module.slave1.configuration
   use_os_released_updates = false
+  provider_settings = {
+    mac = "aa:b2:93:01:00:e4"
+  }
+  server_configuration = {
+    hostname = "suma-reportdb-min-sles15sp3.mgr.suse.de"
+  }
 }
 
 module "min-centos7" {
@@ -166,12 +177,18 @@ module "min-centos7" {
   image = "centos7o"
   server_configuration = module.slave1.configuration
   use_os_released_updates = false
+  provider_settings = {
+    mac = "aa:b2:93:01:00:e5"
+  }
+  server_configuration = {
+    hostname = "suma-reportdb-min-centos7.mgr.suse.de"
+  }
 }
 
 module "controller" {
   source = "./modules/controller"
   base_configuration = module.base_core.configuration
-  name = "controller"
+  name = "ctl"
   no_auth_registry = "registry.mgr.suse.de"
   auth_registry = "portus.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
@@ -189,6 +206,14 @@ module "controller" {
 
   sle15sp3_minion_configuration = module.min-sles15sp3.configuration
   centos7_minion_configuration = module.min-centos7.configuration
+
+  provider_settings = {
+    mac = "aa:b2:93:01:00:e0"
+  }
+
+  server_configuration = {
+    hostname = "suma-reportdb-ctl.mgr.suse.de"
+  }
 }
 
 output "configuration" {
