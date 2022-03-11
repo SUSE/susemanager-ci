@@ -95,7 +95,7 @@ module "hub-srv" {
   }
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:00:e1"
+    mac = "aa:b2:93:01:01:31"
   }
   server_configuration = {
     hostname = "suma-reportdb-hub-srv.mgr.suse.de"
@@ -116,7 +116,7 @@ module "peripheral1" {
   register_to_server = module.hub-srv.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:00:e2"
+    mac = "aa:b2:93:01:01:32"
   }
   server_configuration = {
     hostname = "suma-reportdb-peripheral1.mgr.suse.de"
@@ -137,7 +137,7 @@ module "peripheral2" {
   register_to_server = module.hub-srv.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:00:e3"
+    mac = "aa:b2:93:01:01:33"
   }
   server_configuration = {
     hostname = "suma-reportdb-peripheral2.mgr.suse.de"
@@ -153,7 +153,7 @@ module "min-sles15sp3" {
   server_configuration = module.peripheral1.configuration
   use_os_released_updates = false
   provider_settings = {
-    mac = "aa:b2:93:01:00:e4"
+    mac = "aa:b2:93:01:01:34"
   }
   server_configuration = {
     hostname = "suma-reportdb-min-sles15sp3.mgr.suse.de"
@@ -168,7 +168,7 @@ module "min-centos7" {
   server_configuration = module.peripheral1.configuration
   use_os_released_updates = false
   provider_settings = {
-    mac = "aa:b2:93:01:00:e5"
+    mac = "aa:b2:93:01:01:35"
   }
   server_configuration = {
     hostname = "suma-reportdb-min-centos7.mgr.suse.de"
@@ -198,7 +198,7 @@ module "controller" {
   centos7_minion_configuration = module.min-centos7.configuration
 
   provider_settings = {
-    mac = "aa:b2:93:01:00:e0"
+    mac = "aa:b2:93:01:01:30"
   }
 
   server_configuration = {
