@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-reportdb-hub-tests"
+  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Orion-acceptance-tests-reportdb-hub"
 }
 
 variable "CUCUMBER_COMMAND" {
