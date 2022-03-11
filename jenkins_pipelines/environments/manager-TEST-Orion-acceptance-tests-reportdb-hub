@@ -4,7 +4,7 @@ node('sumaform-cucumber') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
         disableConcurrentBuilds(),
-        pipelineTriggers([cron('H 19 * * *')]),
+        pipelineTriggers([cron('H 03 * * *')]),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni/uyuni.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
