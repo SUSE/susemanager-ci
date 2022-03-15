@@ -154,6 +154,8 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+  mirror      = "minima-mirror.mgr.prv.suse.net"
+  use_mirror_images = true
 
   images = ["centos7o", "opensuse152o", "opensuse153-ci-pr", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
