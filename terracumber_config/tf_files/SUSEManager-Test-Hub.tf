@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = "string"
-  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Orion-acceptance-tests-reportdb-hub"
+  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Hub-acceptance-tests"
 }
 
 variable "CUCUMBER_COMMAND" {
@@ -75,7 +75,7 @@ module "base_core" {
 
   images = ["centos7o", "opensuse152o", "opensuse153o","sles15sp3o", "sles15sp4o"]
   use_avahi    = false
-  name_prefix  = "suma-reportdb-"
+  name_prefix  = "suma-testhub-"
   domain       = "mgr.suse.de"
 
   provider_settings = {
@@ -85,10 +85,10 @@ module "base_core" {
   }
 }
 
-module "hub-srv" {
+module "hub" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
-  name = "hub-srv"
+  name = "hub"
   product_version = "head"
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
@@ -98,49 +98,49 @@ module "hub-srv" {
     mac = "aa:b2:93:01:01:42"
   }
   server_configuration = {
-    hostname = "suma-reportdb-hub-srv.mgr.suse.de"
+    hostname = "suma-testhub-hub.mgr.suse.de"
   }
 }
 
-module "peripheral1" {
+module "prh1" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
   product_version = "head"
-  name = "peripheral1"
+  name = "prh1"
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
   auto_accept                    = true
   use_os_released_updates        = false
   from_email                     = "root@suse.de"
-  register_to_server = module.hub-srv.configuration.hostname
+  register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:01:43"
   }
   server_configuration = {
-    hostname = "suma-reportdb-peripheral1.mgr.suse.de"
+    hostname = "suma-testhub-prh1.mgr.suse.de"
   }
 }
 
-module "peripheral2" {
+module "prh2" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
   product_version = "head"
-  name = "peripheral2"
+  name = "prh2"
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
   auto_accept                    = false
   use_os_released_updates        = false
   from_email                     = "root@suse.de"
-  register_to_server = module.hub-srv.configuration.hostname
+  register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:01:44"
   }
   server_configuration = {
-    hostname = "suma-reportdb-peripheral2.mgr.suse.de"
+    hostname = "suma-testhub-prh2.mgr.suse.de"
   }
 }
 
@@ -150,13 +150,13 @@ module "min-sles15sp3" {
   base_configuration = module.base_core.configuration
   name = "min-sles15sp3"
   image = "sles15sp3o"
-  server_configuration = module.peripheral1.configuration
+  server_configuration = module.prh1.configuration
   use_os_released_updates = false
   provider_settings = {
     mac = "aa:b2:93:01:01:45"
   }
   server_configuration = {
-    hostname = "suma-reportdb-min-sles15sp3.mgr.suse.de"
+    hostname = "suma-testhub-min-sles15sp3.mgr.suse.de"
   }
 }
 
@@ -165,13 +165,13 @@ module "min-centos7" {
   base_configuration = module.base_core.configuration
   name = "min-centos7"
   image = "centos7o"
-  server_configuration = module.peripheral1.configuration
+  server_configuration = module.prh1.configuration
   use_os_released_updates = false
   provider_settings = {
     mac = "aa:b2:93:01:01:46"
   }
   server_configuration = {
-    hostname = "suma-reportdb-min-centos7.mgr.suse.de"
+    hostname = "suma-testhub-min-centos7.mgr.suse.de"
   }
 }
 
@@ -192,7 +192,7 @@ module "controller" {
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
   
-  server_configuration = module.peripheral1.configuration
+  server_configuration = module.pterracumber_config/tf_files/SUSEManager-Test-Orion-Reporting-Hub.tfrh1.configuration
 
   sle15sp3_minion_configuration = module.min-sles15sp3.configuration
   centos7_minion_configuration = module.min-centos7.configuration
@@ -202,7 +202,7 @@ module "controller" {
   }
 
   server_configuration = {
-    hostname = "suma-reportdb-ctl.mgr.suse.de"
+    hostname = "suma-testhub-ctl.mgr.suse.de"
   }
 }
 
