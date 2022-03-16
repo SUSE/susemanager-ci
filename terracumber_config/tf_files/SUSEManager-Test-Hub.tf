@@ -192,7 +192,7 @@ module "controller" {
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
   
-  server_configuration = module.pterracumber_config/tf_files/SUSEManager-Test-Orion-Reporting-Hub.tfrh1.configuration
+  server_configuration = module.prh1.configuration
 
   sle15sp3_minion_configuration = module.min-sles15sp3.configuration
   centos7_minion_configuration = module.min-centos7.configuration
