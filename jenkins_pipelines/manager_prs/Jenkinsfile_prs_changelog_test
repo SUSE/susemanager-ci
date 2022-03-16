@@ -69,7 +69,7 @@ pipeline {
                         currentBuild.displayName = "PR: ${params.PR_NUMBER}"
                     }
                 }
-                sh "set +e; ${gitarro_changelog_test_cmd}; CLRET=\${?}; " +
+                sh "set +e; export PRODUCT=SUSE-Manager; ${gitarro_changelog_test_cmd}; CLRET=\${?}; " +
                    "if [ \$CLRET -eq 0 ]; then " +
                    "${gitarro_enable_merging_cmd} -t /usr/bin/true; " +
                    "else ${gitarro_enable_merging_cmd} -t /usr/bin/false; " +
