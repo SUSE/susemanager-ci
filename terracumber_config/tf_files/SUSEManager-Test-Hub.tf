@@ -138,9 +138,6 @@ module "prh1" {
   provider_settings = {
     mac = "aa:b2:93:01:01:43"
   }
-  server_configuration = {
-    hostname = "suma-testhub-prh1.mgr.suse.de"
-  }
 }
 
 module "prh2" {
@@ -158,9 +155,6 @@ module "prh2" {
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:01:44"
-  }
-  server_configuration = {
-    hostname = "suma-testhub-prh2.mgr.suse.de"
   }
 }
 
