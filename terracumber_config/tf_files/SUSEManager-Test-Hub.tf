@@ -1,46 +1,46 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
-  type = "string"
+  type = string
   default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Hub-acceptance-tests"
 }
 
 variable "CUCUMBER_COMMAND" {
-  type = "string"
+  type = string
   default = "export PRODUCT='Uyuni' && run-testsuite #TODO run only sanity, core and hub tests, including reporting"
 }
 
 variable "CUCUMBER_GITREPO" {
-  type = "string"
+  type = string
   default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
-  type = "string"
+  type = string
   default = "hub-reporting-beta3"
 }
 
 variable "CUCUMBER_RESULTS" {
-  type = "string"
+  type = string
   default = "/root/spacewalk/testsuite"
 }
 
 variable "MAIL_SUBJECT" {
-  type = "string"
+  type = string
   default = "Results TEST-HUB $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
-  type = "string"
+  type = string
   default = "../mail_templates/mail-template-jenkins.txt"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
-  type = "string"
+  type = string
   default = "Results TEST-HUB : Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
-  type = "string"
+  type = string
   default = "../mail_templates/mail-template-jenkins-env-fail.txt"
 }
 
@@ -56,20 +56,20 @@ variable "MAIL_TO" {
 
 // sumaform specific variables
 variable "SCC_USER" {
-  type = "string"
+  type = string
 }
 
 variable "SCC_PASSWORD" {
-  type = "string"
+  type = string
 }
 
 variable "GIT_USER" {
-  type = "string"
+  type = string
   default = null // Not needed for master, as it is public
 }
 
 variable "GIT_PASSWORD" {
-  type = "string"
+  type = string
   default = null // Not needed for master, as it is public
 }
 
