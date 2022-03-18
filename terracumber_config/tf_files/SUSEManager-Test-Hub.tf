@@ -175,9 +175,6 @@ module "min-sles15sp3" {
   provider_settings = {
     mac = "aa:b2:93:01:01:45"
   }
-  server_configuration = {
-    hostname = "suma-testhub-min-sles15sp3.mgr.suse.de"
-  }
 }
 
 module "min-centos7" {
@@ -189,9 +186,6 @@ module "min-centos7" {
   use_os_released_updates = false
   provider_settings = {
     mac = "aa:b2:93:01:01:46"
-  }
-  server_configuration = {
-    hostname = "suma-testhub-min-centos7.mgr.suse.de"
   }
 }
 
@@ -219,10 +213,6 @@ module "controller" {
 
   provider_settings = {
     mac = "aa:b2:93:01:01:41"
-  }
-
-  server_configuration = {
-    hostname = "suma-testhub-ctl.mgr.suse.de"
   }
 }
 
