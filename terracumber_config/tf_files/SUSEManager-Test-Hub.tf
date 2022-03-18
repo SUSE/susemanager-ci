@@ -117,9 +117,6 @@ module "hub" {
   provider_settings = {
     mac = "aa:b2:93:01:01:42"
   }
-  server_configuration = {
-    hostname = "suma-testhub-hub.mgr.suse.de"
-  }
 }
 
 module "prh1" {
