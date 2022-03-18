@@ -44,6 +44,16 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
   default = "../mail_templates/mail-template-jenkins-env-fail.txt"
 }
 
+variable "MAIL_FROM" {
+  type = string
+  default = "galaxy-ci@suse.de"
+}
+
+variable "MAIL_TO" {
+  type = string
+  default = "galaxy-ci@suse.de"
+}
+
 // sumaform specific variables
 variable "SCC_USER" {
   type = "string"
@@ -61,6 +71,16 @@ variable "GIT_USER" {
 variable "GIT_PASSWORD" {
   type = "string"
   default = null // Not needed for master, as it is public
+}
+
+terraform {
+  required_version = "1.0.10"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.3"
+    }
+  }
 }
 
 provider "libvirt" {
