@@ -192,7 +192,7 @@ module "controller" {
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_RANCH
+  branch       = var.CUCUMBER_BRANCH
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
