@@ -208,5 +208,12 @@ module "controller" {
 }
 
 output "configuration" {
-  value = module.controller.configuration
+  value = {
+    hub  = module.hub.configuration
+    prh1 = module.prh1.configuration
+    prh2 = module.prh2.configuration
+    min-sles15sp3 = module.min-sles15sp3.configuration
+    min-centos7 = module.min-centos7.configuration
+    controller = module.controller.configuration
+  }
 }
