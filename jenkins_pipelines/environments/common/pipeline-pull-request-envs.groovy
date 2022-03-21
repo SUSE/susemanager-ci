@@ -10,6 +10,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
         pull_request_number = "master";
         first_env = 1;
         last_env = 8;
+        sumaform_gitrepo = "https://github.com/jordimassaguerpla/sumaform.git";
+        sumaform_ref = "master";
     } else { //not jordi, not reference
         first_env = 1;
         last_env = 8;
