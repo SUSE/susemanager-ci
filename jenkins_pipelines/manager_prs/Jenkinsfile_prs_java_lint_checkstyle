@@ -60,7 +60,7 @@ pipeline {
                         currentBuild.displayName = "PR: ${params.PR_NUMBER}"
                     }
                 }
-                sh "${javacheckstyle_test_cmd}"
+                sh "export PRODUCT=SUSE-Manager && ${javacheckstyle_test_cmd}"
             }
         }
     }

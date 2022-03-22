@@ -169,7 +169,7 @@ module "suse-sshminion" {
   name               = "minssh-sles15"
   image              = "sles15sp2o"
   provider_settings = {
-    mac = "aa:b2:93:01:00:55"
+    mac = "aa:b2:93:01:00:58"
   }
 
   use_os_released_updates = false
@@ -186,7 +186,7 @@ module "suse-minion" {
   name               = "min-sles15"
   image              = "sles15sp2o"
   provider_settings = {
-    mac = "aa:b2:93:01:00:5d"
+    mac = "aa:b2:93:01:00:56"
   }
   server_configuration = {
     hostname = "suma-testhexagon-min-build.mgr.suse.de"

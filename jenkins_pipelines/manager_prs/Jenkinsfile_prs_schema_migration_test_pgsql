@@ -70,7 +70,7 @@ pipeline {
                         currentBuild.displayName = "PR: ${params.PR_NUMBER}"
                     }     
                 }
-                sh "${runtest_pg_cmd}"
+                sh "export PRODUCT=SUSE-Manager && ${runtest_pg_cmd}"
             }
         }
 

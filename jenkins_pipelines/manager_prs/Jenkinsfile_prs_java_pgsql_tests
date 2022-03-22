@@ -66,7 +66,7 @@ pipeline {
                         currentBuild.displayName = "PR: ${params.PR_NUMBER}"
                     }
                 }
-                sh "set +e; ${commands}; TESTS_RESULT=\$?; set -e;"
+                sh "set +e; export PRODUCT=SUSE-Manager; ${commands}; TESTS_RESULT=\$?; set -e;"
                 echo 'Collecting JUnit Test reports'
                 junit allowEmptyResults: true, testResults: "**/java/test-results/*.xml"
                 sh "exit \$TESTS_RESULT"

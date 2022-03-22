@@ -83,6 +83,16 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+terraform {
+  required_version = "1.0.10"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.3"
+    }
+  }
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://salzbreze.mgr.suse.de/system"
 }
@@ -208,5 +218,12 @@ module "controller" {
 }
 
 output "configuration" {
-  value = module.controller.configuration
+  value = {
+    hub  = module.hub.configuration
+    prh1 = module.prh1.configuration
+    prh2 = module.prh2.configuration
+    min-sles15sp3 = module.min-sles15sp3.configuration
+    min-centos7 = module.min-centos7.configuration
+    controller = module.controller.configuration
+  }
 }
