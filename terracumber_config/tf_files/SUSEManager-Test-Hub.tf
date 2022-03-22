@@ -51,7 +51,7 @@ variable "MAIL_FROM" {
 
 variable "MAIL_TO" {
   type = string
-  default = "info@info.de"
+  default = "galaxy-ci@suse.de"
 }
 
 // sumaform specific variables
