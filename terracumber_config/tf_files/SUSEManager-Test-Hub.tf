@@ -1,65 +1,85 @@
+terraform {
+ required_version = "1.0.10"
+ required_providers {
+   libvirt = {
+     source = "dmacvicar/libvirt"
+     version = "0.6.3"
+   }
+ }
+}
+
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
-  type = "string"
+  type = string
   default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Hub-acceptance-tests"
 }
 
 variable "CUCUMBER_COMMAND" {
-  type = "string"
+  type = string
   default = "export PRODUCT='Uyuni' && run-testsuite #TODO run only sanity, core and hub tests, including reporting"
 }
 
 variable "CUCUMBER_GITREPO" {
-  type = "string"
+  type = string
   default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
-  type = "string"
+  type = string
   default = "hub-reporting-beta3"
 }
 
 variable "CUCUMBER_RESULTS" {
-  type = "string"
+  type = string
   default = "/root/spacewalk/testsuite"
 }
 
 variable "MAIL_SUBJECT" {
-  type = "string"
+  type = string
   default = "Results TEST-HUB $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
-  type = "string"
+  type = string
   default = "../mail_templates/mail-template-jenkins.txt"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
-  type = "string"
+  type = string
   default = "Results TEST-HUB : Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
-  type = "string"
+  type = string
   default = "../mail_templates/mail-template-jenkins-env-fail.txt"
+}
+
+variable "MAIL_FROM" {
+  type = string
+  default = "galaxy-ci@suse.de"
+}
+
+variable "MAIL_TO" {
+  type = string
+  default = "info@info.de"
 }
 
 // sumaform specific variables
 variable "SCC_USER" {
-  type = "string"
+  type = string
 }
 
 variable "SCC_PASSWORD" {
-  type = "string"
+  type = string
 }
 
 variable "GIT_USER" {
-  type = "string"
+  type = string
   default = null // Not needed for master, as it is public
 }
 
 variable "GIT_PASSWORD" {
-  type = "string"
+  type = string
   default = null // Not needed for master, as it is public
 }
 
@@ -97,9 +117,6 @@ module "hub" {
   provider_settings = {
     mac = "aa:b2:93:01:01:42"
   }
-  server_configuration = {
-    hostname = "suma-testhub-hub.mgr.suse.de"
-  }
 }
 
 module "prh1" {
@@ -118,9 +135,6 @@ module "prh1" {
   provider_settings = {
     mac = "aa:b2:93:01:01:43"
   }
-  server_configuration = {
-    hostname = "suma-testhub-prh1.mgr.suse.de"
-  }
 }
 
 module "prh2" {
@@ -131,16 +145,13 @@ module "prh2" {
   additional_repos = {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
-  auto_accept                    = false
+  auto_accept                    = true
   use_os_released_updates        = false
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:01:44"
-  }
-  server_configuration = {
-    hostname = "suma-testhub-prh2.mgr.suse.de"
   }
 }
 
@@ -155,9 +166,6 @@ module "min-sles15sp3" {
   provider_settings = {
     mac = "aa:b2:93:01:01:45"
   }
-  server_configuration = {
-    hostname = "suma-testhub-min-sles15sp3.mgr.suse.de"
-  }
 }
 
 module "min-centos7" {
@@ -165,13 +173,10 @@ module "min-centos7" {
   base_configuration = module.base_core.configuration
   name = "min-centos7"
   image = "centos7o"
-  server_configuration = module.prh1.configuration
+  server_configuration = module.prh2.configuration
   use_os_released_updates = false
   provider_settings = {
     mac = "aa:b2:93:01:01:46"
-  }
-  server_configuration = {
-    hostname = "suma-testhub-min-centos7.mgr.suse.de"
   }
 }
 
@@ -187,7 +192,7 @@ module "controller" {
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_RANCH
+  branch       = var.CUCUMBER_BRANCH
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
@@ -199,10 +204,6 @@ module "controller" {
 
   provider_settings = {
     mac = "aa:b2:93:01:01:41"
-  }
-
-  server_configuration = {
-    hostname = "suma-testhub-ctl.mgr.suse.de"
   }
 }
 
