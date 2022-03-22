@@ -21,7 +21,7 @@ node('pull-request-test') {
     stage('Checkout pipeline') {
         checkout scm
     }
-    timeout(activity: false, time: 20, unit: 'HOURS') {
+    timeout(activity: true, time: 20, unit: 'HOURS') {
         // set default values
         first_env = 1;
         last_env = 10;
