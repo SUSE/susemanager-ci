@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://mortadelo.mgr.suse.de/system"
+  uri = "qemu+tcp://cokerunner.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
