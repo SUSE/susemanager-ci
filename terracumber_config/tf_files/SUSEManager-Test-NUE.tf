@@ -136,7 +136,7 @@ module "cucumber_testsuite" {
 //        sapformular = "http://download.suse.de/ibs/SUSE:/Maintenance:/17953/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
 //        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP4/"
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP3:/Update/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp3/standard/"
       }
     }
     proxy = {
@@ -149,7 +149,7 @@ module "cucumber_testsuite" {
 //        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
 //        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp4/standard/"
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP3:/Update/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp3/standard/"
       }
     }
     suse-client = {
@@ -159,8 +159,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:44"
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP2:/Update/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
     }
     suse-minion = {
@@ -170,8 +169,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:46"
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP2:/Update/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
     }
     suse-sshminion = {
@@ -181,8 +179,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:48"
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP2:/Update/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
     }
     redhat-minion = {
@@ -205,8 +202,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:4b"
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-ubuntu18.04/standard/"
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/Ubuntu-20.04:/Update:/Products:/ManagerTools:/Update/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-ubuntu20.04/standard/"
       }
     }
     build-host = {
@@ -217,9 +213,7 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP3:/Update/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
     }
     pxeboot-minion = {
@@ -231,9 +225,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:4e"
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP3/"
-        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/SUSE:/SLE-15-SP3:/Update/standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
       }
     }
 //    xen-host = {
