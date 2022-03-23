@@ -193,6 +193,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/RES7-SUSE-Manager-Tools:/SaltBundle/SUSE_RES-7_Update_standard/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/res7/standard/"
       }
     }
     debian-minion = {
