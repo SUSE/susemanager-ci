@@ -308,6 +308,7 @@ def run(params) {
             stage('Remove build project') {
                 if(environment_workspace){
                   ws(environment_workspace){
+                      sh "rm -rf ${environment_workspace}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
                       sh "rm -rf ${builder_project}:${pull_request_number}" 
                   }
                 }
