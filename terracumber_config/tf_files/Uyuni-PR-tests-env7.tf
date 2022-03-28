@@ -105,6 +105,10 @@ variable "UPDATE_REPO" {
   type = string
 }
 
+variable "ADDITIONAL_REPO_URL" {
+  type = string
+}
+
 variable "TEST_PACKAGES_REPO" {
   type = string
 }
@@ -192,7 +196,7 @@ module "cucumber_testsuite" {
         non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
         os_update = var.UPDATE_REPO,
-
+        os_additional_repo = var.ADDITIONAL_REPO_URL,
       }
       image = "opensuse153-ci-pr"
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
@@ -211,6 +215,7 @@ module "cucumber_testsuite" {
         non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
         os_update = var.UPDATE_REPO,
+        os_additional_repo = var.ADDITIONAL_REPO_URL,
       }
       image = "opensuse153-ci-pr"
       additional_packages = [ "venv-salt-minion" ]
@@ -315,6 +320,7 @@ module "cucumber_testsuite" {
         non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
         os_update = var.UPDATE_REPO,
+        os_additional_repo = var.ADDITIONAL_REPO_URL,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -338,6 +344,7 @@ module "cucumber_testsuite" {
         non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
         os_update = var.UPDATE_REPO,
+        os_additional_repo = var.ADDITIONAL_REPO_URL,
         
       }
       additional_packages = [ "venv-salt-minion" ]
