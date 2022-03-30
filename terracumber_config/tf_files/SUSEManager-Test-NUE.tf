@@ -246,8 +246,8 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp3/standard/"
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP3/"
       }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
 //    xen-host = {
 //      image = "sles15sp3o"
