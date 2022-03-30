@@ -112,9 +112,7 @@ module "server" {
   postgres_log_min_duration = 0
   channels                = ["sle-product-sles15-sp3-pool-x86_64", "sle-product-sles15-sp3-updates-x86_64", "sle-module-basesystem15-sp3-pool-x86_64", "sle-module-basesystem15-sp3-updates-x86_64", "sle-module-containers15-sp3-pool-x86_64", "sle-module-containers15-sp3-updates-x86_64", "sle-module-server-applications15-sp3-pool-x86_64", "sle-module-server-applications15-sp3-updates-x86_64"]
 
-  additional_repos        = {
-    uyuni_client_tools = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Stable:/openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/"
-  }
+  additional_repos        = { }
   provider_settings = {
     mac = "aa:b2:93:01:00:e1"
     memory = 8192
