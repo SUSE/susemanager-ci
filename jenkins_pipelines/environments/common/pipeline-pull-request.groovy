@@ -61,7 +61,7 @@ def run(params) {
             }
             stage('Checkout project') {
                 ws(environment_workspace){
-                    if(params.must_build) {
+                    if(must_build) {
                         // Make sure files are owned by jenkins user.
                         // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
                         sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product || true"
@@ -106,7 +106,7 @@ def run(params) {
                     }
                     currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
                     dir("product") {
-                        if(params.must_build) {
+                        if(must_build) {
                             sh "[ -L /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos"
                            if(!params.skip_package_build_check) {
 
@@ -190,7 +190,7 @@ def run(params) {
             }
             stage('Checkout CI tools') {
                 ws(environment_workspace){
-                    if(params.must_test) {
+                    if(must_test) {
                         git url: terracumber_gitrepo, branch: terracumber_ref
                         dir("susemanager-ci") {
                             checkout scm
@@ -215,7 +215,7 @@ def run(params) {
             }
             stage('Deploy') {
                 ws(environment_workspace){
-                    if(params.must_test) {
+                    if(must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
                         env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
@@ -249,14 +249,14 @@ def run(params) {
             }
             stage('Sanity Check') {
                 ws(environment_workspace){
-                    if(params.must_test) {
+                    if(must_test) {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
                     }
                 }
             }
             stage('Core - Setup') {
                 ws(environment_workspace){
-                    if(params.must_test) {
+                    if(must_test) {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
                     }
@@ -264,7 +264,7 @@ def run(params) {
             }
             stage('Core - Initialize clients') {
                 ws(environment_workspace){
-                    if(params.must_test) {
+                    if(must_test) {
                         namespace = rake_namespace
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
                     }
@@ -272,7 +272,7 @@ def run(params) {
             }
             stage('Secondary features') {
                 ws(environment_workspace){
-                    if(params.must_test && ( params.functional_scopes || params.run_all_scopes) ) {
+                    if(must_test && ( params.functional_scopes || params.run_all_scopes) ) {
                         def exports = ""
                         if (params.functional_scopes){
                           exports += "export TAGS=${params.functional_scopes}; "
@@ -310,7 +310,7 @@ def run(params) {
                 if(environment_workspace){
                     ws(environment_workspace){
                         def error = 0
-                        if(params.must_test) {
+                        if(must_test) {
                             if (deployed) {
                                 try {
                                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing_pr'"
