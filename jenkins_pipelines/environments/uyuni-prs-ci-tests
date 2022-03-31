@@ -23,6 +23,8 @@ node('pull-request-test') {
     }
     timeout(activity: false, time: 20, unit: 'HOURS') {
         // set default values
+        must_build = true;
+        must_test = true;
         first_env = 1;
         last_env = 10;
         email_to = params.email_to;

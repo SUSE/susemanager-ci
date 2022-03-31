@@ -1,5 +1,3 @@
-must_build = true;
-must_test = true;
 if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     first_env = 9;
     last_env = 10;
