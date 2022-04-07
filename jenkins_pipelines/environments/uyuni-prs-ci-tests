@@ -29,6 +29,7 @@ node('pull-request-test') {
         last_env = 10;
         email_to = params.email_to;
         pull_request_number = params.pull_request_number;
+        additional_repo_url = params.additional_repo_url;
         sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
         sumaform_ref = "master";
         // load values to override default ones
