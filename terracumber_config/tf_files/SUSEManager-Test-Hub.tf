@@ -116,6 +116,8 @@ module "hub" {
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:01:42"
+    memory = 10240
+    vcpu = 8
   }
 }
 
