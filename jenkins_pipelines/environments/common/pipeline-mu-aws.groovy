@@ -41,26 +41,23 @@ def run(params) {
             sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
         }
 
-        stage('Download last ami image') {
-            when {
-                not {
-                    equals(actual: params.use_last_ami_image, expected: true)
-                }
-            }
-            steps {
-                server_image_name= sh(script: "curl https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/ | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Server-BYOS.*raw.xz\$'",
+        if (params.use_latest_ami_image) {
+            stage('Download last ami image') {
+                server_image_name = sh(script: "curl https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/ | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Server-BYOS.*raw.xz\$'",
                         returnStdout: true)
-                proxy_image_name= sh(script: "curl https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/ | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Proxy-BYOS.*raw.xz\$'",
+                proxy_image_name = sh(script: "curl https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/ | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Proxy-BYOS.*raw.xz\$'",
                         returnStdout: true)
                 sh(script: "wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${server_image_name}")
                 sh(script: "wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${proxy_image_name}")
                 sh(script: "source ~/.aws ;ec2uploadimg --access-id \$TF_VAR_ACCESS_KEY -s \$TF_VAR_SECRET_KEY --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' --ssh-key-pair 'testing-suma' --private-key-file ../.ssh/testing-suma.pem -d 'ami_suma_server' --wait-count 3 -n ${server_image_name} --type 't2.micro' --user 'ec2-user' -e 'ami-0963d9290bdfe51bb' ${server_image_name}")
                 sh(script: "source ~/.aws ;ec2uploadimg --access-id \$TF_VAR_ACCESS_KEY -s \$TF_VAR_SECRET_KEY --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' --ssh-key-pair 'testing-suma' --private-key-file ../.ssh/testing-suma.pem -d 'ami_suma_server' --wait-count 3 -n ${proxy_image_name} --type 't2.micro' --user 'ec2-user' -e 'ami-0963d9290bdfe51bb' ${proxy_image_name}")
-                env.server_ami= sh(script:"aws ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
+                env.server_ami = sh(script: "aws ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
                         returnStdout: true)
-                env.proxy_ami= sh(script: "aws ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
-                        returnStdout: true)}
+                env.proxy_ami = sh(script: "aws ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
+                        returnStdout: true)
+            }
         }
+
 
         parallel(
                 "create_local_mirror_with_mu": {
