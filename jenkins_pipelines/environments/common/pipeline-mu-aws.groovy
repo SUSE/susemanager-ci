@@ -10,6 +10,10 @@ def run(params) {
         local_mirror_dir = "${resultdir}/sumaform-local"
         aws_mirror_dir = "${resultdir}/sumaform-aws"
 
+        server_ami = null
+        proxy_ami = null
+
+
         //Deployment variables
         deployed_local = false
         deployed_aws = false
@@ -35,6 +39,27 @@ def run(params) {
             // Clone sumaform for aws and local repositories
             sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${local_mirror_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend libvirt"
             sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
+        }
+
+        stage('Download last ami image') {
+            when {
+                not {
+                    equals(actual: params.use_last_ami_image, expected: true)
+                }
+            }
+            steps {
+                server_image_name= sh(script: "curl https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/ | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Server-BYOS.*raw.xz\$'",
+                        returnStdout: true)
+                proxy_image_name= sh(script: "curl https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/ | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Proxy-BYOS.*raw.xz\$'",
+                        returnStdout: true)
+                sh(script: "wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${server_image_name}")
+                sh(script: "wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${proxy_image_name}")
+                sh(script: "source ~/.aws ;ec2uploadimg --access-id \$TF_VAR_ACCESS_KEY -s \$TF_VAR_SECRET_KEY --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' --ssh-key-pair 'testing-suma' --private-key-file ../.ssh/testing-suma.pem -d 'ami_suma_server' --wait-count 3 -n ${server_image_name} --type 't2.micro' --user 'ec2-user' -e 'ami-0963d9290bdfe51bb' ${server_image_name}")
+                sh(script: "source ~/.aws ;ec2uploadimg --access-id \$TF_VAR_ACCESS_KEY -s \$TF_VAR_SECRET_KEY --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' --ssh-key-pair 'testing-suma' --private-key-file ../.ssh/testing-suma.pem -d 'ami_suma_server' --wait-count 3 -n ${proxy_image_name} --type 't2.micro' --user 'ec2-user' -e 'ami-0963d9290bdfe51bb' ${proxy_image_name}")
+                env.server_ami= sh(script:"aws ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
+                        returnStdout: true)
+                env.proxy_ami= sh(script: "aws ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
+                        returnStdout: true)}
         }
 
         parallel(
@@ -115,7 +140,7 @@ def run(params) {
             sh "sed -r 's/ibs\\///g' ${WORKSPACE}/custom_repositories.json"
 
             // Deploying AWS server using MU repositories
-            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*'  --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws --bastion_ssh_key /home/jenkins/.ssh/testing-suma.pem"
+            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_SERVER_AMI=${env.server_ami}; export TF_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*'  --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws --bastion_ssh_key /home/jenkins/.ssh/testing-suma.pem"
         }
     }
 }
