@@ -153,6 +153,8 @@ module "base" {
   cc_username              = var.SCC_USER
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
+  mirror                   = var.MIRROR
+  testsuite                = true
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -175,7 +177,10 @@ module "mirror" {
 
 module "server" {
   source                     = "./modules/server"
-  base_configuration         = module.base.configuration
+  base_configuration = merge(module.base.configuration,
+  {
+    mirror = null
+  })
   name                       = "server"
   product_version            = "build_image"
   repository_disk_size       = 1500
