@@ -116,6 +116,11 @@ variable "PROXY_REGISTRATION_CODE" {
   default = null
 }
 
+variable "SLES_REGISTRATION_CODE" {
+  type = string
+  default = null
+}
+
 variable "ALLOWED_IPS" {
   type = list(string)
   default = []
