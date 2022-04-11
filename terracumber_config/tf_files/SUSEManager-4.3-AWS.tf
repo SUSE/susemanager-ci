@@ -80,6 +80,10 @@ variable "REGION" {
   default = null
 }
 
+variable "MIRROR"{
+  type = string
+}
+
 variable "AVAILABILITY_ZONE" {
   type = string
   default = null
