@@ -10,8 +10,6 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
         pull_request_number = "master";
         first_env = 9;
         last_env = 10;
-        sumaform_gitrepo = "https://github.com/jordimassaguerpla/sumaform.git";
-        sumaform_ref = "master";
         additional_repo_url = "http://minima-mirror.mgr.prv.suse.net/jordi/reference_job_additional_repo";
     } else { //not jordi, not reference
         first_env = 1;
