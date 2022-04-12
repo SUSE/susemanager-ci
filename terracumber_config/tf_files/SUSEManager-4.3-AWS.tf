@@ -189,7 +189,6 @@ module "server" {
   product_version            = "build_image"
   repository_disk_size       = 1500
   image                      = var.SERVER_AMI
-//  ami_image                  = var.SERVER_AMI
 
   auto_accept                    = false
   monitored                      = true
@@ -217,7 +216,7 @@ module "proxy" {
   product_version           = "build_image"
   name                      = "proxy"
   image                     = var.PROXY_AMI
-//  ami_image                 = var.PROXY_AMI
+
   auto_register             = false
   auto_connect_to_master    = false
   download_private_ssl_key  = false
@@ -334,7 +333,6 @@ module "controller" {
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
-  product_version    = "head"
 
   server_configuration    = module.server.configuration
   proxy_configuration     = module.proxy.configuration
