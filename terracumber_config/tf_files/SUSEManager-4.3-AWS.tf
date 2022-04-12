@@ -137,12 +137,12 @@ variable "NAME_PREFIX" {
 
 variable "PROXY_AMI" {
   type = string
-  default = null
+  default = "sles15sp4o"
 }
 
 variable "SERVER_AMI" {
   type = string
-  default = null
+  default = "sles15sp4o"
 }
 
 provider "aws" {
