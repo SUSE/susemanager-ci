@@ -55,15 +55,17 @@ def run(params) {
                 String[] SNAPSHOT_LIST = image_snapshots.split("\n")
 
                 // Deregister all BYOS images
-//                AMI_LIST.each { ami ->
-//                    if( ami != null ) {
-//                        sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
-//                    }
-//                }
-                // Delete all BYOS snapshot
-                SNAPSHOT_LIST.each { snapshot ->
-                    if( snapshot != null ) {
-                        sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
+                if ( AMI_LIST.length > 0 && SNAPSHOT_LIST.length > 0 ) {
+                    AMI_LIST.each { ami ->
+                        if (ami != null) {
+                            sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
+                        }
+                    }
+                    // Delete all BYOS snapshot
+                    SNAPSHOT_LIST.each { snapshot ->
+                        if (snapshot != null) {
+                            sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
+                        }
                     }
                 }
             }
