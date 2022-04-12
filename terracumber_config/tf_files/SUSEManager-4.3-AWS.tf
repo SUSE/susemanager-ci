@@ -237,7 +237,7 @@ module "suse-client" {
   base_configuration = module.base.configuration
   name                 = "cli-sles15"
   image                = "sles15sp2o"
-  product_version    = "4.3-beta"
+  product_version    = "4.3-released"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
@@ -249,7 +249,7 @@ module "suse-client" {
 module "suse-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "4.3-beta"
+  product_version    = "4.3-released"
   name               = "min-sles15"
   image              = "sles15sp2o"
   server_configuration = module.server.configuration
@@ -265,7 +265,7 @@ module "suse-minion" {
 module "suse-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
-  product_version    = "4.3-beta"
+  product_version    = "4.3-released"
   name               = "minssh-sles15"
   image              = "sles15sp2o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
@@ -288,7 +288,7 @@ module "redhat-minion"  {
   }
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "4.3-beta"
+  product_version    = "4.3-released"
   server_configuration = module.server.configuration
   auto_connect_to_master = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -299,7 +299,7 @@ module "debian-minion" {
   image = "ubuntu2004"
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "4.3-beta"
+  product_version    = "4.3-released"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -311,7 +311,7 @@ module "build-host"  {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
-  product_version    = "4.3-beta"
+  product_version    = "4.3-released"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = true
@@ -334,7 +334,7 @@ module "controller" {
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
-
+  product_version    = "head"
 
   server_configuration    = module.server.configuration
   proxy_configuration     = module.proxy.configuration
