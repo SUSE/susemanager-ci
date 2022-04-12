@@ -43,6 +43,30 @@ def run(params) {
         }
 
         if (params.use_latest_ami_image) {
+            stage('Clean old images') {
+                // Get all the images description matching BYOS SUSE-Manager-*-BYOS
+                image_description = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region}",
+                        returnStdout: true)
+                // Get all image ami ids
+                image_amis = sh(script: "echo ${image_description} | jq -r '.Images[].ImageId'",
+                        returnStdout: true)
+                // Get all snapshot ids
+                image_snapshots = sh(script: "echo ${image_description} | jq -r '.Images[].BlockDeviceMappings[0].SnapshotId'",
+                        returnStdout: true)
+
+                String[] AMI_LIST = image_amis.split("\n")
+                String[] SNAPSHOT_LIST = image_snapshots.split("\n")
+
+                // Deregister all BYOS images
+                AMI_LIST.each { ami ->
+                    sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
+                }
+                // Delete all BYOS snapshot
+                SNAPSHOT_LIST.each { snapshot ->
+                    sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
+                }
+            }
+
             stage('Download last ami image') {
                 sh "rm -rf ${resultdir}/images"
                 sh "mkdir -p ${resultdir}/images"
@@ -52,8 +76,8 @@ def run(params) {
                         returnStdout: true).trim()
                 sh(script: "cd ${resultdir}/images; wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${server_image_name}")
                 sh(script: "cd ${resultdir}/images; wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${proxy_image_name}")
-//                sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_server' --wait-count 3 -n '${server_image_name}' '${resultdir}/images/${server_image_name}'")
-//                sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_proxy' --wait-count 3 -n '${proxy_image_name}' '${resultdir}/images/${proxy_image_name}'")
+                sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_server' --wait-count 3 -n '${server_image_name}' '${resultdir}/images/${server_image_name}'")
+                sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_proxy' --wait-count 3 -n '${proxy_image_name}' '${resultdir}/images/${proxy_image_name}'")
                 env.server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
                         returnStdout: true).trim()
                 env.proxy_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
