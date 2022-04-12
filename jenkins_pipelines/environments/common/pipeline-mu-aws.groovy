@@ -48,7 +48,7 @@ def run(params) {
                 image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
                         returnStdout: true)
                 // Get all snapshot ids
-                image_snapshots = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].BlockDeviceMappings[0].SnapshotId'",
+                image_snapshots = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].BlockDeviceMappings[0].Ebs.SnapshotId'",
                         returnStdout: true)
 
                 String[] AMI_LIST = image_amis.split("\n")
@@ -56,11 +56,15 @@ def run(params) {
 
                 // Deregister all BYOS images
                 AMI_LIST.each { ami ->
-                    sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
+                    if( ami != null ) {
+                        sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
+                    }
                 }
                 // Delete all BYOS snapshot
                 SNAPSHOT_LIST.each { snapshot ->
-                    sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
+                    if( snapshot != null ) {
+                        sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
+                    }
                 }
             }
 
