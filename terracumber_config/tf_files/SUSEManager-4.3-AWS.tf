@@ -191,7 +191,7 @@ module "server" {
   image                      = var.SERVER_AMI
 
   auto_accept                    = false
-  monitored                      = true
+  monitored                      = false
   disable_firewall               = false
   allow_postgres_connections     = false
   skip_changelog_import          = false
