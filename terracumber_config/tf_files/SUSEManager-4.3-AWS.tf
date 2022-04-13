@@ -159,7 +159,7 @@ module "base" {
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
-  testsuite                = false
+  testsuite                = true
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -190,9 +190,10 @@ module "server" {
   product_version            = "build_image"
   repository_disk_size       = 1500
   image                      = var.SERVER_AMI
+  server_registration_code = var.SERVER_REGISTRATION_CODE
 
   auto_accept                    = false
-  monitored                      = false
+  monitored                      = true
   disable_firewall               = false
   allow_postgres_connections     = false
   skip_changelog_import          = false
