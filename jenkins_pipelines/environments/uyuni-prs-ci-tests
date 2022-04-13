@@ -12,8 +12,7 @@ node('pull-request-test') {
             //booleanParam(name: 'must_test', defaultValue: true, description: 'Advanced: Uncheck this if you do not want to run any tests'),
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Advanced: Change this by your repo, only if you changed the tests in your PR'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Advanced: Change this by your branch, only if you changed the tests in your PR'),
-            string(name: 'additional_repo_url', defaultValue: 'http://minima-mirror.mgr.prv.suse.net/jordi/reference_job_additional_repo/', description: 'KEEP THIS URL to get latest fixes from salt'),
-            // string(name: 'additional_repo_url', defaultValue: '', description: 'Advanced: Add the URL of an additional repo to test new packages or package updates (only for server, proxy, kvm and xen hosts).'),
+            string(name: 'additional_repo_url', defaultValue: '', description: 'Advanced: Add the URL of an additional repo to test new packages or package updates (only for server, proxy, kvm and xen hosts).'),
             booleanParam(name: 'force_pr_lock_cleanup', defaultValue: false, description: 'Advanced: Check this parameter to force a cleanup of the locks associated with this PR. Be careful, only do this if you are certain no one else is running a test for the same PR. More at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting'),
             booleanParam(name: 'skip_package_build_check', defaultValue: false, description: 'Advanced: Check this parameter to skip checking if packages build correctly in systemsmanagement:Uyuni:Master. Do this when you are fixing a package build with your PR.'), 
         ])
