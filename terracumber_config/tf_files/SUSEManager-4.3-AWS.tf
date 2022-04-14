@@ -226,7 +226,7 @@ module "proxy" {
   auto_configure            = false
   generate_bootstrap_script = false
   publish_private_ssl_key   = false
-  use_os_released_updates   = true
+  use_os_released_updates   = false
 
   //proxy_additional_repos
 
