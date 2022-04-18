@@ -205,6 +205,7 @@ module "server" {
   publish_private_ssl_key        = false
   use_os_released_updates        = false
   disable_download_tokens        = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //server_additional_repos
 
@@ -227,7 +228,7 @@ module "proxy" {
   generate_bootstrap_script = false
   publish_private_ssl_key   = false
   use_os_released_updates   = false
-
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
   //proxy_additional_repos
 
 }
