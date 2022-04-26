@@ -33,7 +33,7 @@ def run(params) {
                   }
                   running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
                   if(running_same_pr == "yes") {
-                      error('Aborting the build. Already running a test for Pull Request ${pull_request_number}')
+                      error("Aborting the build. Already running a test for Pull Request ${pull_request_number}")
                   }
                   if(pull_request_number == '') {
                       error('Aborting the build. Pull Request number can\'t be empty')
