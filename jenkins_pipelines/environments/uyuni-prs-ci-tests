@@ -19,7 +19,7 @@ node('pull-request-test') {
     ])
 
     stage('Record activity') {
-        sh "echo $(DATE),${params.pull_request_number},${params.email_to},${params.run_all_scopes},${params.functional_scopes},${params.cucumber_gitrepo},${params.cucumber_ref},${params.additional_repo_url},${params.force_pr_lock_cleanup},${params.skip_package_build_check} >> /srv/www/htdocs/uyuni-prs-ci-tests-activity.csv"
+        echo "$(DATE),${params.pull_request_number},${params.email_to},${params.run_all_scopes},${params.functional_scopes},${params.cucumber_gitrepo},${params.cucumber_ref},${params.additional_repo_url},${params.force_pr_lock_cleanup},${params.skip_package_build_check}" >> /srv/www/htdocs/uyuni-prs-ci-tests-activity.csv
     }
 
     stage('Checkout pipeline') {
