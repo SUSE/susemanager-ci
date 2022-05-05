@@ -197,7 +197,7 @@ module "base_new_sle" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o" ]
+  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -521,6 +521,30 @@ module "sles15sp3-client" {
 
 }
 
+module "sles15sp4-client" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.2-released"
+  name               = "cli-sles15sp4"
+  image              = "sles15sp4o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:9f"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp4-client_additional_repos
+
+}
+
 module "centos7-client" {
   providers = {
     libvirt = libvirt.tatooine
@@ -714,6 +738,31 @@ module "sles15sp3-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //sle15sp3-minion_additional_repos
+
+}
+
+module "sles15sp4-minion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.2-released"
+  name               = "min-sles15sp4"
+  image              = "sles15sp4o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:af"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp4-minion_additional_repos
 
 }
 
@@ -1007,6 +1056,23 @@ module "sles15sp3-sshminion" {
   image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:b6"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles15sp4-sshminion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.2-released"
+  name               = "minssh-sles15sp4"
+  image              = "sles15sp4o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:bf"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1341,6 +1407,10 @@ module "controller" {
   sle15sp3_client_configuration    = module.sles15sp3-client.configuration
   sle15sp3_minion_configuration    = module.sles15sp3-minion.configuration
   sle15sp3_sshminion_configuration = module.sles15sp3-sshminion.configuration
+
+  sle15sp4_client_configuration    = module.sles15sp4-client.configuration
+  sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
+  sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
 
   ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
   ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
