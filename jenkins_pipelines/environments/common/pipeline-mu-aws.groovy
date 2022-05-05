@@ -10,6 +10,7 @@ def run(params) {
         local_mirror_dir = "${resultdir}/sumaform-local"
         aws_mirror_dir = "${resultdir}/sumaform-aws"
         awscli = '/usr/local/bin/aws'
+        suma43_build_url = "https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/"
 
         server_ami = null
         proxy_ami = null
@@ -55,30 +56,29 @@ def run(params) {
                         image_snapshots = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].BlockDeviceMappings[0].Ebs.SnapshotId'",
                                 returnStdout: true)
 
-                        String[] AMI_LIST = image_amis.split("\n")
-                        String[] SNAPSHOT_LIST = image_snapshots.split("\n")
+                        String[] ami_list = image_amis.split("\n")
+                        String[] snapshot_list = image_snapshots.split("\n")
 
                         // Deregister all BYOS images
-                        AMI_LIST.each { ami ->
+                        ami_list.each { ami ->
                             if (ami) {
                                 sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
                             }
                         }
                         // Delete all BYOS snapshot
-                        SNAPSHOT_LIST.each { snapshot ->
+                        snapshot_list.each { snapshot ->
                             if (snapshot) {
                                 sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
                             }
                         }
                     }
 
-
                     stage('Download last ami image') {
                         sh "rm -rf ${resultdir}/images"
                         sh "mkdir -p ${resultdir}/images"
-                        server_image_name = sh(script: "curl https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/ | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Server-BYOS.*raw.xz\$'",
+                        server_image_name = sh(script: "curl ${suma43_build_url} | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Server-BYOS.*raw.xz\$'",
                                 returnStdout: true).trim()
-                        proxy_image_name = sh(script: "curl https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/ | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Proxy-BYOS.*raw.xz\$'",
+                        proxy_image_name = sh(script: "curl ${suma43_build_url} | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Proxy-BYOS.*raw.xz\$'",
                                 returnStdout: true).trim()
                         sh(script: "cd ${resultdir}/images; wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${server_image_name}")
                         sh(script: "cd ${resultdir}/images; wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${proxy_image_name}")
@@ -126,10 +126,8 @@ def run(params) {
                     ALLOWED_IPS.each { ip ->
                         env.aws_configuration = aws_configuration + "    \"${ip}\",\n"
                     }
-
                     env.aws_configuration = aws_configuration + "]\n"
                     writeFile file: "${aws_mirror_dir}/terraform.tfvars", text: aws_configuration, encoding: "UTF-8"
-
                     // Deploy empty AWS mirror
                     sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws/.aws set -x;source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_mirror_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
                     deployed_aws = true
@@ -137,7 +135,6 @@ def run(params) {
                 }
             }
         )
-
 
         stage("Upload local mirror data to AWS mirror") {
 
