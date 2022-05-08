@@ -254,7 +254,7 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {

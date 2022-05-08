@@ -160,7 +160,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:81"
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
   }
