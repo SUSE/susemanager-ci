@@ -15,7 +15,6 @@ def run(params) {
         rake_namespace = 'cucumber'
         rake_parallel_namespace = 'parallel'
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
-        pull_request_repo = 'https://github.com/uyuni-project/uyuni.git'
         builder_api = 'https://api.opensuse.org'
         builder_project = 'systemsmanagement:Uyuni:Master:PR'
         source_project = 'systemsmanagement:Uyuni:Master'
