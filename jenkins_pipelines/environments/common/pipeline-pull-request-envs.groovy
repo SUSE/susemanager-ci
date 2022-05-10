@@ -4,7 +4,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
     sumaform_gitrepo = "https://github.com/jordimassaguerpla/sumaform.git";
     sumaform_ref = "master";
-} else if (env.JOB_NAME == "head-prs-ci-tests-qe-servicepack-migration") {
+} else if (env.JOB_NAME == "head-prs-ci-tests-qe-servicepack-migration")
     // special pipeline for QE to test new service packs and service pack migrations
     first_env = 7;
     last_env = 8;
