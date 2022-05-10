@@ -11,6 +11,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
     sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
     sumaform_ref = "qe-service-pack-migration";
+    pull_request_repo = 'https://github.com/SUSE/spacewalk.git'
 } else {
     if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
         email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";

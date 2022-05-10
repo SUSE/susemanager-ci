@@ -36,6 +36,7 @@ node('pull-request-test') {
         additional_repo_url = params.additional_repo_url;
         sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
         sumaform_ref = "master";
+        pull_request_repo = 'https://github.com/uyuni-project/uyuni.git'
         // load values to override default ones
         pr_env_filename = "jenkins_pipelines/environments/common/pipeline-pull-request-envs.groovy"
         if (fileExists(pr_env_filename)) {
