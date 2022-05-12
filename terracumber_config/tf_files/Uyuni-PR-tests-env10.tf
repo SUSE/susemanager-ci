@@ -222,23 +222,14 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-client = {
+      image = "sles15sp2o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:97"
       }
-      additional_repos_only = true
       additional_repos = {
-        pull_request_repo = var.PULL_REQUEST_REPO,
-        master_repo = var.MASTER_REPO,
-        master_repo_other = var.MASTER_OTHER_REPO,
-        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
-        test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
-        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
-        os_update = var.UPDATE_REPO,
-        os_additional_repo = var.ADDITIONAL_REPO_URL,
+        client_repo = var.SLE_CLIENT_REPO,
       }
-      image = "opensuse153-ci-pr"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
