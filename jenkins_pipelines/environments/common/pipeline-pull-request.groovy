@@ -23,6 +23,7 @@ def run(params) {
         test_packages_project = 'systemsmanagement:Uyuni:Test-Packages:Pool'
         build_repo = 'openSUSE_Leap_15.3'
         environment_workspace = null
+        url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
         try {
             stage('Get environment') {
                   echo "DEBUG: first environment: ${first_env}"
@@ -339,7 +340,7 @@ def run(params) {
                                 archiveArtifacts artifacts: "results/${BUILD_NUMBER}/**/*"
                             }
                             if (email_to != '') {
-                                sh " export TF_VAR_MAIL_TO=${email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                                sh " export TF_VAR_MAIL_TO=${email_to};export TF_VAR_URL_PREFIX=${url_prefix}" ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
                             // Clean up old results
                             sh "./clean-old-results -r ${resultdir}"
