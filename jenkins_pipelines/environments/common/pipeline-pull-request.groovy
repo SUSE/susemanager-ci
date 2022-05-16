@@ -34,12 +34,7 @@ def run(params) {
                   }
                   if(params.remove_previous_environment) {
                     if(email_to!='' && pull_request_number!='') {
-                      echo "DEBUG: removing previous environment for user: ${email_to} and PR ${pull_request_number}"
-                      echo "DEBUG: remove job"
-                      sh "grep -H PR:${pull_request_number} /tmp/env-suma-pr-*.lock.info | cut -d: -f1 | xargs grep -H user:${email_to} | cut -d: -f1 | xargs grep -H keep: | cut -d: -f1 | rev | cut -d. -f1 --complement | rev | xargs -I ARG grep -H ARG /var/spool/atjobs/* | cut -d: -f1 |xargs rm -fv"
-                      echo "DEBUG: remove files"
-                      sh "grep -H PR:${pull_request_number} /tmp/env-suma-pr-*.lock.info | cut -d: -f1 | xargs grep -H user:${email_to} | cut -d: -f1 | xargs grep -H keep: | cut -d: -f1 | rev | cut -d. -f1 --complement | rev | xargs rm -rf"
-                      sh "grep -H PR:${pull_request_number} /tmp/env-suma-pr-*.lock.info | cut -d: -f1 | xargs grep -H user:${email_to} | cut -d: -f1 | xargs grep -H keep: | cut -d: -f1 | rev | cut -d. -f1 --complement | rev | xargs -I ARG rm -rf ARG.info"
+                        sh "bash susemanager-utils/testing/automation/cleanup-lock.sh -u ${email_to} -p ${pull_request_number}"
                     }
                   }
                   running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
