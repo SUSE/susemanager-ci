@@ -34,6 +34,10 @@ def run(params) {
                   }
                   if(params.remove_previous_environment) {
                     if(email_to!='' && pull_request_number!='') {
+                        echo "DEBUG *********"
+                        sh "pwd"
+                        sh "find ."
+                        echo "DEBUG ***********"
                         sh "bash jenkins_pipelines/scripts/cleanup-lock.sh -u ${email_to} -p ${pull_request_number}"
                     }
                   }
