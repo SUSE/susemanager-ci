@@ -340,7 +340,7 @@ def run(params) {
                                 archiveArtifacts artifacts: "results/${BUILD_NUMBER}/**/*"
                             }
                             if (email_to != '') {
-                                sh " export TF_VAR_MAIL_TO=${email_to};export TF_VAR_URL_PREFIX=${url_prefix} ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                                sh " export TF_VAR_MAIL_TO=${email_to};export TF_VAR_URL_PREFIX=${url_prefix}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
                             // Clean up old results
                             sh "./clean-old-results -r ${resultdir}"
