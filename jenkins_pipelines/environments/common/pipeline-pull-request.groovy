@@ -25,41 +25,6 @@ def run(params) {
         environment_workspace = null
         url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
         try {
-            stage('Checkout project') {
-                ws(environment_workspace){
-                      // Make sure files are owned by jenkins user.
-                      // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
-                      sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product || true"
-                  }
-                  sh 'rm -rf product'
-                  dir("product") {
-                      // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
-                      env.GIT_COMMITTER_NAME = "jenkins"
-                      env.GIT_AUTHOR_NAME = "jenkins"
-                      env.GIT_AUTHOR_EMAIL = "jenkins@a.b"
-                      env.GIT_COMMITTER_EMAIL = "jenkins@a.b"
-                      sh "git config --global user.email 'galaxy-noise@suse.de'"
-                      sh "git config --global user.name 'jenkins'"
-                      //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
-                      //      Inside userRemoteConfigs add credentialsId: 'github'
-                      if (pull_request_number == "master") {
-                          checkout([
-                                  $class: 'GitSCM',
-                                  branches: [[name: "master"]],
-                                  extensions: [[$class: 'CloneOption', depth: 1, timeout: 30, shallow: true, noTags: true, honorRefspec: true]],
-                                  userRemoteConfigs: [[refspec: '+refs/heads/master:refs/remotes/origin/master', url: "${pull_request_repo}"]],
-                                 ])
-                      } else {
-                          checkout([
-                                  $class: 'GitSCM',
-                                  branches: [[name: "pr/${pull_request_number}"]], 
-                                  extensions: [[$class: 'CloneOption', depth: 1, timeout: 30, shallow: true, noTags: true, honorRefspec: true]],
-                                  userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
-                                 ])
-                      }
-                  }
-                  
-            }
             stage('Get environment') {
                   echo "DEBUG: first environment: ${first_env}"
                   echo "DEBUG: last environment: ${last_env}"
@@ -69,7 +34,7 @@ def run(params) {
                   }
                   if(params.remove_previous_environment) {
                     if(email_to!='' && pull_request_number!='') {
-                        sh "bash susemanager-utils/testing/automation/cleanup-lock.sh -u ${email_to} -p ${pull_request_number}"
+                        sh "bash jenkins_pipelines/scripts/cleanup-lock.sh -u ${email_to} -p ${pull_request_number}"
                     }
                   }
                   running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
@@ -99,6 +64,43 @@ def run(params) {
                       }
                   }
 
+            }
+            stage('Checkout project') {
+                ws(environment_workspace){
+                    if(must_build) {
+                        // Make sure files are owned by jenkins user.
+                        // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
+                        sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product || true"
+                    }
+                    sh 'rm -rf product'
+                    dir("product") {
+                        // We need git_commiter_name, git_author_name and git_email to perform the merge with master branch
+                        env.GIT_COMMITTER_NAME = "jenkins"
+                        env.GIT_AUTHOR_NAME = "jenkins"
+                        env.GIT_AUTHOR_EMAIL = "jenkins@a.b"
+                        env.GIT_COMMITTER_EMAIL = "jenkins@a.b"
+                        sh "git config --global user.email 'galaxy-noise@suse.de'"
+                        sh "git config --global user.name 'jenkins'"
+                        //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
+                        //      Inside userRemoteConfigs add credentialsId: 'github'
+                        if (pull_request_number == "master") {
+                            checkout([
+                                    $class: 'GitSCM',
+                                    branches: [[name: "master"]],
+                                    extensions: [[$class: 'CloneOption', depth: 1, timeout: 30, shallow: true, noTags: true, honorRefspec: true]],
+                                    userRemoteConfigs: [[refspec: '+refs/heads/master:refs/remotes/origin/master', url: "${pull_request_repo}"]],
+                                   ])
+                        } else {
+                            checkout([
+                                    $class: 'GitSCM',
+                                    branches: [[name: "pr/${pull_request_number}"]], 
+                                    extensions: [[$class: 'CloneOption', depth: 1, timeout: 30, shallow: true, noTags: true, honorRefspec: true]],
+                                    userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*', url: "${pull_request_repo}"]],
+                                   ])
+                        }
+                    }
+                    
+                }
             }
             stage('Build product') {
                 ws(environment_workspace){
