@@ -1094,21 +1094,14 @@ module "sles11sp3-terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
-  source             = "./modules/minion"
+  source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
   name               = "terminal-sles11sp3"
   image              = "sles11sp4" # This is not a typo
   provider_settings = {
     memory             = 1024
     vcpu               = 1
   }
-  server_configuration = {
-    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "sles12sp5-buildhost" {
@@ -1137,21 +1130,14 @@ module "sles12sp5-terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
-  source             = "./modules/minion"
+  source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
   name               = "terminal-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 1024
     vcpu               = 1
   }
-  server_configuration = {
-    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "sles15sp3-buildhost" {
@@ -1180,21 +1166,14 @@ module "sles15sp3-terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
-  source             = "./modules/minion"
+  source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
   name               = "terminal-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
     memory             = 2048
     vcpu               = 2
   }
-  server_configuration = {
-    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 // No ARM support for openSUSE on 4.1 branch
