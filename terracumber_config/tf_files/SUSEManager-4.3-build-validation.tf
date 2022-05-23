@@ -1124,6 +1124,8 @@ module "sles12sp5-terminal" {
   provider_settings = {
     memory             = 1024
     vcpu               = 1
+    manufacturer       = "Supermicro"
+    product            = "X9DR3-F"
   }
 }
 
@@ -1160,6 +1162,8 @@ module "sles15sp3-terminal" {
   provider_settings = {
     memory             = 2048
     vcpu               = 2
+    manufacturer       = "HP"
+    product            = "ProLiant DL360 Gen9"
   }
 }
 
