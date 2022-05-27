@@ -222,7 +222,7 @@ module "base_retail" {
   name_prefix = "suma-bv-41-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp5o", "sles15sp2o", "sles15sp3o" ]
+  images      = [ "sles12sp5o", "sles15sp2o", "sles15sp3o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -310,7 +310,7 @@ module "proxy" {
   name               = "pxy"
   provider_settings = {
     mac                = "aa:b2:92:42:00:4a"
-    memory             = 4096
+    memory             = 8192
   }
   server_configuration = {
     hostname = "suma-bv-41-srv.mgr.prv.suse.net"
@@ -1068,42 +1068,6 @@ module "debian10-sshminion" {
 
 // Debian 11 is not supported yet by 4.1
 
-module "sles11sp4-buildhost" {
-  providers = {
-    libvirt = libvirt.coruscant
-  }
-  source             = "./modules/build_host"
-  base_configuration = module.base_retail.configuration
-  product_version    = "4.1-released"
-  name               = "build-sles11sp4"
-  image              = "sles11sp4"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:4b"
-    memory             = 2048
-    vcpu               = 2
-  }
-  server_configuration = {
-    hostname = "suma-bv-41-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "sles11sp3-terminal" {
-  providers = {
-    libvirt = libvirt.coruscant
-  }
-  source             = "./modules/pxe_boot"
-  base_configuration = module.base_retail.configuration
-  name               = "terminal-sles11sp3"
-  image              = "sles11sp4" # This is not a typo
-  provider_settings = {
-    memory             = 1024
-    vcpu               = 1
-  }
-}
-
 module "sles12sp5-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
@@ -1251,11 +1215,9 @@ module "controller" {
 
   // Debian 11 is not supported yet by 4.1
 
-  sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
 
-  sle11sp3_terminal_configuration = module.sles11sp3-terminal.configuration
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
 
