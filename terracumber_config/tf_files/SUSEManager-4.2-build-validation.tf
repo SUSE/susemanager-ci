@@ -332,7 +332,7 @@ module "proxy" {
   name               = "pxy"
   provider_settings = {
     mac                = "aa:b2:92:42:00:8a"
-    memory             = 8192
+    memory             = 4096
   }
   server_configuration = {
     hostname = "suma-bv-42-srv.mgr.prv.suse.net"
