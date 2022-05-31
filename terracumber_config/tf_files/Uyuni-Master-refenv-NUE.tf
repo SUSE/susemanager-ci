@@ -176,7 +176,7 @@ module "debian-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "uyuni-master"
-  name                 = "min-ubuntu2004o"
+  name                 = "min-ubuntu1804"
   image                = "ubuntu2004o"
   server_configuration = module.server.configuration
 
