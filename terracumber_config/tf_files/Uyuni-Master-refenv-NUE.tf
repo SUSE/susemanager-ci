@@ -176,12 +176,12 @@ module "debian-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "uyuni-master"
-  name                 = "min-ubuntu1804"
+  name                 = "min-ubuntu2004"
   image                = "ubuntu2004o"
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "aa:b2:93:01:00:eb"
+    mac = "aa:b2:93:01:00:ec"
   }
   additional_packages = [ "venv-salt-minion" ]
 
