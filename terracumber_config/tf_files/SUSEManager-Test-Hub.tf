@@ -217,8 +217,6 @@ module "controller" {
   provider_settings = {
     mac = "aa:b2:93:01:01:30"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 output "configuration" {
