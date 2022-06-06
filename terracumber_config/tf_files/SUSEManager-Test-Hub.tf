@@ -16,7 +16,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "hub-reporting-beta3"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
