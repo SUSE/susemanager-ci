@@ -117,6 +117,8 @@ module "hub" {
   provider_settings = {
     mac = "aa:b2:93:01:01:31"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "prh1" {
@@ -135,6 +137,8 @@ module "prh1" {
   provider_settings = {
     mac = "aa:b2:93:01:01:32"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "prh2" {
@@ -153,6 +157,8 @@ module "prh2" {
   provider_settings = {
     mac = "aa:b2:93:01:01:33"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 
@@ -166,6 +172,8 @@ module "min-sles15sp3" {
   provider_settings = {
     mac = "aa:b2:93:01:01:34"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "min-centos7" {
@@ -178,6 +186,8 @@ module "min-centos7" {
   provider_settings = {
     mac = "aa:b2:93:01:01:35"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "controller" {
@@ -205,6 +215,8 @@ module "controller" {
   provider_settings = {
     mac = "aa:b2:93:01:01:30"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 output "configuration" {
