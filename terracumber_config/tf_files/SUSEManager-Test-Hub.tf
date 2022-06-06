@@ -115,10 +115,12 @@ module "hub" {
   }
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:42"
+    mac = "aa:b2:93:01:01:31"
     memory = 10240
     vcpu = 8
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "prh1" {
@@ -135,8 +137,10 @@ module "prh1" {
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:43"
+    mac = "aa:b2:93:01:01:32"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "prh2" {
@@ -153,8 +157,10 @@ module "prh2" {
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:44"
+    mac = "aa:b2:93:01:01:33"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 
@@ -166,8 +172,10 @@ module "min-sles15sp3" {
   server_configuration = module.prh1.configuration
   use_os_released_updates = false
   provider_settings = {
-    mac = "aa:b2:93:01:01:45"
+    mac = "aa:b2:93:01:01:34"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "min-centos7" {
@@ -178,8 +186,10 @@ module "min-centos7" {
   server_configuration = module.prh2.configuration
   use_os_released_updates = false
   provider_settings = {
-    mac = "aa:b2:93:01:01:46"
+    mac = "aa:b2:93:01:01:35"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "controller" {
@@ -205,8 +215,10 @@ module "controller" {
   centos7_minion_configuration = module.min-centos7.configuration
 
   provider_settings = {
-    mac = "aa:b2:93:01:01:41"
+    mac = "aa:b2:93:01:01:30"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 output "configuration" {
