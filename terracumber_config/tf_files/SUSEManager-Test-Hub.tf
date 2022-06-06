@@ -132,7 +132,6 @@ module "prh1" {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
   auto_accept                    = true
-  use_os_released_updates        = false
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
@@ -152,7 +151,6 @@ module "prh2" {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
   auto_accept                    = true
-  use_os_released_updates        = false
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
@@ -170,7 +168,6 @@ module "min-sles15sp3" {
   name = "min-sles15sp3"
   image = "sles15sp3o"
   server_configuration = module.prh1.configuration
-  use_os_released_updates = false
   provider_settings = {
     mac = "aa:b2:93:01:01:34"
   }
@@ -184,7 +181,6 @@ module "min-centos7" {
   name = "min-centos7"
   image = "centos7o"
   server_configuration = module.prh2.configuration
-  use_os_released_updates = false
   provider_settings = {
     mac = "aa:b2:93:01:01:35"
   }
