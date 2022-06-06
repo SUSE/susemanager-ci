@@ -115,7 +115,7 @@ module "hub" {
   }
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:42"
+    mac = "aa:b2:93:01:01:31"
   }
 }
 
@@ -133,7 +133,7 @@ module "prh1" {
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:43"
+    mac = "aa:b2:93:01:01:32"
   }
 }
 
@@ -151,7 +151,7 @@ module "prh2" {
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:44"
+    mac = "aa:b2:93:01:01:33"
   }
 }
 
@@ -164,7 +164,7 @@ module "min-sles15sp3" {
   server_configuration = module.prh1.configuration
   use_os_released_updates = false
   provider_settings = {
-    mac = "aa:b2:93:01:01:45"
+    mac = "aa:b2:93:01:01:34"
   }
 }
 
@@ -176,7 +176,7 @@ module "min-centos7" {
   server_configuration = module.prh1.configuration
   use_os_released_updates = false
   provider_settings = {
-    mac = "aa:b2:93:01:01:46"
+    mac = "aa:b2:93:01:01:35"
   }
 }
 
@@ -203,7 +203,7 @@ module "controller" {
   centos7_minion_configuration = module.min-centos7.configuration
 
   provider_settings = {
-    mac = "aa:b2:93:01:01:41"
+    mac = "aa:b2:93:01:01:30"
   }
 }
 
