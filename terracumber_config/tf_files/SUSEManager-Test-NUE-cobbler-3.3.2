@@ -122,6 +122,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:40"
       }
+  //    branch = "master-test-deadlock"
     }
     server = {
       provider_settings = {
@@ -136,8 +137,7 @@ module "cucumber_testsuite" {
 //        sapformular = "http://download.suse.de/ibs/SUSE:/Maintenance:/17953/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
 //        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP4/"
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp4/standard/"
-        Test_repo_2 = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/openSUSE.org:/systemsmanagement/SLE_15_SP4/"
+        Test_repo = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/openSUSE.org:/systemsmanagement/SLE_15_SP4/"
       }
       additional_packages = [ "cobbler" ]
     }
@@ -213,13 +213,13 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:4b"
       }
       additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/ubuntu20.04/standard/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-cve-ubuntu18.04/standard/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     build-host = {
-      image = "sles15sp3o"
+      image = "sles15sp2o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:4d"
@@ -243,7 +243,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:4e"
       }
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp3/standard/"
+//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP3/"
       }
       additional_packages = [ "venv-salt-minion" ]

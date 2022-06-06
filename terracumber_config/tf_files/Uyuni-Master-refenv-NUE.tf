@@ -91,7 +91,7 @@ module "base" {
   name_prefix = "uyuni-refmaster-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["centos7o", "opensuse153o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1804o"]
+  images      = ["centos7o", "opensuse154o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   provider_settings = {
     pool         = "ssd"
@@ -112,9 +112,7 @@ module "server" {
   postgres_log_min_duration = 0
   channels                = ["sle-product-sles15-sp3-pool-x86_64", "sle-product-sles15-sp3-updates-x86_64", "sle-module-basesystem15-sp3-pool-x86_64", "sle-module-basesystem15-sp3-updates-x86_64", "sle-module-containers15-sp3-pool-x86_64", "sle-module-containers15-sp3-updates-x86_64", "sle-module-server-applications15-sp3-pool-x86_64", "sle-module-server-applications15-sp3-updates-x86_64"]
 
-  additional_repos        = {
-    uyuni_client_tools = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Stable:/openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/"
-  }
+  additional_repos        = { }
   provider_settings = {
     mac = "aa:b2:93:01:00:e1"
     memory = 8192
@@ -178,12 +176,12 @@ module "debian-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "uyuni-master"
-  name                 = "min-ubuntu1804"
-  image                = "ubuntu1804o"
+  name                 = "min-ubuntu2004"
+  image                = "ubuntu2004o"
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "aa:b2:93:01:00:eb"
+    mac = "aa:b2:93:01:00:ec"
   }
   additional_packages = [ "venv-salt-minion" ]
 

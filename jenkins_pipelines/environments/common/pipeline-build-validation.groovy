@@ -149,7 +149,7 @@ def run(params) {
                                 reportFiles: 'cucumber_report.html',
                                 reportName: "Build Validation report"]
                     )
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                    // junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
                 // Send email
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"

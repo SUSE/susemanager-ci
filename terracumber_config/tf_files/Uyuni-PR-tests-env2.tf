@@ -105,6 +105,10 @@ variable "UPDATE_REPO" {
   type = string
 }
 
+variable "ADDITIONAL_REPO_URL" {
+  type = string
+}
+
 variable "TEST_PACKAGES_REPO" {
   type = string
 }
@@ -157,7 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
 
-  images = ["centos7o", "opensuse152o", "opensuse153-ci-pr", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse154-ci-pr", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -189,12 +193,12 @@ module "cucumber_testsuite" {
         master_repo_other = var.MASTER_OTHER_REPO,
         master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
         test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
-        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/non-oss/",
+        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
         os_update = var.UPDATE_REPO,
-
+        os_additional_repo = var.ADDITIONAL_REPO_URL,
       }
-      image = "opensuse153-ci-pr"
+      image = "opensuse154-ci-pr"
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
     }
     proxy = {
@@ -208,11 +212,12 @@ module "cucumber_testsuite" {
         master_repo_other = var.MASTER_OTHER_REPO,
         master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
         test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
-        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/non-oss/",
+        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
         os_update = var.UPDATE_REPO,
+        os_additional_repo = var.ADDITIONAL_REPO_URL,
       }
-      image = "opensuse153-ci-pr"
+      image = "opensuse154-ci-pr"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -249,7 +254,7 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
@@ -299,10 +304,10 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse153-ci-pr"
+      image = "opensuse154-ci-pr"
       additional_grains = {
-        hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
-        hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+        hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+        hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
       }
       provider_settings = {
         mac = "aa:b2:92:04:00:16"
@@ -312,20 +317,21 @@ module "cucumber_testsuite" {
         client_repo = var.OPENSUSE_CLIENT_REPO,
         master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
         test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
-        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/non-oss/",
+        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
         os_update = var.UPDATE_REPO,
+        os_additional_repo = var.ADDITIONAL_REPO_URL,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     xen-host = {
-      image = "opensuse153-ci-pr"
+      image = "opensuse154-ci-pr"
       additional_grains = {
-        xen_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2"
-        xen_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2.sha256"
-        hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
-        hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+        xen_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-15.4-kvm-and-xen-Current.qcow2"
+        xen_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-15.4-kvm-and-xen-Current.qcow2.sha256"
+        hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+        hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
       }
       provider_settings = {
         mac = "aa:b2:92:04:00:17"
@@ -335,9 +341,10 @@ module "cucumber_testsuite" {
         client_repo = var.OPENSUSE_CLIENT_REPO,
         master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
         test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/non-oss/",
-        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/repo/oss/",
+        non_os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/non-oss/",
+        os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
         os_update = var.UPDATE_REPO,
+        os_additional_repo = var.ADDITIONAL_REPO_URL,
         
       }
       additional_packages = [ "venv-salt-minion" ]

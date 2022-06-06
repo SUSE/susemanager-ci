@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-4.3-GMC"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -160,7 +160,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:b8"
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {

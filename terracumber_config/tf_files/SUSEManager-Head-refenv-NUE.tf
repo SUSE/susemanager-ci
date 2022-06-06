@@ -115,8 +115,6 @@ module "server" {
     mac = "aa:b2:93:01:00:c1"
     memory = 8192
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "suse-client" {

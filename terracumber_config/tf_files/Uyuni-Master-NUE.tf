@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://mortadelo.mgr.suse.de/system"
+  uri = "qemu+tcp://salzbreze.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -132,6 +132,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:d1"
         memory = 10240
       }
+      login_timeout = 28800
     }
     proxy = {
       provider_settings = {
@@ -164,7 +165,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
