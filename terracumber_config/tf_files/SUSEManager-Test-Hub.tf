@@ -171,8 +171,6 @@ module "min-sles15sp3" {
   provider_settings = {
     mac = "aa:b2:93:01:01:34"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "min-centos7" {
