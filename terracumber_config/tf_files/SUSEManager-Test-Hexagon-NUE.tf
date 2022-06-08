@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "qa-containerized-proxy"
 }
 
 variable "CUCUMBER_RESULTS" {
