@@ -6,7 +6,6 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     sumaform_ref = "master";
 } else {
     if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
-        must_build = true;
         email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
         pull_request_number = "master";
         first_env = 9;
