@@ -37,6 +37,15 @@ node('pull-request-test') {
         additional_repo_url = params.additional_repo_url;
         sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
         sumaform_ref = "master";
+        secondary_exports = ""
+        if(must_test && ( params.functional_scopes || params.run_all_scopes) ) {
+          if (params.functional_scopes){
+            secondary_exports += "export TAGS=\"(${params.functional_scopes}) and not @flaky\"; "
+          } else {
+            secondary_exports += "export TAGS=\"not @flaky\"; "
+          }
+        }
+        echo "DEBUG: Secondary test tags: ${secondary_exports}"
         // load values to override default ones
         pr_env_filename = "jenkins_pipelines/environments/common/pipeline-pull-request-envs.groovy"
         if (fileExists(pr_env_filename)) {
