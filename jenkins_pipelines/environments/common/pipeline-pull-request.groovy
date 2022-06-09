@@ -281,7 +281,9 @@ def run(params) {
                     if(must_test && ( params.functional_scopes || params.run_all_scopes) ) {
                         def exports = ""
                         if (params.functional_scopes){
-                          exports += "export TAGS=\"${params.functional_scopes}\"; "
+                          exports += "export TAGS=\"(${params.functional_scopes}) and not @flaky\"; "
+                        } else {
+                          exports += "export TAGS=\"not @flaky\"; "
                         }
                         def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
                         def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus:true
