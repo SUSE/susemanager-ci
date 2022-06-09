@@ -191,7 +191,7 @@ module "controller" {
   base_configuration = module.base_core.configuration
   name = "ctl"
   no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "portus.mgr.suse.de:5000/cucutest"
+  auth_registry = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
 
@@ -201,7 +201,7 @@ module "controller" {
   branch       = var.CUCUMBER_BRANCH
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
+  server_http_proxy = "http-proxy.mgr.suse.de:3128"
   
   server_configuration = module.prh1.configuration
 
