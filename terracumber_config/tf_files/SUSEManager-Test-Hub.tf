@@ -193,7 +193,7 @@ module "controller" {
   base_configuration = module.base_core.configuration
   name = "ctl"
   no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "portus.mgr.suse.de:5000/cucutest"
+  auth_registry = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
 
