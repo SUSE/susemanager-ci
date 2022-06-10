@@ -33,12 +33,20 @@ node('pull-request-test') {
         first_env = 1;
         last_env = 10;
         email_to = params.email_to;
+        run_all_scopes = params.run_all_scopes;
         pull_request_number = params.pull_request_number;
         additional_repo_url = params.additional_repo_url;
         sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
         sumaform_ref = "master";
         secondary_exports = ""
-        if(must_test && ( params.functional_scopes || params.run_all_scopes) ) {
+        cucumber_gitrepo = params.cucumber_gitrepo;
+        cucumber_ref = params.cucumber_ref;
+        // load values to override default ones
+        pr_env_filename = "jenkins_pipelines/environments/common/pipeline-pull-request-envs.groovy"
+        if (fileExists(pr_env_filename)) {
+            load pr_env_filename
+        }
+        if(must_test && ( params.functional_scopes || run_all_scopes) ) {
           if (params.functional_scopes){
             secondary_exports += "export TAGS=\"(${params.functional_scopes}) and not @flaky\"; "
           } else {
@@ -46,11 +54,6 @@ node('pull-request-test') {
           }
         }
         echo "DEBUG: Secondary test tags: ${secondary_exports}"
-        // load values to override default ones
-        pr_env_filename = "jenkins_pipelines/environments/common/pipeline-pull-request-envs.groovy"
-        if (fileExists(pr_env_filename)) {
-            load pr_env_filename
-        }
         def pipeline = load "jenkins_pipelines/environments/common/pipeline-pull-request.groovy"
         pipeline.run(params)
     }
