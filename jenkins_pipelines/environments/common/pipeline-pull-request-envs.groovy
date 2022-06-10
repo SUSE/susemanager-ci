@@ -11,6 +11,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     last_env = 9;
     additional_repo_url = "http://minima-mirror.mgr.prv.suse.net/jordi/reference_job_additional_repo";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-reference-secondary") {
+    email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
     run_all_scopes = true;
     first_env = 8;
     last_env = 8;
