@@ -16,6 +16,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     last_env = 8;
     cucumber_gitrepo = "https://github.com/jordimassaguerpla/uyuni.git";
     cucumber_ref = "remove_failing_tests";
+    pull_request_number = "5379";
 } else { //regular ci test
     first_env = 1;
     last_env = 8;
