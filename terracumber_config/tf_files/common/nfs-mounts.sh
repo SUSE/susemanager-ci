@@ -13,14 +13,14 @@ for dir in 'repo/$RCE/RES7' \
   mount "/mirror/$dir"
 done
 
-#for dir in 'distribution/leap/15.3' \
-#           'update/leap/15.3' \
-#           'SUSE/Products/SLE-Manager-Tools/15/aarch64' \
-#           'SUSE/Products/SLE-Manager-Tools/15-BETA/aarch64' \
-#           'SUSE/Updates/SLE-Manager-Tools/15/aarch64' \
-#           'SUSE/Updates/SLE-Manager-Tools/15-BETA/aarch64' \
-#           'repositories/systemsmanagement:/sumaform:/tools/openSUSE_Leap_15.3' \
-#           'repositories/systemsmanagement:/Uyuni:/Stable:/openSUSE_Leap_15-Uyuni-Client-Tools'; do
-#  echo "minima-mirror-bv3.mgr.prv.suse.net:/srv/mirror/$dir  /mirror/$dir  nfs  defaults  0 0" >> /etc/fstab
-#  mount "/mirror/$dir"
-#done
+for dir in 'distribution/leap/15.3' \
+           'update/leap/15.3' \
+           'SUSE/Products/SLE-Manager-Tools/15/aarch64' \
+           'SUSE/Products/SLE-Manager-Tools/15-BETA/aarch64' \
+           'SUSE/Updates/SLE-Manager-Tools/15/aarch64' \
+           'SUSE/Updates/SLE-Manager-Tools/15-BETA/aarch64' \
+           'repositories/systemsmanagement:/sumaform:/tools/openSUSE_Leap_15.3' \
+           'repositories/systemsmanagement:/Uyuni:/Stable:/openSUSE_Leap_15-Uyuni-Client-Tools'; do
+  echo "minima-mirror-bv3.mgr.prv.suse.net:/srv/mirror/$dir  /mirror/$dir  nfs  defaults  0 0" >> /etc/fstab
+  mount "/mirror/$dir"
+done
