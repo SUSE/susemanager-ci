@@ -48,9 +48,9 @@ node('pull-request-test') {
         }
         if(must_test && ( params.functional_scopes || run_all_scopes) ) {
           if (params.functional_scopes){
-            secondary_exports += "export TAGS=\\\"(${params.functional_scopes}) and not @flaky\\\"; "
+            secondary_exports += "export TAGS=\"\\\"(${params.functional_scopes}) and not @flaky\\\"\"; "
           } else {
-            secondary_exports += "export TAGS=\\\"not @flaky\\\"; "
+            secondary_exports += "export TAGS=\"\\\"not @flaky\\\"\"; "
           }
         }
         echo "DEBUG: Secondary test tags: ${secondary_exports}"
