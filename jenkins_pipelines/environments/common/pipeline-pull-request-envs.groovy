@@ -5,7 +5,10 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     sumaform_gitrepo = "https://github.com/jordimassaguerpla/sumaform.git";
     sumaform_ref = "master";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
-    email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
+    // jordi's email alias for slack
+    //  email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
+    // martin's email alias for slack
+    email_to = "aaaaeozhsvivfyx5vismmpaq7u@suse.slack.com";
     pull_request_number = "master";
     first_env = 9;
     last_env = 9;
