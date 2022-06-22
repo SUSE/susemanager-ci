@@ -147,7 +147,7 @@ module "base_old_sle" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o", "sles12sp5o" ]
+  images      = [ "sles12sp4o", "sles12sp5o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -353,30 +353,6 @@ module "proxy" {
 
 }
 
-module "sles11sp4-client" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
-  source             = "./modules/client"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.2-released"
-  name               = "cli-sles11sp4"
-  image              = "sles11sp4"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:90"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle11sp4-client_additional_repos
-
-}
-
 module "sles12sp4-client" {
   providers = {
     libvirt = libvirt.tatooine
@@ -566,30 +542,6 @@ module "centos7-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //ceos7-client_additional_repos
-
-}
-
-module "sles11sp4-minion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.2-released"
-  name               = "min-sles11sp4"
-  image              = "sles11sp4"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:a0"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle11sp4-minion_additional_repos
 
 }
 
@@ -935,23 +887,6 @@ module "debian11-minion" {
 
   //debian11-minion_additional_repos
 
-}
-
-module "sles11sp4-sshminion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-sles11sp4"
-  image              = "sles11sp4"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:b0"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "sles12sp4-sshminion" {
@@ -1326,10 +1261,6 @@ module "controller" {
 
   centos8_minion_configuration    = module.centos8-minion.configuration
   centos8_sshminion_configuration = module.centos8-sshminion.configuration
-
-  sle11sp4_client_configuration    = module.sles11sp4-client.configuration
-  sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
-  sle11sp4_sshminion_configuration = module.sles11sp4-sshminion.configuration
 
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
