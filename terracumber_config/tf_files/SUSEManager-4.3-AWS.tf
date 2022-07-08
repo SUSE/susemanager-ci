@@ -229,6 +229,7 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = true
   //proxy_additional_repos
 
 }
@@ -246,6 +247,7 @@ module "suse-client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
   //  product_version = "4.2-released"
 }
 
@@ -261,6 +263,7 @@ module "suse-minion" {
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
   //sle15sp2-minion_additional_repos
 
 }
@@ -276,6 +279,7 @@ module "suse-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   additional_packages = [ "venv-salt-minion" , "iptables"]
+  install_salt_bundle = true
   //sle15sp3-minion_additional_repos
 
 }
@@ -296,6 +300,7 @@ module "redhat-minion"  {
   auto_connect_to_master = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian-minion" {
@@ -308,6 +313,7 @@ module "debian-minion" {
   auto_connect_to_master  = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "build-host"  {
@@ -322,6 +328,7 @@ module "build-host"  {
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "controller" {
