@@ -228,7 +228,7 @@ module "cucumber_testsuite" {
     pool = "ssd"
     network_name = null
     bridge = "br1"
-    additional_network = "192.168.42.0/24"
+    additional_network = "192.168.43.0/24"
   }
 }
 
