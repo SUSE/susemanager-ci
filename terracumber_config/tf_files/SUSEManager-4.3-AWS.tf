@@ -319,7 +319,7 @@ module "debian-minion" {
 module "build-host"  {
   image = "sles15sp2o"
   name = "build-host"
-  source             = "./modules/minion"
+  source             = "./modules/build_host"
   base_configuration = module.base.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   product_version    = "4.3-released"
