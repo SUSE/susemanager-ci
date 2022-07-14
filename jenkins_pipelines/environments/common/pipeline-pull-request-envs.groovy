@@ -18,7 +18,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     last_env = 8;
     cucumber_gitrepo = "https://github.com/uyuni-project/uyuni.git";
     cucumber_ref = "remove_failing_tests";
-    pull_request_number = "5379";
+    pull_request_number = "5662";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-reference-secondary-full") {
     email_to = "aaaaeoayla72kj6blracdlufr4@suse.slack.com";
     run_all_scopes = true;
@@ -26,7 +26,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     last_env = 7;
     cucumber_gitrepo = "https://github.com/uyuni-project/uyuni.git";
     cucumber_ref = "remove_flaky_tags";
-    pull_request_number = "5568";
+    pull_request_number = "5663";
 } else { //regular ci test
     first_env = 1;
     last_env = 6;
