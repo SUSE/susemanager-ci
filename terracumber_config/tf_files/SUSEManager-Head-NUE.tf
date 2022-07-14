@@ -185,7 +185,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     build-host = {
-      image = "sles15sp4o"
+      image = "sles15sp2o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:bd"
