@@ -7,7 +7,7 @@ variable "URL_PREFIX" {
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
+  default = "export PRODUCT='Uyuni' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "qa-containerized-proxy"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -74,10 +74,6 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
-provider "libvirt" {
-  uri = "qemu+tcp://cthulu.mgr.suse.de/system"
-}
-
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -88,169 +84,15 @@ terraform {
   }
 }
 
-module "base_core" {
-  source = "./modules/base"
-
-
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-
-  images = ["centos7o", "opensuse152o", "opensuse154o", "sles15sp2o"]
-
-  use_avahi    = false
-  name_prefix  = "suma-testhexagon-"
-  domain       = "mgr.suse.de"
-
-  provider_settings = {
-    pool         = "ssd"
-    network_name = null
-    bridge       = "br0"
-  }
+provider "libvirt" {
+  uri = "qemu+tcp://cthulu.mgr.suse.de/system"
 }
 
-module "server" {
-  source             = "./modules/server"
-  base_configuration = module.base_core.configuration
-  product_version = "uyuni-master"
-  name               = "srv"
-  provider_settings = {
-    mac = "aa:b2:93:01:00:51"
-  }
+module "cucumber_testsuite" {
+  source = "./modules/cucumber_testsuite"
 
-  auto_accept                    = false
-  monitored                      = true
-  disable_firewall               = false
-  allow_postgres_connections     = false
-  skip_changelog_import          = false
-  create_first_user              = false
-  mgr_sync_autologin             = false
-  create_sample_channel          = false
-  create_sample_activation_key   = false
-  create_sample_bootstrap_script = false
-  publish_private_ssl_key        = false
-  use_os_released_updates        = true
-  disable_download_tokens        = false
-  ssh_key_path                   = "./salt/controller/id_rsa.pub"
-  from_email                     = "root@suse.de"
-
-  //server_additional_repos
-}
-
-module "proxy" {
-  source             = "./modules/proxy"
-  base_configuration = module.base_core.configuration
-  product_version    = "uyuni-master"
-  name               = "pxy"
-  provider_settings = {
-    mac = "aa:b2:93:01:00:52"
-  }
-  server_configuration = {
-    hostname = "suma-testhexagon-pxy.mgr.suse.de"
-    username = "admin"
-    password = "admin"
-  }
-  auto_register             = false
-  auto_connect_to_master    = false
-  download_private_ssl_key  = false
-  auto_configure            = false
-  generate_bootstrap_script = false
-  publish_private_ssl_key   = false
-  use_os_released_updates   = true
-  ssh_key_path              = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "suse-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  product_version    = "uyuni-master"
-  name               = "minssh-sles15"
-  image              = "sles15sp2o"
-  provider_settings = {
-    mac = "aa:b2:93:01:00:58"
-  }
-
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "suse-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  product_version    = "uyuni-master"
-  name               = "min-sles15"
-  image              = "sles15sp2o"
-  provider_settings = {
-    mac = "aa:b2:93:01:00:56"
-  }
-  server_configuration = {
-    hostname = "suma-testhexagon-min-build.mgr.suse.de"
-  }
-
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "sles15sp2-client" {
-  source             = "./modules/client"
-  base_configuration = module.base_core.configuration
-  product_version    = "uyuni-master"
-  //name               = "cli-sles15sp2"
-  name               = "cli-sles15"
-  image              = "sles15sp2o"
-  provider_settings = {
-    mac = "aa:b2:93:01:00:54"
-  }
-  server_configuration = {
-    hostname = "suma-testhexagon-cli-sles15.mgr.suse.de"
-  }
-
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "redhat-minion" {
-  source = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  product_version    = "uyuni-master"
-  name               = "min-centos7"
-  image              = "centos7o"
-  provider_settings = {
-    mac = "aa:b2:93:01:00:59"
-  }
-  server_configuration = {
-    hostname = "suma-testhexagon-min-centos7.mgr.suse.de"
-  }
-
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path  = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "controller" {
-  source             = "./modules/controller"
-  base_configuration = module.base_core.configuration
-  name               = "ctl"
-  provider_settings = {
-    mac = "aa:b2:93:01:00:50"
-  }
-  swap_file_size = 2048
+  //product_version = "uyuni-master"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -258,17 +100,109 @@ module "controller" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  server_configuration = module.server.configuration
-  proxy_configuration  = module.proxy.configuration
+  cc_username = var.SCC_USER
+  cc_password = var.SCC_PASSWORD
 
-  client_configuration    = module.sles15sp2-client.configuration
-  minion_configuration    = module.suse-minion.configuration
-  sshminion_configuration = module.suse-sshminion.configuration
-  redhat_configuration    = module.redhat-minion.configuration
+  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o"]
+
+  use_avahi    = false
+  name_prefix  = "suma-testhexagon-"
+  domain       = "mgr.suse.de"
+  from_email   = "root@suse.de"
+
+  no_auth_registry = "registry.mgr.suse.de"
+  auth_registry = "registry.mgr.suse.de:5000/cucutest"
+  auth_registry_username = "cucutest"
+  auth_registry_password = "cucusecret"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+
+  server_http_proxy = "http-proxy.mgr.suse.de:3128"
+
+  host_settings = {
+    controller = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:50"
+      }
+    }
+    server = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:51"
+        memory = 10240
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP4/"
+      }
+    }
+    proxy = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:52"
+      }
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP4/"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    suse-client = {
+      image = "sles15sp2o"
+      name = "cli-sles15"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:54"
+      }
+      additional_repos = {
+        Test_client_tools_repo = "https://download.opensuse.org/repositories/home:/cbosdonnat:/branches:/systemsmanagement:/Uyuni:/Master:/SLE15-Uyuni-Client-Tools/SLE_15/"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    suse-minion = {
+      image = "sles15sp2o"
+      name = "min-sles15"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:56"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    suse-sshminion = {
+      image = "sles15sp2o"
+      name = "minssh-sles15"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:58"
+      }
+      additional_packages = [ "venv-salt-minion", "iptables" ]
+      install_salt_bundle = true
+    }
+    redhat-minion = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:59"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Still researching, but it will do it for now
+        memory = 2048
+        vcpu = 2
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    pxeboot-minion = {
+      image = "sles15sp3o"
+    }
+    build-host = {
+      image = "sles15sp2o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:5d"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+  }
+  provider_settings = {
+    pool         = "ssd"
+    network_name = null
+    bridge       = "br0"
+  }
 }
 
 output "configuration" {
-  value = {
-    controller = module.controller.configuration
-  }
+  value = module.cucumber_testsuite.configuration
 }

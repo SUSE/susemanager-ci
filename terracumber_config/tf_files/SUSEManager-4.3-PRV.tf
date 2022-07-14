@@ -123,17 +123,17 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:90"
+        mac = "aa:b2:92:03:00:80"
       }
     }
     server = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:91"
+        mac = "aa:b2:92:03:00:81"
       }
     }
     proxy = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:92"
+        mac = "aa:b2:92:03:00:82"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -142,7 +142,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "cli-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:00:94"
+        mac = "aa:b2:92:03:00:84"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -151,7 +151,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:00:96"
+        mac = "aa:b2:92:03:00:86"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -160,7 +160,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:00:98"
+        mac = "aa:b2:92:03:00:88"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -168,7 +168,7 @@ module "cucumber_testsuite" {
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:99"
+        mac = "aa:b2:92:03:00:89"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         memory = 2048
@@ -181,7 +181,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:9c"
+        mac = "aa:b2:92:03:00:8c"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -189,7 +189,7 @@ module "cucumber_testsuite" {
     build-host = {
       image = "sles15sp2o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:9d"
+        mac = "aa:b2:92:03:00:8d"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -204,7 +204,7 @@ module "cucumber_testsuite" {
         hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
       }
       provider_settings = {
-        mac = "aa:b2:93:01:00:9e"
+        mac = "aa:b2:92:03:00:8e"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -218,7 +218,7 @@ module "cucumber_testsuite" {
         hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
       }
       provider_settings = {
-        mac = "aa:b2:93:01:00:9f"
+        mac = "aa:b2:92:03:00:8f"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -228,7 +228,7 @@ module "cucumber_testsuite" {
     pool = "ssd"
     network_name = null
     bridge = "br1"
-    additional_network = "192.168.42.0/24"
+    additional_network = "192.168.43.0/24"
   }
 }
 
