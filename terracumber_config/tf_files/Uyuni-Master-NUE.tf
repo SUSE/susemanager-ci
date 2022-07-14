@@ -151,6 +151,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
+      # left with SP3 since we update it to SP4 in the testsuite
       image = "sles15sp3o"
       name = "min-sles15"
       provider_settings = {
@@ -160,6 +161,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
+      # left with SP3 since we update it to SP4 in the testsuite
       image = "sles15sp3o"
       name = "minssh-sles15"
       provider_settings = {
