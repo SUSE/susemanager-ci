@@ -190,7 +190,7 @@ module "server" {
   product_version            = "4.3-release"
   repository_disk_size       = 1500
   image                      = var.SERVER_AMI
-  server_registration_code = var.SERVER_REGISTRATION_CODE
+  server_registration_code   = var.SERVER_REGISTRATION_CODE
 
   auto_accept                    = false
   monitored                      = true
@@ -219,6 +219,7 @@ module "proxy" {
   product_version           = "4.3-release"
   name                      = "proxy"
   image                     = var.PROXY_AMI
+  proxy_registration_code   = var.PROXY_REGISTRATION_CODE
 
   auto_register             = false
   auto_connect_to_master    = false
