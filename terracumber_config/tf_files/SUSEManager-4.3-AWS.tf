@@ -187,7 +187,7 @@ module "server" {
     mirror = null
   })
   name                       = "server"
-  product_version            = "4.3-build_image"
+  product_version            = "4.3-release"
   repository_disk_size       = 1500
   image                      = var.SERVER_AMI
   server_registration_code = var.SERVER_REGISTRATION_CODE
@@ -216,7 +216,7 @@ module "proxy" {
   source                    = "./modules/proxy"
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
-  product_version           = "4.3-build_image"
+  product_version           = "4.3-release"
   name                      = "proxy"
   image                     = var.PROXY_AMI
 
