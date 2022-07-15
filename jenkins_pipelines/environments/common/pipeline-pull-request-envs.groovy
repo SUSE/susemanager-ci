@@ -13,6 +13,6 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     additional_repo_url = "http://minima-mirror.mgr.prv.suse.net/jordi/reference_job_additional_repo";
 } else { //regular ci test
     first_env = 1;
-    last_env = 5;
+    last_env = 8;
 }
 
