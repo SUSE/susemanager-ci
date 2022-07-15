@@ -11,11 +11,6 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     first_env = 9;
     last_env = 9;
     additional_repo_url = "http://minima-mirror.mgr.prv.suse.net/jordi/reference_job_additional_repo";
-} else if (env.JOB_NAME == "uyuni-prs-ci-tests-qe") {
-    first_env = 6;
-    last_env = 6;
-    sumaform_gitrepo = "https://github.com/Bischoff/sumaform.git";
-    sumaform_ref = "uyuni-prs-grains";
 } else { //regular ci test
     first_env = 1;
     last_env = 5;
