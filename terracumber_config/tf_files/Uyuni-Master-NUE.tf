@@ -142,7 +142,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-client = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d4"
@@ -151,7 +151,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp2o"
+      # left with SP3 since we update it to SP4 in the testsuite
+      image = "sles15sp3o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
@@ -160,7 +161,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp2o"
+      # left with SP3 since we update it to SP4 in the testsuite
+      image = "sles15sp3o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
@@ -193,7 +195,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:dd"
       }
@@ -201,12 +203,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse153o"
+      image = "opensuse154o"
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
       }
@@ -214,7 +216,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     xen-host = {
-      image = "opensuse153o"
+      image = "opensuse154o"
       provider_settings = {
         mac = "aa:b2:93:01:00:df"
       }
