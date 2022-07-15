@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://ramrod.mgr.suse.de/system"
+  uri = "qemu+tcp://salzbreze.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
