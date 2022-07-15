@@ -5,7 +5,7 @@ def run(params) {
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --parallelism ${params.terraform_parallelism}"
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
                 // Create a directory for  to place the directory with the build results (if it does not exist)
