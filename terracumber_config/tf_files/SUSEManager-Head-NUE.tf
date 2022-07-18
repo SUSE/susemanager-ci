@@ -187,8 +187,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     build-host = {
-      # left with SP2 since since images are missing in the registry
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:bd"
