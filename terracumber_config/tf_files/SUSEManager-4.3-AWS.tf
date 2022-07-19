@@ -136,16 +136,6 @@ variable "NAME_PREFIX" {
   default = null
 }
 
-variable "PROXY_AMI" {
-  type = string
-  default = "sles15sp4o"
-}
-
-variable "SERVER_AMI" {
-  type = string
-  default = "sles15sp4o"
-}
-
 provider "aws" {
   region     = var.REGION
   access_key = var.ACCESS_KEY
@@ -189,7 +179,6 @@ module "server" {
   name                       = "server"
   product_version            = "4.3-release"
   repository_disk_size       = 1500
-  image                      = var.SERVER_AMI
   server_registration_code   = var.SERVER_REGISTRATION_CODE
 
   auto_accept                    = false
@@ -218,7 +207,6 @@ module "proxy" {
   server_configuration      = module.server.configuration
   product_version           = "4.3-release"
   name                      = "proxy"
-  image                     = var.PROXY_AMI
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
 
   auto_register             = false
