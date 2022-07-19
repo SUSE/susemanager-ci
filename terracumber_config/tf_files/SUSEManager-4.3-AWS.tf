@@ -177,7 +177,7 @@ module "server" {
     mirror = null
   })
   name                       = "server"
-  product_version            = "4.3-release"
+  product_version            = "4.3-released"
   repository_disk_size       = 1500
   server_registration_code   = var.SERVER_REGISTRATION_CODE
 
@@ -205,7 +205,7 @@ module "proxy" {
   source                    = "./modules/proxy"
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
-  product_version           = "4.3-release"
+  product_version           = "4.3-released"
   name                      = "proxy"
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
 
@@ -228,7 +228,7 @@ module "suse-client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   name                 = "cli-sles15"
-  image                = "sles15sp2o"
+  image                = "sles15sp4o"
   product_version    = "4.3-released"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
@@ -245,7 +245,7 @@ module "suse-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-sles15"
-  image              = "sles15sp2o"
+  image              = "sles15sp3o"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
@@ -262,7 +262,7 @@ module "suse-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-sles15"
-  image              = "sles15sp2o"
+  image              = "sles15sp3o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -306,7 +306,7 @@ module "debian-minion" {
 }
 
 module "build-host"  {
-  image = "sles15sp2o"
+  image = "sles15sp4o"
   name = "build-host"
   source             = "./modules/build_host"
   base_configuration = module.base.configuration
