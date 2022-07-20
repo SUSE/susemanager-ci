@@ -1129,15 +1129,15 @@ module "sles12sp5-terminal" {
   }
 }
 
-module "sles15sp3-buildhost" {
+module "sles15sp4-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
-  name               = "build-sles15sp3"
-  image              = "sles15sp3o"
+  name               = "build-sles15sp4"
+  image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:cd"
     memory             = 2048
@@ -1151,14 +1151,14 @@ module "sles15sp3-buildhost" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp3-terminal" {
+module "sles15sp4-terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sles15sp3"
-  image              = "sles15sp3o"
+  name               = "terminal-sles15sp4"
+  image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048
     vcpu               = 2
@@ -1261,10 +1261,10 @@ module "controller" {
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
-  sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
+  sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
 
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
-  sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
+  sle15sp4_terminal_configuration = module.sles15sp4-terminal.configuration
 
   opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
 }

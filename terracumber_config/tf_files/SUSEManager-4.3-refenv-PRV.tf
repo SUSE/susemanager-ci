@@ -124,7 +124,7 @@ module "suse-client" {
   base_configuration = module.base.configuration
   product_version    = "4.3-nightly"
   name               = "cli-sles15"
-  image              = "sles15sp3o"
+  image              = "sles15sp4o"
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -141,7 +141,7 @@ module "suse-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-nightly"
   name               = "min-sles15"
-  image              = "sles15sp3o"
+  image              = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
@@ -194,7 +194,7 @@ module "build-host" {
   base_configuration      = module.base.configuration
   product_version         = "4.3-nightly"
   name                    = "min-build"
-  image                   = "sles15sp3o"
+  image                   = "sles15sp4o"
   server_configuration    = module.server.configuration
 
   provider_settings = {
@@ -209,7 +209,7 @@ module "kvm-minion" {
   base_configuration   = module.base.configuration
   product_version      = "head"
   name                 = "min-kvm"
-  image                = "sles15sp3o"
+  image                = "sles15sp4o"
   server_configuration = module.server.configuration
 
   provider_settings = {

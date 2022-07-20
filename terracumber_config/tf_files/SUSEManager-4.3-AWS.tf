@@ -238,7 +238,7 @@ module "suse-client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   name                 = "cli-sles15"
-  image                = "sles15sp2o"
+  image                = "sles15sp4o"
   product_version    = "4.3-released"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
@@ -253,7 +253,7 @@ module "suse-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-sles15"
-  image              = "sles15sp2o"
+  image              = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
@@ -269,7 +269,7 @@ module "suse-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-sles15"
-  image              = "sles15sp2o"
+  image              = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -308,7 +308,7 @@ module "debian-minion" {
 }
 
 module "build-host"  {
-  image = "sles15sp2o"
+  image = "sles15sp4o"
   name = "build-host"
   source             = "./modules/minion"
   base_configuration = module.base.configuration
