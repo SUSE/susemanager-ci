@@ -1311,7 +1311,7 @@ module "controller" {
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
 
-  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
+//  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {
