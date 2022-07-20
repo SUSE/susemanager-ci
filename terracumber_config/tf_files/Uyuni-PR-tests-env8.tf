@@ -222,7 +222,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-client = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:73"
@@ -234,7 +234,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp2o"
+      image = "sles15sp3o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:74"
@@ -246,7 +246,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp2o"
+      image = "sles15sp3o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:75"
@@ -285,7 +285,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:92:04:00:79"
       }
