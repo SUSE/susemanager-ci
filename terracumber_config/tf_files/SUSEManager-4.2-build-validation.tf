@@ -108,10 +108,10 @@ provider "libvirt" {
   uri = "qemu+tcp://trantor.mgr.prv.suse.net/system"
 }
 
-provider "libvirt" {
-  alias = "overdrive4"
-  uri = "qemu+tcp://overdrive4.arch.suse.de/system"
-}
+//provider "libvirt" {
+//  alias = "overdrive4"
+//  uri = "qemu+tcp://overdrive4.arch.suse.de/system"
+//}
 
 module "base_core" {
   source = "./modules/base"
@@ -261,30 +261,30 @@ module "base_debian" {
   }
 }
 
-module "base_arm" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
-
-  source = "./modules/base"
-
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-42-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse153armo" ]
-
-  mirror = "minima-mirror-bv3.mgr.prv.suse.net"
-  use_mirror_images = true
-
-  testsuite = true
-
-  provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
-  }
-}
+// module "base_arm" {
+//   providers = {
+//     libvirt = libvirt.overdrive4
+//   }
+//
+//   source = "./modules/base"
+//
+//   cc_username = var.SCC_USER
+//   cc_password = var.SCC_PASSWORD
+//   name_prefix = "suma-bv-42-"
+//   use_avahi   = false
+//   domain      = "mgr.prv.suse.net"
+//   images      = [ "opensuse153armo" ]
+//
+//   mirror = "minima-mirror-bv3.mgr.prv.suse.net"
+//   use_mirror_images = true
+//
+//   testsuite = true
+//
+//   provider_settings = {
+//     pool        = "ssd"
+//     bridge      = "br1"
+//   }
+// }
 
 module "server" {
   source             = "./modules/server"
@@ -1209,31 +1209,31 @@ module "sles15sp3-terminal" {
   }
 }
 
-module "opensuse153arm-minion" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.2-released"
-  name               = "min-opensuse153arm"
-  image              = "opensuse153armo"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:ae"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //opensuse153arm-minion_additional_repos
-
-}
+//module "opensuse153arm-minion" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "4.2-released"
+//  name               = "min-opensuse153arm"
+//  image              = "opensuse153armo"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:ae"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  server_configuration = {
+//    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  //opensuse153arm-minion_additional_repos
+//
+//}
 
 module "controller" {
   source             = "./modules/controller"
@@ -1311,7 +1311,7 @@ module "controller" {
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
 
-  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
+//  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {

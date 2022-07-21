@@ -245,7 +245,7 @@ module "suse-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-sles15"
-  image              = "sles15sp3o"
+  image              = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
@@ -262,7 +262,7 @@ module "suse-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-sles15"
-  image              = "sles15sp3o"
+  image              = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
