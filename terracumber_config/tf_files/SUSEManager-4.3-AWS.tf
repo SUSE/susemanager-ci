@@ -136,16 +136,6 @@ variable "NAME_PREFIX" {
   default = null
 }
 
-variable "PROXY_AMI" {
-  type = string
-  default = "sles15sp4o"
-}
-
-variable "SERVER_AMI" {
-  type = string
-  default = "sles15sp4o"
-}
-
 provider "aws" {
   region     = var.REGION
   access_key = var.ACCESS_KEY
@@ -187,10 +177,9 @@ module "server" {
     mirror = null
   })
   name                       = "server"
-  product_version            = "4.3-build_image"
+  product_version            = "4.3-released"
   repository_disk_size       = 1500
-  image                      = var.SERVER_AMI
-  server_registration_code = var.SERVER_REGISTRATION_CODE
+  server_registration_code   = var.SERVER_REGISTRATION_CODE
 
   auto_accept                    = false
   monitored                      = true
@@ -216,9 +205,9 @@ module "proxy" {
   source                    = "./modules/proxy"
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
-  product_version           = "4.3-build_image"
+  product_version           = "4.3-released"
   name                      = "proxy"
-  image                     = var.PROXY_AMI
+  proxy_registration_code   = var.PROXY_REGISTRATION_CODE
 
   auto_register             = false
   auto_connect_to_master    = false
@@ -229,6 +218,7 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = true
   //proxy_additional_repos
 
 }
@@ -245,6 +235,8 @@ module "suse-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
   //  product_version = "4.2-released"
 }
 
@@ -259,7 +251,8 @@ module "suse-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
   //sle15sp2-minion_additional_repos
 
 }
@@ -274,7 +267,8 @@ module "suse-sshminion" {
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
-
+  additional_packages = [ "venv-salt-minion" , "iptables"]
+  install_salt_bundle = true
   //sle15sp3-minion_additional_repos
 
 }
@@ -294,6 +288,8 @@ module "redhat-minion"  {
   server_configuration = module.server.configuration
   auto_connect_to_master = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian-minion" {
@@ -305,12 +301,14 @@ module "debian-minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "build-host"  {
   image = "sles15sp4o"
   name = "build-host"
-  source             = "./modules/minion"
+  source             = "./modules/build_host"
   base_configuration = module.base.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   product_version    = "4.3-released"
@@ -318,6 +316,8 @@ module "build-host"  {
   auto_connect_to_master  = false
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "controller" {
