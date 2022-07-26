@@ -4,6 +4,10 @@ def run(params) {
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
 
+        if (!params.terraform_parallelism) {
+            params.terraform_parallelism = 10
+        }
+
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin} --parallelism ${params.terraform_parallelism}"

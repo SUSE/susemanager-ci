@@ -3,6 +3,11 @@ def run(params) {
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+
+        if (!params.terraform_parallelism) {
+            params.terraform_parallelism = 10
+        }
+
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin} --parallelism ${params.terraform_parallelism}"
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
