@@ -37,6 +37,7 @@ node('pull-request-test') {
         run_all_scopes = params.run_all_scopes;
         pull_request_number = params.pull_request_number;
         additional_repo_url = params.additional_repo_url;
+        terraform_parallelism = params.terraform_parallelism;
         sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
         sumaform_ref = "master";
         secondary_exports = ""
