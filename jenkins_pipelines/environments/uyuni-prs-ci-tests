@@ -14,6 +14,7 @@ node('pull-request-test') {
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Advanced: Change this by your repo, only if you changed the tests in your PR'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Advanced: Change this by your branch, only if you changed the tests in your PR'),
             string(name: 'additional_repo_url', defaultValue: '', description: 'Advanced: Add the URL of an additional repo to test new packages or package updates (only for server, proxy, kvm and xen hosts).'),
+            string(name: 'terraform_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for terraform'),
             booleanParam(name: 'force_pr_lock_cleanup', defaultValue: false, description: 'Advanced: Check this parameter to force a cleanup of the locks associated with this PR. Be careful, only do this if you are certain no one else is running a test for the same PR. More at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting'),
             booleanParam(name: 'skip_package_build_check', defaultValue: false, description: 'Advanced: Check this parameter to skip checking if packages build correctly in systemsmanagement:Uyuni:Master. Do this when you are fixing a package build with your PR.'), 
         ])
@@ -36,6 +37,7 @@ node('pull-request-test') {
         run_all_scopes = params.run_all_scopes;
         pull_request_number = params.pull_request_number;
         additional_repo_url = params.additional_repo_url;
+        terraform_parallelism = params.terraform_parallelism;
         sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
         sumaform_ref = "master";
         secondary_exports = ""
