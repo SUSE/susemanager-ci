@@ -207,12 +207,11 @@ def run(params) {
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/Uyuni-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
+                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
 
-                        if (!params.terraform_parallelism || params.terraform_parallelism == '') {
-                            params.terraform_parallelism = 10
+                        if (params.terraform_parallelism) {
+                            env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
                         }
-
-                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --parallelism ${params.terraform_parallelism}"
 
                         // Clean up old results
                         sh "if [ -d ${resultdir} ];then ./clean-old-results -r ${resultdir};fi"

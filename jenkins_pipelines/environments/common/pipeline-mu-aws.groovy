@@ -20,13 +20,15 @@ def run(params) {
         deployed_local = false
         deployed_aws = false
 
-        if (!params.terraform_parallelism || params.terraform_parallelism == '') {
-            params.terraform_parallelism = 10
-        }
+        local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir}"
+        aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir}"
+        aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/${env.JOB_NAME}.tf --gitfolder ${aws_mirror_dir}"
 
-        local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir} --parallelism ${params.terraform_parallelism}"
-        aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir} --parallelism ${params.terraform_parallelism}"
-        aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/${env.JOB_NAME}.tf --gitfolder ${aws_mirror_dir} --parallelism ${params.terraform_parallelism}"
+        if (params.terraform_parallelism) {
+            local_mirror_params = "${local_mirror_params} --parallelism ${params.terraform_parallelism}"
+            aws_mirror_params = "${aws_mirror_params} --parallelism ${params.terraform_parallelism}"
+            aws_common_params = "${aws_common_params} --parallelism ${params.terraform_parallelism}"
+        }
         if (params.terraform_init) {
             TERRAFORM_INIT = '--init'
         } else {
