@@ -20,7 +20,7 @@ def run(params) {
         deployed_local = false
         deployed_aws = false
 
-        if (!params.terraform_parallelism) {
+        if (!params.terraform_parallelism || params.terraform_parallelism == '') {
             params.terraform_parallelism = 10
         }
 

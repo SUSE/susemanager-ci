@@ -4,7 +4,7 @@ def run(params) {
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
 
-        if (!params.terraform_parallelism) {
+        if (!params.terraform_parallelism || params.terraform_parallelism == '') {
             params.terraform_parallelism = 10
         }
 

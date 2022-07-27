@@ -208,7 +208,7 @@ def run(params) {
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/Uyuni-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
 
-                        if (!params.terraform_parallelism) {
+                        if (!params.terraform_parallelism || params.terraform_parallelism == '') {
                             params.terraform_parallelism = 10
                         }
 

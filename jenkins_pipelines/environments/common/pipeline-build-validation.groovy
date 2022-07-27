@@ -6,7 +6,7 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
 
-        if (!params.terraform_parallelism) {
+        if (!params.terraform_parallelism || params.terraform_parallelism == '') {
             params.terraform_parallelism = 10
         }
 
