@@ -24,6 +24,7 @@ def run(params) {
         build_repo = 'openSUSE_Leap_15.4'
         environment_workspace = null
         url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
+        env.common_params = ''
         try {
             stage('Get environment') {
                   echo "DEBUG: first environment: ${first_env}"
@@ -309,7 +310,7 @@ def run(params) {
                 }
             }
             stage('Get test results') {
-                if(environment_workspace){
+                if(environment_workspace && common_params != ''){
                     ws(environment_workspace){
                         def error = 0
                         if(must_test) {
