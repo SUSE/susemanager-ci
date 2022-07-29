@@ -141,6 +141,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
+        Salt_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/SLE15/SLE_15/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -151,6 +152,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:74"
       }
+      additional_repos = {
+        Salt_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/SLE15/SLE_15/"
+      }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -159,6 +163,9 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:76"
+      }
+      additional_repos = {
+        Salt_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/SLE15/SLE_15/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -169,7 +176,10 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:78"
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_repos = {
+        Salt_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/SLE15/SLE_15/"
+      }
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
@@ -179,6 +189,9 @@ module "cucumber_testsuite" {
         // Still researching, but it will do it for now
         memory = 2048
         vcpu = 2
+      }
+      additional_repos = {
+        Salt_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/CentOS7/CentOS_7/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -192,6 +205,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:7b"
       }
+      additional_repos = {
+        Salt_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/Ubuntu2004/Ubuntu_20.04/"
+      }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -199,6 +215,9 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       provider_settings = {
         mac = "aa:b2:93:01:00:7d"
+      }
+      additional_repos = {
+        Salt_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/SLE15/SLE_15/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true

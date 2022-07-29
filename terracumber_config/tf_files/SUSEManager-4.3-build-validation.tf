@@ -261,30 +261,30 @@ module "base_debian" {
   }
 }
 
-# module "base_arm" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
-# 
-#   source = "./modules/base"
-# 
-#   cc_username = var.SCC_USER
-#   cc_password = var.SCC_PASSWORD
-#   name_prefix = "suma-bv-43-"
-#   use_avahi   = false
-#   domain      = "mgr.prv.suse.net"
-#   images      = [ "opensuse153armo" ]
-# 
-#   mirror = "minima-mirror-bv3.mgr.prv.suse.net"
-#   use_mirror_images = true
-# 
-#   testsuite = true
-# 
-#   provider_settings = {
-#     pool        = "ssd"
-#     bridge      = "br0"
-#   }
-# }
+module "base_arm" {
+  providers = {
+    libvirt = libvirt.overdrive4
+  }
+
+  source = "./modules/base"
+
+  cc_username = var.SCC_USER
+  cc_password = var.SCC_PASSWORD
+  name_prefix = "suma-bv-43-"
+  use_avahi   = false
+  domain      = "mgr.prv.suse.net"
+  images      = [ "opensuse153armo" ]
+
+  mirror = "minima-mirror-bv3.mgr.prv.suse.net"
+  use_mirror_images = true
+
+  testsuite = true
+
+  provider_settings = {
+    pool        = "ssd"
+    bridge      = "br1"
+  }
+}
 
 module "server" {
   source             = "./modules/server"
@@ -1117,32 +1117,27 @@ module "sles12sp5-terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
-  source             = "./modules/minion"
+  source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.3-released"
   name               = "terminal-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 1024
     vcpu               = 1
+    manufacturer       = "Supermicro"
+    product            = "X9DR3-F"
   }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp3-buildhost" {
+module "sles15sp4-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
-  name               = "build-sles15sp3"
-  image              = "sles15sp3o"
+  name               = "build-sles15sp4"
+  image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:cd"
     memory             = 2048
@@ -1156,18 +1151,36 @@ module "sles15sp3-buildhost" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp3-terminal" {
+module "sles15sp4-terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
-  source             = "./modules/minion"
+  source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.3-released"
-  name               = "terminal-sles15sp3"
-  image              = "sles15sp3o"
+  name               = "terminal-sles15sp4"
+  image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048
     vcpu               = 2
+    manufacturer       = "HP"
+    product            = "ProLiant DL360 Gen9"
+  }
+}
+
+module "opensuse153arm-minion" {
+  providers = {
+    libvirt = libvirt.overdrive4
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "min-opensuse153arm"
+  image              = "opensuse153armo"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:ee"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
@@ -1175,33 +1188,10 @@ module "sles15sp3-terminal" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
 
-# module "opensuse153arm-minion" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
-#   source             = "./modules/minion"
-#   base_configuration = module.base_arm.configuration
-#   product_version    = "4.3-released"
-#   name               = "min-opensuse153arm"
-#   image              = "opensuse153armo"
-#   provider_settings = {
-#     mac                = "aa:b2:92:42:00:ee"
-#     memory             = 2048
-#     vcpu               = 2
-#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-#   }
-#   server_configuration = {
-#     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-#   }
-#   auto_connect_to_master  = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-# 
-#   //opensuse153arm-minion_additional_repos
-# 
-# }
+  //opensuse153arm-minion_additional_repos
+
+}
 
 module "controller" {
   source             = "./modules/controller"
@@ -1271,12 +1261,12 @@ module "controller" {
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
-  sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
+  sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
 
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
-  sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
+  sle15sp4_terminal_configuration = module.sles15sp4-terminal.configuration
 
-#   opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
+  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {

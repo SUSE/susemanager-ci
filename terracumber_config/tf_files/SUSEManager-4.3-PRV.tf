@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.0/job/manager-4.0-dev-acceptance-tests-PRV"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-dev-acceptance-tests-PRV"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-4.0"
+  default = "Manager-4.3"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results 4.0-PRV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 4.3-PRV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results 4.0-PRV: Environment setup failed"
+  default = "Results 4.3-PRV: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -92,7 +92,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "4.0-nightly"
+  product_version = "4.3-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -103,13 +103,12 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  # temporary: custom CentOS image due to broken Salt
-  images = ["centos7o", "opensuse152o", "sles15sp1o", "sles15sp2o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
 
-  use_avahi    = false
-  name_prefix  = "suma-40-"
-  domain       = "mgr.prv.suse.net"
-  from_email   = "root@suse.de"
+  use_avahi = false
+  name_prefix = "suma-43-"
+  domain = "mgr.prv.suse.net"
+  from_email = "root@suse.de"
 
   no_auth_registry = "registry.mgr.prv.suse.net"
   auth_registry = "registry.mgr.prv.suse.net:5000/cucutest"
@@ -136,35 +135,47 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:82"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-client = {
-      image = "sles15sp1o"
+      image = "sles15sp4o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:84"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp1o"
+      image = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:86"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp1o"
+      image = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:88"
       }
+      additional_packages = [ "venv-salt-minion", "iptables" ]
+      install_salt_bundle = true
     }
     redhat-minion = {
       image = "centos7o"
       provider_settings = {
         mac = "aa:b2:92:03:00:89"
-        // Openscap cannot run with less than 1.25 GB of RAM
-        memory = 1280
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        memory = 2048
+        vcpu = 2
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2004"
@@ -172,34 +183,52 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:8c"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     build-host = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:92:03:00:8d"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
     }
     kvm-host = {
-      image = "sles15sp1o"
+      image = "sles15sp4o"
+      additional_grains = {
+        hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+        hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+      }
       provider_settings = {
         mac = "aa:b2:92:03:00:8e"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     xen-host = {
-      image = "sles15sp1o"
+      image = "sles15sp4o"
+      additional_grains = {
+        xen_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-15.4-kvm-and-xen-Current.qcow2"
+        xen_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-15.4-kvm-and-xen-Current.qcow2.sha256"
+        hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+        hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+      }
       provider_settings = {
         mac = "aa:b2:92:03:00:8f"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
   }
   provider_settings = {
     pool = "ssd"
     network_name = null
     bridge = "br1"
-    additional_network = "192.168.40.0/24"
+    additional_network = "192.168.43.0/24"
   }
 }
 

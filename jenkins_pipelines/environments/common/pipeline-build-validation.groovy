@@ -5,7 +5,12 @@ def run(params) {
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
+
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
+
+        if (params.terraform_parallelism) {
+            env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
+        }
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
                 // Create a directory for  to place the directory with the build results (if it does not exist)
@@ -149,7 +154,7 @@ def run(params) {
                                 reportFiles: 'cucumber_report.html',
                                 reportName: "Build Validation report"]
                     )
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                    // junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
                 // Send email
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"

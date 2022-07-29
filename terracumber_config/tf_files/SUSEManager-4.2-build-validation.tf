@@ -108,10 +108,10 @@ provider "libvirt" {
   uri = "qemu+tcp://trantor.mgr.prv.suse.net/system"
 }
 
-provider "libvirt" {
-  alias = "overdrive4"
-  uri = "qemu+tcp://overdrive4.arch.suse.de/system"
-}
+//provider "libvirt" {
+//  alias = "overdrive4"
+//  uri = "qemu+tcp://overdrive4.arch.suse.de/system"
+//}
 
 module "base_core" {
   source = "./modules/base"
@@ -147,7 +147,7 @@ module "base_old_sle" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp4o", "sles12sp5o" ]
+  images      = [ "sles12sp4o", "sles12sp5o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -222,7 +222,7 @@ module "base_retail" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles11sp4", "sles12sp5o", "sles15sp3o" ]
+  images      = [ "sles12sp5o", "sles15sp3o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -261,30 +261,30 @@ module "base_debian" {
   }
 }
 
-# module "base_arm" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
-# 
-#   source = "./modules/base"
-# 
-#   cc_username = var.SCC_USER
-#   cc_password = var.SCC_PASSWORD
-#   name_prefix = "suma-bv-42-"
-#   use_avahi   = false
-#   domain      = "mgr.prv.suse.net"
-#   images      = [ "opensuse153armo" ]
-# 
-#   mirror = "minima-mirror-bv3.mgr.prv.suse.net"
-#   use_mirror_images = true
-# 
-#   testsuite = true
-# 
-#   provider_settings = {
-#     pool        = "ssd"
-#     bridge      = "br0"
-#   }
-# }
+// module "base_arm" {
+//   providers = {
+//     libvirt = libvirt.overdrive4
+//   }
+//
+//   source = "./modules/base"
+//
+//   cc_username = var.SCC_USER
+//   cc_password = var.SCC_PASSWORD
+//   name_prefix = "suma-bv-42-"
+//   use_avahi   = false
+//   domain      = "mgr.prv.suse.net"
+//   images      = [ "opensuse153armo" ]
+//
+//   mirror = "minima-mirror-bv3.mgr.prv.suse.net"
+//   use_mirror_images = true
+//
+//   testsuite = true
+//
+//   provider_settings = {
+//     pool        = "ssd"
+//     bridge      = "br1"
+//   }
+// }
 
 module "server" {
   source             = "./modules/server"
@@ -350,30 +350,6 @@ module "proxy" {
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 
   //proxy_additional_repos
-
-}
-
-module "sles11sp4-client" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
-  source             = "./modules/client"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.2-released"
-  name               = "cli-sles11sp4"
-  image              = "sles11sp4"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:90"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle11sp4-client_additional_repos
 
 }
 
@@ -566,30 +542,6 @@ module "centos7-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   //ceos7-client_additional_repos
-
-}
-
-module "sles11sp4-minion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.2-released"
-  name               = "min-sles11sp4"
-  image              = "sles11sp4"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:a0"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle11sp4-minion_additional_repos
 
 }
 
@@ -937,23 +889,6 @@ module "debian11-minion" {
 
 }
 
-module "sles11sp4-sshminion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-sles11sp4"
-  image              = "sles11sp4"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:b0"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "sles12sp4-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -1198,49 +1133,6 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles11sp4-buildhost" {
-  providers = {
-    libvirt = libvirt.terminus
-  }
-  source             = "./modules/build_host"
-  base_configuration = module.base_retail.configuration
-  product_version    = "4.2-released"
-  name               = "build-sles11sp4"
-  image              = "sles11sp4"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:8b"
-    memory             = 2048
-    vcpu               = 2
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "sles11sp3-terminal" {
-  providers = {
-    libvirt = libvirt.terminus
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_retail.configuration
-  product_version    = "4.2-released"
-  name               = "terminal-sles11sp3"
-  image              = "sles11sp4" # This is not a typo
-  provider_settings = {
-    memory             = 1024
-    vcpu               = 1
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "sles12sp5-buildhost" {
   providers = {
     libvirt = libvirt.terminus
@@ -1267,21 +1159,16 @@ module "sles12sp5-terminal" {
   providers = {
     libvirt = libvirt.terminus
   }
-  source             = "./modules/minion"
+  source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.2-released"
   name               = "terminal-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 1024
     vcpu               = 1
+    manufacturer       = "Supermicro"
+    product            = "X9DR3-F"
   }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "sles15sp3-buildhost" {
@@ -1310,48 +1197,43 @@ module "sles15sp3-terminal" {
   providers = {
     libvirt = libvirt.terminus
   }
-  source             = "./modules/minion"
+  source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.2-released"
   name               = "terminal-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
     memory             = 2048
     vcpu               = 2
+    manufacturer       = "HP"
+    product            = "ProLiant DL360 Gen9"
   }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-# module "opensuse153arm-minion" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
-#   source             = "./modules/minion"
-#   base_configuration = module.base_arm.configuration
-#   product_version    = "4.2-released"
-#   name               = "min-opensuse153arm"
-#   image              = "opensuse153armo"
-#   provider_settings = {
-#     mac                = "aa:b2:92:42:00:ae"
-#     memory             = 2048
-#     vcpu               = 2
-#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-#   }
-#   server_configuration = {
-#     hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-#   }
-#   auto_connect_to_master  = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-# 
-#   //opensuse153arm-minion_additional_repos
-# 
-# }
+//module "opensuse153arm-minion" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "4.2-released"
+//  name               = "min-opensuse153arm"
+//  image              = "opensuse153armo"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:ae"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  server_configuration = {
+//    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  //opensuse153arm-minion_additional_repos
+//
+//}
 
 module "controller" {
   source             = "./modules/controller"
@@ -1379,10 +1261,6 @@ module "controller" {
 
   centos8_minion_configuration    = module.centos8-minion.configuration
   centos8_sshminion_configuration = module.centos8-sshminion.configuration
-
-  sle11sp4_client_configuration    = module.sles11sp4-client.configuration
-  sle11sp4_minion_configuration    = module.sles11sp4-minion.configuration
-  sle11sp4_sshminion_configuration = module.sles11sp4-sshminion.configuration
 
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
@@ -1427,15 +1305,13 @@ module "controller" {
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
-  sle11sp4_buildhost_configuration = module.sles11sp4-buildhost.configuration
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
 
-  sle11sp3_terminal_configuration = module.sles11sp3-terminal.configuration
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
 
-#   opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
+//  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {

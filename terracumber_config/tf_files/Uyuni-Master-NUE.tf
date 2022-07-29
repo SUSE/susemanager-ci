@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse153o", "opensuse154o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -116,8 +116,8 @@ module "cucumber_testsuite" {
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   // Comment the next two lines if no mirror should be used
-  mirror = "minima-mirror.mgr.suse.de"
-  use_mirror_images = true
+  //mirror = "minima-mirror.mgr.suse.de"
+  //use_mirror_images = true
 
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
 
@@ -142,7 +142,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp2o"
+      # left with SP3 since we update it to SP4 in the testsuite
+      image = "sles15sp3o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
@@ -151,12 +152,13 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp2o"
+      # left with SP3 since we update it to SP4 in the testsuite
+      image = "sles15sp3o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
@@ -184,7 +186,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:dd"
       }
@@ -192,12 +194,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse153o"
+      image = "opensuse154o"
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
       }
@@ -205,7 +207,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     xen-host = {
-      image = "opensuse153o"
+      image = "opensuse154o"
       provider_settings = {
         mac = "aa:b2:93:01:00:df"
       }

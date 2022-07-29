@@ -12,7 +12,7 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
@@ -137,7 +137,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-client = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:b4"
@@ -146,7 +146,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp2o"
+      # left with SP3 since we update it to SP4 in the testsuite
+      image = "sles15sp3o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:b6"
@@ -155,12 +156,13 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp2o"
+      # left with SP3 since we update it to SP4 in the testsuite
+      image = "sles15sp3o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:b8"
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
@@ -185,7 +187,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     build-host = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:bd"
@@ -194,10 +196,10 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
     }
     kvm-host = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:be"
       }
@@ -205,7 +207,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     xen-host = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:bf"
       }

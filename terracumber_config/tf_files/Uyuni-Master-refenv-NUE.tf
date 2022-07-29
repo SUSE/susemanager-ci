@@ -91,7 +91,7 @@ module "base" {
   name_prefix = "uyuni-refmaster-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["centos7o", "opensuse153o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu1804o"]
+  images      = ["centos7o", "opensuse154o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
 
   provider_settings = {
     pool         = "ssd"
@@ -176,12 +176,12 @@ module "debian-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "uyuni-master"
-  name                 = "min-ubuntu1804"
-  image                = "ubuntu1804o"
+  name                 = "min-ubuntu2004"
+  image                = "ubuntu2004o"
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "aa:b2:93:01:00:eb"
+    mac = "aa:b2:93:01:00:ec"
   }
   additional_packages = [ "venv-salt-minion" ]
 

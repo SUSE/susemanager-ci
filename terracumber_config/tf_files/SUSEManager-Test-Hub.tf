@@ -16,7 +16,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "hub-reporting-beta3"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -115,10 +115,12 @@ module "hub" {
   }
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:42"
+    mac = "aa:b2:93:01:01:31"
     memory = 10240
     vcpu = 8
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "prh1" {
@@ -130,13 +132,14 @@ module "prh1" {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
   auto_accept                    = true
-  use_os_released_updates        = false
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:43"
+    mac = "aa:b2:93:01:01:32"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "prh2" {
@@ -148,13 +151,14 @@ module "prh2" {
     Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
   }
   auto_accept                    = true
-  use_os_released_updates        = false
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration.hostname
   image = "sles15sp4o"
   provider_settings = {
-    mac = "aa:b2:93:01:01:44"
+    mac = "aa:b2:93:01:01:33"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 
@@ -164,9 +168,8 @@ module "min-sles15sp3" {
   name = "min-sles15sp3"
   image = "sles15sp3o"
   server_configuration = module.prh1.configuration
-  use_os_released_updates = false
   provider_settings = {
-    mac = "aa:b2:93:01:01:45"
+    mac = "aa:b2:93:01:01:34"
   }
 }
 
@@ -176,10 +179,11 @@ module "min-centos7" {
   name = "min-centos7"
   image = "centos7o"
   server_configuration = module.prh2.configuration
-  use_os_released_updates = false
   provider_settings = {
-    mac = "aa:b2:93:01:01:46"
+    mac = "aa:b2:93:01:01:35"
   }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "controller" {
@@ -187,7 +191,7 @@ module "controller" {
   base_configuration = module.base_core.configuration
   name = "ctl"
   no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "portus.mgr.suse.de:5000/cucutest"
+  auth_registry = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
 
@@ -197,7 +201,7 @@ module "controller" {
   branch       = var.CUCUMBER_BRANCH
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  server_http_proxy = "galaxy-proxy.mgr.suse.de:3128"
+  server_http_proxy = "http-proxy.mgr.suse.de:3128"
   
   server_configuration = module.prh1.configuration
 
@@ -205,7 +209,7 @@ module "controller" {
   centos7_minion_configuration = module.min-centos7.configuration
 
   provider_settings = {
-    mac = "aa:b2:93:01:01:41"
+    mac = "aa:b2:93:01:01:30"
   }
 }
 

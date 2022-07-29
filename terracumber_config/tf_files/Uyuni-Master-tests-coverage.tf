@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["opensuse152o", "opensuse153o", "sles15sp2o", "sles15sp3o"]
+  images = ["opensuse152o", "opensuse154o", "sles15sp2o", "sles15sp3o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr8-"
@@ -160,7 +160,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:81"
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
   }

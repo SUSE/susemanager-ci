@@ -8,6 +8,10 @@ def run(params) {
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
 
+        if (params.terraform_parallelism) {
+            env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
+        }
+
         def previous_commit = null
         def product_commit = null
         if (params.show_product_changes) {

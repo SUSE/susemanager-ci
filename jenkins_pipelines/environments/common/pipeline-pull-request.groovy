@@ -21,8 +21,10 @@ def run(params) {
         source_project = 'systemsmanagement:Uyuni:Master'
         sumaform_tools_project = 'systemsmanagement:sumaform:tools'
         test_packages_project = 'systemsmanagement:Uyuni:Test-Packages:Pool'
-        build_repo = 'openSUSE_Leap_15.3'
+        build_repo = 'openSUSE_Leap_15.4'
         environment_workspace = null
+        url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
+        env.common_params = ''
         try {
             stage('Get environment') {
                   echo "DEBUG: first environment: ${first_env}"
@@ -30,6 +32,11 @@ def run(params) {
                   env.suma_pr_lockfile = "/tmp/suma-pr${pull_request_number}"
                   if(params.force_pr_lock_cleanup) {
                     sh "rm -rf ${env.suma_pr_lockfile}"
+                  }
+                  if(params.remove_previous_environment) {
+                    if(email_to!='' && pull_request_number!='') {
+                        sh "bash jenkins_pipelines/scripts/cleanup-lock.sh -u ${email_to} -p ${pull_request_number}"
+                    }
                   }
                   running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
                   if(running_same_pr == "yes") {
@@ -99,7 +106,7 @@ def run(params) {
             stage('Build product') {
                 ws(environment_workspace){
                     currentBuild.description =  "${builder_project}:${pull_request_number}<br>${email_to}<br>environment: ${env_number}<br>"
-                    if (params.run_all_scopes) {
+                    if (run_all_scopes) {
                         currentBuild.description = "${currentBuild.description} Run all scopes<br>"
                     } else {
                         currentBuild.description = "${currentBuild.description}${params.functional_scopes}<br>"
@@ -202,6 +209,10 @@ def run(params) {
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/Uyuni-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
                         env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
 
+                        if (params.terraform_parallelism) {
+                            env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
+                        }
+
                         // Clean up old results
                         sh "if [ -d ${resultdir} ];then ./clean-old-results -r ${resultdir};fi"
 
@@ -242,7 +253,7 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_CENTOS_CLIENT_REPO=${CENTOS_CLIENT_REPO};export TF_VAR_UBUNTU_CLIENT_REPO=${UBUNTU_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_CENTOS_CLIENT_REPO=${CENTOS_CLIENT_REPO};export TF_VAR_UBUNTU_CLIENT_REPO=${UBUNTU_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
                     }
                 }
@@ -272,13 +283,9 @@ def run(params) {
             }
             stage('Secondary features') {
                 ws(environment_workspace){
-                    if(must_test && ( params.functional_scopes || params.run_all_scopes) ) {
-                        def exports = ""
-                        if (params.functional_scopes){
-                          exports += "export TAGS=${params.functional_scopes}; "
-                        }
-                        def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                        def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus:true
+                    if(must_test && ( params.functional_scopes || run_all_scopes) ) {
+                        def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
+                        def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus:true
                         sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                     }
                 }
@@ -307,7 +314,7 @@ def run(params) {
                 }
             }
             stage('Get test results') {
-                if(environment_workspace){
+                if(environment_workspace && common_params != ''){
                     ws(environment_workspace){
                         def error = 0
                         if(must_test) {
@@ -339,10 +346,10 @@ def run(params) {
                                 archiveArtifacts artifacts: "results/${BUILD_NUMBER}/**/*"
                             }
                             if (email_to != '') {
-                                sh " export TF_VAR_MAIL_TO=${email_to}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                                sh " export TF_VAR_MAIL_TO=${email_to};export TF_VAR_URL_PREFIX=${url_prefix}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
                             // Clean up old results
-                            sh "./clean-old-results -r ${resultdir}"
+                            sh "./clean-old-results -r ${resultdir} -s 10"
                             sh "exit ${error}"
                         }
                     }
