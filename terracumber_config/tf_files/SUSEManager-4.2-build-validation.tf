@@ -292,7 +292,7 @@ module "server" {
   product_version    = "4.2-released"
   name               = "srv"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:89"
+    mac                = "aa:b2:92:42:00:51"
     memory             = 40960
     vcpu               = 10
     data_pool          = "ssd"
@@ -331,7 +331,7 @@ module "proxy" {
   product_version    = "4.2-released"
   name               = "pxy"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:8a"
+    mac                = "aa:b2:92:42:00:52"
     memory             = 4096
   }
   server_configuration = {
@@ -363,7 +363,7 @@ module "sles12sp4-client" {
   name               = "cli-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:91"
+    mac                = "aa:b2:92:42:00:58"
     memory             = 4096
   }
   server_configuration = {
@@ -387,7 +387,7 @@ module "sles12sp5-client" {
   name               = "cli-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:92"
+    mac                = "aa:b2:92:42:00:59"
     memory             = 4096
   }
   server_configuration = {
@@ -411,7 +411,7 @@ module "sles15-client" {
   name               = "cli-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:93"
+    mac                = "aa:b2:92:42:00:5a"
     memory             = 4096
   }
   server_configuration = {
@@ -435,7 +435,7 @@ module "sles15sp1-client" {
   name               = "cli-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:94"
+    mac                = "aa:b2:92:42:00:5b"
     memory             = 4096
   }
   server_configuration = {
@@ -459,7 +459,7 @@ module "sles15sp2-client" {
   name               = "cli-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:95"
+    mac                = "aa:b2:92:42:00:5c"
     memory             = 4096
   }
   server_configuration = {
@@ -483,7 +483,7 @@ module "sles15sp3-client" {
   name               = "cli-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:96"
+    mac                = "aa:b2:92:42:00:5d"
     memory             = 4096
   }
   server_configuration = {
@@ -507,7 +507,7 @@ module "sles15sp4-client" {
   name               = "cli-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:9f"
+    mac                = "aa:b2:92:42:00:5e"
     memory             = 4096
   }
   server_configuration = {
@@ -531,7 +531,7 @@ module "centos7-client" {
   name               = "cli-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:97"
+    mac                = "aa:b2:92:42:00:5f"
     memory             = 4096
   }
   server_configuration = {
@@ -555,7 +555,7 @@ module "sles12sp4-minion" {
   name               = "min-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a1"
+    mac                = "aa:b2:92:42:00:60"
     memory             = 4096
   }
   server_configuration = {
@@ -579,7 +579,7 @@ module "sles12sp5-minion" {
   name               = "min-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a2"
+    mac                = "aa:b2:92:42:00:61"
     memory             = 4096
   }
   server_configuration = {
@@ -603,7 +603,7 @@ module "sles15-minion" {
   name               = "min-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a3"
+    mac                = "aa:b2:92:42:00:62"
     memory             = 4096
   }
 
@@ -628,7 +628,7 @@ module "sles15sp1-minion" {
   name               = "min-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a4"
+    mac                = "aa:b2:92:42:00:63"
     memory             = 4096
   }
 
@@ -653,7 +653,7 @@ module "sles15sp2-minion" {
   name               = "min-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a5"
+    mac                = "aa:b2:92:42:00:64"
     memory             = 4096
   }
 
@@ -678,7 +678,7 @@ module "sles15sp3-minion" {
   name               = "min-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a6"
+    mac                = "aa:b2:92:42:00:65"
     memory             = 4096
   }
 
@@ -703,7 +703,7 @@ module "sles15sp4-minion" {
   name               = "min-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:af"
+    mac                = "aa:b2:92:42:00:66"
     memory             = 4096
   }
 
@@ -728,7 +728,7 @@ module "centos7-minion" {
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a7"
+    mac                = "aa:b2:92:42:00:67"
     memory             = 4096
   }
   server_configuration = {
@@ -752,7 +752,7 @@ module "centos8-minion" {
   name               = "min-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a8"
+    mac                = "aa:b2:92:42:00:68"
     memory             = 4096
   }
   server_configuration = {
@@ -776,7 +776,7 @@ module "ubuntu1804-minion" {
   name               = "min-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a9"
+    mac                = "aa:b2:92:42:00:69"
     memory             = 4096
   }
   server_configuration = {
@@ -800,7 +800,7 @@ module "ubuntu2004-minion" {
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:aa"
+    mac                = "aa:b2:92:42:00:6a"
     memory             = 4096
   }
   server_configuration = {
@@ -814,6 +814,30 @@ module "ubuntu2004-minion" {
 
 }
 
+// module "ubuntu2204-minion" {
+//   providers = {
+//     libvirt = libvirt.trantor
+//   }
+//   source             = "./modules/minion"
+//   base_configuration = module.base_debian.configuration
+//   product_version    = "4.2-released"
+//   name               = "min-ubuntu2204"
+//   image              = "ubuntu2204o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:6b"
+//     memory             = 4096
+//   }
+//   server_configuration = {
+//     hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+//   }
+//   auto_connect_to_master  = false
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//   //ubuntu2204-minion_additional_repos
+//
+// }
+
 module "debian9-minion" {
   providers = {
     libvirt = libvirt.trantor
@@ -824,7 +848,7 @@ module "debian9-minion" {
   name               = "min-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ab"
+    mac                = "aa:b2:92:42:00:6c"
     memory             = 4096
   }
 
@@ -849,7 +873,7 @@ module "debian10-minion" {
   name               = "min-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ac"
+    mac                = "aa:b2:92:42:00:6d"
     memory             = 4096
   }
 
@@ -874,7 +898,7 @@ module "debian11-minion" {
   name               = "min-debian11"
   image              = "debian11o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ad"
+    mac                = "aa:b2:92:42:00:6e"
     memory             = 4096
   }
 
@@ -899,7 +923,7 @@ module "sles12sp4-sshminion" {
   name               = "minssh-sles12sp4"
   image              = "sles12sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b1"
+    mac                = "aa:b2:92:42:00:80"
     memory             = 4096
   }
 
@@ -918,7 +942,7 @@ module "sles12sp5-sshminion" {
   name               = "minssh-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b2"
+    mac                = "aa:b2:92:42:00:81"
     memory             = 4096
   }
 
@@ -937,7 +961,7 @@ module "sles15-sshminion" {
   name               = "minssh-sles15"
   image              = "sles15o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b3"
+    mac                = "aa:b2:92:42:00:82"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -955,7 +979,7 @@ module "sles15sp1-sshminion" {
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b4"
+    mac                = "aa:b2:92:42:00:83"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -973,7 +997,7 @@ module "sles15sp2-sshminion" {
   name               = "minssh-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b5"
+    mac                = "aa:b2:92:42:00:84"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -990,7 +1014,7 @@ module "sles15sp3-sshminion" {
   name               = "minssh-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b6"
+    mac                = "aa:b2:92:42:00:85"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1007,7 +1031,7 @@ module "sles15sp4-sshminion" {
   name               = "minssh-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bf"
+    mac                = "aa:b2:92:42:00:86"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1024,7 +1048,7 @@ module "centos7-sshminion" {
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b7"
+    mac                = "aa:b2:92:42:00:87"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1041,7 +1065,7 @@ module "centos8-sshminion" {
   name               = "minssh-centos8"
   image              = "centos8o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b8"
+    mac                = "aa:b2:92:42:00:88"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1058,7 +1082,7 @@ module "ubuntu1804-sshminion" {
   name               = "minssh-ubuntu1804"
   image              = "ubuntu1804o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b9"
+    mac                = "aa:b2:92:42:00:89"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1075,12 +1099,29 @@ module "ubuntu2004-sshminion" {
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:ba"
+    mac                = "aa:b2:92:42:00:8a"
     memory             = 4096
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
+
+// module "ubuntu2204-sshminion" {
+//   providers = {
+//     libvirt = libvirt.trantor
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_debian.configuration
+//   product_version    = "4.2-released"
+//   name               = "minssh-ubuntu2204"
+//   image              = "ubuntu2204o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:8b"
+//     memory             = 4096
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
 module "debian9-sshminion" {
   providers = {
@@ -1092,7 +1133,7 @@ module "debian9-sshminion" {
   name               = "minssh-debian9"
   image              = "debian9o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bb"
+    mac                = "aa:b2:92:42:00:8c"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1109,7 +1150,7 @@ module "debian10-sshminion" {
   name               = "minssh-debian10"
   image              = "debian10o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bc"
+    mac                = "aa:b2:92:42:00:8d"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1126,7 +1167,7 @@ module "debian11-sshminion" {
   name               = "minssh-debian11"
   image              = "debian11o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:bd"
+    mac                = "aa:b2:92:42:00:8e"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1143,7 +1184,7 @@ module "sles12sp5-buildhost" {
   name               = "build-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:8c"
+    mac                = "aa:b2:92:42:00:54"
     memory             = 2048
     vcpu               = 2
   }
@@ -1181,7 +1222,7 @@ module "sles15sp3-buildhost" {
   name               = "build-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:8d"
+    mac                = "aa:b2:92:42:00:55"
     memory             = 2048
     vcpu               = 2
   }
@@ -1219,7 +1260,7 @@ module "sles15sp3-terminal" {
 //  name               = "min-opensuse153arm"
 //  image              = "opensuse153armo"
 //  provider_settings = {
-//    mac                = "aa:b2:92:42:00:ae"
+//    mac                = "aa:b2:92:42:00:6f"
 //    memory             = 2048
 //    vcpu               = 2
 //    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1240,7 +1281,7 @@ module "controller" {
   base_configuration = module.base_core.configuration
   name               = "ctl"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:88"
+    mac                = "aa:b2:92:42:00:50"
     memory             = 16384
     vcpu               = 8
   }
