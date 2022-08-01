@@ -234,7 +234,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp4o"
+      image = "sles15sp3o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:84"
