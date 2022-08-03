@@ -26,7 +26,7 @@ node('sumaform-cucumber') {
     stage('Checkout pipeline') {
         checkout scm
     }
-    timeout(activity: true, time: 3, unit: 'HOURS') {
+    timeout(activity: false, time: 14, unit: 'HOURS') {
         def pipeline = load "jenkins_pipelines/environments/common/pipeline-reference.groovy"
         pipeline.run(params)
     }
