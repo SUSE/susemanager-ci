@@ -168,8 +168,8 @@ module "cucumber_testsuite" {
   domain       = "mgr.prv.suse.net"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry      = "registry.mgr.suse.de:5000/cucutest"
+  no_auth_registry = "registry.mgr.prv.suse.net"
+  auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
