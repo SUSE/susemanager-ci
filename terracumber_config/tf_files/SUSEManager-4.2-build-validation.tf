@@ -261,6 +261,7 @@ module "base_debian" {
   }
 }
 
+// Disabled because of heat in NUE
 // module "base_arm" {
 //   providers = {
 //     libvirt = libvirt.overdrive4
@@ -913,6 +914,33 @@ module "debian11-minion" {
 
 }
 
+// Disabled because of heat in NUE
+//module "opensuse153arm-minion" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "4.2-released"
+//  name               = "min-opensuse153arm"
+//  image              = "opensuse153armo"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:6f"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  server_configuration = {
+//    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  //opensuse153arm-minion_additional_repos
+//
+//}
+
 module "sles12sp4-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -1174,6 +1202,26 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+// Disabled because of heat in NUE
+//module "opensuse153arm-sshminion" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "4.2-released"
+//  name               = "minssh-opensuse153arm"
+//  image              = "opensuse153armo"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:8f"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+
 module "sles12sp5-buildhost" {
   providers = {
     libvirt = libvirt.terminus
@@ -1250,32 +1298,6 @@ module "sles15sp3-terminal" {
   }
 }
 
-//module "opensuse153arm-minion" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//  source             = "./modules/minion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.2-released"
-//  name               = "min-opensuse153arm"
-//  image              = "opensuse153armo"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:6f"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  server_configuration = {
-//    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-//  }
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//
-//  //opensuse153arm-minion_additional_repos
-//
-//}
-
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
@@ -1346,13 +1368,14 @@ module "controller" {
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
+//  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
+//  opensuse153arm_sshminion_configuration = module.opensuse153arm-sshminion.configuration
+
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
 
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
-
-//  opensuse153arm_minion_configuration = module.opensuse153arm-minion.configuration
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {

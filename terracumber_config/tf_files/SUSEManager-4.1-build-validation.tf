@@ -866,6 +866,8 @@ module "debian10-minion" {
 
 // Debian 11 is not supported by 4.1
 
+// No ARM support for openSUSE on 4.1 branch
+
 module "sles12sp4-sshminion" {
   providers = {
     libvirt = libvirt.endor
@@ -1110,6 +1112,8 @@ module "debian10-sshminion" {
 
 // Debian 11 is not supported by 4.1
 
+// No ARM support for openSUSE on 4.1 branch
+
 module "sles12sp5-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
@@ -1186,8 +1190,6 @@ module "sles15sp3-terminal" {
   }
 }
 
-// No ARM support for openSUSE on 4.1 branch
-
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
@@ -1257,13 +1259,13 @@ module "controller" {
 
   // Debian 11 is not supported by 4.1
 
+  // No ARM support for openSUSE on 4.1 branch
+
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
 
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
-
-  // No ARM support for openSUSE on 4.1 branch
 }
 
 resource "null_resource" "server_extra_nfs_mounts" {
