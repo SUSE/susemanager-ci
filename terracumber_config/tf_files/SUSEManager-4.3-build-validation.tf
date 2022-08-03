@@ -890,6 +890,31 @@ module "debian11-minion" {
 
 }
 
+module "slemicro52-minion" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.3-released"
+  name               = "min-slemicro52"
+  image              = "slemicro52-ign"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c0"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //slemicro52-minion_additional_repos
+
+}
+
 module "sles12sp4-sshminion" {
   providers = {
     libvirt = libvirt.endor
@@ -1130,6 +1155,23 @@ module "debian11-sshminion" {
   image              = "debian11o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:de"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "slemicro52-sshminion" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-slemicro52"
+  image              = "slemicro52-ign"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:e0"
     memory             = 4096
   }
   use_os_released_updates = false
