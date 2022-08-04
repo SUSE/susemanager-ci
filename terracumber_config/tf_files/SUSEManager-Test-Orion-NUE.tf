@@ -215,6 +215,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       provider_settings = {
         mac = "aa:b2:93:01:00:7d"
+        memory = 2048
       }
       additional_repos = {
         Salt_repo = "https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/SLE15/SLE_15/"

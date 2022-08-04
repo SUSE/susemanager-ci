@@ -191,6 +191,7 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:bd"
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true

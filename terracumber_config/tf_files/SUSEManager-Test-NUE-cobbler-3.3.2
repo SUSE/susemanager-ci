@@ -223,6 +223,7 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:4d"
+        memory = 2048
         vcpu = 2
       }
       additional_repos = {

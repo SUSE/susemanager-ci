@@ -190,6 +190,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:92:03:00:8d"
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true

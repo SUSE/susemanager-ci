@@ -179,6 +179,7 @@ module "cucumber_testsuite" {
     build-host = {
       image = "opensuse153o"
       provider_settings = {
+        memory = 2048
       }
     }
 // No PXE support for AWS yet

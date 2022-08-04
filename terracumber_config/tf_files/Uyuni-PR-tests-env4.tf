@@ -288,6 +288,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:92:04:00:39"
+        memory = 2048
       }
       additional_repos = {
         client_repo = var.SLE_CLIENT_REPO,

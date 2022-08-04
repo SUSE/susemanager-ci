@@ -173,6 +173,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       provider_settings = {
         mac = "aa:b2:93:01:00:ad"
+        memory = 2048
       }
     }
     pxeboot-minion = {
