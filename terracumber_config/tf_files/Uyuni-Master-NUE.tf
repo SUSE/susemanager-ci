@@ -141,6 +141,15 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
+    suse-client = {
+      image = "sles15sp4o"
+      name = "cli-sles15"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:d4"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
     suse-minion = {
       # left with SP3 since we update it to SP4 in the testsuite
       image = "sles15sp3o"
