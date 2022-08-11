@@ -172,7 +172,7 @@ module "base_res" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "centos7o", "centos8o" ]
+  images      = [ "centos7o", "rocky8o" ]
 
   mirror = "minima-mirror-bv2.mgr.prv.suse.net"
   use_mirror_images = true
@@ -743,15 +743,15 @@ module "centos7-minion" {
 
 }
 
-module "centos8-minion" {
+module "rocky8-minion" {
   providers = {
     libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "4.2-released"
-  name               = "min-centos8"
-  image              = "centos8o"
+  name               = "min-rocky8"
+  image              = "rocky8o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:68"
     memory             = 4096
@@ -1083,15 +1083,15 @@ module "centos7-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "centos8-sshminion" {
+module "rocky8-sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "4.2-released"
-  name               = "minssh-centos8"
-  image              = "centos8o"
+  name               = "minssh-rocky8"
+  image              = "rocky8o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:88"
     memory             = 4096
@@ -1322,8 +1322,8 @@ module "controller" {
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-  centos8_minion_configuration    = module.centos8-minion.configuration
-  centos8_sshminion_configuration = module.centos8-sshminion.configuration
+  rocky8_minion_configuration    = module.rocky8-minion.configuration
+  rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
 
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
