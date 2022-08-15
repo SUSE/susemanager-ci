@@ -926,7 +926,7 @@ module "slemicro52-minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "min-slemicro52"
-  image              = "slemicro52-ign"
+  image              = "slemicro52-ignition"
   provider_settings = {
     mac                = "aa:b2:92:42:00:c0"
     memory             = 4096
@@ -1217,7 +1217,7 @@ module "slemicro52-sshminion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "minssh-slemicro52"
-  image              = "slemicro52-ign"
+  image              = "slemicro52-ignition"
   provider_settings = {
     mac                = "aa:b2:92:42:00:e0"
     memory             = 4096
