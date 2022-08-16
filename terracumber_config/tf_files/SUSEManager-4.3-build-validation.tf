@@ -290,7 +290,7 @@ module "base_debian" {
 module "server" {
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
-  product_version    = "4.3-beta"
+  product_version    = "4.3-released"
   name               = "srv"
   provider_settings = {
     mac                = "aa:b2:92:42:00:a1"
@@ -329,7 +329,7 @@ module "proxy" {
   }
   source             = "./modules/proxy"
   base_configuration = module.base_retail.configuration
-  product_version    = "4.3-beta"
+  product_version    = "4.3-released"
   name               = "pxy"
   provider_settings = {
     mac                = "aa:b2:92:42:00:a2"
