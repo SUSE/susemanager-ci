@@ -197,7 +197,7 @@ module "base_new_sle" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o" ]
+  images      = [ "sles15o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -926,7 +926,7 @@ module "slemicro52-minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "min-slemicro52"
-  image              = "slemicro52-ignition"
+  image              = "slemicro52-ign"
   provider_settings = {
     mac                = "aa:b2:92:42:00:c0"
     memory             = 4096
@@ -1217,7 +1217,7 @@ module "slemicro52-sshminion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "minssh-slemicro52"
-  image              = "slemicro52-ignition"
+  image              = "slemicro52-ign"
   provider_settings = {
     mac                = "aa:b2:92:42:00:e0"
     memory             = 4096
