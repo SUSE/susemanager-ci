@@ -118,6 +118,20 @@ def run(params) {
                 }
             }
 
+            stage('Prepare and run Retail') {
+                if(params.must_prepare_retail) {
+                    echo 'Prepare Proxy for Retail'
+                    res_retail_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_retail_proxy'", returnStatus: true)
+                    echo "Retail proxy status code: ${res_retail_proxy}"
+                    echo 'SLE 12 Retail'
+                    res_retail_sle12 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_retail_sle12'", returnStatus: true)
+                    echo "SLE 12 Retail status code: ${res_retail_sle12}"
+                    echo 'SLE 15 Retail'
+                    res_retail_sle15 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_retail_sle15'", returnStatus: true)
+                    echo "SLE 15 Retail status code: ${res_retail_sle15}"
+                }
+            }
+
             stage('Run Smoke Tests') {
                 if(params.must_run_tests) {
                         echo 'Run Smoke tests'
