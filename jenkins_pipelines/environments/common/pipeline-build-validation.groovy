@@ -118,6 +118,14 @@ def run(params) {
                 }
             }
 
+            stage('Run Smoke Tests') {
+                if(params.must_run_tests) {
+                        echo 'Run Smoke tests'
+                        res_smoke_tests = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_smoke_tests'", returnStatus: true)
+                        echo "Smoke tests status code: ${res_smoke_tests}"
+                }
+            }
+
             stage('Prepare and run Retail') {
                 if(params.must_prepare_retail) {
                     echo 'Prepare Proxy for Retail'
@@ -129,14 +137,6 @@ def run(params) {
                     echo 'SLE 15 Retail'
                     res_retail_sle15 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_retail_sle15'", returnStatus: true)
                     echo "SLE 15 Retail status code: ${res_retail_sle15}"
-                }
-            }
-
-            stage('Run Smoke Tests') {
-                if(params.must_run_tests) {
-                        echo 'Run Smoke tests'
-                        res_smoke_tests = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_smoke_tests'", returnStatus: true)
-                        echo "Smoke tests status code: ${res_smoke_tests}"
                 }
             }
         }
