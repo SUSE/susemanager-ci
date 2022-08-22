@@ -1145,7 +1145,7 @@ module "sles12sp5-terminal" {
   name               = "terminal-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
-    memory             = 1024
+    memory             = 2048
     vcpu               = 1
     manufacturer       = "Supermicro"
     product            = "X9DR3-F"
