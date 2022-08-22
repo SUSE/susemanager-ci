@@ -53,6 +53,12 @@ the build is reproducible.
 image for testing Pull Requests built with the open build service. This needs to be copied manually.
 - http://minima-mirror.mgr.prv.suse.net/distribution/leap/: oss and non-oss repositories.
 
-* http://minima-mirror.mgr.prv.suse.net/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/ . openSUSE image for testing Pull Requests built with the open build service. This needs to be copied manually.
+## Used image versions in the CI test suite
 
-* http://minima-mirror.mgr.prv.suse.net/distribution/leap/: oss and non-oss repositories 
+| Version | Minion      | SSH minion  | Client      | RH-like  | Deb-like     | Virthost    | Buildhost   | Terminal    |
+| ------- | ----------- | ----------- | ----------- | -------- | ------------ | ----------- | ----------- | ----------- |
+|  Uyuni  | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
+|  HEAD   | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
+|  4.3    | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
+|  4.2    | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 |
+|  4.1    | SLES 15 SP1 | SLES 15 SP1 | SLES 15 SP1 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP2 | SLES 15 SP2 | SLES 15 SP2 |
