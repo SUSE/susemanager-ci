@@ -138,6 +138,8 @@ module "cucumber_testsuite" {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP4/"
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp4/standard/"
         Test_repo_2 = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/openSUSE.org:/systemsmanagement/SLE_15_SP4/"
+        // Temporary hack to install netty 4.1.44
+        42_hack_for_netty = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/4.2/images/repo/SLE-Module-SUSE-Manager-Server-4.2-POOL-x86_64-Media1/"
       }
       additional_packages = [ "cobbler" ]
     }
