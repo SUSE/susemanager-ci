@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
 
-  images = ["centos7o", "opensuse152o", "opensuse154o", "opensuse154-ci-pr", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse152o", "opensuse154o", "opensuse154-ci-pr", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -247,7 +247,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     redhat-minion = {
-      image = "centos7o"
+      image = "rocky8o"
       provider_settings = {
         mac = "aa:b2:92:04:00:46"
         memory = 2048

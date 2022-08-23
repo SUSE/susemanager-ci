@@ -91,7 +91,7 @@ module "base" {
   name_prefix = "suma-refhead-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["centos7o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
+  images      = ["rocky8o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
   provider_settings = {
     pool         = "ssd"
     network_name = null
@@ -138,8 +138,8 @@ module "redhat-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "head"
-  name                 = "min-centos7"
-  image                = "centos7o"
+  name                 = "min-rocky8"
+  image                = "rocky8o"
   server_configuration = module.server.configuration
 
   provider_settings = {
