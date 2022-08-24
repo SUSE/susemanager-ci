@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "4.3-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
