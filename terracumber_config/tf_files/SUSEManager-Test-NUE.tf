@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "4.3-nightly"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -207,8 +207,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
-      image = "ubuntu2004o"
       name = "min-ubuntu1804"
+      image = "ubuntu2004o"
       provider_settings = {
         mac = "aa:b2:93:01:00:4b"
       }
