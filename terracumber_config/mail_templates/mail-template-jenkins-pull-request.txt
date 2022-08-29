@@ -42,6 +42,8 @@ https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull
 
 Check the infrastructure status page to know if your build failed because of some infrastructure problem: http://grafana.mgr.suse.de/d/BLvait-ik/ci-availability?from=now-7d&to=now
 
+Check the "flaky tests" page to compare it with your results: http://grafana.mgr.suse.de/d/PO3YoiMMz/testsuites-wip?orgId=1&var-jobname=uyuni-master-dev-acceptance-tests-NUE&viewPanel=19&from=now-7d&to=now
+
 Please let us know how you liked it at
 
 https://forms.office.com/r/tAcUe98vAZ .
