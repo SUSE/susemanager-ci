@@ -248,7 +248,7 @@ module "base_debian" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1804o", "ubuntu2004o", "debian10o", "debian11o" ]
+  images      = [ "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -815,29 +815,29 @@ module "ubuntu2004-minion" {
 
 }
 
-// module "ubuntu2204-minion" {
-//   providers = {
-//     libvirt = libvirt.mandalore
-//   }
-//   source             = "./modules/minion"
-//   base_configuration = module.base_debian.configuration
-//   product_version    = "4.3-released"
-//   name               = "min-ubuntu2204"
-//   image              = "ubuntu2204o"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:bb"
-//     memory             = 4096
-//   }
-//   server_configuration = {
-//     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-//   }
-//   auto_connect_to_master  = false
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
-//
-//   //ubuntu2204-minion_additional_repos
-//
-// }
+module "ubuntu2204-minion" {
+  providers = {
+    libvirt = libvirt.mandalore
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "4.3-released"
+  name               = "min-ubuntu2204"
+  image              = "ubuntu2204o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:bb"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //ubuntu2204-minion_additional_repos
+
+}
 
 // Debian 9 is not supported by 4.3
 
@@ -1364,6 +1364,9 @@ module "controller" {
 
   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+
+  ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
+  ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
 
   debian10_minion_configuration    = module.debian10-minion.configuration
   debian10_sshminion_configuration = module.debian10-sshminion.configuration
