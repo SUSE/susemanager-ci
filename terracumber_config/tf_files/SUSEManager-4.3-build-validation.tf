@@ -834,9 +834,6 @@ module "ubuntu2204-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //ubuntu2204-minion_additional_repos
-
 }
 
 // Debian 9 is not supported by 4.3
@@ -1137,22 +1134,22 @@ module "ubuntu2004-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// module "ubuntu2204-sshminion" {
-//   providers = {
-//     libvirt = libvirt.mandalore
-//   }
-//   source             = "./modules/sshminion"
-//   base_configuration = module.base_debian.configuration
-//   product_version    = "4.3-released"
-//   name               = "minssh-ubuntu2204"
-//   image              = "ubuntu2204o"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:db"
-//     memory             = 4096
-//   }
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
-// }
+module "ubuntu2204-sshminion" {
+  providers = {
+    libvirt = libvirt.mandalore
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-ubuntu2204"
+  image              = "ubuntu2204o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:db"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 // Debian 9 is not supported by 4.3
 
