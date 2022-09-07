@@ -55,10 +55,10 @@ image for testing Pull Requests built with the open build service. This needs to
 
 ## Used image versions in the CI test suite
 
-| Version | Minion      | SSH minion  | Client      | RH-like  | Deb-like     | Virthosts   | Buildhost   | Terminal    |
-| ------- | ----------- | ----------- | ----------- | -------- | ------------ | ----------- | ----------- | ----------- |
-|  Uyuni  | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | Leap 15.4   | SLES 15 SP4 | SLES 15 SP4 |
-|  HEAD   | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
-|  4.3    | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
-|  4.2    | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 |
-|  4.1    | SLES 15 SP1 | SLES 15 SP1 | SLES 15 SP1 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP2 | SLES 15 SP2 | SLES 15 SP2 |
+| Version | Minion      | SSH minion  | Client      | RH-like  | Deb-like     | Virthosts   | Buildhost   | Terminal    | Controller |
+| ------- | ----------- | ----------- | ----------- | -------- | ------------ | ----------- | ----------- | ----------- | ---------- |
+|  Uyuni  | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | Leap 15.4   | SLES 15 SP4 | SLES 15 SP4 | Leap 15.2  |
+|  HEAD   | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.2  |
+|  4.3    | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.2  |
+|  4.2    | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 | Leap 15.2  |
+|  4.1    | SLES 15 SP1 | SLES 15 SP1 | SLES 15 SP1 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP2 | SLES 15 SP2 | SLES 15 SP2 | Leap 15.2  |
