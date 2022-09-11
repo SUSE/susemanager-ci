@@ -94,6 +94,21 @@ variable "KEY_NAME" {
   default = "uyuni-jenkins"
 }
 
+variable "ACCESS_KEY" {
+  type = string
+  default = null
+}
+
+variable "SECRET_KEY" {
+  type = string
+  default = null
+}
+
+variable "ALLOWED_IPS" {
+  type = list(string)
+  default = []
+}
+
 variable "MY_IP" {
   type = string
   default = ""
@@ -101,6 +116,8 @@ variable "MY_IP" {
 
 provider "aws" {
   region     = var.REGION
+  //access_key = var.ACCESS_KEY
+  //secret_key = var.SECRET_KEY
 }
 
 module "cucumber_testsuite" {
@@ -212,7 +229,7 @@ module "cucumber_testsuite" {
     bastion_host                         = "ec2-3-73-148-21.eu-central-1.compute.amazonaws.com"
     availability_zone                    = var.AVAILABILITY_ZONE
     region                               = var.REGION
-    ssh_allowed_ips                      = ["195.135.221.27"]
+    ssh_allowed_ips                      = var.ALLOWED_IPS
     key_name                             = var.KEY_NAME
     key_file                             = var.KEY_FILE
   }
