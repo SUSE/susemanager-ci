@@ -212,7 +212,7 @@ module "cucumber_testsuite" {
     bastion_host                         = "ec2-3-73-148-21.eu-central-1.compute.amazonaws.com"
     availability_zone                    = var.AVAILABILITY_ZONE
     region                               = var.REGION
-    ssh_allowed_ips                      = []
+    ssh_allowed_ips                      = ["195.135.221.27"]
     key_name                             = var.KEY_NAME
     key_file                             = var.KEY_FILE
   }
