@@ -117,7 +117,8 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse152o", "opensuse153o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2004"]
+  //images = ["centos7",  "opensuse152o", "opensuse153o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2004"]
+  images   = ["centos7o", "opensuse152o", "opensuse154o", "sles15sp4o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -162,7 +163,7 @@ module "cucumber_testsuite" {
       }
     }
     redhat-minion = {
-      image = "centos7"
+      image = "centos7o"
       provider_settings = {
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
@@ -172,12 +173,12 @@ module "cucumber_testsuite" {
     }
     debian-minion = {
       name = "min-ubuntu2004"
-      image = "ubuntu2004"
+      image = "ubuntu2004o"
       provider_settings = {
       }
     }
     build-host = {
-      image = "opensuse153o"
+      image = "sles15sp4o"
       provider_settings = {
         memory = 2048
       }
@@ -202,13 +203,13 @@ module "cucumber_testsuite" {
   }
   provider_settings = {
     create_network                       = false
-    public_subnet_id                     = "subnet-0f8f5847460b0be70"
-    private_subnet_id                    = "subnet-0346035ce4cd25764"
-    private_additional_subnet_id         = "subnet-0459583d3361b8aa2"
-    public_security_group_id             = "sg-0535a11916638b7e3"
-    private_security_group_id            = "sg-01d023b03409de006"
-    private_additional_security_group_id = "sg-0cbf3be126cfcf355"
-    bastion_host                         = "ec2-18-157-102-83.eu-central-1.compute.amazonaws.com"
+    public_subnet_id                     = "subnet-01db332a7f8bd5ba1"
+    private_subnet_id                    = "subnet-00a0b59c64ca94e3c"
+    private_additional_subnet_id         = "subnet-07d1f93fe7cea5b33"
+    public_security_group_id             = "sg-0b8c5f685bf50ca0d"
+    private_security_group_id            = "sg-00dffcc61093a3630"
+    private_additional_security_group_id = "sg-0aaa32fdc02bb7e73"
+    bastion_host                         = "ec2-3-73-148-21.eu-central-1.compute.amazonaws.com"
     availability_zone                    = var.AVAILABILITY_ZONE
     region                               = var.REGION
     ssh_allowed_ips                      = []
