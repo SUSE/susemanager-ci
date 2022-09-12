@@ -91,7 +91,7 @@ variable "KEY_FILE" {
 
 variable "KEY_NAME" {
   type = string
-  default = "uyuni-jenkins"
+  default = "internal-jenkins-worker"
 }
 
 variable "MY_IP" {
@@ -132,6 +132,8 @@ module "cucumber_testsuite" {
 
   // server_http_proxy = "http-proxy.mgr.suse.de:3128"
 
+  mirror = "ip-172-16-1-30.eu-central-1.compute.internal"
+
   host_settings = {
     controller = {
     }
@@ -171,7 +173,7 @@ module "cucumber_testsuite" {
       }
     }
     build-host = {
-      image = "opensuse153o"
+      image = "sles15sp4o"
       provider_settings = {
         memory = 2048
       }
@@ -196,13 +198,13 @@ module "cucumber_testsuite" {
   }
   provider_settings = {
     create_network                       = false
-    public_subnet_id                     = "subnet-0f8f5847460b0be70"
-    private_subnet_id                    = "subnet-0346035ce4cd25764"
-    private_additional_subnet_id         = "subnet-0459583d3361b8aa2"
-    public_security_group_id             = "sg-0535a11916638b7e3"
-    private_security_group_id            = "sg-01d023b03409de006"
-    private_additional_security_group_id = "sg-0cbf3be126cfcf355"
-    bastion_host                         = "ec2-18-157-102-83.eu-central-1.compute.amazonaws.com"
+    public_subnet_id                     = "subnet-01db332a7f8bd5ba1"
+    private_subnet_id                    = "subnet-00a0b59c64ca94e3c"
+    private_additional_subnet_id         = "subnet-07d1f93fe7cea5b33"
+    public_security_group_id             = "sg-0b8c5f685bf50ca0d"
+    private_security_group_id            = "sg-00dffcc61093a3630"
+    private_additional_security_group_id = "sg-0aaa32fdc02bb7e73"
+    bastion_host                         = "ec2-3-73-148-21.eu-central-1.compute.amazonaws.com"
     availability_zone                    = var.AVAILABILITY_ZONE
     region                               = var.REGION
     ssh_allowed_ips                      = []
