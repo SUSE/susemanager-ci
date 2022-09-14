@@ -137,7 +137,7 @@ module "cucumber_testsuite" {
 //        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP4/"
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp4/standard/"
-        Test_repo_2 = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/openSUSE.org:/systemsmanagement/SLE_15_SP4/"
+//        Test_repo_2 = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/openSUSE.org:/systemsmanagement/SLE_15_SP4/"
       }
       additional_packages = [ "cobbler" ]
     }
