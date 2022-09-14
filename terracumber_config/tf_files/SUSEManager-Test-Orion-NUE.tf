@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://cthulu.mgr.suse.de/system"
+  uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
