@@ -128,9 +128,11 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:61"
       }
+      /* TODO: needs to be upgraded to openSUSE_Leap_15.4?
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/openSUSE_Leap_15.3/"
       }
+      */
     }
     /*
     proxy = {
