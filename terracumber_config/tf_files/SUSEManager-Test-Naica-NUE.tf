@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse154o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -147,7 +147,7 @@ module "cucumber_testsuite" {
     }
     */
     suse-client = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:64"
@@ -156,7 +156,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:66"
@@ -165,7 +165,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:68"
@@ -195,7 +195,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     build-host = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:6d"
