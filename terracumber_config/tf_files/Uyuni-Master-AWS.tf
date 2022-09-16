@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "hhttp://localhost:8080/job/uyuni-master-dev-acceptance-tests-AWS"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-AWS"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Uyuni-Master $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Uyuni-Master AWS: $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Uyuni-Master: Environment setup failed"
+  default = "Results Uyuni-Master AWS: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -52,7 +52,7 @@ variable "MAIL_FROM" {
 
 variable "MAIL_TO" {
   type = string
-  default = "jgonzalez@suse.de"
+  default = "galaxy-ci@suse.de"
 }
 
 // sumaform specific variables
@@ -124,15 +124,17 @@ module "cucumber_testsuite" {
   // domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  // no_auth_registry = "registry.mgr.suse.de"
-  // auth_registry      = "registry.mgr.suse.de:5000/cucutest"
-  // auth_registry_username = "cucutest"
-  // auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
-
-  // server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  no_auth_registry = "ip-172-16-1-30.eu-central-1.compute.internal"
+  auth_registry    = "ip-172-16-1-30.eu-central-1.compute.internal:5000/cucutest"
+  auth_registry_username = "cucutest"
+  auth_registry_password = "cucusecret"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#testing_in_aws:testsuite/features/profiles/cloud_aws"
 
   mirror = "ip-172-16-1-30.eu-central-1.compute.internal"
+  // use_mirror_images = true
+
+  // server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  custom_download_endpoint = "ftp://ip-172-16-1-30.eu-central-1.compute.internal:445"
 
   host_settings = {
     controller = {
@@ -144,39 +146,52 @@ module "cucumber_testsuite" {
     proxy = {
       provider_settings = {
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-minion = {
-      image = "opensuse152o"
-      name = "min-opensuse15"
+      image = "sles15sp4o"
+      name = "min-sles15"
       provider_settings = {
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse152o"
-      name = "minssh-opensuse15"
+      image = "sles15sp4o"
+      name = "minssh-sles15"
       provider_settings = {
       }
+      additional_packages = [ "venv-salt-minion", "iptables" ]
+      install_salt_bundle = true
     }
     redhat-minion = {
       image = "rocky8o"
       provider_settings = {
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
-        vcpu = 2
+        // openscap cannot run with less than 1.25 GB of RAM
+        // use small instead of micro
+        // t3 has problems with network interfaces setup
+        instance_type = "t2.small"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2204"
       image = "ubuntu2204"
       provider_settings = {
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp4o"
       provider_settings = {
-        memory = 2048
+        // 2 GB RAM needed - use small instead of micro
+        instance_type = "t3.small"
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
 // No PXE support for AWS yet
 //    pxeboot-minion = {
