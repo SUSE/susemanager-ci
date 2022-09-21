@@ -17,6 +17,7 @@ def run(params) {
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         pull_request_repo = 'https://github.com/uyuni-project/uyuni.git'
         builder_api = 'https://api.opensuse.org'
+        build_url = 'https://build.opensuse.org'
         builder_project = 'systemsmanagement:Uyuni:Master:PR'
         source_project = 'systemsmanagement:Uyuni:Master'
         sumaform_tools_project = 'systemsmanagement:sumaform:tools'
@@ -118,6 +119,7 @@ def run(params) {
                            if(!params.skip_package_build_check) {
 
                               // fail if packages are not building correctly
+                              echo "Checking packages build successfully in ${build_url}/project/show/${source_project}"
                               sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'F' | awk '{print}END{exit NR>1}'"
                               // fail if packages are unresolvable
                               sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'U' | awk '{print}END{exit NR>1}'"
@@ -136,6 +138,7 @@ def run(params) {
                             echo "Checking ${builder_project}:${pull_request_number}"
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${builder_api} -c $HOME/.oscrc -p ${builder_project}:${pull_request_number}"
                             // fail if packages are not building correctly
+                            echo "Checking packages build successfully in ${build_url}/project/show/${builder_project}:${pull_request_number}"
                             sh "osc pr ${builder_project}:${pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
                             // fail if packages are unresolvable
                             sh "osc pr ${builder_project}:${pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
