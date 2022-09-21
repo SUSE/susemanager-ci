@@ -120,6 +120,7 @@ def run(params) {
 
                               // fail if packages are not building correctly
                               echo "Checking packages build successfully in ${build_url}/project/show/${source_project}"
+                              echo "If packages fail to build, check the url above for more details"
                               sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'F' | awk '{print}END{exit NR>1}'"
                               // fail if packages are unresolvable
                               sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'U' | awk '{print}END{exit NR>1}'"
@@ -139,6 +140,7 @@ def run(params) {
                             sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${builder_api} -c $HOME/.oscrc -p ${builder_project}:${pull_request_number}"
                             // fail if packages are not building correctly
                             echo "Checking packages build successfully in ${build_url}/project/show/${builder_project}:${pull_request_number}"
+                            echo "If packages fail to build, check the url above for more details"
                             sh "osc pr ${builder_project}:${pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
                             // fail if packages are unresolvable
                             sh "osc pr ${builder_project}:${pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
