@@ -211,7 +211,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:4b"
+        mac = "aa:b2:93:01:00:4c"
       }
 //    additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/ubuntu20.04/standard/"
