@@ -293,8 +293,8 @@ module "redhat-minion"  {
 }
 
 module "debian-minion" {
-  name = "min-ubuntu2004"
-  image = "ubuntu2004"
+  name = "min-ubuntu2204"
+  image = "ubuntu2204"
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"

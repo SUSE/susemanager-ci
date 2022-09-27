@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
 
-  images = ["centos7o", "opensuse152o", "opensuse154-ci-pr", "sles15sp4o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse154-ci-pr", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -272,8 +272,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
-      name = "min-ubuntu2004"
-      image = "ubuntu2004o"
+      name = "min-ubuntu2204"
+      image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:92:04:00:28"
       }
