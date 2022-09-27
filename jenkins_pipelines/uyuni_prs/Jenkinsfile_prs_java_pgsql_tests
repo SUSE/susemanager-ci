@@ -26,7 +26,7 @@ pipeline {
         filter = "java/"
         git_fs = "${env.WORKSPACE}"
         // the actual test is the git repo
-        test = "susemanager-utils/testing/automation/java-unittests-pgsql.sh"
+        test = "'susemanager-utils/testing/automation/java-unittests-pgsql.sh -t test-coverage-report'"
         gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
         gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro.rb'
@@ -70,6 +70,24 @@ pipeline {
                 echo 'Collecting JUnit Test reports'
                 junit allowEmptyResults: true, testResults: "**/java/test-results/*.xml"
                 sh "exit \$TESTS_RESULT"
+            }
+        }
+        stage('Scan code and tests results for sonarcloud') {
+            steps {
+                echo 'Run sonarcloud scanner'
+                sh "UYUNI_CLONE=`ls -d uyuni*`; " +
+                    "PR_BASE=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"base\"' | grep ref | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
+                    "PR_BRANCH=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"head\"' | grep ref | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
+                    "cd \$UYUNI_CLONE; " +
+                    "mkdir -p .sonar; " +
+                    "source /home/jenkins/.sonar-credentials; " +
+                    "docker run --rm -v \$PWD:/usr/src " +
+                        "-v \$PWD/../.sonar:/opt/sonar-scanner/.sonar " +
+                        "-e SONAR_LOGIN " +
+                        "sonarsource/sonar-scanner-cli " +
+                        "-Dsonar.pullrequest.key=${params.PR_NUMBER} " +
+                        "-Dsonar.pullrequest.branch=\$PR_BRANCH " +
+                        "-Dsonar.pullrequest.base=\$PR_BASE"
             }
         }
     }
