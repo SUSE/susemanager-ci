@@ -128,7 +128,7 @@ module "cucumber_testsuite" {
   auth_registry    = "ip-172-16-1-30.eu-central-1.compute.internal:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#testing_in_aws:testsuite/features/profiles/cloud_aws"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/cloud_aws"
 
   mirror = "ip-172-16-1-30.eu-central-1.compute.internal"
   // use_mirror_images = true
