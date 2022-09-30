@@ -103,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "sles15sp4o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi = false
   name_prefix = "suma-43-"
@@ -179,8 +179,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
-      name = "min-ubuntu2004"
-      image = "ubuntu2004o"
+      name = "min-ubuntu2204"
+      image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:92:03:00:8c"
       }

@@ -91,7 +91,7 @@ module "base" {
   name_prefix       = "suma-ref43-"
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
-  images            = ["centos7o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2004o"]
+  images            = ["centos7o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
   mirror            = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
 
@@ -178,8 +178,8 @@ module "debian-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "4.3-nightly"
-  name                 = "min-ubuntu2004"
-  image                = "ubuntu2004o"
+  name                 = "min-ubuntu2204"
+  image                = "ubuntu2204o"
   server_configuration = module.server.configuration
 
   provider_settings = {

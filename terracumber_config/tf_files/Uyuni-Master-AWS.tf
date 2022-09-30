@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7", "opensuse152o", "opensuse153o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2004"]
+  images = ["centos7", "opensuse152o", "opensuse153o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2204"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -171,8 +171,8 @@ module "cucumber_testsuite" {
       }
     }
     debian-minion = {
-      name = "min-ubuntu2004"
-      image = "ubuntu2004"
+      name = "min-ubuntu2204"
+      image = "ubuntu2204"
       provider_settings = {
       }
     }
