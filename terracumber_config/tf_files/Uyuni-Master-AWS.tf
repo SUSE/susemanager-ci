@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse152o", "opensuse153o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2204"]
+  images = ["rocky8o", "opensuse153o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2204"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -138,6 +138,7 @@ module "cucumber_testsuite" {
 
   host_settings = {
     controller = {
+      image = "opensuse154o"
     }
     server = {
       provider_settings = {
