@@ -211,7 +211,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       image = "ubuntu2204o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:4c"
+        mac = "aa:b2:93:01:00:4b"
       }
 //    additional_repos = {
 //        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/ubuntu22.04/standard/"

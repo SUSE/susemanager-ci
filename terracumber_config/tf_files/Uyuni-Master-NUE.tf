@@ -185,7 +185,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       image = "ubuntu2204o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:dc"
+        mac = "aa:b2:93:01:00:db"
       }
       additional_packages = [ "venv-salt-minion" ]
 

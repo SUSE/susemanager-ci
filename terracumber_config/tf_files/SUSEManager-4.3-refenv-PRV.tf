@@ -183,7 +183,7 @@ module "debian-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "aa:b2:92:03:00:9c"
+    mac = "aa:b2:92:03:00:9b"
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true

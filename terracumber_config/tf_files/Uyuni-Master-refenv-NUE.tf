@@ -181,7 +181,7 @@ module "debian-minion" {
   server_configuration = module.server.configuration
 
   provider_settings = {
-    mac = "aa:b2:93:01:00:ec"
+    mac = "aa:b2:93:01:00:eb"
   }
   additional_packages = [ "venv-salt-minion" ]
 

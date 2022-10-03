@@ -174,7 +174,7 @@ module "debian-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "head"
-  name                 = "min-ubuntu1804"
+  name                 = "min-ubuntu2204"
   image                = "ubuntu2204o"
   server_configuration = module.server.configuration
 
