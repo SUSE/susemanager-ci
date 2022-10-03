@@ -275,7 +275,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       image = "ubuntu2204o"
       provider_settings = {
-        mac = "aa:b2:92:04:00:08"
+        mac = "aa:b2:92:04:00:07"
       }
       additional_repos = {
         client_repo = var.UBUNTU_CLIENT_REPO,
