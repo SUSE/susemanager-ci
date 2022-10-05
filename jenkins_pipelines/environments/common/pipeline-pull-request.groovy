@@ -183,11 +183,11 @@ def run(params) {
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                         sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools\" -r openSUSE_Leap_15.0 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_openSUSE_Leap_15-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_openSUSE_Leap_15-Uyuni-Client-Tools.error"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/${arch}"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2204-Uyuni-Client-Tools/xUbuntu_22.04/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                         // Clean up previous Packages.gz
-                        sh "rm -f ${environment_workspace}/repos/systemsmanagement:Uyuni:Master:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/${arch}/Packages.gz"
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Ubuntu2004-Uyuni-Client-Tools\" -r xUbuntu_20.04 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2004-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2004-Uyuni-Client-Tools.error"
+                        sh "rm -f ${environment_workspace}/repos/systemsmanagement:Uyuni:Master:Ubuntu2204-Uyuni-Client-Tools/xUbuntu_22.04/${arch}/Packages.gz"
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Ubuntu2204-Uyuni-Client-Tools\" -r xUbuntu_22.04 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2204-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2204-Uyuni-Client-Tools.error"
 
                         echo "Wait for all publishers to finish...This could take a while ..."
                         sh "bash -c \"while ( ps -C publish-rpms.sh > /dev/null 2>/dev/null );do sleep 1; done\" "
@@ -249,7 +249,7 @@ def run(params) {
                         }
                         env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/${arch}"
                         env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/${arch}"
-                        env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2004-Uyuni-Client-Tools/xUbuntu_20.04/${arch}"
+                        env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2204-Uyuni-Client-Tools/xUbuntu_22.04/${arch}"
                         env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/${arch}"
 
                         // Provision the environment
