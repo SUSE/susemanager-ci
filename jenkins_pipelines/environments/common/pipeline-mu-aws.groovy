@@ -128,16 +128,14 @@ def run(params) {
                     // Get the testsuite defaults repositories list
                     repositories = sh(script: "cat ${local_mirror_dir}/salt/mirror/utils/minimum_repositories_testsuite.yaml",
                             returnStdout: true)
-                    if ( mu_repositories.isEmpty() ){
-                        String[] REPOSITORIES_LIST = []
-                    } else {
+                    if ( !mu_repositories.isEmpty() ) {
                         String[] REPOSITORIES_LIST = mu_repositories.split("\n")
-                    }
-                    // Add MU repositories to the repository list
-                    REPOSITORIES_LIST.each { item ->
-                        repositories = "${repositories}\n\n" +
-                                "  - url: ${item}\n" +
-                                "    archs: [x86_64]"
+                        // Add MU repositories to the repository list
+                        REPOSITORIES_LIST.each { item ->
+                            repositories = "${repositories}\n\n" +
+                                    "  - url: ${item}\n" +
+                                    "    archs: [x86_64]"
+                        }
                     }
                     writeFile file: "${local_mirror_dir}/salt/mirror/etc/minima-customize.yaml", text: repositories, encoding: "UTF-8"
 
