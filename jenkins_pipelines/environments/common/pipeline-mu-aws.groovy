@@ -11,6 +11,7 @@ def run(params) {
         aws_mirror_dir = "${resultdir}/sumaform-aws"
         awscli = '/usr/local/bin/aws'
         suma43_build_url = "https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/"
+        node_user = 'maxime'
 
         server_ami = null
         proxy_ami = null
@@ -37,6 +38,26 @@ def run(params) {
 
         // Public IP for AWS ingress
         String[] ALLOWED_IPS = params.allowed_IPS.split("\n")
+        withCredentials([usernamePassword(credentialsId: 'git_credential', passwordVariable: 'git_password', usernameVariable: 'git_user')]) {
+            env.TF_VAR_GIT_USER = env.git_user
+            env.TF_VAR_GIT_PASSWORD = env.git_password
+        }
+
+        withCredentials([usernamePassword(credentialsId: 'scc_credential', passwordVariable: 'scc_password', usernameVariable: 'scc_user')]) {
+            env.TF_VAR_SCC_USER = env.scc_user
+            env.TF_VAR_SCC_PASSWORD = env.scc_password
+        }
+
+        withCredentials([usernamePassword(credentialsId: 'aws_connection', passwordVariable: 'secret_key', usernameVariable: 'access_key')]) {
+            env.TF_VAR_ACCESS_KEY = env.access_key
+            env.TF_VAR_SECRET_KEY = env.secret_key
+        }
+
+        withCredentials([string(credentialsId: 'proxy_registration_code', variable: 'proxy_registration_code'), string(credentialsId: 'sles_registration_code', variable: 'sles_registration_code') , string(credentialsId: 'server_registration_code', variable: 'server_registration_code')]) {
+            env.TF_VAR_PROXY_REGISTRATION_CODE = env.proxy_registration_code
+            env.TF_VAR_SLES_REGISTRATION_CODE = env.sles_registration_code
+            env.TF_VAR_SERVER_REGISTRATION_CODE = env.server_registration_code
+        }
 
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create the directory for the build results
@@ -46,8 +67,8 @@ def run(params) {
                 checkout scm
             }
             // Clone sumaform for aws and local repositories
-            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${local_mirror_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend libvirt"
-            sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
+//            sh "./terracumber-cli ${local_mirror_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend libvirt"
+//            sh "./terracumber-cli ${aws_common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
         }
 
 
@@ -117,16 +138,19 @@ def run(params) {
                     writeFile file: "${local_mirror_dir}/salt/mirror/etc/minima-customize.yaml", text: repositories, encoding: "UTF-8"
 
                     // Deploy local mirror
-//                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_mirror_params} --logfile ${resultdirbuild}/sumaform-local.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend libvirt"
+//                    sh "export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_mirror_params} --logfile ${resultdirbuild}/sumaform-mirror-local.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend libvirt"
                     deployed_local = true
 
                 }
             },
 //            "create_empty_aws_mirror": {
 //                stage("Create empty AWS mirror") {
+//                    // Fix issue where result folder is created at the same time by local mirror and aws mirror
+//                    sleep(30)
+//                    NAME_PREFIX = env.JOB_NAME.toLowerCase().replace('.','-')
 //                    env.aws_configuration = "REGION = \"${params.aws_region}\"\n" +
 //                            "AVAILABILITY_ZONE = \"${params.aws_availability_zone}\"\n" +
-//                            "NAME_PREFIX = \"${env.JOB_NAME}-\"\n" +
+//                            "NAME_PREFIX = \"${NAME_PREFIX}-\"\n" +
 //                            "ALLOWED_IPS = [ \n"
 //
 //                    ALLOWED_IPS.each { ip ->
@@ -135,7 +159,7 @@ def run(params) {
 //                    env.aws_configuration = aws_configuration + "]\n"
 //                    writeFile file: "${aws_mirror_dir}/terraform.tfvars", text: aws_configuration, encoding: "UTF-8"
 //                    // Deploy empty AWS mirror
-//                    sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws/.aws set -x;source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_mirror_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
+//                    sh "export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_mirror_params} --logfile ${resultdirbuild}/sumaform-mirror-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
 //                    deployed_aws = true
 //
 //                }
@@ -153,14 +177,14 @@ def run(params) {
 //                    returnStdout: true).trim()
 //
 //            user = 'root'
-//            sh "ssh-keygen -R ${mirror_hostname_local} -f /home/jenkins/.ssh/known_hosts"
-//            sh "scp -o StrictHostKeyChecking=no /home/jenkins/.ssh/testing-suma.pem ${user}@${mirror_hostname_local}:/root/"
+//            sh "ssh-keygen -R ${mirror_hostname_local} -f /home/${node_user}/.ssh/known_hosts"
+//            sh "scp -o StrictHostKeyChecking=no /home/${node_user}/.ssh/testing-suma.pem ${user}@${mirror_hostname_local}:/root/"
 //            sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
 //            sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'tar -czvf mirror.tar.gz -C /srv/mirror/ .'"
 //            sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
-//            sh "ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo tar -xvf /home/ec2-user/mirror.tar.gz -C /srv/mirror/' "
-//            sh "ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo mv /srv/mirror/ibs/* /srv/mirror/' "
-//            sh "ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo rm -rf /srv/mirror/ibs' "
+//            sh "ssh -o StrictHostKeyChecking=no -i /home/${node_user}/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo tar -xvf /home/ec2-user/mirror.tar.gz -C /srv/mirror/' "
+//            sh "ssh -o StrictHostKeyChecking=no -i /home/${node_user}/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo mv /srv/mirror/ibs/* /srv/mirror/' "
+//            sh "ssh -o StrictHostKeyChecking=no -i /home/${node_user}/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo rm -rf /srv/mirror/ibs' "
 //
 //        }
 
@@ -171,8 +195,8 @@ def run(params) {
 //            sh "sed -r 's/ibs\\///g' ${WORKSPACE}/custom_repositories.json"
 //
 //            // Deploying AWS server using MU repositories
-//            sh "echo \"set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws --bastion_ssh_key /home/jenkins/.ssh/testing-suma.pem\""
-//            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.aws/.aws set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws --bastion_ssh_key /home/jenkins/.ssh/testing-suma.pem"
+//            sh "echo \"export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws --bastion_ssh_key /home/${node_user}/.ssh/testing-suma.pem\""
+//            sh "export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws --bastion_ssh_key /home/${node_user}/.ssh/testing-suma.pem"
 //        }
     }
 }
