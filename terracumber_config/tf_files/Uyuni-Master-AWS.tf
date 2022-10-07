@@ -143,12 +143,6 @@ module "cucumber_testsuite" {
       provider_settings = {
       }
     }
-    suse-client = {
-      image = "opensuse152o"
-      name = "cli-opensuse15"
-      provider_settings = {
-      }
-    }
     suse-minion = {
       image = "opensuse152o"
       name = "min-opensuse15"
