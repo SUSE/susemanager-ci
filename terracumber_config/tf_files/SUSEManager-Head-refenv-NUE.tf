@@ -117,23 +117,6 @@ module "server" {
   }
 }
 
-module "suse-client" {
-  source             = "./modules/client"
-  base_configuration = module.base.configuration
-  product_version    = "head"
-  name               = "cli-sles15"
-  image              = "sles15sp3o"
-
-  server_configuration    = module.server.configuration
-  use_os_released_updates = true
-
-  provider_settings = {
-    mac = "aa:b2:93:01:00:c4"
-  }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
 module "suse-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
