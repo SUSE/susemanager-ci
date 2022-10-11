@@ -139,6 +139,14 @@ def run(params) {
                     echo "SLE 15 Retail status code: ${res_retail_sle15}"
                 }
             }
+
+            stage('Containerization') {
+                if(params.must_run_containerization_tests) {
+                    echo 'Prepare Proxy as Pod and run basic tests'
+                    res_container_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_containerization'", returnStatus: true)
+                    echo "Container proxy status code: ${res_container_proxy}"
+                }
+            }
         }
         finally {
             stage('Save TF state') {
