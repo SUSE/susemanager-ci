@@ -274,7 +274,7 @@ module "base_debian" {
 //  name_prefix = "suma-bv-43-"
 //  use_avahi   = false
 //  domain      = "mgr.prv.suse.net"
-//  images      = [ "opensuse153armo" ]
+//  images      = [ "opensuse154armo" ]
 //
 //  mirror = "minima-mirror-bv3.mgr.prv.suse.net"
 //  use_mirror_images = true
@@ -889,15 +889,15 @@ module "debian11-minion" {
 }
 
 // Disabled because of heat in NUE
-//module "opensuse153arm-minion" {
+//module "opensuse154arm-minion" {
 //  providers = {
 //    libvirt = libvirt.overdrive4
 //  }
 //  source             = "./modules/minion"
 //  base_configuration = module.base_arm.configuration
 //  product_version    = "4.3-released"
-//  name               = "min-opensuse153arm"
-//  image              = "opensuse153armo"
+//  name               = "min-opensuse154arm"
+//  image              = "opensuse154armo"
 //  provider_settings = {
 //    mac                = "aa:b2:92:42:00:bf"
 //    memory             = 2048
@@ -911,7 +911,7 @@ module "debian11-minion" {
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //
-//  //opensuse153arm-minion_additional_repos
+//  //opensuse154arm-minion_additional_repos
 //
 //}
 
@@ -1188,15 +1188,15 @@ module "debian11-sshminion" {
 }
 
 // Disabled because of heat in NUE
-//module "opensuse153arm-sshminion" {
+//module "opensuse154arm-sshminion" {
 //  providers = {
 //    libvirt = libvirt.overdrive4
 //  }
 //  source             = "./modules/sshminion"
 //  base_configuration = module.base_arm.configuration
 //  product_version    = "4.3-released"
-//  name               = "minssh-opensuse153arm"
-//  image              = "opensuse153armo"
+//  name               = "minssh-opensuse154arm"
+//  image              = "opensuse154armo"
 //  provider_settings = {
 //    mac                = "aa:b2:92:42:00:df"
 //    memory             = 2048
@@ -1371,8 +1371,8 @@ module "controller" {
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
-//  opensuse153arm_minion_configuration    = module.opensuse153arm-minion.configuration
-//  opensuse153arm_sshminion_configuration = module.opensuse153arm-sshminion.configuration
+//  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
+//  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 
 // Disabled until hexagon has the bootstrap process ready for SLE Micro
 //  slemicro52_minion_configuration    = module.slemicro52-minion.configuration
