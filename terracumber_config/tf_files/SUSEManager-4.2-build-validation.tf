@@ -925,7 +925,7 @@ module "debian11-minion" {
 //  name               = "min-opensuse154arm"
 //  image              = "opensuse154armo"
 //  provider_settings = {
-//    mac                = "aa:b2:92:42:00:6f"
+//    mac                = "aa:b2:93:01:00:f2"
 //    memory             = 2048
 //    vcpu               = 2
 //    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1213,7 +1213,7 @@ module "debian11-sshminion" {
 //  name               = "minssh-opensuse154arm"
 //  image              = "opensuse154armo"
 //  provider_settings = {
-//    mac                = "aa:b2:92:42:00:8f"
+//    mac                = "aa:b2:93:01:00:f3"
 //    memory             = 2048
 //    vcpu               = 2
 //    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
