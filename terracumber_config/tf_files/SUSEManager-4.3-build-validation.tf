@@ -888,32 +888,31 @@ module "debian11-minion" {
 
 }
 
-// Disabled because of heat in NUE
-//module "opensuse154arm-minion" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//  source             = "./modules/minion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "min-opensuse154arm"
-//  image              = "opensuse154armo"
-//  provider_settings = {
-//    mac                = "aa:b2:93:01:00:f4"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  server_configuration = {
-//    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-//  }
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//
-//  //opensuse154arm-minion_additional_repos
-//
-//}
+module "opensuse154arm-minion" {
+  providers = {
+    libvirt = libvirt.overdrive4
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "min-opensuse154arm"
+  image              = "opensuse154armo"
+  provider_settings = {
+    mac                = "aa:b2:93:01:00:f4"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //opensuse154arm-minion_additional_repos
+
+}
 
 // Disabled until hexagon has the bootstrap process ready for SLE Micro
 //module "slemicro52-minion" {
@@ -1187,25 +1186,24 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// Disabled because of heat in NUE
-//module "opensuse154arm-sshminion" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//  source             = "./modules/sshminion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "minssh-opensuse154arm"
-//  image              = "opensuse154armo"
-//  provider_settings = {
-//    mac                = "aa:b2:93:01:00:f5"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "opensuse154arm-sshminion" {
+  providers = {
+    libvirt = libvirt.overdrive4
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-opensuse154arm"
+  image              = "opensuse154armo"
+  provider_settings = {
+    mac                = "aa:b2:93:01:00:f5"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 // Disabled until hexagon has the bootstrap process ready for SLE Micro
 //module "slemicro52-sshminion" {
@@ -1371,8 +1369,8 @@ module "controller" {
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
-//  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
-//  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
+  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 
 // Disabled until hexagon has the bootstrap process ready for SLE Micro
 //  slemicro52_minion_configuration    = module.slemicro52-minion.configuration
