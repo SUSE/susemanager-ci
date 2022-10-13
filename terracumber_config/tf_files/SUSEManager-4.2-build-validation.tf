@@ -110,7 +110,7 @@ provider "libvirt" {
 
 //provider "libvirt" {
 //  alias = "overdrive4"
-//  uri = "qemu+tcp://overdrive4.arch.suse.de/system"
+//  uri = "qemu+tcp://overdrive4.mgr.suse.de/system"
 //}
 
 module "base_core" {
