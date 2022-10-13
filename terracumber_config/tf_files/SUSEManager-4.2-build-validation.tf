@@ -1134,22 +1134,22 @@ module "ubuntu2004-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// module "ubuntu2204-sshminion" {
-//   providers = {
-//     libvirt = libvirt.trantor
-//   }
-//   source             = "./modules/sshminion"
-//   base_configuration = module.base_debian.configuration
-//   product_version    = "4.2-released"
-//   name               = "minssh-ubuntu2204"
-//   image              = "ubuntu2204o"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:8b"
-//     memory             = 4096
-//   }
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
-// }
+module "ubuntu2204-sshminion" {
+  providers = {
+    libvirt = libvirt.trantor
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "4.2-released"
+  name               = "minssh-ubuntu2204"
+  image              = "ubuntu2204o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:8b"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "debian9-sshminion" {
   providers = {
@@ -1202,25 +1202,24 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// Disabled because of heat in NUE
-//module "opensuse154arm-sshminion" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//  source             = "./modules/sshminion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.2-released"
-//  name               = "minssh-opensuse154arm"
-//  image              = "opensuse154armo"
-//  provider_settings = {
-//    mac                = "aa:b2:93:01:00:f3"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "opensuse154arm-sshminion" {
+  providers = {
+    libvirt = libvirt.overdrive4
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.2-released"
+  name               = "minssh-opensuse154arm"
+  image              = "opensuse154armo"
+  provider_settings = {
+    mac                = "aa:b2:93:01:00:f3"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "sles12sp5-buildhost" {
   providers = {
@@ -1368,8 +1367,8 @@ module "controller" {
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
-//  opensuse154arm_minion_configuration = module.opensuse154arm-minion.configuration
-//  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+  opensuse154arm_minion_configuration = module.opensuse154arm-minion.configuration
+  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
