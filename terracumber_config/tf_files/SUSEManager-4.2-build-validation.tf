@@ -108,10 +108,10 @@ provider "libvirt" {
   uri = "qemu+tcp://trantor.mgr.prv.suse.net/system"
 }
 
-//provider "libvirt" {
-//  alias = "overdrive4"
-//  uri = "qemu+tcp://overdrive4.mgr.suse.de/system"
-//}
+provider "libvirt" {
+  alias = "overdrive4"
+  uri = "qemu+tcp://overdrive4.mgr.suse.de/system"
+}
 
 module "base_core" {
   source = "./modules/base"
