@@ -103,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse152o", "sles15sp3o", "ubuntu2004o"]
+  images = ["centos7o", "opensuse152o", "opensuse154o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi = false
   name_prefix = "suma-42-"

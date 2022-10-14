@@ -104,7 +104,7 @@ module "cucumber_testsuite" {
   cc_password = var.SCC_PASSWORD
 
   //images = ["opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
-  images = ["centos7o", "opensuse152o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
+  images = ["centos7o", "opensuse152o", "opensuse154o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-testorion-"
