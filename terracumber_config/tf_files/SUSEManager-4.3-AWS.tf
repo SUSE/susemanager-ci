@@ -292,18 +292,18 @@ module "suse-sshminion" {
 //  install_salt_bundle = true
 //}
 
-//module "debian-minion" {
-//  name = "min-ubuntu2204"
-//  image = "ubuntu2204"
-//  source             = "./modules/minion"
-//  base_configuration = module.base.configuration
-//  product_version    = "4.3-released"
-//  server_configuration = module.server.configuration
-//  auto_connect_to_master  = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
-//}
+module "debian-minion" {
+  name = "min-ubuntu2204"
+  image = "ubuntu2204"
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "build-host"  {
   image = "sles15sp4o"
@@ -344,7 +344,7 @@ module "controller" {
   buildhost_configuration = module.build-host.configuration
   sshminion_configuration = module.suse-sshminion.configuration
 //  redhat_configuration    = module.redhat-minion.configuration
-//  debian_configuration    = module.debian-minion.configuration
+  debian_configuration    = module.debian-minion.configuration
 
 }
 
