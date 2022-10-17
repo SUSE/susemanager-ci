@@ -91,7 +91,7 @@ module "base" {
   name_prefix = "uyuni-refmaster-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["centos7o", "opensuse154o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu2204o"]
+  images      = ["rocky8o", "opensuse154o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu2204o"]
 
   provider_settings = {
     pool         = "ssd"
@@ -140,8 +140,8 @@ module "redhat-minion" {
   source               = "./modules/minion"
   base_configuration   = module.base.configuration
   product_version      = "uyuni-master"
-  name                 = "min-centos7"
-  image                = "centos7o"
+  name                 = "min-rocky8"
+  image                = "rocky8o"
   server_configuration = module.server.configuration
 
   provider_settings = {
