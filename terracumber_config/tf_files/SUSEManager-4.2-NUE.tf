@@ -157,6 +157,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "centos7o"
+      name = "min-centos7"
       provider_settings = {
         mac = "aa:b2:93:01:00:89"
         // Openscap cannot run with less than 1.25 GB of RAM
