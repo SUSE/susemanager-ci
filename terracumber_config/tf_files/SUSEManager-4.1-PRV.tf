@@ -176,6 +176,7 @@ module "cucumber_testsuite" {
     }
     build-host = {
       image = "sles15sp2o"
+      name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:03:00:ad"
         memory = 2048
@@ -186,12 +187,14 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "sles15sp2o"
+      name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:92:03:00:ae"
       }
     }
     xen-host = {
       image = "sles15sp2o"
+      name = "min-xen"
       provider_settings = {
         mac = "aa:b2:92:03:00:af"
       }

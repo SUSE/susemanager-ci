@@ -180,8 +180,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
-      name = "min-ubuntu2204"
       image = "ubuntu2204o"
+      name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:92:03:00:8b"
       }
@@ -202,6 +202,7 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "sles15sp4o"
+      name = "min-kvm"
       additional_grains = {
         hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
         hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
@@ -214,6 +215,7 @@ module "cucumber_testsuite" {
     }
     xen-host = {
       image = "sles15sp4o"
+      name = "min-xen"
       additional_grains = {
         xen_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-15.4-kvm-and-xen-Current.qcow2"
         xen_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-15.4-kvm-and-xen-Current.qcow2.sha256"
