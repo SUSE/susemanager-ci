@@ -177,8 +177,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
-      name = "min-ubuntu2204"
       image = "ubuntu2204o"
+      name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:93:01:00:9b"
       }
@@ -187,6 +187,7 @@ module "cucumber_testsuite" {
     }
     build-host = {
       image = "sles15sp4o"
+      name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:9d"
         memory = 2048
@@ -199,6 +200,7 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "sles15sp4o"
+      name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:93:01:00:9e"
       }
@@ -207,6 +209,7 @@ module "cucumber_testsuite" {
     }
     xen-host = {
       image = "sles15sp4o"
+      name = "min-xen"
       provider_settings = {
         mac = "aa:b2:93:01:00:9f"
       }

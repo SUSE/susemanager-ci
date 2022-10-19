@@ -241,6 +241,7 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "sles15sp4o"
+      name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:93:01:00:4e"
       }

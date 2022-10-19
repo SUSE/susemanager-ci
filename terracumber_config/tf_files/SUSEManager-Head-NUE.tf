@@ -157,6 +157,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "rocky8o"
+      name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:93:01:00:b9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -168,8 +169,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
-      name = "min-ubuntu2204"
       image = "ubuntu2204o"
+      name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:93:01:00:bb"
       }
@@ -191,6 +192,7 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "sles15sp4o"
+      name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:93:01:00:be"
       }
@@ -199,6 +201,7 @@ module "cucumber_testsuite" {
     }
     xen-host = {
       image = "sles15sp4o"
+      name = "min-xen"
       provider_settings = {
         mac = "aa:b2:93:01:00:bf"
       }

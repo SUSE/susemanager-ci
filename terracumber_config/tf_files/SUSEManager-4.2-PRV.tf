@@ -176,6 +176,7 @@ module "cucumber_testsuite" {
     }
     build-host = {
       image = "sles15sp3o"
+      name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:03:00:cd"
         memory = 2048
@@ -196,6 +197,7 @@ module "cucumber_testsuite" {
     }
     xen-host = {
       image = "sles15sp3o"
+      name = "min-xen"
       additional_grains = {
         xen_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2"
         xen_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-15.3-kvm-and-xen-Current.qcow2.sha256"

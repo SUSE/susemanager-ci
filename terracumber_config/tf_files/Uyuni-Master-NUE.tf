@@ -162,6 +162,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "rocky8o"
+      name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:93:01:00:d9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -186,6 +187,7 @@ module "cucumber_testsuite" {
     }
     build-host = {
       image = "sles15sp4o"
+      name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:dd"
         memory = 2048
@@ -200,6 +202,7 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "opensuse154o"
+      name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
       }
@@ -208,6 +211,7 @@ module "cucumber_testsuite" {
     }
     xen-host = {
       image = "opensuse154o"
+      name = "min-xen"
       provider_settings = {
         mac = "aa:b2:93:01:00:df"
       }
