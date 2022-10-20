@@ -282,6 +282,7 @@ module "redhat-minion"  {
     // Also, openscap cannot run with less than 1.25 GB of RAM
     memory = 2048
     vcpu = 2
+    instance_type = "t2.micro"
   }
   source             = "./modules/minion"
   base_configuration = module.base.configuration
