@@ -8,8 +8,8 @@ node('sumaform-cucumber') {
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/Uyuni-Master-NUE.tf', description: 'Path to the tf file to be used'),
-            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/Uyuni-Master-NUE-jordi.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/jordimassaguerpla/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
             choice(name: 'terraform_bin', choices: ['/usr/bin/terraform'], description: 'Terraform binary path'),
