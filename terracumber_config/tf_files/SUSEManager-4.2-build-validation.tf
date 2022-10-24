@@ -116,7 +116,7 @@ module "base_core" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp3o", "opensuse152o" ]
+  images      = [ "sles15sp3o", "opensuse154o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -243,7 +243,7 @@ module "base_debian" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1804o", "ubuntu2004o", "debian9o", "debian10o", "debian11o" ]
+  images      = [ "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian9o", "debian10o", "debian11o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -784,29 +784,29 @@ module "ubuntu2004-minion" {
 
 }
 
-// module "ubuntu2204-minion" {
-//   providers = {
-//     libvirt = libvirt.trantor
-//   }
-//   source             = "./modules/minion"
-//   base_configuration = module.base_debian.configuration
-//   product_version    = "4.2-released"
-//   name               = "min-ubuntu2204"
-//   image              = "ubuntu2204o"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:6b"
-//     memory             = 4096
-//   }
-//   server_configuration = {
-//     hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-//   }
-//   auto_connect_to_master  = false
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
-//
-//   //ubuntu2204-minion_additional_repos
-//
-// }
+module "ubuntu2204-minion" {
+  providers = {
+    libvirt = libvirt.trantor
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "4.2-released"
+  name               = "min-ubuntu2204"
+  image              = "ubuntu2204o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:6b"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //ubuntu2204-minion_additional_repos
+
+}
 
 module "debian9-minion" {
   providers = {
