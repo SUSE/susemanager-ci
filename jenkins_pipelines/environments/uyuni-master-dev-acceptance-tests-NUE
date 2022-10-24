@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('sumaform-cucumber') {
+node('sumaform-cucumber-provo') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
