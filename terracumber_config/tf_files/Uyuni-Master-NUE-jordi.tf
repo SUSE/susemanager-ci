@@ -116,11 +116,11 @@ module "cucumber_testsuite" {
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   // Comment the next two lines if no mirror should be used
-  mirror = "minima-mirror.mgr.suse.de"
+  mirror = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
 
-  server_http_proxy = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://minima-mirror.mgr.suse.de:445"
+  # server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  custom_download_endpoint = "ftp://minima-mirror.mgr.prv.suse.net:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
