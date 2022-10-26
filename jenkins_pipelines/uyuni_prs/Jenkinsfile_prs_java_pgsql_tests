@@ -26,7 +26,7 @@ pipeline {
         filter = "java/"
         git_fs = "${env.WORKSPACE}"
         // the actual test is the git repo
-        test = "'susemanager-utils/testing/automation/java-unittests-pgsql.sh -t test-coverage-report'"
+        test = "susemanager-utils/testing/automation/java-unittests-pgsql.sh"
         gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
         gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro.rb'
