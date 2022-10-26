@@ -126,7 +126,7 @@ def run(params) {
                     mu_repositories = sh(script: "cat ${WORKSPACE}/custom_repositories.json | jq -r ' to_entries[] |  \" \\(.value)\"' | jq -r ' to_entries[] |  \" \\(.value)\"'",
                             returnStdout: true)
                     // Get the testsuite defaults repositories list
-                    repositories = sh(script: "cat ${local_mirror_dir}/salt/mirror/utils/minimum_repositories_testsuite.yaml",
+                    repositories = sh(script: "cat ${local_mirror_dir}/salt/mirror/etc/minimum_repositories_testsuite.yaml",
                             returnStdout: true)
                     if ( !mu_repositories.isEmpty() ) {
                         String[] REPOSITORIES_LIST = mu_repositories.split("\n")
