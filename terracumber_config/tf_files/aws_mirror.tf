@@ -101,6 +101,11 @@ variable "ACCESS_KEY" {
   default = null
 }
 
+variable "TOKEN_AWS" {
+  type = string
+  default = null
+}
+
 variable "SECRET_KEY" {
   type = string
   default = null
@@ -130,6 +135,7 @@ provider "aws" {
   region = var.REGION
   access_key = var.ACCESS_KEY
   secret_key = var.SECRET_KEY
+  token      = var.TOKEN_AWS
 }
 
 module "base" {
