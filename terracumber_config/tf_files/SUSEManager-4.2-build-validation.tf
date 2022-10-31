@@ -736,29 +736,29 @@ module "rocky8-minion" {
 
 }
 
-module "ubuntu1804-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "min-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:69"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //ubuntu1804-minion_additional_repos
-
-}
+//module "ubuntu1804-minion" {
+//  providers = {
+//    libvirt = libvirt.trantor
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_debian.configuration
+//  product_version    = "4.2-released"
+//  name               = "min-ubuntu1804"
+//  image              = "ubuntu1804o"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:69"
+//    memory             = 4096
+//  }
+//  server_configuration = {
+//    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  //ubuntu1804-minion_additional_repos
+//
+//}
 
 module "ubuntu2004-minion" {
   providers = {
@@ -833,55 +833,55 @@ module "debian9-minion" {
 
 }
 
-module "debian10-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "min-debian10"
-  image              = "debian10o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6d"
-    memory             = 4096
-  }
+//module "debian10-minion" {
+//  providers = {
+//    libvirt = libvirt.trantor
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_debian.configuration
+//  product_version    = "4.2-released"
+//  name               = "min-debian10"
+//  image              = "debian10o"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:6d"
+//    memory             = 4096
+//  }
+//
+//  server_configuration = {
+//    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  //debian10-minion_additional_repos
+//
+//}
 
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //debian10-minion_additional_repos
-
-}
-
-module "debian11-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "min-debian11"
-  image              = "debian11o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6e"
-    memory             = 4096
-  }
-
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //debian11-minion_additional_repos
-
-}
+//module "debian11-minion" {
+//  providers = {
+//    libvirt = libvirt.trantor
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_debian.configuration
+//  product_version    = "4.2-released"
+//  name               = "min-debian11"
+//  image              = "debian11o"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:6e"
+//    memory             = 4096
+//  }
+//
+//  server_configuration = {
+//    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  //debian11-minion_additional_repos
+//
+//}
 
 module "sles12sp4-sshminion" {
   providers = {
@@ -1042,22 +1042,22 @@ module "rocky8-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "ubuntu1804-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:89"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//module "ubuntu1804-sshminion" {
+//  providers = {
+//    libvirt = libvirt.trantor
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_debian.configuration
+//  product_version    = "4.2-released"
+//  name               = "minssh-ubuntu1804"
+//  image              = "ubuntu1804o"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:89"
+//    memory             = 4096
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 module "ubuntu2004-sshminion" {
   providers = {
@@ -1110,39 +1110,39 @@ module "debian9-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian10-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-debian10"
-  image              = "debian10o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:8d"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//module "debian10-sshminion" {
+//  providers = {
+//    libvirt = libvirt.trantor
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_debian.configuration
+//  product_version    = "4.2-released"
+//  name               = "minssh-debian10"
+//  image              = "debian10o"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:8d"
+//    memory             = 4096
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
-module "debian11-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-debian11"
-  image              = "debian11o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:8e"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//module "debian11-sshminion" {
+//  providers = {
+//    libvirt = libvirt.trantor
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_debian.configuration
+//  product_version    = "4.2-released"
+//  name               = "minssh-debian11"
+//  image              = "debian11o"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:8e"
+//    memory             = 4096
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 module "sles12sp5-buildhost" {
   providers = {
@@ -1275,8 +1275,8 @@ module "controller" {
   sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
   sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
 
-  ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
-  ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
+  //ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
+  //ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
@@ -1284,11 +1284,11 @@ module "controller" {
   debian9_minion_configuration    = module.debian9-minion.configuration
   debian9_sshminion_configuration = module.debian9-sshminion.configuration
 
-  debian10_minion_configuration    = module.debian10-minion.configuration
-  debian10_sshminion_configuration = module.debian10-sshminion.configuration
+  //debian10_minion_configuration    = module.debian10-minion.configuration
+  //debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
-  debian11_minion_configuration    = module.debian11-minion.configuration
-  debian11_sshminion_configuration = module.debian11-sshminion.configuration
+  //debian11_minion_configuration    = module.debian11-minion.configuration
+  //debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
