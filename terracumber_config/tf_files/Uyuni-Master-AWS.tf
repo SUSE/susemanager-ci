@@ -117,24 +117,24 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse153o", "opensuse154o", "sles15sp2o", "sles15sp3o", "ubuntu2204"]
+  images = ["rocky8", "opensuse154o", "sles15sp4o", "ubuntu2204"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
   // domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "ip-172-16-1-30.eu-central-1.compute.internal"
-  auth_registry    = "ip-172-16-1-30.eu-central-1.compute.internal:5000/cucutest"
+  no_auth_registry = "ip-172-16-1-175.eu-central-1.compute.internal"
+  auth_registry    = "ip-172-16-1-175.eu-central-1.compute.internal:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/cloud_aws"
 
-  mirror = "ip-172-16-1-30.eu-central-1.compute.internal"
+  mirror = "ip-172-16-1-175.eu-central-1.compute.internal"
   // use_mirror_images = true
 
   // server_http_proxy = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://ip-172-16-1-30.eu-central-1.compute.internal:445"
+  custom_download_endpoint = "ftp://ip-172-16-1-175.eu-central-1.compute.internal:445"
 
   host_settings = {
     controller = {
@@ -167,12 +167,13 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     redhat-minion = {
-      image = "rocky8o"
+      image = "rocky8"
       provider_settings = {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
         // t3 has problems with network interfaces setup
-        instance_type = "t2.small"
+        //instance_type = "t2.small"
+        instance_type = "t3.small"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -195,32 +196,17 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
 // No PXE support for AWS yet
-//    pxeboot-minion = {
-//       image = "opensuse153o"
-//      provider_settings = {
-//      }
-//    }
-// We need to clarify if this is supported at AWS
-//    kvm-host = {
-//      image = "opensuse153o"
-//      provider_settings = {
-//      }
-//    }
-//    xen-host = {
-//      image = "opensuse153o"
-//      provider_settings = {
-//      }
-//    }
+// No nested virtualization in AWS
   }
   provider_settings = {
     create_network                       = false
-    public_subnet_id                     = "subnet-01db332a7f8bd5ba1"
-    private_subnet_id                    = "subnet-00a0b59c64ca94e3c"
-    private_additional_subnet_id         = "subnet-07d1f93fe7cea5b33"
-    public_security_group_id             = "sg-0b8c5f685bf50ca0d"
-    private_security_group_id            = "sg-00dffcc61093a3630"
-    private_additional_security_group_id = "sg-0aaa32fdc02bb7e73"
-    bastion_host                         = "ec2-3-73-148-21.eu-central-1.compute.amazonaws.com"
+    public_subnet_id                     = "subnet-0ddb3211d5b0feef9"
+    private_subnet_id                    = "subnet-0ed7c1652726aec5f"
+    private_additional_subnet_id         = "subnet-0da1a502298cd9e49"
+    public_security_group_id             = "sg-0a21915f3523fbede"
+    private_security_group_id            = "sg-0a6dbca0ac0c4dedf"
+    private_additional_security_group_id = "sg-0b97a9b546439bfeb"
+    bastion_host                         = "ec2-3-68-127-29.eu-central-1.compute.amazonaws.com"
     availability_zone                    = var.AVAILABILITY_ZONE
     region                               = var.REGION
     ssh_allowed_ips                      = []
