@@ -11,6 +11,12 @@ def run(params) {
         if (params.terraform_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
         }
+        if (params.bastion_ssh_key_file) {
+            env.common_params = "${env.common_params} --bastion_ssh_key ${params.bastion_ssh_key_file} --bastion_user ${params.bastion_username}"
+            if (params.bastion_hostname) {
+                env.common_params = "${env.common_params} --bastion_hostname ${params.bastion_hostname}"
+            }
+        }
 
         def previous_commit = null
         def product_commit = null
