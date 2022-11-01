@@ -171,8 +171,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
-        // t3 has problems with network interfaces setup
-        //instance_type = "t2.small"
         instance_type = "t3.small"
       }
       additional_packages = [ "venv-salt-minion" ]
@@ -189,8 +187,6 @@ module "cucumber_testsuite" {
     build-host = {
       image = "sles15sp4o"
       provider_settings = {
-        // 2 GB RAM needed - use small instead of micro
-        instance_type = "t3.small"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
