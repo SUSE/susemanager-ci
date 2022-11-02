@@ -296,7 +296,7 @@ module "redhat-minion"  {
   server_configuration = module.server.configuration
   auto_connect_to_master = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-  additional_packages = [ "venv-salt-minion" ]
+//  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
