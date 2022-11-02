@@ -118,7 +118,7 @@ module "base_core" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp3o", "opensuse154o" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
