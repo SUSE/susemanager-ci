@@ -338,7 +338,8 @@ module "controller" {
   }
   swap_file_size = null
   no_mirror = true
-  is_using_build_image = true
+  is_using_build_image = false
+  is_using_scc_repositories = true
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
