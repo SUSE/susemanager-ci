@@ -261,31 +261,30 @@ module "base_debian" {
   }
 }
 
-// Disabled because of heat in NUE
-//module "base_arm" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//
-//  source = "./modules/base"
-//
-//  cc_username = var.SCC_USER
-//  cc_password = var.SCC_PASSWORD
-//  name_prefix = "suma-bv-43-"
-//  use_avahi   = false
-//  domain      = "mgr.prv.suse.net"
-//  images      = [ "opensuse154armo" ]
-//
-//  mirror = "minima-mirror-bv3.mgr.prv.suse.net"
-//  use_mirror_images = true
-//
-//  testsuite = true
-//
-//  provider_settings = {
-//    pool        = "ssd"
-//    bridge      = "br1"
-//  }
-//}
+module "base_arm" {
+  providers = {
+    libvirt = libvirt.overdrive4
+  }
+
+  source = "./modules/base"
+
+  cc_username = var.SCC_USER
+  cc_password = var.SCC_PASSWORD
+  name_prefix = "suma-bv-43-"
+  use_avahi   = false
+  domain      = "mgr.prv.suse.net"
+  images      = [ "opensuse154armo" ]
+
+  mirror = "minima-mirror-bv3.mgr.prv.suse.net"
+  use_mirror_images = true
+
+  testsuite = true
+
+  provider_settings = {
+    pool        = "ssd"
+    bridge      = "br1"
+  }
+}
 
 module "server" {
   source             = "./modules/server"
