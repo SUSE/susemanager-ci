@@ -174,7 +174,7 @@ module "base_res" {
   domain      = "mgr.prv.suse.net"
   images      = [ "centos7o", "centos8o" ]
 
-  mirror = "minima-mirror-bv2.mgr.prv.suse.net"
+  mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
