@@ -208,15 +208,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    xen-host = {
-      image = "sles15sp4o"
-      name = "min-xen"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:9f"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
   }
   provider_settings = {
     pool = "ssd"

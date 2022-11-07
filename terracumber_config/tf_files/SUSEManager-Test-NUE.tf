@@ -252,18 +252,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-//    xen-host = {
-//      image = "sles15sp4o"
-//      name = "min-xen"
-//      provider_settings = {
-//        mac = "aa:b2:93:01:00:4f"
-//      }
-//      additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-//      }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
-//    }
   }
   provider_settings = {
     pool               = "ssd"
