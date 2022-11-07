@@ -225,6 +225,7 @@ module "proxy" {
   use_os_released_updates   = false
   proxy_containerized       = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
   //proxy_additional_repos
 
