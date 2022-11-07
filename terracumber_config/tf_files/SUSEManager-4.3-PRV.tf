@@ -214,21 +214,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    xen-host = {
-      image = "sles15sp4o"
-      name = "min-xen"
-      additional_grains = {
-        xen_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-15.4-kvm-and-xen-Current.qcow2"
-        xen_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-15.4-kvm-and-xen-Current.qcow2.sha256"
-        hvm_disk_image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
-        hvm_disk_image_hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
-      }
-      provider_settings = {
-        mac = "aa:b2:92:03:00:8f"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
   }
   provider_settings = {
     pool = "ssd"
