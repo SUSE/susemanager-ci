@@ -171,9 +171,9 @@ def run(params) {
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                         sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${test_packages_project}\" -r rpm -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${test_packages_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${test_packages_project}.error"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/x86_64"
+                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS8-Uyuni-Client-Tools/CentOS_8/x86_64"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:CentOS7-Uyuni-Client-Tools\" -r CentOS_7 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_CentOS7-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_CentOS7-Uyuni-Client-Tools.error"
+                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:CentOS8-Uyuni-Client-Tools\" -r CentOS_8 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_CentOS8-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_CentOS8-Uyuni-Client-Tools.error"
 
                         echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/${arch}"
                         // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
@@ -248,7 +248,7 @@ def run(params) {
                             env.ADDITIONAL_REPO_URL = additional_repo_url
                         }
                         env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/${arch}"
-                        env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS7-Uyuni-Client-Tools/CentOS_7/${arch}"
+                        env.CENTOS_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:CentOS8-Uyuni-Client-Tools/CentOS_8/${arch}"
                         env.UBUNTU_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2204-Uyuni-Client-Tools/xUbuntu_22.04/${arch}"
                         env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/${arch}"
 
