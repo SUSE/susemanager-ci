@@ -1382,18 +1382,6 @@ module "controller" {
   sle15sp4_terminal_configuration = module.sles15sp4-terminal.configuration
 }
 
-resource "null_resource" "server_extra_nfs_mounts" {
-  provisioner "remote-exec" {
-    script = "../../susemanager-ci/terracumber_config/tf_files/common/nfs-mounts.sh"
-    connection {
-      type     = "ssh"
-      user     = "root"
-      password = "linux"
-      host     = "${module.server.configuration.hostname}"
-    }
-  }
-}
-
 output "configuration" {
   value = {
     controller = module.controller.configuration
