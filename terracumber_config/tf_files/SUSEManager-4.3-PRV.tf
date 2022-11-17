@@ -87,7 +87,7 @@ terraform {
 provider "libvirt" {
 // Switching temporarily because metropolis is down
 //  uri = "qemu+tcp://metropolis.mgr.prv.suse.net/system"
-  uri = "qemu+tcp://hugo.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://bloodymary.mgr.prv.suse.net/system"
 }
 
 
