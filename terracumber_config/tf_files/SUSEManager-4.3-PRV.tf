@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://metropolis.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://hugo.mgr.prv.suse.net/system"
 }
 
 
