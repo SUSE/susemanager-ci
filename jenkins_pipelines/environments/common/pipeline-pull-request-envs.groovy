@@ -3,7 +3,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     last_env = 10;
     // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
     sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
-    sumaform_ref = "container-proxy-in-43-and-prtests";
+    sumaform_ref = "master";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-ion") {
     first_env = 9;
     last_env = 9;
