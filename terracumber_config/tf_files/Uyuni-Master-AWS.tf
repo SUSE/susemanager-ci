@@ -139,14 +139,18 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       image = "opensuse154o"
+      provider_settings = {
+        instance_type = "c6a.xlarge"
+      }
     }
     server = {
       provider_settings = {
+        instance_type = "m6a.2xlarge"
       }
     }
     proxy = {
       provider_settings = {
-        instance_type = "m5.large"
+        instance_type = "c6a.large"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -155,7 +159,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
-        instance_type = "t3.medium"
+        instance_type = "t3a.medium"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -164,7 +168,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
-        instance_type = "t3.medium"
+        instance_type = "t3a.medium"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -174,7 +178,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
-        instance_type = "t3.medium"
+        instance_type = "t3a.medium"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -183,7 +187,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       image = "ubuntu2204"
       provider_settings = {
-        instance_type = "t3.medium"
+        instance_type = "t3a.medium"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -191,6 +195,7 @@ module "cucumber_testsuite" {
     build-host = {
       image = "sles15sp4o"
       provider_settings = {
+        instance_type = "t3a.large"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
