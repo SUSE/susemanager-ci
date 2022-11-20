@@ -146,6 +146,7 @@ module "cucumber_testsuite" {
     }
     proxy = {
       provider_settings = {
+        instance_type = "m5.large"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -154,6 +155,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
+        instance_type = "t3.medium"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -162,6 +164,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
+        instance_type = "t3.medium"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -171,7 +174,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
-        instance_type = "t3.small"
+        instance_type = "t3.medium"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -180,6 +183,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       image = "ubuntu2204"
       provider_settings = {
+        instance_type = "t3.medium"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
