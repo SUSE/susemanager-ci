@@ -145,7 +145,7 @@ module "cucumber_testsuite" {
     }
     server = {
       provider_settings = {
-        instance_type = "m6a.2xlarge"
+        instance_type = "m6a.xlarge"
       }
     }
     proxy = {
