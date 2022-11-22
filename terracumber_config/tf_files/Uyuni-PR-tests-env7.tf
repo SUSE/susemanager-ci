@@ -230,7 +230,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:04:00:64"
       }
       additional_repos = {
-        client_repo = var.SLE_CLIENT_REPO,
+        tools_update = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -242,7 +242,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:04:00:65"
       }
       additional_repos = {
-        client_repo = var.SLE_CLIENT_REPO,
+        tools_update = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -283,7 +283,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos = {
-        client_repo = var.SLE_CLIENT_REPO,
+        tools_update = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -291,7 +291,7 @@ module "cucumber_testsuite" {
     pxeboot-minion = {
       image = "sles15sp4o"
       additional_repos = {
-        client_repo = var.SLE_CLIENT_REPO,
+        tools_update = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
