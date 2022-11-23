@@ -766,29 +766,30 @@ module "rocky8-minion" {
 
 }
 
-module "rocky9-minion" {
-  providers = {
-    libvirt = libvirt.endor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.3-released"
-  name               = "min-rocky9"
-  image              = "rocky9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:c1"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //ceos9-minion_additional_repos
-
-}
+// Disabled until we have the products in SCC
+// module "rocky9-minion" {
+//   providers = {
+//     libvirt = libvirt.endor
+//   }
+//   source             = "./modules/minion"
+//   base_configuration = module.base_res.configuration
+//   product_version    = "4.3-released"
+//   name               = "min-rocky9"
+//   image              = "rocky9o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:c1"
+//     memory             = 4096
+//   }
+//   server_configuration = {
+//     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+//   }
+//   auto_connect_to_master  = false
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//   //ceos9-minion_additional_repos
+//
+// }
 
 module "ubuntu1804-minion" {
   providers = {
@@ -1122,22 +1123,23 @@ module "rocky8-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "rocky9-sshminion" {
-  providers = {
-    libvirt = libvirt.endor
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-rocky9"
-  image              = "rocky9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:e1"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// Disabled until we have the products in SCC
+// module "rocky9-sshminion" {
+//   providers = {
+//     libvirt = libvirt.endor
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_res.configuration
+//   product_version    = "4.3-released"
+//   name               = "minssh-rocky9"
+//   image              = "rocky9o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:e1"
+//     memory             = 4096
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
 module "ubuntu1804-sshminion" {
   providers = {
@@ -1366,8 +1368,9 @@ module "controller" {
   rocky8_minion_configuration    = module.rocky8-minion.configuration
   rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
 
-  rocky9_minion_configuration    = module.rocky9-minion.configuration
-  rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
+// Disabled until we have the products in SCC
+//  rocky9_minion_configuration    = module.rocky9-minion.configuration
+//  rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
 
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
