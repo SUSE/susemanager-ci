@@ -129,30 +129,11 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:41"
         memory = 10240
       }
-//    additional_repos = {
-//      server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST/images/repo/SLE-Module-SUSE-Manager-Server-4.3-POOL-x86_64-Media1/"
-//        salt15sp2_base = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Basesystem_15-SP2_x86_64/",
-//        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
-//        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
-//        sapformular = "http://download.suse.de/ibs/SUSE:/Maintenance:/17953/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
-//        hwdata = "http://download.suse.de/ibs/SUSE:/Maintenance:/17927/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.1_x86_64/",
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP4/"
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp4/standard/"
-//        Test_repo_2 = "http://download.suse.de/ibs/home:/PSuarezHernandez:/branches:/openSUSE.org:/systemsmanagement/SLE_15_SP4/"
-//    }
-//    additional_packages = [ "cobbler" ]
     }
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:42"
       }
-//    additional_repos = {
-//        proxy_stack = "http://download.suse.de/ibs/SUSE:/Maintenance:/17859/SUSE_Updates_SLE-Module-SUSE-Manager-Proxy_4.1_x86_64/",
-//        salt15sp2_base = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Basesystem_15-SP2_x86_64/",
-//        salt15sp2_python2_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Python2_15-SP2_x86_64/",
-//        salt15sp2_server_apps_module = "http://download.suse.de/ibs/SUSE:/Maintenance:/17878/SUSE_Updates_SLE-Module-Server-Applications_15-SP2_x86_64/",
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp4/standard/"
-//    }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -162,9 +143,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:44"
       }
-//    additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-//    }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -174,9 +152,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:46"
       }
-//    additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-//    }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -186,9 +161,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:48"
       }
-//    additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-//    }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
@@ -201,9 +173,6 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-//    additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/Head:/RES7-SUSE-Manager-Tools:/SaltBundle/SUSE_RES-7_Update_standard/"
-//    }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -213,9 +182,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:4b"
       }
-//    additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/ubuntu22.04/standard/"
-//    }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -227,10 +193,6 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-//    additional_repos = {
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp2/standard/"
-//        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP2/"
-//    }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -245,10 +207,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:4e"
       }
-//    additional_repos = {
-//      Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing:/sle15sp3/standard/"
-//      Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/salt-testing/SLE_15_SP3/"
-//    }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
