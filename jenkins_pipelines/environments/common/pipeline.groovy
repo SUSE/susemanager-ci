@@ -157,7 +157,7 @@ def run(params) {
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
                 // Send email
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                // sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
                 sh "exit ${error}"
