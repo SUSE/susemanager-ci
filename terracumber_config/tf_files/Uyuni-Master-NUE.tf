@@ -132,7 +132,7 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:93:01:00:d1"
-        memory = 10240
+        memory = 12288
       }
       login_timeout = 28800
     }
