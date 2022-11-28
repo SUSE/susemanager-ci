@@ -762,7 +762,7 @@ module "rocky8-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //ceos8-minion_additional_repos
+  //rocky8-minion_additional_repos
 
 }
 
