@@ -245,7 +245,7 @@ module "suse-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
-  //  product_version = "4.2-released"
+  //sle15sp4-client_additional_repos
 }
 
 module "suse-minion" {
@@ -261,7 +261,7 @@ module "suse-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
-  //sle15sp2-minion_additional_repos
+  //sle15sp4-minion_additional_repos
 
 }
 
@@ -277,7 +277,6 @@ module "suse-sshminion" {
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   additional_packages = [ "venv-salt-minion" , "iptables"]
   install_salt_bundle = true
-  //sle15sp3-minion_additional_repos
 
 }
 
