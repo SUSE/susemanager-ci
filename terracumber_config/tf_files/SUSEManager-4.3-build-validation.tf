@@ -1449,7 +1449,7 @@ module "controller" {
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp4_terminal_configuration = module.sles15sp4-terminal.configuration
 
-  monitoring_server_configuration = module.monitoring-server.configuration
+  monitoringserver_configuration = module.monitoring-server.configuration
 }
 
 output "configuration" {
