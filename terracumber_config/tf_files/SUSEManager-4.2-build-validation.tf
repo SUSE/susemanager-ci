@@ -1295,6 +1295,28 @@ module "sles15sp3-terminal" {
   }
 }
 
+module "monitoring-server" {
+  providers = {
+    libvirt = libvirt.terminus
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_retail.configuration
+  product_version    = "4.2-released"
+  name               = "monitoring"
+  image              = "sles15sp3o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:53"
+    memory             = 2048
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
@@ -1373,6 +1395,8 @@ module "controller" {
 
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
   sle15sp3_terminal_configuration = module.sles15sp3-terminal.configuration
+
+  monitoring_server_configuration = module.monitoring-server.configuration
 }
 
 output "configuration" {
