@@ -277,6 +277,7 @@ module "rhel9-minion" {
 
   source             = "./modules/minion"
   base_configuration = module.base.configuration
+  server_configuration = module.server.configuration
   product_version    = "4.3-released"
   name               = "min-rhel9"
   image              = "rhel9"
