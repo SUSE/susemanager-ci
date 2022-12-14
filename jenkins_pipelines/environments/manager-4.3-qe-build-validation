@@ -27,6 +27,7 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
             booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
             booleanParam(name: 'must_boot_proxy', defaultValue: true, description: 'Bootstrap Proxy'),
+            booleanParam(name: 'must_boot_monitoring', defaultValue: true, description: 'Bootstrap Monitoring Server'),
             booleanParam(name: 'must_boot_clients', defaultValue: true, description: 'Bootstrap clients'),
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             booleanParam(name: 'must_prepare_retail', defaultValue: true, description: 'Prepare and run Retail'),

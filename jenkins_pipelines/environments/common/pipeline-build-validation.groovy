@@ -110,6 +110,14 @@ def run(params) {
                 }
             }
 
+            stage('Bootstrap Monitoring Server') {
+                if(params.must_boot_monitoring) {
+                    echo 'Register monitoring server as minion with gui'
+                    res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_init_monitoring'", returnStatus: true)
+                    echo "Init Monitoring Server status code: ${res_init_monitoring}"
+                }
+            }
+
             stage('Bootstrap clients') {
                 if(params.must_boot_clients) {
                     echo 'Bootstrap clients'
