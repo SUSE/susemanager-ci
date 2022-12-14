@@ -81,7 +81,7 @@ variable "REGION" {
 
 variable "AVAILABILITY_ZONE" {
   type = string
-  default = "eu-central-1a"
+  default = "eu-central-1c"
 }
 
 variable "KEY_FILE" {
