@@ -92,13 +92,13 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/maxime/.ssh/id_rsa"
+  default = "/home/maxime/.ssh/aws_mnoel"
 }
 
 
 variable "KEY_NAME" {
   type = string
-  default = "mnoel_key"
+  default = "mnoel-aws-key"
 }
 
 variable "ACCESS_KEY" {
