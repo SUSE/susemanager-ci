@@ -92,13 +92,13 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/maxime/.ssh/testing-suma.pem"
+  default = "/home/maxime/.ssh/id_rsa.pub"
 }
 
 
 variable "KEY_NAME" {
   type = string
-  default = "testing-suma"
+  default = "mnoel_key"
 }
 
 variable "ACCESS_KEY" {
@@ -245,6 +245,21 @@ module "sles15sp4-client" {
   //sle15sp4-client_additional_repos
 }
 
+module "sles15sp3-client" {
+
+  source             = "./modules/client"
+  base_configuration = module.base.configuration
+  name                 = "cli-sles15sp3"
+  image                = "sles15sp3o"
+  product_version    = "4.3-released"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  //sle15sp3-client_additional_repos
+}
+
 module "sles15sp4-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -261,12 +276,40 @@ module "sles15sp4-minion" {
 
 }
 
+module "sles15sp3-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-sles15sp3"
+  image              = "sles15sp3o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = true
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //sle15sp3-minion_additional_repos
+
+}
+
 module "sles15sp4-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-sles15sp4"
   image              = "sles15sp4o"
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  use_os_released_updates = true
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+}
+
+module "sles15sp3-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-sles15sp3"
+  image              = "sles15sp3o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -285,7 +328,7 @@ module "rhel9-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //ceos8-minion_additional_repos
+  //rhel9-minion_additional_repos
 
 }
 
@@ -309,8 +352,11 @@ module "controller" {
   proxy_configuration     = module.proxy.configuration
 
   sle15sp4_client_configuration    = module.sles15sp4-client.configuration
+  sle15sp3_client_configuration    = module.sles15sp3-client.configuration
   sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
+  sle15sp3_minion_configuration    = module.sles15sp3-minion.configuration
   sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
+  sle15sp3_sshminion_configuration = module.sles15sp3-sshminion.configuration
 
   rhel9_minion_configuration       = module.rhel9-minion.configuration
 
