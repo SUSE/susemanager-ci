@@ -88,12 +88,12 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/maxime/.ssh/testing-suma.pem"
+  default = "/home/maxime/.ssh/id_rsa.pub"
 }
 
 variable "KEY_NAME" {
   type = string
-  default = "testing-suma"
+  default = "mnoel_key"
 }
 
 variable "ACCESS_KEY" {
