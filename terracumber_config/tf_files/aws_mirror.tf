@@ -88,7 +88,7 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/maxime/.ssh/id_rsa.pub"
+  default = "/home/maxime/.ssh/id_rsa"
 }
 
 variable "KEY_NAME" {
