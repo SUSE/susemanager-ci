@@ -24,7 +24,7 @@ def run(params) {
 
         local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir}"
         aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir}"
-        aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/${env.JOB_NAME}.tf --gitfolder ${aws_mirror_dir} --bastion_ssh_key /home/${node_user}/.ssh/testing-suma.pem"
+        aws_common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/${env.JOB_NAME}.tf --gitfolder ${aws_mirror_dir} --bastion_ssh_key ${params.key_file}"
 
         if (params.terraform_parallelism) {
             local_mirror_params = "${local_mirror_params} --parallelism ${params.terraform_parallelism}"
@@ -155,6 +155,8 @@ def run(params) {
                         env.aws_configuration = "REGION = \"${params.aws_region}\"\n" +
                                 "AVAILABILITY_ZONE = \"${params.aws_availability_zone}\"\n" +
                                 "NAME_PREFIX = \"${NAME_PREFIX}-\"\n" +
+                                "KEY_FILE = \"${params.key_file}\"\n" +
+                                "KEY_NAME = \"${params.key_name}\"\n" +
                                 "ALLOWED_IPS = [ \n"
 
                         ALLOWED_IPS.each { ip ->
@@ -182,13 +184,13 @@ def run(params) {
 
             user = 'root'
             sh "ssh-keygen -R ${mirror_hostname_local} -f /home/${node_user}/.ssh/known_hosts"
-            sh "scp -o StrictHostKeyChecking=no /home/${node_user}/.ssh/testing-suma.pem ${user}@${mirror_hostname_local}:/root/"
+            sh "scp -o StrictHostKeyChecking=no ${params.key_file} ${user}@${mirror_hostname_local}:/root/"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'tar -czvf mirror.tar.gz -C /srv/mirror/ .'"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
-            sh "ssh -o StrictHostKeyChecking=no -i /home/${node_user}/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo tar -xvf /home/ec2-user/mirror.tar.gz -C /srv/mirror/' "
-            sh "ssh -o StrictHostKeyChecking=no -i /home/${node_user}/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo mv /srv/mirror/ibs/* /srv/mirror/' "
-            sh "ssh -o StrictHostKeyChecking=no -i /home/${node_user}/.ssh/testing-suma.pem ec2-user@${mirror_hostname_aws_public} 'sudo rm -rf /srv/mirror/ibs' "
+            sh "ssh -o StrictHostKeyChecking=no -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo tar -xvf /home/ec2-user/mirror.tar.gz -C /srv/mirror/' "
+            sh "ssh -o StrictHostKeyChecking=no -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo mv /srv/mirror/ibs/* /srv/mirror/' "
+            sh "ssh -o StrictHostKeyChecking=no -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rm -rf /srv/mirror/ibs' "
 
         }
 
