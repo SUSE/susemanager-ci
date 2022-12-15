@@ -140,7 +140,7 @@ module "cucumber_testsuite" {
     controller = {
       image = "opensuse154o"
       provider_settings = {
-        instance_type = "c6a.xlarge"
+        instance_type = "c6i.xlarge"
       }
     }
     server = {
@@ -150,7 +150,7 @@ module "cucumber_testsuite" {
     }
     proxy = {
       provider_settings = {
-        instance_type = "c6a.large"
+        instance_type = "c6i.large"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
