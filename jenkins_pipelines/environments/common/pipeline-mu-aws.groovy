@@ -184,7 +184,7 @@ def run(params) {
 
             user = 'root'
             sh "ssh-keygen -R ${mirror_hostname_local} -f /home/${node_user}/.ssh/known_hosts"
-            sh "scp -o StrictHostKeyChecking=no ${params.key_file} ${user}@${mirror_hostname_local}:/root/"
+            sh "scp -o StrictHostKeyChecking=no ${params.key_file} ${user}@${mirror_hostname_local}:/root/testing-suma.pem"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'tar -czvf mirror.tar.gz -C /srv/mirror/ .'"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
