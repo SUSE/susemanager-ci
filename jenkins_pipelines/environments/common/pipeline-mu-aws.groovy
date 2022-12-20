@@ -189,7 +189,7 @@ def run(params) {
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'tar -czvf mirror.tar.gz -C /srv/mirror/ .'"
             sh "ssh -o StrictHostKeyChecking=no ${user}@${mirror_hostname_local} 'scp -o StrictHostKeyChecking=no -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
             sh "ssh -o StrictHostKeyChecking=no -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo tar -xvf /home/ec2-user/mirror.tar.gz -C /srv/mirror/' "
-            sh "ssh -o StrictHostKeyChecking=no -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo mv /srv/mirror/ibs/* /srv/mirror/' "
+            sh "ssh -o StrictHostKeyChecking=no -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rsync -a /srv/mirror/ibs/ /srv/mirror' "
             sh "ssh -o StrictHostKeyChecking=no -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rm -rf /srv/mirror/ibs' "
 
         }
