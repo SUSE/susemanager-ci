@@ -16,6 +16,7 @@ node('sumaform-cucumber') {
             string(name: 'terraform_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for terraform'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            choice(name: 'rake_namespace', choices: ['parallel', 'cucumber'], description: 'Choose parallel or cucumber'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             string(name: 'aws_region', defaultValue: 'eu-central-1', description: 'Describe the AWS region where to deploy the server'),
             string(name: 'aws_availability_zone', defaultValue: 'eu-central-1a', description: 'Describe the AWS availability zone to deploy the server'),
