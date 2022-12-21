@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "4.2-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
+  images = ["centos7o", "rocky8o", "opensuse154o", "sles15sp2o", "sles15sp3o", "sles15sp4o","ubuntu2004o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-testorion-"
