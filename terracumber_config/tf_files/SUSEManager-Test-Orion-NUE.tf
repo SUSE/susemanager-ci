@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-4.2"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -142,8 +142,6 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP3/"
       }
       image = "sles15sp3o"
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp4o"
@@ -151,8 +149,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:74"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp4o"
@@ -160,8 +156,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:76"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "sles15sp4o"
@@ -169,8 +163,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:78"
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
     }
     redhat-minion = {
       image = "rocky8o"
@@ -182,8 +174,6 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2204"
@@ -191,8 +181,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:7b"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp4o"
@@ -202,8 +190,6 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     pxeboot-minion = {
       image = "sles15sp4o"
@@ -216,8 +202,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:4e"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
   }
   provider_settings = {
