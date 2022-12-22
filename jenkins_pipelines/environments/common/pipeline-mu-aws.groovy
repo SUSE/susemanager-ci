@@ -274,6 +274,38 @@ def run(params) {
                 res_smoke_tests = sh(script: "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_smoke_tests'", returnStatus: true)
                 echo "Smoke tests status code: ${res_smoke_tests}"
             }
+            stage('Get results') {
+                def error = 0
+                if (deployed || !params.must_deploy) {
+                    try {
+                        sh "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
+                    } catch(Exception ex) {
+                        println("ERROR: rake cucumber:build_validation_finishing failed")
+                        error = 1
+                    }
+                    try {
+                        sh "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
+                    } catch(Exception ex) {
+                        println("ERROR: rake utils:generate_test_report failed")
+                        error = 1
+                    }
+                    sh "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                    publishHTML( target: [
+                            allowMissing: true,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: true,
+                            reportDir: "${resultdirbuild}/cucumber_report/",
+                            reportFiles: 'cucumber_report.html',
+                            reportName: "Build Validation report"]
+                    )
+                    // junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                }
+                // Send email
+                sh "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                // Clean up old results
+                sh "./clean-old-results -r ${resultdir}"
+                sh "exit ${error}"
+            }
         }
     }
 }
