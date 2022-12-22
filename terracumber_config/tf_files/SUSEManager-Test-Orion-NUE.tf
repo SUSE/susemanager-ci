@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "rocky8o", "opensuse154o", "sles15sp2o", "sles15sp3o", "sles15sp4o","ubuntu2004o", "ubuntu2204o"]
+  images = ["centos7o", "opensuse154o", "sles15sp2o", "sles15sp3o", "sles15sp4o","ubuntu2004o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-testorion-"
@@ -166,8 +166,8 @@ module "cucumber_testsuite" {
       }
     }
     redhat-minion = {
-      image = "rocky8o"
-      name = "min-rocky8"
+      image = "centos7o"
+      name = "min-centos7"
       provider_settings = {
         mac = "aa:b2:93:01:00:79"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
