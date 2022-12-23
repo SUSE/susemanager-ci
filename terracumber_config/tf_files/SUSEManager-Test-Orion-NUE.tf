@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse154o", "sles15sp2o", "sles15sp3o", "sles15sp4o","ubuntu2004o", "ubuntu2204o"]
+  images = ["centos7o", "opensuse154o", "sles15sp3o", "ubuntu2004o"]
 
   use_avahi    = false
   name_prefix  = "suma-testorion-"
@@ -177,8 +177,8 @@ module "cucumber_testsuite" {
       }
     }
     debian-minion = {
-      name = "min-ubuntu2204"
-      image = "ubuntu2204o"
+      name = "min-ubuntu2004"
+      image = "ubuntu2004o"
       provider_settings = {
         mac = "aa:b2:93:01:00:7b"
       }
