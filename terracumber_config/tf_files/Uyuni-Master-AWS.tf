@@ -141,16 +141,20 @@ module "cucumber_testsuite" {
       image = "opensuse154o"
       provider_settings = {
         instance_type = "c6i.xlarge"
+        private_ip = "172.16.3.5"
       }
     }
     server = {
       provider_settings = {
         instance_type = "m6a.xlarge"
+        volume_size = "100"
+        private_ip = "172.16.3.6"
       }
     }
     proxy = {
       provider_settings = {
         instance_type = "c6i.large"
+        private_ip = "172.16.3.7"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -160,6 +164,7 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         instance_type = "t3a.medium"
+        private_ip = "172.16.3.8"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -169,6 +174,7 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         instance_type = "t3a.medium"
+        private_ip = "172.16.3.9"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -179,6 +185,7 @@ module "cucumber_testsuite" {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
         instance_type = "t3a.medium"
+        private_ip = "172.16.3.10"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -188,6 +195,7 @@ module "cucumber_testsuite" {
       image = "ubuntu2204"
       provider_settings = {
         instance_type = "t3a.medium"
+        private_ip = "172.16.3.11"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -196,6 +204,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       provider_settings = {
         instance_type = "t3a.large"
+        private_ip = "172.16.3.12"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -205,12 +214,13 @@ module "cucumber_testsuite" {
   }
   provider_settings = {
     create_network                       = false
+    vpc_id                               = "vpc-0e056f570bb1d7784"
     public_subnet_id                     = "subnet-0ddb3211d5b0feef9"
-    private_subnet_id                    = "subnet-0ed7c1652726aec5f"
-    private_additional_subnet_id         = "subnet-0da1a502298cd9e49"
     public_security_group_id             = "sg-0a21915f3523fbede"
-    private_security_group_id            = "sg-0a6dbca0ac0c4dedf"
-    private_additional_security_group_id = "sg-0b97a9b546439bfeb"
+    create_private_network               = true
+    private_network                      = "172.16.3.0/24"
+    create_additional_private_network    = true
+    additional_private_network           = "172.16.4.0/24"
     bastion_host                         = "ec2-3-68-127-29.eu-central-1.compute.amazonaws.com"
     availability_zone                    = var.AVAILABILITY_ZONE
     region                               = var.REGION
