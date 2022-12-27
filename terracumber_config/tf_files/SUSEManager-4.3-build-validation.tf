@@ -1263,7 +1263,7 @@ module "alma9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //almalinux9o-sshminion_additional_repos
+  //alma9-sshminion_additional_repos
 
 }
 
@@ -1286,7 +1286,7 @@ module "oracle9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //oraclelinux9o-sshminion_additional_repos
+  //oracle9-sshminion_additional_repos
 
 }
 
