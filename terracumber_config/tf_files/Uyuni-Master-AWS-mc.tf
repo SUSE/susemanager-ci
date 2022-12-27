@@ -219,8 +219,8 @@ module "cucumber_testsuite" {
     public_security_group_id             = "sg-0a21915f3523fbede"
     create_private_network               = true
     private_network                      = "172.16.10.0/24"
-    create_additional_private_network    = true
-    additional_private_network           = "172.16.11.0/24"
+    create_additional_network            = true
+    additional_network                   = "172.16.11.0/24"
     bastion_host                         = "ec2-3-68-127-29.eu-central-1.compute.amazonaws.com"
     availability_zone                    = var.AVAILABILITY_ZONE
     region                               = var.REGION
