@@ -101,7 +101,6 @@ variable "MY_IP" {
 
 provider "aws" {
   region     = var.REGION
-
 }
 
 module "cucumber_testsuite" {
@@ -148,6 +147,7 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         instance_type = "m6a.xlarge"
+        volume_size = "100"
         private_ip = "172.16.10.10"
       }
     }
