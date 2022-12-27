@@ -172,7 +172,7 @@ module "base_res" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "centos7o", "rocky8o", "rocky9o" ]
+  images      = [ "centos7o", "rocky8o", "rocky9o", "oraclelinux9o", "almalinux9o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -914,6 +914,54 @@ module "opensuse154arm-minion" {
 //
 //}
 
+module "alma9-minion" {
+  providers = {
+    libvirt = libvirt.endor
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.3-released"
+  name               = "min-alma9"
+  image              = "almalinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c2"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //alma9-minion_additional_repos
+
+}
+
+module "oracle9-minion" {
+  providers = {
+    libvirt = libvirt.endor
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.3-released"
+  name               = "min-oracle9"
+  image              = "oraclelinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c3"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //oracle9-minion_additional_repos
+
+}
+
 module "sles12sp4-sshminion" {
   providers = {
     libvirt = libvirt.endor
@@ -1196,6 +1244,52 @@ module "opensuse154arm-sshminion" {
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
 
+module "alma9-sshminion" {
+  providers = {
+    libvirt = libvirt.endor
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-alma9"
+  image              = "almalinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:e2"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //almalinux9o-sshminion_additional_repos
+
+}
+
+module "oracle9-sshminion" {
+  providers = {
+    libvirt = libvirt.endor
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-oracle9"
+  image              = "oraclelinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:e3"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //oraclelinux9o-sshminion_additional_repos
+
+}
+
 module "sles12sp5-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
@@ -1325,6 +1419,12 @@ module "controller" {
 
   rocky9_minion_configuration    = module.rocky9-minion.configuration
   rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
+
+  alma9_minion_configuration    = module.alma9-minion.configuration
+  alma9_sshminion_configuration = module.alma9-sshminion.configuration
+
+  oracle9_minion_configuration    = module.oracle9-minion.configuration
+  oracle9_sshminion_configuration = module.oracle9-sshminion.configuration
 
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
