@@ -86,12 +86,12 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/jenkins/.ssh/id_rsa"
+  default = "/suse/mc/.ssh/id_rsa_4k"
 }
 
 variable "KEY_NAME" {
   type = string
-  default = "internal-jenkins-worker"
+  default = "mcalmer-aws"
 }
 
 variable "MY_IP" {
@@ -111,8 +111,8 @@ module "cucumber_testsuite" {
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
-  git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_BRANCH
+  git_repo     = "https://github.com/uyuni-project/uyuni.git"
+  branch       = "master"
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
@@ -120,7 +120,7 @@ module "cucumber_testsuite" {
   images = ["rocky8", "opensuse154o", "sles15sp4o", "ubuntu2204"]
 
   use_avahi    = false
-  name_prefix  = "uyuni-master-"
+  name_prefix  = "uyuni-mc-"
   // domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -140,21 +140,21 @@ module "cucumber_testsuite" {
     controller = {
       image = "opensuse154o"
       provider_settings = {
-        instance_type = "c6i.xlarge"
-        private_ip = "172.16.3.5"
+        instance_type = "c6a.xlarge"
+        private_ip = "172.16.10.11"
       }
     }
     server = {
       provider_settings = {
         instance_type = "m6a.xlarge"
         volume_size = "100"
-        private_ip = "172.16.3.6"
+        private_ip = "172.16.10.10"
       }
     }
     proxy = {
       provider_settings = {
-        instance_type = "c6i.large"
-        private_ip = "172.16.3.7"
+        instance_type = "c6a.large"
+        private_ip = "172.16.10.9"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -164,7 +164,7 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         instance_type = "t3a.medium"
-        private_ip = "172.16.3.8"
+        private_ip = "172.16.10.4"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -174,7 +174,7 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         instance_type = "t3a.medium"
-        private_ip = "172.16.3.9"
+        private_ip = "172.16.10.5"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -185,7 +185,7 @@ module "cucumber_testsuite" {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
         instance_type = "t3a.medium"
-        private_ip = "172.16.3.10"
+        private_ip = "172.16.10.6"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -195,7 +195,7 @@ module "cucumber_testsuite" {
       image = "ubuntu2204"
       provider_settings = {
         instance_type = "t3a.medium"
-        private_ip = "172.16.3.11"
+        private_ip = "172.16.10.7"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -204,7 +204,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       provider_settings = {
         instance_type = "t3a.large"
-        private_ip = "172.16.3.12"
+        private_ip = "172.16.10.8"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -218,9 +218,9 @@ module "cucumber_testsuite" {
     public_subnet_id                     = "subnet-0ddb3211d5b0feef9"
     public_security_group_id             = "sg-0a21915f3523fbede"
     create_private_network               = true
-    private_network                      = "172.16.3.0/24"
+    private_network                      = "172.16.10.0/24"
     create_additional_private_network    = true
-    additional_private_network           = "172.16.4.0/24"
+    additional_private_network           = "172.16.11.0/24"
     bastion_host                         = "ec2-3-68-127-29.eu-central-1.compute.amazonaws.com"
     availability_zone                    = var.AVAILABILITY_ZONE
     region                               = var.REGION
