@@ -124,17 +124,17 @@ module "cucumber_testsuite" {
   // domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "ip-172-16-1-175.eu-central-1.compute.internal"
-  auth_registry    = "ip-172-16-1-175.eu-central-1.compute.internal:5000/cucutest"
+  no_auth_registry = "mirror.sumaci.aws"
+  auth_registry    = "mirror.sumaci.aws:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/cloud_aws"
 
-  mirror = "ip-172-16-1-175.eu-central-1.compute.internal"
+  mirror = "mirror.sumaci.aws"
   // use_mirror_images = true
 
   // server_http_proxy = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://ip-172-16-1-175.eu-central-1.compute.internal:445"
+  custom_download_endpoint = "ftp://mirror.sumaci.aws:445"
 
   host_settings = {
     controller = {
@@ -142,6 +142,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "c6i.xlarge"
         private_ip = "172.16.3.5"
+        overwrite_fqdn = "uyuni-master-ctl.sumaci.aws"
       }
     }
     server = {
@@ -149,12 +150,14 @@ module "cucumber_testsuite" {
         instance_type = "m6a.xlarge"
         volume_size = "100"
         private_ip = "172.16.3.6"
+        overwrite_fqdn = "uyuni-master-srv.sumaci.aws"
       }
     }
     proxy = {
       provider_settings = {
         instance_type = "c6i.large"
         private_ip = "172.16.3.7"
+        overwrite_fqdn = "uyuni-master-pxy.sumaci.aws"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -165,6 +168,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.8"
+        overwrite_fqdn = "uyuni-master-min-sles15.sumaci.aws"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -175,6 +179,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.9"
+        overwrite_fqdn = "uyuni-master-minssh-sles15.sumaci.aws"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -186,6 +191,7 @@ module "cucumber_testsuite" {
         // use small instead of micro
         instance_type = "t3a.medium"
         private_ip = "172.16.3.10"
+        overwrite_fqdn = "uyuni-master-min-rocky8.sumaci.aws"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -196,6 +202,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.11"
+        overwrite_fqdn = "uyuni-master-min-ubuntu2204.sumaci.aws"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -205,6 +212,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "t3a.large"
         private_ip = "172.16.3.12"
+        overwrite_fqdn = "uyuni-master-min-build.sumaci.aws"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
