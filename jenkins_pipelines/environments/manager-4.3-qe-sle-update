@@ -1,0 +1,34 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber-provo') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'Manager-4.3', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.3-SLE-update.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
+            choice(name: 'terraform_bin', choices: ['/usr/bin/terraform'], description: 'Terraform binary path'),
+            choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
+            string(name: 'terraform_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for terraform'),
+            // Temporary: should move to uyuni-project
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
+            choice(name: 'rake_namespace', choices: ['parallel', 'cucumber'], defaultValue: 'cucumber', description: 'Choose parallel or cucumber'),
+            string(name: 'capybara_timeout', defaultValue: '30', description: 'Capybara max. waiting time'),
+            string(name: 'default_timeout', defaultValue: '300', description: 'Default timeout used in our Test Framework'),
+            text(name: 'custom_repositories', defaultValue: '{"server":{"sle_update":""},"proxy":{"sle_update":""},"sle15sp4_minion":{"sle_update":""},"rocky8_client":{"sle_update":""},"ubuntu2204_minion":{"sle_update":""}}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
+            ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-sle-update.groovy"
+    pipeline.run(params)
+}
