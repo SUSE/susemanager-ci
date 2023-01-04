@@ -91,20 +91,12 @@ terraform {
   }
 }
 
-//provider "libvirt" {
-//  uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
-//}
-
 provider "libvirt" {
-  uri = "qemu+tcp://yuggoth.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
 }
 
-//locals {
-//  pool = "ssd"
-//}
-
 locals {
-  pool = "mnoel_disks"
+  pool = "ssd"
 }
 
 module "base" {
