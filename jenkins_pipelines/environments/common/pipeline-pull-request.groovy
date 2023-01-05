@@ -12,8 +12,6 @@ def run(params) {
         terracumber_gitrepo = 'https://github.com/uyuni-project/terracumber.git'
         terracumber_ref = 'master'
         terraform_init = true
-        rake_namespace = 'cucumber'
-        rake_parallel_namespace = 'parallel'
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         pull_request_repo = 'https://github.com/uyuni-project/uyuni.git'
         builder_api = 'https://api.opensuse.org'
@@ -266,7 +264,7 @@ def run(params) {
             stage('Sanity Check') {
                 ws(environment_workspace){
                     if(must_test) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:sanity_check'"
                     }
                 }
             }
@@ -281,8 +279,7 @@ def run(params) {
             stage('Core - Initialize clients') {
                 ws(environment_workspace){
                     if(must_test) {
-                        namespace = rake_namespace
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
                     }
                 }
             }
@@ -290,7 +287,7 @@ def run(params) {
                 ws(environment_workspace){
                     if(must_test && ( params.functional_scopes || run_all_scopes) ) {
                         def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                        def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus:true
+                        def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
                         sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                     }
                 }
