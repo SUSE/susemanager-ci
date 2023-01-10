@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qa-sle-update"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-sle-update"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
