@@ -22,7 +22,7 @@ def run(params) {
             node_list.each { element ->
                 minion = element.split("=")[0].toLowerCase()
                 echo minion
-                tests["${minion}"] = {
+                env.tests["${minion}"] = {
                     node {
                         stage("${minion}") {
                             echo "${minion}"
@@ -33,7 +33,7 @@ def run(params) {
                 }
             }
         }
-        parallel tests
+        parallel env.tests
 
     }
 }
