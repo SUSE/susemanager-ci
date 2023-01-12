@@ -5,7 +5,7 @@ def run(params) {
 
         stage('1') {
             def tests = [:]
-            for (f in list) {
+            list.each{f ->
                 tests["${f}"] = {
                     node {
                         stage("${f}") {
