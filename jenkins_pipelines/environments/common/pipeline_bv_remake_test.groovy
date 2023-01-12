@@ -4,7 +4,7 @@ def run(params) {
         list = ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5"]
 
         stage('1') {
-            minions = sh(script: "printenv | grep MINION",
+            minions = sh(script: "printenv",
                     returnStdout: true)
             sshminion = sh(script: "printenv | grep SSHMINION",
                     returnStdout: true)
