@@ -21,6 +21,7 @@ def run(params) {
             echo node_list.join(", ")
             node_list.each { element ->
                 minion = element.split("=")[0].toLowerCase()
+                echo minion
                 tests["${minion}"] = {
                     node {
                         stage("${minion}") {
