@@ -29,7 +29,7 @@ node('sumaform-cucumber') {
         checkout scm
     }
     timeout(activity: false, time: 10, unit: 'HOURS') {
-        def pipeline = load "jenkins_pipelines/environments/common/test_new_pipeline.groovy"
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline_bv_remake_test.groovy"
         pipeline.run(params)
     }
 }
