@@ -4,11 +4,11 @@ def run(params) {
         list = ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5"]
 
         stage('1') {
-            minions = sh(script: "printenv",
+            minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION",
                     returnStdout: true)
-            sshminion = sh(script: "printenv | grep SSHMINION",
+            sshminion = sh(script: "source /home/maxime/.profile; printenv | grep SSHMINION",
                     returnStdout: true)
-            client = sh(script: "printenv | grep CLIENT",
+            client = sh(script: "source /home/maxime/.profile; printenv | grep CLIENT",
                     returnStdout: true)
             String[] minion_list = minions.split("\n")
             String[] sshminion_list = sshminion.split("\n")
