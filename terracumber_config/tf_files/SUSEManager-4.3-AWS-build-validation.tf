@@ -332,6 +332,27 @@ module "rhel9-minion" {
 
 }
 
+module "ubuntu2204-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-ubuntu2204"
+  image              = "ubuntu2204"
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "ubuntu2204-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  server_configuration = module.server.configuration
+  product_version    = "4.3-released"
+  name               = "min-ubuntu2204"
+  image              = "ubuntu2204"
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "controller" {
   source             = "./modules/controller"
