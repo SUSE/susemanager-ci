@@ -13,9 +13,9 @@ def run(params) {
             String[] minion_list = minions.split("\n")
             String[] sshminion_list = sshminion.split("\n")
             String[] client_list = client.split("\n")
-            echo minion_list
-            echo sshminion_list
-            echo client_list
+            echo minion_list.join(", ")
+            echo sshminion_list.join(", ")
+            echo client_list.join(", ")
 
             def node_list = []
             def tests = [:]
