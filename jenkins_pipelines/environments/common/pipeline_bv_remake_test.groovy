@@ -2,7 +2,7 @@ def run(params) {
 
     timestamps {
         list = ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5"]
-        env.tests = [:]
+        def tests = [:]
         stage('1') {
             minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
                     returnStdout: true)
@@ -22,7 +22,7 @@ def run(params) {
             node_list.each { element ->
                 minion = element.split("=")[0].toLowerCase()
                 echo minion
-                env.tests["${minion}"] = {
+                tests["${minion}"] = {
                     node {
                         stage("${minion}") {
                             echo "${minion}"
@@ -32,8 +32,9 @@ def run(params) {
                     }
                 }
             }
+            parallel tests
         }
-        parallel env.tests
+        parallel tests
 
     }
 }
