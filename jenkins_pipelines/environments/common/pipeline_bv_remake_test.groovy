@@ -19,9 +19,9 @@ def run(params) {
 
             def node_list = [minion_list, sshminion_list, client_list].flatten().findAll{it}
             echo node_list.join(", ")
-            node_list.each { element ->
-//                minion = element.split("=")[0].toLowerCase()
-                minion = element.split("=")[0]
+            for (element in node_list) {
+                minion = element.split("=")[0].toLowerCase()
+//                minion = element.split("=")[0]
                 echo minion
                 tests["job-${minion}"] = {
                     node {
