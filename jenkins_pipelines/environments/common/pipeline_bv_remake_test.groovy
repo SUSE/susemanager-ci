@@ -2,7 +2,7 @@ def run(params) {
 
     timestamps {
         list = ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5"]
-
+        def tests = [:]
         stage('1') {
             minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
                     returnStdout: true)
@@ -17,10 +17,9 @@ def run(params) {
             echo sshminion_list.join(", ")
             echo client_list.join(", ")
 
-            def tests = [:]
-            def node_list = [minion_list,sshminion_list,client_list].flatten()
+            def node_list = [minion_list, sshminion_list, client_list].flatten()
             echo node_list.join(", ")
-            node_list.each{ element ->
+            node_list.each { element ->
                 tests["${element}"] = {
                     node {
                         stage("${element}") {
@@ -31,8 +30,9 @@ def run(params) {
                     }
                 }
             }
-            parallel tests
         }
+        parallel tests
+
     }
 }
 
