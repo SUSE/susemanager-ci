@@ -22,15 +22,15 @@ def run(params) {
             node_list.each { element ->
                 minion = element.split("=")[0].toLowerCase()
                 echo minion
-                tests["${minion}"] = {
-                    node {
-                        stage("${minion}") {
-                            echo "${minion}"
+                tests["job-${minion}"] = {
+                    stage("${minion}") {
+                        echo minion
+                        sh "echo ${minion}"
 
 
-                        }
                     }
                 }
+
             }
             parallel tests
         }
