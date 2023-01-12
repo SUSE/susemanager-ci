@@ -2,7 +2,7 @@ def run(params) {
 
     timestamps {
         list = ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5"]
-        def tests = [:]
+        env.tests = [:]
         stage('1') {
             minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
                     returnStdout: true)
