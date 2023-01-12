@@ -18,7 +18,7 @@ def doDynamicParallelSteps(){
         tests["${element}"] = {
             node {
                 stage("${element}") {
-                    echo '${element}'
+                    echo element
                 }
             }
         }
