@@ -20,21 +20,23 @@ def run(params) {
             def node_list = [minion_list, sshminion_list, client_list].flatten().findAll{it}
             echo node_list.join(", ")
             node_list.each { element ->
-                minion = element.split("=")[0].toLowerCase()
+//                minion = element.split("=")[0].toLowerCase()
+                minion = element.split("=")[0]
                 echo minion
                 tests["job-${minion}"] = {
-                    stage("${minion}") {
-                        echo minion
-                        sh "echo ${minion}"
+                    node {
+                        stage("job-${minion}") {
+                            echo minion
+                            sh "echo ${minion}"
 
 
+                        }
                     }
                 }
 
             }
             parallel tests
         }
-        parallel tests
 
     }
 }
