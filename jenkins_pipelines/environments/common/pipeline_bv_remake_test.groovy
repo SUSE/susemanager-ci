@@ -20,6 +20,7 @@ def run(params) {
             def node_list = []
             def tests = [:]
             node_list.addAll(minion_list,sshminion_list,client_list)
+            echo node_list.join(", ")
             node_list.each{ element ->
                 tests["${element}"] = {
                     node {
