@@ -9,7 +9,7 @@ def run(params) {
                 tests["${f}"] = {
                     node {
                         stage("${f}") {
-                            echo '${f}'
+                            echo "${f}"
                         }
                     }
                 }
