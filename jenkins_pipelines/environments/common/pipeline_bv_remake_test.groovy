@@ -20,7 +20,7 @@ def run(params) {
             def node_list = [minion_list, sshminion_list, client_list].flatten().findAll{it}
             echo node_list.join(", ")
             node_list.each { element ->
-                minion = element.split("=")[0]
+                minion = element.split("=")[0].toLowerCase()
                 tests["${minion}"] = {
                     node {
                         stage("${minion}") {
