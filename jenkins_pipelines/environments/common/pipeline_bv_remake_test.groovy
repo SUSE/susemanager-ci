@@ -17,13 +17,14 @@ def run(params) {
             echo sshminion_list.join(", ")
             echo client_list.join(", ")
 
-            def node_list = [minion_list, sshminion_list, client_list].flatten()
+            def node_list = [minion_list, sshminion_list, client_list].flatten().findAll{it}
             echo node_list.join(", ")
             node_list.each { element ->
-                tests["${element}"] = {
+                minion = element.split("=")[0]
+                tests["${minion}"] = {
                     node {
-                        stage("${element}") {
-                            echo "${element}"
+                        stage("${minion}") {
+                            echo "${minion}"
 
 
                         }
