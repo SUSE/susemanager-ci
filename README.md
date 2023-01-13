@@ -53,7 +53,9 @@ the build is reproducible.
 image for testing Pull Requests built with the open build service. This needs to be copied manually.
 - http://minima-mirror.mgr.prv.suse.net/distribution/leap/: oss and non-oss repositories.
 
-## Used image versions in the CI test suite
+## CI Test suite
+
+### Used image versions
 
 | Version | Minion      | SSH minion  | Client      | RH-like  | Deb-like     | Virthosts   | Buildhost   | Terminal    | Controller | Server      | Proxy       |
 | ------- | ----------- | ----------- | ----------- | -------- | ------------ | ----------- | ----------- | ----------- | ---------- | ----------- | ----------- |
@@ -62,3 +64,13 @@ image for testing Pull Requests built with the open build service. This needs to
 |  HEAD   | SLES 15 SP4 | SLES 15 SP4 | -           | Rocky 8  | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.4  | SLES 15 SP4 | SLES 15 SP4 |
 |  4.3    | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.4  | SLES 15 SP4 | SLES 15 SP4 |
 |  4.2    | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 | Leap 15.4  | SLES 15 SP3 | SLES 15 SP3 |
+
+### Other information
+
+| Version | Location | Hypervisor | Mirror |
+| ------- | -------- | ---------- | ------ |
+| PR test | Provo    |            | yes    |
+| Uyuni   | Nuremberg| salzbreze  | no     |
+| HEAD    | Nuremberg| ramrod     | yes    |
+| 4.3     | Provo    | bloodymary | yes    |
+| 4.2     | Provo    | selektah   | yes    |
