@@ -2,6 +2,8 @@ def run(params) {
 
     timestamps {
         list = ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5"]
+//        def minion
+        def tests = [:]
 //        stage('Dynamic parallel') {
 //            minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
 //                    returnStdout: true)
@@ -71,9 +73,8 @@ def doDynamicParallelSteps(){
 
     def node_list = [minion_list, sshminion_list, client_list].flatten().findAll { it }
     echo node_list.join(", ")
-    def minion = ""
     node_list.each { element ->
-        minion = element.split("=")[0].toLowerCase()
+        def minion = element.split("=")[0].toLowerCase()
         tests["job-${minion}"] = {
             stage("${minion}") {
                 echo minion
