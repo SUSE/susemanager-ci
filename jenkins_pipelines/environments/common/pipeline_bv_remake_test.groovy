@@ -71,7 +71,7 @@ def doDynamicParallelSteps(){
 
     def node_list = [minion_list, sshminion_list, client_list].flatten().findAll { it }
     echo node_list.join(", ")
-
+    def minion = ""
     node_list.each { element ->
         minion = element.split("=")[0].toLowerCase()
         tests["job-${minion}"] = {
