@@ -69,6 +69,9 @@ def doDynamicParallelSteps(){
         if (instanceList[1].contain(minion) || instanceList[1].contain(client)) {
             echo instanceList[1]
             nodeList.add(instanceList[1])
+
+        } else {
+            println "Not a minion or client"
         }
     }
     echo nodeList.join(", ")
