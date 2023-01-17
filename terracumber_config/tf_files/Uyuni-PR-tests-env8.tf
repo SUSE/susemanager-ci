@@ -187,6 +187,8 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:92:04:00:71"
+        memory = 20480
+        vcpu = 4
       }
       additional_repos_only = true
       additional_repos = {
@@ -228,6 +230,7 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:74"
+        memory = 4096
       }
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
@@ -239,6 +242,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
+        memory = 4096
         mac = "aa:b2:92:04:00:75"
       }
       additional_repos = {
@@ -252,7 +256,7 @@ module "cucumber_testsuite" {
       name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:92:04:00:76"
-        memory = 2048
+        memory = 4096
         vcpu = 2
       }
       additional_repos = {
@@ -265,6 +269,7 @@ module "cucumber_testsuite" {
       image = "ubuntu2204o"
       name = "min-ubuntu2204"
       provider_settings = {
+        memory = 4096
         mac = "aa:b2:92:04:00:77"
       }
       additional_repos = {
@@ -280,7 +285,7 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:04:00:79"
-        memory = 2048
+        memory = 4096
       }
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
@@ -314,6 +319,7 @@ module "cucumber_testsuite" {
         }
       }
       provider_settings = {
+        memory = 4096
         mac = "aa:b2:92:04:00:7a"
       }
       additional_repos_only = true
