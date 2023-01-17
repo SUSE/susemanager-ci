@@ -61,9 +61,11 @@ def doDynamicParallelSteps(){
     modules = sh(script: "cd /home/maxime/jenkinsslave/workspace/SUSEManager-4.3-AWS-build-validation/results/sumaform-aws; terraform state list",
             returnStdout: true)
     String[] moduleList = modules.split("\n")
+    echo moduleList.join(", ")
     moduleList.each {lane->
         def instance = lane.split('.')[1]
         if (instance.contain(minion) || instance.contain(client)) {
+            echo instance
             nodeList.add(instance)
         }
     }
