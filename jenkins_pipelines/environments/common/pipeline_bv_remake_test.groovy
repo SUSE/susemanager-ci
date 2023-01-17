@@ -62,30 +62,12 @@ def doDynamicParallelSteps(){
             returnStdout: true)
     String[] moduleList = modules.split("\n")
     moduleList.each {lane->
-        echo lane
         def instanceList = lane.tokenize(".")
-        echo instanceList[1]
         if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            echo instanceList[1]
             nodeList.add(instanceList[1])
-
-        } else {
-            println "Not a minion or client"
         }
     }
     echo nodeList.join(", ")
-//    minions = sh(script: "source /home/maxime/.profile; printenv | grep minion || exit 0",
-//            returnStdout: true)
-//    sshminion = sh(script: "source /home/maxime/.profile; printenv | grep sshminion || exit 0",
-//            returnStdout: true)
-//    client = sh(script: "source /home/maxime/.profile; printenv | grep client || exit 0",
-//            returnStdout: true)
-//    String[] minion_list = minions.split("\n")
-//    String[] sshminion_list = sshminion.split("\n")
-//    String[] client_list = client.split("\n")
-
-//    def node_list = [minion_list, sshminion_list, client_list].flatten().findAll { it }
-//    echo node_list.join(", ")
     nodeList.each { element ->
         def minion = element.split("=")[0].toLowerCase()
         tests["job-${minion}"] = {
