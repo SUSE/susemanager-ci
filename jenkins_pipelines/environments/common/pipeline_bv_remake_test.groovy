@@ -64,7 +64,7 @@ def doDynamicParallelSteps(){
     moduleList.each {lane->
         echo lane
         def instanceList = lane.tokenize(".")
-        if (instanceList[1].contain('minion') || instanceList[1].contain('client')) {
+        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
             echo instanceList[1]
             nodeList.add(instanceList[1])
 
