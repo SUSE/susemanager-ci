@@ -63,8 +63,8 @@ def doDynamicParallelSteps(){
     String[] moduleList = modules.split("\n")
     moduleList.each {lane->
         echo lane
-        String[] instanceList = lane.split(".")
-        echo instanceList.join(", ")
+        def instanceList = lane.split(".")
+        println instanceList
         echo instanceList[0]
 
         if (instanceList.contain(minion) || instanceList.contain(client)) {
