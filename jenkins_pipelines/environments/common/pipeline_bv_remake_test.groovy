@@ -63,10 +63,10 @@ def doDynamicParallelSteps(){
     String[] moduleList = modules.split("\n")
     moduleList.each {lane->
         echo lane
-        def instance = lane.tokenize(".")[1]
-
-        if (instance.contain(minion) || instance.contain(client)) {
-            nodeList.add(instance)
+        def instanceList = lane.tokenize(".")
+        echo instanceList[1]
+        if (instanceList[1].contain(minion) || instanceList[1].contain(client)) {
+            nodeList.add(instanceList[1])
         }
     }
     echo nodeList.join(", ")
