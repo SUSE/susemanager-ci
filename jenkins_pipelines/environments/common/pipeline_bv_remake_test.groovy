@@ -60,7 +60,7 @@ def doDynamicParallelSteps(){
     Set<String> nodeList = new HashSet<String>()
     modules = sh(script: "cd /home/maxime/jenkinsslave/workspace/SUSEManager-4.3-AWS-build-validation/results/sumaform-aws; terraform state list",
             returnStdout: true)
-    String[] moduleList = modules.split("\n")
+    String[] moduleList = modules.split("\n").flatten().findAll { it }
     def thing = moduleList[0].split(".")
     echo thing.join(", ")
     moduleList.each {lane->
