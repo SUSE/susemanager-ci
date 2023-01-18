@@ -11,8 +11,8 @@ def run(params) {
         aws_mirror_dir = "${resultdir}/sumaform-aws"
         awscli = '/usr/local/bin/aws'
         suma43_build_url = "https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/"
-        node_user = 'maxime'
-        build_validation = false
+        node_user = 'jenkins'
+        build_validation = true
 
         server_ami = null
         proxy_ami = null
@@ -39,27 +39,27 @@ def run(params) {
 
         // Public IP for AWS ingress
         String[] ALLOWED_IPS = params.allowed_IPS.split("\n")
-        withCredentials([usernamePassword(credentialsId: 'git_credential', passwordVariable: 'git_password', usernameVariable: 'git_user')]) {
-            env.TF_VAR_GIT_USER = env.git_user
-            env.TF_VAR_GIT_PASSWORD = env.git_password
-        }
-
-        withCredentials([usernamePassword(credentialsId: 'scc_credential', passwordVariable: 'scc_password', usernameVariable: 'scc_user')]) {
-            env.TF_VAR_SCC_USER = env.scc_user
-            env.TF_VAR_SCC_PASSWORD = env.scc_password
-        }
-
-        withCredentials([usernamePassword(credentialsId: 'aws_connection', passwordVariable: 'secret_key', usernameVariable: 'access_key')]) {
-            env.TF_VAR_ACCESS_KEY = env.access_key
-            env.TF_VAR_SECRET_KEY = env.secret_key
-        }
-
-        withCredentials([string(credentialsId: 'proxy_registration_code', variable: 'proxy_registration_code'), string(credentialsId: 'sles_registration_code', variable: 'sles_registration_code'), string(credentialsId: 'server_registration_code', variable: 'server_registration_code'), string(credentialsId: 'token_aws', variable: 'token_aws')]) {
-            env.TF_VAR_PROXY_REGISTRATION_CODE = env.proxy_registration_code
-            env.TF_VAR_SLES_REGISTRATION_CODE = env.sles_registration_code
-            env.TF_VAR_SERVER_REGISTRATION_CODE = env.server_registration_code
-            env.TF_VAR_TOKEN_AWS = env.token_aws
-        }
+//        withCredentials([usernamePassword(credentialsId: 'git_credential', passwordVariable: 'git_password', usernameVariable: 'git_user')]) {
+//            env.TF_VAR_GIT_USER = env.git_user
+//            env.TF_VAR_GIT_PASSWORD = env.git_password
+//        }
+//
+//        withCredentials([usernamePassword(credentialsId: 'scc_credential', passwordVariable: 'scc_password', usernameVariable: 'scc_user')]) {
+//            env.TF_VAR_SCC_USER = env.scc_user
+//            env.TF_VAR_SCC_PASSWORD = env.scc_password
+//        }
+//
+//        withCredentials([usernamePassword(credentialsId: 'aws_connection', passwordVariable: 'secret_key', usernameVariable: 'access_key')]) {
+//            env.TF_VAR_ACCESS_KEY = env.access_key
+//            env.TF_VAR_SECRET_KEY = env.secret_key
+//        }
+//
+//        withCredentials([string(credentialsId: 'proxy_registration_code', variable: 'proxy_registration_code'), string(credentialsId: 'sles_registration_code', variable: 'sles_registration_code'), string(credentialsId: 'server_registration_code', variable: 'server_registration_code'), string(credentialsId: 'token_aws', variable: 'token_aws')]) {
+//            env.TF_VAR_PROXY_REGISTRATION_CODE = env.proxy_registration_code
+//            env.TF_VAR_SLES_REGISTRATION_CODE = env.sles_registration_code
+//            env.TF_VAR_SERVER_REGISTRATION_CODE = env.server_registration_code
+//            env.TF_VAR_TOKEN_AWS = env.token_aws
+//        }
 
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create the directory for the build results
@@ -202,7 +202,7 @@ def run(params) {
 
             // Deploying AWS server using MU repositories
             sh "echo \"export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend aws\""
-            sh "export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws"
+            sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/sumaform-aws.log ${TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws"
         }
         if (build_validation) {
             stage('Generate build validation feature') {
