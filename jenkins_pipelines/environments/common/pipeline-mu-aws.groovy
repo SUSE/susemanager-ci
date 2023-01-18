@@ -12,7 +12,7 @@ def run(params) {
         awscli = '/usr/local/bin/aws'
         suma43_build_url = "https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/"
         node_user = 'maxime'
-        build_validation = true
+        build_validation = false
 
         server_ami = null
         proxy_ami = null
