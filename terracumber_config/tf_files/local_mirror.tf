@@ -55,7 +55,7 @@ variable "MAIL_TO" {
   default = "mnoel@suse.de"
 }
 
- sumaform specific variables
+// sumaform specific variables
 variable "SCC_USER" {
   type = string
 }
