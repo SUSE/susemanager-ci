@@ -56,13 +56,13 @@ variable "MAIL_TO" {
 }
 
 // sumaform specific variables
-variable "SCC_USER" {
-  type = string
-}
-
-variable "SCC_PASSWORD" {
-  type = string
-}
+//variable "SCC_USER" {
+//  type = string
+//}
+//
+//variable "SCC_PASSWORD" {
+//  type = string
+//}
 
 variable "GIT_USER" {
   type = string
@@ -78,7 +78,7 @@ variable "GIT_PASSWORD" {
 
 variable "SSH_KEY" {
   type = string
-  default = "/home/maxime/.ssh/id_rsa.pub"
+  default = "/home/jenkins/.ssh/id_rsa.pub"
 }
 
 terraform {
@@ -102,8 +102,8 @@ locals {
 module "base" {
   source = "./modules/base"
   ssh_key_path = var.SSH_KEY
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
+//  cc_username = var.SCC_USER
+//  cc_password = var.SCC_PASSWORD
   name_prefix = "mirror-mu-aws-"
   images = [
     "opensuse154o"]
