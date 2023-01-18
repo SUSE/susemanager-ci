@@ -55,14 +55,14 @@ variable "MAIL_TO" {
   default = "mnoel@suse.de"
 }
 
-// sumaform specific variables
-//variable "SCC_USER" {
-//  type = string
-//}
-//
-//variable "SCC_PASSWORD" {
-//  type = string
-//}
+ sumaform specific variables
+variable "SCC_USER" {
+  type = string
+}
+
+variable "SCC_PASSWORD" {
+  type = string
+}
 
 variable "GIT_USER" {
   type = string
@@ -102,8 +102,8 @@ locals {
 module "base" {
   source = "./modules/base"
   ssh_key_path = var.SSH_KEY
-//  cc_username = var.SCC_USER
-//  cc_password = var.SCC_PASSWORD
+  cc_username = var.SCC_USER
+  cc_password = var.SCC_PASSWORD
   name_prefix = "mirror-mu-aws-"
   images = [
     "opensuse154o"]
