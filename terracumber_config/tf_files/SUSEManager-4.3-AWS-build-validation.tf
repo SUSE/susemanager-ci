@@ -92,13 +92,12 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/maxime/.ssh/aws_mnoel"
+  default = "/home/jenkins/.ssh/testing-suma.pem"
 }
-
 
 variable "KEY_NAME" {
   type = string
-  default = "mnoel-aws-key"
+  default = "testing-suma"
 }
 
 variable "SERVER_REGISTRATION_CODE" {
