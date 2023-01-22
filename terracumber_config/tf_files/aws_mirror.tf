@@ -88,27 +88,12 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/maxime/.ssh/aws_mnoel"
+  default = "/home/jenkins/.ssh/testing-suma.pem"
 }
 
 variable "KEY_NAME" {
   type = string
-  default = "mnoel-aws-key"
-}
-
-variable "ACCESS_KEY" {
-  type = string
-  default = null
-}
-
-variable "TOKEN_AWS" {
-  type = string
-  default = null
-}
-
-variable "SECRET_KEY" {
-  type = string
-  default = null
+  default = "testing-suma"
 }
 
 variable "ALLOWED_IPS" {
@@ -133,9 +118,6 @@ variable "NAME_PREFIX" {
 
 provider "aws" {
   region = var.REGION
-//  access_key = var.ACCESS_KEY
-//  secret_key = var.SECRET_KEY
-//  token      = var.TOKEN_AWS
 }
 
 module "base" {

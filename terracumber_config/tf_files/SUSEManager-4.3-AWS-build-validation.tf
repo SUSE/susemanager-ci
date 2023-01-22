@@ -101,21 +101,6 @@ variable "KEY_NAME" {
   default = "mnoel-aws-key"
 }
 
-variable "ACCESS_KEY" {
-  type = string
-  default = null
-}
-
-variable "SECRET_KEY" {
-  type = string
-  default = null
-}
-
-variable "TOKEN_AWS" {
-  type = string
-  default = null
-}
-
 variable "SERVER_REGISTRATION_CODE" {
   type = string
   default = null
@@ -143,9 +128,6 @@ variable "NAME_PREFIX" {
 
 provider "aws" {
   region     = var.REGION
-//  access_key = var.ACCESS_KEY
-//  secret_key = var.SECRET_KEY
-//  token = var.TOKEN_AWS
 }
 
 module "base" {
@@ -156,6 +138,7 @@ module "base" {
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
+  use_eip_bastion          = false
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
