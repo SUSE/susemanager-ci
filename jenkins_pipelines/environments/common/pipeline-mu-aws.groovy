@@ -40,27 +40,6 @@ def run(params) {
 
         // Public IP for AWS ingress
         String[] ALLOWED_IPS = params.allowed_IPS.split("\n")
-//        withCredentials([usernamePassword(credentialsId: 'git_credential', passwordVariable: 'git_password', usernameVariable: 'git_user')]) {
-//            env.TF_VAR_GIT_USER = env.git_user
-//            env.TF_VAR_GIT_PASSWORD = env.git_password
-//        }
-//
-//        withCredentials([usernamePassword(credentialsId: 'scc_credential', passwordVariable: 'scc_password', usernameVariable: 'scc_user')]) {
-//            env.TF_VAR_SCC_USER = env.scc_user
-//            env.TF_VAR_SCC_PASSWORD = env.scc_password
-//        }
-//
-//        withCredentials([usernamePassword(credentialsId: 'aws_connection', passwordVariable: 'secret_key', usernameVariable: 'access_key')]) {
-//            env.TF_VAR_ACCESS_KEY = env.access_key
-//            env.TF_VAR_SECRET_KEY = env.secret_key
-//        }
-//
-//        withCredentials([string(credentialsId: 'proxy_registration_code', variable: 'proxy_registration_code'), string(credentialsId: 'sles_registration_code', variable: 'sles_registration_code'), string(credentialsId: 'server_registration_code', variable: 'server_registration_code'), string(credentialsId: 'token_aws', variable: 'token_aws')]) {
-//            env.TF_VAR_PROXY_REGISTRATION_CODE = env.proxy_registration_code
-//            env.TF_VAR_SLES_REGISTRATION_CODE = env.sles_registration_code
-//            env.TF_VAR_SERVER_REGISTRATION_CODE = env.server_registration_code
-//            env.TF_VAR_TOKEN_AWS = env.token_aws
-//        }
 
         stage('Clone terracumber, susemanager-ci and sumaform') {
             // Create the directory for the build results
