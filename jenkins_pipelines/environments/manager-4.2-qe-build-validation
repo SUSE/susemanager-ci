@@ -31,6 +31,7 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'must_boot_clients', defaultValue: true, description: 'Bootstrap clients'),
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             booleanParam(name: 'must_prepare_retail', defaultValue: true, description: 'Prepare and run Retail'),
+            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             choice(name: 'rake_namespace', choices: ['parallel', 'cucumber'], description: 'Choose parallel or cucumber'),
             string(name: 'capybara_timeout', defaultValue: '30', description: 'Capybara max. waiting time'),
             string(name: 'default_timeout', defaultValue: '300', description: 'Default timeout used in our Test Framework'),

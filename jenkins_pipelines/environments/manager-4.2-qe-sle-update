@@ -19,6 +19,19 @@ node('sumaform-cucumber-provo') {
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
+            booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
+            booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
+            booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
+            booleanParam(name: 'must_add_custom_channels', defaultValue: true, description: 'Add custom channels'),
+            booleanParam(name: 'must_add_common_channels', defaultValue: true, description: 'Add common channels'),
+            booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
+            booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
+            booleanParam(name: 'must_boot_proxy', defaultValue: true, description: 'Bootstrap Proxy'),
+            booleanParam(name: 'must_boot_monitoring', defaultValue: false, description: 'Bootstrap Monitoring Server'),
+            booleanParam(name: 'must_boot_clients', defaultValue: true, description: 'Bootstrap clients'),
+            booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
+            booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
+            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             choice(name: 'rake_namespace', choices: ['parallel', 'cucumber'], defaultValue: 'cucumber', description: 'Choose parallel or cucumber'),
             string(name: 'capybara_timeout', defaultValue: '30', description: 'Capybara max. waiting time'),
             string(name: 'default_timeout', defaultValue: '300', description: 'Default timeout used in our Test Framework'),
@@ -29,6 +42,6 @@ node('sumaform-cucumber-provo') {
     stage('Checkout pipeline') {
         checkout scm
     }
-    def pipeline = load "jenkins_pipelines/environments/common/pipeline-sle-update.groovy"
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(params)
 }
