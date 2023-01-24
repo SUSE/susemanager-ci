@@ -57,17 +57,19 @@ def run(params) {
 
 def doDynamicParallelSteps(){
     def tests = [:]
-    Set<String> nodeList = new HashSet<String>()
-    modules = sh(script: "cd /home/maxime/jenkinsslave/workspace/SUSEManager-4.3-AWS-build-validation/results/sumaform-aws; terraform state list",
-            returnStdout: true)
-    String[] moduleList = modules.split("\n")
-    def mgrCreateBootstrapRepo = new ReentrantLock()
-    moduleList.each {lane->
-        def instanceList = lane.tokenize(".")
-        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            nodeList.add(instanceList[1])
-        }
-    }
+//    Set<String> nodeList = new HashSet<String>()
+//    modules = sh(script: "cd /home/maxime/jenkinsslave/workspace/SUSEManager-4.3-AWS-build-validation/results/sumaform-aws; terraform state list",
+//            returnStdout: true)
+//    String[] moduleList = modules.split("\n")
+//    def mgrCreateBootstrapRepo = new ReentrantLock()
+//    moduleList.each {lane->
+//        def instanceList = lane.tokenize(".")
+//        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
+//            nodeList.add(instanceList[1])
+//        }
+//    }
+    def mgrCreateBootstrapRepo = "mgrCreateBootstrapRepo"
+    def nodeList = ["sles15sp3-minion", "sles15sp4-minion", "sles15sp4-sshminion", "ubuntu2204-minion", "debian11-minion"]
     echo nodeList.join(", ")
     nodeList.each { minion ->
         tests["job-${minion}"] = {
@@ -76,13 +78,10 @@ def doDynamicParallelSteps(){
                 sh "echo ${minion}"
             }
             stage("Bootstrap ${minion}"){
-                mgrCreateBootstrapRepo.lock()
-                try {
+                synchronized(mgrCreateBootstrapRepo) {
                     sleep 10
                     sh "sudo cat /etc/hosts"
                     sh "echo 'hostname for ${minion}'"
-                } finally {
-                    mgrCreateBootstrapRepo.unlock()
                 }
             }
         }
