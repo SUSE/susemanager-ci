@@ -55,7 +55,7 @@ def run(params) {
 
 }
 
-def doDynamicParallelSteps(){
+def doDynamicParallelSteps() {
     def tests = [:]
 //    Set<String> nodeList = new HashSet<String>()
 //    modules = sh(script: "cd /home/maxime/jenkinsslave/workspace/SUSEManager-4.3-AWS-build-validation/results/sumaform-aws; terraform state list",
@@ -78,12 +78,12 @@ def doDynamicParallelSteps(){
                 echo minion
                 sh "echo ${minion}"
             }
-            stage("Bootstrap ${minion}"){
-                mgrCreateBootstrapRepo.lock()
+            stage("Bootstrap ${minion}") {
                 lock(resource: mgrCreateBootstrapRepo) {
                     sleep 10
                     sh "sudo cat /etc/hosts"
                     sh "echo 'hostname for ${minion}'"
+                }
             }
         }
     }
@@ -96,7 +96,7 @@ def clientTestingStages() {
     modules = sh(script: "cd /home/maxime/jenkinsslave/workspace/SUSEManager-4.3-AWS-build-validation/results/sumaform-aws; terraform state list",
             returnStdout: true)
     String[] moduleList = modules.split("\n")
-    moduleList.each {lane->
+    moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
 //        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
         if (instanceList[1].contains('minion')) {
