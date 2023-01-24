@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-import java.util.*
+import java.util.concurrent.ReentrantLock
 node('sumaform-cucumber') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
