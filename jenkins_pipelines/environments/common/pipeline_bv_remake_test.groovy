@@ -78,7 +78,7 @@ def doDynamicParallelSteps(){
                 sh "echo ${minion}"
             }
             stage("Bootstrap ${minion}"){
-                synchronized(mgrCreateBootstrapRepo) {
+                lock(resource : mgrCreateBootstrapRepo) {
                     sleep 10
                     sh "sudo cat /etc/hosts"
                     sh "echo 'hostname for ${minion}'"
