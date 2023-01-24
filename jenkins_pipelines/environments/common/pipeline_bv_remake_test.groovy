@@ -69,7 +69,8 @@ def doDynamicParallelSteps(){
 //            nodeList.add(instanceList[1])
 //        }
 //    }
-    def mgrCreateBootstrapRepo = new ReentrantLock()
+//    def mgrCreateBootstrapRepo = new ReentrantLock()
+    def mgrCreateBootstrapRepo = "mgr_element"
     def nodeList = ["sles15sp3-minion", "sles15sp4-minion", "sles15sp4-sshminion", "ubuntu2204-minion", "debian11-minion"]
     echo nodeList.join(", ")
     nodeList.each { minion ->
@@ -80,13 +81,10 @@ def doDynamicParallelSteps(){
             }
             stage("Bootstrap ${minion}"){
                 mgrCreateBootstrapRepo.lock()
-                try {
+                lock(resource: mgrCreateBootstrapRepo) {
                     sleep 10
                     sh "sudo cat /etc/hosts"
                     sh "echo 'hostname for ${minion}'"
-                } finally {
-                    mgrCreateBootstrapRepo.unlock()
-                }
             }
         }
     }
