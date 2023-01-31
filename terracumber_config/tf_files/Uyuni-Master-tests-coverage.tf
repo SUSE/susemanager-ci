@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://hyperion.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://schnaps.mgr.prv.suse.net/system"
 }
 
 module "cucumber_testsuite" {
@@ -105,7 +105,7 @@ module "cucumber_testsuite" {
   images = ["opensuse154o", "sles15sp2o", "sles15sp3o"]
 
   use_avahi    = false
-  name_prefix  = "suma-pr8-"
+  name_prefix  = "oscar-"
   domain       = "mgr.prv.suse.net"
   from_email   = "root@suse.de"
 
@@ -120,18 +120,18 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:7c"
+        mac = "aa:b2:93:02:01:24"
       }
     }
     server = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:7d"
+        mac = "aa:b2:93:02:01:25"
         memory = 10240
       }
     }
     proxy = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:7e"
+        mac = "aa:b2:93:02:01:26"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -140,7 +140,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:80"
+        mac = "aa:b2:93:02:01:28"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -149,7 +149,7 @@ module "cucumber_testsuite" {
       image = "sles15sp2o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:81"
+        mac = "aa:b2:93:02:01:29"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
