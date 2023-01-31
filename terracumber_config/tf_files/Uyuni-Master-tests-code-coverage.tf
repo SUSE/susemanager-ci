@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-sonarqube"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-code-coverage"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Uyuni-Master-test-coverage $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Uyuni-Master-test-code-coverage $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Uyuni-Master: Environment setup failed"
+  default = "Results Uyuni-Master Code Coverage: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -47,12 +47,12 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
 
 variable "MAIL_FROM" {
   type = string
-  default = "galaxy-ci@suse.de"
+  default = "obarrios@suse.com"
 }
 
 variable "MAIL_TO" {
   type = string
-  default = "galaxy-ci@suse.de"
+  default = "obarrios@suse.com"
 }
 
 // sumaform specific variables
@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://hyperion.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://daiquiri.mgr.prv.suse.net/system"
 }
 
 module "cucumber_testsuite" {
@@ -102,12 +102,12 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["opensuse154o", "sles15sp2o", "sles15sp3o"]
+  images = ["opensuse154o", "sles15sp4o", "sles15sp3o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr8-"
   domain       = "mgr.prv.suse.net"
-  from_email   = "root@suse.de"
+  from_email   = "obarrios@suse.com"
 
   no_auth_registry = "registry.mgr.suse.de"
   auth_registry      = "registry.mgr.suse.de:5000/cucutest"
@@ -120,12 +120,12 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:7c"
+        mac = "aa:b2:92:04:00:70"
       }
     }
     server = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:7d"
+        mac = "aa:b2:92:04:00:71"
         memory = 10240
       }
     }
@@ -137,19 +137,19 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:80"
+        mac = "aa:b2:92:04:00:74"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:81"
+        mac = "aa:b2:92:04:00:75"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
