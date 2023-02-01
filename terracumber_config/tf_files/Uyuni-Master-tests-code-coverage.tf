@@ -105,33 +105,36 @@ module "cucumber_testsuite" {
   images = ["opensuse154o", "sles15sp4o", "sles15sp3o"]
 
   use_avahi    = false
-  name_prefix  = "suma-pr8-"
+  name_prefix  = "suma-codecov-"
   domain       = "mgr.prv.suse.net"
   from_email   = "obarrios@suse.com"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry      = "registry.mgr.suse.de:5000/cucutest"
+  mirror      = "minima-mirror.mgr.prv.suse.net"
+  no_auth_registry = "registry.mgr.prv.suse.net"
+  auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 
-  server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  server_http_proxy = "http-proxy.mgr.prv.suse.net:3128"
+  custom_download_endpoint = "ftp://minima-mirror.mgr.prv.suse.net:445"
 
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:70"
+        mac = "aa:b2:92:04:00:a0"
       }
     }
     server = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:71"
+        mac = "aa:b2:92:04:00:a1"
         memory = 10240
       }
+      server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
     }
     proxy = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:7e"
+        mac = "aa:b2:92:04:00:a2"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -140,7 +143,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:74"
+        mac = "aa:b2:92:04:00:a4"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -149,14 +152,14 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:75"
+        mac = "aa:b2:92:04:00:a5"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
   }
   provider_settings = {
-    pool               = "ssd"
+    pool               = "default"
     network_name       = null
     bridge             = "br1"
     additional_network = "192.168.108.0/24"
