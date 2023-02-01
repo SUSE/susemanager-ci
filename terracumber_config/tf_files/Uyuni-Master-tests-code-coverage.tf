@@ -47,12 +47,12 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
 
 variable "MAIL_FROM" {
   type = string
-  default = "obarrios@suse.com"
+  default = "galaxy-ci@suse.de"
 }
 
 variable "MAIL_TO" {
   type = string
-  default = "obarrios@suse.com"
+  default = "galaxy-ci@suse.de"
 }
 
 // sumaform specific variables
@@ -107,7 +107,7 @@ module "cucumber_testsuite" {
   use_avahi    = false
   name_prefix  = "suma-codecov-"
   domain       = "mgr.prv.suse.net"
-  from_email   = "obarrios@suse.com"
+  from_email   = "root@suse.com"
 
   mirror      = "minima-mirror.mgr.prv.suse.net"
   no_auth_registry = "registry.mgr.prv.suse.net"
@@ -122,19 +122,19 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:a0"
+        mac = "aa:b2:92:04:00:f0"
       }
     }
     server = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:a1"
+        mac = "aa:b2:92:04:00:f1"
         memory = 10240
       }
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
     }
     proxy = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:a2"
+        mac = "aa:b2:92:04:00:f2"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -143,7 +143,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:a4"
+        mac = "aa:b2:92:04:00:f4"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -152,7 +152,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "aa:b2:92:04:00:a5"
+        mac = "aa:b2:92:04:00:f5"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
