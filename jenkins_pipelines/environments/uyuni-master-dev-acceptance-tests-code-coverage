@@ -1,4 +1,4 @@
-node('sumaform-cucumber') {
+node('sumaform-cucumber-provo') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '1', daysToKeepStr: '60', artifactNumToKeepStr: '1')),
         disableConcurrentBuilds(),
