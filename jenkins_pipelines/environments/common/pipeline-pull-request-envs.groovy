@@ -9,7 +9,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     last_env = 9;
     // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
     sumaform_gitrepo = "https://github.com/nodeg/sumaform.git";
-    sumaform_ref = "qe-update-ruby";
+    sumaform_ref = "qe-update-ruby27";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-qe") {
     first_env = 8;
     last_env = 8;
