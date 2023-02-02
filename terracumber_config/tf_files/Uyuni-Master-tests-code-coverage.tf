@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://daiquiri.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://hyperion.mgr.prv.suse.net/system"
 }
 
 module "cucumber_testsuite" {
@@ -132,13 +132,6 @@ module "cucumber_testsuite" {
       }
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
     }
-    proxy = {
-      provider_settings = {
-        mac = "aa:b2:92:04:00:f2"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
@@ -148,21 +141,28 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    suse-sshminion = {
-      image = "sles15sp4o"
-      name = "minssh-sles15"
-      provider_settings = {
-        mac = "aa:b2:92:04:00:f5"
-      }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
-    }
   }
   provider_settings = {
-    pool               = "default"
+    pool               = "ssd"
     network_name       = null
     bridge             = "br1"
-    additional_network = "192.168.108.0/24"
+    additional_network = "192.168.112.0/24"
+  }
+}
+
+resource "null_resource" "add_test_information" {
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+ provisioner "file" {
+    source      = "../../susemanager-ci/terracumber_config/config_files/Uyuni-Master-tests-code-coverage/tomcat"
+    destination = "/etc/sysconfig/tomcat"
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "linux"
+      host     = "${module.cucumber_testsuite.configuration.server.hostname}"
+    }
   }
 }
 
