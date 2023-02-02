@@ -1,6 +1,7 @@
 node('sumaform-cucumber-provo') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '1', daysToKeepStr: '60', artifactNumToKeepStr: '1')),
+        buildDiscarder(logRotator(numToKeepStr: '1', daysToKeepStr: '30', artifactNumToKeepStr: '1')),
+        pipelineTriggers([cron('0 0 12 ? * FRI')]),
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
@@ -17,8 +18,6 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'terraform_taint', defaultValue: true, description: 'Call terraform taint (so the resources, except volumes, are recreated)'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
-            booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
-            booleanParam(name: 'must_test', defaultValue: true, description: 'Test'),
             choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
             extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ',', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_smdba,@scope_spacecmd,@scope_spacewalk_utils,@scope_visualization,@scope_notification_message,@scope_virtual_host_manager,@scope_subscription_matching,@scope_formulas,@scope_sp_migration,@scope_cve_audit,@scope_onboarding,@scope_content_lifecycle_management,@scope_res,@scope_recurring_actions,@scope_maintenance_windows,@scope_building_container_images,@scope_kubernetes_integration,@scope_openscap,@scope_deblike,@scope_action_chains,@scope_salt_ssh,@scope_tomcat,@scope_changing_software_channels,@scope_monitoring,@scope_salt,@scope_cobbler,@scope_sumatoolbox,@scope_virtualization,@scope_hub,@scope_retail,@scope_configuration_channels,@scope_content_staging,@scope_proxy,@scope_traditional_client,@scope_api,@scope_power_management,@scope_retracted_patches,@scope_ansible,@scope_reportdb,@scope_containerized_proxy', description: 'Choose the functional scopes that you want to test')
         ])
@@ -59,51 +58,65 @@ node('sumaform-cucumber-provo') {
             }
 
             stage('Deploy') {
-                if(params.must_deploy) {
-                    // Provision the environment
-                    if (params.terraform_init) {
-                        env.TERRAFORM_INIT = '--init'
-                    } else {
-                        env.TERRAFORM_INIT = ''
-                    }
-                    env.TERRAFORM_TAINT = ''
-                    if (params.terraform_taint) {
-                        switch(params.sumaform_backend) {
-                            case "libvirt":
-                                env.TERRAFORM_TAINT = " --taint '.*(domain|main_disk).*'";
-                                break;
-                            case "aws":
-                                env.TERRAFORM_TAINT = " --taint '.*(host).*'";
-                                break;
-                            default:
-                                println("ERROR: Unknown backend ${params.sumaform_backend}");
-                                sh "exit 1";
-                                break;
-                        }
-                    }
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
-                    deployed = true
+                // Provision the environment
+                if (params.terraform_init) {
+                    env.TERRAFORM_INIT = '--init'
+                } else {
+                    env.TERRAFORM_INIT = ''
                 }
+                env.TERRAFORM_TAINT = ''
+                if (params.terraform_taint) {
+                    switch(params.sumaform_backend) {
+                        case "libvirt":
+                            env.TERRAFORM_TAINT = " --taint '.*(domain|main_disk).*'";
+                            break;
+                        case "aws":
+                            env.TERRAFORM_TAINT = " --taint '.*(host).*'";
+                            break;
+                        default:
+                            println("ERROR: Unknown backend ${params.sumaform_backend}");
+                            sh "exit 1";
+                            break;
+                    }
+                }
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                deployed = true
             }
 
             stage('Enable JaCoCo Agent') {
-                def url = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O /tmp/jacocoagent.jar ${url}\"'"
+                def jacocoagent_url = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar"
+                def uyuni_master = "https://github.com/uyuni-project/uyuni/archive/refs/heads/master.zip"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O /tmp/jacocoagent.jar ${jacocoagent_url}\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"systemctl restart tomcat.service\"'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O /tmp/uyuni_master.zip ${uyuni_master}; unzip -d /tmp /tmp/uyuni_master.zip\"'"
             }
 
+
+            stage('Sanity Check') {
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
+            }
             stage('Core - Setup') {
-                if(params.must_test) {
-                    sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'", returnStatus:true
-                    sh "exit 0"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+            }
+            stage('Core - Initialize clients') {
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
+            }
+            stage('Secondary features') {
+                def exports = ""
+                if (params.functional_scopes){
+                  exports += "export TAGS=${params.functional_scopes}; "
                 }
+                def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
+                def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
+                sh "exit \$(( ${statusCode1}|${statusCode2} ))"
             }
 
             stage('Dump Test Coverage results') {
                 def url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.7/org.jacoco.cli-0.8.7-nodeps.jar"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget ${url} -O /tmp/jacococli.jar\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar dump --address localhost --destfile /tmp/jacoco.exec --port 6300 --reset\"'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar report /tmp/jacoco.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib\"'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar report /tmp/jacoco.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --sourcefiles /tmp/uyuni-master/java/code/src --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib\"'"
             }
         }
 

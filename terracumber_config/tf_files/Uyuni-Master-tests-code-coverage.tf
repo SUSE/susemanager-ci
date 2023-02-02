@@ -155,7 +155,7 @@ resource "null_resource" "add_test_information" {
     always_run = "${timestamp()}"
   }
  provisioner "file" {
-    source      = "../../susemanager-ci/terracumber_config/config_files/Uyuni-Master-tests-code-coverage/tomcat"
+    source      = "../../susemanager-ci/terracumber_config/config_files/etc_sysconfig_tomcat"
     destination = "/etc/sysconfig/tomcat"
     connection {
       type     = "ssh"
