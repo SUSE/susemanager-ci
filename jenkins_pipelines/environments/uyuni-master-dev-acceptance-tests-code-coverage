@@ -1,7 +1,7 @@
 node('sumaform-cucumber-provo') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '1', daysToKeepStr: '30', artifactNumToKeepStr: '1')),
-        pipelineTriggers([cron('0 0 12 ? * FRI')]),
+        pipelineTriggers([cron('0 0 * * FRI')]),
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
