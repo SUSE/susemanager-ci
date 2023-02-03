@@ -79,8 +79,9 @@ node('sumaform-cucumber-provo') {
 
             stage('Enable JaCoCo Agent') {
                 def jacocoagent_url = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar"
+                def jacococli_url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.7/org.jacoco.cli-0.8.7-nodeps.jar"
                 def uyuni_master = "https://github.com/uyuni-project/uyuni/archive/refs/heads/master.zip"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O /tmp/jacocoagent.jar ${jacocoagent_url}\"'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O /tmp/jacocoagent.jar ${jacocoagent_url}; wget ${jacococli_url} -O /tmp/jacococli.jar\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"systemctl restart tomcat.service\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O /tmp/uyuni_master.zip ${uyuni_master}; unzip -d /tmp /tmp/uyuni_master.zip\"'"
             }
@@ -107,8 +108,6 @@ node('sumaform-cucumber-provo') {
             }
 
             stage('Dump Test Coverage results') {
-                def url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.7/org.jacoco.cli-0.8.7-nodeps.jar"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget ${url} -O /tmp/jacococli.jar\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar dump --address localhost --destfile /tmp/jacoco.exec --port 6300 --reset\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar report /tmp/jacoco.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --sourcefiles /tmp/uyuni-master/java/code/src --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib\"'"
             }
