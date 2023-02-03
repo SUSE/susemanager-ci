@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["opensuse154o", "sles15sp4o", "sles15sp3o"]
+  images = ["opensuse154o", "sles15sp4o", "sles15sp3o", "rocky8o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-codecov-"
@@ -128,15 +128,74 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:92:04:00:f1"
-        memory = 10240
+        memory = 12288
       }
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
+    }
+    proxy = {
+      provider_settings = {
+        mac = "aa:b2:92:04:00:f2"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f4"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    suse-sshminion = {
+      image = "sles15sp4o"
+      name = "minssh-sles15"
+      provider_settings = {
+        mac = "aa:b2:92:04:00:f5"
+      }
+      additional_packages = [ "venv-salt-minion", "iptables" ]
+      install_salt_bundle = true
+    }
+    redhat-minion = {
+      image = "rocky8o"
+      name = "min-rocky8"
+      provider_settings = {
+        mac = "aa:b2:92:04:00:f6"
+        memory = 2048
+        vcpu = 2
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    debian-minion = {
+      name = "min-ubuntu2204"
+      image = "ubuntu2204o"
+      provider_settings = {
+        mac = "aa:b2:92:04:00:f7"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = false
+    }
+    build-host = {
+      image = "sles15sp4o"
+      name = "min-build"
+      provider_settings = {
+        mac = "aa:b2:92:04:00:f9"
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    pxeboot-minion = {
+      image = "sles15sp4o"
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    kvm-host = {
+      image = "opensuse154o"
+      name = "min-kvm"
+      provider_settings = {
+        mac = "aa:b2:92:04:00:fa"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
