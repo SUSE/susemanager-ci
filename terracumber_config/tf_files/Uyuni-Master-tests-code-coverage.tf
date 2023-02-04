@@ -74,21 +74,6 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
-variable "REDIS_HOST" {
-  type = string
-  default = "redis-19269.c285.us-west-2-2.ec2.cloud.redislabs.com"
-}
-
-variable "REDIS_USERNAME" {
-  type = string
-  default = "default"
-}
-
-variable "REDIS_PASSWORD" {
-  type = string
-  default = "I4Wxta4v5wpZGWQgUAUpnMQf35zmZGqx"
-}
-
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -225,9 +210,11 @@ module "cucumber_testsuite" {
 }
 
 resource "null_resource" "configure_jacoco" {
-  triggers = {
+
+ triggers = {
     always_run = "${timestamp()}"
-  }
+ }
+
  provisioner "file" {
     source      = "../../susemanager-ci/terracumber_config/config_files/etc_sysconfig_tomcat"
     destination = "/etc/sysconfig/tomcat"
@@ -240,12 +227,19 @@ resource "null_resource" "configure_jacoco" {
   }
 
   provisioner "remote-exec" {
-    inline = "echo \"export REDIS_HOST=${var.REDIS_HOST}; export REDIS_USERNAME=${var.REDIS_USERNAME}; export REDIS_PASSWORD=${var.REDIS_PASSWORD}\"  >> ~/.bashrc"
+    inline = [ "echo export REDIS_HOST=redis-19269.c285.us-west-2-2.ec2.cloud.redislabs.com >> ~/.bashrc",
+               "echo export REDIS_USERNAME=default >> ~/.bashrc",
+               "echo export REDIS_PASSWORD=I4Wxta4v5wpZGWQgUAUpnMQf35zmZGqx >> ~/.bashrc",
+               "source ~/.bashrc"
+             ]
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "linux"
+      host     = "${module.cucumber_testsuite.configuration.controller.hostname}"
+    }
   }
-  
-  provisioner "remote-exec" {
-    inline = "source ~/.bashrc"
-  }
+
 }
 
 output "configuration" {
