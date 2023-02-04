@@ -106,14 +106,13 @@ node('sumaform-cucumber-provo') {
                 def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
                 sh "exit \$(( ${statusCode1}|${statusCode2} ))"
             }
+        }
 
+        finally {
             stage('Dump Test Coverage results') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar dump --address localhost --destfile /tmp/jacoco.exec --port 6300 --reset\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar report /tmp/jacoco.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --sourcefiles /tmp/uyuni-master/java/code/src --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib\"'"
             }
-        }
-
-        finally {
             stage('Get results') {
                 def error = 0
                 // Send email
