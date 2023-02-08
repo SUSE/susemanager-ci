@@ -39,9 +39,9 @@ def doDynamicParallelSteps(){
     }
 
     node_list.each { element ->
-        def minionEnv = element.split("=")[0]
-        minion = element.split("=")[0].toLowerCase()
-        def temporaryList = envVar.toList() - minionEnv - "PROXY"
+        minionEnv = element.split("=")[0]
+        temporaryList = envVar.toList() - minionEnv - "PROXY"
+        def minion = element.split("=")[0].toLowerCase()
         echo temporaryList.join(", ")
         tests["job-${minion}"] = {
             stage("${minion}") {
