@@ -21,7 +21,7 @@ def doDynamicParallelSteps(){
 //            returnStdout: true)
 //    client = sh(script: "source /home/maxime/.profile; printenv | grep CLIENT || exit 0",
 //            returnStdout: true)
-    minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
+    minions = sh(script: "set +x; source /home/maxime/.profile; printenv | grep MINION || exit 0",
             returnStdout: true)
     sshminion = sh(script: "printenv | grep SSHMINION || exit 0",
             returnStdout: true)
