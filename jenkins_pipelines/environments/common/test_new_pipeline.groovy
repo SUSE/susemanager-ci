@@ -13,6 +13,7 @@ pipeline{
 
 def doDynamicParallelSteps(){
     def list_value = ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5"]
+    def minion
     Set<String> nodeList = new HashSet<String>()
     minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
             returnStdout: true)
@@ -37,7 +38,7 @@ def doDynamicParallelSteps(){
     echo nodeList.join(", ")
     node_list.each { element ->
 //        def minionEnv = element.split("=")[0]
-        def minion = element.split("=")[0].toLowerCase()
+        minion = element.split("=")[0].toLowerCase()
 //        nodeList - minionEnv
         echo nodeList.join(", ")
         tests["job-${minion}"] = {
