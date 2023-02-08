@@ -13,7 +13,6 @@ pipeline{
 
 def doDynamicParallelSteps(){
     Set<String> envVar = new HashSet<String>()
-    def tests = [:]
     minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
             returnStdout: true)
     sshminion = sh(script: "source /home/maxime/.profile; printenv | grep SSHMINION || exit 0",
