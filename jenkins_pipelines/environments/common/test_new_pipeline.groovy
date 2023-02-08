@@ -35,7 +35,7 @@ def doDynamicParallelSteps(){
         def instanceList = lane.tokenize("=")
         nodeList.add(instanceList[0])
     }
-
+    echo nodeList.join(", ")
     node_list.each { element ->
 
         minion = element.split("=")[0].toLowerCase()
