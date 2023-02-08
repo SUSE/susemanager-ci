@@ -19,6 +19,8 @@ def doDynamicParallelSteps(){
             returnStdout: true)
     client = sh(script: "source /home/maxime/.profile; printenv | grep CLIENT || exit 0",
             returnStdout: true)
+    proxy = sh(script: "source /home/maxime/.profile; printenv | grep PROXY || exit 0",
+            returnStdout: true)
 
     String[] minion_list = minions.split("\n")
     String[] sshminion_list = sshminion.split("\n")
@@ -27,7 +29,7 @@ def doDynamicParallelSteps(){
     echo sshminion_list.join(", ")
     echo client_list.join(", ")
 
-    def node_list = [minion_list, sshminion_list, client_list].flatten().findAll { it }
+    def node_list = [minion_list, sshminion_list, client_list, proxy].flatten().findAll { it }
 
     // Create list ENV variable key
     echo node_list.join(", ")
@@ -39,7 +41,7 @@ def doDynamicParallelSteps(){
     node_list.each { element ->
         def minionEnv = element.split("=")[0]
         minion = element.split("=")[0].toLowerCase()
-        def temporaryList = envVar.toList() - minionEnv
+        def temporaryList = envVar.toList() - minionEnv - "PROXY"
         echo temporaryList.join(", ")
         tests["job-${minion}"] = {
             stage("${minion}") {
@@ -49,6 +51,8 @@ def doDynamicParallelSteps(){
             stage("List without ${minion}") {
                 echo minion
                 sh(script: "source /home/maxime/.profile; unset ${temporaryList.join(" ")}; printenv | grep MINION || exit 0")
+                sh(script: "source /home/maxime/.profile; unset ${temporaryList.join(" ")}; printenv | grep PROXY || exit 0")
+
             }
         }
     }
