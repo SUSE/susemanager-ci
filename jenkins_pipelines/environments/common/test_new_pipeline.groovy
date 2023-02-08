@@ -15,18 +15,13 @@ def doDynamicParallelSteps(){
     def list_value = ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5"]
     def minion
     Set<String> nodeList = new HashSet<String>()
-//    minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
-//            returnStdout: true)
-//    sshminion = sh(script: "source /home/maxime/.profile; printenv | grep SSHMINION || exit 0",
-//            returnStdout: true)
-//    client = sh(script: "source /home/maxime/.profile; printenv | grep CLIENT || exit 0",
-//            returnStdout: true)
-    minions = sh(script: "set +x; source /home/maxime/.profile; printenv | grep MINION || exit 0",
+    minions = sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0",
             returnStdout: true)
-    sshminion = sh(script: "printenv | grep SSHMINION || exit 0",
+    sshminion = sh(script: "source /home/maxime/.profile; printenv | grep SSHMINION || exit 0",
             returnStdout: true)
-    client = sh(script: "printenv | grep CLIENT || exit 0",
+    client = sh(script: "source /home/maxime/.profile; printenv | grep CLIENT || exit 0",
             returnStdout: true)
+
     String[] minion_list = minions.split("\n")
     String[] sshminion_list = sshminion.split("\n")
     String[] client_list = client.split("\n")
