@@ -42,11 +42,11 @@ def doDynamicParallelSteps(){
         tests["job-${minion}"] = {
             stage("${minion}") {
                 echo minion
-                sh "source /home/maxime/.profile; printenv | grep MINION || exit 0"
+                sh(script: "source /home/maxime/.profile; printenv | grep MINION || exit 0")
             }
             stage("List without ${minion}") {
                 echo minion
-                sh "source /home/maxime/.profile; unset ${removeElement}; printenv | grep MINION || exit 0"
+                sh(script: "source /home/maxime/.profile; unset ${removeElement}; printenv | grep MINION || exit 0")
             }
         }
     }
