@@ -41,7 +41,7 @@ def doDynamicParallelSteps(){
         def minionEnv = element.split("=")[0]
         minion = element.split("=")[0].toLowerCase()
         def temporaryList = envVar.toList() - minionEnv
-        echo envVar.join(", ")
+        echo temporaryList.join(", ")
         tests["job-${minion}"] = {
             stage("${minion}") {
                 echo minion
@@ -49,7 +49,7 @@ def doDynamicParallelSteps(){
             }
             stage("List without ${minion}") {
                 echo minion
-                sh(script: "source /home/maxime/.profile; unset ${temporaryList.join(", ")}; printenv | grep MINION || exit 0")
+                sh(script: "source /home/maxime/.profile; unset ${temporaryList.join(" ")}; printenv | grep MINION || exit 0")
             }
         }
     }
