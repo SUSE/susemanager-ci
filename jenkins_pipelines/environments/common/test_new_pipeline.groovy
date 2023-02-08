@@ -39,7 +39,7 @@ def doDynamicParallelSteps(){
     node_list.each { element ->
 
         minion = element.split("=")[0].toLowerCase()
-        def removeElement = nodeList.remove(element.split("=")[0])
+        def removeElement = nodeList.remove("${element.split("=")[0]}")
         tests["job-${minion}"] = {
             stage("${minion}") {
                 echo minion
