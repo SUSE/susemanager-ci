@@ -7,7 +7,7 @@ def run(params) {
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
 
         // Declare lock resource use during node bootstrap
-        mgrCreateBootstrapRepo = "share resource to avoid running mgr create bootstrap repo in parallel"
+        mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
@@ -32,7 +32,7 @@ def run(params) {
             }
 
             stage('Deploy') {
-                if(params.must_deploy) {
+                if (params.must_deploy) {
                     // Provision the environment
                     if (params.terraform_init) {
                         env.TERRAFORM_INIT = '--init'
@@ -56,13 +56,13 @@ def run(params) {
             }
 
             stage('Run core features') {
-                if(params.must_run_core && (deployed || !params.must_deploy)) {
+                if (params.must_run_core && (deployed || !params.must_deploy)) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_core'"
                 }
             }
 
             stage('Sync. products and channels') {
-                if(params.must_sync && (deployed || !params.must_deploy)) {
+                if (params.must_sync && (deployed || !params.must_deploy)) {
                     res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     res_sync_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_product_reposync'", returnStatus: true)
@@ -75,7 +75,7 @@ def run(params) {
                 stage('Prepare Proxy') {
                     if (params.must_add_custom_channels) {
                         echo 'Add proxy MUs'
-                        if(params.confirm_before_continue) {
+                        if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
                         echo 'Add custom channels and MU repositories'
@@ -88,7 +88,7 @@ def run(params) {
                     }
                     if (params.must_add_keys) {
                         echo 'Add proxy activation key'
-                        if(params.confirm_before_continue) {
+                        if (params.confirm_before_continue) {
                             input 'Press any key to start adding activation keys'
                         }
                         res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_proxy'")
@@ -96,16 +96,16 @@ def run(params) {
                     }
                     if (params.must_create_bootstrap_repos) {
                         echo 'Create proxy bootstrap repository'
-                        if(params.confirm_before_continue) {
-                            input 'Press any key to start creating proxy bootstrap repository'
+                        if (params.confirm_before_continue) {
+                            input 'Press any key to start creating the proxy bootstrap repository'
                         }
                         res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_proxy'")
-                        echo "Create Proxy bootstrap repository code: ${res_create_bootstrap_repos}"
+                        echo "Create Proxy bootstrap repository status code: ${res_create_bootstrap_repos}"
                     }
                 }
 
                 stage('Bootstrap Proxy') {
-                    if(params.confirm_before_continue) {
+                    if (params.confirm_before_continue) {
                         input 'Press any key to start bootstraping the Proxy'
                     }
                     res_init_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_proxy'")
@@ -114,12 +114,12 @@ def run(params) {
             }
 
             stage('Bootstrap Monitoring Server') {
-                if(params.confirm_before_continue) {
+                if (params.confirm_before_continue) {
                     input 'Press any key to start bootstraping the Monitoring Server'
                 }
-                if(params.must_boot_monitoring) {
+                if (params.must_boot_monitoring) {
                     echo 'Register monitoring server as minion with gui'
-                    res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_init_monitoring'", returnStatus: true)
+                    res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_monitoring'", returnStatus: true)
                     echo "Init Monitoring Server status code: ${res_init_monitoring}"
                 }
             }
@@ -130,42 +130,42 @@ def run(params) {
                     clientTestingStages()
                 }
             } catch (Exception ex) {
-                println("ERROR: one or more clients have failed")
+                println('ERROR: one or more clients have failed')
             }
 
             stage('Prepare and run Retail') {
-                if(params.confirm_before_continue) {
+                if (params.confirm_before_continue) {
                     input 'Press any key to start running the retail tests'
                 }
-                if(params.must_prepare_retail) {
+                if (params.must_prepare_retail) {
                     echo 'Prepare Proxy for Retail'
-                    res_retail_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_retail_proxy'", returnStatus: true)
+                    res_retail_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_proxy'", returnStatus: true)
                     echo "Retail proxy status code: ${res_retail_proxy}"
                     echo 'SLE 12 Retail'
-                    res_retail_sle12 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_retail_sle12'", returnStatus: true)
+                    res_retail_sle12 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_sle12'", returnStatus: true)
                     echo "SLE 12 Retail status code: ${res_retail_sle12}"
                     echo 'SLE 15 Retail'
-                    res_retail_sle15 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_retail_sle15'", returnStatus: true)
+                    res_retail_sle15 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_sle15'", returnStatus: true)
                     echo "SLE 15 Retail status code: ${res_retail_sle15}"
                 }
             }
 
             stage('Containerization') {
-                if(params.confirm_before_continue) {
+                if (params.confirm_before_continue) {
                     input 'Press any key to start running the containerization tests'
                 }
-                if(params.must_run_containerization_tests) {
+                if (params.must_run_containerization_tests) {
                     echo 'Prepare Proxy as Pod and run basic tests'
-                    res_container_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:build_validation_containerization'", returnStatus: true)
+                    res_container_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_containerization'", returnStatus: true)
                     echo "Container proxy status code: ${res_container_proxy}"
                 }
             }
         }
         finally {
             stage('Save TF state') {
-                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+                archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
             }
-            
+
             stage('Get results') {
                 def error = 0
                 if (deployed || !params.must_deploy) {
@@ -183,12 +183,12 @@ def run(params) {
                     }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
                     publishHTML( target: [
-                                allowMissing: true,
-                                alwaysLinkToLastBuild: false,
-                                keepAll: true,
-                                reportDir: "${resultdirbuild}/cucumber_report/",
-                                reportFiles: 'cucumber_report.html',
-                                reportName: "Build Validation report"]
+                            allowMissing: true,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: true,
+                            reportDir: "${resultdirbuild}/cucumber_report/",
+                            reportFiles: 'cucumber_report.html',
+                            reportName: "Build Validation report"]
                     )
                     // junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
@@ -223,7 +223,6 @@ def clientTestingStages() {
             nodeList.add(instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle"))
             echo instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase()
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
-
         }
     }
     echo nodeList.join(", ")
@@ -240,7 +239,7 @@ def clientTestingStages() {
             if (params.must_add_custom_channels) {
                 stage('Add MUs') {
                     if (!minion.contains('ssh')) {
-                        if(params.confirm_before_continue) {
+                        if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
                         echo 'Add custom channels and MU repositories'
@@ -256,13 +255,11 @@ def clientTestingStages() {
                             error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
                         }
                     }
-
                 }
-
 
                 stage('Add Common Channels') {
                     if (!minion.contains('ssh')) {
-                        if(params.confirm_before_continue) {
+                        if (params.confirm_before_continue) {
                             input 'Press any key to start adding common channels'
                         }
                         echo 'Add common channels'
@@ -279,13 +276,12 @@ def clientTestingStages() {
                                 error("Common channels synchronization failed with status code: ${res_sync_common_channels}")
                             }
                         }
-
                     }
                 }
             }
             if (params.must_add_keys) {
                 stage('Add Activation Keys') {
-                    if(params.confirm_before_continue) {
+                    if (params.confirm_before_continue) {
                         input 'Press any key to start adding activation keys'
                     }
                     echo 'Add Activation Keys'
@@ -300,7 +296,7 @@ def clientTestingStages() {
             if (params.must_create_bootstrap_repos) {
                 stage('Create bootstrap repository') {
                     if (!minion.contains('ssh')) {
-                        if(params.confirm_before_continue) {
+                        if (params.confirm_before_continue) {
                             input 'Press any key to start creating bootstrap repositories'
                         }
                         // Employ a lock resource to prevent concurrent calls to create the bootstrap repository in the manager.
@@ -309,22 +305,20 @@ def clientTestingStages() {
                             try {
                                 echo 'Create bootstrap repository'
                                 res_create_bootstrap_repository = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_${minion}'", returnStatus: true)
-                                echo "Create bootstrap repository code: ${res_create_bootstrap_repository}"
+                                echo "Create bootstrap repository status code: ${res_create_bootstrap_repository}"
                                 if (res_create_bootstrap_repository != 0) {
-                                    error("Create bootstrap repository fail: ${res_add_keys}")
+                                    error("Create bootstrap repository failed with status code: ${res_create_bootstrap_repository}")
                                 }
                             } finally {
                                 echo 'Release resource mgrCreateBootstrapRepo'
                             }
-
                         }
                     }
                 }
             }
-
             if (params.must_boot_clients) {
                 stage('Bootstrap clients') {
-                    if(params.confirm_before_continue) {
+                    if (params.confirm_before_continue) {
                         input 'Press any key to start bootstraping the clients'
                     }
                     echo 'Bootstrap clients'
@@ -336,13 +330,11 @@ def clientTestingStages() {
                     }
                 }
             }
-
             if (params.must_run_tests) {
                 stage('Run Smoke Tests') {
-                    if(params.confirm_before_continue) {
+                    if (params.confirm_before_continue) {
                         input 'Press any key to start running the smoke tests'
                     }
-
                     echo 'Run Smoke tests'
                     res_smoke_tests = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_smoke_tests_${minion}'", returnStatus: true)
                     echo "Smoke tests status code: ${res_smoke_tests}"
@@ -350,7 +342,6 @@ def clientTestingStages() {
                         error("Run Smoke tests failed with status code: ${res_smoke_tests}")
                     }
                 }
-
             }
         }
     }
