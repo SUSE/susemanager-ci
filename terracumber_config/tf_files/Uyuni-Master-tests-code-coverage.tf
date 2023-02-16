@@ -228,6 +228,7 @@ resource "null_resource" "configure_jacoco" {
 
   provisioner "remote-exec" {
     inline = [ "echo export REDIS_HOST=redis-19269.c285.us-west-2-2.ec2.cloud.redislabs.com >> ~/.bashrc",
+               "echo export REDIS_PORT=19269 >> ~/.bashrc",
                "echo export REDIS_USERNAME=default >> ~/.bashrc",
                "echo export REDIS_PASSWORD=I4Wxta4v5wpZGWQgUAUpnMQf35zmZGqx >> ~/.bashrc",
                "source ~/.bashrc"
