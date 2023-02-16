@@ -888,30 +888,30 @@ module "opensuse154arm-minion" {
 
 }
 
-module "slemicro52-minion" {
-  providers = {
-    libvirt = libvirt.giediprime
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "4.3-released"
-  name               = "min-slemicro52"
-  image              = "slemicro52-ign"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:c0"
-   memory             = 2048
-  }
-
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //slemicro52-minion_additional_repos
-
-}
+// module "slemicro52-minion" {
+//   providers = {
+//     libvirt = libvirt.giediprime
+//   }
+//   source             = "./modules/minion"
+//   base_configuration = module.base_new_sle.configuration
+//   product_version    = "4.3-released"
+//   name               = "min-slemicro52"
+//   image              = "slemicro52-ign"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:c0"
+//    memory             = 2048
+//   }
+//
+//   server_configuration = {
+//     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+//   }
+//   auto_connect_to_master  = false
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//   //slemicro52-minion_additional_repos
+//
+// }
 
 module "alma9-minion" {
   providers = {
@@ -961,30 +961,30 @@ module "oracle9-minion" {
 
 }
 
-module "slemicro53-minion" {
-  providers = {
-    libvirt = libvirt.giediprime
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "4.3-released"
-  name               = "min-slemicro53"
-  image              = "slemicro53-ign"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:c4"
-   memory             = 2048
-  }
-
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //slemicro52-minion_additional_repos
-
-}
+//module "slemicro53-minion" {
+//  providers = {
+//    libvirt = libvirt.giediprime
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_new_sle.configuration
+//  product_version    = "4.3-released"
+//  name               = "min-slemicro53"
+//  image              = "slemicro53-ign"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:c4"
+//   memory             = 2048
+//  }
+//
+//  server_configuration = {
+//    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  //slemicro52-minion_additional_repos
+//
+//}
 
 module "sles12sp4-sshminion" {
   providers = {
@@ -1250,22 +1250,22 @@ module "opensuse154arm-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "slemicro52-sshminion" {
- providers = {
-    libvirt = libvirt.giediprime
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-slemicro52"
-  image              = "slemicro52-ign"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:e0"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//module "slemicro52-sshminion" {
+// providers = {
+//    libvirt = libvirt.giediprime
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_new_sle.configuration
+//  product_version    = "4.3-released"
+//  name               = "minssh-slemicro52"
+//  image              = "slemicro52-ign"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:e0"
+//    memory             = 2048
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 module "alma9-sshminion" {
   providers = {
@@ -1313,22 +1313,22 @@ module "oracle9-sshminion" {
 
 }
 
-module "slemicro53-sshminion" {
- providers = {
-    libvirt = libvirt.giediprime
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-slemicro53"
-  image              = "slemicro53-ign"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:e4"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//module "slemicro53-sshminion" {
+// providers = {
+//    libvirt = libvirt.giediprime
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_new_sle.configuration
+//  product_version    = "4.3-released"
+//  name               = "minssh-slemicro53"
+//  image              = "slemicro53-ign"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:e4"
+//    memory             = 2048
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 module "sles12sp5-buildhost" {
   providers = {
@@ -1508,11 +1508,11 @@ module "controller" {
   opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
   opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 
-  slemicro52_minion_configuration    = module.slemicro52-minion.configuration
-  slemicro52_sshminion_configuration = module.slemicro52-sshminion.configuration
-
-  slemicro53_minion_configuration    = module.slemicro53-minion.configuration
-  slemicro53_sshminion_configuration = module.slemicro53-sshminion.configuration
+//  slemicro52_minion_configuration    = module.slemicro52-minion.configuration
+//  slemicro52_sshminion_configuration = module.slemicro52-sshminion.configuration
+//
+//  slemicro53_minion_configuration    = module.slemicro53-minion.configuration
+//  slemicro53_sshminion_configuration = module.slemicro53-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
