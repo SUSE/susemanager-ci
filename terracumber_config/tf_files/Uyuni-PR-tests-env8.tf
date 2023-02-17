@@ -330,6 +330,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
+  nested_vm_hosts = ["leap-salt-migration","sles-salt-migration"]
   provider_settings = {
     pool               = "default"
     network_name       = null
