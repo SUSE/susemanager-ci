@@ -207,6 +207,7 @@ module "cucumber_testsuite" {
       }
     }
   }
+  nested_vm_hosts = ["leap-salt-migration","sles-salt-migration"]
   provider_settings = {
     pool = "ssd"
     network_name = null
