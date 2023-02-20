@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://hyperion.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://screwdriver.mgr.prv.suse.net/system"
 }
 
 module "cucumber_testsuite" {
