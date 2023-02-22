@@ -123,18 +123,20 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:92:04:00:f0"
+        memory = 16384
       }
     }
     server = {
       provider_settings = {
         mac = "aa:b2:92:04:00:f1"
-        memory = 12288
+        memory = 32768
       }
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
     }
     proxy = {
       provider_settings = {
         mac = "aa:b2:92:04:00:f2"
+        memory = 16384
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -144,6 +146,7 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f4"
+        memory = 4096
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -153,6 +156,7 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f5"
+        memory = 4096
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -162,7 +166,7 @@ module "cucumber_testsuite" {
       name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:92:04:00:f6"
-        memory = 2048
+        memory = 4096
         vcpu = 2
       }
       additional_packages = [ "venv-salt-minion" ]
@@ -173,6 +177,7 @@ module "cucumber_testsuite" {
       image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:92:04:00:f7"
+        memory = 4096
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = false
