@@ -138,6 +138,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:42"
       }
+      additional_repos = {
+        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Ion/images/repo/SLE-Module-SUSE-Manager-Proxy-4.2-POOL-x86_64-Media1/"
+      }
 //      additional_packages = [ "venv-salt-minion" ]
 //      install_salt_bundle = true
     }
