@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["opensuse154o", "sles15sp4o", "sles15sp3o", "rocky8o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-codecov-"
@@ -187,6 +187,7 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:04:00:f9"
+        memory = 4096
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -199,8 +200,23 @@ module "cucumber_testsuite" {
     kvm-host = {
       image = "opensuse154o"
       name = "min-kvm"
+      additional_grains = {
+        hvm_disk_image = {
+          leap = {
+            hostname = "leap-salt-migration"
+            image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+            hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+          }
+          sles = {
+            hostname = "sles-salt-migration"
+            image = "http://minima-mirror.mgr.prv.suse.net/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
+            hash = "http://minima-mirror.mgr.prv.suse.net/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
+          }
+        }
+      }
       provider_settings = {
         mac = "aa:b2:92:04:00:fa"
+        memory = 8192
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
