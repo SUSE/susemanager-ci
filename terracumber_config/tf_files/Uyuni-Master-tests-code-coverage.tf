@@ -129,7 +129,7 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:92:04:00:f1"
-        memory = 32768
+        memory = 49152
       }
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
     }
