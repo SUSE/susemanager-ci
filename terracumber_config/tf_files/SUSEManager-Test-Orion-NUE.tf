@@ -211,7 +211,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-kvm"
       provider_settings = {
-        mac = "aa:b2:93:01:00:4e"
+        mac = "aa:b2:93:01:00:7c"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
