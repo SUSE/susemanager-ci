@@ -110,8 +110,9 @@ node('sumaform-cucumber-provo') {
 
         finally {
             stage('Dump Test Coverage results') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar dump --address localhost --destfile /tmp/jacoco.exec --port 6300 --reset\"'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar report /tmp/jacoco.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --sourcefiles /tmp/uyuni-master/java/code/src --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib\"'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar dump --address localhost --destfile /tmp/jacoco-last.exec --port 6300 --reset\"'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar merge \$(ls /tmp/*.exec) --destfile /tmp/jacoco-all.exec\"'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar report /tmp/jacoco-all.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --sourcefiles /tmp/uyuni-master/java/code/src --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib\"'"
             }
             stage('Get results') {
                 def error = 0
