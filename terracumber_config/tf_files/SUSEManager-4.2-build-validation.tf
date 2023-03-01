@@ -248,7 +248,7 @@ module "base_debian" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian9o", "debian10o", "debian11o" ]
+  images      = [ "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -789,31 +789,6 @@ module "ubuntu2204-minion" {
 
 }
 
-module "debian9-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "min-debian9"
-  image              = "debian9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6c"
-    memory             = 4096
-  }
-
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //debian9-minion_additional_repos
-
-}
-
 module "debian10-minion" {
   providers = {
     libvirt = libvirt.trantor
@@ -1082,23 +1057,6 @@ module "ubuntu2204-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian9-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-debian9"
-  image              = "debian9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:8c"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "debian10-sshminion" {
   providers = {
     libvirt = libvirt.trantor
@@ -1306,9 +1264,6 @@ module "controller" {
 
   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
-
-  debian9_minion_configuration    = module.debian9-minion.configuration
-  debian9_sshminion_configuration = module.debian9-sshminion.configuration
 
   debian10_minion_configuration    = module.debian10-minion.configuration
   debian10_sshminion_configuration = module.debian10-sshminion.configuration

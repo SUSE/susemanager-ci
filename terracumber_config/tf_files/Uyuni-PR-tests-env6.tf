@@ -118,11 +118,11 @@ variable "SLE_CLIENT_REPO" {
   type = string
 }
 
-variable "CENTOS_CLIENT_REPO" {
+variable "RHLIKE_CLIENT_REPO" {
   type = string
 }
 
-variable "UBUNTU_CLIENT_REPO" {
+variable "DEBLIKE_CLIENT_REPO" {
   type = string
 }
 
@@ -256,7 +256,7 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
       additional_repos = {
-        client_repo = var.CENTOS_CLIENT_REPO,
+        client_repo = var.RHLIKE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -268,7 +268,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:04:00:57"
       }
       additional_repos = {
-        client_repo = var.UBUNTU_CLIENT_REPO,
+        client_repo = var.DEBLIKE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       // FIXME: cloudl-init fails if venv-salt-minion is not avaiable
