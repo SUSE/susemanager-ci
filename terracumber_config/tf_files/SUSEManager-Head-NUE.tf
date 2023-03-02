@@ -197,12 +197,12 @@ module "cucumber_testsuite" {
       additional_grains = {
         hvm_disk_image = {
           leap = {
-            hostname = "leap-salt-migration"
+            hostname = "leap"
             image = "http://minima-mirror.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
             hash = "http://minima-mirror.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
           }
           sles = {
-            hostname = "sles-salt-migration"
+            hostname = "suma-head-min-nested"
             image = "http://minima-mirror.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
             hash = "http://minima-mirror.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
           }
@@ -215,7 +215,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  nested_vm_hosts = ["leap-salt-migration","sles-salt-migration"]
+  nested_vm_hosts = ["suma-head-min-nested"]
   provider_settings = {
     pool = "ssd"
     network_name = null
