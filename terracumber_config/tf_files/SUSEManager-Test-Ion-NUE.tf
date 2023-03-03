@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "4.2-nightly"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -102,8 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  //images = ["rocky8o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
-  images = ["centos7o", "opensuse154o", "sles15sp3o", "ubuntu2004o"]
+  images = ["rocky8o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-ion-"
@@ -131,7 +130,7 @@ module "cucumber_testsuite" {
         memory = 12288
       }
       additional_repos = {
-        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Ion/images/repo/SLE-Module-SUSE-Manager-Server-4.2-POOL-x86_64-Media1/"
+        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Ion/images/repo/SLE-Module-SUSE-Manager-Server-4.3-POOL-x86_64-Media1/"
       }
     }
     proxy = {
@@ -139,10 +138,10 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:42"
       }
       additional_repos = {
-        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Ion/images/repo/SLE-Module-SUSE-Manager-Proxy-4.2-POOL-x86_64-Media1/"
+        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Ion/images/repo/SLE-Module-SUSE-Manager-Proxy-4.3-POOL-x86_64-Media1/"
       }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp3o"
@@ -150,8 +149,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:44"
       }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp3o"
@@ -159,8 +158,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:46"
       }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "sles15sp3o"
@@ -168,8 +167,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:48"
       }
-//      additional_packages = [ "venv-salt-minion", "iptables" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion", "iptables" ]
+      install_salt_bundle = true
     }
     redhat-minion = {
       image = "centos7o"
@@ -181,8 +180,8 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2204"
@@ -190,8 +189,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:4b"
       }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp3o"
@@ -201,13 +200,13 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     pxeboot-minion = {
       image = "sles15sp3o"
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     kvm-host = {
       image = "sles15sp3o"
@@ -215,8 +214,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:4e"
       }
-//      additional_packages = [ "venv-salt-minion" ]
-//      install_salt_bundle = true
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
   }
   provider_settings = {
