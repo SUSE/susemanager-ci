@@ -519,6 +519,8 @@ module "centos7-client" {
 
   //ceos7-client_additional_repos
 
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles12sp4-minion" {
@@ -715,6 +717,8 @@ module "centos7-minion" {
 
   //ceos7-minion_additional_repos
 
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "liberty9-minion" {
@@ -1155,6 +1159,9 @@ module "centos7-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "liberty9-sshminion" {
