@@ -8,6 +8,7 @@ def run(params) {
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
+        env.client_stage_result_fail = false
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
@@ -113,15 +114,54 @@ def run(params) {
                 }
             }
 
-            stage('Bootstrap Monitoring Server') {
-                if (params.confirm_before_continue) {
-                    input 'Press any key to start bootstraping the Monitoring Server'
-                }
+            try {
                 if (params.must_boot_monitoring) {
-                    echo 'Register monitoring server as minion with gui'
-                    res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_monitoring'", returnStatus: true)
-                    echo "Init Monitoring Server status code: ${res_init_monitoring}"
+                    stage('Prepare Monitoring Server') {
+                        // Block ready to support maintenance update for monitoring server
+                        /*
+                        if (params.must_add_custom_channels) {
+                            echo 'Add Server Monitoring MUs'
+                            if (params.confirm_before_continue) {
+                                input 'Press any key to start adding Maintenance Update repositories'
+                            }
+                            echo 'Add custom channels and MU repositories'
+                            res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_monitoring_server'")
+                            echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+
+                            res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'")
+                            echo "Custom channels and MU repositories synchronization status code: ${res_sync_mu_repos}"
+                            sh "exit \$(( ${res_mu_repos}|${res_sync_mu_repos} ))"
+                        }
+
+                         */
+                        if (params.must_add_keys) {
+                            echo 'Add server monitoring activation key'
+                            if (params.confirm_before_continue) {
+                                input 'Press any key to start adding activation keys'
+                            }
+                            res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_monitoring_server'")
+                            echo "Add Server Monitoring Activation Key status code: ${res_add_keys}"
+                        }
+                        if (params.must_create_bootstrap_repos) {
+                            echo 'Create server monitoring bootstrap repository'
+                            if (params.confirm_before_continue) {
+                                input 'Press any key to start creating the Server Monitoring bootstrap repository'
+                            }
+                            res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_monitoring_server")
+                            echo "Create Server Monitoring bootstrap repository status code: ${res_create_bootstrap_repos}"
+                        }
+                    }
+                    stage('Bootstrap Monitoring Server') {
+                        if (params.confirm_before_continue) {
+                            input 'Press any key to start bootstraping the Monitoring Server'
+                        }
+                        echo 'Register monitoring server as minion with gui'
+                        res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_monitoring'")
+                        echo "Init Monitoring Server status code: ${res_init_monitoring}"
+                    }
                 }
+            } catch (Exception ex) {
+                println('Monitoring server bootstrap failed ')
             }
 
             // Call the minion testing.
@@ -131,6 +171,7 @@ def run(params) {
                 }
             } catch (Exception ex) {
                 println('ERROR: one or more clients have failed')
+                env.client_stage_result_fail = true
             }
 
             stage('Prepare and run Retail') {
@@ -196,6 +237,10 @@ def run(params) {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
+                // Fail pipeline if client stages failed
+                if (env.client_stage_result_fail) {
+                    error("Client stage failed")
+                }
                 sh "exit ${error}"
             }
         }
