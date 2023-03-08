@@ -166,6 +166,17 @@ def run(params) {
 
             // Call the minion testing.
             try {
+                if (params.must_add_custom_channels) {
+                    stage('Create the CLM filters for RH-like minions') {
+                        echo 'Create the CLM filters for RH-like minions'
+                        res_clm_filter = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_prepare_clm_filters'", returnStatus: true)
+                        echo "Create the CLM filters for RH-like minions status code: ${res_clm_filter}"
+                        if (res_clm_filter != 0) {
+                            error("Create the CLM filters for RH-like minions failed with status code: ${res_clm_filter}")
+                        }
+                    }
+                }
+
                 stage('Clients stages') {
                     clientTestingStages()
                 }
@@ -311,81 +322,79 @@ def clientTestingStages() {
                         res_common_channels = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_common_channels'", returnStatus: true)
                         echo "Custom channels and MU repositories status code: ${res_common_channels}"
                         if (res_common_channels != 0) {
-                            if (params.must_run_containerization_tests) {
-                                error("Add common channels failed with status code: ${res_common_channels}")
-                            }
-                            res_sync_common_channels = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
-                            echo "Common channels synchronization status code: ${res_sync_common_channels}"
-                            sh "exit \$(( ${res_common_channels}|${res_sync_common_channels} ))"
-                            if (res_sync_common_channels != 0) {
-                                error("Common channels synchronization failed with status code: ${res_sync_common_channels}")
-                            }
+                            error("Add common channels failed with status code: ${res_common_channels}")
+                        }
+                        res_sync_common_channels = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
+                        echo "Common channels synchronization status code: ${res_sync_common_channels}"
+                        sh "exit \$(( ${res_common_channels}|${res_sync_common_channels} ))"
+                        if (res_sync_common_channels != 0) {
+                            error("Common channels synchronization failed with status code: ${res_sync_common_channels}")
                         }
                     }
                 }
             }
-            if (params.must_add_keys) {
-                stage('Add Activation Keys') {
+        }
+        if (params.must_add_keys) {
+            stage('Add Activation Keys') {
+                if (params.confirm_before_continue) {
+                    input 'Press any key to start adding activation keys'
+                }
+                echo 'Add Activation Keys'
+                res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${minion}'", returnStatus: true)
+                echo "Add Activation Keys status code: ${res_add_keys}"
+                if (res_add_keys != 0) {
+                    error("Add Activation Keys failed with status code: ${res_add_keys}")
+                }
+
+            }
+        }
+        if (params.must_create_bootstrap_repos) {
+            stage('Create bootstrap repository') {
+                if (!minion.contains('ssh')) {
                     if (params.confirm_before_continue) {
-                        input 'Press any key to start adding activation keys'
+                        input 'Press any key to start creating bootstrap repositories'
                     }
-                    echo 'Add Activation Keys'
-                    res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${minion}'", returnStatus: true)
-                    echo "Add Activation Keys status code: ${res_add_keys}"
-                    if (res_add_keys != 0) {
-                        error("Add Activation Keys failed with status code: ${res_add_keys}")
+                    // Employ a lock resource to prevent concurrent calls to create the bootstrap repository in the manager.
+                    // Utilize a try-catch mechanism to release the resource for other nodes in the event of a failed bootstrap.
+                    lock(resource: mgrCreateBootstrapRepo, timeout: 320) {
+                        try {
+                            echo 'Create bootstrap repository'
+                            res_create_bootstrap_repository = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_${minion}'", returnStatus: true)
+                            echo "Create bootstrap repository status code: ${res_create_bootstrap_repository}"
+                            if (res_create_bootstrap_repository != 0) {
+                                error("Create bootstrap repository failed with status code: ${res_create_bootstrap_repository}")
+                            }
+                        } finally {
+                            echo 'Release resource mgrCreateBootstrapRepo'
+                        }
                     }
+                }
+            }
+        }
+        if (params.must_boot_clients) {
+            stage('Bootstrap clients') {
+                if (params.confirm_before_continue) {
+                    input 'Press any key to start bootstraping the clients'
+                }
+                echo 'Bootstrap clients'
+                res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${minion}'", returnStatus: true)
+                echo "Init clients status code: ${res_init_clients}"
+                if (res_init_clients != 0) {
+                    error("Bootstrap clients failed with status code: ${res_init_clients}")
 
                 }
             }
-            if (params.must_create_bootstrap_repos) {
-                stage('Create bootstrap repository') {
-                    if (!minion.contains('ssh')) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start creating bootstrap repositories'
-                        }
-                        // Employ a lock resource to prevent concurrent calls to create the bootstrap repository in the manager.
-                        // Utilize a try-catch mechanism to release the resource for other nodes in the event of a failed bootstrap.
-                        lock(resource: mgrCreateBootstrapRepo, timeout: 320) {
-                            try {
-                                echo 'Create bootstrap repository'
-                                res_create_bootstrap_repository = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_${minion}'", returnStatus: true)
-                                echo "Create bootstrap repository status code: ${res_create_bootstrap_repository}"
-                                if (res_create_bootstrap_repository != 0) {
-                                    error("Create bootstrap repository failed with status code: ${res_create_bootstrap_repository}")
-                                }
-                            } finally {
-                                echo 'Release resource mgrCreateBootstrapRepo'
-                            }
-                        }
-                    }
+        }
+        if (params.must_run_tests) {
+            stage('Run Smoke Tests') {
+                if (params.confirm_before_continue) {
+                    input 'Press any key to start running the smoke tests'
                 }
-            }
-            if (params.must_boot_clients) {
-                stage('Bootstrap clients') {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start bootstraping the clients'
-                    }
-                    echo 'Bootstrap clients'
-                    res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${minion}'", returnStatus: true)
-                    echo "Init clients status code: ${res_init_clients}"
-                    if (res_init_clients != 0) {
-                        error("Bootstrap clients failed with status code: ${res_init_clients}")
-
-                    }
-                }
-            }
-            if (params.must_run_tests) {
-                stage('Run Smoke Tests') {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start running the smoke tests'
-                    }
-                    echo 'Run Smoke tests'
-                    res_smoke_tests = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_smoke_tests_${minion}'", returnStatus: true)
-                    echo "Smoke tests status code: ${res_smoke_tests}"
-                    if (res_smoke_tests != 0) {
-                        error("Run Smoke tests failed with status code: ${res_smoke_tests}")
-                    }
+                echo 'Run Smoke tests'
+                res_smoke_tests = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_smoke_tests_${minion}'", returnStatus: true)
+                echo "Smoke tests status code: ${res_smoke_tests}"
+                if (res_smoke_tests != 0) {
+                    error("Run Smoke tests failed with status code: ${res_smoke_tests}")
                 }
             }
         }
