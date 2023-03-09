@@ -301,7 +301,8 @@ def clientTestingStages() {
                         }
                     }
                 }
-
+            }
+            if (params.must_add_common_channels) {
                 stage('Add Common Channels') {
                     if (!minion.contains('ssh')) {
                         if (params.confirm_before_continue) {
@@ -309,17 +310,15 @@ def clientTestingStages() {
                         }
                         echo 'Add common channels'
                         res_common_channels = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_common_channels'", returnStatus: true)
-                        echo "Custom channels and MU repositories status code: ${res_common_channels}"
+                        echo "Common channels status code: ${res_common_channels}"
                         if (res_common_channels != 0) {
-                            if (params.must_run_containerization_tests) {
-                                error("Add common channels failed with status code: ${res_common_channels}")
-                            }
-                            res_sync_common_channels = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
-                            echo "Common channels synchronization status code: ${res_sync_common_channels}"
-                            sh "exit \$(( ${res_common_channels}|${res_sync_common_channels} ))"
-                            if (res_sync_common_channels != 0) {
-                                error("Common channels synchronization failed with status code: ${res_sync_common_channels}")
-                            }
+                            error("Add common channels failed with status code: ${res_common_channels}")
+                        }
+                        res_sync_common_channels = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
+                        echo "Common channels synchronization status code: ${res_sync_common_channels}"
+                        sh "exit \$(( ${res_common_channels}|${res_sync_common_channels} ))"
+                        if (res_sync_common_channels != 0) {
+                            error("Common channels synchronization failed with status code: ${res_sync_common_channels}")
                         }
                     }
                 }
@@ -335,7 +334,6 @@ def clientTestingStages() {
                     if (res_add_keys != 0) {
                         error("Add Activation Keys failed with status code: ${res_add_keys}")
                     }
-
                 }
             }
             if (params.must_create_bootstrap_repos) {
@@ -371,7 +369,6 @@ def clientTestingStages() {
                     echo "Init clients status code: ${res_init_clients}"
                     if (res_init_clients != 0) {
                         error("Bootstrap clients failed with status code: ${res_init_clients}")
-
                     }
                 }
             }
