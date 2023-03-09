@@ -167,6 +167,7 @@ module "cucumber_testsuite" {
         // Openscap cannot run with less than 1.25 GB of RAM
         memory = 1280
       }
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2004"
