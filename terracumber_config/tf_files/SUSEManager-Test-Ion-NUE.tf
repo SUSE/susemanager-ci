@@ -183,15 +183,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    debian-minion = {
-      name = "min-ubuntu2204"
-      image = "ubuntu2204o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:4b"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
     build-host = {
       image = "sles15sp4o"
       name = "min-build"
