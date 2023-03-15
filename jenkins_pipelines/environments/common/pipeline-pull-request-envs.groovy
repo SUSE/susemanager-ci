@@ -15,7 +15,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     last_env = 8;
     // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
     sumaform_gitrepo = "https://github.com/nodeg/sumaform.git";
-    sumaform_ref = "qe-update-ruby32";
+    sumaform_ref = "qe-update-ruby";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
     // email aliases for slack channel discuss-susemanager-pr-tests-results
     email_to = "discuss-susemanager-p-aaaag32rrv4bcp3adzknwc42m4@suse.slack.com";
