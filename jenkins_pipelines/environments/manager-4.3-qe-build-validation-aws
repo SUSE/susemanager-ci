@@ -31,8 +31,6 @@ node('sumaform-cucumber-provo') {
     stage('Checkout pipeline') {
         checkout scm
     }
-    timeout(activity: false, time: 10, unit: 'HOURS') {
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline-mu-aws.groovy"
-        pipeline.run(params)
-    }
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation-aws.groovy"
+    pipeline.run(params)
 }
