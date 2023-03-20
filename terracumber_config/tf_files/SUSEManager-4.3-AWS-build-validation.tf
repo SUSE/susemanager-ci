@@ -137,6 +137,7 @@ module "base" {
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
+  use_avahi                = false
   use_eip_bastion          = false
 
   provider_settings = {

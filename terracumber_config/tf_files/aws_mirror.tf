@@ -128,6 +128,7 @@ module "base" {
   name_prefix = var.NAME_PREFIX
   testsuite                = true
   use_avahi                = false
+  use_eip_bastion          = false
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region = var.REGION
