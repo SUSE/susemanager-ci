@@ -184,6 +184,9 @@ module "server" {
   use_os_released_updates        = false
   disable_download_tokens        = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "m6a.xlarge"
+  }
 
   //server_additional_repos
 
@@ -208,6 +211,9 @@ module "proxy" {
   use_os_released_updates   = true
   proxy_containerized       = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "c6i.large"
+  }
 
   //proxy_additional_repos
 
@@ -225,6 +231,10 @@ module "sles15sp4-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
   //sle15sp4-client_additional_repos
 }
 
@@ -240,6 +250,10 @@ module "sles15sp3-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
   //sle15sp3-client_additional_repos
 }
 
@@ -254,6 +268,9 @@ module "sles15sp4-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 
   //sle15sp4-minion_additional_repos
 
@@ -270,6 +287,9 @@ module "sles15sp3-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 
   //sle15sp3-minion_additional_repos
 
@@ -284,6 +304,9 @@ module "sles15sp4-sshminion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 
 }
 
@@ -296,6 +319,9 @@ module "sles15sp3-sshminion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 
 }
 
@@ -310,6 +336,9 @@ module "rhel9-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 
   //rhel9-minion_additional_repos
 
@@ -323,6 +352,10 @@ module "ubuntu2204-sshminion" {
   image              = "ubuntu2204"
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
 }
 
 module "ubuntu2204-minion" {
@@ -335,6 +368,9 @@ module "ubuntu2204-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 
   //ubuntu2204-minion_additional_repos
 
@@ -344,6 +380,9 @@ module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base.configuration
   name               = "ctl"
+  provider_settings = {
+    instance_type = "c6i.xlarge"
+  }
 
   swap_file_size = null
   no_mirror = true
