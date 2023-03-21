@@ -212,14 +212,14 @@ def run(params) {
                     sh "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:build_validation_sanity_check'"
                 }
 
-                stage('Run core features') {
-                    if (params.must_run_core && (deployed_aws || !params.must_deploy)) {
+                if (params.must_run_core && (deployed_aws || !params.must_deploy)) {
+                    stage('Run core features') {
                         sh "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_core'"
                     }
                 }
 
-                stage('Sync. products and channels') {
-                    if (params.must_sync && (deployed_aws || !params.must_deploy)) {
+                if (params.must_sync && (deployed_aws || !params.must_deploy)) {
+                    stage('Sync. products and channels') {
                         res_products = sh(script: "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
                         echo "Custom channels and MU repositories status code: ${res_products}"
                         res_sync_products = sh(script: "./terracumber-cli ${aws_common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_product_reposync'", returnStatus: true)
@@ -413,7 +413,7 @@ def clientTestingStages() {
     // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
     Set<String> nodeList = new HashSet<String>()
     Set<String> envVar = new HashSet<String>()
-    modules = sh(script: "cd ${resultdir}/sumaform; terraform state list",
+    modules = sh(script: "cd ${resultdir}/sumaform-aws; terraform state list",
             returnStdout: true)
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
