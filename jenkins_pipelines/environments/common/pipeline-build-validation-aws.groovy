@@ -18,10 +18,13 @@ def run(params) {
         server_ami = null
         proxy_ami = null
 
-
         //Deployment variables
         deployed_local = false
         deployed_aws = false
+
+        // Declare lock resource use during node bootstrap
+        mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
+        env.client_stage_result_fail = false
 
         local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir}"
         aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir}"
