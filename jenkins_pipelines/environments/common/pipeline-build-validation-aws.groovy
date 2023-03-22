@@ -460,7 +460,7 @@ def clientTestingStages() {
                     }
                 }
             }
-            if (params.must_non_MU_repositories) {
+            if (params.must_add_non_MU_repositories) {
                 stage('Add non MU Repositories') {
                     if (!minion.contains('ssh')) {
                         if (params.confirm_before_continue) {
