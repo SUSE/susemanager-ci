@@ -295,14 +295,13 @@ def clientTestingStages() {
                         echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                         res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
                         echo "Custom channels and MU repositories synchronization status code: ${res_sync_mu_repos}"
-                        sh "exit \$(( ${res_mu_repos}|${res_sync_mu_repos} ))"
                         if (res_sync_mu_repos != 0) {
                             error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
                         }
                     }
                 }
             }
-            if (params.must_non_MU_repositories) {
+            if (params.must_add_non_MU_repositories) {
                 stage('Add non MU Repositories') {
                     if (!minion.contains('ssh')) {
                         if (params.confirm_before_continue) {
@@ -316,7 +315,6 @@ def clientTestingStages() {
                         }
                         res_sync_non_MU_repositories = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
                         echo "Non MU Repositories synchronization status code: ${res_sync_non_MU_repositories}"
-                        sh "exit \$(( ${res_non_MU_repositories}|${res_sync_non_MU_repositories} ))"
                         if (res_sync_non_MU_repositories != 0) {
                             error("Non MU Repositories synchronization failed with status code: ${res_sync_non_MU_repositories}")
                         }
