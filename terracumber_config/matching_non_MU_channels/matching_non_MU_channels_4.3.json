@@ -1,0 +1,9 @@
+{
+  "alma9_minion" : "build_validation_alma9_minion_build_clm",
+  "centos7_minion" : "build_validation_centos7_minion_add_iso",
+  "liberty9" : "build_validation_liberty9_minion_build_clm",
+  "oracle9" : "build_validation_oracle9_minion_build_clm",
+  "rocky8" : "build_validation_rocky8_minion_add_iso_and_build_clm",
+  "rocky9" : "build_validation_rocky9_minion_build_clm",
+  "ubuntu1804" : "build_validation_ubuntu1804_minion_add_common_repositories"
+}
