@@ -1,0 +1,10 @@
+{
+  "_comment":  "List of minions that require specific custom channels with corresponding run_set",
+  "alma9_minion" : "build_validation_alma9_minion_build_clm",
+  "centos7_minion" : "build_validation_centos7_minion_add_iso",
+  "liberty9_minion" : "build_validation_liberty9_minion_build_clm",
+  "oracle9_minion" : "build_validation_oracle9_minion_build_clm",
+  "rocky8_minion" : "build_validation_rocky8_minion_add_iso_and_build_clm",
+  "rocky9_minion" : "build_validation_rocky9_minion_build_clm",
+  "ubuntu1804_minion" : "build_validation_ubuntu1804_minion_add_common_repositories"
+}
