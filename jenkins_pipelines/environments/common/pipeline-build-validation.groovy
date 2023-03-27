@@ -254,6 +254,9 @@ def clientTestingStages() {
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
 
+    // Load JSON matching non MU repositories data
+    def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
+
     // Employ the terraform state list command to generate the list of nodes.
     // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
     Set<String> nodeList = new HashSet<String>()
@@ -303,12 +306,14 @@ def clientTestingStages() {
             }
             if (params.must_add_non_MU_repositories) {
                 stage('Add non MU Repositories') {
-                    if (!minion.contains('ssh')) {
+                    // We have this condition inside the stage to see in Jenkins which minion is skipped
+                    if (json_matching_non_MU_data.containsKey(minion)) {
+                        def build_validation_non_MU_script = json_matching_non_MU_data["${minion}"]
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding common channels'
                         }
                         echo 'Add non MU Repositories'
-                        res_non_MU_repositories = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_non_MU_channels'", returnStatus: true)
+                        res_non_MU_repositories = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:${build_validation_non_MU_script}'", returnStatus: true)
                         echo "Non MU Repositories status code: ${res_non_MU_repositories}"
                         if (res_non_MU_repositories != 0) {
                             error("Add common channels failed with status code: ${res_non_MU_repositories}")
