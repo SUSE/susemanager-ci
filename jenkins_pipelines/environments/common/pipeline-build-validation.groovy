@@ -254,7 +254,7 @@ def clientTestingStages() {
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
 
-    // Load json matching non MU repositories data
+    // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
     // Employ the terraform state list command to generate the list of nodes.
@@ -306,7 +306,7 @@ def clientTestingStages() {
             }
             if (params.must_add_non_MU_repositories) {
                 stage('Add non MU Repositories') {
-                    // We have this condition inside the stage to see in Jenkins side which minion is skipped
+                    // We have this condition inside the stage to see in Jenkins which minion is skipped
                     if (json_matching_non_MU_data.containsKey(minion)) {
                         def build_validation_non_MU_script = json_matching_non_MU_data["${minion}"]
                         if (params.confirm_before_continue) {
