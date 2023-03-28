@@ -18,6 +18,41 @@ node('sumaform-cucumber-provo') {
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             string(name: 'non_MU_channels_tasks_file', defaultValue: 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json', description: 'Path to JSON run set file for non MU repositories'),
+            extendedChoice(name: 'minions',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30,
+                    value: 'sle12sp4_client, sle12sp4_minion, sle12sp4_sshminion, ' +
+                            'sle12sp5_client, sle12sp5_minion, sle12sp5_sshminion, ' +
+                            'sle15sp1_client, sle15sp1_minion, sle15sp1_sshminion, ' +
+                            'sle15sp2_client, sle15sp2_minion, sle15sp2_sshminion, ' +
+                            'sle15sp3_client, sle15sp3_minion, sle15sp3_sshminion, ' +
+                            'sle15sp4_client, sle15sp4_minion, sle15sp4_sshminion, ' +
+                            'alma9_minion, alma9_sshminion, ' +
+                            'centos7_client, centos7_minion, centos7_sshminion, ' +
+                            'liberty9_minion, liberty9_sshminion, ' +
+                            'oracle9_minion, oracle9_sshminion, ' +
+                            'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion ' +
+                            'ubuntu1804_minion, ubuntu1804_sshminion, ubuntu2004_minion, ubuntu2004_sshminion, ubuntu2204_minion, ubuntu2204_sshminion, ' +
+                            'debian10_minion, debian10_sshminion, debian11_minion, debian11_sshminion, ' +
+                            'opensuse154arm_minion, opensuse154arm_sshminion, ' +
+                            'slemicro51_minion, slemicro51_sshminion, slemicro52_minion, slemicro52_sshminion, slemicro53_minion, slemicro53_sshminion, ' +
+                            'sle12sp5_buildhost, sle15sp4_buildhost, sle12sp5_terminal, sle15sp4_terminal, ' +
+                            'monitoringserver',
+                    defaultValue: 'sle12sp4_client, sle12sp4_minion, sle12sp4_sshminion, ' +
+                            'sle12sp5_client, sle12sp5_minion, sle12sp5_sshminion, ' +
+                            'sle15sp1_client, sle15sp1_minion, sle15sp1_sshminion, ' +
+                            'sle15sp2_client, sle15sp2_minion, sle15sp2_sshminion, ' +
+                            'sle15sp3_client, sle15sp3_minion, sle15sp3_sshminion, ' +
+                            'sle15sp4_client, sle15sp4_minion, sle15sp4_sshminion, ' +
+                            'alma9_minion, alma9_sshminion, ' +
+                            'centos7_client, centos7_minion, centos7_sshminion, ' +
+                            'liberty9_minion, liberty9_sshminion, ' +
+                            'oracle9_minion, oracle9_sshminion, ' +
+                            'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion ' +
+                            'ubuntu1804_minion, ubuntu1804_sshminion, ubuntu2004_minion, ubuntu2004_sshminion, ubuntu2204_minion, ubuntu2204_sshminion, ' +
+                            'debian10_minion, debian10_sshminion, debian11_minion, debian11_sshminion, ' +
+                            'opensuse154arm_minion, opensuse154arm_sshminion, ' +
+                            'slemicro51_minion, slemicro51_sshminion, slemicro52_minion, slemicro52_sshminion, slemicro53_minion, slemicro53_sshminion, ' +
+                            'sle12sp5_buildhost, sle15sp4_buildhost, sle12sp5_terminal, sle15sp4_terminal, ' +
+                            'monitoringserver', 'List of minions to be run during BV'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
