@@ -54,9 +54,7 @@ def run(params) {
 
             stage('Sanity check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:build_validation_sanity_check'"
-                minionList = getMinionList()
-                println minionList.envVar
-                println minionList.nodeList
+                env.minionList = getMinionList()
             }
 
             stage('Run core features') {
@@ -260,13 +258,12 @@ def clientTestingStages() {
     // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
-    minionList = getMinionList()
     // Construct a list of stages for every node.
-    minionList.nodeList.each { minion ->
+    env.minionList.nodeList.each { minion ->
         tests["${minion}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
-            def temporaryList = minionList.envVar.toList() - minion.replaceAll("ssh_minion", "sshminion").toUpperCase()
+            def temporaryList = env.minionList.envVar.toList() - minion.replaceAll("ssh_minion", "sshminion").toUpperCase()
             stage("${minion}") {
                 echo "Testing ${minion}"
             }
@@ -391,9 +388,7 @@ def getMinionList() {
     moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
         if (instanceList[1].contains('minion')) {
-            echo instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle")
             nodeList.add(instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle"))
-            echo instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase()
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
         }
     }
