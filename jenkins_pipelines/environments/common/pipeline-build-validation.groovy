@@ -404,8 +404,10 @@ def getMinionList() {
     def declareMinionList = params.minions_to_run.split(", ")
 
     println ("Minion list from jenkins : ${declareMinionList}" )
-    def minionNotDeployList = declareMinionList - nodeList
-    minionToDisableList = nodeList - ( declareMinionList - minionNotDeployList )
+//    def minionNotDeployList = declareMinionList - nodeList
+    def minionNotDeployList = declareMinionList.findAll { !nodeList.contains(it) }
+//    def minionToDisableList = nodeList - ( declareMinionList - minionNotDeployList )
+    def minionToDisableList = nodeList.findAll { !declareMinionList.contains(it) }
 
     println "This minions are not deployed ! ${minionNotDeployList}"
     println "Minion to disable : ${minionToDisableList}"
