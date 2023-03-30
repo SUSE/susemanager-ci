@@ -402,8 +402,8 @@ def getMinionList() {
         }
     }
     println ("Minion list from jenkins : ${params.declareMinionList.split(", ")}" )
-    def minionToDisableList = nodeList - params.declareMinionList.split(", ")
     def minionNotDeployList = params.declareMinionList.split(", ") - nodeList
+    def minionToDisableList = nodeList - params.declareMinionList.split(", ")
 
     println "This minions are not deployed ! ${minionNotDeployList}"
 
