@@ -401,9 +401,11 @@ def getMinionList() {
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
         }
     }
-    println ("Minion list from jenkins : ${params.declareMinionList.split(", ")}" )
-    def minionNotDeployList = params.declareMinionList.split(", ") - nodeList
-    def minionToDisableList = nodeList - params.declareMinionList.split(", ")
+    Set<String> declareMinionList = new HashSet<String>(params.minions_to_run.split(", "))
+
+    println ("Minion list from jenkins : ${declareMinionList}" )
+    minionNotDeployList = declareMinionList - nodeList
+    minionToDisableList = nodeList - declareMinionList
 
     println "This minions are not deployed ! ${minionNotDeployList}"
     println "Minion to disable : ${minionToDisableList}"
