@@ -401,12 +401,10 @@ def getMinionList() {
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
         }
     }
-    def minionToDisableList = nodeList
-    def minionsMissingFromParameters = params.declareMinionList
+    def minionToDisableList = nodeList - params.declareMinionList
+    def minionNotDeployList = params.declareMinionList - nodeList
 
-    minionToDisableList.removeAll(params.declareMinionList)
-    minionsMissingFromParameters.removeAll(nodeList)
-    println "This minions are not declared in the build validation list ! ${minionsMissingFromParameters}"
+    println "This minions are not deployed ! ${minionNotDeployList}"
 
     return [nodeList:nodeList, envVariableList:envVar, minionToDisableList:minionToDisableList]
 }
