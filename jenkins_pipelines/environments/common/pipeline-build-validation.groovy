@@ -405,7 +405,7 @@ def getMinionList() {
 
     println ("Minion list from jenkins : ${declareMinionList}" )
     minionNotDeployList = declareMinionList - nodeList
-    minionToDisableList = nodeList - declareMinionList
+    minionToDisableList = nodeList - ( declareMinionList - minionNotDeployList )
 
     println "This minions are not deployed ! ${minionNotDeployList}"
     println "Minion to disable : ${minionToDisableList}"
