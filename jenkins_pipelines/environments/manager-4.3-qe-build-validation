@@ -1,7 +1,21 @@
 #!/usr/bin/env groovy
 
 node('sumaform-cucumber-provo') {
-    def minionList = 'essai'
+    def minionList = 'sle12sp4_client, sle12sp4_minion, sle12sp4_ssh_minion, ' +
+            'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, ' +
+            'sle15sp1_client, sle15sp1_minion, sle15sp1_ssh_minion, ' +
+            'sle15sp2_client, sle15sp2_minion, sle15sp2_ssh_minion, ' +
+            'sle15sp3_client, sle15sp3_minion, sle15sp3_ssh_minion, ' +
+            'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, ' +
+            'alma9_minion, alma9_ssh_minion, ' +
+            'centos7_client, centos7_minion, centos7_ssh_minion, ' +
+            'liberty9_minion, liberty9_ssh_minion, ' +
+            'oracle9_minion, oracle9_ssh_minion, ' +
+            'rocky8_minion, rocky8_ssh_minion, rocky9_minion, rocky9_ssh_minion, ' +
+            'ubuntu1804_minion, ubuntu1804_ssh_minion, ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
+            'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, ' +
+            'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
+            'slemicro51_minion, slemicro51_ssh_minion, slemicro52_minion, slemicro52_ssh_minion, slemicro53_minion, slemicro53_ssh_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
@@ -19,38 +33,9 @@ node('sumaform-cucumber-provo') {
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             string(name: 'non_MU_channels_tasks_file', defaultValue: 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json', description: 'Path to JSON run set file for non MU repositories'),
-            string(name: 'test', defaultValue: "${minionList}", description: 'Path to JSON run set file for non MU repositories'),
             extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
-                    value: 'sle12sp4_client, sle12sp4_minion, sle12sp4_ssh_minion, ' +
-                            'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, ' +
-                            'sle15sp1_client, sle15sp1_minion, sle15sp1_ssh_minion, ' +
-                            'sle15sp2_client, sle15sp2_minion, sle15sp2_ssh_minion, ' +
-                            'sle15sp3_client, sle15sp3_minion, sle15sp3_ssh_minion, ' +
-                            'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, ' +
-                            'alma9_minion, alma9_ssh_minion, ' +
-                            'centos7_client, centos7_minion, centos7_ssh_minion, ' +
-                            'liberty9_minion, liberty9_ssh_minion, ' +
-                            'oracle9_minion, oracle9_ssh_minion, ' +
-                            'rocky8_minion, rocky8_ssh_minion, rocky9_minion, rocky9_ssh_minion, ' +
-                            'ubuntu1804_minion, ubuntu1804_ssh_minion, ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
-                            'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, ' +
-                            'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
-                            'slemicro51_minion, slemicro51_ssh_minion, slemicro52_minion, slemicro52_ssh_minion, slemicro53_minion, slemicro53_ssh_minion',
-                    defaultValue: 'sle12sp4_client, sle12sp4_minion, sle12sp4_ssh_minion, ' +
-                            'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, ' +
-                            'sle15sp1_client, sle15sp1_minion, sle15sp1_ssh_minion, ' +
-                            'sle15sp2_client, sle15sp2_minion, sle15sp2_ssh_minion, ' +
-                            'sle15sp3_client, sle15sp3_minion, sle15sp3_ssh_minion, ' +
-                            'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, ' +
-                            'alma9_minion, alma9_ssh_minion, ' +
-                            'centos7_client, centos7_minion, centos7_ssh_minion, ' +
-                            'liberty9_minion, liberty9_ssh_minion, ' +
-                            'oracle9_minion, oracle9_ssh_minion, ' +
-                            'rocky8_minion, rocky8_ssh_minion, rocky9_minion, rocky9_ssh_minion, ' +
-                            'ubuntu1804_minion, ubuntu1804_ssh_minion, ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
-                            'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, ' +
-                            'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
-                            'slemicro51_minion, slemicro51_ssh_minion, slemicro52_minion, slemicro52_ssh_minion, slemicro53_minion, slemicro53_ssh_minion',
+                    value: minionList,
+                    defaultValue: minionList,
                     description: 'List of minions to be run during BV'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
