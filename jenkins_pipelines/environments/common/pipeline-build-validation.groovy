@@ -58,6 +58,7 @@ def run(params) {
                 println "Node list from terraform ${minionList.nodeList}"
                 println "Env variable for cucumber ${minionList.envVariableList}"
                 println "Minion to disable : ${minionList.minionToDisableList}"
+                println "Env varaible to disable : ${minionList.envVariableListToDisable}"
 
             }
 
@@ -401,18 +402,15 @@ def getMinionList() {
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
         }
     }
+
     def declareMinionList = params.minions_to_run.split(", ")
-
     println ("Minion list from jenkins : ${declareMinionList}" )
-//    def minionNotDeployList = declareMinionList - nodeList
-    def minionNotDeployList = declareMinionList.findAll { !nodeList.contains(it) }
-//    def minionToDisableList = nodeList - ( declareMinionList - minionNotDeployList )
+    def notDeployedMinionList = declareMinionList.findAll { !nodeList.contains(it) }
     def minionToDisableList = nodeList.findAll { !declareMinionList.contains(it) }
+    def envVariableListToDisable = minionToDisableList.replaceAll("ssh_minion", "sshminion").toUpperCase()
+    println "This minions are declared in jenkins but not deployed ! ${notDeployedMinionList}"
 
-    println "This minions are not deployed ! ${minionNotDeployList}"
-    println "Minion to disable : ${minionToDisableList}"
-
-    return [nodeList:nodeList, envVariableList:envVar, minionToDisableList:minionToDisableList]
+    return [nodeList:nodeList, envVariableList:envVar, minionToDisableList:minionToDisableList, envVariableListToDisable:envVariableListToDisable]
 }
 
 return this
