@@ -406,6 +406,7 @@ def getMinionList() {
     def minionToDisableList = nodeList - params.declareMinionList.split(", ")
 
     println "This minions are not deployed ! ${minionNotDeployList}"
+    println "Minion to disable : ${minionToDisableList}"
 
     return [nodeList:nodeList, envVariableList:envVar, minionToDisableList:minionToDisableList]
 }
