@@ -401,6 +401,7 @@ def getMinionList() {
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
         }
     }
+    println ("Minion list from jenkins ${params.declareMinionList}" )
     def minionToDisableList = nodeList - params.declareMinionList
     def minionNotDeployList = params.declareMinionList - nodeList
 
