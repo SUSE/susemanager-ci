@@ -54,7 +54,11 @@ def run(params) {
 
             stage('Sanity check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:build_validation_sanity_check'"
-                env.minionList = getMinionList()
+                minionList = getMinionList()
+                println minionList.nodeList
+                println minionList.envVariableList
+                println minionList.minionToDisableList
+
             }
 
             stage('Run core features') {
@@ -65,6 +69,8 @@ def run(params) {
 
             stage('Sync. products and channels') {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
+                    // Get minion list from terraform state list command
+                    minionList = getMinionList()
                     res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     res_sync_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_product_reposync'", returnStatus: true)
@@ -258,12 +264,15 @@ def clientTestingStages() {
     // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
-    // Construct a list of stages for every node.
-    env.minionList.nodeList.each { minion ->
+    //Get minion list from terraform state list command
+    def minionList = getMinionList()
+
+    // Construct a stage list for each node.
+    minionList.nodeList.each { minion ->
         tests["${minion}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
-            def temporaryList = env.minionList.envVar.toList() - minion.replaceAll("ssh_minion", "sshminion").toUpperCase()
+            def temporaryList = minionList.envVariableList.toList() - minion.replaceAll("ssh_minion", "sshminion").toUpperCase()
             stage("${minion}") {
                 echo "Testing ${minion}"
             }
@@ -392,7 +401,14 @@ def getMinionList() {
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
         }
     }
-    return [nodeList:nodeList, envVar:envVar]
+    def minionToDisableList = nodeList
+    def minionsMissingFromParameters = params.declareMinionList
+
+    minionToDisableList.removeAll(params.declareMinionList)
+    minionsMissingFromParameters.removeAll(nodeList)
+    println "This minions are not declared in the build validation list ! ${minionsMissingFromParameters}"
+
+    return [nodeList:nodeList, envVariableList:envVar, minionToDisableList:minionToDisableList]
 }
 
 return this
