@@ -57,7 +57,6 @@ def run(params) {
                 minionList = getMinionList()
                 println "Node list from terraform ${minionList.nodeList}"
                 println "Env variable for cucumber ${minionList.envVariableList}"
-                println "Minion to disable : ${minionList.minionToDisableList}"
                 println "Env varaible to disable : ${minionList.envVariableListToDisable}"
 
             }
@@ -72,7 +71,7 @@ def run(params) {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
                     // Get minion list from terraform state list command
                     minionList = getMinionList()
-                    res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
+                    res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${minionList.envVariableListToDisable}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     res_sync_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_product_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories synchronization status code: ${res_sync_products}"
@@ -408,9 +407,11 @@ def getMinionList() {
     def notDeployedMinionList = declareMinionList.findAll { !nodeList.contains(it) }
     def minionToDisableList = nodeList.findAll { !declareMinionList.contains(it) }
     def envVariableListToDisable = minionToDisableList.collect { it.replaceAll("ssh_minion", "sshminion").toUpperCase() }
+    def envVariableWithDisableNode = envVar - envVariableListToDisable
+    def nodeListWithDisableNode = nodeList - minionToDisableList
     println "This minions are declared in jenkins but not deployed ! ${notDeployedMinionList}"
 
-    return [nodeList:nodeList, envVariableList:envVar, minionToDisableList:minionToDisableList, envVariableListToDisable:envVariableListToDisable]
+    return [nodeList:nodeListWithDisableNode, envVariableList:envVariableWithDisableNode, envVariableListToDisable:envVariableListToDisable]
 }
 
 return this
