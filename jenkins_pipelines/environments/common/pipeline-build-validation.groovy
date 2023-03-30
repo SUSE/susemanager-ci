@@ -407,7 +407,7 @@ def getMinionList() {
     println ("Minion list from jenkins : ${declareMinionList}" )
     def notDeployedMinionList = declareMinionList.findAll { !nodeList.contains(it) }
     def minionToDisableList = nodeList.findAll { !declareMinionList.contains(it) }
-    def envVariableListToDisable = minionToDisableList.replaceAll("ssh_minion", "sshminion").toUpperCase()
+    def envVariableListToDisable = minionToDisableList.collect { it.replaceAll("ssh_minion", "sshminion").toUpperCase() }
     println "This minions are declared in jenkins but not deployed ! ${notDeployedMinionList}"
 
     return [nodeList:nodeList, envVariableList:envVar, minionToDisableList:minionToDisableList, envVariableListToDisable:envVariableListToDisable]
