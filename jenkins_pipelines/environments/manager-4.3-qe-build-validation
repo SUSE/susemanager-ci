@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 
 node('sumaform-cucumber-provo') {
+    def minionList = 'essai'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
@@ -18,6 +19,7 @@ node('sumaform-cucumber-provo') {
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             string(name: 'non_MU_channels_tasks_file', defaultValue: 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json', description: 'Path to JSON run set file for non MU repositories'),
+            string(name: 'test', defaultValue: "${minionList}", description: 'Path to JSON run set file for non MU repositories'),
             extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
                     value: 'sle12sp4_client, sle12sp4_minion, sle12sp4_ssh_minion, ' +
                             'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, ' +
