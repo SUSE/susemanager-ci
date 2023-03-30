@@ -396,7 +396,7 @@ def getMinionList() {
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
-        if (instanceList[1].contains('minion') or instanceList[1].contains('client')) {
+        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
             nodeList.add(instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle"))
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
         }
