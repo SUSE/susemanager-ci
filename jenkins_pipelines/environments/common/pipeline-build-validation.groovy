@@ -257,30 +257,13 @@ def clientTestingStages() {
     // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
-    // Employ the terraform state list command to generate the list of nodes.
-    // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
-    Set<String> nodeList = new HashSet<String>()
-    Set<String> envVar = new HashSet<String>()
-    modules = sh(script: "cd ${resultdir}/sumaform; terraform state list",
-            returnStdout: true)
-    String[] moduleList = modules.split("\n")
-    moduleList.each { lane ->
-        def instanceList = lane.tokenize(".")
-        if (instanceList[1].contains('minion')) {
-            echo instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle")
-            nodeList.add(instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle"))
-            echo instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase()
-            envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
-        }
-    }
-    echo nodeList.join(", ")
-
+    minionList = getMinionList()
     // Construct a list of stages for every node.
-    nodeList.each { minion ->
+    minionList.nodeList.each { minion ->
         tests["${minion}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
-            def temporaryList = envVar.toList() - minion.replaceAll("ssh_minion", "sshminion").toUpperCase()
+            def temporaryList = minionList.envVar.toList() - minion.replaceAll("ssh_minion", "sshminion").toUpperCase()
             stage("${minion}") {
                 echo "Testing ${minion}"
             }
@@ -392,6 +375,26 @@ def clientTestingStages() {
     }
     // Once all the stages have been correctly configured, run in parallel
     parallel tests
+}
+
+def getMinionList() {
+    // Employ the terraform state list command to generate the list of nodes.
+    // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
+    Set<String> nodeList = new HashSet<String>()
+    Set<String> envVar = new HashSet<String>()
+    modules = sh(script: "cd ${resultdir}/sumaform; terraform state list",
+            returnStdout: true)
+    String[] moduleList = modules.split("\n")
+    moduleList.each { lane ->
+        def instanceList = lane.tokenize(".")
+        if (instanceList[1].contains('minion')) {
+            echo instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle")
+            nodeList.add(instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle"))
+            echo instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase()
+            envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
+        }
+    }
+    return [nodeList:nodeList, envVar:envVar]
 }
 
 return this
