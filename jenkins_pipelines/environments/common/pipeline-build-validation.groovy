@@ -66,7 +66,7 @@ def run(params) {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
                     // Get minion list from terraform state list command
                     minionList = getMinionList()
-                    res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${minionList.envVariableListToDisable}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
+                    res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${minionList.envVariableListToDisable.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     res_sync_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_product_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories synchronization status code: ${res_sync_products}"
@@ -210,19 +210,19 @@ def run(params) {
             }
 
             stage('Get results') {
-                def error = 0
+                def result_error = 0
                 if (deployed || !params.must_deploy) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
                     } catch(Exception ex) {
                         println("ERROR: rake cucumber:build_validation_finishing failed")
-                        error = 1
+                        result_error = 1
                     }
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
                     } catch(Exception ex) {
                         println("ERROR: rake utils:generate_test_report failed")
-                        error = 1
+                        result_error = 1
                     }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
                     publishHTML( target: [
@@ -243,7 +243,7 @@ def run(params) {
                 if (env.client_stage_result_fail) {
                     error("Client stage failed")
                 }
-                sh "exit ${error}"
+                sh "exit ${result_error}"
             }
         }
     }
@@ -396,17 +396,19 @@ def getMinionList() {
             envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
         }
     }
-
-    def declareMinionList = params.minions_to_run.split(", ")
-    println ("Minion list from jenkins : ${declareMinionList}" )
-    def notDeployedMinionList = declareMinionList.findAll { !nodeList.contains(it) }
-    def minionToDisableList = nodeList.findAll { !declareMinionList.contains(it) }
-    def envVariableListToDisable = minionToDisableList.collect { it.replaceAll("ssh_minion", "sshminion").toUpperCase() }
-    def envVariableWithDisableNode = envVar - envVariableListToDisable
-    def nodeListWithDisableNode = nodeList - minionToDisableList
-    println "This minions are declared in jenkins but not deployed ! ${notDeployedMinionList}"
-
-    return [nodeList:nodeListWithDisableNode, envVariableList:envVariableWithDisableNode, envVariableListToDisable:envVariableListToDisable]
+    // Convert jenkins minions list parameter to list
+    def nodesToRun = params.minions_to_run.split(", ")
+    // Create a variable with declared nodes on Jenkins side but not deploy and print it
+    def notDeployedNode = nodesToRun.findAll { !nodeList.contains(it) }
+    println "This minions are declared in jenkins but not deployed ! ${notDeployedNode}"
+    // Check the difference between the nodes deployed and the nodes declared in Jenkins side
+    // This difference will be the nodes to disable
+    def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }
+    // Convert this list to cucumber compatible environment variable
+    def envVarDisabledNodes = disabledNodes.collect { it.replaceAll("ssh_minion", "sshminion").toUpperCase() }
+    // Create a node list without the disabled nodes. ( use to configure the client stage )
+    def nodeListWithDisabledNodes = nodeList - disabledNodes
+    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes]
 }
 
 return this
