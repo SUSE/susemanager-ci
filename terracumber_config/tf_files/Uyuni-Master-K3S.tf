@@ -194,7 +194,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
-        mac = " aa:b2:92:04:00:e9"
+        mac = "aa:b2:92:04:00:e9"
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
