@@ -392,8 +392,8 @@ def getMinionList() {
     moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
         if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            nodeList.add(instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle"))
-            envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
+            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            envVar.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
     }
     // Convert jenkins minions list parameter to list
@@ -405,7 +405,7 @@ def getMinionList() {
     // This difference will be the nodes to disable
     def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }
     // Convert this list to cucumber compatible environment variable
-    def envVarDisabledNodes = disabledNodes.collect { it.replaceAll("ssh_minion", "sshminion").toUpperCase() }
+    def envVarDisabledNodes = disabledNodes.collect { it.replaceAll('ssh_minion', 'sshminion').toUpperCase() }
     // Create a node list without the disabled nodes. ( use to configure the client stage )
     def nodeListWithDisabledNodes = nodeList - disabledNodes
     return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes]
