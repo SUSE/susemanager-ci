@@ -248,7 +248,7 @@ module "base_debian" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o" ]
+  images      = [ "ubuntu1804o", "ubuntu2004o", "debian10o", "debian11o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -769,29 +769,7 @@ module "ubuntu2004-minion" {
 
 }
 
-module "ubuntu2204-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "min-ubuntu2204"
-  image              = "ubuntu2204o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6b"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //ubuntu2204-minion_additional_repos
-
-}
+// Ubuntu 22.04 is not supported by SUSE Manager 4.2
 
 module "debian10-minion" {
   providers = {
@@ -1047,22 +1025,7 @@ module "ubuntu2004-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "ubuntu2204-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-ubuntu2204"
-  image              = "ubuntu2204o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:8b"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// Ubuntu 22.04 is not supported by SUSE Manager 4.2
 
 module "debian10-sshminion" {
   providers = {
@@ -1271,6 +1234,8 @@ module "controller" {
 
   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+
+  // Ubuntu 22.04 is not supported by SUSE Manager 4.2
 
   debian10_minion_configuration    = module.debian10-minion.configuration
   debian10_sshminion_configuration = module.debian10-sshminion.configuration
