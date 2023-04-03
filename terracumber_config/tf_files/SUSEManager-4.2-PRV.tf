@@ -203,7 +203,7 @@ module "cucumber_testsuite" {
       }
     }
   }
-  nested_vm_hosts = ["min-nested"]
+  nested_vm_host = "min-nested"
   provider_settings = {
     pool = "ssd"
     network_name = null
