@@ -115,9 +115,8 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  // Comment the next two lines if no mirror should be used
-  # mirror = "minima-mirror.mgr.prv.suse.net"
-  # use_mirror_images = true
+  mirror      = "minima-mirror.mgr.prv.suse.net"
+  use_mirror_images = true
 
   server_http_proxy = "http-proxy.mgr.prv.suse.net:3128"
   custom_download_endpoint = "ftp://minima-mirror.mgr.prv.suse.net:445"
@@ -129,11 +128,13 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:04:00:e0"
       }
     }
-    server = {
+    server_containerized = {
       provider_settings = {
         mac = "aa:b2:92:04:00:e1"
         memory = 16384
       }
+      runtime = "k3s"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
       // Your server repo providing all dependencies to run server in K3S
       // additional_repos = {
       //   server_repo = "",
