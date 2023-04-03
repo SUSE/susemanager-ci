@@ -273,11 +273,11 @@ def clientTestingStages() {
             }
             if (params.must_add_MU_repositories) {
                 stage('Add MUs') {
+                    group("add_MU_${minion}")
                     if (minion.contains('ssh')) {
                         println ("SSH minion with dependOn ${minion.replaceAll('ssh_minion', 'minion')}")
                         dependsOn "add_MU_${minion.replaceAll('ssh_minion', 'minion')}"
                     } else {
-                        group("add_MU_${minion}")
                         println ("Create group ${minion}")
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
