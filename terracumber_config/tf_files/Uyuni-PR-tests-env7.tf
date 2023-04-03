@@ -331,6 +331,7 @@ module "cucumber_testsuite" {
     }
   }
   nested_vm_hosts = ["suma-pr7-min-nested"]
+  nested_vm_macs =  ["aa:b2:93:01:00:6b"]
   provider_settings = {
     pool               = "default"
     network_name       = null
