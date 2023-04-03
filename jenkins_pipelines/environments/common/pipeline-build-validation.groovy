@@ -273,8 +273,12 @@ def clientTestingStages() {
             }
             if (params.must_add_MU_repositories) {
                 stage('Add MUs') {
-                    if (!minion.contains('ssh')) {
+                    if (minion.contains('ssh')) {
+                        println ("SSH minion with dependOn ${minion.replaceAll('ssh_minion', 'minion')}")
+                        dependsOn "add_MU_${minion.replaceAll('ssh_minion', 'minion')}"
+                    } else {
                         group("add_MU_${minion}")
+                        println ("Create group ${minion}")
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
@@ -289,8 +293,6 @@ def clientTestingStages() {
                         if (res_sync_mu_repos != 0) {
                             error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
                         }
-                    } else {
-                        dependsOn "add_MU_${minion.replaceAll('ssh_minion', 'minion')}"
                     }
                 }
             }
