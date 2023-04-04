@@ -261,6 +261,7 @@ def clientTestingStages() {
 
     //Get minion list from terraform state list command
     def minionList = getMinionList()
+    def mu_sync_status = minionList.MUSyncStatus
 
     // Construct a stage list for each node.
     minionList.nodeList.each { minion ->
@@ -272,13 +273,16 @@ def clientTestingStages() {
                 echo "Testing ${minion}"
             }
             if (params.must_add_MU_repositories) {
-                stage('Add MUs') {
-                    group("add_MU_${minion}")
-                    if (minion.contains('ssh')) {
-                        println ("SSH minion with dependOn ${minion.replaceAll('ssh_minion', 'minion')}")
-                        dependsOn "add_MU_${minion.replaceAll('ssh_minion', 'minion')}"
+                stage("Add_MUs_${minion}") {
+                    if (minion.contains('ssh_minion')) {
+                        // SSH minion need minion MU channel. This section wait until minion finish creating MU channel
+                        def minion_name_without_ssh = minion.replaceAll('ssh_minion', 'minion')
+                        println "Waiting for the MU channel creation by ${minion_name_without_ssh} for ${minion}."
+                        waitUntil {
+                            mu_sync_status[minion_name_without_ssh]
+                        }
+                        println "MU channel available for ${minion} "
                     } else {
-                        println ("Create group ${minion}")
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
@@ -293,6 +297,8 @@ def clientTestingStages() {
                         if (res_sync_mu_repos != 0) {
                             error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
                         }
+                        // Update minion repo sync status variable once the MU channel is synchronized
+                        mu_sync_status[minion] = true
                     }
                 }
             }
@@ -402,7 +408,7 @@ def getMinionList() {
         }
     }
     // Convert jenkins minions list parameter to list
-    def nodesToRun = params.minions_to_run.split(", ")
+    Set<String> nodesToRun = params.minions_to_run.split(', ')
     // Create a variable with declared nodes on Jenkins side but not deploy and print it
     def notDeployedNode = nodesToRun.findAll { !nodeList.contains(it) }
     println "This minions are declared in jenkins but not deployed ! ${notDeployedNode}"
@@ -413,7 +419,12 @@ def getMinionList() {
     def envVarDisabledNodes = disabledNodes.collect { it.replaceAll('ssh_minion', 'sshminion').toUpperCase() }
     // Create a node list without the disabled nodes. ( use to configure the client stage )
     def nodeListWithDisabledNodes = nodeList - disabledNodes
-    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes]
+    // Create a map storing mu synchronization state for each minion.
+    // This map is to be sure ssh minions have the MU channel ready.
+    for (node in nodeListWithDisabledNodes ) {
+        MUSyncStatus[node] = false
+    }
+    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes, MUSyncStatus:MUSyncStatus]
 }
 
 return this
