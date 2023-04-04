@@ -64,7 +64,9 @@ def run(params) {
 
             stage('Sync. products and channels') {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
-                    res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
+                    // Get minion list from terraform state list command
+                    minionList = getMinionList()
+                    res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${minionList.envVariableListToDisable.join(' ')}; export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     res_sync_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_product_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories synchronization status code: ${res_sync_products}"
@@ -208,19 +210,19 @@ def run(params) {
             }
 
             stage('Get results') {
-                def error = 0
+                def result_error = 0
                 if (deployed || !params.must_deploy) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
                     } catch(Exception ex) {
                         println("ERROR: rake cucumber:build_validation_finishing failed")
-                        error = 1
+                        result_error = 1
                     }
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
                     } catch(Exception ex) {
                         println("ERROR: rake utils:generate_test_report failed")
-                        error = 1
+                        result_error = 1
                     }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
                     publishHTML( target: [
@@ -241,7 +243,7 @@ def run(params) {
                 if (env.client_stage_result_fail) {
                     error("Client stage failed")
                 }
-                sh "exit ${error}"
+                sh "exit ${result_error}"
             }
         }
     }
@@ -257,30 +259,15 @@ def clientTestingStages() {
     // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
-    // Employ the terraform state list command to generate the list of nodes.
-    // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
-    Set<String> nodeList = new HashSet<String>()
-    Set<String> envVar = new HashSet<String>()
-    modules = sh(script: "cd ${resultdir}/sumaform; terraform state list",
-            returnStdout: true)
-    String[] moduleList = modules.split("\n")
-    moduleList.each { lane ->
-        def instanceList = lane.tokenize(".")
-        if (instanceList[1].contains('minion')) {
-            echo instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle")
-            nodeList.add(instanceList[1].replaceAll("-", "_").replaceAll("sshminion", "ssh_minion").replaceAll("sles", "sle"))
-            echo instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase()
-            envVar.add(instanceList[1].replaceAll("-", "_").replaceAll("sles", "sle").toUpperCase())
-        }
-    }
-    echo nodeList.join(", ")
+    //Get minion list from terraform state list command
+    def minionList = getMinionList()
 
-    // Construct a list of stages for every node.
-    nodeList.each { minion ->
+    // Construct a stage list for each node.
+    minionList.nodeList.each { minion ->
         tests["${minion}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
-            def temporaryList = envVar.toList() - minion.replaceAll("ssh_minion", "sshminion").toUpperCase()
+            def temporaryList = minionList.envVariableList.toList() - minion.replaceAll("ssh_minion", "sshminion").toUpperCase()
             stage("${minion}") {
                 echo "Testing ${minion}"
             }
@@ -392,6 +379,36 @@ def clientTestingStages() {
     }
     // Once all the stages have been correctly configured, run in parallel
     parallel tests
+}
+
+def getMinionList() {
+    // Employ the terraform state list command to generate the list of nodes.
+    // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
+    Set<String> nodeList = new HashSet<String>()
+    Set<String> envVar = new HashSet<String>()
+    modules = sh(script: "cd ${resultdir}/sumaform; terraform state list",
+            returnStdout: true)
+    String[] moduleList = modules.split("\n")
+    moduleList.each { lane ->
+        def instanceList = lane.tokenize(".")
+        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
+            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            envVar.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        }
+    }
+    // Convert jenkins minions list parameter to list
+    def nodesToRun = params.minions_to_run.split(", ")
+    // Create a variable with declared nodes on Jenkins side but not deploy and print it
+    def notDeployedNode = nodesToRun.findAll { !nodeList.contains(it) }
+    println "This minions are declared in jenkins but not deployed ! ${notDeployedNode}"
+    // Check the difference between the nodes deployed and the nodes declared in Jenkins side
+    // This difference will be the nodes to disable
+    def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }
+    // Convert this list to cucumber compatible environment variable
+    def envVarDisabledNodes = disabledNodes.collect { it.replaceAll('ssh_minion', 'sshminion').toUpperCase() }
+    // Create a node list without the disabled nodes. ( use to configure the client stage )
+    def nodeListWithDisabledNodes = nodeList - disabledNodes
+    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes]
 }
 
 return this
