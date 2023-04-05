@@ -330,8 +330,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  nested_vm_hosts = ["suma-pr10-min-nested"]
-  nested_vm_macs =  ["aa:b2:93:01:00:9b"]
+  nested_vm_host = "suma-pr10-min-nested"
+  nested_vm_mac =  "aa:b2:93:01:00:9b"
   provider_settings = {
     pool               = "default"
     network_name       = null

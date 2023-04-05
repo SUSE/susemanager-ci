@@ -222,7 +222,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  nested_vm_hosts = ["min-nested"]
+  nested_vm_host = "min-nested"
   provider_settings = {
     pool = "ssd"
     network_name = null

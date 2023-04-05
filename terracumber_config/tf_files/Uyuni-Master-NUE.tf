@@ -225,8 +225,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  nested_vm_hosts = ["uyuni-master-min-nested"]
-  nested_vm_macs =  ["aa:b2:93:01:00:df"]
+  nested_vm_host = "uyuni-master-min-nested"
+  nested_vm_mac =  "aa:b2:93:01:00:df"
   provider_settings = {
     pool               = "ssd"
     network_name       = null
