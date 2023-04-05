@@ -35,7 +35,7 @@ node('sumaform-cucumber-provo') {
             choice(name: 'rake_namespace', choices: ['parallel', 'cucumber'], defaultValue: 'cucumber', description: 'Choose parallel or cucumber'),
             string(name: 'capybara_timeout', defaultValue: '30', description: 'Capybara max. waiting time'),
             string(name: 'default_timeout', defaultValue: '300', description: 'Default timeout used in our Test Framework'),
-            text(name: 'custom_repositories', defaultValue: '{"server":{"sle_update":""},"proxy:{"sle_update":""},"sle15sp3_minion":{"sle_update":""},"rocky8_minion":{"sle_update":""},"ubuntu2204_minion":{"sle_update":""}}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
             ])
     ])
 
