@@ -34,16 +34,10 @@ def run(params) {
 
             stage('Deploy') {
                 if (params.must_deploy) {
-                    // Provision the environment
-                    if (params.terraform_init) {
-                        env.TERRAFORM_INIT = '--init'
-                    } else {
-                        env.TERRAFORM_INIT = ''
-                    }
                     // Generate json file in the workspace
                     writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
                     // Run Terracumber to deploy the environment
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk|data_disk|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --taint '.*(domain|main_disk|data_disk|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend ${params.sumaform_backend} --runstep provision"
                     // Generate features
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake utils:generate_build_validation_features'"
                     // Generate rake files
@@ -74,7 +68,7 @@ def run(params) {
                 }
             }
 
-            if (params.must_boot_proxy) {
+            if (params.enable_proxy_stages) {
                 stage('Prepare Proxy') {
                     if (params.must_add_MU_repositories) {
                         echo 'Add proxy MUs'
@@ -106,18 +100,19 @@ def run(params) {
                         echo "Create Proxy bootstrap repository status code: ${res_create_bootstrap_repos}"
                     }
                 }
-
-                stage('Bootstrap Proxy') {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start bootstraping the Proxy'
+                if (params.must_boot_proxy) {
+                    stage('Bootstrap Proxy') {
+                        if (params.confirm_before_continue) {
+                            input 'Press any key to start bootstraping the Proxy'
+                        }
+                        res_init_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_proxy'")
+                        echo "Init Proxy status code: ${res_init_proxy}"
                     }
-                    res_init_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_proxy'")
-                    echo "Init Proxy status code: ${res_init_proxy}"
                 }
             }
 
             try {
-                if (params.must_boot_monitoring) {
+                if (params.enable_monitoring_stages) {
                     stage('Prepare Monitoring Server') {
                         // Block ready to support maintenance update for monitoring server
                         /*
@@ -153,13 +148,15 @@ def run(params) {
                             echo "Create Server Monitoring bootstrap repository status code: ${res_create_bootstrap_repos}"
                         }
                     }
-                    stage('Bootstrap Monitoring Server') {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start bootstraping the Monitoring Server'
+                    if (params.must_boot_monitoring) {
+                        stage('Bootstrap Monitoring Server') {
+                            if (params.confirm_before_continue) {
+                                input 'Press any key to start bootstraping the Monitoring Server'
+                            }
+                            echo 'Register monitoring server as minion with gui'
+                            res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_monitoring'")
+                            echo "Init Monitoring Server status code: ${res_init_monitoring}"
                         }
-                        echo 'Register monitoring server as minion with gui'
-                        res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_monitoring'")
-                        echo "Init Monitoring Server status code: ${res_init_monitoring}"
                     }
                 }
             } catch (Exception ex) {
@@ -168,8 +165,10 @@ def run(params) {
 
             // Call the minion testing.
             try {
-                stage('Clients stages') {
-                    clientTestingStages()
+                if (params.enable_client_stages) {
+                    stage('Clients stages') {
+                        clientTestingStages()
+                    }
                 }
             } catch (Exception ex) {
                 println('ERROR: one or more clients have failed')
