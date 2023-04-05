@@ -85,26 +85,27 @@ terraform {
 }
 
 provider "libvirt" {
+  alias = "caipirinha"
   uri = "qemu+tcp://caipirinha.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "endor"
+  alias = "cosmopolitan"
   uri = "qemu+tcp://cosmopolitan.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "giediprime"
+  alias = "ginfizz"
   uri = "qemu+tcp://ginfizz.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "coruscant"
+  alias = "hugo"
   uri = "qemu+tcp://hugo.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "mandalore"
+  alias = "irishcoffee"
   uri = "qemu+tcp://irishcoffee.mgr.prv.suse.net/system"
 }
 
