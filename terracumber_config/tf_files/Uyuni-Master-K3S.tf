@@ -135,11 +135,7 @@ module "cucumber_testsuite" {
       }
       runtime = "k3s"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
-      helm_chart_url = "oci://registry.opensuse.org//systemsmanagement/uyuni/master/servercontainer/charts/uyuni/server"
-      // Your server repo providing all dependencies to run server in K3S
-      // additional_repos = {
-      //   server_repo = "",
-      // }
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/charts/uyuni/server"
       login_timeout = 28800
     }
     proxy = {
