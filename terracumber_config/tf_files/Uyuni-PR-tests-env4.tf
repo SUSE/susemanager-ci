@@ -331,7 +331,7 @@ module "cucumber_testsuite" {
     }
   }
   nested_vm_host = "suma-pr4-min-nested"
-  nested_vm_mac =  "aa:b2:93:01:00:3b"
+  nested_vm_mac =  "aa:b2:92:04:00:3b"
   provider_settings = {
     pool               = "ssd"
     network_name       = null
