@@ -85,7 +85,6 @@ terraform {
 }
 
 provider "libvirt" {
-  alias = "caipirinha"
   uri = "qemu+tcp://caipirinha.mgr.prv.suse.net/system"
 }
 
