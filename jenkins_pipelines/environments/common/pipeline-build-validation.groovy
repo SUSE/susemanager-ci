@@ -166,16 +166,17 @@ def run(params) {
                 println('Monitoring server bootstrap failed ')
             }
 
-            // Call the minion testing.
-            try {
-                if (params.enable_client_stages) {
+            if (params.enable_client_stages) {
+                // Call the minion testing.
+                try {
                     stage('Clients stages') {
                         clientTestingStages()
                     }
+
+                } catch (Exception ex) {
+                    println('ERROR: one or more clients have failed')
+                    env.client_stage_result_fail = true
                 }
-            } catch (Exception ex) {
-                println('ERROR: one or more clients have failed')
-                env.client_stage_result_fail = true
             }
 
             stage('Prepare and run Retail') {
