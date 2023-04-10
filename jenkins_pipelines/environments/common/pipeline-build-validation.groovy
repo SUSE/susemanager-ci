@@ -274,7 +274,7 @@ def clientTestingStages() {
             stage("${node}") {
                 echo "Testing ${node}"
             }
-            if (params.must_add_MU_repositories && !(node == "${monitoring_sle_version}_minion" && params.must_boot_monitoring)) {
+            if (params.must_add_MU_repositories && !(node == "${monitoring_sle_version}_minion" && params.enable_monitoring_stages)) {
                 stage("Add_MUs_${node}") {
                     if (node.contains('ssh_minion')) {
                         // SSH minion need minion MU channel. This section wait until minion finish creating MU channel
