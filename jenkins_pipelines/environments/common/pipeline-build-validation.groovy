@@ -12,9 +12,6 @@ def run(params) {
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
-        // Monitoring doesn't have MU channel and is reusing sle minion channel. Specify which one.
-        env.monitoring_sle_version = 'sle15sp3'
-
         if (params.terraform_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
         }
@@ -129,7 +126,7 @@ def run(params) {
                                 input 'Press any key to start adding Maintenance Update repositories'
                             }
                             echo 'Add custom channels and MU repositories'
-                            res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${monitoring_sle_version}_minion'")
+                            res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${params.monitoring_sle_version}_minion'")
                             echo "Custom channels and MU repositories status code: ${res_mu_repos}"
 
                             res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'")
@@ -287,6 +284,8 @@ def clientTestingStages() {
                             mu_sync_status[minion_name_without_ssh]
                         }
                         println "MU channel available for ${node} "
+                    } else if (node == "${params.monitoring_sle_version}_minion" && params.must_boot_monitoring) {
+                        mu_sync_status[node] = true
                     } else {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
