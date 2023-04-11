@@ -37,6 +37,7 @@ node('sumaform-cucumber-provo') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
+            string(name: 'monitoring_sle_version', defaultValue: 'sle15sp4', description: 'Server version used by monitoring server'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),

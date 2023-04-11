@@ -120,15 +120,13 @@ def run(params) {
             try {
                 if (params.enable_monitoring_stages) {
                     stage('Prepare Monitoring Server') {
-                        // Block ready to support maintenance update for monitoring server
-                        /*
                         if (params.must_add_MU_repositories) {
                             echo 'Add Server Monitoring MUs'
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start adding Maintenance Update repositories'
                             }
                             echo 'Add custom channels and MU repositories'
-                            res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_monitoring_server'")
+                            res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${params.monitoring_sle_version}_minion'")
                             echo "Custom channels and MU repositories status code: ${res_mu_repos}"
 
                             res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'")
@@ -136,7 +134,6 @@ def run(params) {
                             sh "exit \$(( ${res_mu_repos}|${res_sync_mu_repos} ))"
                         }
 
-                         */
                         if (params.must_add_keys) {
                             echo 'Add server monitoring activation key'
                             if (params.confirm_before_continue) {
@@ -150,7 +147,7 @@ def run(params) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start creating the Server Monitoring bootstrap repository'
                             }
-                            res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_monitoring_server")
+                            res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_monitoring_server'")
                             echo "Create Server Monitoring bootstrap repository status code: ${res_create_bootstrap_repos}"
                         }
                     }
@@ -169,16 +166,17 @@ def run(params) {
                 println('Monitoring server bootstrap failed ')
             }
 
-            // Call the minion testing.
-            try {
-                if (params.enable_client_stages) {
+            if (params.enable_client_stages) {
+                // Call the minion testing.
+                try {
                     stage('Clients stages') {
                         clientTestingStages()
                     }
+
+                } catch (Exception ex) {
+                    println('ERROR: one or more clients have failed')
+                    env.client_stage_result_fail = true
                 }
-            } catch (Exception ex) {
-                println('ERROR: one or more clients have failed')
-                env.client_stage_result_fail = true
             }
 
             stage('Prepare and run Retail') {
@@ -287,6 +285,8 @@ def clientTestingStages() {
                             mu_sync_status[minion_name_without_ssh]
                         }
                         println "MU channel available for ${node} "
+                    } else if (node == "${params.monitoring_sle_version}_minion" && params.enable_monitoring_stages) {
+                        mu_sync_status[node] = true
                     } else {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'

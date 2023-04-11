@@ -1523,7 +1523,8 @@ module "monitoring-server" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //monitoring_additional_repos
+  //sle15sp4-minion_additional_repos
+
 }
 
 module "controller" {
