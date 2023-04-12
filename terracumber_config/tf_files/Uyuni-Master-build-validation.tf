@@ -1313,7 +1313,7 @@ module "ubuntu2204-sshminion" {
   name               = "minssh-ubuntu2204"
   image              = "ubuntu2204o"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:a57"
+    mac                = "aa:b2:93:02:01:a7"
     memory             = 4096
   }
   use_os_released_updates = false
