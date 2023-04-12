@@ -218,6 +218,7 @@ module "cucumber_testsuite" {
         os_pool = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
         os_update = var.UPDATE_REPO,
         os_additional_repo = var.ADDITIONAL_REPO_URL,
+        testing_overlay_devel_repo = "http://minima-mirror.mgr.prv.suse.net/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Testing-Overlay-POOL-x86_64-Media1/",
       }
       image = "opensuse154-ci-pr"
       additional_packages = [ "venv-salt-minion" ]
