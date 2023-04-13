@@ -197,7 +197,7 @@ module "base_new_sle" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" ]
+  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -1035,7 +1035,32 @@ module "slemicro53-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //slemicro52-minion_additional_repos
+  //slemicro53-minion_additional_repos
+
+}
+
+module "slemicro54-minion" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.3-released"
+  name               = "min-slemicro54"
+  image              = "slemicro54-ign"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:b2"
+   memory             = 2048
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  //slemicro54-minion_additional_repos
 
 }
 
@@ -1426,6 +1451,23 @@ module "slemicro53-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "slemicro54-sshminion" {
+ providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-slemicro54"
+  image              = "slemicro54-ign"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:d2"
+    memory             = 2048
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "sles12sp5-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
@@ -1616,6 +1658,9 @@ module "controller" {
 
   slemicro53_minion_configuration    = module.slemicro53-minion.configuration
   slemicro53_sshminion_configuration = module.slemicro53-sshminion.configuration
+
+  slemicro54_minion_configuration    = module.slemicro54-minion.configuration
+  slemicro54_sshminion_configuration = module.slemicro54-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
