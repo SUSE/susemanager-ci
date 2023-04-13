@@ -1035,7 +1035,7 @@ module "slemicro53-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  //slemicro52-minion_additional_repos
+  //slemicro53-minion_additional_repos
 
 }
 
