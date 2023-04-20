@@ -118,7 +118,7 @@ module "base_core" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-"
+  name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp4o", "opensuse154o" ]
@@ -144,7 +144,7 @@ module "base_old_sle" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-"
+  name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles12sp4o", "sles12sp5o" ]
@@ -169,7 +169,7 @@ module "base_res" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-"
+  name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
@@ -194,7 +194,7 @@ module "base_new_sle" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-"
+  name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign"  ]
@@ -219,7 +219,7 @@ module "base_retail" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-"
+  name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse154o" ]
@@ -245,7 +245,7 @@ module "base_debian" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-"
+  name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o" ]
@@ -270,7 +270,7 @@ module "base_arm" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-"
+  name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "opensuse154armo" ]
@@ -335,7 +335,7 @@ module "proxy" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-srv.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-srv.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }
@@ -367,7 +367,7 @@ module "sles12sp4-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -391,7 +391,7 @@ module "sles12sp5-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -415,7 +415,7 @@ module "sles15sp1-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -439,7 +439,7 @@ module "sles15sp2-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -463,7 +463,7 @@ module "sles15sp3-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -487,7 +487,7 @@ module "sles15sp4-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -511,7 +511,7 @@ module "centos7-client" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_register           = false
   use_os_released_updates = false
@@ -537,7 +537,7 @@ module "sles12sp4-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -561,7 +561,7 @@ module "sles12sp5-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -586,7 +586,7 @@ module "sles15sp1-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -611,7 +611,7 @@ module "sles15sp2-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -636,7 +636,7 @@ module "sles15sp3-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -661,7 +661,7 @@ module "sles15sp4-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -685,7 +685,7 @@ module "alma9-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -709,7 +709,7 @@ module "centos7-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -735,7 +735,7 @@ module "liberty9-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -759,7 +759,7 @@ module "oracle9-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -783,7 +783,7 @@ module "rocky8-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -807,7 +807,7 @@ module "rocky9-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -831,7 +831,7 @@ module "ubuntu1804-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -855,7 +855,7 @@ module "ubuntu2004-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -879,7 +879,7 @@ module "ubuntu2204-minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -903,7 +903,7 @@ module "debian10-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -928,7 +928,7 @@ module "debian11-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -954,7 +954,7 @@ module "opensuse154arm-minion" {
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -979,7 +979,7 @@ module "slemicro51-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1004,7 +1004,7 @@ module "slemicro52-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1029,7 +1029,7 @@ module "slemicro53-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1054,7 +1054,7 @@ module "slemicro54-minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1185,7 +1185,7 @@ module "alma9-sshminion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -1228,7 +1228,7 @@ module "liberty9-sshminion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -1251,7 +1251,7 @@ module "oracle9-sshminion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -1483,7 +1483,7 @@ module "sles12sp5-buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1521,7 +1521,7 @@ module "sles15sp4-buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1559,7 +1559,7 @@ module "monitoring-server" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
