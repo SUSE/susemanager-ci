@@ -85,7 +85,8 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://salzbreze.mgr.suse.de/system"
+  //uri = "qemu+tcp://suma-01.mgr.suse.de/system"
+  uri = "qemu+tcp://10.137.208.130/system"
 }
 
 module "cucumber_testsuite" {
@@ -109,13 +110,13 @@ module "cucumber_testsuite" {
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "registry.mgr.suse.de:5000/cucutest"
+  no_auth_registry       = "registry.mgr.suse.de"
+  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror.mgr.suse.de:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
@@ -188,7 +189,6 @@ module "cucumber_testsuite" {
     }
     build-host = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:9d"
         memory = 2048
@@ -209,6 +209,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
+  nested_vm_host = "min-nested"
   provider_settings = {
     pool = "ssd"
     network_name = null
