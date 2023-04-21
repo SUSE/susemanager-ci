@@ -107,20 +107,20 @@ module "cucumber_testsuite" {
 
   images = ["centos7o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 
-  use_avahi = false
-  name_prefix = "suma-43-"
-  domain = "mgr.prv.suse.net"
-  from_email = "root@suse.de"
+  use_avahi    = false
+  name_prefix  = "suma-43-"
+  domain       = "mgr.prv.suse.net"
+  from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.prv.suse.net"
-  auth_registry = "registry.mgr.prv.suse.net:5000/cucutest"
+  no_auth_registry       = "registry.mgr.prv.suse.net"
+  auth_registry          = "registry.mgr.prv.suse.net:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 
-  mirror = "minima-mirror.mgr.prv.suse.net"
-  use_mirror_images = true
-  server_http_proxy = "http-proxy.mgr.prv.suse.net:3128"
+  mirror                   = "minima-mirror.mgr.prv.suse.net"
+  use_mirror_images        = true
+  server_http_proxy        = "http-proxy.mgr.prv.suse.net:3128"
   custom_download_endpoint = "ftp://minima-mirror.mgr.prv.suse.net:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
