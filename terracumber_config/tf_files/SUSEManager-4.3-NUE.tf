@@ -85,8 +85,8 @@ terraform {
 }
 
 provider "libvirt" {
-  //uri = "qemu+tcp://suma-01.mgr.suse.de/system"
-  uri = "qemu+tcp://10.137.208.130/system"
+  uri = "qemu+tcp://suma-01-a.mgr.suse.de/system"
+  //uri = "qemu+tcp://10.137.208.130/system"
 }
 
 module "cucumber_testsuite" {
