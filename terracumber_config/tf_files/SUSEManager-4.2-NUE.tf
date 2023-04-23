@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://ramrod.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-01.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -123,16 +123,22 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:80"
+        vcpu = 2
+        memory = 2048
       }
     }
     server = {
       provider_settings = {
         mac = "aa:b2:93:01:00:81"
+        vcpu = 4
+        memory = 16384
       }
     }
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:82"
+        vcpu = 2
+        memory = 2048
       }
     }
     suse-client = {
@@ -140,6 +146,8 @@ module "cucumber_testsuite" {
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:84"
+        vcpu = 2
+        memory = 2048
       }
     }
     suse-minion = {
@@ -147,6 +155,8 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:86"
+        vcpu = 2
+        memory = 2048
       }
     }
     suse-sshminion = {
@@ -154,6 +164,8 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:88"
+        vcpu = 2
+        memory = 2048
       }
     }
     redhat-minion = {
@@ -162,14 +174,18 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:89"
         // Openscap cannot run with less than 1.25 GB of RAM
-        memory = 1280
+        vcpu = 2
+        memory = 2048
       }
+      install_salt_bundle = true
     }
     debian-minion = {
       name = "min-ubuntu2004"
       image = "ubuntu2004o"
       provider_settings = {
         mac = "aa:b2:93:01:00:8c"
+        vcpu = 2
+        memory = 2048
       }
     }
     build-host = {
@@ -177,20 +193,28 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:8d"
+        vcpu = 2
         memory = 2048
       }
     }
     pxeboot-minion = {
       image = "sles15sp3o"
+      provider_settings = {
+        vcpu = 2
+        memory = 2048
+      }
     }
     kvm-host = {
       image = "sles15sp3o"
       name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:93:01:00:8e"
+        vcpu = 4
+        memory = 4096
       }
     }
   }
+  nested_vm_host = "min-nested"
   provider_settings = {
     pool = "ssd"
     network_name = null
