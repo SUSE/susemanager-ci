@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://ramrod.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-01.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -123,17 +123,22 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:b0"
+        vcpu = 2
+        memory = 2048
       }
     }
     server = {
       provider_settings = {
         mac = "aa:b2:93:01:00:b1"
-        memory = 12288
+        vcpu = 8
+        memory = 32767
       }
     }
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:b2"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -143,6 +148,8 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:b6"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -152,6 +159,8 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:b8"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -163,8 +172,8 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:b9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
         vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -174,6 +183,8 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:93:01:00:bb"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -183,6 +194,7 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:bd"
+        vcpu = 2
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
@@ -210,6 +222,8 @@ module "cucumber_testsuite" {
       }
       provider_settings = {
         mac = "aa:b2:93:01:00:be"
+        vcpu = 4
+        memory = 4096
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
