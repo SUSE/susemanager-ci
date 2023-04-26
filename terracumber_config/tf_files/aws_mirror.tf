@@ -136,6 +136,7 @@ module "base" {
     key_name = var.KEY_NAME
     key_file = var.KEY_FILE
   }
+  images = ["rocky8", "opensuse154o", "sles15sp4o", "ubuntu2204"]
 }
 
 
@@ -146,6 +147,7 @@ module "mirror" {
   provider_settings = {
     public_instance = true
   }
+  image = "opensuse154o"
 }
 
 
