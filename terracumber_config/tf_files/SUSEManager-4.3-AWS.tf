@@ -184,7 +184,9 @@ module "server" {
   use_os_released_updates        = false
   disable_download_tokens        = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
+  provider_settings = {
+    instance_type = "m6a.xlarge"
+  }
   //server_additional_repos
 
 }
@@ -309,6 +311,9 @@ module "build-host"  {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.large"
+  }
 }
 
 module "controller" {
@@ -319,6 +324,7 @@ module "controller" {
     memory             = 16384
     vcpu               = 8
   }
+  image = "opensuse154o"
   swap_file_size = null
   no_mirror = true
   is_using_build_image = false
