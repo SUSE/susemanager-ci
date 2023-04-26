@@ -324,7 +324,6 @@ module "controller" {
     memory             = 16384
     vcpu               = 8
   }
-  image = "opensuse154o"
   swap_file_size = null
   no_mirror = true
   is_using_build_image = false
