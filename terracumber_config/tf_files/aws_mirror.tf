@@ -136,7 +136,6 @@ module "base" {
     key_name = var.KEY_NAME
     key_file = var.KEY_FILE
   }
-  images = ["rocky8", "opensuse154o", "sles15sp4o", "ubuntu2204"]
 }
 
 
