@@ -115,7 +115,8 @@ module "server" {
   additional_repos        = { }
   provider_settings = {
     mac = "aa:b2:93:01:00:e1"
-    memory = 8192
+    vcpu = 4
+    memory = 16384
   }
 }
 
@@ -133,6 +134,8 @@ module "suse-minion" {
 
   provider_settings = {
     mac = "aa:b2:93:01:00:e6"
+    vcpu = 2
+    memory = 2048
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -150,8 +153,8 @@ module "redhat-minion" {
     mac = "aa:b2:93:01:00:e9"
     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
     // Also, openscap cannot run with less than 1.25 GB of RAM
-    memory = 2048
     vcpu = 2
+    memory = 2048
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -167,6 +170,8 @@ module "debian-minion" {
 
   provider_settings = {
     mac = "aa:b2:93:01:00:eb"
+    vcpu = 2
+    memory = 2048
   }
   additional_packages = [ "venv-salt-minion" ]
 
@@ -185,6 +190,8 @@ module "build-host" {
 
   provider_settings = {
     mac = "aa:b2:93:01:00:ed"
+    vcpu = 2
+    memory = 2048
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -200,6 +207,8 @@ module "kvm-minion" {
 
   provider_settings = {
     mac = "aa:b2:93:01:00:ee"
+    vcpu = 2
+    memory = 2048
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
