@@ -230,6 +230,9 @@ module "suse-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
   //sle15sp4-client_additional_repos
 }
 
@@ -246,6 +249,9 @@ module "suse-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
   //sle15sp4-minion_additional_repos
 
 }
@@ -262,6 +268,9 @@ module "suse-sshminion" {
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   additional_packages = [ "venv-salt-minion" , "iptables"]
   install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 
 }
 
@@ -273,7 +282,7 @@ module "redhat-minion"  {
     // Also, openscap cannot run with less than 1.25 GB of RAM
     memory = 2048
     vcpu = 2
-    instance_type = "t2.micro"
+    instance_type = "t3a.medium"
   }
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -296,6 +305,9 @@ module "debian-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 }
 
 module "build-host"  {
