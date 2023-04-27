@@ -91,7 +91,7 @@ module "base" {
   name_prefix = "uyuni-refmaster-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = ["rocky8o", "opensuse154o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "ubuntu2204o"]
+  images      = ["rocky8o", "opensuse154o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
 
   provider_settings = {
     pool         = "ssd"
