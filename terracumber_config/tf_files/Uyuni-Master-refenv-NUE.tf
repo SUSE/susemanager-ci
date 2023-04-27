@@ -96,7 +96,7 @@ module "base" {
   provider_settings = {
     pool         = "ssd"
     network_name = null
-    bridge       = "br2"
+    bridge       = "br0"
   }
 }
 
