@@ -135,7 +135,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d1"
         vcpu = 4
-        memory = 12288
+        memory = 16384
       }
       login_timeout = 28800
     }
@@ -232,8 +232,8 @@ module "cucumber_testsuite" {
       }
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
-        vcpu = 2
-        memory = 2048
+        vcpu = 4
+        memory = 4096
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
