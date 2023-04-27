@@ -126,8 +126,6 @@ module "suse-minion" {
   product_version    = "uyuni-master"
   name               = "min-sles15"
   image              = "sles15sp3o"
-  evil_minion_count = 10
-  evil_minion_slowdown_factor = 1
 
   server_configuration    = module.server.configuration
   use_os_released_updates = true
