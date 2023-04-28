@@ -9,17 +9,20 @@ node('sumaform-cucumber-provo') {
             'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, ' +
             'alma9_minion, alma9_ssh_minion, ' +
             'centos7_client, centos7_minion, centos7_ssh_minion, ' +
+            'liberty9_minion, liberty9_ssh_minion, ' +
+            'oracle9_minion, oracle9_ssh_minion, ' +
             'rocky8_minion, rocky8_ssh_minion, rocky9_minion, rocky9_ssh_minion, ' +
-            'ubuntu1804_minion, ubuntu1804_ssh_minion, ubuntu2004_minion, ubuntu2004_ssh_minion, ' +
+            'ubuntu1804_minion, ubuntu1804_ssh_minion, ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
             'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, ' +
-            'opensuse154arm_minion, opensuse154arm_ssh_minion'
+            'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
+            'slemicro51_minion, slemicro51_ssh_minion, slemicro52_minion, slemicro52_ssh_minion, slemicro53_minion, slemicro53_ssh_minion, slemicro54_minion, slemicro54_ssh_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         parameters([
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'Manager-4.2', description: 'Branch prepared for the MU tested'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.2-build-validation.tf', description: 'Path to the tf file to be used'),
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/Uyuni-Master-build-validation-PRV.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
@@ -34,15 +37,11 @@ node('sumaform-cucumber-provo') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
-            string(name: 'monitoring_sle_version', defaultValue: 'sle15sp3', description: 'Server version used by monitoring server'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
             booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
-            booleanParam(name: 'enable_proxy_stages', defaultValue: true, description: 'Run Proxy stages'),
-            booleanParam(name: 'enable_monitoring_stages', defaultValue: true, description: 'Run Monitoring stages'),
-            booleanParam(name: 'enable_client_stages', defaultValue: true, description: 'Run Client stages'),
             booleanParam(name: 'must_add_MU_repositories', defaultValue: true, description: 'Add MU channels'),
             booleanParam(name: 'must_add_non_MU_repositories', defaultValue: true, description: 'Add non MU channels'),
             booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
