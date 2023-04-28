@@ -348,9 +348,6 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = true
   ssh_key_path              = "./salt/controller/id_rsa.pub"
-
-  //proxy_additional_repos
-
 }
 
 module "sles12sp4-client" {
@@ -372,9 +369,6 @@ module "sles12sp4-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle12sp4-client_additional_repos
-
 }
 
 module "sles12sp5-client" {
@@ -396,9 +390,6 @@ module "sles12sp5-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle12sp5-client_additional_repos
-
 }
 
 module "sles15sp1-client" {
@@ -420,9 +411,6 @@ module "sles15sp1-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp1-client_additional_repos
-
 }
 
 module "sles15sp2-client" {
@@ -444,9 +432,6 @@ module "sles15sp2-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp2-client_additional_repos
-
 }
 
 module "sles15sp3-client" {
@@ -468,9 +453,6 @@ module "sles15sp3-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp3-client_additional_repos
-
 }
 
 module "sles15sp4-client" {
@@ -492,9 +474,6 @@ module "sles15sp4-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp4-client_additional_repos
-
 }
 
 module "centos7-client" {
@@ -516,8 +495,6 @@ module "centos7-client" {
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //ceos7-client_additional_repos
 
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -542,9 +519,6 @@ module "sles12sp4-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle12sp4-minion_additional_repos
-
 }
 
 module "sles12sp5-minion" {
@@ -566,9 +540,6 @@ module "sles12sp5-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle12sp5-minion_additional_repos
-
 }
 
 module "sles15sp1-minion" {
@@ -591,9 +562,6 @@ module "sles15sp1-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp1-minion_additional_repos
-
 }
 
 module "sles15sp2-minion" {
@@ -616,9 +584,6 @@ module "sles15sp2-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp2-minion_additional_repos
-
 }
 
 module "sles15sp3-minion" {
@@ -641,9 +606,6 @@ module "sles15sp3-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp3-minion_additional_repos
-
 }
 
 module "sles15sp4-minion" {
@@ -666,9 +628,6 @@ module "sles15sp4-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp4-minion_additional_repos
-
 }
 
 module "alma9-minion" {
@@ -690,9 +649,6 @@ module "alma9-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //alma9-minion_additional_repos
-
 }
 
 module "centos7-minion" {
@@ -714,8 +670,6 @@ module "centos7-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //ceos7-minion_additional_repos
 
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -740,9 +694,6 @@ module "liberty9-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //liberty9-minion_additional_repos
-
 }
 
 module "oracle9-minion" {
@@ -764,9 +715,6 @@ module "oracle9-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //oracle9-minion_additional_repos
-
 }
 
 module "rocky8-minion" {
@@ -788,9 +736,6 @@ module "rocky8-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //rocky8-minion_additional_repos
-
 }
 
 module "rocky9-minion" {
@@ -812,9 +757,6 @@ module "rocky9-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //rocky9-minion_additional_repos
-
 }
 
 module "ubuntu1804-minion" {
@@ -836,9 +778,6 @@ module "ubuntu1804-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //ubuntu1804-minion_additional_repos
-
 }
 
 module "ubuntu2004-minion" {
@@ -860,9 +799,6 @@ module "ubuntu2004-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //ubuntu2004-minion_additional_repos
-
 }
 
 module "ubuntu2204-minion" {
@@ -908,9 +844,6 @@ module "debian10-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //debian10-minion_additional_repos
-
 }
 
 module "debian11-minion" {
@@ -933,9 +866,6 @@ module "debian11-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //debian11-minion_additional_repos
-
 }
 
 module "opensuse154arm-minion" {
@@ -959,9 +889,6 @@ module "opensuse154arm-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //opensuse154arm-minion_additional_repos
-
 }
 
 module "slemicro51-minion" {
@@ -984,9 +911,6 @@ module "slemicro51-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //slemicro51-minion_additional_repos
-
 }
 
 module "slemicro52-minion" {
@@ -1009,9 +933,6 @@ module "slemicro52-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //slemicro52-minion_additional_repos
-
 }
 
 module "slemicro53-minion" {
@@ -1034,9 +955,6 @@ module "slemicro53-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //slemicro53-minion_additional_repos
-
 }
 
 module "slemicro54-minion" {
@@ -1059,9 +977,6 @@ module "slemicro54-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //slemicro54-minion_additional_repos
-
 }
 
 module "sles12sp4-sshminion" {
@@ -1189,9 +1104,6 @@ module "alma9-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //alma9-sshminion_additional_repos
-
 }
 
 module "centos7-sshminion" {
@@ -1232,9 +1144,6 @@ module "liberty9-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //liberty9-sshminion_additional_repos
-
 }
 
 module "oracle9-sshminion" {
@@ -1255,9 +1164,6 @@ module "oracle9-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //oracle9-sshminion_additional_repos
-
 }
 
 module "rocky8-sshminion" {
@@ -1564,8 +1470,6 @@ module "monitoring-server" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //monitoring_additional_repos
 }
 
 module "controller" {
