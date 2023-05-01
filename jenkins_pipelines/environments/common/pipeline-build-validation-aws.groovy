@@ -400,8 +400,8 @@ def run(params) {
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
                 // Fail pipeline if client stages failed
-                sh "echo 'Client stage value ${env.client_stage_result_fail}'"
-                if (env.client_stage_result_fail) {
+                sh "echo 'Client stage value ${env.client_stage_result_fail} and result ${result_error}'"
+                if (client_stage_result_fail) {
                     error("Client stage failed")
                 }
                 sh "exit ${result_error}"
