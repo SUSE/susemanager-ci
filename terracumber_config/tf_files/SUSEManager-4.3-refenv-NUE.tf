@@ -68,6 +68,16 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "GIT_USER" {
+  type = string
+  default = null // Not needed for master, as it is public
+}
+
+variable "GIT_PASSWORD" {
+  type = string
+  default = null // Not needed for master, as it is public
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
