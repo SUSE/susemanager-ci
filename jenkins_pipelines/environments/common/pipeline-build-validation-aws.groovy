@@ -22,7 +22,7 @@ def run(params) {
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
-        env.client_stage_result_fail = false
+        def client_stage_result_fail = false
 
         local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir}"
         aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir}"
@@ -332,7 +332,7 @@ def run(params) {
 
                 } catch (Exception ex) {
                     println('ERROR: one or more clients have failed')
-                    env.client_stage_result_fail = true
+                    client_stage_result_fail = true
                 }
             }
 
@@ -400,10 +400,10 @@ def run(params) {
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
                 // Fail pipeline if client stages failed
-                sh "echo 'Client stage value ${env.client_stage_result_fail} and result ${result_error}'"
-                sh "echo 'Type of env.client_stage_result_fail: ${env.client_stage_result_fail.getClass()}'"
-                if (env.client_stage_result_fail.toBoolean()) {
-                    sh "echo 'Client stage variableClient stage value ${env.client_stage_result_fail} and result ${result_error}'"
+                sh "echo 'Client stage value ${client_stage_result_fail} and result ${result_error}'"
+                sh "echo 'Type of env.client_stage_result_fail: ${client_stage_result_fail.getClass()}'"
+                if (client_stage_result_fail) {
+                    sh "echo 'Client stage variableClient stage value ${client_stage_result_fail} and result ${result_error}'"
                     error("Client stage failed")
                 }
                 sh "exit ${result_error}"
