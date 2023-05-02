@@ -177,9 +177,6 @@ module "server" {
 }
 
 module "proxy" {
-  providers = {
-    libvirt = libvirt.terminus
-  }
   source             = "./modules/proxy"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -205,9 +202,6 @@ module "proxy" {
 }
 
 module "sles12sp4-client" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -226,9 +220,6 @@ module "sles12sp4-client" {
 }
 
 module "sles12sp5-client" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -247,9 +238,6 @@ module "sles12sp5-client" {
 }
 
 module "sles15sp1-client" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -268,9 +256,6 @@ module "sles15sp1-client" {
 }
 
 module "sles15sp2-client" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -289,9 +274,6 @@ module "sles15sp2-client" {
 }
 
 module "sles15sp3-client" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -310,9 +292,6 @@ module "sles15sp3-client" {
 }
 
 module "sles15sp4-client" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -331,9 +310,6 @@ module "sles15sp4-client" {
 }
 
 module "centos7-client" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/client"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -355,9 +331,6 @@ module "centos7-client" {
 }
 
 module "sles12sp4-minion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -376,9 +349,6 @@ module "sles12sp4-minion" {
 }
 
 module "sles12sp5-minion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -397,9 +367,6 @@ module "sles12sp5-minion" {
 }
 
 module "sles15sp1-minion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -419,9 +386,6 @@ module "sles15sp1-minion" {
 }
 
 module "sles15sp2-minion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -441,9 +405,6 @@ module "sles15sp2-minion" {
 }
 
 module "sles15sp3-minion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -463,9 +424,6 @@ module "sles15sp3-minion" {
 }
 
 module "sles15sp4-minion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -485,9 +443,6 @@ module "sles15sp4-minion" {
 }
 
 module "centos7-minion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -509,9 +464,6 @@ module "centos7-minion" {
 }
 
 module "rocky8-minion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -530,9 +482,6 @@ module "rocky8-minion" {
 }
 
 module "ubuntu1804-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -551,9 +500,6 @@ module "ubuntu1804-minion" {
 }
 
 module "ubuntu2004-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -574,9 +520,6 @@ module "ubuntu2004-minion" {
 // Ubuntu 22.04 is not supported by SUSE Manager 4.2
 
 module "debian10-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -596,9 +539,6 @@ module "debian10-minion" {
 }
 
 module "debian11-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -641,9 +581,6 @@ module "opensuse154arm-minion" {
 }
 
 module "sles12sp4-sshminion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -660,9 +597,6 @@ module "sles12sp4-sshminion" {
 }
 
 module "sles12sp5-sshminion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -679,9 +613,6 @@ module "sles12sp5-sshminion" {
 }
 
 module "sles15sp1-sshminion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -697,9 +628,6 @@ module "sles15sp1-sshminion" {
 }
 
 module "sles15sp2-sshminion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -714,9 +642,6 @@ module "sles15sp2-sshminion" {
 }
 
 module "sles15sp3-sshminion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -731,9 +656,6 @@ module "sles15sp3-sshminion" {
 }
 
 module "sles15sp4-sshminion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -748,9 +670,6 @@ module "sles15sp4-sshminion" {
 }
 
 module "centos7-sshminion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -768,9 +687,6 @@ module "centos7-sshminion" {
 }
 
 module "rocky8-sshminion" {
-  providers = {
-    libvirt = libvirt.tatooine
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -785,9 +701,6 @@ module "rocky8-sshminion" {
 }
 
 module "ubuntu1804-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -802,9 +715,6 @@ module "ubuntu1804-sshminion" {
 }
 
 module "ubuntu2004-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -821,9 +731,6 @@ module "ubuntu2004-sshminion" {
 // Ubuntu 22.04 is not supported by SUSE Manager 4.2
 
 module "debian10-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -838,9 +745,6 @@ module "debian10-sshminion" {
 }
 
 module "debian11-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -874,9 +778,6 @@ module "opensuse154arm-sshminion" {
 }
 
 module "sles12sp5-buildhost" {
-  providers = {
-    libvirt = libvirt.terminus
-  }
   source             = "./modules/build_host"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -896,9 +797,6 @@ module "sles12sp5-buildhost" {
 }
 
 module "sles12sp5-terminal" {
-  providers = {
-    libvirt = libvirt.terminus
-  }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_core.configuration
   name               = "terminal-sles12sp5"
@@ -912,9 +810,6 @@ module "sles12sp5-terminal" {
 }
 
 module "sles15sp3-buildhost" {
-  providers = {
-    libvirt = libvirt.terminus
-  }
   source             = "./modules/build_host"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
@@ -934,9 +829,6 @@ module "sles15sp3-buildhost" {
 }
 
 module "sles15sp3-terminal" {
-  providers = {
-    libvirt = libvirt.terminus
-  }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_core.configuration
   name               = "terminal-sles15sp3"
@@ -950,9 +842,6 @@ module "sles15sp3-terminal" {
 }
 
 module "monitoring-server" {
-  providers = {
-    libvirt = libvirt.terminus
-  }
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
