@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-06.mgr.suse.de/system"
 }
 
 provider "libvirt" {
