@@ -89,8 +89,8 @@ provider "libvirt" {
 }
 
 provider "libvirt" {
-  alias = "overdrive4"
-  uri = "qemu+tcp://overdrive4.mgr.suse.de/system"
+  alias = "overdrive3"
+  uri = "qemu+tcp://overdrive3.mgr.suse.de/system"
 }
 
 module "base_core" {
@@ -117,7 +117,7 @@ module "base_core" {
 
 module "base_arm" {
   providers = {
-    libvirt = libvirt.overdrive4
+    libvirt = libvirt.overdrive3
   }
 
   source = "./modules/base"
@@ -619,7 +619,7 @@ module "debian11-minion" {
 
 module "opensuse154arm-minion" {
   providers = {
-    libvirt = libvirt.overdrive4
+    libvirt = libvirt.overdrive3
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
@@ -856,7 +856,7 @@ module "debian11-sshminion" {
 
 module "opensuse154arm-sshminion" {
   providers = {
-    libvirt = libvirt.overdrive4
+    libvirt = libvirt.overdrive3
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
