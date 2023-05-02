@@ -8,7 +8,7 @@ def run(params) {
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
-        env.client_stage_result_fail = false
+        def client_stage_result_fail = false
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
@@ -175,7 +175,7 @@ def run(params) {
 
                 } catch (Exception ex) {
                     println('ERROR: one or more clients have failed')
-                    env.client_stage_result_fail = true
+                    client_stage_result_fail = true
                 }
             }
 
@@ -243,7 +243,7 @@ def run(params) {
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
                 // Fail pipeline if client stages failed
-                if (env.client_stage_result_fail) {
+                if (client_stage_result_fail) {
                     error("Client stage failed")
                 }
                 sh "exit ${result_error}"
