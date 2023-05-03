@@ -12,7 +12,7 @@ node('sumaform-cucumber') {
             ),
             string(
               name: 'ISO_URL',
-              defaultValue: 'http://download.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/QR:/TEST/images/iso/SLE-15-SP4-Full-x86_64-Media1.iso',
+              defaultValue: 'http://download.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/QR:/TEST/images/iso/SLE-15-SP4-Online-x86_64-Media1.iso',
               description: 'Enter the URL of the image you want to test in http, NOT https'
             )
         ])
