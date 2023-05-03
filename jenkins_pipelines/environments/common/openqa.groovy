@@ -4,7 +4,7 @@ def run(params) {
             stage('Installation') {
               steps {
                 script {
-                  if (params['Installation Type'] == 'Online') {
+                  if (params.Installation_Type == 'online') {
                     sh 'ssh -v -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de; cd /root/openqa-suma-installation; cp params-run-installation-43_online.json params-run-installation-43.json;'
                   } else {
                     sh 'ssh -v -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de; cd /root/openqa-suma-installation; cp params-run-installation-43_full.json params-run-installation-43.json;'

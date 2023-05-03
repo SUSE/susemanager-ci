@@ -5,11 +5,7 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         parameters([
-            string(
-              name: 'Installation_Type',
-              defaultValue: 'Online',
-              description: 'Select the type of installation'
-            )
+            choice(name: 'Installation_Type', choices: ['online', 'offline'], description: 'Select the type of installation you want, with SCC registration it uses Online, without SCC it uses Offline'),
             string(
               name: 'ISO_URL',
               defaultValue: '',
