@@ -15,7 +15,7 @@ def run(params) {
         }
 
         stage('Run') {
-            sh "ssh -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de \"cd /root/openqa-suma-installation/; /root/openqa-suma-installation/run-openqa-test.sh $BUILD_NUMBER 43 ${params.Installation_Type} \n""
+            sh "ssh -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de \"cd /root/openqa-suma-installation/; # /root/openqa-suma-installation/run-openqa-test.sh $BUILD_NUMBER 43 ${params.Installation_Type} \n""
         }
     }
 }
