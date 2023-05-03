@@ -21,7 +21,7 @@ node('sumadocker-nue') {
     stage('SonarQube scanner') {
         sh "mkdir -p .sonar"
         dir("uyuni") {
-            sh "set +x; source /home/jenkins/.sonar-credentials; set -x; " +
+            sh "set +x; source /var/lib/jenkins/.sonar-credentials; set -x; " +
                 "docker run --rm -v \$PWD:/usr/src " +
                 "-v \$PWD/../.sonar:/opt/sonar-scanner/.sonar " +
                 "-e SONAR_LOGIN=\$SONAR_LOGIN " +
