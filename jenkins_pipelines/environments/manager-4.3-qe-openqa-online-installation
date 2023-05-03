@@ -5,7 +5,10 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         parameters([
-            choice(name: 'Installation_Type', choices: ['online', 'offline'], description: 'Select the type of installation you want, with SCC registration it uses Online, without SCC it uses Offline'),
+            string(
+              name: 'Installation_Type',
+              defaultValue: 'online',
+              description: 'online or offline, do not touch'
             string(
               name: 'ISO_URL',
               defaultValue: 'http://download.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/QR:/TEST/images/iso/SLE-15-SP4-Full-x86_64-Media1.iso',
