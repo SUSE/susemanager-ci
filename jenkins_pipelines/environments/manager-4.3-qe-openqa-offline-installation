@@ -9,6 +9,7 @@ node('sumaform-cucumber') {
               name: 'Installation_Type',
               defaultValue: 'offline',
               description: 'online or offline, do not touch'
+            )
             string(
               name: 'ISO_URL',
               defaultValue: 'http://download.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/QR:/TEST/images/iso/SLE-15-SP4-Full-x86_64-Media1.iso',
