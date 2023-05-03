@@ -6,9 +6,9 @@ node('sumaform-cucumber') {
         disableConcurrentBuilds(),
         parameters([
           parameters {
-            choice(
+            string(
               name: 'Installation Type',
-              choices: ['Online', 'Offline'],
+              defaultValue: 'Online',
               description: 'Select the type of installation'
             )
             string(
