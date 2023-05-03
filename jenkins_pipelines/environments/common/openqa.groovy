@@ -10,12 +10,11 @@ def run(params) {
             }
         }
         stage('Configuration of ISO_URL') {
-            sh "ssh -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de \"cd /root/openqa-suma-installation; jq '. + {\\\"ISO_URL\\\": \\\"${params.ISO_URL}\\\" }' params-run-installation-43.json > params-run-installation-43.json.tmp && mv params-run-installation-43.json.tmp params-run-installation-43.json\""
+            sh "ssh -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de \"cd /root/openqa-suma-installation; jq '. + {\\\"ISO_URL\\\": \\\"${params.ISO_URL}\\\" }' params-run-installation-43.json > params-run-installation-43.json.tmp && mv params-run-installation-43.json.tmp params-run-installation-43.json; cat params-run-installation-43.json;\""
         }
 
         stage('Run') {
-            // sh 'ssh -v -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de "cd /root/openqa-suma-installation/;/root/openqa-suma-installation/run-openqa-test.sh $BUILD_NUMBER 43\n"'
-            sh 'ssh -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de "cd /root/openqa-suma-installation/;  cat params-run-installation-43.json;"'
+            sh 'ssh -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de "cd /root/openqa-suma-installation/; /root/openqa-suma-installation/run-openqa-test.sh $BUILD_NUMBER 43\n"'
         }
     }
 }
