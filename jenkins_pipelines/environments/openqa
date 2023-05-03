@@ -5,9 +5,8 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         parameters([
-          parameters {
             string(
-              name: 'Installation Type',
+              name: 'Installation_Type',
               defaultValue: 'Online',
               description: 'Select the type of installation'
             )
@@ -16,7 +15,6 @@ node('sumaform-cucumber') {
               defaultValue: '',
               description: 'Enter the URL of the image you want to test in http, NOT https'
             )
-          }
         ])
     ])
 
