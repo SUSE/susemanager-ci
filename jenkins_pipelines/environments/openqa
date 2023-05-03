@@ -8,7 +8,7 @@ node('sumaform-cucumber') {
             choice(name: 'Installation_Type', choices: ['online', 'offline'], description: 'Select the type of installation you want, with SCC registration it uses Online, without SCC it uses Offline'),
             string(
               name: 'ISO_URL',
-              defaultValue: '',
+              defaultValue: 'http://download.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/QR:/TEST/images/iso/SLE-15-SP4-Full-x86_64-Media1.iso',
               description: 'Enter the URL of the image you want to test in http, NOT https'
             )
         ])
