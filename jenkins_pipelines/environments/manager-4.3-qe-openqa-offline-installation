@@ -8,7 +8,7 @@ node('sumaform-cucumber') {
             string(
               name: 'Installation_Type',
               defaultValue: 'offline',
-              description: 'online or offline, do not touch'
+              description: 'online or offline, do not touch, this depends on which job you are running'
             ),
             string(
               name: 'ISO_URL',
