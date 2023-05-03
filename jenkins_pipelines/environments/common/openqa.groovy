@@ -10,7 +10,7 @@ def run(params) {
             }
         }
         stage('Configuration of ISO_URL') {
-            sh 'ssh -v -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de "cat params-run-installation-43.json | jq '. + {\"ISO_URL\": \"${params.ISO_URL}\" }' > params-run-installation-43.json"'
+            sh "ssh -v -o StrictHostKeyChecking=no root@openqa-executor.mgr.suse.de \"cat params-run-installation-43.json | jq '. + {\\\"ISO_URL\\\": \\\"${params.ISO_URL}\\\" }' > params-run-installation-43.json\""
         }
 
         stage('Run') {
