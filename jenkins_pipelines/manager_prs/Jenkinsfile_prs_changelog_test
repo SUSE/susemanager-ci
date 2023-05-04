@@ -23,7 +23,7 @@ pipeline {
         gitarro_local = 'ruby gitarro.rb'
         gitarro_changelog_test = "-r ${repository}" +
                 " -c changelog_test -d \"test if changelog was updated\" " +
-                " -t /home/jenkins/bin/changelog.rb " +
+                " -t /var/lib/jenkins/bin/changelog.rb " +
                 " -u ${env.BUILD_URL}" +
                 " -g \"${env.WORKSPACE}\" "
 

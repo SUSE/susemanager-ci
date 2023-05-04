@@ -76,11 +76,11 @@ pipeline {
             steps {
                 echo 'Run sonarcloud scanner'
                 sh "UYUNI_CLONE=`ls -d uyuni*`; " +
-                    "PR_BASE=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"base\"' | grep ref | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
-                    "PR_BRANCH=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"head\"' | grep ref | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
+                    "PR_BASE=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"base\"' | grep '\"ref\"' | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
+                    "PR_BRANCH=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"head\"' | grep '\"ref\"' | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
                     "cd \$UYUNI_CLONE; " +
                     "mkdir -p .sonar; " +
-                    "source /home/jenkins/.sonar-credentials; " +
+                    "source /var/lib/jenkins/.sonar-credentials; " +
                     "docker run --rm -v \$PWD:/usr/src " +
                         "-v \$PWD/../.sonar:/opt/sonar-scanner/.sonar " +
                         "-e SONAR_LOGIN " +
