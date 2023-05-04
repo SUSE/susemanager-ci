@@ -37,6 +37,7 @@ node('sumaform-cucumber-provo') {
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
             string(name: 'monitoring_sle_version', defaultValue: 'sle15sp4', description: 'Server version used by monitoring server'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
             booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
@@ -51,6 +52,7 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             booleanParam(name: 'must_prepare_retail', defaultValue: true, description: 'Prepare and run Retail'),
             booleanParam(name: 'must_run_containerization_tests', defaultValue: true, description: 'Run Containerization Tests'),
+            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format')
             ])
     ])
