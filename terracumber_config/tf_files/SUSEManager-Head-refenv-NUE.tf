@@ -68,6 +68,16 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "GIT_USER" {
+  type = string
+  default = null // Not needed for master, as it is public
+}
+
+variable "GIT_PASSWORD" {
+  type = string
+  default = null // Not needed for master, as it is public
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -82,127 +92,136 @@ provider "libvirt" {
   uri = "qemu+tcp://suma-02.mgr.suse.de/system"
 }
 
-module "base" {
-  source = "./modules/base"
+module "cucumber_testsuite" {
+  source = "./modules/cucumber_testsuite"
+
+  product_version = "head"
+
+  // Cucumber repository configuration for the controller
+  git_username = var.GIT_USER
+  git_password = var.GIT_PASSWORD
+  git_repo     = var.CUCUMBER_GITREPO
+  branch       = var.CUCUMBER_BRANCH
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  name_prefix = "suma-refhead-"
-  use_avahi   = false
-  domain      = "mgr.suse.de"
-  images      = ["rocky8o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
+
+  use_avahi    = false
+  name_prefix  = "suma-refhead-"
+  domain       = "mgr.suse.de"
+  from_email   = "root@suse.de"
+
+  no_auth_registry       = "registry.mgr.suse.de"
+  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
+  auth_registry_username = "cucutest"
+  auth_registry_password = "cucusecret"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+
+  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
+  custom_download_endpoint = "ftp://minima-mirror.mgr.suse.de:445"
+
+  # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
+  host_settings = {
+    controller = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:c0"
+        vcpu = 2
+        memory = 2048
+      }
+    }
+    server = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:c1"
+        vcpu = 4
+        memory = 16384
+      }
+    }
+    proxy = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:c2"
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    suse-minion = {
+      image = "sles15sp4o"
+      name = "min-sles15"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:c6"
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    suse-sshminion = {
+      image = "sles15sp4o"
+      name = "minssh-sles15"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:c8"
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion", "iptables" ]
+      install_salt_bundle = true
+    }
+    redhat-minion = {
+      image = "rocky8o"
+      name = "min-rocky8"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:c9"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    debian-minion = {
+      image = "ubuntu2204o"
+      name = "min-ubuntu2204"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:cb"
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    build-host = {
+      image = "sles15sp4o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:cd"
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    kvm-host = {
+      image = "sles15sp4o"
+      name = "min-kvm"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:ce"
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+  }
   provider_settings = {
-    pool         = "ssd"
+    pool = "ssd"
     network_name = null
-    bridge       = "br0"
+    bridge = "br0"
   }
 }
 
-module "server" {
-  source             = "./modules/server"
-  base_configuration = module.base.configuration
-  product_version    = "head"
-  name               = "srv"
-  monitored               = true
-  use_os_released_updates = true
-  disable_download_tokens = false
-  from_email              = "root@suse.de"
-  postgres_log_min_duration = 0
-  channels                = ["sle-product-sles15-sp3-pool-x86_64", "sle-product-sles15-sp3-updates-x86_64", "sle-module-basesystem15-sp3-pool-x86_64", "sle-module-basesystem15-sp3-updates-x86_64", "sle-module-containers15-sp3-pool-x86_64", "sle-module-containers15-sp3-updates-x86_64", "sle-manager-tools15-pool-x86_64-sp3", "sle-module-server-applications15-sp3-pool-x86_64", "sle-module-server-applications15-sp3-updates-x86_64", "sle-manager-tools15-beta-updates-x86_64-sp3", "sle-manager-tools15-beta-pool-x86_64-sp3", "sle-manager-tools15-updates-x86_64-sp3"]
-
-  provider_settings = {
-    mac = "aa:b2:93:01:00:c1"
-    vcpu = 4
-    memory = 16384
-  }
-}
-
-module "suse-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "head"
-  name               = "min-sles15"
-  image              = "sles15sp3o"
-
-  server_configuration    = module.server.configuration
-  use_os_released_updates = true
-
-  provider_settings = {
-    mac = "aa:b2:93:01:00:c6"
-    vcpu = 2
-    memory = 2048
-  }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "redhat-minion" {
-  source               = "./modules/minion"
-  base_configuration   = module.base.configuration
-  product_version      = "head"
-  name                 = "min-rocky8"
-  image                = "rocky8o"
-  server_configuration = module.server.configuration
-
-  provider_settings = {
-    mac = "aa:b2:93:01:00:c9"
-    // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-    // Also, openscap cannot run with less than 1.25 GB of RAM
-    vcpu = 2
-    memory = 2048
-  }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "debian-minion" {
-  source               = "./modules/minion"
-  base_configuration   = module.base.configuration
-  product_version      = "head"
-  name                 = "min-ubuntu2204"
-  image                = "ubuntu2204o"
-  server_configuration = module.server.configuration
-
-  provider_settings = {
-    mac = "aa:b2:93:01:00:cb"
-    vcpu = 2
-    memory = 2048
-  }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "build-host" {
-  source                  = "./modules/build_host"
-  base_configuration      = module.base.configuration
-  product_version         = "head"
-  name                    = "min-build"
-  image                   = "sles15sp3o"
-  server_configuration    = module.server.configuration
-
-  provider_settings = {
-    mac = "aa:b2:93:01:00:cd"
-    vcpu = 2
-    memory = 2048
-  }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "kvm-minion" {
-  source               = "./modules/virthost"
-  base_configuration   = module.base.configuration
-  product_version      = "head"
-  name                 = "min-kvm"
-  image                = "sles15sp3o"
-  server_configuration = module.server.configuration
-
-  provider_settings = {
-    mac = "aa:b2:93:01:00:ce"
-    vcpu = 2
-    memory = 2048
-  }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
+output "configuration" {
+  value = module.cucumber_testsuite.configuration
 }
