@@ -110,7 +110,7 @@ module "base_core" {
 
   provider_settings = {
     pool        = "ssd"
-    bridge      = "br1"
+    bridge      = "br0"
     additional_network = "192.168.43.0/24"
   }
 }
