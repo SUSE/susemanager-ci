@@ -648,6 +648,9 @@ module "debian11-minion" {
 }
 
 module "opensuse154arm-minion" {
+  providers = {
+    libvirt = libvirt.overdrive3
+  }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "4.3-released"
@@ -1001,6 +1004,9 @@ module "debian11-sshminion" {
 }
 
 module "opensuse154arm-sshminion" {
+  providers = {
+    libvirt = libvirt.overdrive3
+  }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "4.3-released"
