@@ -123,12 +123,13 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:70"
+        vcpu = 2
       }
     }
     server = {
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
-        memory = 10240
+        memory = 16384
       }
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/4_3-SLE_15_SP4/"
