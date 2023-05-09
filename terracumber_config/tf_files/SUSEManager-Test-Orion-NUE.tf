@@ -172,6 +172,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "centos7o"
+      name = "min-centos7"
       provider_settings = {
         mac = "aa:b2:93:01:00:79"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
