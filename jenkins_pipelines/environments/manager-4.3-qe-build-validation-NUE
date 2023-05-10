@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('sumaform-cucumber-provo') {
+node('sumaform-cucumber') {
     def minionList = 'sle12sp4_client, sle12sp4_minion, sle12sp4_ssh_minion, ' +
             'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, ' +
             'sle15sp1_client, sle15sp1_minion, sle15sp1_ssh_minion, ' +
@@ -22,7 +22,7 @@ node('sumaform-cucumber-provo') {
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'Manager-4.3', description: 'Branch prepared for the MU tested'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.3-SLE-update.tf', description: 'Path to the tf file to be used'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.3-build-validation-NUE.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
@@ -32,28 +32,34 @@ node('sumaform-cucumber-provo') {
             // Temporary: should move to uyuni-project
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            string(name: 'non_MU_channels_tasks_file', defaultValue: 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json', description: 'Path to JSON run set file for non MU repositories'),
             extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
             string(name: 'monitoring_sle_version', defaultValue: 'sle15sp4', description: 'Server version used by monitoring server'),
-            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
+            booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
             booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
             booleanParam(name: 'enable_proxy_stages', defaultValue: true, description: 'Run Proxy stages'),
-            booleanParam(name: 'enable_monitoring_stages', defaultValue: false, description: 'Run Monitoring stages'),
+            booleanParam(name: 'enable_monitoring_stages', defaultValue: true, description: 'Run Monitoring stages'),
             booleanParam(name: 'enable_client_stages', defaultValue: true, description: 'Run Client stages'),
             booleanParam(name: 'must_add_MU_repositories', defaultValue: true, description: 'Add MU channels'),
             booleanParam(name: 'must_add_non_MU_repositories', defaultValue: true, description: 'Add non MU channels'),
             booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
             booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
-            booleanParam(name: 'must_boot_node', defaultValue: true, description: 'Bootstrap Node'),
+            booleanParam(name: 'must_boot_proxy', defaultValue: true, description: 'Bootstrap Proxy'),
+            booleanParam(name: 'must_boot_monitoring', defaultValue: true, description: 'Bootstrap Monitoring Server'),
+            booleanParam(name: 'must_boot_clients', defaultValue: true, description: 'Bootstrap clients'),
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
-            booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
-            booleanParam(name: 'must_run_containerization_tests', defaultValue: false, description: 'Run Containerization Tests'),
+            booleanParam(name: 'must_prepare_retail', defaultValue: true, description: 'Prepare and run Retail'),
+            booleanParam(name: 'must_run_containerization_tests', defaultValue: true, description: 'Run Containerization Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
+            string(name: 'capybara_timeout', defaultValue: '30', description: 'Capybara max. waiting time'),
+            string(name: 'default_timeout', defaultValue: '300', description: 'Default timeout used in our Test Framework'),
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format')
             ])
     ])
 

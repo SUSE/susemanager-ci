@@ -131,7 +131,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:b1"
         vcpu = 8
-        memory = 32767
+        memory = 32768
       }
     }
     proxy = {

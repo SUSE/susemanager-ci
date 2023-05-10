@@ -17,7 +17,7 @@ def run(params) {
         def default_timeout = 300
 
         // Path to JSON run set file for non MU repositories
-        def non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json'
+        env.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json'
 
         if (params.terraform_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
@@ -163,14 +163,12 @@ def run(params) {
                     }
                     stage('Bootstrap Monitoring Server') {
                         if (params.must_boot_node && params.enable_monitoring_stages) {
-                            if (params.must_boot_monitoring && params.enable_monitoring_stages) {
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start bootstraping the Monitoring Server'
-                                }
-                                echo 'Register monitoring server as minion with gui'
-                                res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_monitoring'")
-                                echo "Init Monitoring Server status code: ${res_init_monitoring}"
+                            if (params.confirm_before_continue) {
+                                input 'Press any key to start bootstraping the Monitoring Server'
                             }
+                            echo 'Register monitoring server as minion with gui'
+                            res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_monitoring'")
+                            echo "Init Monitoring Server status code: ${res_init_monitoring}"
                         }
                     }
                 }
@@ -183,7 +181,7 @@ def run(params) {
                 // Call the minion testing.
                 try {
                     stage('Clients stages') {
-                        clientTestingStages()
+                        clientTestingStages(capybara_timeout, default_timeout)
                     }
 
                 } catch (Exception ex) {
@@ -267,13 +265,13 @@ def run(params) {
 
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
-def clientTestingStages() {
+def clientTestingStages(capybara_timeout, default_timeout) {
 
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
 
     // Load JSON matching non MU repositories data
-    def json_matching_non_MU_data = readJSON(file: non_MU_channels_tasks_file)
+    def json_matching_non_MU_data = readJSON(file: env.non_MU_channels_tasks_file)
 
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler()

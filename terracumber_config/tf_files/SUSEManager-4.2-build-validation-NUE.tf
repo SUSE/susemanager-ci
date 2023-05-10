@@ -101,7 +101,7 @@ module "base_core" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles15sp3o", "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "centos7o", "rocky8o", "ubuntu1804o", "ubuntu2004o", "debian10o", "debian11o", "opensuse154o" ]
+  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "centos7o", "rocky8o", "ubuntu1804o", "ubuntu2004o", "debian10o", "debian11o", "opensuse154o" ]
 
   # mirror = "minima-mirror-bv.mgr.suse.de"
   # use_mirror_images = true
@@ -479,6 +479,9 @@ module "rocky8-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "ubuntu1804-minion" {
@@ -698,6 +701,9 @@ module "rocky8-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "ubuntu1804-sshminion" {
