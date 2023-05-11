@@ -5,7 +5,7 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         // UTC Timezone
-        pipelineTriggers([cron('H 20 * * *')]),
+        pipelineTriggers([cron('30 18 * * *')]),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'Manager-4.3-suma-payg', description: 'Testsuite Git reference (branch, tag...)'),
