@@ -41,6 +41,9 @@ def run(params) {
             aws_mirror_params = "${aws_mirror_params} --parallelism ${params.terraform_parallelism}"
             env.common_params = "${common_params} --parallelism ${params.terraform_parallelism}"
         }
+        // Public IP for AWS ingress
+        String[] ALLOWED_IPS = params.allowed_IPS.split("\n")
+
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
                 // Create a directory for  to place the directory with the build results (if it does not exist)
