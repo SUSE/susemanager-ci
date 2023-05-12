@@ -116,6 +116,10 @@ variable "NAME_PREFIX" {
   default = null
 }
 
+locals {
+  domain            = "suma.ci.aws"
+}
+
 provider "aws" {
   region = var.REGION
 }
@@ -129,7 +133,6 @@ module "base" {
   testsuite                = true
   use_avahi                = false
   use_eip_bastion          = false
-  domain                   = "suma.ci.aws"
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -137,6 +140,8 @@ module "base" {
     ssh_allowed_ips = var.ALLOWED_IPS
     key_name = var.KEY_NAME
     key_file = var.KEY_FILE
+    route53_domain    = local.domain
+    bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
   }
 }
 
