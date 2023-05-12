@@ -137,6 +137,7 @@ module "base" {
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
+  domain                   = "suma.ci.aws"
 
   images = ["rocky8", "opensuse154o", "sles15sp4o", "ubuntu2204"]
   provider_settings = {
