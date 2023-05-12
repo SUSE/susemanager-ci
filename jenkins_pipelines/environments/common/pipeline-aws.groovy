@@ -109,24 +109,8 @@ def run(params) {
                             },
                             "create_local_mirror_with_mu": {
                                 stage("Create local mirror with MU") {
-                                    // Save MU json into local file
-                                    writeFile file: "custom_repositories.json", text: params.custom_repositories, encoding: "UTF-8"
-                                    mu_repositories = sh(script: "cat ${WORKSPACE}/custom_repositories.json | jq -r ' to_entries[] |  \" \\(.value)\"' | jq -r ' to_entries[] |  \" \\(.value)\"'",
-                                            returnStdout: true)
-                                    // Get the testsuite defaults repositories list
-                                    repositories = sh(script: "cat ${local_mirror_dir}/salt/mirror/etc/minimum_repositories_testsuite.yaml",
-                                            returnStdout: true)
-                                    if (!mu_repositories.isEmpty()) {
-                                        String[] REPOSITORIES_LIST = mu_repositories.split("\n")
-                                        // Add MU repositories to the repository list
-                                        REPOSITORIES_LIST.each { item ->
-                                            repositories = "${repositories}\n\n" +
-                                                    "  - url: ${item}\n" +
-                                                    "    archs: [x86_64]"
-                                        }
-                                    }
-                                    writeFile file: "${local_mirror_dir}/salt/mirror/etc/minima-customize.yaml", text: repositories, encoding: "UTF-8"
-
+                                    // Copy minimum repo list to mirror
+                                    sh "cp ${local_mirror_dir}/salt/mirror/etc/minimum_repositories_testsuite.yaml ${local_mirror_dir}/salt/mirror/etc/minima-customize.yaml"
                                     // Deploy local mirror
                                     sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_mirror_params} --logfile ${resultdirbuild}/sumaform-mirror-local.log --init --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend libvirt"
                                     deployed_local = true
