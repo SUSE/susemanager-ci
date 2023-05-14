@@ -140,7 +140,7 @@ def run(params) {
                                     NAME_PREFIX = env.JOB_NAME.toLowerCase().replace('.', '-')
                                     env.aws_configuration = "REGION = \"${params.aws_region}\"\n" +
                                             "AVAILABILITY_ZONE = \"${params.aws_availability_zone}\"\n" +
-                                            "NAME_PREFIX = \"${NAME_PREFIX}-\"\n" +
+                                            "NAME_PREFIX = \"${NAME_PREFIX}\"\n" +
                                             "KEY_FILE = \"${params.key_file}\"\n" +
                                             "KEY_NAME = \"${params.key_name}\"\n" +
                                             "ALLOWED_IPS = [ \n"
