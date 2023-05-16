@@ -316,24 +316,24 @@ module "debian-minion" {
     instance_type = "t3a.medium"
   }
 }
-
-module "build-host"  {
-  image = "sles15sp4o"
-  name = "build-host"
-  source             = "./modules/build_host"
-  base_configuration = module.base.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  product_version    = "4.3-released"
-  server_configuration = module.server.configuration
-  auto_connect_to_master  = false
-  use_os_released_updates = true
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-  provider_settings = {
-    instance_type = "t3a.large"
-  }
-}
+//
+//module "build-host"  {
+//  image = "sles15sp4o"
+//  name = "build-host"
+//  source             = "./modules/build_host"
+//  base_configuration = module.base.configuration
+//  sles_registration_code = var.SLES_REGISTRATION_CODE
+//  product_version    = "4.3-released"
+//  server_configuration = module.server.configuration
+//  auto_connect_to_master  = false
+//  use_os_released_updates = true
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
+//  provider_settings = {
+//    instance_type = "t3a.large"
+//  }
+//}
 
 module "controller" {
   source             = "./modules/controller"
