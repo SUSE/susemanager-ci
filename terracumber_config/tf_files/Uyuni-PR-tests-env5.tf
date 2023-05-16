@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
 
-  images = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -230,8 +230,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp4o"
-      name = "min-sles15"
+      image = "opensuse154o"
+      name = "min-leap15"
       provider_settings = {
         mac = "aa:b2:92:04:00:44"
       }
@@ -242,8 +242,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp4o"
-      name = "minssh-sles15"
+      image = "opensuse154o"
+      name = "minssh-leap15"
       provider_settings = {
         mac = "aa:b2:92:04:00:45"
       }
@@ -282,7 +282,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "sles15sp4o"
+      image = "opensuse154o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:04:00:49"
@@ -295,7 +295,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "sles15sp4o"
+      image = "opensuse154o"
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
       }

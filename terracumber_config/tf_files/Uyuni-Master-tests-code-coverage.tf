@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse154o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-codecov-"
@@ -144,8 +144,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp4o"
-      name = "min-sles15"
+      image = "opensuse154o"
+      name = "min-leap15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f4"
         memory = 4096
@@ -154,8 +154,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp4o"
-      name = "minssh-sles15"
+      image = "opensuse154o"
+      name = "minssh-leap15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f5"
         memory = 4096
@@ -185,7 +185,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "sles15sp4o"
+      image = "opensuse154o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:04:00:f9"
@@ -195,7 +195,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "sles15sp4o"
+      image = "opensuse154o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
