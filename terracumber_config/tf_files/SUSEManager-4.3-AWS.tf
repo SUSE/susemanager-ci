@@ -150,8 +150,8 @@ module "base" {
     ssh_allowed_ips   = var.ALLOWED_IPS
     key_name          = var.KEY_NAME
     key_file          = var.KEY_FILE
-    route53_domain    = local.domain
-    bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
+//    route53_domain    = local.domain
+//    bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
   }
 }
 
