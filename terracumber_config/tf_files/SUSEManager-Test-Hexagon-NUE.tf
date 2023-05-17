@@ -175,7 +175,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:59"
+        mac = "aa:b2:93:01:00:5a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Still researching, but it will do it for now
         memory = 2048
