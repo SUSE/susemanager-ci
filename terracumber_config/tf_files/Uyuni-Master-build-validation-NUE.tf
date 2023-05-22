@@ -861,9 +861,6 @@ module "alma9-sshminion" {
     mac                = "aa:b2:93:02:01:e2"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
-  }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
@@ -898,9 +895,6 @@ module "liberty9-sshminion" {
     mac                = "aa:b2:93:02:01:e5"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
-  }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
@@ -917,9 +911,6 @@ module "oracle9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:e3"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
