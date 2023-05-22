@@ -852,7 +852,7 @@ module "sles15sp4-sshminion" {
 }
 
 module "alma9-sshminion" {
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-released"
   name               = "minssh-alma9"
@@ -889,7 +889,7 @@ module "centos7-sshminion" {
 }
 
 module "liberty9-sshminion" {
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-released"
   name               = "minssh-liberty9"
@@ -909,7 +909,7 @@ module "liberty9-sshminion" {
 }
 
 module "oracle9-sshminion" {
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-released"
   name               = "minssh-oracle9"

@@ -1105,7 +1105,7 @@ module "alma9-sshminion" {
   providers = {
     libvirt = libvirt.endor
   }
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "4.3-released"
   name               = "minssh-alma9"
@@ -1148,7 +1148,7 @@ module "liberty9-sshminion" {
   providers = {
     libvirt = libvirt.endor
   }
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "4.3-released"
   name               = "minssh-liberty9"
@@ -1171,7 +1171,7 @@ module "oracle9-sshminion" {
   providers = {
     libvirt = libvirt.endor
   }
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "4.3-released"
   name               = "minssh-oracle9"
