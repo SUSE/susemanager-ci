@@ -101,7 +101,8 @@ module "base_core" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "opensuse154o" ]
+  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "opensuse154o" ]
+  // images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "opensuse154o" ]
 
   # mirror = "minima-mirror-bv.mgr.suse.de"
   # use_mirror_images = true
@@ -484,26 +485,26 @@ module "centos7-minion" {
   install_salt_bundle = true
 }
 
-module "liberty9-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "min-liberty9"
-  image              = "libertylinux9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:c5"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
+// module "liberty9-minion" {
+//   source             = "./modules/minion"
+//   base_configuration = module.base_core.configuration
+//   product_version    = "4.3-released"
+//   name               = "min-liberty9"
+//   image              = "libertylinux9o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:c5"
+//     memory             = 4096
+//   }
+//   server_configuration = {
+//     hostname = "suma-bv-43-pxy.mgr.suse.de"
+//   }
+//   auto_connect_to_master  = false
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//   additional_packages = [ "venv-salt-minion" ]
+//   install_salt_bundle = true
+// }
 
 module "oracle9-minion" {
   source             = "./modules/minion"
@@ -884,22 +885,22 @@ module "centos7-sshminion" {
   install_salt_bundle = true
 }
 
-module "liberty9-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-liberty9"
-  image              = "libertylinux9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:e5"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
+// module "liberty9-sshminion" {
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_core.configuration
+//   product_version    = "4.3-released"
+//   name               = "minssh-liberty9"
+//   image              = "libertylinux9o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:e5"
+//     memory             = 4096
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//   additional_packages = [ "venv-salt-minion" ]
+//   install_salt_bundle = true
+// }
 
 module "oracle9-sshminion" {
   source             = "./modules/sshminion"
@@ -1233,8 +1234,8 @@ module "controller" {
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-  liberty9_minion_configuration    = module.liberty9-minion.configuration
-  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
+//  liberty9_minion_configuration    = module.liberty9-minion.configuration
+//  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9-minion.configuration
   oracle9_sshminion_configuration = module.oracle9-sshminion.configuration
