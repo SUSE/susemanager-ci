@@ -146,8 +146,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:c4"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp3o"
@@ -155,8 +153,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:c6"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "sles15sp3o"
@@ -164,8 +160,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:c8"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     redhat-minion = {
       image = "centos7o"
@@ -184,8 +178,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:cc"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp3o"
@@ -194,8 +186,6 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:03:00:cd"
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     pxeboot-minion = {
       image = "sles15sp3o"
@@ -214,8 +204,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:ce"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
   }
   nested_vm_host = "min-nested"
