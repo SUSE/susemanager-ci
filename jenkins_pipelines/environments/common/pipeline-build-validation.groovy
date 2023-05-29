@@ -10,8 +10,8 @@ def run(params) {
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
         // Variables to store none critical stage run status
-        def client_stage_result_fail = false
         def monitoring_stage_result_fail = false
+        def client_stage_result_fail = false
         def retail_stage_result_fail = false
         def containerization_stage_result_fail = false
 
