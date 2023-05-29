@@ -337,19 +337,24 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
-                        echo 'Add custom channels and MU repositories'
-                        res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${node}'", returnStatus: true)
-                        if (res_mu_repos != 0) {
-                            error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
+                        try {
+                            echo 'Add custom channels and MU repositories'
+                            res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${node}'", returnStatus: true)
+                            if (res_mu_repos != 0) {
+                                error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
+                            }
+                            echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+                            res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export NODE=${node}; unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
+                            echo "Custom channels and MU repositories synchronization status code: ${res_sync_mu_repos}"
+                            if (res_sync_mu_repos != 0) {
+                                error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
+                            }
+                            // Update minion repo sync status variable once the MU channel is synchronized
+                            mu_sync_status[node] = true
+                        } finally {
+                            // Update minion repo sync status variable once the MU channel is synchronized
+                            mu_sync_status[node] = "Error during MU node ${node} synchronization"
                         }
-                        echo "Custom channels and MU repositories status code: ${res_mu_repos}"
-                        res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export NODE=${node}; unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
-                        echo "Custom channels and MU repositories synchronization status code: ${res_sync_mu_repos}"
-                        if (res_sync_mu_repos != 0) {
-                            error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
-                        }
-                        // Update minion repo sync status variable once the MU channel is synchronized
-                        mu_sync_status[node] = true
                     }
                 }
             }
