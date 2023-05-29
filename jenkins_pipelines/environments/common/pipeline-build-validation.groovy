@@ -9,7 +9,9 @@ def run(params) {
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
+        // Variables to store none critical stage run status
         def client_stage_result_fail = false
+        def monitoring_stage_result_fail = false
         def retail_stage_result_fail = false
         def containerization_stage_result_fail = false
 
@@ -127,9 +129,9 @@ def run(params) {
             /** Proxy stages end **/
 
             /** Monitoring stages begin **/
-            try {
-                // Hide monitoring for qe update pipeline
-                if (params.enable_monitoring_stages) {
+            // Hide monitoring for qe update pipeline
+            if (params.enable_monitoring_stages) {
+                try {
                     stage('Add MUs Monitoring') {
                         if (params.must_add_MU_repositories && params.enable_monitoring_stages) {
                             if (params.confirm_before_continue) {
@@ -174,9 +176,10 @@ def run(params) {
                             echo "Init Monitoring Server status code: ${res_init_monitoring}"
                         }
                     }
+                } catch (Exception ex) {
+                    println('Monitoring server bootstrap failed ')
+                    monitoring_stage_result_fail = true
                 }
-            } catch (Exception ex) {
-                println('Monitoring server bootstrap failed ')
             }
             /** Monitoring stages end **/
 
@@ -219,21 +222,22 @@ def run(params) {
             }
 
             stage('Containerization') {
-                if (params.confirm_before_continue) {
-                    input 'Press any key to start running the containerization tests'
-                }
-                try {
-                    if (params.must_run_containerization_tests) {
+                if (params.must_run_containerization_tests) {
+                    if (params.confirm_before_continue) {
+                        input 'Press any key to start running the containerization tests'
+                    }
+                    try {
                         echo 'Prepare Proxy as Pod and run basic tests'
                         res_container_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_containerization'", returnStatus: true)
                         echo "Container proxy status code: ${res_container_proxy}"
+                        if (res_container_proxy != 0) {
+                            error("Containerization test failed with status code: ${res_non_MU_repositories}")
+                        }
+
+                    } catch (Exception ex) {
+                        println('ERROR: Containerization failed')
+                        containerization_stage_result_fail = true
                     }
-                    if (res_container_proxy != 0) {
-                        error("Containerization test failed with status code: ${res_non_MU_repositories}")
-                    }
-                } catch (Exception ex) {
-                    println('ERROR: Containerization failed')
-                    containerization_stage_result_fail = true
                 }
             }
         }
@@ -276,9 +280,15 @@ def run(params) {
                 if (client_stage_result_fail) {
                     error("Client stage failed")
                 }
+                // Fail pipeline if monitoring stages failed
+                if (monitoring_stage_result_fail) {
+                    error("Monitoring stage failed")
+                }
+                // Fail pipeline if retail stages failed
                 if (retail_stage_result_fail) {
                     error("Retail stage failed")
                 }
+                // Fail pipeline if containerization stage failed
                 if (containerization_stage_result_fail) {
                     error("Containerization stage failed")
                 }
