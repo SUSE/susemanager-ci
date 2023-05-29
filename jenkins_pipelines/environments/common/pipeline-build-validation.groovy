@@ -328,11 +328,15 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                         def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
                         println "Waiting for the MU channel creation by ${minion_name_without_ssh} for ${node}."
                         waitUntil {
-                            mu_sync_status[minion_name_without_ssh]
+                            if (mu_sync_status[minion_name_without_ssh] = "SYNC") {
+                                return true
+                            } else if (mu_sync_status[minion_name_without_ssh] = "FAIL") {
+                                error("${minion_name_without_ssh} MU synchronization failed")
+                            }
                         }
                         println "MU channel available for ${node} "
                     } else if (node == "${params.monitoring_sle_version}_minion" && params.enable_monitoring_stages) {
-                        mu_sync_status[node] = true
+                        mu_sync_status[node] = 'SYNC'
                     } else {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
@@ -350,10 +354,10 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                                 error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
                             }
                             // Update minion repo sync status variable once the MU channel is synchronized
-                            mu_sync_status[node] = true
-                        } finally {
-                            // Update minion repo sync status variable once the MU channel is synchronized
-                            mu_sync_status[node] = "Error during MU node ${node} synchronization"
+                            mu_sync_status[node] = 'SYNC'
+                        } catch (Exception ex) {
+                            // Update minion repo sync status variable if the MU channel synchronization fail
+                            mu_sync_status[node] = "FAIL"
                         }
                     }
                 }
@@ -481,7 +485,7 @@ def getNodesHandler() {
     // Create a map storing mu synchronization state for each minion.
     // This map is to be sure ssh minions have the MU channel ready.
     for (node in nodeListWithDisabledNodes ) {
-        MUSyncStatus[node] = false
+        MUSyncStatus[node] = 'UNSYNC'
     }
     return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes, MUSyncStatus:MUSyncStatus]
 }
