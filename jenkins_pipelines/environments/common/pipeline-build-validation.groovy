@@ -294,11 +294,15 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                         def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
                         println "Waiting for the MU channel creation by ${minion_name_without_ssh} for ${node}."
                         waitUntil {
-                            mu_sync_status[minion_name_without_ssh]
+                            mu_sync_status[minion_name_without_ssh] != 'UNSYNC'
                         }
-                        println "MU channel available for ${node} "
+                        if (mu_sync_status[minion_name_without_ssh] == 'FAIL') {
+                            error("${minion_name_without_ssh} MU synchronization failed")
+                        } else {
+                            println "MU channel available for ${node} "
+                        }
                     } else if (node == "${params.monitoring_sle_version}_minion" && params.enable_monitoring_stages) {
-                        mu_sync_status[node] = true
+                        mu_sync_status[node] = 'SYNC'
                     } else {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
@@ -306,16 +310,18 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                         echo 'Add custom channels and MU repositories'
                         res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${node}'", returnStatus: true)
                         if (res_mu_repos != 0) {
+                            mu_sync_status[node] = 'FAIL'
                             error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
                         }
                         echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                         res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export NODE=${node}; unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
                         echo "Custom channels and MU repositories synchronization status code: ${res_sync_mu_repos}"
                         if (res_sync_mu_repos != 0) {
+                            mu_sync_status[node] = 'FAIL'
                             error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
                         }
                         // Update minion repo sync status variable once the MU channel is synchronized
-                        mu_sync_status[node] = true
+                        mu_sync_status[node] = 'SYNC'
                     }
                 }
             }
@@ -407,7 +413,7 @@ def clientTestingStages(capybara_timeout, default_timeout) {
             }
         }
     }
-    // Once all the stages have been correctly configured, run in parallel
+// Once all the stages have been correctly configured, run in parallel
     parallel tests
 }
 
@@ -442,7 +448,7 @@ def getNodesHandler() {
     // Create a map storing mu synchronization state for each minion.
     // This map is to be sure ssh minions have the MU channel ready.
     for (node in nodeListWithDisabledNodes ) {
-        MUSyncStatus[node] = false
+        MUSyncStatus[node] = 'UNSYNC'
     }
     return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes, MUSyncStatus:MUSyncStatus]
 }
