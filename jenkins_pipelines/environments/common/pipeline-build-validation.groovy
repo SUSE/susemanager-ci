@@ -454,7 +454,7 @@ def getNodesHandler() {
 }
 
 def randomWait() {
-    def randomWait = new Random().nextInt(30)
+    def randomWait = new Random().nextInt(180)
     println "Waiting for ${randomWait} seconds"
     sleep randomWait
 }
