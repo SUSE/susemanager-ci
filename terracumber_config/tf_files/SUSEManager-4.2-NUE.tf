@@ -151,8 +151,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-minion = {
       image = "sles15sp3o"
