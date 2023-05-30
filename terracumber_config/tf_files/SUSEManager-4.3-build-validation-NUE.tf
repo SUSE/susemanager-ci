@@ -154,7 +154,7 @@ module "server" {
   }
 
   # server_mounted_mirror = "minima-mirror-bv.mgr.suse.de"
-  repository_disk_size = 2000
+  repository_disk_size = 2048
 
   auto_accept                    = false
   monitored                      = true
