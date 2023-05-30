@@ -294,13 +294,13 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                         def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
                         println "Waiting for the MU channel creation by ${minion_name_without_ssh} for ${node}."
                         waitUntil {
-                            if (mu_sync_status[minion_name_without_ssh] == 'SYNC') {
-                                return true
-                            } else if (mu_sync_status[minion_name_without_ssh] == 'FAIL') {
-                                error("${minion_name_without_ssh} MU synchronization failed")
-                            }
+                            (mu_sync_status[minion_name_without_ssh] == 'SYNC' || mu_sync_status[minion_name_without_ssh] == 'FAIL')
                         }
-                        println "MU channel available for ${node} "
+                        if (mu_sync_status[minion_name_without_ssh] == 'FAIL') {
+                            error("${minion_name_without_ssh} MU synchronization failed")
+                        } else {
+                            println "MU channel available for ${node} "
+                        }
                     } else if (node == "${params.monitoring_sle_version}_minion" && params.enable_monitoring_stages) {
                         mu_sync_status[node] = 'SYNC'
                     } else {
