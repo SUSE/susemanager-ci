@@ -126,16 +126,22 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:92:03:00:c0"
+        vcpu = 2
+        memory = 2048
       }
     }
     server = {
       provider_settings = {
         mac = "aa:b2:92:03:00:c1"
+        vcpu = 4
+        memory = 16384
       }
     }
     proxy = {
       provider_settings = {
         mac = "aa:b2:92:03:00:c2"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -145,6 +151,8 @@ module "cucumber_testsuite" {
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:c4"
+        vcpu = 2
+        memory = 2048
       }
     }
     suse-minion = {
@@ -152,6 +160,8 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:c6"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -161,6 +171,8 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:c8"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -171,7 +183,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:03:00:c9"
         // Openscap cannot run with less than 1.25 GB of RAM
-        memory = 1280
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -181,6 +194,8 @@ module "cucumber_testsuite" {
       image = "ubuntu2004o"
       provider_settings = {
         mac = "aa:b2:92:03:00:cc"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -190,6 +205,7 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:03:00:cd"
+        vcpu = 2
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
@@ -197,6 +213,10 @@ module "cucumber_testsuite" {
     }
     pxeboot-minion = {
       image = "sles15sp3o"
+      provider_settings = {
+        vcpu = 2
+        memory = 2048
+      }
     }
     kvm-host = {
       image = "sles15sp3o"
@@ -211,6 +231,8 @@ module "cucumber_testsuite" {
       }
       provider_settings = {
         mac = "aa:b2:92:03:00:ce"
+        vcpu = 4
+        memory = 4096
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
