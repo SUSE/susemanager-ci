@@ -171,7 +171,6 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:88"
-        vcpu = 2
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
