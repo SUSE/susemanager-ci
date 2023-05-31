@@ -153,7 +153,6 @@ module "cucumber_testsuite" {
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:84"
-        vcpu = 2
         memory = 2048
       }
     }
@@ -162,7 +161,6 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:03:00:86"
-        vcpu = 2
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
@@ -197,7 +195,6 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:92:03:00:8b"
-        vcpu = 2
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
@@ -216,7 +213,6 @@ module "cucumber_testsuite" {
     pxeboot-minion = {
       image = "sles15sp4o"
       provider_settings = {
-        vcpu = 2
         memory = 2048
       }
     }
