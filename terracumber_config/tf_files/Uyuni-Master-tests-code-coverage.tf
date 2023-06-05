@@ -235,13 +235,13 @@ module "cucumber_testsuite" {
 
 resource "null_resource" "configure_jacoco" {
 
- triggers = {
+  triggers = {
     always_run = "${timestamp()}"
- }
+  }
 
- provisioner "file" {
-    source      = "../../susemanager-ci/terracumber_config/config_files/etc_sysconfig_tomcat"
-    destination = "/etc/sysconfig/tomcat"
+  provisioner "file" {
+    source      = "../../susemanager-ci/terracumber_config/config_files/jacoco_agent.conf"
+    destination = "/etc/tomcat/conf.d/jacoco_agent.conf"
     connection {
       type     = "ssh"
       user     = "root"

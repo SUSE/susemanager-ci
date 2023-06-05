@@ -153,7 +153,7 @@ module "server" {
   }
 
   # server_mounted_mirror = "minima-mirror-bv.mgr.suse.de"
-  repository_disk_size = 2000
+  repository_disk_size = 2048
 
   auto_accept                    = false
   monitored                      = true
@@ -852,7 +852,7 @@ module "sles15sp4-sshminion" {
 }
 
 module "alma9-sshminion" {
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-released"
   name               = "minssh-alma9"
@@ -860,9 +860,6 @@ module "alma9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:e2"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -889,7 +886,7 @@ module "centos7-sshminion" {
 }
 
 module "liberty9-sshminion" {
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-released"
   name               = "minssh-liberty9"
@@ -897,9 +894,6 @@ module "liberty9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:e5"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -909,7 +903,7 @@ module "liberty9-sshminion" {
 }
 
 module "oracle9-sshminion" {
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-released"
   name               = "minssh-oracle9"
@@ -917,9 +911,6 @@ module "oracle9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:e3"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"

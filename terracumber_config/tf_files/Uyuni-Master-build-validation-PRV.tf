@@ -299,7 +299,7 @@ module "server" {
   }
 
   server_mounted_mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  repository_disk_size = 1700
+  repository_disk_size = 2048
 
   auto_accept                    = false
   monitored                      = true
@@ -1105,7 +1105,7 @@ module "alma9-sshminion" {
   providers = {
     libvirt = libvirt.cosmopolitan
   }
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-released"
   name               = "minssh-alma9"
@@ -1113,9 +1113,6 @@ module "alma9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:ae"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -1148,7 +1145,7 @@ module "liberty9-sshminion" {
   providers = {
     libvirt = libvirt.cosmopolitan
   }
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-released"
   name               = "minssh-liberty9"
@@ -1156,9 +1153,6 @@ module "liberty9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:b1"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -1171,7 +1165,7 @@ module "oracle9-sshminion" {
   providers = {
     libvirt = libvirt.cosmopolitan
   }
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-released"
   name               = "minssh-oracle9"
@@ -1179,9 +1173,6 @@ module "oracle9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:af"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"

@@ -140,6 +140,8 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-client = {
       image = "sles15sp3o"
@@ -158,6 +160,8 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "sles15sp3o"
@@ -167,6 +171,8 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     redhat-minion = {
       image = "centos7o"
@@ -177,6 +183,7 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     debian-minion = {
@@ -187,6 +194,8 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp3o"
@@ -196,6 +205,8 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
     pxeboot-minion = {
       image = "sles15sp3o"
@@ -212,6 +223,8 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 4096
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
     }
   }
   nested_vm_host = "min-nested"

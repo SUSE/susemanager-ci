@@ -103,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o", "sles15sp2o", "sles15sp3o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse154o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "suma-testhexagon-"
@@ -147,7 +147,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-client = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:54"
@@ -156,7 +156,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:56"
@@ -165,7 +165,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:58"
@@ -175,7 +175,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:59"
+        mac = "aa:b2:93:01:00:5a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Still researching, but it will do it for now
         memory = 2048
@@ -185,10 +185,10 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "sles15sp3o"
+      image = "sles15sp4o"
     }
     build-host = {
-      image = "sles15sp2o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:5d"
         memory = 2048

@@ -172,7 +172,8 @@ module "base_res" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
+  images      = [ "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o" ]
+//  images      = [ "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -299,7 +300,7 @@ module "server" {
   }
 
   server_mounted_mirror = "minima-mirror-bv.mgr.prv.suse.net"
-  repository_disk_size = 1700
+  repository_disk_size = 2048
 
   auto_accept                    = false
   monitored                      = true
@@ -678,29 +679,29 @@ module "centos7-minion" {
   install_salt_bundle = true
 }
 
-module "liberty9-minion" {
-  providers = {
-    libvirt = libvirt.endor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.3-released"
-  name               = "min-liberty9"
-  image              = "libertylinux9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:c5"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
+// module "liberty9-minion" {
+//   providers = {
+//     libvirt = libvirt.endor
+//   }
+//   source             = "./modules/minion"
+//   base_configuration = module.base_res.configuration
+//   product_version    = "4.3-released"
+//   name               = "min-liberty9"
+//   image              = "libertylinux9o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:c5"
+//     memory             = 4096
+//   }
+//   server_configuration = {
+//     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+//   }
+//   auto_connect_to_master  = false
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//   additional_packages = [ "venv-salt-minion" ]
+//   install_salt_bundle = true
+// }
 
 module "oracle9-minion" {
   providers = {
@@ -1105,7 +1106,7 @@ module "alma9-sshminion" {
   providers = {
     libvirt = libvirt.endor
   }
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "4.3-released"
   name               = "minssh-alma9"
@@ -1113,9 +1114,6 @@ module "alma9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:92:42:00:e2"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -1144,34 +1142,31 @@ module "centos7-sshminion" {
   install_salt_bundle = true
 }
 
-module "liberty9-sshminion" {
-  providers = {
-    libvirt = libvirt.endor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-liberty9"
-  image              = "libertylinux9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:e5"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
+// module "liberty9-sshminion" {
+//   providers = {
+//     libvirt = libvirt.endor
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_res.configuration
+//   product_version    = "4.3-released"
+//   name               = "minssh-liberty9"
+//   image              = "libertylinux9o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:e5"
+//     memory             = 4096
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//   additional_packages = [ "venv-salt-minion" ]
+//   install_salt_bundle = true
+// }
 
 module "oracle9-sshminion" {
   providers = {
     libvirt = libvirt.endor
   }
-  source             = "./modules/minion"
+  source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "4.3-released"
   name               = "minssh-oracle9"
@@ -1179,9 +1174,6 @@ module "oracle9-sshminion" {
   provider_settings = {
     mac                = "aa:b2:92:42:00:e3"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -1553,8 +1545,8 @@ module "controller" {
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-  liberty9_minion_configuration    = module.liberty9-minion.configuration
-  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
+//  liberty9_minion_configuration    = module.liberty9-minion.configuration
+//  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9-minion.configuration
   oracle9_sshminion_configuration = module.oracle9-sshminion.configuration
