@@ -219,6 +219,53 @@ module "proxy" {
 
 }
 
+
+module "sles12sp4-client" {
+  source             = "./modules/client"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "cli-sles12sp4"
+  image              = "sles12sp4o"
+  server_configuration = module.server.configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "sles12sp5-client" {
+  source             = "./modules/client"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "cli-sles12sp5"
+  image              = "sles12sp5o"
+  server_configuration = module.server.configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "sles15sp2-client" {
+  source             = "./modules/client"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "cli-sles15sp2"
+  image              = "sles15sp2o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
 module "sles15sp4-client" {
 
   source             = "./modules/client"
@@ -257,6 +304,121 @@ module "sles15sp3-client" {
   //sle15sp3-client_additional_repos
 }
 
+module "ubuntu1804-minion" {
+
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-ubuntu1804"
+  image              = "ubuntu1804o"
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "ubuntu2004-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-ubuntu2004"
+  image              = "ubuntu2004o"
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "debian11-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-debian11"
+  image              = "debian11o"
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "rocky8-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-rocky8"
+  image              = "rocky8o"
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "sles12sp4-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-sles12sp4"
+  image              = "sles12sp4o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "sles12sp5-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-sles12sp5"
+  image              = "sles12sp5o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "sles15sp2-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-sles15sp2"
+  image              = "sles15sp2o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
 module "sles15sp4-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -266,7 +428,7 @@ module "sles15sp4-minion" {
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
-  use_os_released_updates = true
+  use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -285,7 +447,7 @@ module "sles15sp3-minion" {
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
-  use_os_released_updates = true
+  use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -295,6 +457,109 @@ module "sles15sp3-minion" {
 
 }
 
+module "ubuntu1804-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-ubuntu1804"
+  image              = "ubuntu1804o"
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "ubuntu2004-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-ubuntu2004"
+  image              = "ubuntu2004o"
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "debian11-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-debian11"
+  image              = "debian11o"
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "rocky8-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-rocky8"
+  image              = "rocky8o"
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+}
+
+module "sles12sp4-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-sles12sp4"
+  image              = "sles12sp4o"
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  gpg_keys                = ["default/gpg_keys/galaxy.key"]
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "sles12sp5-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-sles12sp5"
+  image              = "sles12sp5o"
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  gpg_keys                = ["default/gpg_keys/galaxy.key"]
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "sles15sp2-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-sles15sp2"
+  image              = "sles15sp2o"
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+
 module "sles15sp4-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
@@ -302,7 +567,7 @@ module "sles15sp4-sshminion" {
   name               = "minssh-sles15sp4"
   image              = "sles15sp4o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
-  use_os_released_updates = true
+  use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -317,7 +582,7 @@ module "sles15sp3-sshminion" {
   name               = "minssh-sles15sp3"
   image              = "sles15sp3o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
-  use_os_released_updates = true
+  use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -397,15 +662,42 @@ module "controller" {
   server_configuration    = module.server.configuration
   proxy_configuration     = module.proxy.configuration
 
-  sle15sp4_client_configuration    = module.sles15sp4-client.configuration
+  sle12sp4_client_configuration    = module.sles12sp4-client.configuration
+  sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
+  sle12sp4_sshminion_configuration = module.sles12sp4-sshminion.configuration
+
+  sle12sp5_client_configuration    = module.sles12sp5-client.configuration
+  sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+
+
+  sle15sp2_client_configuration    = module.sles15sp2-client.configuration
+  sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
+  sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
+
   sle15sp3_client_configuration    = module.sles15sp3-client.configuration
-  sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
   sle15sp3_minion_configuration    = module.sles15sp3-minion.configuration
-  sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
   sle15sp3_sshminion_configuration = module.sles15sp3-sshminion.configuration
 
-  ubuntu2204_minion_configuration     = module.ubuntu2204-minion.configuration
-  ubuntu2204_sshminion_configuration  = module.ubuntu2204-sshminion.configuration
+  sle15sp4_client_configuration    = module.sles15sp4-client.configuration
+  sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
+  sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
+
+  rocky8_minion_configuration    = module.rocky8-minion.configuration
+  rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
+
+  ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
+  ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
+
+  ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
+  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+
+  ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
+  ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
+
+  debian11_minion_configuration    = module.debian11-minion.configuration
+  debian11_sshminion_configuration = module.debian11-sshminion.configuration
+
   rhel9_minion_configuration          = module.rhel9-minion.configuration
 
 }
