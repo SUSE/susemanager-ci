@@ -149,7 +149,6 @@ module "base" {
   }
 }
 
-
 module "mirror" {
   source = "./modules/mirror"
   base_configuration = module.base.configuration
@@ -157,6 +156,7 @@ module "mirror" {
   provider_settings = {
     public_instance = true
   }
+  image = "opensuse154o"
 }
 
 module "server" {
