@@ -7,6 +7,7 @@ node('sumaform-cucumber-provo') {
             'sle15sp2_client, sle15sp2_minion, sle15sp2_ssh_minion, ' +
             'sle15sp3_client, sle15sp3_minion, sle15sp3_ssh_minion, ' +
             'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, ' +
+            'sle15sp5_client, sle15sp5_minion, sle15sp5_ssh_minion, ' +
             'alma9_minion, alma9_ssh_minion, ' +
             'centos7_client, centos7_minion, centos7_ssh_minion, ' +
             'liberty9_minion, liberty9_ssh_minion, ' +
@@ -15,7 +16,11 @@ node('sumaform-cucumber-provo') {
             'ubuntu1804_minion, ubuntu1804_ssh_minion, ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
             'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, ' +
             'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
-            'slemicro51_minion, slemicro51_ssh_minion, slemicro52_minion, slemicro52_ssh_minion, slemicro53_minion, slemicro53_ssh_minion, slemicro54_minion, slemicro54_ssh_minion'
+            'opensuse155arm_minion, opensuse155arm_ssh_minion, ' +
+            'slemicro51_minion, slemicro51_ssh_minion, ' +
+            'slemicro52_minion, slemicro52_ssh_minion, ' +
+            'slemicro53_minion, slemicro53_ssh_minion, ' +
+            'slemicro54_minion, slemicro54_ssh_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),

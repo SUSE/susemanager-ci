@@ -198,7 +198,7 @@ module "base_new_sle" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign" ]
+  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -274,7 +274,7 @@ module "base_arm" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse154armo" ]
+  images      = [ "opensuse154armo", "opensuse155armo" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -477,6 +477,27 @@ module "sles15sp4-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "sles15sp5-client" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/client"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.3-released"
+  name               = "cli-sles15sp5"
+  image              = "sles15sp5o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:aa"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "centos7-client" {
   providers = {
     libvirt = libvirt.endor
@@ -620,6 +641,28 @@ module "sles15sp4-minion" {
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:b6"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles15sp5-minion" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.3-released"
+  name               = "min-sles15sp5"
+  image              = "sles15sp5o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:b2"
     memory             = 4096
   }
 
@@ -894,7 +937,30 @@ module "opensuse154arm-minion" {
   name               = "min-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
-    mac                = "aa:b2:93:01:00:f4"
+    mac                = "aa:b2:93:02:01:f8"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "opensuse155arm-minion" {
+  providers = {
+    libvirt = libvirt.overdrive4
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "min-opensuse155arm"
+  image              = "opensuse155armo"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:f9"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -918,7 +984,7 @@ module "slemicro51-minion" {
   image              = "slemicro51-ign"
   provider_settings = {
     mac                = "aa:b2:92:42:00:c6"
-   memory             = 2048
+    memory             = 2048
   }
 
   server_configuration = {
@@ -939,8 +1005,8 @@ module "slemicro52-minion" {
   name               = "min-slemicro52"
   image              = "slemicro52-ign"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:c0"
-   memory             = 2048
+    mac                = "aa:b2:92:42:00:c7"
+    memory             = 2048
   }
 
   server_configuration = {
@@ -961,8 +1027,8 @@ module "slemicro53-minion" {
   name               = "min-slemicro53"
   image              = "slemicro53-ign"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:c4"
-   memory             = 2048
+    mac                = "aa:b2:92:42:00:c8"
+    memory             = 2048
   }
 
   server_configuration = {
@@ -983,8 +1049,8 @@ module "slemicro54-minion" {
   name               = "min-slemicro54"
   image              = "slemicro54-ign"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b2"
-   memory             = 2048
+    mac                = "aa:b2:92:42:00:c9"
+    memory             = 2048
   }
 
   server_configuration = {
@@ -1096,6 +1162,23 @@ module "sles15sp4-sshminion" {
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:d6"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles15sp5-sshminion" {
+  providers = {
+    libvirt = libvirt.giediprime
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-sles15sp5"
+  image              = "sles15sp5o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:d2"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1319,7 +1402,26 @@ module "opensuse154arm-sshminion" {
   name               = "minssh-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
-    mac                = "aa:b2:93:01:00:f5"
+    mac                = "aa:b2:93:02:01:fa"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "opensuse155arm-sshminion" {
+  providers = {
+    libvirt = libvirt.overdrive4
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-opensuse155arm"
+  image              = "opensuse155armo"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:fb"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1355,7 +1457,7 @@ module "slemicro52-sshminion" {
   name               = "minssh-slemicro52"
   image              = "slemicro52-ign"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:e0"
+    mac                = "aa:b2:92:42:00:e7"
     memory             = 2048
   }
   use_os_released_updates = false
@@ -1372,7 +1474,7 @@ module "slemicro53-sshminion" {
   name               = "minssh-slemicro53"
   image              = "slemicro53-ign"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:e4"
+    mac                = "aa:b2:92:42:00:e8"
     memory             = 2048
   }
   use_os_released_updates = false
@@ -1389,7 +1491,7 @@ module "slemicro54-sshminion" {
   name               = "minssh-slemicro54"
   image              = "slemicro54-ign"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:d2"
+    mac                = "aa:b2:92:42:00:e9"
     memory             = 2048
   }
   use_os_released_updates = false
@@ -1538,6 +1640,10 @@ module "controller" {
   sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
   sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
 
+  sle15sp5_client_configuration    = module.sles15sp5-client.configuration
+  sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
+  sle15sp5_sshminion_configuration = module.sles15sp5-sshminion.configuration
+
   alma9_minion_configuration    = module.alma9-minion.configuration
   alma9_sshminion_configuration = module.alma9-sshminion.configuration
 
@@ -1574,6 +1680,9 @@ module "controller" {
 
   opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
   opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+
+  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
+  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
   slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
