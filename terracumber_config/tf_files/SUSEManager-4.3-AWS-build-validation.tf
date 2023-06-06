@@ -225,7 +225,7 @@ module "sles12sp4-client" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "cli-sles12sp4"
-  image              = "sles12sp4o"
+  image              = "sles12sp4"
   server_configuration = module.server.configuration
   auto_register           = false
   use_os_released_updates = false
@@ -310,7 +310,7 @@ module "ubuntu1804-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-ubuntu1804"
-  image              = "ubuntu1804o"
+  image              = "ubuntu1804"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -326,7 +326,7 @@ module "ubuntu2004-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-ubuntu2004"
-  image              = "ubuntu2004o"
+  image              = "ubuntu2004"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -342,7 +342,7 @@ module "debian11-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-debian11"
-  image              = "debian11o"
+  image              = "debian11"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -358,7 +358,7 @@ module "rocky8-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-rocky8"
-  image              = "rocky8o"
+  image              = "rocky8"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -376,7 +376,7 @@ module "sles12sp4-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-sles12sp4"
-  image              = "sles12sp4o"
+  image              = "sles12sp4"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
@@ -392,7 +392,7 @@ module "sles12sp5-minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "min-sles12sp5"
-  image              = "sles12sp5o"
+  image              = "sles12sp5"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
@@ -462,7 +462,7 @@ module "ubuntu1804-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804o"
+  image              = "ubuntu1804"
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
@@ -476,7 +476,7 @@ module "ubuntu2004-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-ubuntu2004"
-  image              = "ubuntu2004o"
+  image              = "ubuntu2004"
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
@@ -490,7 +490,7 @@ module "debian11-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-debian11"
-  image              = "debian11o"
+  image              = "debian11"
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
@@ -504,7 +504,7 @@ module "rocky8-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-rocky8"
-  image              = "rocky8o"
+  image              = "rocky8"
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
@@ -522,7 +522,7 @@ module "sles12sp4-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-sles12sp4"
-  image              = "sles12sp4o"
+  image              = "sles12sp4"
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
@@ -590,24 +590,24 @@ module "sles15sp3-sshminion" {
 
 }
 
-module "rhel9-minion" {
-
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  server_configuration = module.server.configuration
-  product_version    = "4.3-released"
-  name               = "min-rhel9"
-  image              = "rhel9"
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-
-  //rhel9-minion_additional_repos
-
-}
+//module "rhel9-minion" {
+//
+//  source             = "./modules/minion"
+//  base_configuration = module.base.configuration
+//  server_configuration = module.server.configuration
+//  product_version    = "4.3-released"
+//  name               = "min-rhel9"
+//  image              = "rhel9"
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//  provider_settings = {
+//    instance_type = "t3a.medium"
+//  }
+//
+//  //rhel9-minion_additional_repos
+//
+//}
 
 module "ubuntu2204-sshminion" {
   source             = "./modules/sshminion"
@@ -698,7 +698,7 @@ module "controller" {
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
-  rhel9_minion_configuration          = module.rhel9-minion.configuration
+//  rhel9_minion_configuration          = module.rhel9-minion.configuration
 
 }
 
