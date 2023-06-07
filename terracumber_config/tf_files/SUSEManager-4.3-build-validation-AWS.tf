@@ -605,6 +605,7 @@ module "rhel9-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = true
   provider_settings = {
     instance_type = "t3a.medium"
   }
