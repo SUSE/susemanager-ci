@@ -227,6 +227,7 @@ module "sles12sp4-client" {
   name               = "cli-sles12sp4"
   image              = "sles12sp4"
   server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -242,6 +243,7 @@ module "sles12sp5-client" {
   name               = "cli-sles12sp5"
   image              = "sles12sp5"
   server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -524,6 +526,7 @@ module "sles12sp4-sshminion" {
   name               = "minssh-sles12sp4"
   image              = "sles12sp4"
   use_os_released_updates = false
+  sles_registration_code = var.SLES_REGISTRATION_CODE
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   provider_settings = {
@@ -538,6 +541,7 @@ module "sles12sp5-sshminion" {
   name               = "minssh-sles12sp5"
   image              = "sles12sp5"
   use_os_released_updates = false
+  sles_registration_code = var.SLES_REGISTRATION_CODE
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   provider_settings = {
