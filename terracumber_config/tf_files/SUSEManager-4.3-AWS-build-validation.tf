@@ -240,7 +240,7 @@ module "sles12sp5-client" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "cli-sles12sp5"
-  image              = "sles12sp5o"
+  image              = "sles12sp5"
   server_configuration = module.server.configuration
   auto_register           = false
   use_os_released_updates = false
@@ -536,7 +536,7 @@ module "sles12sp5-sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   name               = "minssh-sles12sp5"
-  image              = "sles12sp5o"
+  image              = "sles12sp5"
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
