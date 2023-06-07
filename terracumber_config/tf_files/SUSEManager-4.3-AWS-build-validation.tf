@@ -337,21 +337,21 @@ module "ubuntu2004-minion" {
   }
 }
 
-module "debian11-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "min-debian11"
-  image              = "debian11"
-  server_configuration = module.server.configuration
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-}
+//module "debian11-minion" {
+//  source             = "./modules/minion"
+//  base_configuration = module.base.configuration
+//  product_version    = "4.3-released"
+//  name               = "min-debian11"
+//  image              = "debian11"
+//  server_configuration = module.server.configuration
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  provider_settings = {
+//    instance_type = "t3a.medium"
+//  }
+//}
 
 module "rocky8-minion" {
   source             = "./modules/minion"
@@ -484,20 +484,20 @@ module "ubuntu2004-sshminion" {
     instance_type = "t3a.medium"
   }
 }
-
-module "debian11-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-debian11"
-  image              = "debian11"
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-}
+//
+//module "debian11-sshminion" {
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base.configuration
+//  product_version    = "4.3-released"
+//  name               = "minssh-debian11"
+//  image              = "debian11"
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  provider_settings = {
+//    instance_type = "t3a.medium"
+//  }
+//}
 
 module "rocky8-sshminion" {
   source             = "./modules/sshminion"
@@ -590,24 +590,24 @@ module "sles15sp3-sshminion" {
 
 }
 
-//module "rhel9-minion" {
-//
-//  source             = "./modules/minion"
-//  base_configuration = module.base.configuration
-//  server_configuration = module.server.configuration
-//  product_version    = "4.3-released"
-//  name               = "min-rhel9"
-//  image              = "rhel9"
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//  provider_settings = {
-//    instance_type = "t3a.medium"
-//  }
-//
-//  //rhel9-minion_additional_repos
-//
-//}
+module "rhel9-minion" {
+
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  server_configuration = module.server.configuration
+  product_version    = "4.3-released"
+  name               = "min-rhel9"
+  image              = "rhel9"
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+  //rhel9-minion_additional_repos
+
+}
 
 module "ubuntu2204-sshminion" {
   source             = "./modules/sshminion"
@@ -695,10 +695,10 @@ module "controller" {
   ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
 
-  debian11_minion_configuration    = module.debian11-minion.configuration
-  debian11_sshminion_configuration = module.debian11-sshminion.configuration
+//  debian11_minion_configuration    = module.debian11-minion.configuration
+//  debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
-//  rhel9_minion_configuration          = module.rhel9-minion.configuration
+  rhel9_minion_configuration          = module.rhel9-minion.configuration
 
 }
 
