@@ -204,6 +204,17 @@ module "cucumber_testsuite" {
   }
 }
 
+resource "null_resource" "CDN workaround" {
+ provisioner "remote-exec" {
+    inline = [ "echo techpreview.ZYPP_MEDIANETWORK=1 >> /etc/zypp/zypp.conf" ]
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "linux"
+      host     = "${module.cucumber_testsuite.configuration.server.hostname}"
+    }
+  }
+}
 output "configuration" {
   value = module.cucumber_testsuite.configuration
 }
