@@ -203,7 +203,7 @@ module "cucumber_testsuite" {
       }
       image = "opensuse154-ci-pro"
       additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = false
+      install_salt_bundle = true
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
     }
     proxy = {
