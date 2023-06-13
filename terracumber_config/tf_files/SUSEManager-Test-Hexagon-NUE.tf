@@ -204,7 +204,7 @@ module "cucumber_testsuite" {
   }
 }
 
-resource "null_resource" "CDN workaround" {
+resource "null_resource" "cdn_workaround" {
  provisioner "remote-exec" {
     inline = [ "echo techpreview.ZYPP_MEDIANETWORK=1 >> /etc/zypp/zypp.conf" ]
     connection {
