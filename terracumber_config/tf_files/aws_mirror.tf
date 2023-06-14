@@ -96,16 +96,6 @@ variable "KEY_NAME" {
   default = "testing-suma"
 }
 
-variable "ACCESS_KEY" {
-  type = string
-  default = null
-}
-
-variable "SECRET_KEY" {
-  type = string
-  default = null
-}
-
 variable "ALLOWED_IPS" {
   type = list(string)
   default = []
@@ -126,27 +116,32 @@ variable "NAME_PREFIX" {
   default = null
 }
 
+locals {
+  domain            = "suma.ci.aws"
+}
+
 provider "aws" {
   region = var.REGION
-  access_key = var.ACCESS_KEY
-  secret_key = var.SECRET_KEY
 }
 
 module "base" {
   source = "./modules/base"
 
-  images = [ "opensuse153o", "sles15sp2o" ]
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   name_prefix = var.NAME_PREFIX
   testsuite                = true
   use_avahi                = false
+  use_eip_bastion          = false
+
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region = var.REGION
     ssh_allowed_ips = var.ALLOWED_IPS
     key_name = var.KEY_NAME
     key_file = var.KEY_FILE
+//    route53_domain    = local.domain
+//    bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
   }
 }
 
@@ -158,6 +153,7 @@ module "mirror" {
   provider_settings = {
     public_instance = true
   }
+  image = "opensuse154o"
 }
 
 

@@ -1,0 +1,41 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber-provo') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'Manager-4.3', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'SUSEManager-4.3-AWS.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
+            choice(name: 'terraform_bin', choices: ['/usr/bin/terraform'], description: 'Terraform binary path'),
+            choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
+            string(name: 'terraform_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for terraform'),
+            // Temporary: should move to uyuni-project
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
+            booleanParam(name: 'prepare_aws_env', defaultValue: true, description: 'Create local and AWS mirror and upload data to AWS mirror'),
+            booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
+            booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
+            booleanParam(name: 'must_init_clients', defaultValue: true, description: 'Run init clients'),
+            booleanParam(name: 'must_secondary', defaultValue: true, description: 'Run secondary featuress'),
+            string(name: 'aws_region', defaultValue: 'eu-central-1', description: 'Describe the AWS region where to deploy the server'),
+            string(name: 'aws_availability_zone', defaultValue: 'eu-central-1a', description: 'Describe the AWS availability zone to deploy the server'),
+            string(name: 'key_file', defaultValue: '/home/jenkins/.ssh/testing-suma.pem', description: 'Path to SSH private key to access instance in AWS'),
+            string(name: 'key_name', defaultValue: 'testing-suma', description: 'SSH key name in AWS'),
+            text(name: 'allowed_IPS', defaultValue: '65.132.116.252', description: 'Add the public IPs to add to AWS ingress security group ( keep default Jenkins address ) separated by new line' ),
+            booleanParam(name: 'use_latest_ami_image', defaultValue: false, description: 'Use latest ami image')
+            ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-aws.groovy"
+    pipeline.run(params)
+}
