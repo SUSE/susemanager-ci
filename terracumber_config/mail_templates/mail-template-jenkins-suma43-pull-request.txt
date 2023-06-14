@@ -1,0 +1,49 @@
+Results for $timestamp build.
+
+#################################################################
+# SUMMARY
+#################################################################
+Build:   $urlprefix/$timestamp
+Console: $urlprefix/$timestamp/console
+Results: $urlprefix/$timestamp/artifact/results/$timestamp
+Report:  $urlprefix/$timestamp/artifact/results/$timestamp/cucumber_report/cucumber_report.html
+Logs:    $urlprefix/$timestamp/artifact/results/$timestamp/spacewalk-debug.tar.bz2
+
+#################################################################
+# SCENARIOS
+#################################################################
+Total:   $tests
+Passed:  $passed
+Failed:  $failures
+Errors:  $errors
+Skipped: $skipped
+
+$failures_log
+
+Compare the test results with 4.3 tests results and see if your PR
+fixed some or whether your failing tests are also failing in master:
+
+https://ci.suse.de/view/Manager/view/Manager-4.2/job/manager-4.3-dev-acceptance-tests-NUE/
+
+In case of failure, you can connect to the server host. See $urlprefix/$timestamp for connection details.
+
+Your environment will be kept for 24h.
+
+
+Do you need help? Ask for help at our slack channel
+
+https://app.slack.com/client/T02863RC2AC/C02DRMDU69E
+
+
+See troubleshooting guide at
+
+https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting
+
+Check the infrastructure status page to know if your build failed because of some infrastructure problem: http://grafana.mgr.suse.de/d/BLvait-ik/ci-availability?from=now-7d&to=now
+
+Please let us know how you liked it at
+
+https://forms.office.com/r/tAcUe98vAZ .
+
+Your feedback will be used for improving the system.
+

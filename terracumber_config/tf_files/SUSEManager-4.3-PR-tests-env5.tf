@@ -1,23 +1,23 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-prs-ci-tests"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/suma43-prs-ci-tests"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='Uyuni' && run-testsuite"
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-4.3"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,12 +27,12 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "$status acceptance tests on Pull Request: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "$status acceptance tests on SUMA 4.3 Pull Request: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
   type = string
-  default = "../mail_templates/mail-template-jenkins-pull-request.txt"
+  default = "../mail_templates/mail-template-jenkins-suma43-pull-request.txt"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
@@ -42,7 +42,7 @@ variable "MAIL_SUBJECT_ENV_FAIL" {
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = string
-  default = "../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
+  default = "../mail_templates/mail-template-jenkins-suma43-pull-request-env-fail.txt"
 }
 
 variable "ENVIRONMENT" {
@@ -148,7 +148,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-pr"
+  product_version = "4.3-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror.mgr.prv.suse.net"
   use_mirror_images = true
 
-  images = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -172,7 +172,7 @@ module "cucumber_testsuite" {
   auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+  git_profiles_repo = "https://github.com/SUSE/spacewalk.git#:testsuite/features/profiles/internal_prv"
 
   server_http_proxy = "http-proxy.mgr.prv.suse.net:3128"
   custom_download_endpoint = "ftp://minima-mirror.mgr.prv.suse.net:445"
@@ -201,7 +201,7 @@ module "cucumber_testsuite" {
         os_additional_repo = var.ADDITIONAL_REPO_URL,
         testing_overlay_devel = "http://minima-mirror.mgr.prv.suse.net/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Testing-Overlay-POOL-x86_64-Media1/",
       }
-      image = "opensuse154-ci-pro"
+      image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       server_mounted_mirror = "minima-mirror.mgr.prv.suse.net"
@@ -225,7 +225,7 @@ module "cucumber_testsuite" {
         proxy_pool = "http://minima-mirror.mgr.prv.suse.net/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Uyuni-Proxy-POOL-x86_64-Media1/",
         tools_update = var.OPENSUSE_CLIENT_REPO
       }
-      image = "opensuse154-ci-pro"
+      image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -303,7 +303,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse154-ci-pro"
+      image = "sles15sp4o"
       name = "min-kvm"
       additional_grains = {
         hvm_disk_image = {
