@@ -125,12 +125,12 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:04:00:e0"
+        mac = "aa:b2:93:01:00:30"
       }
     }
     server_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:30"
+        mac = "aa:b2:93:01:00:31"
         memory = 16384
       }
       runtime = "k3s"
