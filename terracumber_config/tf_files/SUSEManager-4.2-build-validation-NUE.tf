@@ -523,7 +523,7 @@ module "rocky8-minion" {
 
 module "rocky9-minion" {
   source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
+  base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
   name               = "min-rocky9"
   image              = "rocky9o"
@@ -803,7 +803,7 @@ module "rocky8-sshminion" {
 
 module "rocky9-sshminion" {
   source             = "./modules/sshminion"
-  base_configuration = module.base_res.configuration
+  base_configuration = module.base_core.configuration
   product_version    = "4.2-released"
   name               = "minssh-rocky9"
   image              = "rocky9o"
