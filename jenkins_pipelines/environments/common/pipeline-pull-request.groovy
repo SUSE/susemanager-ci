@@ -15,28 +15,19 @@ def run(params) {
         rake_namespace = 'cucumber'
         rake_parallel_namespace = 'parallel'
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
-        pull_request_repo = 'https://github.com/uyuni-project/uyuni.git'
-        builder_api = 'https://api.opensuse.org'
-        build_url = 'https://build.opensuse.org'
-        builder_project = 'systemsmanagement:Uyuni:Master:PR'
-        source_project = 'systemsmanagement:Uyuni:Master'
-        sumaform_tools_project = 'systemsmanagement:sumaform:tools'
-        test_packages_project = 'systemsmanagement:Uyuni:Test-Packages:Pool'
-        build_repo = 'openSUSE_Leap_15.5'
         environment_workspace = null
-        url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
         env.common_params = ''
         try {
             stage('Get environment') {
                   echo "DEBUG: first environment: ${first_env}"
                   echo "DEBUG: last environment: ${last_env}"
-                  env.suma_pr_lockfile = "/tmp/suma-pr${pull_request_number}"
+                  env.suma_pr_lockfile = "/tmp/${short_product_name}-pr${pull_request_number}"
                   if(params.force_pr_lock_cleanup) {
                     sh "rm -rf ${env.suma_pr_lockfile}"
                   }
                   if(params.remove_previous_environment) {
                     if(email_to!='' && pull_request_number!='') {
-                        sh "bash jenkins_pipelines/scripts/cleanup-lock.sh -u ${email_to} -p ${pull_request_number}"
+                        sh "bash jenkins_pipelines/scripts/cleanup-lock.sh -u ${email_to} -p ${pull_request_number} -x ${short_product_name}"
                     }
                   }
                   running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
@@ -55,10 +46,11 @@ def run(params) {
                       env_status = sh(script: "lockfile -001 -r1 -! ${env_file} 2>/dev/null && echo 'locked' || echo 'free' ", returnStdout: true).trim()
                       if(env_status == 'free'){
                           echo "Using environment suma-pr${env_number}"
-                          environment_workspace = "${jenkins_workspace}suma-pr${env_number}"
+                          environment_workspace = "${jenkins_workspace}/${short_product_name}-pr${env_number}"
                           sh "echo user:${email_to} >> ${env_file}.info"
                           sh "echo PR:${pull_request_number} >> ${env_file}.info"
                           sh "echo started:\$(date) >> ${env_file}.info"
+                          sh "echo product:${short_product_name} >> ${env_file}.info"
                           break;
                       }
                       if(env_number == last_env){
@@ -106,97 +98,99 @@ def run(params) {
             }
             stage('Build product') {
                 ws(environment_workspace){
-                    currentBuild.description =  "${builder_project}:${pull_request_number}<br>${email_to}<br>environment: ${env_number}<br>"
-                    if (run_all_scopes) {
-                        currentBuild.description = "${currentBuild.description} Run all scopes<br>"
-                    } else {
-                        currentBuild.description = "${currentBuild.description}${params.functional_scopes}<br>"
-                    }
-                    currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
-                    dir("product") {
-                        if(must_build) {
-                            sh "[ -L /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos"
-                           if(!params.skip_package_build_check) {
+                    if (build_packages) {
+                      currentBuild.description =  "${builder_project}:${pull_request_number}<br>${email_to}<br>environment: ${env_number}<br>"
+                      if (run_all_scopes) {
+                          currentBuild.description = "${currentBuild.description} Run all scopes<br>"
+                      } else {
+                          currentBuild.description = "${currentBuild.description}${params.functional_scopes}<br>"
+                      }
+                      currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
+                      dir("product") {
+                          if(must_build) {
+                              sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${product_name}/${env_number}/ ${environment_workspace}/repos"
+                             if(!params.skip_package_build_check) {
 
+                                // fail if packages are not building correctly
+                                echo "Checking packages build successfully in ${build_url}/project/show/${source_project}"
+                                echo "If packages fail to build, check the url above for more details"
+                                sh "osc -A ${builder_api} pr -r ${build_repo} -a ${arch} ${source_project} -s 'F' | awk '{print}END{exit NR>1}'"
+                                // fail if packages are unresolvable
+                                sh "osc -A ${builder_api} pr -r ${build_repo} -a ${arch} ${source_project} -s 'U' | awk '{print}END{exit NR>1}'"
+                              }
+                              // force remove, to clean up previous build
+                              sh "osc -A ${builder_api} unlock ${builder_project}:${pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
+
+                              sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --api ${builder_api} --prproject ${builder_project} --configfile $HOME/.oscrc remove --noninteractive ${pull_request_number} || true"
+
+                              sh "osc -A ${builder_api} rdelete -rf -m 'removing project before creating it again' ${builder_project}:${pull_request_number} || true"
+                              sh "python3 susemanager-utils/testing/automation/obs-project.py --api ${builder_api} --prproject ${builder_project} --configfile $HOME/.oscrc add --project ${source_project} --repo ${build_repo} ${pull_request_number} --disablepublish --setmaintainer zypp-team"
+                              // Autocleanup in 3 days from obs
+                              sh "osc -A ${builder_api} dr --accept-in-hours=\$(( 24 * 7 )) --all -m 'Autocleanup' ${builder_project}:${pull_request_number}"                          
+                              sh "osc -A ${builder_api} linkpac ${rn_project} ${rn_package} ${builder_project}:${pull_request_number}"
+                              sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${builder_api}|${source_project}\" -n \"${builder_project}:${pull_request_number}\" -c $HOME/.oscrc -e -s $HOME/.ssh/id_rsa"
+                              echo "Checking ${builder_project}:${pull_request_number}"
+                              sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${builder_api} -c $HOME/.oscrc -p ${builder_project}:${pull_request_number}"
                               // fail if packages are not building correctly
-                              echo "Checking packages build successfully in ${build_url}/project/show/${source_project}"
+                              echo "Checking packages build successfully in ${build_url}/project/show/${builder_project}:${pull_request_number}"
                               echo "If packages fail to build, check the url above for more details"
-                              sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'F' | awk '{print}END{exit NR>1}'"
+                              sh "osc -A ${builder_api} pr ${builder_project}:${pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
                               // fail if packages are unresolvable
-                              sh "osc pr -r ${build_repo} -a ${arch} ${source_project} -s 'U' | awk '{print}END{exit NR>1}'"
-                            }
-                            // force remove, to clean up previous build
-                            sh "osc unlock ${builder_project}:${pull_request_number} -m 'unlock to remove' 2> /dev/null|| true"
+                              sh "osc -A ${builder_api} pr ${builder_project}:${pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
+                              built = true
+                          } // params.must_buid
+                          sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${product_name}/${env_number}/ ${environment_workspace}/repos"
 
-                            sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/obs-project.py --prproject ${builder_project} --configfile $HOME/.oscrc remove --noninteractive ${pull_request_number} || true"
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
+                          // Clean up previous errors
+                          sh "bash -c \"rm -rf ${environment_workspace}/repos/publish_logs\""
+                          sh "bash -c \"mkdir ${environment_workspace}/repos/publish_logs\""
+                          // We clean up the previous repo because the pull request repo gets recreated each time, so we have no control on the build numbers.
+                          sh "bash -c \"rm -rf ${environment_workspace}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}\""
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${builder_project}:${pull_request_number}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${builder_project}_${pull_request_number} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${builder_project}_${pull_request_number}.error"
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
+                          // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${source_project}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" -q ${server_release_package} -q ${proxy_release_package} > ${environment_workspace}/repos/publish_logs/${source_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}.error"
+                          
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${other_project}/${other_build_repo}/${arch}"
+                          // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${other_project}\" -r ${other_build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Other 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Other.error"
+                          
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/x86_64"
+                          // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${sumaform_tools_project}\" -r ${build_repo} -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${sumaform_tools_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${sumaform_tools_project}.error"
 
-                            sh "osc rdelete -rf -m 'removing project before creating it again' ${builder_project}:${pull_request_number} || true"
-                            sh "python3 susemanager-utils/testing/automation/obs-project.py --prproject ${builder_project} --configfile $HOME/.oscrc add --repo ${build_repo} ${pull_request_number} --disablepublish --setmaintainer zypp-team"
-                            // Autocleanup in 3 days from obs
-                            sh "osc dr --accept-in-hours=\$(( 24 * 7 )) --all -m 'Autocleanup' ${builder_project}:${pull_request_number}"                          
-                            sh "osc linkpac ${source_project} release-notes-uyuni ${builder_project}:${pull_request_number}"
-                            sh "bash susemanager-utils/testing/automation/push-to-obs.sh -t -d \"${builder_api}|${source_project}\" -n \"${builder_project}:${pull_request_number}\" -c $HOME/.oscrc -e"
-                            echo "Checking ${builder_project}:${pull_request_number}"
-                            sh "bash susemanager-utils/testing/automation/wait-for-builds.sh -u -a ${builder_api} -c $HOME/.oscrc -p ${builder_project}:${pull_request_number}"
-                            // fail if packages are not building correctly
-                            echo "Checking packages build successfully in ${build_url}/project/show/${builder_project}:${pull_request_number}"
-                            echo "If packages fail to build, check the url above for more details"
-                            sh "osc pr ${builder_project}:${pull_request_number} -s 'F' | awk '{print}END{exit NR>1}'"
-                            // fail if packages are unresolvable
-                            sh "osc pr ${builder_project}:${pull_request_number} -s 'U' | awk '{print}END{exit NR>1}'"
-                            built = true
-                        } // params.must_buid
-                        sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ ${environment_workspace}/repos"
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${test_packages_project}/rpm"
+                          // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${test_packages_project}\" -r rpm -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${test_packages_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${test_packages_project}.error"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
-                        // Clean up previous errors
-                        sh "bash -c \"rm -rf ${environment_workspace}/repos/publish_logs\""
-                        sh "bash -c \"mkdir ${environment_workspace}/repos/publish_logs\""
-                        // We clean up the previous repo because the pull request repo gets recreated each time, so we have no control on the build numbers.
-                        sh "bash -c \"rm -rf ${environment_workspace}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}\""
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${builder_project}:${pull_request_number}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${builder_project}_${pull_request_number} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${builder_project}_${pull_request_number}.error"
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
-                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" -q 000product:Uyuni-Server-release -q 000product:Uyuni-Proxy-release > ${environment_workspace}/repos/publish_logs/${source_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}.error"
-                        
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/${arch}"
-                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Other\" -r ${build_repo} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Other 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Other.error"
-                        
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/x86_64"
-                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${sumaform_tools_project}\" -r ${build_repo} -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${sumaform_tools_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${sumaform_tools_project}.error"
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${el_client_repo}/${EL_9}/x86_64"
+                          // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${el_client_repo}\" -r ${EL_9} -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${el_client_repo} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${el_client_repo}.error"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${test_packages_project}/rpm"
-                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${test_packages_project}\" -r rpm -a x86_64 -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${test_packages_project} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${test_packages_project}.error"
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sles_client_repo}/SLE_15/${arch}"
+                          // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${sles_client_repo}\" -r SLE_15 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${sles_client_repo} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${sles_client_repo}.error"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:EL8-Uyuni-Client-Tools/EL_8/x86_64"
-                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:EL8-Uyuni-Client-Tools\" -r EL_8 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_EL8-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_EL8-Uyuni-Client-Tools.error"
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${openSUSE_client_repo}/openSUSE_Leap_15.0/${arch}"
+                          // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${openSUSE_client_repo}\" -r openSUSE_Leap_15.0 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${openSUSE_client_repo} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${openSUSE_client_repo}.error"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/${arch}"
-                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:SLE15-Uyuni-Client-Tools\" -r SLE_15 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_SLE15-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_SLE15-Uyuni-Client-Tools.error"
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}"
+                          // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
+                          // Clean up previous Packages.gz
+                          sh "rm -f ${environment_workspace}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}/Packages.gz"
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${ubuntu_client_repo}\" -r xUbuntu_22.04 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${ubuntu_client_repo} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${ubuntu_client_repo}.error"
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/${arch}"
-                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools\" -r openSUSE_Leap_15.0 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_openSUSE_Leap_15-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_openSUSE_Leap_15-Uyuni-Client-Tools.error"
+                          echo "Wait for all publishers to finish...This could take a while ..."
+                          sh "bash -c \"while ( ps -C publish-rpms.sh > /dev/null 2>/dev/null );do sleep 1; done\" "
 
-                        echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2204-Uyuni-Client-Tools/xUbuntu_22.04/${arch}"
-                        // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
-                        // Clean up previous Packages.gz
-                        sh "rm -f ${environment_workspace}/repos/systemsmanagement:Uyuni:Master:Ubuntu2204-Uyuni-Client-Tools/xUbuntu_22.04/${arch}/Packages.gz"
-                        sh "bash susemanager-utils/testing/automation/publish-rpms.sh -p \"${source_project}:Ubuntu2204-Uyuni-Client-Tools\" -r xUbuntu_22.04 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2204-Uyuni-Client-Tools 2>&1 || touch ${environment_workspace}/repos/publish_logs/${source_project}_Ubuntu2204-Uyuni-Client-Tools.error"
-
-                        echo "Wait for all publishers to finish...This could take a while ..."
-                        sh "bash -c \"while ( ps -C publish-rpms.sh > /dev/null 2>/dev/null );do sleep 1; done\" "
-
-                        echo "DEBUG"
-                        sh "pwd"
-                        sh "ls"
-                        echo "Check for publishing failures"
-                        sh "bash -c \"if ls ${environment_workspace}/repos/publish_logs/*.error 1>/dev/null 2>&1;then echo 'There was an error publishing';cat ${environment_workspace}/repos/publish_logs/*;exit -1;fi \""
+                          echo "DEBUG"
+                          sh "pwd"
+                          sh "ls"
+                          echo "Check for publishing failures"
+                          sh "bash -c \"if ls ${environment_workspace}/repos/publish_logs/*.error 1>/dev/null 2>&1;then echo 'There was an error publishing';cat ${environment_workspace}/repos/publish_logs/*;exit -1;fi \""
+                      }
                     }
                 }
             }
@@ -211,7 +205,7 @@ def run(params) {
                         // Define test environment parameters
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-                        env.tf_file = "susemanager-ci/terracumber_config/tf_files/Uyuni-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
+                        env.tf_file = "susemanager-ci/terracumber_config/tf_files/${product_name}-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
                         env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
 
                         if (params.terraform_parallelism) {
@@ -225,42 +219,46 @@ def run(params) {
                         sh "mkdir -p ${resultdir}"
 
                         // Clone sumaform
-                        sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${sumaform_gitrepo} --gitref ${sumaform_ref} --runstep gitsync"
+                        sh "set +x;set +e; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${sumaform_gitrepo} --gitref ${sumaform_ref} --runstep gitsync"
+                        echo "DEBUG: end of clone ci"
                     }
                 }
             }
             stage('Deploy') {
+                echo "DEBUG: Deploy 1"
                 ws(environment_workspace){
                     if(must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
-                        env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
-                        env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/${arch}"
-                        env.MASTER_SUMAFORM_TOOLS_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/${arch}"
-                        env.TEST_PACKAGES_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${test_packages_project}/rpm/${arch}"
-                        env.UPDATE_REPO = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/some-updates/leap/15.4"
+                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
+                        env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
+                        env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${other_project}/${other_build_repo}/${arch}"
+                        env.MASTER_SUMAFORM_TOOLS_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/${arch}"
+                        env.TEST_PACKAGES_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${test_packages_project}/rpm/${arch}"
+                        env.UPDATE_REPO = update_repo
                         if (additional_repo_url == '') {
                             echo "Adding dummy repo for update repo"
-                            env.ADDITIONAL_REPO_URL = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/dummy/"
+                            env.ADDITIONAL_REPO_URL = additional_repo 
                         } else {
                             echo "Adding ${additional_repo_url}"
                             env.ADDITIONAL_REPO_URL = additional_repo_url
                         }
-                        env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:SLE15-Uyuni-Client-Tools/SLE_15/${arch}"
-                        env.RHLIKE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:EL8-Uyuni-Client-Tools/EL_8/${arch}"
-                        env.DEBLIKE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Ubuntu2204-Uyuni-Client-Tools/xUbuntu_22.04/${arch}"
-                        env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools/openSUSE_Leap_15.0/${arch}"
+                        env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sles_client_repo}/SLE_15/${arch}"
+                        env.RHLIKE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${el_client_repo}/${EL_9}/${arch}"
+                        env.DEBLIKE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}"
+                        env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${openSUSE_client_repo}/openSUSE_Leap_15.0/${arch}"
 
-                        // Provision the environment
-                        if (terraform_init) {
-                            env.TERRAFORM_INIT = '--init'
-                        } else {
-                            env.TERRAFORM_INIT = ''
-                        }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
-                        deployed = true
-                    }
+                      // Provision the environment
+                      if (terraform_init) {
+                          env.TERRAFORM_INIT = '--init'
+                      } else {
+                          env.TERRAFORM_INIT = ''
+                      }
+                      echo "DEBUG: Deploy 5"
+                      sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                      echo "DEBUG: Deploy 6"
+                      deployed = true
+		    }
                 }
             }
             stage('Sanity Check') {
