@@ -101,7 +101,7 @@ module "base_core" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "centos7o", "rocky8o", "ubuntu1804o", "ubuntu2004o", "debian10o", "debian11o", "opensuse154o" ]
+  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "centos7o", "rocky8o", "rocky9o", "ubuntu1804o", "ubuntu2004o", "debian10o", "debian11o", "opensuse154o" ]
 
   # mirror = "minima-mirror-bv.mgr.suse.de"
   # use_mirror_images = true
@@ -521,6 +521,27 @@ module "rocky8-minion" {
   install_salt_bundle = true
 }
 
+module "rocky9-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.2-released"
+  name               = "min-rocky9"
+  image              = "rocky9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:71"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
 module "ubuntu1804-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -780,6 +801,23 @@ module "rocky8-sshminion" {
   install_salt_bundle = true
 }
 
+module "rocky9-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.2-released"
+  name               = "minssh-rocky9"
+  image              = "rocky9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:91"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
 module "ubuntu1804-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -985,6 +1023,9 @@ module "controller" {
 
   rocky8_minion_configuration    = module.rocky8-minion.configuration
   rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
+
+  rocky9_minion_configuration    = module.rocky9-minion.configuration
+  rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
 
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
