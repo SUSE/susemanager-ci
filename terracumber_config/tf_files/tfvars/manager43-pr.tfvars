@@ -1,3 +1,5 @@
+############ Unique to spacewalk ###########3
+
 IMAGE="sles15sp4o"
 GIT_PROFILES_REPO="https://github.com/SUSE/spacewalk.git#:testsuite/features/profiles/internal_prv"
 IMAGES=["rocky8o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]

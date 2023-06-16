@@ -1,3 +1,5 @@
+############ Unique to uyuni ########################
+
 IMAGE="opensuse154-ci-pro"
 GIT_PROFILES_REPO="https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 IMAGES=["rocky8o", "opensuse154o", "opensuse154-ci-pro", "sles15sp4o", "ubuntu2204o"]
@@ -9,6 +11,9 @@ CUCUMBER_BRANCH="master"
 CUCUMBER_GITREPO="https://github.com/uyuni-project/uyuni.git"
 CUCUMBER_COMMAND="export PRODUCT='Uyuni' && run-testsuite"
 URL_PREFIX="https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-prs-ci-tests"
+
+############### GENERIC PART BETWEEN THE TWO PIPELINE ########################
+##  This variables are not correctly describe
 SLE_CLIENT_REPO=${SLE_CLIENT_REPO}
 RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO}
 DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO}
