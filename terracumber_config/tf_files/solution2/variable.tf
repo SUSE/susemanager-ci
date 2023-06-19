@@ -40,12 +40,10 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
 
 variable "ENVIRONMENT" {
   type = string
-  default = "1"
 }
 
 variable "HYPER" {
   type = string
-  default = "romulus.mgr.prv.suse.net"
 }
 
 variable "MAIL_FROM" {
