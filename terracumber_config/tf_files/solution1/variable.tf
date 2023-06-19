@@ -158,5 +158,3 @@ variable "additional_network" {
   type = string
   description = "Additional network depending on environment "
 }
-
-

@@ -143,4 +143,3 @@ variable "environment_configuration" {
   type = map(string)
   description = "Collection of  value containing : mac addresses, hypervisor and additional network"
 }
-
