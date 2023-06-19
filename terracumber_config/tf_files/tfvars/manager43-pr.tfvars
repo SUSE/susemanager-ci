@@ -1,4 +1,4 @@
-############ Unique to spacewalk ###########3
+############ Varaibles unique to spacewalk ###########
 
 IMAGE="sles15sp4o"
 GIT_PROFILES_REPO="https://github.com/SUSE/spacewalk.git#:testsuite/features/profiles/internal_prv"
