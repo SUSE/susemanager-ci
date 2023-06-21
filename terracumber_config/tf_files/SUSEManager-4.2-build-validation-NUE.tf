@@ -101,7 +101,7 @@ module "base_core" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "centos7o", "rocky8o", "rocky9o", "ubuntu1804o", "ubuntu2004o", "debian10o", "debian11o", "opensuse154o" ]
+  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "centos7o", "rocky8o", "ubuntu1804o", "ubuntu2004o", "debian10o", "opensuse154o" ]
 
   # mirror = "minima-mirror-bv.mgr.suse.de"
   # use_mirror_images = true
@@ -521,26 +521,7 @@ module "rocky8-minion" {
   install_salt_bundle = true
 }
 
-module "rocky9-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.2-released"
-  name               = "min-rocky9"
-  image              = "rocky9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:71"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
+// Rocky 9 is not supported by SUSE Manager 4.2
 
 module "ubuntu1804-minion" {
   source             = "./modules/minion"
@@ -599,24 +580,9 @@ module "debian10-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian11-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.2-released"
-  name               = "min-debian11"
-  image              = "debian11o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6e"
-    memory             = 4096
-  }
+// Debian 11 is not supported by SUSE Manager 4.2
 
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// Debian 12 is not supported by SUSE Manager 4.2
 
 module "opensuse154arm-minion" {
   providers = {
@@ -801,22 +767,7 @@ module "rocky8-sshminion" {
   install_salt_bundle = true
 }
 
-module "rocky9-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-rocky9"
-  image              = "rocky9o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:91"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
+// Rocky 9 is not supported by SUSE Manager 4.2
 
 module "ubuntu1804-sshminion" {
   source             = "./modules/sshminion"
@@ -862,19 +813,9 @@ module "debian10-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian11-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-debian11"
-  image              = "debian11o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:8e"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// Debian 11 is not supported by SUSE Manager 4.2
+
+// Debian 12 is not supported by SUSE Manager 4.2
 
 module "opensuse154arm-sshminion" {
   providers = {
@@ -1024,8 +965,7 @@ module "controller" {
   rocky8_minion_configuration    = module.rocky8-minion.configuration
   rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
 
-  rocky9_minion_configuration    = module.rocky9-minion.configuration
-  rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
+  // Rocky 9 is not supported by SUSE Manager 4.2
 
   sle12sp4_client_configuration    = module.sles12sp4-client.configuration
   sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
@@ -1066,9 +1006,7 @@ module "controller" {
   debian10_minion_configuration    = module.debian10-minion.configuration
   debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
-  debian11_minion_configuration    = module.debian11-minion.configuration
-  debian11_sshminion_configuration = module.debian11-sshminion.configuration
-
+  // Debian 11 is not supported by SUSE Manager 4.2
   // Debian 12 is not supported by SUSE Manager 4.2
 
   opensuse154arm_minion_configuration = module.opensuse154arm-minion.configuration
