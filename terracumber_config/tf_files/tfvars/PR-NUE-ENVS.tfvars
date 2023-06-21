@@ -1,3 +1,5 @@
+MIRROR = "minima-mirror.mgr.suse.de"
+DOMAIN = "mgr.suse.de"
 environment_description = {
   1 = {
     mac = {
