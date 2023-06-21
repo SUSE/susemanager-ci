@@ -594,6 +594,26 @@ module "sles15sp3-sshminion" {
 
 }
 
+module "rhel8-minion" {
+
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  server_configuration = module.server.configuration
+  product_version    = "4.3-released"
+  name               = "min-rhel8"
+  image              = "rhel8"
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+  //rhel8-minion_additional_repos
+
+}
+
 module "rhel9-minion" {
 
   source             = "./modules/minion"
@@ -611,6 +631,42 @@ module "rhel9-minion" {
   }
 
   //rhel9-minion_additional_repos
+
+}
+
+module "rhel9-sshminion" {
+
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  server_configuration = module.server.configuration
+  product_version    = "4.3-released"
+  name               = "min-sshrhel9"
+  image              = "rhel9"
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+}
+
+module "rhel8-sshminion" {
+
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  server_configuration = module.server.configuration
+  product_version    = "4.3-released"
+  name               = "min-sshrhel8"
+  image              = "rhel8"
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
 
 }
 
