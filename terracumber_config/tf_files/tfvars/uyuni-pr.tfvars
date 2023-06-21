@@ -11,6 +11,4 @@ CUCUMBER_BRANCH        = "master"
 CUCUMBER_GITREPO       = "https://github.com/uyuni-project/uyuni.git"
 CUCUMBER_COMMAND       = "export PRODUCT='Uyuni' && run-testsuite"
 URL_PREFIX             = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-prs-ci-tests"
-MIRROR                 = "minima-mirror.mgr.prv.suse.net"
 USE_MIRROR             = true
-DOMAIN                 = "mgr.prv.suse.net"
