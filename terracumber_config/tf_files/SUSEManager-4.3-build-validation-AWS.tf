@@ -609,9 +609,7 @@ module "rhel8-minion" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
-
   //rhel8-minion_additional_repos
-
 }
 
 module "rhel9-minion" {
@@ -629,9 +627,7 @@ module "rhel9-minion" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
-
   //rhel9-minion_additional_repos
-
 }
 
 module "rhel9-sshminion" {
@@ -649,7 +645,6 @@ module "rhel9-sshminion" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
-
 }
 
 module "rhel8-sshminion" {
@@ -667,7 +662,6 @@ module "rhel8-sshminion" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
-
 }
 
 module "ubuntu2204-sshminion" {
