@@ -181,8 +181,9 @@ module "server" {
   create_sample_activation_key   = false
   create_sample_bootstrap_script = false
   publish_private_ssl_key        = false
-  use_os_released_updates        = false
+  use_os_released_updates        = true
   disable_download_tokens        = false
+  accept_all_ssl_protocols       = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "m6a.xlarge"
