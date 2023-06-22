@@ -233,6 +233,7 @@ module "sles12sp4-client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
+  additional_packages = [ "chrony" ]
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -249,6 +250,7 @@ module "sles12sp5-client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
+  additional_packages = [ "chrony" ]
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
