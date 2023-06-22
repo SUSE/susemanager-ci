@@ -383,6 +383,7 @@ module "sles12sp4-minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
+  additional_packages = [ "chrony" ]
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -399,6 +400,7 @@ module "sles12sp5-minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
+  additional_packages = [ "chrony" ]
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -527,6 +529,7 @@ module "sles12sp4-sshminion" {
   image              = "sles12sp4"
   use_os_released_updates = false
   sles_registration_code = var.SLES_REGISTRATION_CODE
+  additional_packages = [ "chrony" ]
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   provider_settings = {
@@ -542,6 +545,7 @@ module "sles12sp5-sshminion" {
   image              = "sles12sp5"
   use_os_released_updates = false
   sles_registration_code = var.SLES_REGISTRATION_CODE
+  additional_packages = [ "chrony" ]
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   provider_settings = {
@@ -638,6 +642,7 @@ module "rhel9-sshminion" {
   name               = "min-sshrhel9"
   image              = "rhel9"
   use_os_released_updates = false
+  install_salt_bundle = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -652,6 +657,7 @@ module "rhel8-sshminion" {
   name               = "min-sshrhel8"
   image              = "rhel8"
   use_os_released_updates = false
+  install_salt_bundle = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -747,7 +753,11 @@ module "controller" {
 //  debian11_minion_configuration    = module.debian11-minion.configuration
 //  debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
+  rhel8_minion_configuration         = module.rhel8-minion.configuration
+  rhel8_sshminion_configuration      = module.rhel8-sshminion.configuration
+
   rhel9_minion_configuration          = module.rhel9-minion.configuration
+  rhel9_sshminion_configuration       = module.rhel9-sshminion.configuration
 
 }
 
