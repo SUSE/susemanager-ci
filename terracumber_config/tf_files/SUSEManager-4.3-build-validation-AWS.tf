@@ -751,8 +751,8 @@ module "controller" {
 //  debian11_minion_configuration    = module.debian11-minion.configuration
 //  debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
-  rhel8_minion_configuration         = module.rhel8-minion.configuration
-  rhel8_sshminion_configuration      = module.rhel8-sshminion.configuration
+//  rhel8_minion_configuration         = module.rhel8-minion.configuration
+//  rhel8_sshminion_configuration      = module.rhel8-sshminion.configuration
 
   rhel9_minion_configuration          = module.rhel9-minion.configuration
   rhel9_sshminion_configuration       = module.rhel9-sshminion.configuration
