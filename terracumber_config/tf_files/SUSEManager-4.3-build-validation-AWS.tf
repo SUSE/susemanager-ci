@@ -609,6 +609,7 @@ module "rhel8-minion" {
   image              = "rhel8"
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -657,6 +658,7 @@ module "rhel8-sshminion" {
   name               = "min-sshrhel8"
   image              = "rhel8"
   use_os_released_updates = false
+  install_salt_bundle = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "t3a.medium"
