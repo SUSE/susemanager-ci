@@ -184,6 +184,8 @@ module "server" {
   use_os_released_updates        = true
   disable_download_tokens        = false
   accept_all_ssl_protocols       = true
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "m6a.xlarge"
