@@ -18,6 +18,7 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'terraform_taint', defaultValue: true, description: 'Call terraform taint (so the resources, except volumes, are recreated)'),
             choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
             extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ',', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_smdba,@scope_spacecmd,@scope_spacewalk_utils,@scope_visualization,@scope_notification_message,@scope_virtual_host_manager,@scope_subscription_matching,@scope_formulas,@scope_sp_migration,@scope_cve_audit,@scope_onboarding,@scope_content_lifecycle_management,@scope_res,@scope_recurring_actions,@scope_maintenance_windows,@scope_building_container_images,@scope_kubernetes_integration,@scope_openscap,@scope_deblike,@scope_action_chains,@scope_salt_ssh,@scope_tomcat,@scope_changing_software_channels,@scope_monitoring,@scope_salt,@scope_cobbler,@scope_sumatoolbox,@scope_virtualization,@scope_hub,@scope_retail,@scope_configuration_channels,@scope_content_staging,@scope_proxy,@scope_traditional_client,@scope_api,@scope_power_management,@scope_retracted_patches,@scope_ansible,@scope_reportdb,@scope_containerized_proxy', description: 'Choose the functional scopes that you want to test')
         ])
     ])
@@ -49,6 +50,11 @@ node('sumaform-cucumber-provo') {
                 
                 // Clone sumaform
                 sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+
+                // Restore Terraform states from artifacts
+                if (params.use_previous_terraform_state) {
+                    copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                }
             }
 
             stage('Deploy') {
@@ -109,6 +115,9 @@ node('sumaform-cucumber-provo') {
         }
 
         finally {
+            stage('Save TF state') {
+                archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+            }
             stage('Dump Test Coverage results') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar dump --address localhost --destfile /tmp/jacoco-last.exec --port 6300 --reset\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"java -jar /tmp/jacococli.jar merge \\\$(ls /tmp/*.exec) --destfile /tmp/jacoco-all.exec\"'"
