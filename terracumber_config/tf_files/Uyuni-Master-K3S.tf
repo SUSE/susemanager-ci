@@ -115,7 +115,7 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
   
-  server_containerized = true
+  containerized_server = true
 
   # mirror      = "minima-mirror.mgr.suse.de"
   # use_mirror_images = true
