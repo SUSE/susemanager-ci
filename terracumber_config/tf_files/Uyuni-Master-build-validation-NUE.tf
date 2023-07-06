@@ -565,7 +565,7 @@ module "opensuse154arm-minion" {
   name               = "min-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:fc"
+    mac                = "aa:b2:93:02:01:bf"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -588,7 +588,7 @@ module "opensuse155arm-minion" {
   name               = "min-opensuse155arm"
   image              = "opensuse155armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:fd"
+    mac                = "aa:b2:93:02:01:c0"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -964,7 +964,7 @@ module "opensuse154arm-sshminion" {
   name               = "minssh-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:fe"
+    mac                = "aa:b2:93:02:01:df"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -983,7 +983,7 @@ module "opensuse155arm-sshminion" {
   name               = "minssh-opensuse155arm"
   image              = "opensuse155armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:ff"
+    mac                = "aa:b2:93:02:01:e0"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
