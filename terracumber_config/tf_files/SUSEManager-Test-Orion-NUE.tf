@@ -125,6 +125,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:70"
         vcpu = 2
+        memory = 2048
       }
     }
     server = {
@@ -151,6 +152,8 @@ module "cucumber_testsuite" {
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:74"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -160,6 +163,8 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:76"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -169,6 +174,8 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:78"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -191,6 +198,8 @@ module "cucumber_testsuite" {
       image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:93:01:00:7b"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
