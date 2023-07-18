@@ -4,7 +4,7 @@ node('sumaform-cucumber') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
-        pipelineTriggers([cron('H 0 * * *')]),
+        pipelineTriggers([cron('H 20 * * *')]),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
             // Temporary: makes sense only for a specific PR at this point
