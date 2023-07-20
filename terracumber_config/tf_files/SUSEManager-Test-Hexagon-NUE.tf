@@ -130,8 +130,9 @@ module "cucumber_testsuite" {
     server_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:51"
-        memory = 13312
+        memory = 16384
       }
+      login_timeout = 28800
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
       //additional_repos = {
