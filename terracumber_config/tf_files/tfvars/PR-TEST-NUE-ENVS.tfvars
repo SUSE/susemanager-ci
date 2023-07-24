@@ -1,7 +1,8 @@
 MIRROR = "minima-mirror.mgr.suse.de"
 DOMAIN = "mgr.suse.de"
 GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
-environment_description = {
+USE_MIRROR = true
+ENVIRONMENT_CONFIGURATION = {
   1 = {
     mac = {
       controller     = "aa:b2:93:01:03:00"

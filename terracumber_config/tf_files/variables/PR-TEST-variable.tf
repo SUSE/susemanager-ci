@@ -42,10 +42,6 @@ variable "ENVIRONMENT" {
   type = string
 }
 
-variable "HYPER" {
-  type = string
-}
-
 variable "MAIL_FROM" {
   type = string
   default = "galaxy-ci@suse.de"
@@ -134,7 +130,7 @@ variable "IMAGES" {
 }
 
 variable "PRODUCT_VERSION" {
-  type = list(string)
+  type = string
 }
 
 variable "MIRROR" {
@@ -142,16 +138,14 @@ variable "MIRROR" {
 }
 
 variable "USE_MIRROR" {
-  type = boolean
+  type = bool
 }
 
 variable "DOMAIN" {
   type = string
 }
 
-### Related to environent solution 2 ####
-
-variable "environment_configuration" {
-  type = map(string)
+variable "ENVIRONMENT_CONFIGURATION" {
+  type = map
   description = "Collection of  value containing : mac addresses, hypervisor and additional network"
 }

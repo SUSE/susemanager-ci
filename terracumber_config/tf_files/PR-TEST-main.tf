@@ -10,7 +10,7 @@ terraform {
 
 
 provider "libvirt" {
-  uri = "qemu+tcp://${var.environment_configuration[var.ENVIRONMENT].hypervisor}/system"
+  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor}/system"
 }
 
 module "cucumber_testsuite" {
@@ -49,12 +49,12 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["controller"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
       }
     }
     server = {
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["server"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
       }
       additional_repos_only = true
       additional_repos = {
@@ -76,7 +76,7 @@ module "cucumber_testsuite" {
     }
     proxy = {
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["proxy"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
       }
       additional_repos_only = true
       additional_repos = {
@@ -101,7 +101,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["suse-minion"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
       }
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
@@ -113,7 +113,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["suse-sshminion"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
       }
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
@@ -125,7 +125,7 @@ module "cucumber_testsuite" {
       image = "rocky8o"
       name = "min-rocky8"
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["redhat-minion"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["redhat-minion"]
         memory = 2048
         vcpu = 2
       }
@@ -139,7 +139,7 @@ module "cucumber_testsuite" {
       image = "ubuntu2204o"
       name = "min-ubuntu2204"
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["debian-minion"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["debian-minion"]
       }
       additional_repos = {
         client_repo = var.DEBLIKE_CLIENT_REPO,
@@ -153,7 +153,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["build-host"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
         memory = 2048
       }
       additional_repos = {
@@ -188,7 +188,7 @@ module "cucumber_testsuite" {
         }
       }
       provider_settings = {
-        mac = var.environment_configuration[var.ENVIRONMENT].mac["kvm-host"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
       }
       additional_repos_only = true
       additional_repos = {
@@ -205,12 +205,12 @@ module "cucumber_testsuite" {
     }
   }
   nested_vm_host = "suma-pr${var.ENVIRONMENT}-min-nested"
-  nested_vm_mac =  var.environment_configuration[var.ENVIRONMENT].mac["nested-vm"]
+  nested_vm_mac =  var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["nested-vm"]
   provider_settings = {
     pool               = "ssd"
     network_name       = null
     bridge             = "br1"
-    additional_network = var.environment_configuration[var.ENVIRONMENT].additional_network
+    additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
   }
 }
 

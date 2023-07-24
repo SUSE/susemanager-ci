@@ -1,6 +1,7 @@
 MIRROR = "minima-mirror.mgr.prv.suse.net"
 DOMAIN = "mgr.prv.suse.net"
 GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+USE_MIRROR = true
 environment_description = {
   1 = {
     mac = {
