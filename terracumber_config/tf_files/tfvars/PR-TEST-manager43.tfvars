@@ -1,7 +1,6 @@
 ############ Varaibles unique to spacewalk ###########
 
 IMAGE                  = "sles15sp4o"
-GIT_PROFILES_REPO      = "https://github.com/SUSE/spacewalk.git#:testsuite/features/profiles/internal_prv"
 IMAGES                 = ["rocky8o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 PRODUCT_VERSION        = "4.3-nightly"
 MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-suma43-pull-request-env-fail.txt"

@@ -1,7 +1,6 @@
 ############ Variable unique to uyuni ########################
 
 IMAGE                  = "opensuse154-ci-pro"
-GIT_PROFILES_REPO      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 IMAGES                 = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "sles15sp4o", "ubuntu2204o"]
 PRODUCT_VERSION        = "uyuni-pr"
 MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
