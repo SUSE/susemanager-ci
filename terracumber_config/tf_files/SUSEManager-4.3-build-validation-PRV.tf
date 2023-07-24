@@ -108,11 +108,6 @@ provider "libvirt" {
   uri = "qemu+tcp://mandalore.mgr.prv.suse.net/system"
 }
 
-//provider "libvirt" {
-//  alias = "overdrive4"
-//  uri = "qemu+tcp://overdrive4.mgr.suse.de/system"
-//}
-
 module "base_core" {
   source = "./modules/base"
 
@@ -261,31 +256,6 @@ module "base_debian" {
     bridge      = "br1"
   }
 }
-
-//module "base_arm" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//
-//  source = "./modules/base"
-//
-//  cc_username = var.SCC_USER
-//  cc_password = var.SCC_PASSWORD
-//  name_prefix = "suma-bv-43-"
-//  use_avahi   = false
-//  domain      = "mgr.prv.suse.net"
-//  images      = [ "opensuse154armo", "opensuse155armo" ]
-//
-//  mirror = "minima-mirror-bv.mgr.prv.suse.net"
-//  use_mirror_images = true
-//
-//  testsuite = true
-//
-//  provider_settings = {
-//    pool        = "ssd"
-//    bridge      = "br1"
-//  }
-//}
 
 module "server" {
   source             = "./modules/server"
@@ -722,30 +692,6 @@ module "centos7-minion" {
   install_salt_bundle = true
 }
 
-// module "liberty9-minion" {
-//   providers = {
-//     libvirt = libvirt.endor
-//   }
-//   source             = "./modules/minion"
-//   base_configuration = module.base_res.configuration
-//   product_version    = "4.3-released"
-//   name               = "min-liberty9"
-//   image              = "libertylinux9o"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:c5"
-//     memory             = 4096
-//   }
-//   server_configuration = {
-//     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-//   }
-//   auto_connect_to_master  = false
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
-//
-//   additional_packages = [ "venv-salt-minion" ]
-//   install_salt_bundle = true
-// }
-
 module "oracle9-minion" {
   providers = {
     libvirt = libvirt.endor
@@ -926,52 +872,6 @@ module "debian11-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
-//module "opensuse154arm-minion" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//  source             = "./modules/minion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "min-opensuse154arm"
-//  image              = "opensuse154armo"
-//  provider_settings = {
-//    mac                = "aa:b2:93:02:01:f8"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  server_configuration = {
-//    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-//  }
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
-
-//module "opensuse155arm-minion" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//  source             = "./modules/minion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "min-opensuse155arm"
-//  image              = "opensuse155armo"
-//  provider_settings = {
-//    mac                = "aa:b2:93:02:01:f9"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  server_configuration = {
-//    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-//  }
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
 
 module "slemicro51-minion" {
   providers = {
@@ -1391,44 +1291,6 @@ module "debian11-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
-//module "opensuse154arm-sshminion" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//  source             = "./modules/sshminion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "minssh-opensuse154arm"
-//  image              = "opensuse154armo"
-//  provider_settings = {
-//    mac                = "aa:b2:93:02:01:fa"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
-
-//module "opensuse155arm-sshminion" {
-//  providers = {
-//    libvirt = libvirt.overdrive4
-//  }
-//  source             = "./modules/sshminion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "minssh-opensuse155arm"
-//  image              = "opensuse155armo"
-//  provider_settings = {
-//    mac                = "aa:b2:93:02:01:fb"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
 
 module "slemicro51-sshminion" {
  providers = {
