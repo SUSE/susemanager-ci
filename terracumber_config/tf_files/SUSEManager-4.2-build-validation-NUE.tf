@@ -88,10 +88,10 @@ provider "libvirt" {
   uri = "qemu+tcp://suma-06.mgr.suse.de/system"
 }
 
-provider "libvirt" {
-  alias = "overdrive3"
-  uri = "qemu+tcp://overdrive3.mgr.suse.de/system"
-}
+//provider "libvirt" {
+//  alias = "overdrive3"
+//  uri = "qemu+tcp://overdrive3.mgr.suse.de/system"
+//}
 
 module "base_core" {
   source = "./modules/base"
@@ -115,30 +115,30 @@ module "base_core" {
   }
 }
 
-module "base_arm" {
-  providers = {
-    libvirt = libvirt.overdrive3
-  }
-
-  source = "./modules/base"
-
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-42-"
-  use_avahi   = false
-  domain      = "mgr.suse.de"
-  images      = [ "opensuse154armo", "opensuse155armo" ]
-
-  # mirror = "minima-mirror-bv.mgr.suse.de"
-  # use_mirror_images = true
-
-  testsuite = true
-
-  provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
-  }
-}
+//module "base_arm" {
+//  providers = {
+//    libvirt = libvirt.overdrive3
+//  }
+//
+//  source = "./modules/base"
+//
+//  cc_username = var.SCC_USER
+//  cc_password = var.SCC_PASSWORD
+//  name_prefix = "suma-bv-42-"
+//  use_avahi   = false
+//  domain      = "mgr.suse.de"
+//  images      = [ "opensuse154armo", "opensuse155armo" ]
+//
+//  # mirror = "minima-mirror-bv.mgr.suse.de"
+//  # use_mirror_images = true
+//
+//  testsuite = true
+//
+//  provider_settings = {
+//    pool        = "ssd"
+//    bridge      = "br1"
+//  }
+//}
 
 module "server" {
   source             = "./modules/server"
@@ -584,51 +584,51 @@ module "debian10-minion" {
 
 // Debian 12 is not supported by SUSE Manager 4.2
 
-module "opensuse154arm-minion" {
-  providers = {
-    libvirt = libvirt.overdrive3
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.2-released"
-  name               = "min-opensuse154arm"
-  image              = "opensuse154armo"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6f"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "opensuse155arm-minion" {
-  providers = {
-    libvirt = libvirt.overdrive3
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.2-released"
-  name               = "min-opensuse155arm"
-  image              = "opensuse155armo"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:70"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//module "opensuse154arm-minion" {
+//  providers = {
+//    libvirt = libvirt.overdrive3
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "4.2-released"
+//  name               = "min-opensuse154arm"
+//  image              = "opensuse154armo"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:6f"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  server_configuration = {
+//    hostname = "suma-bv-42-pxy.mgr.suse.de"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+//
+//module "opensuse155arm-minion" {
+//  providers = {
+//    libvirt = libvirt.overdrive3
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "4.2-released"
+//  name               = "min-opensuse155arm"
+//  image              = "opensuse155armo"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:70"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  server_configuration = {
+//    hostname = "suma-bv-42-pxy.mgr.suse.de"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 module "sles12sp4-sshminion" {
   source             = "./modules/sshminion"
@@ -817,43 +817,43 @@ module "debian10-sshminion" {
 
 // Debian 12 is not supported by SUSE Manager 4.2
 
-module "opensuse154arm-sshminion" {
-  providers = {
-    libvirt = libvirt.overdrive3
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-opensuse154arm"
-  image              = "opensuse154armo"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:8f"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "opensuse155arm-sshminion" {
-  providers = {
-    libvirt = libvirt.overdrive3
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-opensuse155arm"
-  image              = "opensuse155armo"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:90"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//module "opensuse154arm-sshminion" {
+//  providers = {
+//    libvirt = libvirt.overdrive3
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "4.2-released"
+//  name               = "minssh-opensuse154arm"
+//  image              = "opensuse154armo"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:8f"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+//
+//module "opensuse155arm-sshminion" {
+//  providers = {
+//    libvirt = libvirt.overdrive3
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "4.2-released"
+//  name               = "minssh-opensuse155arm"
+//  image              = "opensuse155armo"
+//  provider_settings = {
+//    mac                = "aa:b2:92:42:00:90"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 module "sles12sp5-buildhost" {
   source             = "./modules/build_host"
@@ -1009,11 +1009,11 @@ module "controller" {
   // Debian 11 is not supported by SUSE Manager 4.2
   // Debian 12 is not supported by SUSE Manager 4.2
 
-  opensuse154arm_minion_configuration = module.opensuse154arm-minion.configuration
-  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
-
-  opensuse155arm_minion_configuration = module.opensuse155arm-minion.configuration
-  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+//  opensuse154arm_minion_configuration = module.opensuse154arm-minion.configuration
+//  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+//
+//  opensuse155arm_minion_configuration = module.opensuse155arm-minion.configuration
+//  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp3_buildhost_configuration = module.sles15sp3-buildhost.configuration
