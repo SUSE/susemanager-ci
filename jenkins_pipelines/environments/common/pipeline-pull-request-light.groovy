@@ -43,8 +43,8 @@ def run(params) {
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-TEST-main.tf"
                         env.tfvariables_file  = "susemanager-ci/terracumber_config/tf_files/variables/PR-TEST-variable.tf"
-                        env.tftfvars_files = ["susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-manager43.tfvars","susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-NUE-ENVS.tfvars"]
-                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
+                        env.tfvars_files = ["susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-manager43.tfvars","susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-NUE-ENVS.tfvars"]
+                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tfvariables_file=${tfvariables_file} --tfvars_files=${tftfvars_files}"
 
                         if (params.terraform_parallelism) {
                             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
@@ -57,7 +57,7 @@ def run(params) {
                         sh "mkdir -p ${resultdir}"
 
                         // Clone sumaform
-                        sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${sumaform_gitrepo} --gitref ${sumaform_ref} --tfvariables_file=${env.tfvariables_file} --runstep gitsync"
+                        sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${sumaform_gitrepo} --gitref ${sumaform_ref} --runstep gitsync"
                     }
                 }
             }
@@ -90,7 +90,7 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_ENVIRONMENT=${env_number}; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --tfvariables_file=${env.tfvariables_file}  --tfvars_files=${env.tfvars_files} --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_ENVIRONMENT=${env_number}; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
                     }
                 }
