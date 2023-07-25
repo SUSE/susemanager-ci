@@ -27,10 +27,12 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
+  default = "Define in product tfvars"
 }
 
 variable "MAIL_TEMPLATE" {
   type = string
+  default = "Define in product tfvars"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
@@ -40,6 +42,7 @@ variable "MAIL_SUBJECT_ENV_FAIL" {
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = string
+  default = "Define in product tfvars"
 }
 
 variable "ENVIRONMENT" {
