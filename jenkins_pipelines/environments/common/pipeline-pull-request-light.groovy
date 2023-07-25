@@ -57,7 +57,7 @@ def run(params) {
                         sh "mkdir -p ${resultdir}"
 
                         // Clone sumaform
-                        sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${sumaform_gitrepo} --gitref ${sumaform_ref} --runstep gitsync"
+                        sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${sumaform_gitrepo} --gitref ${sumaform_ref} --tfvariables_file=${env.tfvariables_file} --runstep gitsync"
                     }
                 }
             }
