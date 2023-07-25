@@ -42,9 +42,10 @@ def run(params) {
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-TEST-main.tf"
-                        env.tfvariables_file  = "susemanager-ci/terracumber_config/tf_files/variables/PR-TEST-variable.tf"
-                        env.tfvars_files = ["susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-manager43.tfvars","susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-NUE-ENVS.tfvars"]
-                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tfvariables_file=${tfvariables_file} --tfvars_files=${tfvars_files}"
+                        tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-TEST-variable.tf'
+                        tfvars_manager43 = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-manager43.tfvars'
+                        tfvars_nuremberg = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-NUE-ENVS.tfvars'
+                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tfvariables_file=${tfvariables_file} --tfvars_files=${tfvars_nuremberg} --tfvars_files=${tfvars_manager43}"
 
                         if (params.terraform_parallelism) {
                             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
