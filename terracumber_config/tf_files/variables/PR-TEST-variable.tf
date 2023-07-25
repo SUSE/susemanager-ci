@@ -6,14 +6,17 @@ variable "URL_PREFIX" {
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
+  default = "Define in product tfvars"
 }
 
 variable "CUCUMBER_GITREPO" {
   type = string
+  default = "Define in product tfvars"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
+  default = "Define in product tfvars"
 }
 
 variable "CUCUMBER_RESULTS" {
