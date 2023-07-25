@@ -1,6 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
+  default = "Define in product tfvars"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
