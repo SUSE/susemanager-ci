@@ -51,12 +51,12 @@ variable "ENVIRONMENT" {
 
 variable "MAIL_FROM" {
   type = string
-  default = "galaxy-ci@suse.de"
+  default = "galaxy-noise@suse.de"
 }
 
 variable "MAIL_TO" {
   type = string
-  default = "galaxy-ci@suse.de"
+  default = "galaxy-noise@suse.de"
 }
 
 // sumaform specific variables
@@ -134,6 +134,14 @@ variable "GIT_PROFILES_REPO" {
 
 variable "IMAGES" {
   type = list(string)
+}
+
+variable "SUSE_MINION_IMAGE" {
+  type = string
+}
+
+variable "SUSE_MINION_NAME" {
+  type = string
 }
 
 variable "PRODUCT_VERSION" {

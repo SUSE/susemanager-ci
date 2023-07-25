@@ -8,7 +8,6 @@ terraform {
   }
 }
 
-
 provider "libvirt" {
   uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor}/system"
 }
@@ -50,11 +49,15 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
+        vcpu = 2
+        memory = 2048
       }
     }
     server = {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
+        vcpu = 8
+        memory = 32768
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = {
@@ -77,6 +80,8 @@ module "cucumber_testsuite" {
     proxy = {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
+        vcpu = 2
+        memory = 2048
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = {
@@ -98,10 +103,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp4o"
-      name = "min-sles15"
+      image = var.SUSE_MINION_IMAGE
+      name = "min-${var.SUSE_MINION_NAME}"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
+        vcpu = 2
+        memory = 2048
       }
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
@@ -110,10 +117,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp4o"
-      name = "minssh-sles15"
+      image = var.SUSE_MINION_IMAGE
+      name = "minssh-${var.SUSE_MINION_NAME}"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
+        vcpu = 2
+        memory = 2048
       }
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
@@ -140,6 +149,8 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["debian-minion"]
+        vcpu = 2
+        memory = 2048
       }
       additional_repos = {
         client_repo = var.DEBLIKE_CLIENT_REPO,
@@ -154,7 +165,8 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
-        memory = 2048
+        vcpu = 4
+        memory = 8192
       }
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
@@ -164,6 +176,10 @@ module "cucumber_testsuite" {
     }
     pxeboot-minion = {
       image = "sles15sp4o"
+      provider_settings = {
+        vcpu = 2
+        memory = 2048
+      }
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
       }
@@ -189,6 +205,8 @@ module "cucumber_testsuite" {
       }
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
+        vcpu = 4
+        memory = 8192
       }
       additional_repos_only = true
       additional_repos = {
@@ -230,7 +248,6 @@ resource "null_resource" "add_test_information" {
     }
   }
 }
-
 
 output "configuration" {
   value = module.cucumber_testsuite.configuration

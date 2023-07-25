@@ -1,7 +1,9 @@
 ############ Uyuni unique variables ########################
 
 IMAGE                  = "opensuse154-ci-pro"
-IMAGES                 = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "sles15sp4o", "ubuntu2204o"]
+IMAGES                 = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "ubuntu2204o"]
+SUSE_MINION_IMAGE      = "opensuse154o"
+SUSE_MINION_NAME       = "leap15"
 PRODUCT_VERSION        = "uyuni-pr"
 MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
 MAIL_TEMPLATE          = "../mail_templates/mail-template-jenkins-pull-request.txt"
