@@ -44,7 +44,7 @@ def run(params) {
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-TEST-main.tf"
                         env.tfvariables_file  = "susemanager-ci/terracumber_config/tf_files/variables/PR-TEST-variable.tf"
                         env.tfvars_files = ["susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-manager43.tfvars","susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-NUE-ENVS.tfvars"]
-                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tfvariables_file=${tfvariables_file} --tfvars_files=${tftfvars_files}"
+                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tfvariables_file=${tfvariables_file} --tfvars_files=${tfvars_files}"
 
                         if (params.terraform_parallelism) {
                             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
