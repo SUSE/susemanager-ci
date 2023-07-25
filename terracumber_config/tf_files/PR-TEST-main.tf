@@ -209,7 +209,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool               = "ssd"
     network_name       = null
-    bridge             = "br1"
+    bridge             = var.BRIDGE
     additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
   }
 }

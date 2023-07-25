@@ -145,6 +145,10 @@ variable "DOMAIN" {
   type = string
 }
 
+variable "BRIDGE" {
+  type = string
+}
+
 variable "ENVIRONMENT_CONFIGURATION" {
   type = map
   description = "Collection of  value containing : mac addresses, hypervisor and additional network"
