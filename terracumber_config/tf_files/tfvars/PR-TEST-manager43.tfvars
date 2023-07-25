@@ -12,5 +12,4 @@ CUCUMBER_BRANCH        = "Manager-4.3"
 CUCUMBER_GITREPO       = "https://github.com/SUSE/spacewalk/spacewalk.git"
 CUCUMBER_COMMAND       = "export PRODUCT='SUSE-Manager' && run-testsuite"
 URL_PREFIX             = "https://ci.suse.de/view/Manager/view/Uyuni/job/suma43-prs-ci-tests"
-USE_MIRROR             = true
 ADDITIONAL_REPOS_ONLY  = false
