@@ -11,3 +11,4 @@ CUCUMBER_GITREPO       = "https://github.com/uyuni-project/uyuni.git"
 CUCUMBER_COMMAND       = "export PRODUCT='Uyuni' && run-testsuite"
 URL_PREFIX             = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-prs-ci-tests"
 USE_MIRROR             = true
+ADDITIONAL_REPOS_ONLY  = true

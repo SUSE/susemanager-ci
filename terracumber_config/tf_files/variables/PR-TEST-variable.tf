@@ -156,6 +156,10 @@ variable "BRIDGE" {
   type = string
 }
 
+variable "ADDITIONAL_REPOS_ONLY" {
+  type = bool
+}
+
 variable "ENVIRONMENT_CONFIGURATION" {
   type = map
   description = "Collection of  value containing : mac addresses, hypervisor and additional network"

@@ -56,7 +56,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
       }
-      additional_repos_only = true
+      additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
@@ -78,7 +78,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
       }
-      additional_repos_only = true
+      additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
         master_repo = var.MASTER_REPO,
