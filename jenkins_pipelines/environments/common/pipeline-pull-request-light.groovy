@@ -29,6 +29,9 @@ def run(params) {
         env.common_params = ''
         fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
         env_number = 2
+        tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-TEST-variable.tf'
+        tfvars_manager43 = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-manager43.tfvars'
+        tfvars_nuremberg = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-NUE-ENVS.tfvars'
         try {
             stage('Checkout CI tools') {
                 ws(environment_workspace){
@@ -42,10 +45,7 @@ def run(params) {
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-TEST-main.tf"
-                        tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-TEST-variable.tf'
-                        tfvars_manager43 = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-manager43.tfvars'
-                        tfvars_nuremberg = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-NUE-ENVS.tfvars'
-                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tfvariables_file=${tfvariables_file} --tfvars_files=${tfvars_nuremberg} --tfvars_files=${tfvars_manager43}"
+                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file}"
 
                         if (params.terraform_parallelism) {
                             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
@@ -91,6 +91,9 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
+                        sh "rm ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "cat ${tfvars_manager43} ${tfvars_nuremberg} >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo 'ENVIRONMENT = \'${env_number}\' >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_ENVIRONMENT=${env_number}; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
                     }
