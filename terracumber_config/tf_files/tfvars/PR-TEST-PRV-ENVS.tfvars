@@ -1,3 +1,5 @@
+############ Provo unique variables ###########
+
 MIRROR = "minima-mirror.mgr.prv.suse.net"
 DOMAIN = "mgr.prv.suse.net"
 GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"

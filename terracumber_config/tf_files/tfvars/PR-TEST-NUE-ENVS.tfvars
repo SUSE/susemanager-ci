@@ -1,3 +1,5 @@
+############ Nuremberg unique variables ###########
+
 MIRROR = "minima-mirror.mgr.suse.de"
 DOMAIN = "mgr.suse.de"
 GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
