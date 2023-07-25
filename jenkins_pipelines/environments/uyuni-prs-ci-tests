@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('pull-request-test') {
+node('pull-request-test-NUE') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '30', daysToKeepStr: '15')),
         parameters([
@@ -57,7 +57,7 @@ node('pull-request-test') {
           }
         }
         echo "DEBUG: Secondary test tags: ${secondary_exports}"
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline-pull-request.groovy"
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-pull-request-light.groovy"
         pipeline.run(params)
     }
 }
