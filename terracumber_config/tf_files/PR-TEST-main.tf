@@ -60,7 +60,7 @@ module "cucumber_testsuite" {
         memory = 32768
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
-      additional_repos = var.ADDITIONAL_REPOS["server"]
+      additional_repos = local.additional_repos["server"]
       image = var.IMAGE
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -73,7 +73,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
-      additional_repos = var.ADDITIONAL_REPOS["proxy"]
+      additional_repos = local.additional_repos["proxy"]
       image = var.IMAGE
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -86,7 +86,7 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_repos = var.ADDITIONAL_REPOS["suse-minion"]
+      additional_repos = local.additional_repos["suse-minion"]
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -98,7 +98,7 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_repos = var.ADDITIONAL_REPOS["suse-minion"]
+      additional_repos = local.additional_repos["suse-minion"]
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
@@ -181,7 +181,7 @@ module "cucumber_testsuite" {
         memory = 8192
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
-      additional_repos = var.ADDITIONAL_REPOS["kvm-host"]
+      additional_repos = local.additional_repos["kvm-host"]
       additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
     }

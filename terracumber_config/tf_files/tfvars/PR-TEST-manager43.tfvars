@@ -15,17 +15,3 @@ URL_PREFIX             = "https://ci.suse.de/view/Manager/view/Uyuni/job/suma43-
 ADDITIONAL_REPOS_ONLY  = false
 REDHAT_MINION_IMAGE    = "rocky9o"
 REDHAT_MINION_NAME     = "rocky9"
-ADDITIONAL_REPOS = {
-  server = {
-    pull_request_repo = "${var.PULL_REQUEST_REPO}"
-  }
-  proxy = {
-    pull_request_repo = "${var.PULL_REQUEST_REPO}"
-  }
-  suse-minion = {
-    tools_update_pr = "${var.SLE_CLIENT_REPO}"
-  }
-  kvm-host = {
-    tools_update_pr = "${var.SLE_CLIENT_REPO}"
-  }
-}
