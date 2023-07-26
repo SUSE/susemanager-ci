@@ -180,7 +180,7 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 8192
       }
-      additional_repos_only = true
+      additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = var.ADDITIONAL_REPOS["kvm-host"]
       additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
