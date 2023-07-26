@@ -60,18 +60,7 @@ module "cucumber_testsuite" {
         memory = 32768
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
-      additional_repos = {
-        pull_request_repo = var.PULL_REQUEST_REPO,
-        master_repo = var.MASTER_REPO,
-        master_repo_other = var.MASTER_OTHER_REPO,
-        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
-        test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://${var.MIRROR}/distribution/leap/15.4/repo/non-oss/",
-        os_pool = "http://${var.MIRROR}/distribution/leap/15.4/repo/oss/",
-        os_update = var.UPDATE_REPO,
-        os_additional_repo = var.ADDITIONAL_REPO_URL,
-        testing_overlay_devel = "http://${var.MIRROR}/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Testing-Overlay-POOL-x86_64-Media1/",
-      }
+      additional_repos = var.ADDITIONAL_REPOS["server"]
       image = var.IMAGE
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -84,20 +73,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
-      additional_repos = {
-        pull_request_repo = var.PULL_REQUEST_REPO,
-        master_repo = var.MASTER_REPO,
-        master_repo_other = var.MASTER_OTHER_REPO,
-        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
-        test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://${var.MIRROR}/distribution/leap/15.4/repo/non-oss/",
-        os_pool = "http://${var.MIRROR}/distribution/leap/15.4/repo/oss/",
-        os_update = var.UPDATE_REPO,
-        os_additional_repo = var.ADDITIONAL_REPO_URL,
-        testing_overlay_devel = "http://${var.MIRROR}/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Testing-Overlay-POOL-x86_64-Media1/",
-        proxy_pool = "http://${var.MIRROR}/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Uyuni-Proxy-POOL-x86_64-Media1/",
-        tools_update = var.OPENSUSE_CLIENT_REPO
-      }
+      additional_repos = var.ADDITIONAL_REPOS["proxy"]
       image = var.IMAGE
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -110,9 +86,7 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
-      }
+      additional_repos = var.ADDITIONAL_REPOS["suse-minion"]
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -124,15 +98,13 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
-      }
+      additional_repos = var.ADDITIONAL_REPOS["suse-minion"]
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
-      image = "rocky8o"
-      name = "min-rocky8"
+      image = var.REDHAT_MINION_IMAGE
+      name = "min-${var.REDHAT_MINION_NAME}"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["redhat-minion"]
         memory = 2048
@@ -169,7 +141,7 @@ module "cucumber_testsuite" {
         memory = 8192
       }
       additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
+        tools_update_pr = var.SLE_CLIENT_REPO
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -181,7 +153,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
+        tools_update_pr = var.SLE_CLIENT_REPO
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -209,16 +181,8 @@ module "cucumber_testsuite" {
         memory = 8192
       }
       additional_repos_only = true
-      additional_repos = {
-        client_repo = var.OPENSUSE_CLIENT_REPO,
-        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
-        test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://${var.MIRROR}/distribution/leap/15.4/repo/non-oss/",
-        os_pool = "http://${var.MIRROR}/distribution/leap/15.4/repo/oss/",
-        os_update = var.UPDATE_REPO,
-        os_additional_repo = var.ADDITIONAL_REPO_URL,
-      }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_repos = var.ADDITIONAL_REPOS["kvm-host"]
+      additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
     }
   }

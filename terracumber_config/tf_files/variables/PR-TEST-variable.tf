@@ -144,6 +144,14 @@ variable "SUSE_MINION_NAME" {
   type = string
 }
 
+variable "REDHAT_MINION_IMAGE" {
+  type = string
+}
+
+variable "REDHAT_MINION_NAME" {
+  type = string
+}
+
 variable "PRODUCT_VERSION" {
   type = string
 }
@@ -166,6 +174,10 @@ variable "BRIDGE" {
 
 variable "ADDITIONAL_REPOS_ONLY" {
   type = bool
+}
+
+variable "ADDITIONAL_REPOS" {
+  type = map
 }
 
 variable "ENVIRONMENT_CONFIGURATION" {
