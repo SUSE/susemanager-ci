@@ -176,10 +176,6 @@ variable "ADDITIONAL_REPOS_ONLY" {
   type = bool
 }
 
-variable "ADDITIONAL_REPOS" {
-  type = map
-}
-
 variable "ENVIRONMENT_CONFIGURATION" {
   type = map
   description = "Collection of  value containing : mac addresses, hypervisor and additional network"
