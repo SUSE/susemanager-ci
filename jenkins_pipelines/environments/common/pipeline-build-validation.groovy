@@ -336,7 +336,7 @@ def clientTestingStages() {
                         } else {
                             println "MU channel available for ${node} "
                         }
-                    } else if (node == "${params.monitoring_sle_version}_minion" && params.enable_monitoring_stages) {
+                    } else if (node == "${params.monitoring_sle_version}_minion" && new File("${env.resultdir}/sumaform/monitoring").exists()) {
                         mu_sync_status[node] = 'SYNC'
                     } else {
                         if (params.confirm_before_continue) {
