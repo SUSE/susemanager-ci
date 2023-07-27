@@ -1,5 +1,9 @@
 def run(params) {
     timestamps {
+        //Capybara configuration
+        def capybara_timeout = 60
+        def default_timeout = 300
+
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
@@ -16,10 +20,6 @@ def run(params) {
         def containerization_stage_result_fail = false
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
-
-        //Capybara configuration
-        def capybara_timeout = 60
-        def default_timeout = 300
 
         // Path to JSON run set file for non MU repositories
         env.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json'
@@ -187,7 +187,7 @@ def run(params) {
                 // Call the minion testing.
                 try {
                     stage('Clients stages') {
-                        clientTestingStages(capybara_timeout, default_timeout)
+                        clientTestingStages()
                     }
 
                 } catch (Exception ex) {
@@ -301,7 +301,7 @@ def run(params) {
 
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
-def clientTestingStages(capybara_timeout, default_timeout) {
+def clientTestingStages() {
 
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
