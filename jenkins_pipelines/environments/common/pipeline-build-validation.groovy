@@ -5,7 +5,7 @@ def run(params) {
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true;"
+        env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}"
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
@@ -18,7 +18,7 @@ def run(params) {
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
         //Capybara configuration
-        def capybara_timeout =30
+        def capybara_timeout = 60
         def default_timeout = 300
 
         // Path to JSON run set file for non MU repositories
@@ -202,16 +202,16 @@ def run(params) {
                             input 'Press any key to start running the retail tests'
                         }
                         echo 'Prepare Proxy for Retail'
-                        res_retail_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_proxy'", returnStatus: true)
+                        res_retail_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_proxy'", returnStatus: true)
                         echo "Retail proxy status code: ${res_retail_proxy}"
                         if (res_retail_proxy != 0) {
                             error("Retail proxy failed")
                         }
                         echo 'SLE 12 Retail'
-                        res_retail_sle12 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_sle12'", returnStatus: true)
+                        res_retail_sle12 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_sle12'", returnStatus: true)
                         echo "SLE 12 Retail status code: ${res_retail_sle12}"
                         echo 'SLE 15 Retail'
-                        res_retail_sle15 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_sle15'", returnStatus: true)
+                        res_retail_sle15 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_sle15'", returnStatus: true)
                         echo "SLE 15 Retail status code: ${res_retail_sle15}"
                         if (res_retail_sle15 != 0 || res_retail_sle12 != 0) {
                             error("Run retail failed")
@@ -230,7 +230,7 @@ def run(params) {
                             input 'Press any key to start running the containerization tests'
                         }
                         echo 'Prepare Proxy as Pod and run basic tests'
-                        res_container_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_containerization'", returnStatus: true)
+                        res_container_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_containerization'", returnStatus: true)
                         echo "Container proxy status code: ${res_container_proxy}"
                         if (res_container_proxy != 0) {
                             error("Containerization test failed with status code: ${res_non_MU_repositories}")
@@ -428,7 +428,7 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                     }
                     randomWait()
                     echo 'Bootstrap clients'
-                    res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${node}'", returnStatus: true)
+                    res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${node}'", returnStatus: true)
                     echo "Init clients status code: ${res_init_clients}"
                     if (res_init_clients != 0) {
                         error("Bootstrap clients failed with status code: ${res_init_clients}")
@@ -442,7 +442,7 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                     }
                     randomWait()
                     echo 'Run Smoke tests'
-                    res_smoke_tests = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_smoke_tests_${node}'", returnStatus: true)
+                    res_smoke_tests = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_smoke_tests_${node}'", returnStatus: true)
                     echo "Smoke tests status code: ${res_smoke_tests}"
                     if (res_smoke_tests != 0) {
                         error("Run Smoke tests failed with status code: ${res_smoke_tests}")
