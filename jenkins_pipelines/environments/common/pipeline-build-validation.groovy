@@ -337,6 +337,7 @@ def clientTestingStages() {
                             println "MU channel available for ${node} "
                         }
                     } else if (node == "${params.monitoring_sle_version}_minion" && monitoring_bootstrap_output == 'true') {
+                        echo "${node} MUs have already been added during Monitoring stages"
                         mu_sync_status[node] = 'SYNC'
                     } else {
                         if (params.confirm_before_continue) {
