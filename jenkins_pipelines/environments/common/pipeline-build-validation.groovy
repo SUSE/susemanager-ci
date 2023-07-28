@@ -46,6 +46,10 @@ def run(params) {
 
             stage('Deploy') {
                 if (params.must_deploy) {
+                    // Delete persistent monitoring state
+                    // Explanation : monitoring is using the same MU than one of the sles minion, we can't add twice the MUs
+                    // We are using a persistent file to show monitoring MU has been added
+                    sh "rm -f ${env.resultdir}/sumaform/monitoring"
                     // Generate json file in the workspace
                     writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
                     // Run Terracumber to deploy the environment
@@ -144,6 +148,10 @@ def run(params) {
                             res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'")
                             echo "Custom channels and MU repositories synchronization status code: ${res_sync_mu_repos}"
                             sh "exit \$(( ${res_mu_repos}|${res_sync_mu_repos} ))"
+                            // Add persistent monitoring state
+                            // Explanation : monitoring is using the same MU than one of the sles minion, we can't add twice the MUs
+                            // We are using a persistent file to show monitoring MU has been added
+                            sh "touch ${env.resultdir}/sumaform/monitoring"
                         }
                     }
                     stage('Add Activation Keys Monitoring') {
@@ -312,6 +320,9 @@ def clientTestingStages() {
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler()
     def mu_sync_status = nodesHandler.MUSyncStatus
+    // Check persistent monitoring state
+    // Explanation : monitoring is using the same MU than one of the sles minion, we can't add twice the MUs
+    // We are using a persistent file to show monitoring MU has been added
     def monitoring_bootstrap_output = sh(script: "test -e ${env.resultdir}/sumaform/monitoring && echo 'true' || echo 'false'", returnStdout: true).trim()
     // Construct a stage list for each node.
     nodesHandler.nodeList.each { node ->
