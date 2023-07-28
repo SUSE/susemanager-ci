@@ -312,7 +312,7 @@ def clientTestingStages() {
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler()
     def mu_sync_status = nodesHandler.MUSyncStatus
-
+    def monitoring_bootstrap_output = sh(script: "test -e ${env.resultdir}/sumaform/monitoring && echo 'true' || echo 'false'", returnStdout: true).trim()
     // Construct a stage list for each node.
     nodesHandler.nodeList.each { node ->
         tests["${node}"] = {
@@ -336,7 +336,7 @@ def clientTestingStages() {
                         } else {
                             println "MU channel available for ${node} "
                         }
-                    } else if (node == "${params.monitoring_sle_version}_minion" && new File("${env.resultdir}/sumaform/monitoring").exists()) {
+                    } else if (node == "${params.monitoring_sle_version}_minion" && monitoring_bootstrap_output == 'true') {
                         mu_sync_status[node] = 'SYNC'
                     } else {
                         if (params.confirm_before_continue) {
