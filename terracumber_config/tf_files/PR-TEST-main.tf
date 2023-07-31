@@ -26,7 +26,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   mirror      = var.MIRROR
-  use_mirror_images = var.USE_MIRROR_IMAGES  // TO DO : is it really set somewhere ?
+  use_mirror_images = var.USE_MIRROR_IMAGES
 
   images = var.IMAGES
 
