@@ -301,7 +301,7 @@ def run(params) {
                                 input 'Press any key to start adding Maintenance Update repositories'
                             }
                             echo 'Add custom channels and MU repositories'
-                            res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${params.monitoring_sle_version}_minion'")
+                            res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_monitoring_server'")
                             echo "Custom channels and MU repositories status code: ${res_mu_repos}"
 
                             res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'")
@@ -499,8 +499,6 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                         } else {
                             println "MU channel available for ${node} "
                         }
-                    } else if (node == "${params.monitoring_sle_version}_minion" && params.enable_monitoring_stages) {
-                        mu_sync_status[node] = 'SYNC'
                     } else {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
