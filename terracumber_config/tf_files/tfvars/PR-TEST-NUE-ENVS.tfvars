@@ -3,7 +3,7 @@
 MIRROR = null
 DOMAIN = "mgr.suse.de"
 DOWNLOAD_ENDPOINT = "minima-mirror.mgr.suse.de"
-USE_MIRROR_IMAGES = true
+USE_MIRROR_IMAGES = false
 BRIDGE = "br0"
 ENVIRONMENT_CONFIGURATION = {
   1 = {
