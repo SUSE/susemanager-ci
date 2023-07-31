@@ -160,7 +160,8 @@ variable "MIRROR" {
   type = string
 }
 
-variable "USE_MIRROR" {
+variable "USE_MIRROR_IMAGES" {
+  description = "use true download images from a mirror host"
   type = bool
 }
 
@@ -179,4 +180,9 @@ variable "ADDITIONAL_REPOS_ONLY" {
 variable "ENVIRONMENT_CONFIGURATION" {
   type = map
   description = "Collection of  value containing : mac addresses, hypervisor and additional network"
+}
+
+variable "DOWNLOAD_ENDPOINT" {
+  type = string
+  description = "Download enpoint to get build images and set custom_download_endpoint. This value is equal to platform mirror"
 }
