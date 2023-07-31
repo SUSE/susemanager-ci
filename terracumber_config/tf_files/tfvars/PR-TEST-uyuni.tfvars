@@ -5,6 +5,7 @@ IMAGES                 = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "ubun
 SUSE_MINION_IMAGE      = "opensuse154o"
 SUSE_MINION_NAME       = "leap15"
 PRODUCT_VERSION        = "uyuni-pr"
+GIT_PROFILES_REPO      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
 MAIL_TEMPLATE          = "../mail_templates/mail-template-jenkins-pull-request.txt"
 MAIL_SUBJECT           = "$status acceptance tests on Pull Request: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

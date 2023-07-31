@@ -26,7 +26,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   mirror      = var.MIRROR
-  use_mirror_images = var.USE_MIRROR
+  use_mirror_images = var.USE_MIRROR_IMAGES  // TO DO : is it really set somewhere ?
 
   images = var.IMAGES
 
@@ -42,7 +42,7 @@ module "cucumber_testsuite" {
   git_profiles_repo = var.GIT_PROFILES_REPO
 
   server_http_proxy = "http-proxy.${var.DOMAIN}:3128"
-  custom_download_endpoint = "ftp://${var.MIRROR}:445"
+  custom_download_endpoint = "ftp://${var.DOWNLOAD_ENDPOINT}:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
@@ -165,13 +165,13 @@ module "cucumber_testsuite" {
         hvm_disk_image = {
           leap = {
             hostname = "suma-pr${var.ENVIRONMENT}-min-nested"
-            image = "http://${var.MIRROR}/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
-            hash = "http://${var.MIRROR}/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+            image = "http://${var.DOWNLOAD_ENDPOINT}/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+            hash = "http://${var.DOWNLOAD_ENDPOINT}/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
           }
           sles = {
             hostname = "suma-pr${var.ENVIRONMENT}-min-nested"
-            image = "http://${var.MIRROR}/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
-            hash = "http://${var.MIRROR}/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
+            image = "http://${var.DOWNLOAD_ENDPOINT}/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
+            hash = "http://${var.DOWNLOAD_ENDPOINT}/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
           }
         }
       }
