@@ -36,7 +36,6 @@ node('sumaform-cucumber-provo') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
-            string(name: 'monitoring_sle_version', defaultValue: 'sle15sp4', description: 'Server version used by monitoring server'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'prepare_aws_env', defaultValue: true, description: 'Create local and AWS mirror and upload data to AWS mirror'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
