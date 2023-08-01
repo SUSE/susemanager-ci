@@ -31,7 +31,7 @@ module "cucumber_testsuite" {
   images = var.IMAGES
 
   use_avahi    = false
-  name_prefix  = "suma-pr${var.ENVIRONMENT}${var.ENVIRONMENT_PREFIX}-"
+  name_prefix  = "suma-pr${var.ENVIRONMENT}${var.ENVIRONMENT_EXTENSION}-"
   domain       = var.DOMAIN
   from_email   = "root@suse.de"
 
