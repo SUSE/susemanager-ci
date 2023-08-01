@@ -1,7 +1,7 @@
 ############ Nuremberg unique variables ###########
 
-MIRROR = null
 DOMAIN = "mgr.suse.de"
+ENVIRONMENT_PREFIX = "-nue"
 DOWNLOAD_ENDPOINT = "minima-mirror.mgr.suse.de"
 USE_MIRROR_IMAGES = false
 BRIDGE = "br0"
