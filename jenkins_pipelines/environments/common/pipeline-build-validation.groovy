@@ -2,7 +2,7 @@ def run(params) {
     timestamps {
         //Capybara configuration
         def capybara_timeout = 60
-        def default_timeout = 300
+        def default_timeout = 500
 
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
