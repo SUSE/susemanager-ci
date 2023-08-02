@@ -172,8 +172,7 @@ module "base_res" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o" ]
-//  images      = [ "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
+  images      = [ "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
 
   mirror = "minima-mirror-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -723,29 +722,29 @@ module "centos7-minion" {
   install_salt_bundle = true
 }
 
-// module "liberty9-minion" {
-//   providers = {
-//     libvirt = libvirt.endor
-//   }
-//   source             = "./modules/minion"
-//   base_configuration = module.base_res.configuration
-//   product_version    = "4.3-released"
-//   name               = "min-liberty9"
-//   image              = "libertylinux9o"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:c5"
-//     memory             = 4096
-//   }
-//   server_configuration = {
-//     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-//   }
-//   auto_connect_to_master  = false
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
-//
-//   additional_packages = [ "venv-salt-minion" ]
-//   install_salt_bundle = true
-// }
+module "liberty9-minion" {
+  providers = {
+    libvirt = libvirt.endor
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_res.configuration
+  product_version    = "4.3-released"
+  name               = "min-liberty9"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c5"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "oracle9-minion" {
   providers = {
