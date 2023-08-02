@@ -311,7 +311,6 @@ def clientTestingStages() {
 
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler()
-    def mu_sync_status = nodesHandler.MUSyncStatus
     def bootstrap_repository_status = nodesHandler.BootstrapRepositoryStatus
     // Construct a stage list for each node.
     nodesHandler.nodeList.each { node ->
@@ -331,18 +330,16 @@ def clientTestingStages() {
                         echo 'Add custom channels and MU repositories'
                         res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${node}'", returnStatus: true)
                         if (res_mu_repos != 0) {
-                            mu_sync_status[node] = 'FAIL'
+                            bootstrap_repository_status[node] = 'FAIL'
                             error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
                         }
                         echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                         res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export NODE=${node}; unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
                         echo "Custom channels and MU repositories synchronization status code: ${res_sync_mu_repos}"
                         if (res_sync_mu_repos != 0) {
-                            mu_sync_status[node] = 'FAIL'
+                            bootstrap_repository_status[node] = 'FAIL'
                             error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
                         }
-                        // Update minion repo sync status variable once the MU channel is synchronized
-                        mu_sync_status[node] = 'SYNC'
                     }
                 }
             }
@@ -359,11 +356,13 @@ def clientTestingStages() {
                             res_non_MU_repositories = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:${build_validation_non_MU_script}'", returnStatus: true)
                             echo "Non MU Repositories status code: ${res_non_MU_repositories}"
                             if (res_non_MU_repositories != 0) {
+                                bootstrap_repository_status[node] = 'FAIL'
                                 error("Add common channels failed with status code: ${res_non_MU_repositories}")
                             }
                             res_sync_non_MU_repositories = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export NODE=${node}; unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
                             echo "Non MU Repositories synchronization status code: ${res_sync_non_MU_repositories}"
                             if (res_sync_non_MU_repositories != 0) {
+                                bootstrap_repository_status[node] = 'FAIL'
                                 error("Non MU Repositories synchronization failed with status code: ${res_sync_non_MU_repositories}")
                             }
                         }
@@ -379,6 +378,7 @@ def clientTestingStages() {
                     res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${node}'", returnStatus: true)
                     echo "Add Activation Keys status code: ${res_add_keys}"
                     if (res_add_keys != 0) {
+                        bootstrap_repository_status[node] = 'FAIL'
                         error("Add Activation Keys failed with status code: ${res_add_keys}")
                     }
                 }
