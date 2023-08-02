@@ -309,9 +309,13 @@ def clientTestingStages() {
     // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: env.non_MU_channels_tasks_file)
 
+    // Variable use to sync minion and ssh minion
+    String minion_name_without_ssh
+
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler()
     def bootstrap_repository_status = nodesHandler.BootstrapRepositoryStatus
+    def required_custom_channel_status = nodesHandler.CustomChannelStatus
     // Construct a stage list for each node.
     nodesHandler.nodeList.each { node ->
         tests["${node}"] = {
@@ -330,17 +334,20 @@ def clientTestingStages() {
                         echo 'Add custom channels and MU repositories'
                         res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${node}'", returnStatus: true)
                         if (res_mu_repos != 0) {
-                            bootstrap_repository_status[node] = 'FAIL'
+                            required_custom_channel_status[node] = 'FAIL'
                             error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
                         }
                         echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                         res_sync_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export NODE=${node}; unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
                         echo "Custom channels and MU repositories synchronization status code: ${res_sync_mu_repos}"
                         if (res_sync_mu_repos != 0) {
-                            bootstrap_repository_status[node] = 'FAIL'
+                            required_custom_channel_status[node] = 'FAIL'
                             error("Custom channels and MU repositories synchronization failed with status code: ${res_sync_mu_repos}")
                         }
                     }
+                }
+                if (!json_matching_non_MU_data.containsKey(node)) {
+                    required_custom_channel_status[node] = 'CREATED'
                 }
             }
             stage("Add non MU Repositories ${node}") {
@@ -356,30 +363,47 @@ def clientTestingStages() {
                             res_non_MU_repositories = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:${build_validation_non_MU_script}'", returnStatus: true)
                             echo "Non MU Repositories status code: ${res_non_MU_repositories}"
                             if (res_non_MU_repositories != 0) {
-                                bootstrap_repository_status[node] = 'FAIL'
+                                required_custom_channel_status[node] = 'FAIL'
                                 error("Add common channels failed with status code: ${res_non_MU_repositories}")
                             }
                             res_sync_non_MU_repositories = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export NODE=${node}; unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_wait_for_custom_reposync'", returnStatus: true)
                             echo "Non MU Repositories synchronization status code: ${res_sync_non_MU_repositories}"
                             if (res_sync_non_MU_repositories != 0) {
-                                bootstrap_repository_status[node] = 'FAIL'
+                                required_custom_channel_status[node] = 'FAIL'
                                 error("Non MU Repositories synchronization failed with status code: ${res_sync_non_MU_repositories}")
                             }
                         }
                     }
                 }
+                required_custom_channel_status[node] = 'CREATED'
             }
             stage("Add Activation Keys ${node}") {
                 if (params.must_add_keys) {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start adding activation keys'
+                    if (node.contains('ssh_minion')) {
+                        // SSH minion need mandatory custom channel repository. The channel is created during minion stage.
+                        // This section wait until minion creates custom channel.
+                        minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
+                        println "Waiting for mandatory custom channel for ${node} to be created by ${minion_name_without_ssh}."
+                        waitUntil {
+                            required_custom_channel_status[minion_name_without_ssh] != 'NOT_CREATED'
+                        }
+                        if (required_custom_channel_status[minion_name_without_ssh] == 'FAIL') {
+                            error("${minion_name_without_ssh} creates bootstrap repository failed")
+                        } else {
+                            println "Custom channel available for ${node} "
+                        }
                     }
-                    echo 'Add Activation Keys'
-                    res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${node}'", returnStatus: true)
-                    echo "Add Activation Keys status code: ${res_add_keys}"
-                    if (res_add_keys != 0) {
-                        bootstrap_repository_status[node] = 'FAIL'
-                        error("Add Activation Keys failed with status code: ${res_add_keys}")
+                    else {
+                        if (params.confirm_before_continue) {
+                            input 'Press any key to start adding activation keys'
+                        }
+                        echo 'Add Activation Keys'
+                        res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${node}'", returnStatus: true)
+                        echo "Add Activation Keys status code: ${res_add_keys}"
+                        if (res_add_keys != 0) {
+                            bootstrap_repository_status[node] = 'FAIL'
+                            error("Add Activation Keys failed with status code: ${res_add_keys}")
+                        }
                     }
                 }
             }
@@ -388,7 +412,7 @@ def clientTestingStages() {
                     if (node.contains('ssh_minion')) {
                         // SSH minion need bootstrap repository. The bootstrap repository is created during minion stage.
                         // This section wait until minion creates bootstrap repository
-                        def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
+                        minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
                         println "Waiting for bootstrap repository creation by ${minion_name_without_ssh} for ${node}."
                         waitUntil {
                             bootstrap_repository_status[minion_name_without_ssh] != 'NOT_CREATED'
@@ -413,13 +437,13 @@ def clientTestingStages() {
                                     bootstrap_repository_status[node] = 'FAIL'
                                     error("Create bootstrap repository failed with status code: ${res_create_bootstrap_repository}")
                                 }
-                                bootstrap_repository_status[node] = 'CREATED'
                             } finally {
                                 echo 'Release resource mgrCreateBootstrapRepo'
                             }
                         }
                     }
                 }
+                bootstrap_repository_status[node] = 'CREATED'
             }
             stage("Bootstrap client ${node}") {
                 if (params.must_boot_node) {
@@ -461,6 +485,7 @@ def getNodesHandler() {
     Set<String> nodeList = new HashSet<String>()
     Set<String> envVar = new HashSet<String>()
     def BootstrapRepositoryStatus = [:]
+    def CustomChannelStatus       = [:]
     modules = sh(script: "cd ${resultdir}/sumaform; terraform state list",
             returnStdout: true)
     String[] moduleList = modules.split("\n")
@@ -487,8 +512,9 @@ def getNodesHandler() {
     // This map is to be sure ssh minions have the MU channel ready.
     for (node in nodeListWithDisabledNodes ) {
         BootstrapRepositoryStatus[node] = 'NOT_CREATED'
+        CustomChannelStatus[node]       = 'NOT_CREATED'
     }
-    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes, BootstrapRepositoryStatus:BootstrapRepositoryStatus]
+    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes, CustomChannelStatus:CustomChannelStatus, BootstrapRepositoryStatus:BootstrapRepositoryStatus]
 }
 
 def randomWait() {
