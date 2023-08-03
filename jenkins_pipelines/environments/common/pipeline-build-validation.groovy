@@ -346,6 +346,7 @@ def clientTestingStages() {
                         }
                     }
                 }
+                // Don't update required_custom_channel_status for minion who needs non MU repositories
                 if (!json_matching_non_MU_data.containsKey(node)) {
                     required_custom_channel_status[node] = 'CREATED'
                 }
@@ -375,7 +376,10 @@ def clientTestingStages() {
                         }
                     }
                 }
-                required_custom_channel_status[node] = 'CREATED'
+                // Don't overwrite required_custom_channel_status variable for minions who don't need non MU repositories ( protect overwrite of add MU fails )
+                if (json_matching_non_MU_data.containsKey(node)) {
+                    required_custom_channel_status[node] = 'CREATED'
+                }
             }
             stage("Add Activation Keys ${node}") {
                 if (params.must_add_keys) {
