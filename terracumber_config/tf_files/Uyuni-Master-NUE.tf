@@ -150,7 +150,7 @@ module "cucumber_testsuite" {
     }
     suse-minion = {
       image = "opensuse154o"
-      name = "min-leap15"
+      name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
         vcpu = 2
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
     }
     suse-sshminion = {
       image = "opensuse154o"
-      name = "minssh-leap15"
+      name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
         vcpu = 2
