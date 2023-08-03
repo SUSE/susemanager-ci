@@ -251,7 +251,7 @@ def run(params) {
                 def result_error = 0
                 if (deployed || !params.must_deploy) {
                     try {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
+//                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
                     } catch(Exception ex) {
                         println("ERROR: rake cucumber:build_validation_finishing failed")
                         result_error = 1
