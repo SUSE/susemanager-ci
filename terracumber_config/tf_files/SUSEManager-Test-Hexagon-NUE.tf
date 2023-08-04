@@ -143,13 +143,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:52"
       }
-      //additional_repos = {
-      //  Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP4/"
-      //}
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-
     suse-minion = {
       image = "opensuse154o"
       name = "min-suse"
@@ -181,8 +177,12 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    pxeboot-minion = {
-      image = "opensuse154o"
+    debian-minion = {
+      name = "min-ubuntu2204"
+      image = "ubuntu2204o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:5b"
+      }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -196,6 +196,12 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
+    pxeboot-minion = {
+      image = "opensuse154o"
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+  //TODO add kvm-host
   }
   provider_settings = {
     pool         = "ssd"
