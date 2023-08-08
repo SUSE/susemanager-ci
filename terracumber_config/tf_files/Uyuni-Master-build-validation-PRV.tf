@@ -261,6 +261,7 @@ module "base_debian" {
   }
 }
 
+// WORKAROUND: overdrive4 has been disconnected by mistake
 //module "base_arm" {
 //  providers = {
 //    libvirt = libvirt.overdrive4
@@ -758,6 +759,7 @@ module "debian11-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+// WORKAROUND: overdrive4 has been disconnected by mistake
 //module "opensuse154arm-minion" {
 //  providers = {
 //    libvirt = libvirt.overdrive4
@@ -780,7 +782,8 @@ module "debian11-minion" {
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
-//
+
+// WORKAROUND: overdrive4 has been disconnected by mistake
 //module "opensuse155arm-minion" {
 //  providers = {
 //    libvirt = libvirt.overdrive4
@@ -1223,6 +1226,7 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+// WORKAROUND: overdrive4 has been disconnected by mistake
 //module "opensuse154arm-sshminion" {
 //  providers = {
 //    libvirt = libvirt.overdrive4
@@ -1241,7 +1245,8 @@ module "debian11-sshminion" {
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
-//
+
+// WORKAROUND: overdrive4 has been disconnected by mistake
 //module "opensuse155arm-sshminion" {
 //  providers = {
 //    libvirt = libvirt.overdrive4
@@ -1501,6 +1506,7 @@ module "controller" {
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
+// WORKAROUND: overdrive4 has been disconnected by mistake
 //  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
 //  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 //
