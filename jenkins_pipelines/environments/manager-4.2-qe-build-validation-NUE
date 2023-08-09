@@ -11,7 +11,7 @@ node('sumaform-cucumber') {
             'alma9_minion, alma9_ssh_minion, ' +
             'centos7_client, centos7_minion, centos7_ssh_minion, ' +
             'rocky8_minion, rocky8_ssh_minion, ' +
-            'ubuntu1804_minion, ubuntu1804_ssh_minion, ubuntu2004_minion, ubuntu2004_ssh_minion, ' +
+            'ubuntu2004_minion, ubuntu2004_ssh_minion, ' +
             'debian10_minion, debian10_ssh_minion, ' +
             'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
             'opensuse155arm_minion, opensuse155arm_ssh_minion'
