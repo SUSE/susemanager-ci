@@ -327,7 +327,7 @@ def clientTestingStages() {
             }
             stage("Add MUs ${node}") {
                 if (params.must_add_MU_repositories) {
-                      if (!node.contains('ssh')) {
+                    if (!node.contains('ssh')) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
@@ -393,21 +393,17 @@ def clientTestingStages() {
                         }
                         if (required_custom_channel_status[minion_name_without_ssh] == 'FAIL') {
                             error("${minion_name_without_ssh} creates bootstrap repository failed")
-                        } else {
-                            println "Custom channel available for ${node} "
                         }
                     }
-                    else {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding activation keys'
-                        }
-                        echo 'Add Activation Keys'
-                        res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${node}'", returnStatus: true)
-                        echo "Add Activation Keys status code: ${res_add_keys}"
-                        if (res_add_keys != 0) {
-                            bootstrap_repository_status[node] = 'FAIL'
-                            error("Add Activation Keys failed with status code: ${res_add_keys}")
-                        }
+                    if (params.confirm_before_continue) {
+                        input 'Press any key to start adding activation keys'
+                    }
+                    echo 'Add Activation Keys'
+                    res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${node}'", returnStatus: true)
+                    echo "Add Activation Keys status code: ${res_add_keys}"
+                    if (res_add_keys != 0) {
+                        bootstrap_repository_status[node] = 'FAIL'
+                        error("Add Activation Keys failed with status code: ${res_add_keys}")
                     }
                 }
             }
