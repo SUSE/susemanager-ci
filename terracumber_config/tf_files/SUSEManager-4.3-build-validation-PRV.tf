@@ -1656,7 +1656,7 @@ module "controller" {
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-//  liberty9_minion_configuration    = module.liberty9-minion.configuration
+  liberty9_minion_configuration    = module.liberty9-minion.configuration
 //  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9-minion.configuration
