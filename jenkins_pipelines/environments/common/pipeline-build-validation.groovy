@@ -309,9 +309,6 @@ def clientTestingStages() {
     // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: env.non_MU_channels_tasks_file)
 
-    // Variable use to sync minion and ssh minion
-    String minion_name_without_ssh
-
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler()
     def bootstrap_repository_status = nodesHandler.BootstrapRepositoryStatus
@@ -386,7 +383,7 @@ def clientTestingStages() {
                     if (node.contains('ssh_minion')) {
                         // SSH minion need mandatory custom channel repository. The channel is created during minion stage.
                         // This section wait until minion creates custom channel.
-                        minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
+                        def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
                         println "Waiting for mandatory custom channel for ${node} to be created by ${minion_name_without_ssh}."
                         waitUntil {
                             required_custom_channel_status[minion_name_without_ssh] != 'NOT_CREATED'
@@ -412,7 +409,7 @@ def clientTestingStages() {
                     if (node.contains('ssh_minion')) {
                         // SSH minion need bootstrap repository. The bootstrap repository is created during minion stage.
                         // This section wait until minion creates bootstrap repository
-                        minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
+                        def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
                         println "Waiting for bootstrap repository creation by ${minion_name_without_ssh} for ${node}."
                         waitUntil {
                             bootstrap_repository_status[minion_name_without_ssh] != 'NOT_CREATED'
