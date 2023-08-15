@@ -103,8 +103,8 @@ module "base_core" {
   domain      = "mgr.suse.de"
   images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "opensuse154o" ]
 
-  # mirror = "minima-mirror-bv.mgr.suse.de"
-  # use_mirror_images = true
+  mirror = "minima-mirror-bv.mgr.suse.de"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -130,8 +130,8 @@ module "base_core" {
 //  domain      = "mgr.suse.de"
 //  images      = [ "opensuse154armo", "opensuse155armo" ]
 //
-//  # mirror = "minima-mirror-bv.mgr.suse.de"
-//  # use_mirror_images = true
+//  mirror = "minima-mirror-bv.mgr.suse.de"
+//  use_mirror_images = true
 //
 //  testsuite = true
 //
@@ -153,7 +153,7 @@ module "server" {
     data_pool          = "ssd"
   }
 
-  # server_mounted_mirror = "minima-mirror-bv.mgr.suse.de"
+  server_mounted_mirror = "minima-mirror-bv.mgr.suse.de"
   repository_disk_size = 2048
 
   auto_accept                    = false
