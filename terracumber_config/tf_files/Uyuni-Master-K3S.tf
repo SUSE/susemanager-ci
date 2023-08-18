@@ -117,11 +117,11 @@ module "cucumber_testsuite" {
   
   container_server = true
 
-  # mirror      = "minima-mirror.mgr.suse.de"
+  # mirror      = "minima-mirror-ci-bv.mgr.suse.de"
   # use_mirror_images = true
 
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://minima-mirror.mgr.suse.de:445"
+  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
@@ -212,13 +212,13 @@ module "cucumber_testsuite" {
         hvm_disk_image = {
           leap = {
             hostname = "uyuni-master-min-nested"
-            image = "http://minima-mirror.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
-            hash = "http://minima-mirror.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+            image = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
           }
           sles = {
             hostname = "uyuni-master-min-nested"
-            image = "http://minima-mirror.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
-            hash = "http://minima-mirror.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
+            image = "http://minima-mirror-ci-bv.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
           }
         }
       }

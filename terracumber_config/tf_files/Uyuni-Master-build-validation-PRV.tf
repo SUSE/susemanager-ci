@@ -123,7 +123,7 @@ module "base_core" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp4o", "opensuse154o" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -149,7 +149,7 @@ module "base_old_sle" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles12sp4o", "sles12sp5o" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -174,7 +174,7 @@ module "base_res" {
   domain      = "mgr.prv.suse.net"
   images      = [ "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -199,7 +199,7 @@ module "base_new_sle" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -224,7 +224,7 @@ module "base_retail" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse154o" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -250,7 +250,7 @@ module "base_debian" {
   domain      = "mgr.prv.suse.net"
   images      = [ "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -275,7 +275,7 @@ module "base_arm" {
   domain      = "mgr.prv.suse.net"
   images      = [ "opensuse154armo", "opensuse155armo" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite = true
@@ -298,7 +298,7 @@ module "server" {
     data_pool          = "ssd"
   }
 
-  server_mounted_mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   repository_disk_size = 2048
 
   auto_accept                    = false
