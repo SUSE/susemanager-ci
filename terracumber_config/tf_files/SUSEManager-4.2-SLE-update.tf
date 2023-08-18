@@ -98,7 +98,7 @@ module "base" {
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp3o", "opensuse154o" ]
 
-  mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   testsuite          = true
@@ -121,7 +121,7 @@ module "server" {
     data_pool          = "ssd"
   }
 
-  server_mounted_mirror = "minima-mirror-bv.mgr.prv.suse.net"
+  server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   repository_disk_size = 1500
 
   auto_accept                    = false

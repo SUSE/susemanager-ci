@@ -92,7 +92,7 @@ module "base" {
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
   images            = ["centos7o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
-  mirror            = "minima-mirror.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
   provider_settings = {
