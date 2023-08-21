@@ -1413,7 +1413,7 @@ module "monitoring-server" {
   base_configuration = module.base_retail.configuration
   product_version    = "uyuni-released"
   name               = "monitoring"
-  image              = "sles15sp4o"
+  image              = "opensuse154o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:6f"
     memory             = 2048
