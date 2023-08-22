@@ -103,8 +103,8 @@ module "base_core" {
   domain      = "mgr.suse.de"
   images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "opensuse154o" ]
 
-  # mirror = "minima-mirror-bv.mgr.suse.de"
-  # use_mirror_images = true
+  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -115,6 +115,7 @@ module "base_core" {
   }
 }
 
+// WORKAROUND: overdrive3 has been disconnected by mistake
 //module "base_arm" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -129,8 +130,8 @@ module "base_core" {
 //  domain      = "mgr.suse.de"
 //  images      = [ "opensuse154armo", "opensuse155armo" ]
 //
-//  # mirror = "minima-mirror-bv.mgr.suse.de"
-//  # use_mirror_images = true
+//  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+//  use_mirror_images = true
 //
 //  testsuite = true
 //
@@ -152,7 +153,7 @@ module "server" {
     data_pool          = "ssd"
   }
 
-  # server_mounted_mirror = "minima-mirror-bv.mgr.suse.de"
+  server_mounted_mirror = "minima-mirror-ci-bv.mgr.suse.de"
   repository_disk_size = 2048
 
   auto_accept                    = false
@@ -556,6 +557,7 @@ module "debian11-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+// WORKAROUND: overdrive3 has been disconnected by mistake
 //module "opensuse154arm-minion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -578,7 +580,8 @@ module "debian11-minion" {
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
-//
+
+// WORKAROUND: overdrive3 has been disconnected by mistake
 //module "opensuse155arm-minion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -955,6 +958,7 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+// WORKAROUND: overdrive3 has been disconnected by mistake
 //module "opensuse154arm-sshminion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -973,7 +977,8 @@ module "debian11-sshminion" {
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
-//
+
+// WORKAROUND: overdrive3 has been disconnected by mistake
 //module "opensuse155arm-sshminion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -1118,7 +1123,7 @@ module "monitoring-server" {
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-released"
   name               = "monitoring"
-  image              = "sles15sp4o"
+  image              = "opensuse154o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:a3"
     memory             = 2048
@@ -1206,6 +1211,7 @@ module "controller" {
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
 
+// WORKAROUND: overdrive3 has been disconnected by mistake
 //  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
 //  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 //

@@ -118,10 +118,10 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 
-  mirror                   = "minima-mirror.mgr.prv.suse.net"
+  mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images        = true
   server_http_proxy        = "http-proxy.mgr.prv.suse.net:3128"
-  custom_download_endpoint = "ftp://minima-mirror.mgr.prv.suse.net:445"
+  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.prv.suse.net:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
@@ -222,8 +222,8 @@ module "cucumber_testsuite" {
         hvm_disk_image = {
           leap = {
             hostname = "min-nested"
-            image = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
-            hash = "http://minima-mirror.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
           }
         }
       }

@@ -23,7 +23,7 @@ pipeline {
         context = "backend_unittests_pgsql"
         description = "python backend pgsql unit test"
         git_fs = "${env.WORKSPACE}"
-        filter = 'backend/'
+        filter = 'python/'
         // the actual test is the git repo (inside spacewalk)
         test = "susemanager-utils/testing/automation/backend-unittest-pgsql.sh"
         gitarro_common_params = "-r ${repository} -c ${context} -d ${description} -f ${filter} -t ${test} -g ${git_fs}"
@@ -67,7 +67,7 @@ pipeline {
                 }
                 sh "set +e;export PRODUCT=SUSE-Manager; ${commands}; TESTS_RESULT=\$?; set -e;"
                 echo 'Collecting JUnit Test reports'
-                junit allowEmptyResults: true, testResults: "**/backend/reports/*_tests.xml"
+                junit allowEmptyResults: true, testResults: "**/python/spacewalk/reports/*_tests.xml"
                 sh "exit \$TESTS_RESULT"
             }
         }

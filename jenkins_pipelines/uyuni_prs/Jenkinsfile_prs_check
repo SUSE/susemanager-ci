@@ -51,7 +51,7 @@ pipeline {
                     contexts = [
                             'java_pgsql_tests' : 'java/',
                             'spacecmd_unittests': 'spacecmd/',
-                            'backend_unittests_pgsql' : 'backend/',
+                            'backend_unittests_pgsql' : 'python/',
                             'schema_migration_test_pgsql' : 'schema/spacewalk',
                             'susemanager_unittests' : 'susemanager/'
                     ]
