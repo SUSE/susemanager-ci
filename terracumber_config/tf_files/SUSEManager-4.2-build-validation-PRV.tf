@@ -248,7 +248,7 @@ module "base_debian" {
   name_prefix = "suma-bv-42-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1804o", "ubuntu2004o", "debian10o" ]
+  images      = [ "ubuntu2004o", "debian10o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -724,27 +724,6 @@ module "rocky8-minion" {
 
 // Rocky 9 is not supported by SUSE Manager 4.2
 
-module "ubuntu1804-minion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "min-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:69"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-42-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "ubuntu2004-minion" {
   providers = {
     libvirt = libvirt.trantor
@@ -1006,23 +985,6 @@ module "rocky8-sshminion" {
 
 // Rocky 9 is not supported by SUSE Manager 4.2
 
-module "ubuntu1804-sshminion" {
-  providers = {
-    libvirt = libvirt.trantor
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.2-released"
-  name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:89"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "ubuntu2004-sshminion" {
   providers = {
     libvirt = libvirt.trantor
@@ -1255,9 +1217,6 @@ module "controller" {
   sle15sp5_client_configuration    = module.sles15sp5-client.configuration
   sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
   sle15sp5_sshminion_configuration = module.sles15sp5-sshminion.configuration
-
-  ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
-  ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration

@@ -248,7 +248,7 @@ module "base_debian" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o" ]
+  images      = [ "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -818,27 +818,6 @@ module "rocky9-minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu1804-minion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.3-released"
-  name               = "min-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:b9"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "ubuntu2004-minion" {
   providers = {
     libvirt = libvirt.mandalore
@@ -1305,23 +1284,6 @@ module "rocky9-sshminion" {
   install_salt_bundle = true
 }
 
-module "ubuntu1804-sshminion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:d9"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "ubuntu2004-sshminion" {
   providers = {
     libvirt = libvirt.mandalore
@@ -1662,9 +1624,6 @@ module "controller" {
 
   rocky9_minion_configuration    = module.rocky9-minion.configuration
   rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
-
-  ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
-  ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration

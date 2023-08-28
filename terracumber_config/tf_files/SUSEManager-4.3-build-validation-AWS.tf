@@ -307,23 +307,6 @@ module "sles15sp3-client" {
   //sle15sp3-client_additional_repos
 }
 
-module "ubuntu1804-minion" {
-
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "min-ubuntu1804"
-  image              = "ubuntu1804"
-  server_configuration = module.server.configuration
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-}
-
 module "ubuntu2004-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -458,20 +441,6 @@ module "sles15sp3-minion" {
 
   //sle15sp3-minion_additional_repos
 
-}
-
-module "ubuntu1804-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804"
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
 }
 
 module "ubuntu2004-sshminion" {
@@ -691,9 +660,6 @@ module "controller" {
 
   rocky8_minion_configuration    = module.rocky8-minion.configuration
   rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
-
-  ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
-  ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
