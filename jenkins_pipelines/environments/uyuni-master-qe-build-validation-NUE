@@ -10,7 +10,6 @@ node('sumaform-cucumber') {
             'sle15sp5_minion, sle15sp5_ssh_minion, ' +
             'alma9_minion, alma9_ssh_minion, ' +
             'centos7_minion, centos7_ssh_minion, ' +
-            'liberty9_minion, liberty9_ssh_minion, ' +
             'oracle9_minion, oracle9_ssh_minion, ' +
             'rocky8_minion, rocky8_ssh_minion, rocky9_minion, rocky9_ssh_minion, ' +
             'ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
