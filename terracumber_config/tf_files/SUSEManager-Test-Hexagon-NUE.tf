@@ -103,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o"]
+  images = ["rocky8o", "opensuse154o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "suma-testhexagon-"
@@ -151,7 +151,7 @@ module "cucumber_testsuite" {
     }
 
     suse-minion = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:56"
@@ -160,7 +160,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:58"
@@ -182,12 +182,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     build-host = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:5d"
