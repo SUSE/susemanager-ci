@@ -129,6 +129,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:30"
       }
+      image = "opensuse155o"
     }
     server_containerized = {
       provider_settings = {
@@ -144,10 +145,10 @@ module "cucumber_testsuite" {
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:32"
-        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
+      image = "opensuse155o"
     }
     suse-minion = {
       image = "opensuse155o"
