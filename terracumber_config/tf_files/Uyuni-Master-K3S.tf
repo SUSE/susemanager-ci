@@ -134,12 +134,12 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:31"
         memory = 16384
-        image = "opensuse155o"
       }
       runtime = "k3s"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/charts/uyuni/server"
       login_timeout = 28800
+      image = "opensuse155o"
     }
     proxy = {
       provider_settings = {
@@ -150,21 +150,19 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:36"
-        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:38"
-        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -195,23 +193,22 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:3d"
         memory = 2048
-        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-kvm"
       additional_grains = {
         hvm_disk_image = {
@@ -229,7 +226,6 @@ module "cucumber_testsuite" {
       }
       provider_settings = {
         mac = "aa:b2:93:01:00:3e"
-        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
