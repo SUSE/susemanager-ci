@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-k3s-"
@@ -134,6 +134,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:31"
         memory = 16384
+        image = "opensuse155o"
       }
       runtime = "k3s"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
@@ -143,6 +144,7 @@ module "cucumber_testsuite" {
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:32"
+        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -152,6 +154,7 @@ module "cucumber_testsuite" {
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:36"
+        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -161,6 +164,7 @@ module "cucumber_testsuite" {
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:38"
+        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -196,6 +200,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:3d"
         memory = 2048
+        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -224,6 +229,7 @@ module "cucumber_testsuite" {
       }
       provider_settings = {
         mac = "aa:b2:93:01:00:3e"
+        image = "opensuse155o"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
