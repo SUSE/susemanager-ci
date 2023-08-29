@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse154o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-k3s-"
@@ -117,8 +117,8 @@ module "cucumber_testsuite" {
   
   container_server = true
 
-  # mirror      = "minima-mirror-ci-bv.mgr.suse.de"
-  # use_mirror_images = true
+  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images        = true
 
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
@@ -129,7 +129,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:30"
       }
-      image = "opensuse155o"
     }
     server_containerized = {
       provider_settings = {
@@ -140,7 +139,6 @@ module "cucumber_testsuite" {
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/charts/uyuni/server"
       login_timeout = 28800
-      image = "opensuse155o"
     }
     proxy = {
       provider_settings = {
@@ -148,10 +146,9 @@ module "cucumber_testsuite" {
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
-      image = "opensuse155o"
     }
     suse-minion = {
-      image = "opensuse155o"
+      image = "opensuse154o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:36"
@@ -160,7 +157,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse155o"
+      image = "opensuse154o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:38"
@@ -194,7 +191,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "opensuse155o"
+      image = "opensuse154o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:3d"
@@ -204,12 +201,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "opensuse155o"
+      image = "opensuse154o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse155o"
+      image = "opensuse154o"
       name = "min-kvm"
       additional_grains = {
         hvm_disk_image = {
