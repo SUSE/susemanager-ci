@@ -230,6 +230,7 @@ module "cucumber_testsuite" {
     }
   }
   nested_vm_host = "min-nested"
+  nested_vm_mac =  "aa:b2:93:01:00:3f"
   provider_settings = {
     pool               = "ssd"
     network_name       = null
