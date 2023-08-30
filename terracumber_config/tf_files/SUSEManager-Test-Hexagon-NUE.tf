@@ -179,27 +179,66 @@ module "cucumber_testsuite" {
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Still researching, but it will do it for now
         memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    debian-minion = {
+      image = "ubuntu2204o"
+      name = "min-ubuntu2204"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:5b"
         vcpu = 2
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    pxeboot-minion = {
+    build-host = {
       image = "sles15sp4o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:5d"
+        vcpu = 4
+        memory = 8192
+      }
+      name = "min-build"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    build-host = {
+    pxeboot-minion = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
-        mac = "aa:b2:93:01:00:5d"
+        vcpu = 2
         memory = 2048
+      }
+    }
+    kvm-host = {
+      image = "sles15sp4o"
+      name = "min-kvm"
+      additional_grains = {
+        hvm_disk_image = {
+          leap = {
+            hostname = "suma-testhexagon-min-nested"
+            image = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+          }
+          sles = {
+            hostname = "suma-testhexagon-min-nested"
+            image = "http://minima-mirror-ci-bv.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
+          }
+        }
+      }
+      provider_settings = {
+        mac = "aa:b2:93:01:00:5e"
+        vcpu = 4
+        memory = 8192
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
   }
+  nested_vm_host = "min-nested"
+  nested_vm_mac =  "aa:b2:93:01:00:5f"
   provider_settings = {
     pool         = "ssd"
     network_name = null
