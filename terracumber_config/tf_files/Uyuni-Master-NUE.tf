@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -147,7 +147,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
@@ -158,7 +158,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
@@ -196,7 +196,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:dd"
@@ -207,12 +207,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-kvm"
       additional_grains = {
         hvm_disk_image = {
