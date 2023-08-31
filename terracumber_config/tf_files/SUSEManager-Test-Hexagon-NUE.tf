@@ -237,7 +237,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  nested_vm_host = "min-nested"
+  nested_vm_host = "suma-testhexagon-min-nested"
   nested_vm_mac =  "aa:b2:93:01:00:5f"
   provider_settings = {
     pool         = "ssd"
