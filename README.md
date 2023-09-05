@@ -57,8 +57,8 @@ image for testing Pull Requests built with the open build service. This needs to
 
 | Version | Minion      | SSH minion  | Client      | RH-like  | Deb-like     | Virthosts   | Buildhost   | Terminal    | Controller | Server      | Proxy       |
 | ------- | ----------- | ----------- | ----------- | -------- | ------------ | ----------- | ----------- | ----------- | ---------- | ----------- | ----------- |
-|  PR test| Leap 15.4   | Leap 15.4   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.4   | Leap 15.4   | Leap 15.4   | Leap 15.4  | Leap 15.4   | Leap 15.4   |
-|  Uyuni  | Leap 15.4   | Leap 15.4   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.4   | Leap 15.4   | Leap 15.4   | Leap 15.4  | Leap 15.4   | Leap 15.4   |
+|  PR test| Leap 15.4   | Leap 15.4   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.4   | SLES 15 SP4 | Leap 15.4   | Leap 15.4  | Leap 15.4   | Leap 15.4   |
+|  Uyuni  | Leap 15.4   | Leap 15.4   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.4   | SLES 15 SP4 | Leap 15.4   | Leap 15.4  | Leap 15.4   | Leap 15.4   |
 |  HEAD   | SLES 15 SP4 | SLES 15 SP4 | -           | Rocky 8  | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.4  | SLES 15 SP4 | SLES 15 SP4 |
 |  4.3    | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.4  | SLES 15 SP4 | SLES 15 SP4 |
 |  4.2    | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 | CentOS 7 | Ubuntu 20.04 | SLES 15 SP3 | SLES 15 SP3 | SLES 15 SP3 | Leap 15.4  | SLES 15 SP3 | SLES 15 SP3 |
