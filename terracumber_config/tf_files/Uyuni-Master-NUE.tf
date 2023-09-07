@@ -233,7 +233,7 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
     }
   }
