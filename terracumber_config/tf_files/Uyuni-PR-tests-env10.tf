@@ -295,7 +295,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
       }
