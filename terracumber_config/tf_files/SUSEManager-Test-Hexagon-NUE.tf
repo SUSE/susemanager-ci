@@ -194,7 +194,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     build-host = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:5d"
         vcpu = 4
