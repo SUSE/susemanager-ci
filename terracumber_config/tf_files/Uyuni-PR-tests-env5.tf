@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  images = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse154o", "opensuse154-ci-pro", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -282,7 +282,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:04:00:49"
@@ -295,7 +295,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       additional_repos = {
         tools_update = var.SLE_CLIENT_REPO,
       }

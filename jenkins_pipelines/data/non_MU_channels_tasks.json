@@ -5,6 +5,5 @@
   "liberty9_minion" : "build_validation_liberty9_minion_build_clm",
   "oracle9_minion" : "build_validation_oracle9_minion_build_clm",
   "rocky8_minion" : "build_validation_rocky8_minion_add_iso_and_build_clm",
-  "rocky9_minion" : "build_validation_rocky9_minion_build_clm",
-  "ubuntu1804_minion" : "build_validation_ubuntu1804_minion_add_common_repositories"
+  "rocky9_minion" : "build_validation_rocky9_minion_build_clm"
 }

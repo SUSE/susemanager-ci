@@ -101,7 +101,7 @@ module "base_core" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu1804o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "opensuse154o" ]
+  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "opensuse154o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -607,24 +607,6 @@ module "rocky9-minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu1804-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "min-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:b9"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "ubuntu2004-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -1030,20 +1012,6 @@ module "rocky9-sshminion" {
   install_salt_bundle = true
 }
 
-module "ubuntu1804-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-ubuntu1804"
-  image              = "ubuntu1804o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:d9"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "ubuntu2004-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -1347,9 +1315,6 @@ module "controller" {
 
   rocky9_minion_configuration    = module.rocky9-minion.configuration
   rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
-
-  ubuntu1804_minion_configuration    = module.ubuntu1804-minion.configuration
-  ubuntu1804_sshminion_configuration = module.ubuntu1804-sshminion.configuration
 
   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration

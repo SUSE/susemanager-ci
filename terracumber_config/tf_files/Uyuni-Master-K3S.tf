@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse154o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-k3s-"
@@ -117,8 +117,8 @@ module "cucumber_testsuite" {
   
   container_server = true
 
-  # mirror      = "minima-mirror-ci-bv.mgr.suse.de"
-  # use_mirror_images = true
+  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images        = true
 
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
@@ -191,7 +191,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = false
     }
     build-host = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:3d"
@@ -201,7 +201,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     pxeboot-minion = {
-      image = "opensuse154o"
+      image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
@@ -211,12 +211,12 @@ module "cucumber_testsuite" {
       additional_grains = {
         hvm_disk_image = {
           leap = {
-            hostname = "uyuni-master-min-nested"
+            hostname = "uyuni-master-k3s-min-nested"
             image = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
             hash = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
           }
           sles = {
-            hostname = "uyuni-master-min-nested"
+            hostname = "uyuni-master-k3s-min-nested"
             image = "http://minima-mirror-ci-bv.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
             hash = "http://minima-mirror-ci-bv.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
           }
@@ -229,7 +229,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  nested_vm_host = "min-nested"
+  nested_vm_host = "uyuni-master-k3s-min-nested"
+  nested_vm_mac =  "aa:b2:93:01:00:3f"
   provider_settings = {
     pool               = "ssd"
     network_name       = null
