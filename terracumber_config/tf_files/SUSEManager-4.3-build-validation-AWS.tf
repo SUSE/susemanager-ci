@@ -170,6 +170,7 @@ module "server" {
   repository_disk_size       = 1500
   server_registration_code   = var.SERVER_REGISTRATION_CODE
 
+  java_debugging                 = false
   auto_accept                    = false
   monitored                      = true
   disable_firewall               = false

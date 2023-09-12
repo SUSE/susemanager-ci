@@ -156,6 +156,7 @@ module "server" {
   server_mounted_mirror = "minima-mirror-ci-bv.mgr.suse.de"
   repository_disk_size = 2048
 
+  java_debugging                 = false
   auto_accept                    = false
   monitored                      = true
   disable_firewall               = false
