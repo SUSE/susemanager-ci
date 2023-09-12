@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o", "ubuntu2204o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -147,7 +147,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
@@ -158,7 +158,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
@@ -212,14 +212,14 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-kvm"
       additional_grains = {
         hvm_disk_image = {
           leap = {
             hostname = "uyuni-master-min-nested"
-            image = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
-            hash = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+            image = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2.sha256"
           }
           sles = {
             hostname = "uyuni-master-min-nested"
@@ -233,7 +233,7 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
     }
   }
