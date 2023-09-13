@@ -136,7 +136,8 @@ module "cucumber_testsuite" {
         memory = 16384
       }
       runtime = "k3s"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
+      //container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
+      container_repository = "registry.opensuse.org/home/cbosdonnat/branches/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/charts/uyuni/server"
       login_timeout = 28800
     }
