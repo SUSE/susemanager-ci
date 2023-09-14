@@ -22,7 +22,7 @@ def run(params) {
         source_project = 'systemsmanagement:Uyuni:Master'
         sumaform_tools_project = 'systemsmanagement:sumaform:tools'
         test_packages_project = 'systemsmanagement:Uyuni:Test-Packages:Pool'
-        build_repo = 'openSUSE_Leap_15.4'
+        build_repo = 'openSUSE_Leap_15.5'
         environment_workspace = null
         url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
         env.common_params = ''
