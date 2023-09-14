@@ -2,7 +2,7 @@
 
 node('sumaform-cucumber') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '3', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
+        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30', artifactNumToKeepStr: '10')),
         disableConcurrentBuilds(),
         pipelineTriggers([cron('H H/4 * * *')]),
         parameters([
