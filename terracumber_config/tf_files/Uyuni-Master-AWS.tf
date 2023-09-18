@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse154o", "sles15sp4o", "ubuntu2204"]
+  images = ["rocky8", "opensuse154o", "opensuse155o", "sles15sp4o", "ubuntu2204"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -163,8 +163,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "sles15sp4o"
-      name = "min-sles15"
+      image = "opensuse155o"
+      name = "min-suse"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.8"
@@ -174,8 +174,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "sles15sp4o"
-      name = "minssh-sles15"
+      image = "opensuse155o"
+      name = "minssh-suse"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.9"
