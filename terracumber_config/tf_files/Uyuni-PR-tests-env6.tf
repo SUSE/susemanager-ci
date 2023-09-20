@@ -303,7 +303,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse155o"
+      image = "opensuse155-ci-pro"
       name = "min-kvm"
       additional_grains = {
         hvm_disk_image = {
@@ -332,7 +332,7 @@ module "cucumber_testsuite" {
         os_update = var.UPDATE_REPO,
         os_additional_repo = var.ADDITIONAL_REPO_URL,
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
     }
   }
