@@ -302,7 +302,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse155o"
+      image = "opensuse155-ci-pro"
       name = "min-kvm"
       additional_grains = {
         hvm_disk_image = {
