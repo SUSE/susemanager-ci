@@ -302,39 +302,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    kvm-host = {
-      image = "opensuse155-ci-pro"
-      name = "min-kvm"
-      additional_grains = {
-        hvm_disk_image = {
-          leap = {
-            hostname = "suma-pr10-min-nested"
-            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
-            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
-          }
-          sles = {
-            hostname = "suma-pr10-min-nested"
-            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
-            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
-          }
-        }
-      }
-      provider_settings = {
-        mac = "aa:b2:92:04:00:9a"
-      }
-      additional_repos_only = true
-      additional_repos = {
-        client_repo = var.OPENSUSE_CLIENT_REPO,
-        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
-        test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/repo/non-oss/",
-        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
-        os_update = var.UPDATE_REPO,
-        os_additional_repo = var.ADDITIONAL_REPO_URL,
-      }
-      additional_packages = [ "venv-salt-minion", "mkisofs" ]
-      install_salt_bundle = true
-    }
   }
   nested_vm_host = "suma-pr10-min-nested"
   nested_vm_mac =  "aa:b2:92:04:00:9b"
