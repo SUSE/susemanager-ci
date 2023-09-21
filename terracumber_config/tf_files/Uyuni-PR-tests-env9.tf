@@ -320,7 +320,7 @@ module "cucumber_testsuite" {
         }
       }
       provider_settings = {
-        mac = "aa:b2:92:04:00:0a"
+        mac = "aa:b2:92:04:00:8a"
       }
       additional_repos_only = true
       additional_repos = {
