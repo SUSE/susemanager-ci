@@ -239,7 +239,7 @@ def run(params) {
                         env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${source_project}:Other/${build_repo}/${arch}"
                         env.MASTER_SUMAFORM_TOOLS_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/${arch}"
                         env.TEST_PACKAGES_REPO = "http://${fqdn_jenkins_node}/workspace/suma-pr${env_number}/repos/${test_packages_project}/rpm/${arch}"
-                        env.UPDATE_REPO = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/some-updates/"
+                        env.UPDATE_REPO = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/some-updates/leap/15.4"
                         if (additional_repo_url == '') {
                             echo "Adding dummy repo for update repo"
                             env.ADDITIONAL_REPO_URL = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/dummy/"
