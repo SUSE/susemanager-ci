@@ -22,7 +22,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     pull_request_number = "master";
     first_env = 9;
     last_env = 9;
-    additional_repo_url = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/reference_job_additional_repo";
+    additional_repo_url = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/reference_job_additional_repo";
 } else { //regular ci test
     first_env = 1;
     last_env = 4;
