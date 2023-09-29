@@ -57,7 +57,8 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'must_prepare_retail', defaultValue: true, description: 'Prepare and run Retail'),
             booleanParam(name: 'must_run_containerization_tests', defaultValue: true, description: 'Run Containerization Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format')
+            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by commas without whitespaces (Option A)'),
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
             ])
     ])
 
