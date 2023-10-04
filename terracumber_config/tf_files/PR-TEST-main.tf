@@ -80,7 +80,7 @@ module "cucumber_testsuite" {
     }
     suse-minion = {
       image = var.SUSE_MINION_IMAGE
-      name = "min-${var.SUSE_MINION_NAME}"
+      name = "min-suse"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
         vcpu = 2
@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
     }
     suse-sshminion = {
       image = var.SUSE_MINION_IMAGE
-      name = "minssh-${var.SUSE_MINION_NAME}"
+      name = "minssh-suse"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
         vcpu = 2

@@ -140,10 +140,6 @@ variable "SUSE_MINION_IMAGE" {
   type = string
 }
 
-variable "SUSE_MINION_NAME" {
-  type = string
-}
-
 variable "REDHAT_MINION_IMAGE" {
   type = string
 }

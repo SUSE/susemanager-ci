@@ -3,7 +3,6 @@
 IMAGE                  = "sles15sp4o"
 IMAGES                 = ["rocky9o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 SUSE_MINION_IMAGE      = "sles15sp4o"
-SUSE_MINION_NAME       = "sles15"
 PRODUCT_VERSION        = "4.3-nightly"
 GIT_PROFILES_REPO      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-suma43-pull-request-env-fail.txt"
