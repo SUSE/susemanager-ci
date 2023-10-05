@@ -308,12 +308,12 @@ module "cucumber_testsuite" {
       additional_grains = {
         hvm_disk_image = {
           leap = {
-            hostname = "suma-pr1-min-nested"
-            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-JeOS.x86_64-OpenStack-Cloud.qcow2"
-            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+            hostname = "suma-pr6-min-nested"
+            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2.sha256"
           }
           sles = {
-            hostname = "suma-pr1-min-nested"
+            hostname = "suma-pr6-min-nested"
             image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
             hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
           }
