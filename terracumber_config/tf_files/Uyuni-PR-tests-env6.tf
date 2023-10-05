@@ -195,8 +195,8 @@ module "cucumber_testsuite" {
         master_repo_other = var.MASTER_OTHER_REPO,
         master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
         test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/repo/non-oss/",
-        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
+        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/non-oss/",
+        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/oss/",
         os_update = var.UPDATE_REPO,
         os_additional_repo = var.ADDITIONAL_REPO_URL,
         testing_overlay_devel = "http://minima-mirror-ci-bv.mgr.prv.suse.net/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Testing-Overlay-POOL-x86_64-Media1/",
@@ -217,8 +217,8 @@ module "cucumber_testsuite" {
         master_repo_other = var.MASTER_OTHER_REPO,
         master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
         test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/repo/non-oss/",
-        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
+        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/non-oss/",
+        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/oss/",
         os_update = var.UPDATE_REPO,
         os_additional_repo = var.ADDITIONAL_REPO_URL,
         testing_overlay_devel = "http://minima-mirror-ci-bv.mgr.prv.suse.net/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Testing-Overlay-POOL-x86_64-Media1/",
@@ -309,8 +309,8 @@ module "cucumber_testsuite" {
         hvm_disk_image = {
           leap = {
             hostname = "suma-pr1-min-nested"
-            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
-            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-JeOS.x86_64-OpenStack-Cloud.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
           }
           sles = {
             hostname = "suma-pr1-min-nested"
@@ -327,8 +327,8 @@ module "cucumber_testsuite" {
         client_repo = var.OPENSUSE_CLIENT_REPO,
         master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
         test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/repo/non-oss/",
-        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/repo/oss/",
+        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/non-oss/",
+        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/oss/",
         os_update = var.UPDATE_REPO,
         os_additional_repo = var.ADDITIONAL_REPO_URL,
       }
