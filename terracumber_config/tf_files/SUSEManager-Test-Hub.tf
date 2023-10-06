@@ -46,7 +46,7 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
 
 variable "MAIL_FROM" {
   type = string
-  default = "galaxy-ci@suse.de"
+  default = "jenkins@suse.de"
 }
 
 variable "MAIL_TO" {
