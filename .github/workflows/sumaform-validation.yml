@@ -1,0 +1,56 @@
+name: Sumaform validation
+
+on:
+  pull_request:
+    paths:
+      - 'terracumber_config/tf_files/**'
+
+jobs:
+  validate_sumaform:
+    name: Validate sumaform files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: tf_files
+        name: Get modified .tf files
+        uses: Ana06/get-changed-files@v2.2.0
+        with:
+          filter: '*.tf'
+      - name: Install terraform
+        if: steps.tf_files.outputs.added_modified
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.0.10
+      - name: Checkout sumaform
+        if: steps.tf_files.outputs.added_modified
+        uses: actions/checkout@v4
+        with:
+          repository: uyuni-project/sumaform
+          path: sumaform
+      - name: Validate files
+        if: steps.tf_files.outputs.added_modified
+        run: |
+          # Remove providers to use the 'null' provider
+          sed -i '/provider *"/,/\}/d' ${{steps.tf_files.outputs.added_modified}}
+          # Remove libvirt provider dependency
+          sed -i '/libvirt = {/,/\}/d' ${{steps.tf_files.outputs.added_modified}}
+
+          # Setup sumaform with the 'null' backend
+          cd sumaform
+          ln -sfn ../backend_modules/null modules/backend
+
+          # Set TF variables
+          export TF_VAR_SCC_USER="user"
+          export TF_VAR_SCC_PASSWORD="password"
+
+          for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
+            echo "::notice::Validating '`basename $tf_file`'..."
+            cp ../$tf_file main.tf
+            # Uncomment for Terraform detailed logging
+            # export TF_LOG=trace
+            terraform init -input=false
+            terraform validate
+            terraform apply -auto-approve -input=false
+            terraform destroy -auto-approve -input=false
+            echo
+          done
