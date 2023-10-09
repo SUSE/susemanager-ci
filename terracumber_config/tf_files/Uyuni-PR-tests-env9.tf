@@ -187,6 +187,7 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:92:04:00:81"
+        memory = 16384
       }
       additional_repos_only = true
       additional_repos = {
