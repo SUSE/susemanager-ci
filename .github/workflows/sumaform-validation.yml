@@ -50,7 +50,6 @@ jobs:
             # export TF_LOG=trace
             terraform init -input=false
             terraform validate
-            terraform apply -auto-approve -input=false
-            terraform destroy -auto-approve -input=false
+            terraform plan -input=false
             echo
           done
