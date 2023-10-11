@@ -248,7 +248,7 @@ module "base_debian" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o" ]
+  images      = [ "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -715,6 +715,28 @@ module "debian11-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "debian12-minion" {
+  providers = {
+    libvirt = libvirt.irishcoffee
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "uyuni-master"
+  name               = "min-debian12"
+  image              = "debian12o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:88"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "opensuse154arm-minion" {
   providers = {
     libvirt = libvirt.overdrive4
@@ -1143,6 +1165,23 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "debian12-sshminion" {
+  providers = {
+    libvirt = libvirt.irishcoffee
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "uyuni-master"
+  name               = "minssh-debian12"
+  image              = "debian12o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:a8"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "opensuse154arm-sshminion" {
   providers = {
     libvirt = libvirt.overdrive4
@@ -1414,6 +1453,9 @@ module "controller" {
 
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
+
+  debian12_minion_configuration    = module.debian12-minion.configuration
+  debian12_sshminion_configuration = module.debian12-sshminion.configuration
 
   opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
   opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
