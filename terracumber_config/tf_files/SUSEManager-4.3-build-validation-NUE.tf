@@ -101,7 +101,7 @@ module "base_core" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "opensuse154o" ]
+  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse154o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -684,6 +684,25 @@ module "debian11-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "debian12-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  product_version    = "4.3-released"
+  name               = "min-debian12"
+  image              = "debian12o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:bc"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 // WORKAROUND: overdrive3 has been disconnected by mistake
 //module "opensuse154arm-minion" {
 //  providers = {
@@ -1071,6 +1090,20 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "debian12-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-debian12"
+  image              = "debian12o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:dc"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 // WORKAROUND: overdrive3 has been disconnected by mistake
 //module "opensuse154arm-sshminion" {
 //  providers = {
@@ -1328,6 +1361,9 @@ module "controller" {
 
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
+
+  debian12_minion_configuration    = module.debian12-minion.configuration
+  debian12_sshminion_configuration = module.debian12-sshminion.configuration
 
 // WORKAROUND: overdrive3 has been disconnected by mistake
 //  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
