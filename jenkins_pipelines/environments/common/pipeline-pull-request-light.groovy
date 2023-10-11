@@ -68,11 +68,11 @@ def run(params) {
                     if(must_test) {
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
-                        env.MASTER_REPO = "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
-                        env.MASTER_OTHER_REPO = "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
-                        env.MASTER_SUMAFORM_TOOLS_REPO = "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
-                        env.TEST_PACKAGES_REPO = "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
+                        env.PULL_REQUEST_REPO= "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
+                        env.MASTER_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
+                        env.MASTER_OTHER_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
+                        env.MASTER_SUMAFORM_TOOLS_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
+                        env.TEST_PACKAGES_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
                         env.UPDATE_REPO = "http://minima-mirror.mgr.prv.suse.net/jordi/some-updates/"
                         if (additional_repo_url == '') {
                             echo "Adding dummy repo for update repo"
@@ -81,10 +81,10 @@ def run(params) {
                             echo "Adding ${additional_repo_url}"
                             env.ADDITIONAL_REPO_URL = additional_repo_url
                         }
-                        env.SLE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
-                        env.RHLIKE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
-                        env.DEBLIKE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
-                        env.OPENSUSE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE:/Maintenance:/29643/SUSE_Updates_SLE-Product-SLES_15-SP1-LTSS_x86_64/"
+                        env.SLE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
+                        env.RHLIKE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
+                        env.DEBLIKE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
+                        env.OPENSUSE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
 
                         // Provision the environment
                         if (terraform_init) {
