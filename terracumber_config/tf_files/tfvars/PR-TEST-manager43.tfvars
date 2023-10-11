@@ -1,7 +1,7 @@
 ############ Spacewalk unique variables ###########
 
 IMAGE                  = "sles15sp4o"
-IMAGES                 = ["rocky9o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
+IMAGES                 = ["rocky9o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 SUSE_MINION_IMAGE      = "sles15sp4o"
 PRODUCT_VERSION        = "4.3-nightly"
 GIT_PROFILES_REPO      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
