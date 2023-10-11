@@ -103,10 +103,10 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     redhat-minion = {
-      image = var.REDHAT_MINION_IMAGE
-      name = "min-${var.REDHAT_MINION_NAME}"
+      image = var.RHLIKE_MINION_IMAGE
+      name = "min-${var.RHLIKE_MINION_NAME}"
       provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["redhat-minion"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
         memory = 2048
         vcpu = 2
       }
@@ -117,10 +117,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
+      image = var.DEBLIKE_MINION_IMAGE
+      name = "min-${var.DEBLIKE_MINION_NAME}"
       image = "ubuntu2204o"
       name = "min-ubuntu2204"
       provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["debian-minion"]
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["deblike-minion"]
         vcpu = 2
         memory = 2048
       }
