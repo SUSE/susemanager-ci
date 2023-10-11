@@ -72,24 +72,6 @@ pipeline {
                 sh "exit \$TESTS_RESULT"
             }
         }
-        stage('Scan code and tests results for sonarcloud') {
-            steps {
-                echo 'Run sonarcloud scanner'
-                sh "UYUNI_CLONE=`ls -d uyuni*`; " +
-                    "PR_BASE=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"base\"' | grep '\"ref\"' | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
-                    "PR_BRANCH=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"head\"' | grep '\"ref\"' | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
-                    "cd \$UYUNI_CLONE; " +
-                    "mkdir -p .sonar; " +
-                    "source /var/lib/jenkins/.sonar-credentials; " +
-                    "docker run --rm -v \$PWD:/usr/src " +
-                        "-v \$PWD/../.sonar:/opt/sonar-scanner/.sonar " +
-                        "-e SONAR_LOGIN " +
-                        "sonarsource/sonar-scanner-cli " +
-                        "-Dsonar.pullrequest.key=${params.PR_NUMBER} " +
-                        "-Dsonar.pullrequest.branch=\$PR_BRANCH " +
-                        "-Dsonar.pullrequest.base=\$PR_BASE"
-            }
-        }
     }
 
     post {
