@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('pull-request-test-NUE') {
+node('pull-request-test') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '30', daysToKeepStr: '15')),
         parameters([
