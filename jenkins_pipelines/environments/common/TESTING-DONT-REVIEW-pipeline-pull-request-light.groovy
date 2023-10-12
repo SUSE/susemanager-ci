@@ -45,7 +45,7 @@ def run(params) {
                         // Define test environment parameters
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-                        env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-TEST-main.tf"
+                        env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-Testing-main.tf"
                         env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file}"
 
                         if (params.terraform_parallelism) {
