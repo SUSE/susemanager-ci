@@ -57,7 +57,7 @@ node('pull-request-test-NUE') {
           }
         }
         echo "DEBUG: Secondary test tags: ${secondary_exports}"
-        def pipeline = load "jenkins_pipelines/environments/common/TESTING-DONT-REVIEW-pipeline-pull-request-light.groovy"
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-pull-request.groovy"
         pipeline.run(params)
     }
 }
