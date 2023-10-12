@@ -29,19 +29,32 @@ jobs:
           path: sumaform
       - name: Validate files
         if: steps.tf_files.outputs.added_modified
+        env:
+          TF_VAR_SCC_USER: "user"
+          TF_VAR_SCC_PASSWORD: "password"
+          TF_VAR_MIRROR: ""
+          TF_VAR_PULL_REQUEST_REPO: ""
+          TF_VAR_MASTER_REPO: ""
+          TF_VAR_MASTER_OTHER_REPO: ""
+          TF_VAR_MASTER_SUMAFORM_TOOLS_REPO: ""
+          TF_VAR_UPDATE_REPO: ""
+          TF_VAR_ADDITIONAL_REPO_URL: ""
+          TF_VAR_TEST_PACKAGES_REPO: ""
+          TF_VAR_SLE_CLIENT_REPO: ""
+          TF_VAR_RHLIKE_CLIENT_REPO: ""
+          TF_VAR_DEBLIKE_CLIENT_REPO: ""
+          TF_VAR_OPENSUSE_CLIENT_REPO: ""
         run: |
-          # Remove providers to use the 'null' provider
-          sed -i '/provider *"/,/\}/d' ${{steps.tf_files.outputs.added_modified}}
-          # Remove libvirt provider dependency
-          sed -i '/libvirt = {/,/\}/d' ${{steps.tf_files.outputs.added_modified}}
+          # Remove libvirt provider settings
+          sed -i \
+            -e '/provider *"/,/^[ \/#]*\}\s*$/d' \
+            -e '/libvirt = {/,/^[ \/#]*\}\s*$/d' \
+            -e '/libvirt =/d' \
+            ${{steps.tf_files.outputs.added_modified}}
 
           # Setup sumaform with the 'null' backend
           cd sumaform
           ln -sfn ../backend_modules/null modules/backend
-
-          # Set TF variables
-          export TF_VAR_SCC_USER="user"
-          export TF_VAR_SCC_PASSWORD="password"
 
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
             echo "::notice::Validating '`basename $tf_file`'..."
