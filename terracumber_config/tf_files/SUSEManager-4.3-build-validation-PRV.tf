@@ -819,26 +819,29 @@ module "rocky9-minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004-minion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.3-released"
-  name               = "min-ubuntu2004"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:ba"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// TODO: reenable as soon as possible
+//   - Uyuni stable tools lacks a dependency, see https://github.com/uyuni-project/uyuni/issues/7637
+//   - we should not be using Uyuni stable tools in cloud-init when testing SUSE Manager
+// module "ubuntu2004-minion" {
+//   providers = {
+//     libvirt = libvirt.mandalore
+//   }
+//   source             = "./modules/minion"
+//   base_configuration = module.base_debian.configuration
+//   product_version    = "4.3-released"
+//   name               = "min-ubuntu2004"
+//   image              = "ubuntu2004o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:ba"
+//     memory             = 4096
+//   }
+//   server_configuration = {
+//     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+//   }
+//   auto_connect_to_master  = false
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
 module "ubuntu2204-minion" {
   providers = {
@@ -863,27 +866,30 @@ module "ubuntu2204-minion" {
 
 // Debian 9 is not supported by 4.3
 
-module "debian10-minion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.3-released"
-  name               = "min-debian10"
-  image              = "debian10o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:bd"
-    memory             = 4096
-  }
-
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// TODO: reenable as soon as possible
+//   - Uyuni stable tools lacks a dependency, see https://github.com/uyuni-project/uyuni/issues/7637
+//   - we should not be using Uyuni stable tools in cloud-init when testing SUSE Manager
+// module "debian10-minion" {
+//   providers = {
+//     libvirt = libvirt.mandalore
+//   }
+//   source             = "./modules/minion"
+//   base_configuration = module.base_debian.configuration
+//   product_version    = "4.3-released"
+//   name               = "min-debian10"
+//   image              = "debian10o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:bd"
+//     memory             = 4096
+//   }
+// 
+//   server_configuration = {
+//     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+//   }
+//   auto_connect_to_master  = false
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
 module "debian11-minion" {
   providers = {
@@ -1307,22 +1313,25 @@ module "rocky9-sshminion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004-sshminion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-ubuntu2004"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:da"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// TODO: reenable as soon as possible
+//   - Uyuni stable tools lacks a dependency, see https://github.com/uyuni-project/uyuni/issues/7637
+//   - we should not be using Uyuni stable tools in cloud-init when testing SUSE Manager
+// module "ubuntu2004-sshminion" {
+//   providers = {
+//     libvirt = libvirt.mandalore
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_debian.configuration
+//   product_version    = "4.3-released"
+//   name               = "minssh-ubuntu2004"
+//   image              = "ubuntu2004o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:da"
+//     memory             = 4096
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
 module "ubuntu2204-sshminion" {
   providers = {
@@ -1343,22 +1352,25 @@ module "ubuntu2204-sshminion" {
 
 // Debian 9 is not supported by 4.3
 
-module "debian10-sshminion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-debian10"
-  image              = "debian10o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:dd"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// TODO: reenable as soon as possible
+//   - Uyuni stable tools lacks a dependency, see https://github.com/uyuni-project/uyuni/issues/7637
+//   - we should not be using Uyuni stable tools in cloud-init when testing SUSE Manager
+// module "debian10-sshminion" {
+//   providers = {
+//     libvirt = libvirt.mandalore
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_debian.configuration
+//   product_version    = "4.3-released"
+//   name               = "minssh-debian10"
+//   image              = "debian10o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:42:00:dd"
+//     memory             = 4096
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
 module "debian11-sshminion" {
   providers = {
@@ -1665,14 +1677,16 @@ module "controller" {
   rocky9_minion_configuration    = module.rocky9-minion.configuration
   rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
 
-  ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+// TODO: reenable as soon as possible
+//   ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
+//   ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
 
   ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
 
-  debian10_minion_configuration    = module.debian10-minion.configuration
-  debian10_sshminion_configuration = module.debian10-sshminion.configuration
+// TODO: reenable as soon as possible
+//   debian10_minion_configuration    = module.debian10-minion.configuration
+//   debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
