@@ -119,8 +119,6 @@ module "cucumber_testsuite" {
     debian-minion = {
       image = var.DEBLIKE_MINION_IMAGE
       name = "min-deblike"
-      image = "ubuntu2204o"
-      name = "min-ubuntu2204"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["deblike-minion"]
         vcpu = 2
