@@ -1,10 +1,11 @@
 ############ Provo unique variables ###########
 
-MIRROR = "minima-mirror-ci-bv.mgr.prv.suse.net"
+MIRROR            = "minima-mirror-ci-bv.mgr.prv.suse.net"
 DOWNLOAD_ENDPOINT = "minima-mirror-ci-bv.mgr.prv.suse.net"
-DOMAIN = "mgr.prv.suse.net"
+DOMAIN            = "mgr.prv.suse.net"
 USE_MIRROR_IMAGES = true
-BRIDGE = "br1"
+GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+BRIDGE            = "br1"
 environment_description = {
   1 = {
     mac = {
