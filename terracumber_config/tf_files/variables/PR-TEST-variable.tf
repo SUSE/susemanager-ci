@@ -144,15 +144,7 @@ variable "RHLIKE_MINION_IMAGE" {
   type = string
 }
 
-variable "RHLIKE_MINION_NAME" {
-  type = string
-}
-
 variable "DEBLIKE_MINION_IMAGE" {
-  type = string
-}
-
-variable "DEBLIKE_MINION_NAME" {
   type = string
 }
 

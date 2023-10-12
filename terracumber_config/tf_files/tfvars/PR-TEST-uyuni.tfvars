@@ -14,6 +14,4 @@ CUCUMBER_COMMAND       = "export PRODUCT='Uyuni' && run-testsuite"
 URL_PREFIX             = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-prs-ci-tests"
 ADDITIONAL_REPOS_ONLY  = true
 RHLIKE_MINION_IMAGE    = "rocky8o"
-RHLIKE_MINION_NAME      = "rocky8"
 DEBLIKE_MINION_IMAGE   = "ubuntu2204o"
-DEBLIKE_MINION_NAME    = "ubuntu2204"

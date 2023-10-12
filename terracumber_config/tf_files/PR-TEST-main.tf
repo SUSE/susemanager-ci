@@ -104,7 +104,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = var.RHLIKE_MINION_IMAGE
-      name = "min-${var.RHLIKE_MINION_NAME}"
+      name = "min-rhlike"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
         memory = 2048
@@ -118,7 +118,7 @@ module "cucumber_testsuite" {
     }
     debian-minion = {
       image = var.DEBLIKE_MINION_IMAGE
-      name = "min-${var.DEBLIKE_MINION_NAME}"
+      name = "min-deblike"
       image = "ubuntu2204o"
       name = "min-ubuntu2204"
       provider_settings = {
