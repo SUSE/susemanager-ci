@@ -75,7 +75,7 @@ variable "GIT_PASSWORD" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = "1.5.7"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
@@ -85,7 +85,8 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
+  //uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-04.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -102,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
+  images = ["centos7o", "rocky8o", "opensuse154o", "opensuse155o" , "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -122,35 +123,30 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:60"
+        vcpu = 2
+        memory = 2048
       }
     }
     server = {
       provider_settings = {
         mac = "aa:b2:93:01:00:61"
+        memory = 16384
       }
-      /* TODO: needs to be upgraded to openSUSE_Leap_15.4?
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/openSUSE_Leap_15.3/"
-      }
-      */
     }
-    /*
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:62"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/openSUSE_Leap_15.3/"
-      }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    */
     suse-client = {
       image = "sles15sp4o"
       name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:64"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -160,6 +156,8 @@ module "cucumber_testsuite" {
       name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:66"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -169,12 +167,15 @@ module "cucumber_testsuite" {
       name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:68"
+        vcpu = 2
+        memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
       image = "centos7o"
+      name = "min-centos7"
       provider_settings = {
         mac = "aa:b2:93:01:00:69"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -190,6 +191,8 @@ module "cucumber_testsuite" {
       image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:93:01:00:6b"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -200,16 +203,16 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:6d"
         memory = 2048
+        vcpu = 2
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
   }
   provider_settings = {
-    pool               = "ssd"
-    network_name       = null
-    bridge             = "br0"
-    additional_network = "192.168.142.0/24"
+    pool         = "ssd"
+    network_name = null
+    bridge       = "br0"
   }
 }
 
