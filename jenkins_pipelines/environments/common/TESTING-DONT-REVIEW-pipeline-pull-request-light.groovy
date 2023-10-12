@@ -29,10 +29,10 @@ def run(params) {
         env.common_params = ''
         fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
         env_number = 2
-        tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-TEST-variable.tf'
-        tfvars_manager43 = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-manager43.tfvars'
-        tfvars_nuremberg = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-NUE-ENVS.tfvars'
-        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-TEST-additionnal-repos.tf'
+        tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-testing-variables.tf'
+        tfvars_manager43 = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-manager43.tfvars'
+        tfvars_nuremberg = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-NUE-environments.tfvars'
+        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-additionnal-repos.tfvars'
         try {
             stage('Checkout CI tools') {
                 ws(environment_workspace){
