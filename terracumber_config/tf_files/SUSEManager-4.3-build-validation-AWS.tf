@@ -354,6 +354,9 @@ module "ubuntu2004-minion" {
 //  provider_settings = {
 //    instance_type = "t3a.medium"
 //  }
+//
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 //}
 
 module "rocky8-minion" {
@@ -500,6 +503,9 @@ module "ubuntu2004-sshminion" {
 //  provider_settings = {
 //    instance_type = "t3a.medium"
 //  }
+//
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 //}
 
 module "rocky8-sshminion" {
