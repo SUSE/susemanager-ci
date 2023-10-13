@@ -701,6 +701,9 @@ module "debian12-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 // WORKAROUND: overdrive3 has been disconnected by mistake
@@ -1102,6 +1105,9 @@ module "debian12-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 // WORKAROUND: overdrive3 has been disconnected by mistake
