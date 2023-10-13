@@ -32,7 +32,7 @@ def run(params) {
         tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-testing-variables.tf'
         tfvars_manager43 = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-manager43.tfvars'
         tfvars_nuremberg = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-NUE-environments.tfvars'
-        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-additionnal-repos.tfvars'
+        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-additionnal-repos.tf'
         try {
             stage('Checkout CI tools') {
                 ws(environment_workspace){
