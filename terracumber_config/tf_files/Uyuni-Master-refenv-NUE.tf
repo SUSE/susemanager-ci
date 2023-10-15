@@ -136,6 +136,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:e1"
         vcpu = 4
         memory = 16384
+        repository_disk_size = 250
       }
     }
     proxy = {
