@@ -256,7 +256,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "rocky8o"
-      name = "min-rocky8"
+      name = "min-rhlike"
       provider_settings = {
         mac = "aa:b2:92:04:00:86"
         memory = 2048
@@ -270,7 +270,7 @@ module "cucumber_testsuite" {
     }
     debian-minion = {
       image = "ubuntu2204o"
-      name = "min-ubuntu2204"
+      name = "min-deblike"
       provider_settings = {
         mac = "aa:b2:92:04:00:87"
       }
