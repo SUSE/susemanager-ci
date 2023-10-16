@@ -69,7 +69,7 @@ def run(params) {
             }
             stage('Checkout project') {
                 ws(environment_workspace){
-                    if(must_build) {
+                    if(params.must_build) {
                         // Make sure files are owned by jenkins user.
                         // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
                         sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product || true"
@@ -114,7 +114,7 @@ def run(params) {
                     }
                     currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-srv.mgr.prv.suse.net\">suma-pr${env_number}-srv.mgr.prv.suse.net</a>"
                     dir("product") {
-                        if(must_build) {
+                        if(params.must_build) {
                             sh "[ -L /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos ] || ln -s /storage/jenkins/repos/${env_number}/ /home/jenkins/jenkins-build/workspace/suma-pr${env_number}/repos"
                            if(!params.skip_package_build_check) {
 
