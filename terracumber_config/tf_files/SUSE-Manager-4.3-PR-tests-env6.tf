@@ -214,7 +214,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:04:00:54"
       }
       additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
+        tools_update_pr = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
