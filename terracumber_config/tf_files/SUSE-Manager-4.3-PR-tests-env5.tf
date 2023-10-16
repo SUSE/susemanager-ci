@@ -161,8 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-//  images = ["rocky9o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
-  images = ["opensuse154o", "sles15sp4o"]
+  images = ["rocky9o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -232,34 +231,34 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
-    // redhat-minion = {
-    //  image = "rocky9o"
-    //  name = "min-rocky9"
-    //  provider_settings = {
-    //    mac = "aa:b2:92:04:00:46"
-    //    memory = 2048
-    //    vcpu = 2
-    //  }
-    //  additional_repos = {
-    //    client_repo = var.RHLIKE_CLIENT_REPO,
-    //  }
-    //  additional_packages = [ "venv-salt-minion" ]
-    //  install_salt_bundle = true
-    //}
-    //debian-minion = {
-    //  image = "ubuntu2204o"
-    //  name = "min-ubuntu2204"
-    //  provider_settings = {
-    //    mac = "aa:b2:92:04:00:47"
-    //  }
-    //  additional_repos = {
-    //    client_repo = var.DEBLIKE_CLIENT_REPO,
-    //  }
-    //  additional_packages = [ "venv-salt-minion" ]
+    redhat-minion = {
+      image = "rocky9o"
+      name = "min-rocky9"
+      provider_settings = {
+        mac = "aa:b2:92:04:00:46"
+        memory = 2048
+        vcpu = 2
+      }
+      additional_repos = {
+        client_repo = var.RHLIKE_CLIENT_REPO,
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
+    debian-minion = {
+      image = "ubuntu2204o"
+      name = "min-ubuntu2204"
+      provider_settings = {
+        mac = "aa:b2:92:04:00:47"
+      }
+      additional_repos = {
+        client_repo = var.DEBLIKE_CLIENT_REPO,
+      }
+      additional_packages = [ "venv-salt-minion" ]
       // FIXME: cloudl-init fails if venv-salt-minion is not avaiable
       // We can set "install_salt_bundle = true" as soon as venv-salt-minion is available Uyuni:Stable
-    //  install_salt_bundle = false
-    //}
+      install_salt_bundle = false
+    }
     build-host = {
       image = "sles15sp4o"
       name = "min-build"
