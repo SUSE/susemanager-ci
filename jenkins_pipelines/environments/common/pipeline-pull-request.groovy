@@ -61,7 +61,7 @@ def run(params) {
             }
             stage('Checkout project') {
                 ws(environment_workspace){
-                    if(must_build) {
+                    if(params.must_build) {
                         // Make sure files are owned by jenkins user.
                         // We need to do it with a container because it was built within a docker container and some files would be owned by root if the built was canceled.
                         sh "docker run --rm -v ${WORKSPACE}:/manager registry.opensuse.org/systemsmanagement/uyuni/master/docker/containers/uyuni-push-to-obs chown -R 1000 /manager/product || true"
