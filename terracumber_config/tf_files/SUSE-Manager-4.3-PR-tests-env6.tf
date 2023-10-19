@@ -1,23 +1,23 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-prs-ci-tests"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/suma43-prs-ci-tests"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='Uyuni' && run-testsuite"
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-4.3"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,12 +27,12 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "$status acceptance tests on Pull Request: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "$status acceptance tests on SUMA 4.3 Pull Request: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
   type = string
-  default = "../mail_templates/mail-template-jenkins-pull-request.txt"
+  default = "../mail_templates/mail-template-jenkins-suma43-pull-request.txt"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
@@ -42,7 +42,7 @@ variable "MAIL_SUBJECT_ENV_FAIL" {
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = string
-  default = "../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
+  default = "../mail_templates/mail-template-jenkins-suma43-pull-request-env-fail.txt"
 }
 
 variable "ENVIRONMENT" {
@@ -57,7 +57,7 @@ variable "HYPER" {
 
 variable "MAIL_FROM" {
   type = string
-  default = "jenkins@suse.de"
+  default = "galaxy-ci@suse.de"
 }
 
 variable "MAIL_TO" {
@@ -148,7 +148,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-pr"
+  product_version = "4.3-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  images = ["rocky8o", "opensuse154o", "opensuse155o", "opensuse155-ci-pro", "ubuntu2204o", "sles15sp4o"]
+  images = ["rocky9o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
@@ -172,12 +172,12 @@ module "cucumber_testsuite" {
   auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git//:testsuite/features/profiles/internal_prv"
 
   server_http_proxy = "http-proxy.mgr.prv.suse.net:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.prv.suse.net:445"
 
-  # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
+  // when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
       provider_settings = {
@@ -187,22 +187,11 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:92:04:00:51"
-        memory = 16384
       }
-      additional_repos_only = true
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
-        master_repo = var.MASTER_REPO,
-        master_repo_other = var.MASTER_OTHER_REPO,
-        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
-        test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/non-oss/",
-        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/oss/",
-        os_update = var.UPDATE_REPO,
-        os_additional_repo = var.ADDITIONAL_REPO_URL,
-        testing_overlay_devel = "http://minima-mirror-ci-bv.mgr.prv.suse.net/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Testing-Overlay-POOL-x86_64-Media1/",
       }
-      image = "opensuse155-ci-pro"
+      image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
@@ -211,52 +200,40 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:52"
       }
-      additional_repos_only = true
       additional_repos = {
         pull_request_repo = var.PULL_REQUEST_REPO,
-        master_repo = var.MASTER_REPO,
-        master_repo_other = var.MASTER_OTHER_REPO,
-        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
-        test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/non-oss/",
-        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/oss/",
-        os_update = var.UPDATE_REPO,
-        os_additional_repo = var.ADDITIONAL_REPO_URL,
-        testing_overlay_devel = "http://minima-mirror-ci-bv.mgr.prv.suse.net/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Testing-Overlay-POOL-x86_64-Media1/",
-        proxy_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/repositories/systemsmanagement:/Uyuni:/Master/images/repo/Uyuni-Proxy-POOL-x86_64-Media1/",
-        tools_update = var.OPENSUSE_CLIENT_REPO
       }
-      image = "opensuse155-ci-pro"
+      image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "opensuse155o"
+      image = "sles15sp4o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:92:04:00:54"
       }
       additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
+        tools_update_pr = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse155o"
+      image = "sles15sp4o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:92:04:00:55"
       }
       additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
+        tools_update_pr = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
-      image = "rocky8o"
-      name = "min-rhlike"
+      image = "rocky9o"
+      name = "min-rocky9"
       provider_settings = {
         mac = "aa:b2:92:04:00:56"
         memory = 2048
@@ -270,7 +247,7 @@ module "cucumber_testsuite" {
     }
     debian-minion = {
       image = "ubuntu2204o"
-      name = "min-deblike"
+      name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:92:04:00:57"
       }
@@ -290,7 +267,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
+        tools_update_pr = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -298,20 +275,20 @@ module "cucumber_testsuite" {
     pxeboot-minion = {
       image = "sles15sp4o"
       additional_repos = {
-        tools_update = var.SLE_CLIENT_REPO,
+        tools_update_pr = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse155-ci-pro"
+      image = "sles15sp4o"
       name = "min-kvm"
       additional_grains = {
         hvm_disk_image = {
           leap = {
             hostname = "suma-pr6-min-nested"
-            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
-            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2.sha256"
+            image = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2"
+            hash = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.4/appliances/openSUSE-Leap-15.4-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
           }
           sles = {
             hostname = "suma-pr6-min-nested"
@@ -323,15 +300,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:92:04:00:5a"
       }
-      additional_repos_only = true
       additional_repos = {
-        client_repo = var.OPENSUSE_CLIENT_REPO,
-        master_sumaform_tools_repo = var.MASTER_SUMAFORM_TOOLS_REPO,
-        test_packages_repo = var.TEST_PACKAGES_REPO,
-        non_os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/non-oss/",
-        os_pool = "http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/15.5/repo/oss/",
-        os_update = var.UPDATE_REPO,
-        os_additional_repo = var.ADDITIONAL_REPO_URL,
+        tools_update_pr = var.SLE_CLIENT_REPO,
       }
       additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
