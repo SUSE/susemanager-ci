@@ -479,8 +479,6 @@ module "ubuntu2204-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// Debian 9 is not supported by 4.3
-
 module "debian10-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -880,8 +878,6 @@ module "ubuntu2204-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
-// Debian 9 is not supported by 4.3
 
 module "debian10-sshminion" {
   source             = "./modules/sshminion"
