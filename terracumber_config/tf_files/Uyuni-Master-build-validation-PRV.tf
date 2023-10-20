@@ -646,6 +646,10 @@ module "ubuntu2004-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "ubuntu2204-minion" {
@@ -691,6 +695,10 @@ module "debian10-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian11-minion" {
@@ -713,6 +721,10 @@ module "debian11-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian12-minion" {
@@ -1113,6 +1125,10 @@ module "ubuntu2004-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "ubuntu2204-sshminion" {
@@ -1149,6 +1165,10 @@ module "debian10-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian11-sshminion" {
@@ -1166,6 +1186,10 @@ module "debian11-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian12-sshminion" {
