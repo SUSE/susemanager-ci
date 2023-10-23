@@ -9,7 +9,7 @@ usage()
     echo "  -x product name"
 }
 
-while getopts "u:p:" opts;do
+while getopts "u:p:x:" opts;do
     case "${opts}" in
         u) user_email=${OPTARG};;
         p) pull_request_number=${OPTARG};;
