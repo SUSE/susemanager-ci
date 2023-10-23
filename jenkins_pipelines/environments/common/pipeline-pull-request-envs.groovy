@@ -21,8 +21,6 @@ product_name = "Uyuni"
 short_product_name = "suma"
 update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates/"
 additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy/"
-rn_package = "release-notes-uyuni"
-rn_project = "systemsmanagement:Uyuni:Master"
 build_packages = true
 
 if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {

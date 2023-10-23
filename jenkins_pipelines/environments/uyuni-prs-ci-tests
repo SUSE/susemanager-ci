@@ -42,6 +42,8 @@ node('pull-request-test') {
         secondary_exports = ""
         cucumber_gitrepo = params.cucumber_gitrepo;
         cucumber_ref = params.cucumber_ref;
+        rn_package = "release-notes-uyuni"
+        rn_project = "systemsmanagement:Uyuni:Master"
         // load values to override default ones
         pr_env_filename = "jenkins_pipelines/environments/common/pipeline-pull-request-envs.groovy"
         if (fileExists(pr_env_filename)) {
