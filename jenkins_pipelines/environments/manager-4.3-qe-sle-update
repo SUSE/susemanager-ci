@@ -27,7 +27,6 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
             booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
             booleanParam(name: 'enable_proxy_stages', defaultValue: true, description: 'Run Proxy stages'),
-            booleanParam(name: 'enable_monitoring_stages', defaultValue: false, description: 'Run Monitoring stages'),
             booleanParam(name: 'enable_client_stages', defaultValue: true, description: 'Run Client stages'),
             booleanParam(name: 'must_add_MU_repositories', defaultValue: true, description: 'Add MU channels'),
             booleanParam(name: 'must_add_non_MU_repositories', defaultValue: true, description: 'Add non MU channels'),
