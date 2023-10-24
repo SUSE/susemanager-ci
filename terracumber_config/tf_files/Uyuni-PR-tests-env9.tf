@@ -254,7 +254,8 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
     }
-    redhat-minion = {
+
+    /*redhat-minion = {
       image = "rocky8o"
       name = "min-rhlike"
       provider_settings = {
@@ -267,7 +268,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
-    }
+    }*/
     debian-minion = {
       image = "ubuntu2204o"
       name = "min-deblike"
