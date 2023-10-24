@@ -336,11 +336,10 @@ module "cucumber_testsuite" {
       }
       additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
-    }
+    } */
   }
   nested_vm_host = "suma-pr9-min-nested"
   nested_vm_mac =  "aa:b2:92:04:00:8b"
-*/
   provider_settings = {
     pool               = "default"
     network_name       = null
