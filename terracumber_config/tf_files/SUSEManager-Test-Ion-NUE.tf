@@ -183,6 +183,19 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
+    ubuntu-minion = {
+      image = "ubuntu2204o"
+      name = "min-ubuntu2204o"
+      provider_settings = {
+//        mac = "aa:b2:93:01:00:50"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        memory = 2048
+        vcpu = 2
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
     build-host = {
       image = "sles15sp4o"
       name = "min-build"
