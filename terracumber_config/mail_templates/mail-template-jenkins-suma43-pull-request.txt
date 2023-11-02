@@ -23,7 +23,7 @@ $failures_log
 Compare the test results with 4.3 tests results and see if your PR
 fixed some or whether your failing tests are also failing in master:
 
-https://ci.suse.de/view/Manager/view/Manager-4.2/job/manager-4.3-dev-acceptance-tests-NUE/
+https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-dev-acceptance-tests-NUE/
 
 In case of failure, you can connect to the server host. See $urlprefix/$timestamp for connection details.
 
