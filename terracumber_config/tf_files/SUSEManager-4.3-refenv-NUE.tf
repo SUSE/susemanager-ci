@@ -126,21 +126,21 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:02:00"
+        mac = "aa:b2:93:01:00:a0"
         vcpu = 2
         memory = 2048
       }
     }
     server = {
       provider_settings = {
-        mac = "aa:b2:93:01:02:01"
+        mac = "aa:b2:93:01:00:a1"
         vcpu = 4
         memory = 16384
       }
     }
     proxy = {
       provider_settings = {
-        mac = "aa:b2:93:01:02:02"
+        mac = "aa:b2:93:01:00:a2"
         vcpu = 2
         memory = 2048
       }
@@ -151,7 +151,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:02:03"
+        mac = "aa:b2:93:01:00:a6"
         vcpu = 2
         memory = 2048
       }
@@ -162,7 +162,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "minssh-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:02:04"
+        mac = "aa:b2:93:01:00:a8"
         vcpu = 2
         memory = 2048
       }
@@ -173,7 +173,7 @@ module "cucumber_testsuite" {
       image = "centos7o"
       name = "min-centos7"
       provider_settings = {
-        mac = "aa:b2:93:01:02:05"
+        mac = "aa:b2:93:01:00:a9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -186,7 +186,7 @@ module "cucumber_testsuite" {
       image = "ubuntu2204o"
       name = "min-ubuntu2204"
       provider_settings = {
-        mac = "aa:b2:93:01:02:06"
+        mac = "aa:b2:93:01:00:ab"
         vcpu = 2
         memory = 2048
       }
@@ -196,7 +196,7 @@ module "cucumber_testsuite" {
     build-host = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:07"
+        mac = "aa:b2:93:01:00:ad"
         vcpu = 2
         memory = 2048
       }
@@ -207,7 +207,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-kvm"
       provider_settings = {
-        mac = "aa:b2:93:01:02:08"
+        mac = "aa:b2:93:01:00:ae"
         vcpu = 2
         memory = 2048
       }
