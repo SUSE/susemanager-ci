@@ -236,6 +236,7 @@ def run(params) {
                         env.MASTER_SUMAFORM_TOOLS_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/${arch}"
                         env.TEST_PACKAGES_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${test_packages_project}/rpm/${arch}"
                         env.UPDATE_REPO = update_repo
+
                         if (additional_repo_url == '') {
                             echo "Adding dummy repo for update repo"
                             env.ADDITIONAL_REPO_URL = additional_repo 
@@ -243,22 +244,27 @@ def run(params) {
                             echo "Adding ${additional_repo_url}"
                             env.ADDITIONAL_REPO_URL = additional_repo_url
                         }
+
                         env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sles_client_repo}/SLE_15/${arch}"
                         env.RHLIKE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${el_client_repo}/${EL_9}/${arch}"
                         env.DEBLIKE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}"
                         env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${openSUSE_client_repo}/openSUSE_Leap_15.0/${arch}"
 
-                      // Provision the environment
-                      if (terraform_init) {
-                          env.TERRAFORM_INIT = '--init'
-                      } else {
-                          env.TERRAFORM_INIT = ''
-                      }
-                      echo "DEBUG: Deploy 5"
-                      sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
-                      echo "DEBUG: Deploy 6"
-                      deployed = true
-		    }
+                        // Provision the environment
+                        if (terraform_init) {
+                            env.TERRAFORM_INIT = '--init'
+                        } else {
+                            env.TERRAFORM_INIT = ''
+                        }
+                        
+                        echo "DEBUG: Deploy 5"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                        echo "DEBUG: Deploy 6"
+                        deployed = true
+  
+                        // Collect and tag Flaky tests from the GitHub Board
+                        sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; export BUILD_NUMBER=${BUILD_NUMBER}; rake utils:collect_and_tag_flaky_tests'", returnStatus:true
+		            }
                 }
             }
             stage('Sanity Check') {
