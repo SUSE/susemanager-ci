@@ -202,7 +202,11 @@ module "build-host" {
   }
   additional_repos = {
         cloud_pool_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Products/SLE-Module-Public-Cloud/15-SP4/x86_64/product/,
-        cloud_updates_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Public-Cloud/15-SP4/x86_64/update/
+        cloud_updates_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Public-Cloud/15-SP4/x86_64/update/,
+        desktop_pool_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Products/SLE-Module-Desktop-Applications/15-SP4/x86_64/product/,
+        desktop_updates_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Desktop-Applications/15-SP4/x86_64/update/,
+        devel_pool_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/,
+        devel_updates_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Development-Tools/15-SP4/x86_64/update/
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
