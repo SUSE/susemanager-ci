@@ -79,7 +79,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://bloodymary.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://metropolis.mgr.prv.suse.net/system"
 }
 
 module "base" {
