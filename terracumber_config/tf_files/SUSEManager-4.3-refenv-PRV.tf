@@ -200,6 +200,10 @@ module "build-host" {
   provider_settings = {
     mac = "aa:b2:92:03:00:9d"
   }
+  additional_repos = {
+        cloud_pool_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Products/SLE-Module-Public-Cloud/15-SP4/x86_64/product/,
+        cloud_updates_repo = http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Public-Cloud/15-SP4/x86_64/update/
+  }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
