@@ -47,7 +47,24 @@ def run(params) {
             stage('Deploy') {
                 if (params.must_deploy) {
                     // Generate json file in the workspace
-                    writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
+                    if (params.custom_repositories?.trim()){
+                      // JSON file passed by parameter
+                      writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
+                    }
+                    if (params.mi_ids?.trim()) {
+                        // MI Identifiers passed by parameter
+                        def json_content = ''
+                        node('manager-jenkins-node') {
+                            checkout scm
+                            json_content = sh(script: "python3 jenkins_pipelines/scripts/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStdout: true)
+                            echo "Build Validation JSON:\n ${json_content}"
+                        }
+                        if (json_content?.trim() || json_content.trim() != 'Dictionary is empty, something went wrong'){
+                            writeFile file: 'custom_repositories.json', text: json_content.trim()
+                        } else {
+                            echo "MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)"
+                        }
+                    }
                     // Run Terracumber to deploy the environment
                     sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --taint '.*(domain|main_disk|data_disk|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend ${params.sumaform_backend} --runstep provision"
                     // Generate features
