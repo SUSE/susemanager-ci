@@ -137,7 +137,7 @@ module "cucumber_testsuite" {
       }
       runtime = "k3s"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server-helm"
       login_timeout = 28800
     }
     proxy = {
