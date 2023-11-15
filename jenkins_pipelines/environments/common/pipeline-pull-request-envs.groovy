@@ -82,7 +82,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     rn_project = "Devel:Galaxy:Manager:4.3:ToSLE"
 } else if (env.JOB_NAME == "suma43-prs-ci-tests-reference") {
     email_to = "discuss-susemanager-p-aaaag32rrv4bcp3adzknwc42m4@suse.slack.com";
-    pull_request_number = "master";
+    pull_request_number = "Manager-4.3";
     first_env =6;
     last_env = 6;
     // spacewalk suma43 settings
