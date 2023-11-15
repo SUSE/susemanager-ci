@@ -56,15 +56,6 @@ variable "MAIL_TO" {
   default = "galaxy-noise@suse.de"
 }
 
-// sumaform specific variables
-variable "SCC_USER" {
-  type = string
-}
-
-variable "SCC_PASSWORD" {
-  type = string
-}
-
 variable "GIT_USER" {
   type = string
   default = null // Not needed for master, as it is public
@@ -132,8 +123,6 @@ provider "aws" {
 module "base" {
   source = "./modules/base"
 
-  cc_username              = var.SCC_USER
-  cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
