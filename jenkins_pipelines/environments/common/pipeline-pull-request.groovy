@@ -263,8 +263,9 @@ def run(params) {
                         deployed = true
   
                         // Collect and tag Flaky tests from the GitHub Board
-                        sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; export BUILD_NUMBER=${BUILD_NUMBER}; rake utils:collect_and_tag_flaky_tests'", returnStatus:true
-		            }
+                        def statusCode = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; export BUILD_NUMBER=${BUILD_NUMBER}; rake utils:collect_and_tag_flaky_tests'", returnStatus:true
+                        sh "exit 0"
+                    }
                 }
             }
             stage('Sanity Check') {
