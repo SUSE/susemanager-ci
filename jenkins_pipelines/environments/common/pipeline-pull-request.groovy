@@ -77,12 +77,12 @@ def run(params) {
                         sh "git config --global user.name 'jenkins'"
                         //TODO: When checking out spacewalk, we will need credentials in the Jenkins Slave
                         //      Inside userRemoteConfigs add credentialsId: 'github'
-                        if (pull_request_number == "master") {
+                        if (pull_request_number == "master" || pull_request_number == "Manager-4.3") {
                             checkout([
                                     $class: 'GitSCM',
-                                    branches: [[name: "master"]],
+                                    branches: [[name: "${pull_request_number}"]],
                                     extensions: [[$class: 'CloneOption', depth: 1, timeout: 30, shallow: true, noTags: true, honorRefspec: true]],
-                                    userRemoteConfigs: [[refspec: '+refs/heads/master:refs/remotes/origin/master', url: "${pull_request_repo}"]],
+                                    userRemoteConfigs: [[refspec: "+refs/heads/${pull_request_number}:refs/remotes/origin/${pull_request_number}", url: "${pull_request_repo}"]],
                                    ])
                         } else {
                             checkout([
