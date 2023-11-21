@@ -29,7 +29,7 @@ if [ -z "${user_email}" ] || \
 fi
 
 echo "DEBUG: removing previous environment for user: ${user_email}, PR ${pull_request_number} and product ${product_name}"
-lockfiles=$(grep -H PR:${pull_request_number} /tmp/env-suma-pr-*.lock.info | cut -d: -f1 | xargs grep -H user:${email_to} | cut -d: -f1 | xargs grep -H product:${product_name} | cut -d: f1 | xargs grep -H keep: | cut -d: -f1 | rev | cut -d. -f1 --complement | rev)
+lockfiles=$(grep -H PR:${pull_request_number} /tmp/env-suma-pr-*.lock.info | cut -d: -f1 | xargs grep -H user:${email_to} | cut -d: -f1 | xargs grep -H product:${product_name} | cut -d: -f1 | xargs grep -H keep: | cut -d: -f1 | rev | cut -d. -f1 --complement | rev)
 if [ "${lockfiles}" != "" ];then
     echo "DEBUG: found lockfiles ${lockfiles}"
     echo "DEBUG: remove job"
