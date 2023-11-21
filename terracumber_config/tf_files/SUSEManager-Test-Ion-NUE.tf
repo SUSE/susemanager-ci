@@ -132,6 +132,7 @@ module "cucumber_testsuite" {
       }
       additional_repos = {
         server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Ion/images/repo/SLE-Module-SUSE-Manager-Server-4.3-POOL-x86_64-Media1/"
+        test_python_remote_bump = "http://download.suse.de/ibs/SUSE:/Maintenance:/31259/SUSE_Updates_SLE-Module-Basesystem_15-SP4_x86_64/"
       }
     }
     proxy = {
