@@ -10,16 +10,26 @@ pipeline {
     options {
         timeout(time: 60, unit: 'MINUTES')
     }
-    
+
     parameters {
         string(defaultValue: '', description: 'Uyuni PR', name: 'PR_NUMBER')
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
 
     environment {
-        repository = "uyuni-project/uyuni"
-        context = "sonarcloud_scanner"
-        description = "Sonarcloud scanner"
+        PR_BRANCH="""${sh(
+                    returnStdout: true,
+                    script: "curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | jq .head.ref | tr -d '"'"
+                ).trim()}"""
+        REPO_URL="""${sh(
+                    returnStdout: true,
+                    script: "curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | jq .head.repo.clone_url' | tr -d '"'"
+                ).trim()}"""
+        PR_BASE="""${sh(
+                    returnStdout: true,
+                    script: "curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | jq .base.ref | tr -d '"'"
+                ).trim()}"""
+
         git_fs = "${env.WORKSPACE}"
     }
     // run only on specific hosts
@@ -32,6 +42,17 @@ pipeline {
                 cleanWs()
                 echo 'Check out SCM'
                 checkout scm
+            }
+        }
+        stage('Checkout PR code') {
+            steps {
+                echo 'Check out PR code'
+                sh "PR_BRANCH=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | jq .head.ref | tr -d '"'`; " +
+                   "REPO_URL=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | jq .head.repo.clone_url' | tr -d '"'`"
+                checkout scmGit(branches: [[name: "${env.PR_BRANCH}"]],
+                                userRemoteConfigs: [
+                                    [url: "${env.REPO_URL}"]
+                                ])
             }
         }
         stage('Compile Java code') {
@@ -55,8 +76,6 @@ pipeline {
             steps {
                 echo 'Run sonarcloud scanner'
                 sh "UYUNI_CLONE=`ls -d uyuni*`; " +
-                    "PR_BASE=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"base\"' | grep '\"ref\"' | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
-                    "PR_BRANCH=`curl -n https://api.github.com/repos/uyuni-project/uyuni/pulls/${params.PR_NUMBER} | grep -A3 '\"head\"' | grep '\"ref\"' | sed 's/^ *\"ref\": \"\\([^\"]*\\)\",/\\1/'`; " +
                     "cd \$UYUNI_CLONE; " +
                     "mkdir -p .sonar; " +
                     "source /var/lib/jenkins/.sonar-credentials; " +
@@ -67,8 +86,8 @@ pipeline {
                         "-Dsonar.junit.reportPaths=\"\" "
                         "-Dsonar.coverage.jacoco.xmlReportPaths=\"\" "
                         "-Dsonar.pullrequest.key=${params.PR_NUMBER} " +
-                        "-Dsonar.pullrequest.branch=\$PR_BRANCH " +
-                        "-Dsonar.pullrequest.base=\$PR_BASE"
+                        "-Dsonar.pullrequest.branch=${env.PR_BRANCH} " +
+                        "-Dsonar.pullrequest.base=${env.PR_BASE}"
             }
         }
     }
