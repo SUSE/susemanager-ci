@@ -261,30 +261,31 @@ module "base_debian" {
   }
 }
 
-module "base_arm" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
+// WORKAROUND: overdrive3/4 are not accessible yet
+# module "base_arm" {
+#   providers = {
+#     libvirt = libvirt.overdrive4
+#   }
 
-  source = "./modules/base"
+#   source = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-43-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse154armo", "opensuse155armo" ]
+#   cc_username = var.SCC_USER
+#   cc_password = var.SCC_PASSWORD
+#   name_prefix = "suma-bv-43-"
+#   use_avahi   = false
+#   domain      = "mgr.prv.suse.net"
+#   images      = [ "opensuse154armo", "opensuse155armo" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
-  use_mirror_images = true
+#   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+#   use_mirror_images = true
 
-  testsuite = true
+#   testsuite = true
 
-  provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
-  }
-}
+#   provider_settings = {
+#     pool        = "ssd"
+#     bridge      = "br1"
+#   }
+# }
 
 module "server" {
   source             = "./modules/server"
@@ -940,51 +941,52 @@ module "debian12-minion" {
   install_salt_bundle = true
 }
 
-module "opensuse154arm-minion" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.3-released"
-  name               = "min-opensuse154arm"
-  image              = "opensuse154armo"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:f8"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// WORKAROUND: overdrive3/4 are not accessible yet
+# module "opensuse154arm-minion" {
+#   providers = {
+#     libvirt = libvirt.overdrive4
+#   }
+#   source             = "./modules/minion"
+#   base_configuration = module.base_arm.configuration
+#   product_version    = "4.3-released"
+#   name               = "min-opensuse154arm"
+#   image              = "opensuse154armo"
+#   provider_settings = {
+#     mac                = "aa:b2:93:02:01:f8"
+#     memory             = 2048
+#     vcpu               = 2
+#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+#   }
+#   server_configuration = {
+#     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+#   }
+#   auto_connect_to_master  = false
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_rsa.pub"
+# }
 
-module "opensuse155arm-minion" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.3-released"
-  name               = "min-opensuse155arm"
-  image              = "opensuse155armo"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:f9"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+# module "opensuse155arm-minion" {
+#   providers = {
+#     libvirt = libvirt.overdrive4
+#   }
+#   source             = "./modules/minion"
+#   base_configuration = module.base_arm.configuration
+#   product_version    = "4.3-released"
+#   name               = "min-opensuse155arm"
+#   image              = "opensuse155armo"
+#   provider_settings = {
+#     mac                = "aa:b2:93:02:01:f9"
+#     memory             = 2048
+#     vcpu               = 2
+#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+#   }
+#   server_configuration = {
+#     hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
+#   }
+#   auto_connect_to_master  = false
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_rsa.pub"
+# }
 
 module "slemicro51-minion" {
   providers = {
@@ -1416,43 +1418,44 @@ module "debian12-sshminion" {
   install_salt_bundle = true
 }
 
-module "opensuse154arm-sshminion" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-opensuse154arm"
-  image              = "opensuse154armo"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:fa"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+// WORKAROUND: overdrive3/4 are not accessible yet
+# module "opensuse154arm-sshminion" {
+#   providers = {
+#     libvirt = libvirt.overdrive4
+#   }
+#   source             = "./modules/sshminion"
+#   base_configuration = module.base_arm.configuration
+#   product_version    = "4.3-released"
+#   name               = "minssh-opensuse154arm"
+#   image              = "opensuse154armo"
+#   provider_settings = {
+#     mac                = "aa:b2:93:02:01:fa"
+#     memory             = 2048
+#     vcpu               = 2
+#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+#   }
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_rsa.pub"
+# }
 
-module "opensuse155arm-sshminion" {
-  providers = {
-    libvirt = libvirt.overdrive4
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-opensuse155arm"
-  image              = "opensuse155armo"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:fb"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+# module "opensuse155arm-sshminion" {
+#   providers = {
+#     libvirt = libvirt.overdrive4
+#   }
+#   source             = "./modules/sshminion"
+#   base_configuration = module.base_arm.configuration
+#   product_version    = "4.3-released"
+#   name               = "minssh-opensuse155arm"
+#   image              = "opensuse155armo"
+#   provider_settings = {
+#     mac                = "aa:b2:93:02:01:fb"
+#     memory             = 2048
+#     vcpu               = 2
+#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+#   }
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_rsa.pub"
+# }
 
 module "slemicro51-sshminion" {
   providers = {
@@ -1702,11 +1705,12 @@ module "controller" {
   debian12_minion_configuration    = module.debian12-minion.configuration
   debian12_sshminion_configuration = module.debian12-sshminion.configuration
 
-  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
-  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
-
-  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
-  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+// WORKAROUND: overdrive3/4 are not accessible yet
+//  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
+//  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+//
+//  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
+//  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
   slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
