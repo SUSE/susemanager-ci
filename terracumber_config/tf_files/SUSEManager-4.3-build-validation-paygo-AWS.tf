@@ -211,7 +211,7 @@ module "proxy" {
 
 }
 
-module "sles12sp5paygo-minion" {
+module "sles12sp5-paygo-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "paygo"
@@ -228,7 +228,7 @@ module "sles12sp5paygo-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp5paygo-minion" {
+module "sles15sp5-paygo-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "paygo"
@@ -245,12 +245,12 @@ module "sles15sp5paygo-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sap15sp5paygo-minion" {
+module "slesforsap15sp5-paygo-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "paygo"
-  name               = "min-sap15sp5-paygo"
-  image              = "sap15sp5-paygo"
+  name               = "min-slesforsap15sp5-paygo"
+  image              = "slesforsap15sp5-paygo"
   provider_settings = {
     instance_type = "t3.large"
     //    overwrite_fqdn = "${local.prefix}-min-sles15.${local.domain}"
@@ -608,9 +608,9 @@ module "controller" {
   server_configuration    = module.server.configuration
   proxy_configuration     = module.proxy.configuration
 
-  sle12paygo_minion_configuration  = module.sles12sp5paygo-minion.configuration
-  sle15paygo_minion_configuration  = module.sles15sp5paygo-minion.configuration
-  sappaygo_minion_configuration    = module.sap15sp5paygo-minion.configuration
+  sle12_paygo_minion_configuration       = module.sles12sp5-paygo-minion.configuration
+  sle15_paygo_minion_configuration       = module.sles15sp5-paygo-minion.configuration
+  sleforsap15_paygo_minion_configuration = module.slesforsap15sp5-paygo-minion.configuration
 
   sle12sp5_client_configuration    = module.sles12sp5-client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
