@@ -240,9 +240,9 @@ module "cucumber_testsuite" {
   nested_vm_host = "uyuni-master-min-nested"
   nested_vm_mac =  "aa:b2:92:03:00:df"
   provider_settings = {
-    pool               = "ssd"
+    pool               = "images"
     network_name       = null
-    bridge             = "br0"
+    bridge             = "br1"
     additional_network = "192.168.100.0/24"
   }
 }
