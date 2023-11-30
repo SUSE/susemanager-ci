@@ -81,6 +81,10 @@ terraform {
       source = "dmacvicar/libvirt"
       version = "0.6.3"
     }
+    feilong = {
+      source = "bischoff/feilong"
+      version = "0.0.2"
+    }
   }
 }
 
@@ -88,9 +92,16 @@ provider "libvirt" {
   uri = "qemu+tcp://suma-06.mgr.suse.de/system"
 }
 
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //provider "libvirt" {
 //  alias = "overdrive3"
 //  uri = "qemu+tcp://overdrive3.mgr.suse.de/system"
+//}
+
+// WORKAROUND: Feilong setup is not complete yet
+//provider "feilong" {
+//  connector = "10.144.68.9"
+//  local_user = "jenkins@jenkins-worker.mgr.suse.de"
 //}
 
 module "base_core" {
@@ -115,7 +126,7 @@ module "base_core" {
   }
 }
 
-// WORKAROUND: overdrive3 has been disconnected by mistake
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //module "base_arm" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -139,6 +150,16 @@ module "base_core" {
 //    pool        = "ssd"
 //    bridge      = "br1"
 //  }
+//}
+
+// WORKAROUND: Feilong setup is not complete yet
+//module "base_s390" {
+//  source = "./sumaform/backend_modules/feilong/base"
+//
+//  name_prefix = "uyuni-bv-master-"
+//  domain      = "mgr.suse.de"
+//
+//  testsuite   = true
 //}
 
 module "server" {
@@ -547,7 +568,7 @@ module "debian12-minion" {
   install_salt_bundle = true
 }
 
-// WORKAROUND: overdrive3 has been disconnected by mistake
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //module "opensuse154arm-minion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -571,7 +592,7 @@ module "debian12-minion" {
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
 
-// WORKAROUND: overdrive3 has been disconnected by mistake
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //module "opensuse155arm-minion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -591,6 +612,24 @@ module "debian12-minion" {
 //    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
 //  }
 //  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+
+// WORKAROUND: Feilong setup is not complete yet
+//module "sles15sp5s390-minion" {
+//  source             = "./sumaform/backend_modules/feilong/host"
+//  base_configuration = module.base_s390.configuration
+//
+//  name               = "min-sles15sp3s390"
+//  image              = "s15s3-jeos-1part-ext4"
+//
+//  provider_settings = {
+//    userid             = "UYMMINUE"
+//    mac                = "02:3a:fc:02:01:b9"
+//    ssh_user           = "sles"
+//  }
+//
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
@@ -940,7 +979,7 @@ module "debian12-sshminion" {
   install_salt_bundle = true
 }
 
-// WORKAROUND: overdrive3 has been disconnected by mistake
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //module "opensuse154arm-sshminion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -960,7 +999,7 @@ module "debian12-sshminion" {
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
 
-// WORKAROUND: overdrive3 has been disconnected by mistake
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //module "opensuse155arm-sshminion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -976,6 +1015,24 @@ module "debian12-sshminion" {
 //    vcpu               = 2
 //    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
 //  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+
+// WORKAROUND: Feilong setup is not complete yet
+//module "sles15sp5s390-sshminion" {
+//  source             = "./sumaform/backend_modules/feilong/host"
+//  base_configuration = module.base_s390.configuration
+//
+//  name               = "minssh-sles15sp3s390"
+//  image              = "s15s3-jeos-1part-ext4"
+//
+//  provider_settings = {
+//    userid             = "UYMSSNUE"
+//    mac                = "02:3a:fc:02:01:d9"
+//    ssh_user           = "sles"
+//  }
+//
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
@@ -1190,12 +1247,16 @@ module "controller" {
   debian12_minion_configuration    = module.debian12-minion.configuration
   debian12_sshminion_configuration = module.debian12-sshminion.configuration
 
-// WORKAROUND: overdrive3 has been disconnected by mistake
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
 //  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 //
 //  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
 //  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+
+// WORKAROUND: Feilong setup is not complete yet
+//  sle15sp5s390_minion_configuration = module.sles15sp5s390-minion.configuration
+//  sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
   slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration

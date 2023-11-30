@@ -45,11 +45,13 @@ jobs:
           TF_VAR_DEBLIKE_CLIENT_REPO: ""
           TF_VAR_OPENSUSE_CLIENT_REPO: ""
         run: |
-          # Remove libvirt provider settings
+          # Remove libvirt and feilong provider settings
           sed -i \
             -e '/provider *"/,/^[ \/#]*\}\s*$/d' \
             -e '/libvirt = {/,/^[ \/#]*\}\s*$/d' \
             -e '/libvirt =/d' \
+            -e '/feilong = {/,/^[ \/#]*\}\s*$/d' \
+            -e '/feilong =/d' \
             ${{steps.tf_files.outputs.added_modified}}
 
           # Setup sumaform with the 'null' backend

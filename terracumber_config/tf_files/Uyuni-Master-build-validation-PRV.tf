@@ -81,6 +81,10 @@ terraform {
       source = "dmacvicar/libvirt"
       version = "0.6.3"
     }
+    feilong = {
+      source = "bischoff/feilong"
+      version = "0.0.2"
+    }
   }
 }
 
@@ -108,10 +112,17 @@ provider "libvirt" {
   uri = "qemu+tcp://irishcoffee.mgr.prv.suse.net/system"
 }
 
-provider "libvirt" {
-  alias = "overdrive4"
-  uri = "qemu+tcp://overdrive4.mgr.suse.de/system"
-}
+// WORKAROUND: overdrive4 will be replaced with a new ARM server
+//provider "libvirt" {
+//  alias = "overdrive4"
+//  uri = "qemu+tcp://overdrive4.mgr.suse.de/system"
+//}
+
+// WORKAROUND: Feilong setup is not complete yet
+//provider "feilong" {
+//  connector = "10.144.68.9"
+//  local_user = "jenkins@jenkins-worker.mgr.prv.suse.net"
+//}
 
 module "base_core" {
   source = "./modules/base"
@@ -261,31 +272,41 @@ module "base_debian" {
   }
 }
 
-// WORKAROUND: overdrive3/4 are not accessible yet
-# module "base_arm" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
+// WORKAROUND: overdrive4 will be replaced with a new ARM server
+//module "base_arm" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//
+//  source = "./modules/base"
+//
+//  cc_username = var.SCC_USER
+//  cc_password = var.SCC_PASSWORD
+//  name_prefix = "uyuni-bv-master-"
+//  use_avahi   = false
+//  domain      = "mgr.prv.suse.net"
+//  images      = [ "opensuse154armo", "opensuse155armo" ]
+//
+//  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+//  use_mirror_images = true
+//
+//  testsuite = true
+//
+//  provider_settings = {
+//    pool        = "ssd"
+//    bridge      = "br1"
+//  }
+//}
 
-#   source = "./modules/base"
-
-#   cc_username = var.SCC_USER
-#   cc_password = var.SCC_PASSWORD
-#   name_prefix = "uyuni-bv-master-"
-#   use_avahi   = false
-#   domain      = "mgr.prv.suse.net"
-#   images      = [ "opensuse154armo", "opensuse155armo" ]
-
-#   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
-#   use_mirror_images = true
-
-#   testsuite = true
-
-#   provider_settings = {
-#     pool        = "ssd"
-#     bridge      = "br1"
-#   }
-# }
+// WORKAROUND: Feilong setup is not complete yet
+//module "base_s390" {
+//  source = "./sumaform/backend_modules/feilong/base"
+//
+//  name_prefix = "uyuni-bv-master-"
+//  domain      = "mgr.prv.suse.net"
+//
+//  testsuite   = true
+//}
 
 module "server" {
   source             = "./modules/server"
@@ -749,52 +770,71 @@ module "debian12-minion" {
   install_salt_bundle = true
 }
 
-// WORKAROUND: overdrive3/4 are not accessible yet
-# module "opensuse154arm-minion" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
-#   source             = "./modules/minion"
-#   base_configuration = module.base_arm.configuration
-#   product_version    = "uyuni-master"
-#   name               = "min-opensuse154arm"
-#   image              = "opensuse154armo"
-#   provider_settings = {
-#     mac                = "aa:b2:93:02:01:fc"
-#     memory             = 2048
-#     vcpu               = 2
-#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-#   }
-#   server_configuration = {
-#     hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
-#   }
-#   auto_connect_to_master  = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-# }
+// WORKAROUND: overdrive4 will be replaced with a new ARM server
+//module "opensuse154arm-minion" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "uyuni-master"
+//  name               = "min-opensuse154arm"
+//  image              = "opensuse154armo"
+//  provider_settings = {
+//    mac                = "aa:b2:93:02:01:f8"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  server_configuration = {
+//    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
-# module "opensuse155arm-minion" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
-#   source             = "./modules/minion"
-#   base_configuration = module.base_arm.configuration
-#   product_version    = "uyuni-master"
-#   name               = "min-opensuse155arm"
-#   image              = "opensuse155armo"
-#   provider_settings = {
-#     mac                = "aa:b2:93:02:01:fd"
-#     memory             = 2048
-#     vcpu               = 2
-#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-#   }
-#   server_configuration = {
-#     hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
-#   }
-#   auto_connect_to_master  = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-# }
+// WORKAROUND: overdrive4 will be replaced with a new ARM server
+//module "opensuse155arm-minion" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "uyuni-master"
+//  name               = "min-opensuse155arm"
+//  image              = "opensuse155armo"
+//  provider_settings = {
+//    mac                = "aa:b2:93:02:01:f9"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  server_configuration = {
+//    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+
+// WORKAROUND: Feilong setup is not complete yet
+//module "sles15sp5s390-minion" {
+//  source             = "./sumaform/backend_modules/feilong/host"
+//  base_configuration = module.base_s390.configuration
+//
+//  name               = "min-sles15sp3s390"
+//  image              = "s15s3-jeos-1part-ext4"
+//
+//  provider_settings = {
+//    userid             = "UYMMIPRV"
+//    mac                = "02:3a:fc:02:01:fa"
+//    ssh_user           = "sles"
+//  }
+//
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 module "slemicro51-minion" {
   providers = {
@@ -1206,44 +1246,63 @@ module "debian12-sshminion" {
   install_salt_bundle = true
 }
 
-// WORKAROUND: overdrive3/4 are not accessible yet
-# module "opensuse154arm-sshminion" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
-#   source             = "./modules/sshminion"
-#   base_configuration = module.base_arm.configuration
-#   product_version    = "uyuni-master"
-#   name               = "minssh-opensuse154arm"
-#   image              = "opensuse154armo"
-#   provider_settings = {
-#     mac                = "aa:b2:93:02:01:fe"
-#     memory             = 2048
-#     vcpu               = 2
-#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-#   }
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-# }
+// WORKAROUND: overdrive4 will be replaced with a new ARM server
+//module "opensuse154arm-sshminion" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "uyuni-master"
+//  name               = "minssh-opensuse154arm"
+//  image              = "opensuse154armo"
+//  provider_settings = {
+//    mac                = "aa:b2:93:02:01:fb"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
-# module "opensuse155arm-sshminion" {
-#   providers = {
-#     libvirt = libvirt.overdrive4
-#   }
-#   source             = "./modules/sshminion"
-#   base_configuration = module.base_arm.configuration
-#   product_version    = "uyuni-master"
-#   name               = "minssh-opensuse155arm"
-#   image              = "opensuse155armo"
-#   provider_settings = {
-#     mac                = "aa:b2:93:02:01:ff"
-#     memory             = 2048
-#     vcpu               = 2
-#     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-#   }
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-# }
+// WORKAROUND: overdrive4 will be replaced with a new ARM server
+//module "opensuse155arm-sshminion" {
+//  providers = {
+//    libvirt = libvirt.overdrive4
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "uyuni-master"
+//  name               = "minssh-opensuse155arm"
+//  image              = "opensuse155armo"
+//  provider_settings = {
+//    mac                = "aa:b2:93:02:01:fc"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+
+// WORKAROUND: Feilong setup is not complete yet
+//module "sles15sp5s390-sshminion" {
+//  source             = "./sumaform/backend_modules/feilong/host"
+//  base_configuration = module.base_s390.configuration
+//
+//  name               = "minssh-sles15sp3s390"
+//  image              = "s15s3-jeos-1part-ext4"
+//
+//  provider_settings = {
+//    userid             = "UYMSSPRV"
+//    mac                = "02:3a:fc:02:01:fd"
+//    ssh_user           = "sles"
+//  }
+//
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 module "slemicro51-sshminion" {
  providers = {
@@ -1482,12 +1541,16 @@ module "controller" {
   debian12_minion_configuration    = module.debian12-minion.configuration
   debian12_sshminion_configuration = module.debian12-sshminion.configuration
 
-// WORKAROUND: overdrive3/4 are not accessible yet
+// WORKAROUND: overdrive4 will be replaced with a new ARM server
 //  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
 //  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 //
 //  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
 //  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+
+// WORKAROUND: Feilong setup is not complete yet
+//  sle15sp5s390_minion_configuration = module.sles15sp5s390-minion.configuration
+//  sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
   slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
