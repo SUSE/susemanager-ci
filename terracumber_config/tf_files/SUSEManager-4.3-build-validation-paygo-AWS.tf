@@ -172,6 +172,7 @@ module "server" {
   publish_private_ssl_key        = false
   use_os_released_updates        = false
   disable_download_tokens        = false
+  is_paygo_instance              = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "m6a.xlarge"
@@ -182,7 +183,6 @@ module "server" {
 }
 
 module "proxy" {
-
   source                    = "./modules/proxy"
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
