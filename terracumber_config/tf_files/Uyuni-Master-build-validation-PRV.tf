@@ -208,7 +208,7 @@ module "base_new_sle" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign" ]
+  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55-ign" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -924,6 +924,29 @@ module "slemicro54-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "slemicro55-minion" {
+  providers = {
+    libvirt = libvirt.ginfizz
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "uyuni-master"
+  name               = "min-slemicro55"
+  image              = "slemicro55-ign"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:96"
+    memory             = 2048
+  }
+
+  server_configuration = {
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+
 module "sles12sp4-sshminion" {
   providers = {
     libvirt = libvirt.cosmopolitan
@@ -1305,7 +1328,7 @@ module "debian12-sshminion" {
 //}
 
 module "slemicro51-sshminion" {
- providers = {
+  providers = {
     libvirt = libvirt.ginfizz
   }
   source             = "./modules/sshminion"
@@ -1322,7 +1345,7 @@ module "slemicro51-sshminion" {
 }
 
 module "slemicro52-sshminion" {
- providers = {
+  providers = {
     libvirt = libvirt.ginfizz
   }
   source             = "./modules/sshminion"
@@ -1339,7 +1362,7 @@ module "slemicro52-sshminion" {
 }
 
 module "slemicro53-sshminion" {
- providers = {
+  providers = {
     libvirt = libvirt.ginfizz
   }
   source             = "./modules/sshminion"
@@ -1356,7 +1379,7 @@ module "slemicro53-sshminion" {
 }
 
 module "slemicro54-sshminion" {
- providers = {
+  providers = {
     libvirt = libvirt.ginfizz
   }
   source             = "./modules/sshminion"
@@ -1366,6 +1389,23 @@ module "slemicro54-sshminion" {
   image              = "slemicro54-ign"
   provider_settings = {
     mac                = "aa:b2:93:02:01:b5"
+    memory             = 2048
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "slemicro55-sshminion" {
+  providers = {
+    libvirt = libvirt.ginfizz
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "uyuni-master"
+  name               = "minssh-slemicro55"
+  image              = "slemicro55-ign"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:b6"
     memory             = 2048
   }
   use_os_released_updates = false
@@ -1563,6 +1603,9 @@ module "controller" {
 
   slemicro54_minion_configuration    = module.slemicro54-minion.configuration
   slemicro54_sshminion_configuration = module.slemicro54-sshminion.configuration
+
+  slemicro55_minion_configuration    = module.slemicro55-minion.configuration
+  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
