@@ -83,7 +83,7 @@ terraform {
     }
     feilong = {
       source = "bischoff/feilong"
-      version = "0.0.2"
+      version = "0.0.3"
     }
   }
 }
@@ -118,11 +118,10 @@ provider "libvirt" {
 //  uri = "qemu+tcp://overdrive4.mgr.suse.de/system"
 //}
 
-// WORKAROUND: Feilong setup is not complete yet
-//provider "feilong" {
-//  connector = "10.144.68.9"
-//  local_user = "jenkins@jenkins-worker.mgr.prv.suse.net"
-//}
+provider "feilong" {
+  connector = "10.144.68.9"
+  local_user = "jenkins@jenkins-worker.mgr.prv.suse.net"
+}
 
 module "base_core" {
   source = "./modules/base"
@@ -298,15 +297,14 @@ module "base_debian" {
 //  }
 //}
 
-// WORKAROUND: Feilong setup is not complete yet
-//module "base_s390" {
-//  source = "./sumaform/backend_modules/feilong/base"
-//
-//  name_prefix = "uyuni-bv-master-"
-//  domain      = "mgr.prv.suse.net"
-//
-//  testsuite   = true
-//}
+module "base_s390" {
+  source = "./sumaform/backend_modules/feilong/base"
+
+  name_prefix = "uyuni-bv-master-"
+  domain      = "mgr.prv.suse.net"
+
+  testsuite   = true
+}
 
 module "server" {
   source             = "./modules/server"
@@ -818,23 +816,23 @@ module "debian12-minion" {
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
 
-// WORKAROUND: Feilong setup is not complete yet
-//module "sles15sp5s390-minion" {
-//  source             = "./sumaform/backend_modules/feilong/host"
-//  base_configuration = module.base_s390.configuration
-//
-//  name               = "min-sles15sp3s390"
-//  image              = "s15s3-jeos-1part-ext4"
-//
-//  provider_settings = {
-//    userid             = "UYMMIPRV"
-//    mac                = "02:3a:fc:02:01:fa"
-//    ssh_user           = "sles"
-//  }
-//
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "sles15sp5s390-minion" {
+  source             = "./sumaform/backend_modules/feilong/host"
+  base_configuration = module.base_s390.configuration
+
+  name               = "min-sles15sp3s390"
+  image              = "s15s3-jeos-1part-ext4"
+
+  provider_settings = {
+    userid             = "UYMMIPRV"
+    mac                = "02:3a:fc:02:01:fa"
+    ssh_user           = "sles"
+    vswitch            = "VSUMA"
+  }
+
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "slemicro51-minion" {
   providers = {
@@ -1309,23 +1307,23 @@ module "debian12-sshminion" {
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
 //}
 
-// WORKAROUND: Feilong setup is not complete yet
-//module "sles15sp5s390-sshminion" {
-//  source             = "./sumaform/backend_modules/feilong/host"
-//  base_configuration = module.base_s390.configuration
-//
-//  name               = "minssh-sles15sp3s390"
-//  image              = "s15s3-jeos-1part-ext4"
-//
-//  provider_settings = {
-//    userid             = "UYMSSPRV"
-//    mac                = "02:3a:fc:02:01:fd"
-//    ssh_user           = "sles"
-//  }
-//
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "sles15sp5s390-sshminion" {
+  source             = "./sumaform/backend_modules/feilong/host"
+  base_configuration = module.base_s390.configuration
+
+  name               = "minssh-sles15sp3s390"
+  image              = "s15s3-jeos-1part-ext4"
+
+  provider_settings = {
+    userid             = "UYMSSPRV"
+    mac                = "02:3a:fc:02:01:fd"
+    ssh_user           = "sles"
+    vswitch            = "VSUMA"
+  }
+
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "slemicro51-sshminion" {
   providers = {
@@ -1588,9 +1586,8 @@ module "controller" {
 //  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
 //  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
 
-// WORKAROUND: Feilong setup is not complete yet
-//  sle15sp5s390_minion_configuration = module.sles15sp5s390-minion.configuration
-//  sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
+  sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
+  sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
   slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
