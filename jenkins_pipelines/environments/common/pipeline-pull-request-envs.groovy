@@ -30,8 +30,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     sumaform_gitrepo = "https://github.com/witekest/sumaform.git";
     sumaform_ref = "server_monitoring";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-ion") {
-    first_env = 9;
-    last_env = 9;
+    first_env = 7;
+    last_env = 7;
     // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
     sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
     sumaform_ref = "master-cobbler-3.3.1";
