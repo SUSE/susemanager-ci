@@ -106,7 +106,7 @@ module "base" {
   cc_password = var.SCC_PASSWORD
   name_prefix = "mirror-mu-aws-"
   images = [
-    "opensuse154o"]
+    "opensuse155o"]
 
   provider_settings = {
     pool = local.pool
@@ -123,7 +123,7 @@ module "mirror" {
   customize_minima_file = "mirror/etc/minima-customize.yaml"
   synchronize_immediately = true
   disable_cron = true
-  image = "opensuse154o"
+  image = "opensuse155o"
   volume_provider_settings = {
     pool = local.pool
     // uncomment next line to use existing snapshot as starting point
