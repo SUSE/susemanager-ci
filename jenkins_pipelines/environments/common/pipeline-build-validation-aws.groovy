@@ -288,7 +288,7 @@ def run(params) {
             /** Proxy stages end **/
 
             /** PAYGO stages begin **/
-            if (params.paygo_stages) {
+            if (params.enable_paygo_stages) {
                 // Call the minion testing.
                 try {
                     stage('Clients paygo stages') {
