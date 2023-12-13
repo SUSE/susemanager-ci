@@ -456,6 +456,10 @@ def run(params) {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
+                // Fail pipeline if paygo client stages failed
+                if (client_paygo_stage_result_fail) {
+                    error("Paygo client stage failed")
+                }
                 // Fail pipeline if client stages failed
                 if (client_stage_result_fail) {
                     error("Client stage failed")
