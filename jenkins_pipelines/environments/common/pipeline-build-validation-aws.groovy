@@ -456,6 +456,10 @@ def run(params) {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
+                // Fail pipeline if paygo client stages failed
+                if (client_paygo_stage_result_fail) {
+                    error("Paygo client stage failed")
+                }
                 // Fail pipeline if client stages failed
                 if (client_stage_result_fail) {
                     error("Client stage failed")
@@ -487,15 +491,12 @@ def clientTestingStages(capybara_timeout, default_timeout, minion_type = 'defaul
 
     // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: env.non_MU_channels_tasks_file)
-    println minion_type
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler(minion_type)
-    println nodesHandler.nodeList
     def mu_sync_status = nodesHandler.MUSyncStatus
 
     // Construct a stage list for each node.
     nodesHandler.nodeList.each { node ->
-        println("Create tests for pago")
         tests["${node}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
