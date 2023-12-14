@@ -217,8 +217,6 @@ module "proxy" {
     instance_type = "c6i.large"
   }
 
-  //proxy_additional_repos
-
 }
 
 module "sles12sp5-paygo-minion" {
@@ -286,7 +284,6 @@ module "sles12sp5-client" {
   }
   additional_packages = [ "chrony" ]
 
-  //sle12sp5-client_additional_repos
 }
 
 module "sles15sp4-client" {
@@ -305,7 +302,6 @@ module "sles15sp4-client" {
     instance_type = "t3a.medium"
   }
 
-  //sle15sp4-client_additional_repos
 }
 
 module "sles12sp5-minion" {
@@ -324,7 +320,6 @@ module "sles12sp5-minion" {
   }
   additional_packages = [ "chrony" ]
 
-  //sle12sp5-minion_additional_repos
 }
 
 module "sles15sp4-byos-minion" {
@@ -341,8 +336,6 @@ module "sles15sp4-byos-minion" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
-
-  //sle15sp4-minion_additional_repos
 
 }
 
@@ -361,8 +354,6 @@ module "sles15sp4-minion" {
     instance_type = "t3a.medium"
   }
 
-  //sle15sp4-minion_additional_repos
-
 }
 
 module "sles15sp5-minion" {
@@ -379,8 +370,6 @@ module "sles15sp5-minion" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
-
-  //sle15sp5-minion_additional_repos
 
 }
 

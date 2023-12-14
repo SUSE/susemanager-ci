@@ -296,7 +296,7 @@ def run(params) {
                     }
 
                 } catch (Exception ex) {
-                    println('ERROR: one or more clients have failed')
+                    println("ERROR: one or more clients have failed.\nException: ${ex}")
                     client_paygo_stage_result_fail = true
                 }
                 stage('Paygo testing') {
@@ -356,7 +356,7 @@ def run(params) {
                         }
                     }
                 } catch (Exception ex) {
-                    println('Monitoring server bootstrap failed ')
+                    println("Monitoring server bootstrap failed.\nException: ${ex}")
                     monitoring_stage_result_fail = true
                 }
             }
@@ -370,7 +370,7 @@ def run(params) {
                     }
 
                 } catch (Exception ex) {
-                    println('ERROR: one or more clients have failed')
+                    println("ERROR: one or more clients have failed\\nException: ${ex}")
                     client_stage_result_fail = true
                 }
             }
@@ -398,7 +398,7 @@ def run(params) {
                     }
                 }
             } catch (Exception ex) {
-                println('ERROR: Retail testing fail')
+                println("ERROR: Retail testing fail.\\nException: ${ex}")
                 retail_stage_result_fail = true
             }
 
@@ -417,7 +417,7 @@ def run(params) {
                     }
                 }
             } catch (Exception ex) {
-                println('ERROR: Containerization failed')
+                println("ERROR: Containerization failed\\nException: ${ex}")
                 containerization_stage_result_fail = true
             }
         }
@@ -432,13 +432,13 @@ def run(params) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
                     } catch(Exception ex) {
-                        println("ERROR: rake cucumber:build_validation_finishing failed")
+                        println("ERROR: rake cucumber:build_validation_finishing failed.\\nException: ${ex}")
                         result_error = 1
                     }
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
                     } catch(Exception ex) {
-                        println("ERROR: rake utils:generate_test_report failed")
+                        println("ERROR: rake utils:generate_test_report failed.\\nException: ${ex}")
                         result_error = 1
                     }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
@@ -632,14 +632,14 @@ def getNodesHandler(minionType = 'default') {
             returnStdout: true)
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
-        def instanceList = lane.tokenize(".")
-        if ( minionType == 'default' && (instanceList[1].contains('minion') || instanceList[1].contains('client'))) {
-            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
-            envVar.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        def nodeName = lane.tokenize(".")[1]
+        if ( minionType == 'default' && (nodeName.contains('minion') || nodeName.contains('client'))) {
+            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
-        else if (( minionType == 'paygo' && (instanceList[1].contains('paygo') || instanceList[1].contains('byos')))) {
-            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
-            envVar.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        else if (( minionType == 'paygo' && (nodeName.contains('paygo') || nodeName.contains('byos')))) {
+            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
     }
     // Convert jenkins minions list parameter to list
