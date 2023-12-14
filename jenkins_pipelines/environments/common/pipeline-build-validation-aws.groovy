@@ -146,7 +146,7 @@ def run(params) {
                                     NAME_PREFIX = env.JOB_NAME.toLowerCase().replace('.', '-')
                                     env.aws_configuration = "REGION = \"${params.aws_region}\"\n" +
                                             "AVAILABILITY_ZONE = \"${params.aws_availability_zone}\"\n" +
-                                            "NAME_PREFIX = \"${NAME_PREFIX}\"\n" +
+                                            "NAME_PREFIX = \"${NAME_PREFIX}-\"\n" +
                                             "KEY_FILE = \"${params.key_file}\"\n" +
                                             "KEY_NAME = \"${params.key_name}\"\n" +
                                             "ALLOWED_IPS = [ \n"
@@ -181,15 +181,14 @@ def run(params) {
                             sh "ssh ${ssh_option} ${user}@${mirror_hostname_local} 'scp ${ssh_option} -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo tar -xvf /home/ec2-user/mirror.tar.gz -C /srv/mirror/' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rsync -a /srv/mirror/ibs/ /srv/mirror' "
-                            sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rsync -a /srv/mirror/download/ibs/ /srv/mirror' "
+                            sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rsync -a /srv/mirror/download/ibs/ /srv/mirror' || true"
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rm -rf /srv/mirror/ibs' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rm -rf /srv/mirror/download/ibs' "
                         }
 
                     }
                 }
-            }
-            else {
+            } else {
                 stage("Get mirror private IP") {
                     env.mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                             returnStdout: true).trim()
@@ -288,6 +287,29 @@ def run(params) {
 
             /** Proxy stages end **/
 
+            /** PAYGO stages begin **/
+            if (params.enable_paygo_stages) {
+                // Call the minion testing.
+                try {
+                    stage('Clients paygo stages') {
+                        clientTestingStages(capybara_timeout, default_timeout, 'paygo')
+                    }
+
+                } catch (Exception ex) {
+                    println("ERROR: one or more clients have failed.\nException: ${ex}")
+                    client_paygo_stage_result_fail = true
+                }
+                stage('Paygo testing') {
+                    if (params.confirm_before_continue) {
+                        input 'Press any key to start paygo related tests'
+                    }
+                    res_paygo_testing = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_paygo_testing'")
+                    echo "PAYGO testing status code: ${res_paygo_testing}"
+                }
+            }
+
+            /** PAYGO stages end **/
+
             /** Monitoring stages begin **/
             // Hide monitoring for qe update pipeline
             if (params.enable_monitoring_stages) {
@@ -334,7 +356,7 @@ def run(params) {
                         }
                     }
                 } catch (Exception ex) {
-                    println('Monitoring server bootstrap failed ')
+                    println("Monitoring server bootstrap failed.\nException: ${ex}")
                     monitoring_stage_result_fail = true
                 }
             }
@@ -348,7 +370,7 @@ def run(params) {
                     }
 
                 } catch (Exception ex) {
-                    println('ERROR: one or more clients have failed')
+                    println("ERROR: one or more clients have failed\\nException: ${ex}")
                     client_stage_result_fail = true
                 }
             }
@@ -376,7 +398,7 @@ def run(params) {
                     }
                 }
             } catch (Exception ex) {
-                println('ERROR: Retail testing fail')
+                println("ERROR: Retail testing fail.\\nException: ${ex}")
                 retail_stage_result_fail = true
             }
 
@@ -395,7 +417,7 @@ def run(params) {
                     }
                 }
             } catch (Exception ex) {
-                println('ERROR: Containerization failed')
+                println("ERROR: Containerization failed\\nException: ${ex}")
                 containerization_stage_result_fail = true
             }
         }
@@ -410,13 +432,13 @@ def run(params) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
                     } catch(Exception ex) {
-                        println("ERROR: rake cucumber:build_validation_finishing failed")
+                        println("ERROR: rake cucumber:build_validation_finishing failed.\\nException: ${ex}")
                         result_error = 1
                     }
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
                     } catch(Exception ex) {
-                        println("ERROR: rake utils:generate_test_report failed")
+                        println("ERROR: rake utils:generate_test_report failed.\\nException: ${ex}")
                         result_error = 1
                     }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
@@ -434,6 +456,10 @@ def run(params) {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
+                // Fail pipeline if paygo client stages failed
+                if (client_paygo_stage_result_fail) {
+                    error("Paygo client stage failed")
+                }
                 // Fail pipeline if client stages failed
                 if (client_stage_result_fail) {
                     error("Client stage failed")
@@ -458,16 +484,15 @@ def run(params) {
 
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
-def clientTestingStages(capybara_timeout, default_timeout) {
+def clientTestingStages(capybara_timeout, default_timeout, minion_type = 'default') {
 
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
 
     // Load JSON matching non MU repositories data
     def json_matching_non_MU_data = readJSON(file: env.non_MU_channels_tasks_file)
-
     //Get minion list from terraform state list command
-    def nodesHandler = getNodesHandler()
+    def nodesHandler = getNodesHandler(minion_type)
     def mu_sync_status = nodesHandler.MUSyncStatus
 
     // Construct a stage list for each node.
@@ -578,7 +603,7 @@ def clientTestingStages(capybara_timeout, default_timeout) {
                 }
             }
             stage("Run Smoke Tests ${node}") {
-                if (params.must_run_tests) {
+                if (params.must_run_tests && !node.contains('byos')) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start running the smoke tests'
                     }
@@ -597,7 +622,7 @@ def clientTestingStages(capybara_timeout, default_timeout) {
     parallel tests
 }
 
-def getNodesHandler() {
+def getNodesHandler(minionType = 'default') {
     // Employ the terraform state list command to generate the list of nodes.
     // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
     Set<String> nodeList = new HashSet<String>()
@@ -607,10 +632,14 @@ def getNodesHandler() {
             returnStdout: true)
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
-        def instanceList = lane.tokenize(".")
-        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
-            envVar.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        def nodeName = lane.tokenize(".")[1]
+        if ( minionType == 'default' && (nodeName.contains('minion') || nodeName.contains('client'))) {
+            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        }
+        else if (( minionType == 'paygo' && (nodeName.contains('paygo') || nodeName.contains('byos')))) {
+            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
     }
     // Convert jenkins minions list parameter to list

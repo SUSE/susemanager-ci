@@ -2,11 +2,12 @@
 
 node('sumaform-cucumber-provo') {
     def minionList = 'sle12sp4_client, sle12sp4_minion, sle12sp4_ssh_minion, ' +
-            'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, ' +
+            'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, sle12sp5_paygo_minion, ' +
             'sle15sp1_client, sle15sp1_minion, sle15sp1_ssh_minion, ' +
             'sle15sp2_client, sle15sp2_minion, sle15sp2_ssh_minion, ' +
             'sle15sp3_client, sle15sp3_minion, sle15sp3_ssh_minion, ' +
-            'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, ' +
+            'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, sle15sp4_byos_minion, ' +
+            'sle15sp5_client, sle15sp5_minion, sle15sp5_ssh_minion, sle15sp5_paygo_minion, ' +
             'alma9_minion, alma9_ssh_minion, ' +
             'centos7_client, centos7_minion, centos7_ssh_minion, ' +
             'liberty9_minion, liberty9_ssh_minion, ' +
@@ -46,6 +47,7 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'enable_proxy_stages', defaultValue: true, description: 'Run Proxy stages'),
             booleanParam(name: 'enable_monitoring_stages', defaultValue: true, description: 'Run Monitoring stages'),
             booleanParam(name: 'enable_client_stages', defaultValue: true, description: 'Run Client stages'),
+            booleanParam(name: 'enable_paygo_stages', defaultValue: false, description: 'Run Client stages'),
             booleanParam(name: 'must_add_MU_repositories', defaultValue: true, description: 'Add MU channels'),
             booleanParam(name: 'must_add_non_MU_repositories', defaultValue: true, description: 'Add non MU channels'),
             booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
