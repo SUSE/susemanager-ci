@@ -603,7 +603,7 @@ def clientTestingStages(capybara_timeout, default_timeout, minion_type = 'defaul
                 }
             }
             stage("Run Smoke Tests ${node}") {
-                if (params.must_run_tests) {
+                if (params.must_run_tests && !node.contains('byos')) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start running the smoke tests'
                     }
