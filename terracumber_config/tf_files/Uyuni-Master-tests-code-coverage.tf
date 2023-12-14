@@ -182,7 +182,7 @@ module "cucumber_testsuite" {
         memory = 4096
       }
       additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = false
+      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp4o"

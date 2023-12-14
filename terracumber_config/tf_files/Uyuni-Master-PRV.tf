@@ -190,10 +190,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
-
-      // FIXME: cloudl-init fails if venv-salt-minion is not avaiable
-      // We can set "install_salt_bundle = true" as soon as venv-salt-minion is available Uyuni:Stable
-      install_salt_bundle = false
+      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp4o"
