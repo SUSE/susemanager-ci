@@ -308,26 +308,6 @@ module "sles15sp4-client" {
   //sle15sp4-client_additional_repos
 }
 
-module "rocky8-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "min-rocky8"
-  image              = "rocky8"
-  server_configuration = module.server.configuration
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-
-  //rocky8-minion_additional_repos
-}
-
 module "sles12sp5-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -451,25 +431,6 @@ module "sles15sp5-sshminion" {
 
 }
 
-
-module "rocky8-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-rocky8"
-  image              = "rocky8"
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-
-}
-
 module "controller" {
   source             = "./modules/controller"
   name               = "ctl"
@@ -513,8 +474,6 @@ module "controller" {
   sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
 
   sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
-
-  rocky8_minion_configuration      = module.rocky8-minion.configuration
 
 }
 
