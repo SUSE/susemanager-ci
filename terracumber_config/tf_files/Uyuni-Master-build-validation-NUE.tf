@@ -83,7 +83,7 @@ terraform {
     }
     feilong = {
       source = "bischoff/feilong"
-      version = "0.0.3"
+      version = "0.0.4"
     }
   }
 }
@@ -99,8 +99,9 @@ provider "libvirt" {
 //}
 
 provider "feilong" {
-  connector = "10.144.68.9"
-  local_user = "jenkins@jenkins-worker.mgr.suse.de"
+  connector   = "https://10.144.68.9"
+  admin_token = "j4J0zrRbfgpjiU1ZwUpI1kMtN4d4tvfvydSqA16EJx"
+  local_user  = "jenkins@jenkins-worker.mgr.suse.de"
 }
 
 module "base_core" {
