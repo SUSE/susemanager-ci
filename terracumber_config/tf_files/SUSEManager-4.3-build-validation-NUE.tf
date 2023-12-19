@@ -74,6 +74,10 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+variable "ZVM_ADMIN_TOKEN" {
+  type = string
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -100,7 +104,7 @@ provider "libvirt" {
 
 provider "feilong" {
   connector   = "https://10.144.68.9"
-  admin_token = "j4J0zrRbfgpjiU1ZwUpI1kMtN4d4tvfvydSqA16EJx"
+  admin_token = var.ZVM_ADMIN_TOKEN
   local_user  = "jenkins@jenkins-worker.mgr.suse.de"
 }
 
