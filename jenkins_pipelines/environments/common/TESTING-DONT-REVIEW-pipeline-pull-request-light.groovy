@@ -23,15 +23,15 @@ def run(params) {
         source_project = 'systemsmanagement:Uyuni:Master'
         sumaform_tools_project = 'systemsmanagement:sumaform:tools'
         test_packages_project = 'systemsmanagement:Uyuni:Test-Packages:Pool'
-        build_repo = 'openSUSE_Leap_15.4'
+        build_repo = 'openSUSE_Leap_15.5'
         environment_workspace = null
         url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
         env.common_params = ''
         fqdn_jenkins_node = sh(script: "hostname -f", returnStdout: true).trim()
-        env_number = 2
+        env_number = 10
         tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-testing-variables.tf'
-        tfvars_manager43 = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-manager43.tfvars'
-        tfvars_nuremberg = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-NUE-environments.tfvars'
+        tfvars_manager43 = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-uyuni.tfvars'
+        tfvars_nuremberg = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-PRV-environments.tfvars'
         tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-additionnal-repos.tf'
         try {
             stage('Checkout CI tools') {
@@ -132,7 +132,7 @@ def run(params) {
                         sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                     }
                 }
-                tests_passed = true
+            tests_passed = true
             }
         }
         finally {
