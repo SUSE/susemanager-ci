@@ -124,10 +124,6 @@ variable "OPENSUSE_CLIENT_REPO" {
   type = string
 }
 
-variable "SLE_CLIENT_REPO" {
-  type = string
-}
-
 variable "IMAGE" {
   type = string
 }
