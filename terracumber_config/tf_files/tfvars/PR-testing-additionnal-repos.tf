@@ -27,7 +27,7 @@ locals {
       tools_update_pr = "${var.OPENSUSE_CLIENT_REPO}"
     }
     suse-minion = {
-      tools_update_pr = "${var.OPENSUSE_CLIENT_REPO}"
+      tools_update_pr = "${var.SLE_CLIENT_REPO}"
     }
     kvm-host = {
       client_repo = "${var.OPENSUSE_CLIENT_REPO}"
@@ -37,7 +37,6 @@ locals {
       os_pool = "http://${var.MIRROR}/distribution/leap/15.5/repo/oss/"
       os_update = "${var.UPDATE_REPO}"
       os_additional_repo = "${var.ADDITIONAL_REPO_URL}"
-      tools_update_pr = "${var.SLE_CLIENT_REPO}"
     }
   } : {
     server = {
