@@ -21,6 +21,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.111.0/24"
+    pool = "ssd"
   },
   2 = {
     mac = {
@@ -37,6 +38,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.112.0/24"
+    pool = "ssd"
   },
   3 = {
     mac = {
@@ -53,6 +55,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.113.0/24"
+    pool = "ssd"
   },
   4 = {
     mac = {
@@ -69,6 +72,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.114.0/24"
+    pool = "ssd"
   },
   5 = {
     mac = {
@@ -85,6 +89,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.115.0/24"
+    pool = "ssd"
   },
   6 = {
     mac = {
@@ -101,5 +106,6 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.116.0/24"
+    pool = "ssd"
   }
 }

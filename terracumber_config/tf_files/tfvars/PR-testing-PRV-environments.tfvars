@@ -22,6 +22,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "romulus.mgr.prv.suse.net"
     additional_network = "192.168.101.0/24"
+    pool = "ssd"
   },
   2 = {
     mac = {
@@ -38,6 +39,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "romulus.mgr.prv.suse.net"
     additional_network = "192.168.102.0/24"
+    pool = "ssd"
   },
   3 = {
     mac = {
@@ -54,6 +56,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "vulcan.mgr.prv.suse.net"
     additional_network = "192.168.103.0/24"
+    pool = "ssd"
   },
   4 = {
     mac = {
@@ -70,6 +73,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "vulcan.mgr.prv.suse.net"
     additional_network = "192.168.104.0/24"
+    pool = "ssd"
   },
   5 = {
     mac = {
@@ -86,6 +90,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "hyperion.mgr.prv.suse.net"
     additional_network = "192.168.105.0/24"
+    pool = "ssd"
   },
   6 = {
     mac = {
@@ -102,6 +107,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "hyperion.mgr.prv.suse.net"
     additional_network = "192.168.106.0/24"
+    pool = "ssd"
   },
   7 = {
     mac = {
@@ -118,6 +124,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "daiquiri.mgr.prv.suse.net"
     additional_network = "192.168.107.0/24"
+    pool = "default"
   },
   8 = {
     mac = {
@@ -134,6 +141,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "daiquiri.mgr.prv.suse.net"
     additional_network = "192.168.108.0/24"
+    pool = "default"
   },
   9 = {
     mac = {
@@ -150,6 +158,7 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "mojito.mgr.prv.suse.net"
     additional_network = "192.168.109.0/24"
+    pool = "default"
   },
   10 = {
     mac = {
@@ -166,5 +175,6 @@ ENVIRONMENT_CONFIGURATION = {
     }
     hypervisor = "mojito.mgr.prv.suse.net"
     additional_network = "192.168.110.0/24"
+    pool = "default"
   }
 }

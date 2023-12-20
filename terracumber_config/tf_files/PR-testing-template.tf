@@ -189,7 +189,7 @@ module "cucumber_testsuite" {
   nested_vm_host = "suma-pr${var.ENVIRONMENT}-min-nested"
   nested_vm_mac =  var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["nested-vm"]
   provider_settings = {
-    pool               = "ssd"
+    pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
     network_name       = null
     bridge             = var.BRIDGE
     additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
