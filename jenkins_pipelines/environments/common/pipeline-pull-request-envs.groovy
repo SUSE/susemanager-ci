@@ -114,7 +114,6 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     rn_package = "release-notes-susemanager"
     rn_project = "Devel:Galaxy:Manager:4.3:ToSLE"
 } else {
-   echo "This job is not supported: ${env.JOB_NAME}"
-   sh "exit -1"
+   echo "Temporary disabled"
 }
 
