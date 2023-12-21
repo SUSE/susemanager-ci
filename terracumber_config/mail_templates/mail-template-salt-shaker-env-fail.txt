@@ -1,0 +1,8 @@
+#################################################################
+# SUMMARY
+#################################################################
+Build:   $urlprefix/$timestamp
+Console: $urlprefix/$timestamp/console
+Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
+
+Environment failed to be created, not tests results are available.
