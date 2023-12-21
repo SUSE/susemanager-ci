@@ -244,7 +244,7 @@ def run(params) {
                         // Add all repositories variables
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        sh "echo ############ Repositories variables ############ >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo \"############ Repositories variables ############\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "echo PULL_REQUEST_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "echo MASTER_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${source_project}/${build_repo}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "echo MASTER_OTHER_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${other_project}/${other_build_repo}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
