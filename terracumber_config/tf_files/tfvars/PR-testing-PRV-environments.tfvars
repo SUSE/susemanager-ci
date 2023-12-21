@@ -5,7 +5,6 @@ MIRROR            = "minima-mirror-ci-bv.mgr.prv.suse.net"
 DOWNLOAD_ENDPOINT = "minima-mirror-ci-bv.mgr.prv.suse.net"
 USE_MIRROR_IMAGES = true
 GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
-BRIDGE            = "br1"
 ENVIRONMENT_CONFIGURATION = {
   1 = {
     mac = {
