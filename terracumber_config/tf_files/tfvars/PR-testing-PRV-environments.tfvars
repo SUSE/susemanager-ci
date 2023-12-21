@@ -1,4 +1,4 @@
-############ Provo unique variables ###########
+############ Provo unique variables ############
 
 DOMAIN            = "mgr.prv.suse.net"
 MIRROR            = "minima-mirror-ci-bv.mgr.prv.suse.net"

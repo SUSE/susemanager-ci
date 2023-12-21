@@ -1,10 +1,11 @@
-############ Nuremberg unique variables ###########
+############ Nuremberg unique variables ############
 
-DOMAIN = "mgr.suse.de"
-ENVIRONMENT_EXTENSION = "-nue"
-DOWNLOAD_ENDPOINT = "minima-mirror.mgr.suse.de"
+DOMAIN            = "mgr.suse.de"
+MIRROR            = "minima-mirror-ci-bv.mgr.suse.de"
+DOWNLOAD_ENDPOINT = "minima-mirror-ci-bv.mgr.suse.de"
 USE_MIRROR_IMAGES = false
-BRIDGE = "br0"
+GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+BRIDGE            = "br0"
 ENVIRONMENT_CONFIGURATION = {
   1 = {
     mac = {

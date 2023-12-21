@@ -78,6 +78,7 @@ def run(params) {
                         // Add all
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
+                        sh "echo \\\n############ Repositories variables ############\\\n >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "echo PULL_REQUEST_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "echo MASTER_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "echo MASTER_OTHER_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"

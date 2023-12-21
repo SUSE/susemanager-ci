@@ -4,7 +4,7 @@ node('pull-request-test') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '30', daysToKeepStr: '15')),
         parameters([
-            string(name: 'platform_localisation', defaultValue: 'NUE', description: 'Decide if it will be run in PRV or NUE'),
+            string(name: 'platform_localisation', defaultValue: 'PRV', description: 'Decide if it will be run in PRV or NUE'),
             string(name: 'product_version', defaultValue: 'uyuni', description: 'Select if we are using uyuni project or Manager43 project'),
             string(name: 'pull_request_number', defaultValue: '', description: 'Required: Uyuni Pull Request Number'),
             string(name: 'email_to', defaultValue: '', description: 'Recommended: Receive a report to your e-mail when it finishes with links to the results, artifacts and logs'),

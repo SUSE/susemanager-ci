@@ -1,4 +1,4 @@
-############ Uyuni unique variables ########################
+############ Uyuni unique variables ############
 
 IMAGE                  = "opensuse155-ci-pro"
 IMAGES                 = ["rocky8o", "opensuse154o", "opensuse155o", "opensuse155-ci-pro", "ubuntu2204o", "sles15sp4o"]

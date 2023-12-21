@@ -1,4 +1,4 @@
-############ Spacewalk unique variables ###########
+############ Spacewalk unique variables ############
 
 IMAGE                  = "sles15sp4o"
 IMAGES                 = ["rocky9o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]

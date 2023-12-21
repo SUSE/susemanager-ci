@@ -183,9 +183,3 @@ variable "DOWNLOAD_ENDPOINT" {
   type = string
   description = "Download enpoint to get build images and set custom_download_endpoint. This value is equal to platform mirror"
 }
-
-variable "ENVIRONMENT_EXTENSION" {
-  type = string
-  description = "NUE has prefix nue in hostname"
-  default = null
-}
