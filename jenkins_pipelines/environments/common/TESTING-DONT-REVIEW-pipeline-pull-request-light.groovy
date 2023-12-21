@@ -66,25 +66,37 @@ def run(params) {
             stage('Deploy') {
                 ws(environment_workspace){
                     if(must_test) {
+                        // Delete old terraform.tfvars
+                        sh "rm -f ${env.resultdir}/sumaform/terraform.tfvars"
+                        // Merge product en platform variables into terraform.tfvars
+                        sh "cat ${tfvars_product_version} ${tfvars_platform_localisation} >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        // Add environment to use in tfvars
+                        sh "echo 'ENVIRONMENT = \'${env_number}\'' >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        // Copy the variable declaration file
+                        sh "cp ${tf_local_variables} ${env.resultdir}/sumaform/"
+
+                        // Add all
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
-                        env.MASTER_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
-                        env.MASTER_OTHER_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
-                        env.MASTER_SUMAFORM_TOOLS_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
-                        env.TEST_PACKAGES_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
-                        env.UPDATE_REPO = "http://minima-mirror.mgr.prv.suse.net/jordi/some-updates/"
+                        sh "echo PULL_REQUEST_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo MASTER_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo MASTER_OTHER_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo MASTER_SUMAFORM_TOOLS_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo TEST_PACKAGES_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo UPDATE_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+
                         if (additional_repo_url == '') {
                             echo "Adding dummy repo for update repo"
-                            env.ADDITIONAL_REPO_URL = "http://minima-mirror.mgr.prv.suse.net/jordi/dummy/"
+                            sh "echo ADDITIONAL_REPO_URL = \\\"${additional_repo}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         } else {
                             echo "Adding ${additional_repo_url}"
-                            env.ADDITIONAL_REPO_URL = additional_repo_url
+                            sh "echo ADDITIONAL_REPO_URL = \\\"${additional_repo_url}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         }
-                        env.SLE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
-                        env.RHLIKE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
-                        env.DEBLIKE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
-                        env.OPENSUSE_CLIENT_REPO = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/"
+
+                        sh "echo SLE_CLIENT_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo RHLIKE_CLIENT_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo DEBLIKE_CLIENT_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo OPENSUSE_CLIENT_REPO = \\\"http://download.suse.de/ibs/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
 
                         // Provision the environment
                         if (terraform_init) {
@@ -92,12 +104,12 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "rm -f ${env.resultdir}/sumaform/terraform.tfvars"
-                        sh "cat ${tfvars_product_version} ${tfvars_platform_localisation} >> ${env.resultdir}/sumaform/terraform.tfvars"
-                        sh "echo 'ENVIRONMENT = \'${env_number}\'' >> ${env.resultdir}/sumaform/terraform.tfvars"
-                        sh "cp ${tf_local_variables} ${env.resultdir}/sumaform/"
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_ENVIRONMENT=${env_number}; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
+
+                        // Collect and tag Flaky tests from the GitHub Board
+                        def statusCode = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; export BUILD_NUMBER=${BUILD_NUMBER}; rake utils:collect_and_tag_flaky_tests'", returnStatus:true
+                        sh "exit 0"
                     }
                 }
             }
