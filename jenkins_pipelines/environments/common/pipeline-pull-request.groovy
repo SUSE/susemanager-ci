@@ -9,9 +9,8 @@ def run(params) {
         terraform_bin = '/usr/bin/terraform'
         terraform_bin_plugins = '/usr/bin'
         service_pack_migration = false
-//        terracumber_gitrepo = 'https://github.com/uyuni-project/terracumber.git'
-        terracumber_gitrepo = 'https://github.com/maximenoel8/terracumber.git'
-        terracumber_ref = 'support_tfvars'
+        terracumber_gitrepo = 'https://github.com/uyuni-project/terracumber.git'
+        terracumber_ref = 'master'
         terraform_init = true
         rake_namespace = 'cucumber'
         rake_parallel_namespace = 'parallel'
