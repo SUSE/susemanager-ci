@@ -191,7 +191,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
     network_name       = null
-    bridge             = var.BRIDGE
+    bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
     additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
   }
 }

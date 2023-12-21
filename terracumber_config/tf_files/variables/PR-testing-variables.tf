@@ -166,10 +166,6 @@ variable "DOMAIN" {
   type = string
 }
 
-variable "BRIDGE" {
-  type = string
-}
-
 variable "ADDITIONAL_REPOS_ONLY" {
   type = bool
 }

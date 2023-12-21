@@ -5,7 +5,6 @@ MIRROR            = "minima-mirror-ci-bv.mgr.suse.de"
 DOWNLOAD_ENDPOINT = "minima-mirror-ci-bv.mgr.suse.de"
 USE_MIRROR_IMAGES = false
 GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
-BRIDGE            = "br0"
 ENVIRONMENT_CONFIGURATION = {
   1 = {
     mac = {
@@ -23,6 +22,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.111.0/24"
     pool = "ssd"
+    bridge = "br0"
   },
   2 = {
     mac = {
@@ -40,6 +40,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.112.0/24"
     pool = "ssd"
+    bridge = "br0"
   },
   3 = {
     mac = {
@@ -57,6 +58,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.113.0/24"
     pool = "ssd"
+    bridge = "br0"
   },
   4 = {
     mac = {
@@ -74,6 +76,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.114.0/24"
     pool = "ssd"
+    bridge = "br0"
   },
   5 = {
     mac = {
@@ -91,6 +94,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.115.0/24"
     pool = "ssd"
+    bridge = "br0"
   },
   6 = {
     mac = {
@@ -108,5 +112,6 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.116.0/24"
     pool = "ssd"
+    bridge = "br0"
   }
 }

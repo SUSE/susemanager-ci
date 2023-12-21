@@ -23,6 +23,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "romulus.mgr.prv.suse.net"
     additional_network = "192.168.101.0/24"
     pool = "ssd"
+    bridge = "br1"
   },
   2 = {
     mac = {
@@ -40,6 +41,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "romulus.mgr.prv.suse.net"
     additional_network = "192.168.102.0/24"
     pool = "ssd"
+    bridge = "br1"
   },
   3 = {
     mac = {
@@ -57,6 +59,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "vulcan.mgr.prv.suse.net"
     additional_network = "192.168.103.0/24"
     pool = "ssd"
+    bridge = "br1"
   },
   4 = {
     mac = {
@@ -74,6 +77,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "vulcan.mgr.prv.suse.net"
     additional_network = "192.168.104.0/24"
     pool = "ssd"
+    bridge = "br1"
   },
   5 = {
     mac = {
@@ -91,6 +95,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "hyperion.mgr.prv.suse.net"
     additional_network = "192.168.105.0/24"
     pool = "ssd"
+    bridge = "br1"
   },
   6 = {
     mac = {
@@ -108,6 +113,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "hyperion.mgr.prv.suse.net"
     additional_network = "192.168.106.0/24"
     pool = "ssd"
+    bridge = "br1"
   },
   7 = {
     mac = {
@@ -125,6 +131,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "daiquiri.mgr.prv.suse.net"
     additional_network = "192.168.107.0/24"
     pool = "default"
+    bridge = "br1"
   },
   8 = {
     mac = {
@@ -142,6 +149,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "daiquiri.mgr.prv.suse.net"
     additional_network = "192.168.108.0/24"
     pool = "default"
+    bridge = "br1"
   },
   9 = {
     mac = {
@@ -159,6 +167,7 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "mojito.mgr.prv.suse.net"
     additional_network = "192.168.109.0/24"
     pool = "default"
+    bridge = "br0"
   },
   10 = {
     mac = {
@@ -176,5 +185,6 @@ ENVIRONMENT_CONFIGURATION = {
     hypervisor = "mojito.mgr.prv.suse.net"
     additional_network = "192.168.110.0/24"
     pool = "default"
+    bridge = "br0"
   }
 }
