@@ -1,23 +1,23 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "Define in product tfvars"
+  default = "This is defined in product tfvars"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "Define in product tfvars"
+  default = "This is defined in product tfvars"
 }
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "Define in product tfvars"
+  default = "This is defined in product tfvars"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Define in product tfvars"
+  default = "This is defined in product tfvars"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,12 +27,12 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Define in product tfvars"
+  default = "This is defined in product tfvars"
 }
 
 variable "MAIL_TEMPLATE" {
   type = string
-  default = "Define in product tfvars"
+  default = "This is defined in product tfvars"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
@@ -42,7 +42,7 @@ variable "MAIL_SUBJECT_ENV_FAIL" {
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = string
-  default = "Define in product tfvars"
+  default = "This is defined in product tfvars"
 }
 
 variable "ENVIRONMENT" {

@@ -137,8 +137,7 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
-        vcpu = 4
-        memory = 8192
+        memory = 2048
       }
       additional_repos = {
         tools_update_pr = var.SLE_CLIENT_REPO
@@ -148,10 +147,6 @@ module "cucumber_testsuite" {
     }
     pxeboot-minion = {
       image = "sles15sp4o"
-      provider_settings = {
-        vcpu = 2
-        memory = 2048
-      }
       additional_repos = {
         tools_update_pr = var.SLE_CLIENT_REPO
       }
@@ -165,8 +160,8 @@ module "cucumber_testsuite" {
         hvm_disk_image = {
           leap = {
             hostname = "suma-pr${var.ENVIRONMENT}-min-nested"
-            image = "http://${var.DOWNLOAD_ENDPOINT}/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-JeOS.x86_64-OpenStack-Cloud.qcow2"
-            hash = "http://${var.DOWNLOAD_ENDPOINT}/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-JeOS.x86_64-OpenStack-Cloud.qcow2.sha256"
+            image = "http://${var.DOWNLOAD_ENDPOINT}/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
+            hash = "http://${var.DOWNLOAD_ENDPOINT}/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2.sha256"
           }
           sles = {
             hostname = "suma-pr${var.ENVIRONMENT}-min-nested"
@@ -177,8 +172,6 @@ module "cucumber_testsuite" {
       }
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
-        vcpu = 4
-        memory = 8192
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = local.additional_repos["kvm-host"]
