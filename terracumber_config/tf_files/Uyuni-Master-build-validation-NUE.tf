@@ -637,6 +637,25 @@ module "sles15sp5s390-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "salt-migration-minion" {
+  source = "./modules/minion"
+  base_configuration = module.base.configuration
+  name               = "min-salt-migration"
+  product_version    = "uyuni-master"
+  image              = "sles15sp5o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:cf"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = true
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "slemicro51-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -1292,6 +1311,8 @@ module "controller" {
 
   sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
   sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
+
+  salt_migration_minion_configuration = module.salt-migration-minion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
   slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
