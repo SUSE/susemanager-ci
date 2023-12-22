@@ -74,6 +74,9 @@ defaultdict = {
     "slemicro55_minion": ["/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SUSE-MicroOS_5.5_x86_64/",
                           "/SUSE_Updates_SLE-Micro_5.5_x86_64/"],
+    "salt_migration_minion": ["/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
+                              "/SUSE_Updates_SLE-Module-Basesystem_15-SP5_x86_64/",
+                              "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_x86_64/"],
 }
 
 # Dictionary for SUMA 4.3 Server and Proxy, which is then added together with the common dictionary for client tools
