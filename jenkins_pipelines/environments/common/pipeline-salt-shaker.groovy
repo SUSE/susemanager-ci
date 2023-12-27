@@ -52,8 +52,28 @@ def run(params) {
                     deployed = true
                 }
             }
-            stage('Salt Shaker testsuite') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml ${params.salt_test_group} -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report.xml -vvv'"
+            stage('Salt Shaker testsuite - Unit tests') {
+	        if (!params.run_unit_tests) {
+	            echo "Skipping unit tests as they were not selected for this execution"
+		    return
+		}
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --tb=native' || :"
+            }
+
+            stage('Salt Shaker testsuite - Integration tests') {
+	        if (!params.run_integration_tests) {
+	            echo "Skipping integration tests as they were not selected for this execution"
+		    return
+		}
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --tb=native' || :"
+            }
+
+            stage('Salt Shaker testsuite - Functional tests') {
+	        if (!params.run_functional_tests) {
+	            echo "Skipping functional tests as they were not selected for this execution"
+		    return
+		}
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native' || :"
             }
         }
         finally {
