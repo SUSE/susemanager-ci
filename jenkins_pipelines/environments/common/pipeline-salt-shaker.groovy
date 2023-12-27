@@ -57,7 +57,9 @@ def run(params) {
 	            echo "Skipping unit tests as they were not selected for this execution"
 		    return
 		}
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --tb=native' || :"
+		catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --tb=native'"
+		}
             }
 
             stage('Salt Shaker testsuite - Integration tests') {
@@ -65,7 +67,9 @@ def run(params) {
 	            echo "Skipping integration tests as they were not selected for this execution"
 		    return
 		}
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --tb=native' || :"
+		catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --tb=native'"
+		}
             }
 
             stage('Salt Shaker testsuite - Functional tests') {
@@ -73,7 +77,9 @@ def run(params) {
 	            echo "Skipping functional tests as they were not selected for this execution"
 		    return
 		}
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native' || :"
+		catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+	            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist skiplist.toml functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native'"
+		}
             }
         }
         finally {
