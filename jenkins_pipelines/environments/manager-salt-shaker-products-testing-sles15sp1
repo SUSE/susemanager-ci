@@ -7,8 +7,12 @@ node('sumaform-cucumber') {
         pipelineTriggers([cron('H 0 * * *')]),
         parameters([
             choice(name: 'salt_flavor', choices: ['classic', 'bundle'], description: 'Run testsuite for classic Salt or Salt Bundle'),
+            booleanParam(name: 'run_unit_tests', defaultValue: true, description: 'Run the Salt unit tests'),
+            booleanParam(name: 'run_integration_tests', defaultValue: true, description: 'Run the Salt integration tests'),
+            booleanParam(name: 'run_functional_tests', defaultValue: true, description: 'Run the Salt functional tests'),
             choice(name: 'salt_test_group', choices: ['unit', 'integration', 'functional'], description: 'Salt Testsuite to run'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'skip_list_url', defaultValue: 'https://raw.githubusercontent.com/openSUSE/salt-test-skiplist/main-fix-skiplist/skipped_tests.toml', description: 'URL to the skiplist.toml file to run Salt shaker'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/Salt-Shaker-Testing-SLES15SP1.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master-salt-testenv-fixes', description: 'Sumaform Git reference (branch, tag...)'),
