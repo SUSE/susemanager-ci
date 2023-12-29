@@ -10,7 +10,6 @@ node('sumaform-cucumber') {
             booleanParam(name: 'run_unit_tests', defaultValue: true, description: 'Run the Salt unit tests'),
             booleanParam(name: 'run_integration_tests', defaultValue: true, description: 'Run the Salt integration tests'),
             booleanParam(name: 'run_functional_tests', defaultValue: true, description: 'Run the Salt functional tests'),
-            choice(name: 'salt_test_group', choices: ['unit', 'integration', 'functional'], description: 'Salt Testsuite to run'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'skip_list_url', defaultValue: 'https://raw.githubusercontent.com/openSUSE/salt-test-skiplist/main-fix-skiplist/skipped_tests.toml', description: 'URL to the skiplist.toml file to run Salt shaker'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/Salt-Shaker-Testing-Debian11-Bundle.tf', description: 'Path to the tf file to be used'),
