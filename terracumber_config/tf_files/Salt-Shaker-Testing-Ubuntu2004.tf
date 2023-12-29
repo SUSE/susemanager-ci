@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/salt/job/manager-salt-shaker-products-testing-ubuntu2204-bundle"
+  default = "https://ci.suse.de/view/Manager/view/salt/job/manager-salt-shaker-products-testing-ubuntu2004"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -21,7 +21,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Salt Shaker - products:testing - Ubuntu2204 Salt Bundle $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Salt Shaker - products:testing - Ubuntu2004 $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -31,7 +31,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Salt Shaker - products:testing - Ubuntu2204 Salt Bundle: Environment setup failed"
+  default = "Results Salt Shaker - products:testing - Ubuntu2004: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -96,15 +96,15 @@ module "base" {
     bridge             = "br0"
   }
 
-  images = [ "ubuntu2204o" ]
+  images = [ "ubuntu2004o" ]
 }
 
 module "salt-test-node" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-test-node-ubuntu2204-bundle"
-  image              = "ubuntu2204o"
+  name               = "salt-test-node-ubuntu2004"
+  image              = "ubuntu2004o"
   salt_obs_flavor    = "products:testing"
 }
 
