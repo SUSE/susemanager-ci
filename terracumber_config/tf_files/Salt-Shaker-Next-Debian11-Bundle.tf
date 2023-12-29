@@ -99,15 +99,15 @@ module "base" {
   images = [ "debian11o" ]
 }
 
-module "salt-test-node" {
+module "salt-shaker-products-next" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-test-node-debian11-bundle"
+  name               = "salt-shaker-products-next-debian11-bundle"
   image              = "debian11o"
   salt_obs_flavor    = "products:next"
 }
 
 output "configuration" {
-  value = module.salt-test-node.configuration
+  value = module.salt-shaker-products-next.configuration
 }

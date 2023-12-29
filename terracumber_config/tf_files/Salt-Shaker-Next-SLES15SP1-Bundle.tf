@@ -99,15 +99,15 @@ module "base" {
   images = [ "sles15sp1o" ]
 }
 
-module "salt-test-node" {
+module "salt-shaker-products-next" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-test-node-sles15sp1-bundle"
+  name               = "salt-shaker-products-next-sles15sp1-bundle"
   image              = "sles15sp1o"
   salt_obs_flavor    = "products:next"
 }
 
 output "configuration" {
-  value = module.salt-test-node.configuration
+  value = module.salt-shaker-products-next.configuration
 }

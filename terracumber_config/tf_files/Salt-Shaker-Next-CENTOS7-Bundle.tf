@@ -99,15 +99,15 @@ module "base" {
   images = [ "centos7o" ]
 }
 
-module "salt-test-node" {
+module "salt-shaker-products-next" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-test-node-centos7-bundle"
+  name               = "salt-shaker-products-next-centos7-bundle"
   image              = "centos7o"
   salt_obs_flavor    = "products:next"
 }
 
 output "configuration" {
-  value = module.salt-test-node.configuration
+  value = module.salt-shaker-products-next.configuration
 }

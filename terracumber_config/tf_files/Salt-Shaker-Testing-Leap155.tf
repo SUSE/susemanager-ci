@@ -99,15 +99,15 @@ module "base" {
   images = [ "opensuse155o" ]
 }
 
-module "salt-test-node" {
+module "salt-shaker-products-testing" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-test-node-leap155"
+  name               = "salt-shaker-products-testing-leap155"
   image              = "opensuse155o"
   salt_obs_flavor    = "products:testing"
 }
 
 output "configuration" {
-  value = module.salt-test-node.configuration
+  value = module.salt-shaker-products-testing.configuration
 }

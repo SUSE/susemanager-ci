@@ -99,15 +99,15 @@ module "base" {
   images = [ "almalinux9o" ]
 }
 
-module "salt-test-node" {
+module "salt-shaker-products-next" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-test-node-almalinux9-bundle"
+  name               = "salt-shaker-products-next-almalinux9-bundle"
   image              = "almalinux9o"
   salt_obs_flavor    = "products:next"
 }
 
 output "configuration" {
-  value = module.salt-test-node.configuration
+  value = module.salt-shaker-products-next.configuration
 }
