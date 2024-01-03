@@ -26,12 +26,8 @@ build_packages = true
 if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     first_env = 10;
     last_env = 10;
-    // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
-    // /!\ Temporary change /!\
-    //sumaform_gitrepo = "https://github.com/witekest/sumaform.git";
-    //sumaform_ref = "server_monitoring";
-    sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
-    sumaform_ref = "master";
+    sumaform_gitrepo = "https://github.com/witekest/sumaform.git";
+    sumaform_ref = "server_monitoring";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-ion") {
     first_env = 7;
     last_env = 7;
