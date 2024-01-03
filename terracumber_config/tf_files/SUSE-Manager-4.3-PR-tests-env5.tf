@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
   mirror      = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  images = ["rocky9o", "opensuse154o", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky9o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "suma-pr${var.ENVIRONMENT}-"
