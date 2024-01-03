@@ -137,6 +137,8 @@ module "cucumber_testsuite" {
         vcpu = 8
         memory = 32768
       }
+      repository_disk_size = 150
+      database_disk_size   = 50
     }
     proxy = {
       provider_settings = {
