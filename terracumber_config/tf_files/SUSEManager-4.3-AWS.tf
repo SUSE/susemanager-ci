@@ -143,7 +143,7 @@ module "base" {
   mirror                   = var.MIRROR
   testsuite                = true
 
-  images = ["rocky8", "opensuse154o", "sles15sp4o", "ubuntu2204"]
+  images = ["rocky8", "opensuse155o", "sles15sp4o", "ubuntu2204"]
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region            = var.REGION
