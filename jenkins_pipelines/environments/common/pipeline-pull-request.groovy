@@ -17,6 +17,10 @@ def run(params) {
         jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
         environment_workspace = null
         env.common_params = ''
+        tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-testing-variables.tf'
+        tfvars_product_version = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-${product_version}.tfvars"
+        tfvars_platform_localisation = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-${platform_localisation}-environments.tfvars"
+        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-additionnal-repos.tf'
         try {
             stage('Get environment') {
                   echo "DEBUG: first environment: ${first_env}"
@@ -205,8 +209,8 @@ def run(params) {
                         // Define test environment parameters
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-                        env.tf_file = "susemanager-ci/terracumber_config/tf_files/${product_name}-PR-tests-env${env_number}.tf" //TODO: Make it possible to use environments for SUMA
-                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
+                        env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-testing-template.tf"
+                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file}"
 
                         if (params.terraform_parallelism) {
                             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
@@ -228,27 +232,38 @@ def run(params) {
                 echo "DEBUG: Deploy 1"
                 ws(environment_workspace){
                     if(must_test) {
+                        // Delete old terraform.tfvars
+                        sh "rm -f ${env.resultdir}/sumaform/terraform.tfvars"
+                        // Merge product en platform variables into terraform.tfvars
+                        sh "cat ${tfvars_product_version} ${tfvars_platform_localisation} >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        // Add environment to use in tfvars
+                        sh "echo 'ENVIRONMENT = \'${env_number}\'' >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        // Copy the variable declaration file
+                        sh "cp ${tf_local_variables} ${env.resultdir}/sumaform/"
+
+                        // Add all repositories variables
                         // Passing the built repository by parameter using a environment variable to terraform file
                         // TODO: We will need to add a logic to replace the host, when we use IBS for spacewalk
-                        env.PULL_REQUEST_REPO= "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}"
-                        env.MASTER_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${source_project}/${build_repo}/${arch}"
-                        env.MASTER_OTHER_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${other_project}/${other_build_repo}/${arch}"
-                        env.MASTER_SUMAFORM_TOOLS_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/${arch}"
-                        env.TEST_PACKAGES_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${test_packages_project}/rpm/${arch}"
-                        env.UPDATE_REPO = update_repo
+                        sh "echo \"############ Repositories variables ############\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo PULL_REQUEST_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${builder_project}:${pull_request_number}/${build_repo}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo MASTER_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${source_project}/${build_repo}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo MASTER_OTHER_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${other_project}/${other_build_repo}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo MASTER_SUMAFORM_TOOLS_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sumaform_tools_project}/${build_repo}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo TEST_PACKAGES_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${test_packages_project}/rpm/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo UPDATE_REPO = \\\"${update_repo}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
 
                         if (additional_repo_url == '') {
                             echo "Adding dummy repo for update repo"
-                            env.ADDITIONAL_REPO_URL = additional_repo 
+                            sh "echo ADDITIONAL_REPO_URL = \\\"${additional_repo}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         } else {
                             echo "Adding ${additional_repo_url}"
-                            env.ADDITIONAL_REPO_URL = additional_repo_url
+                            sh "echo ADDITIONAL_REPO_URL = \\\"${additional_repo_url}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         }
 
-                        env.SLE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sles_client_repo}/SLE_15/${arch}"
-                        env.RHLIKE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${el_client_repo}/${EL}/${arch}"
-                        env.DEBLIKE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}"
-                        env.OPENSUSE_CLIENT_REPO = "http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${openSUSE_client_repo}/openSUSE_Leap_15.0/${arch}"
+                        sh "echo SLE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sles_client_repo}/SLE_15/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo RHLIKE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${el_client_repo}/${EL}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo DEBLIKE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo OPENSUSE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${openSUSE_client_repo}/openSUSE_Leap_15.0/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
 
                         // Provision the environment
                         if (terraform_init) {
@@ -256,10 +271,7 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        
-                        echo "DEBUG: Deploy 5"
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_SLE_CLIENT_REPO=${SLE_CLIENT_REPO};export TF_VAR_RHLIKE_CLIENT_REPO=${RHLIKE_CLIENT_REPO};export TF_VAR_DEBLIKE_CLIENT_REPO=${DEBLIKE_CLIENT_REPO};export TF_VAR_OPENSUSE_CLIENT_REPO=${OPENSUSE_CLIENT_REPO};export TF_VAR_PULL_REQUEST_REPO=${PULL_REQUEST_REPO}; export TF_VAR_MASTER_OTHER_REPO=${MASTER_OTHER_REPO};export TF_VAR_MASTER_SUMAFORM_TOOLS_REPO=${MASTER_SUMAFORM_TOOLS_REPO}; export TF_VAR_TEST_PACKAGES_REPO=${TEST_PACKAGES_REPO}; export TF_VAR_MASTER_REPO=${MASTER_REPO};export TF_VAR_UPDATE_REPO=${UPDATE_REPO};export TF_VAR_ADDITIONAL_REPO_URL=${ADDITIONAL_REPO_URL};export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
-                        echo "DEBUG: Deploy 6"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
                         deployed = true
   
                         // Collect and tag Flaky tests from the GitHub Board
