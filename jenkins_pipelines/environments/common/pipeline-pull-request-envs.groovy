@@ -85,6 +85,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     cucumber_gitrepo = "https://github.com/SUSE/spacewalk.git";
     cucumber_ref = "Manager-4.3";
     pull_request_number = "Manager-4.3";
+    product_version = "manager43";
     first_env =6;
     last_env = 6;
     // spacewalk suma43 settings
