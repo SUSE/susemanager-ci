@@ -1032,8 +1032,8 @@ module "sles15sp5s390-minion" {
 }
 
 module "salt-migration-minion" {
-  source = "./modules/minion"
-  base_configuration = module.base.configuration
+  source             = "./modules/minion"
+  base_configuration = module.base_new_sle.configuration
   name               = "min-salt-migration"
   product_version    = "4.3-released"
   image              = "sles15sp5o"
