@@ -27,6 +27,14 @@ jobs:
         with:
           repository: uyuni-project/sumaform
           path: sumaform
+      - name: Download Feilong terraform provider asset
+        if: steps.tf_files.outputs.added_modified
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: Bischoff/terraform-provider-feilong
+          tag: v0.0.4
+          fileName: terraform-provider-feilong_0.0.4_linux_amd64.tar.gz
+          extract: true
       - name: Validate files
         if: steps.tf_files.outputs.added_modified
         env:
@@ -44,7 +52,14 @@ jobs:
           TF_VAR_RHLIKE_CLIENT_REPO: ""
           TF_VAR_DEBLIKE_CLIENT_REPO: ""
           TF_VAR_OPENSUSE_CLIENT_REPO: ""
+          TF_VAR_ZVM_ADMIN_TOKEN: ""
         run: |
+          # Install feilong provider
+          srcdir=/home/runner/work/susemanager-ci/susemanager-ci/
+          dstdir=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.4/linux_amd64/
+          sudo mkdir -p $dstdir
+          sudo ln -s $srcdir/terraform-provider-feilong $dstdir
+
           # Remove libvirt and feilong provider settings
           sed -i \
             -e '/provider *"/,/^[ \/#]*\}\s*$/d' \
@@ -52,6 +67,12 @@ jobs:
             -e '/libvirt =/d' \
             -e '/feilong = {/,/^[ \/#]*\}\s*$/d' \
             -e '/feilong =/d' \
+            ${{steps.tf_files.outputs.added_modified}}
+
+          # Also exclude s390 minions from terraform plan
+          sed -i \
+            -e '/^module ".*s390.*" {$/,/^}$/d' \
+            -e '/.*s390.*_configuration *= module.*s390.*\.configuration/d' \
             ${{steps.tf_files.outputs.added_modified}}
 
           # Setup sumaform with the 'null' backend
