@@ -323,9 +323,9 @@ module "server" {
     data_pool          = "ssd"
   }
 
-  server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
-  repository_disk_size = 2048
-
+  server_mounted_mirror          = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  repository_disk_size           = 2048
+  database_disk_size             = 100
   java_debugging                 = false
   auto_accept                    = false
   monitored                      = true
