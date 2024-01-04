@@ -303,7 +303,7 @@ module "base_debian" {
 //}
 
 module "base_s390" {
-  source = "./sumaform/backend_modules/feilong/base"
+  source = "./backend_modules/feilong/base"
 
   name_prefix = "suma-bv-43-"
   domain      = "mgr.prv.suse.net"
@@ -1014,7 +1014,7 @@ module "debian12-minion" {
 //}
 
 module "sles15sp5s390-minion" {
-  source             = "./sumaform/backend_modules/feilong/host"
+  source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
 
   name               = "min-sles15sp3s390"
@@ -1544,7 +1544,7 @@ module "debian12-sshminion" {
 //}
 
 module "sles15sp5s390-sshminion" {
-  source             = "./sumaform/backend_modules/feilong/host"
+  source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
 
   name               = "minssh-sles15sp3s390"
