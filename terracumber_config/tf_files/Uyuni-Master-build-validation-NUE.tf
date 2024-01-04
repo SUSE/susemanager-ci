@@ -638,8 +638,8 @@ module "sles15sp5s390-minion" {
 }
 
 module "salt-migration-minion" {
-  source = "./modules/minion"
-  base_configuration = module.base.configuration
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
   name               = "min-salt-migration"
   product_version    = "uyuni-master"
   image              = "sles15sp5o"
