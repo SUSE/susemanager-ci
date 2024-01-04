@@ -45,6 +45,12 @@ jobs:
           TF_VAR_DEBLIKE_CLIENT_REPO: ""
           TF_VAR_OPENSUSE_CLIENT_REPO: ""
         run: |
+          for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
+            echo ">$tf_file before<"
+            cat "$tf_file"
+            echo
+          done
+
           # Remove libvirt and feilong provider settings
           sed -i \
             -e '/provider *"/,/^[ \/#]*\}\s*$/d' \
@@ -53,6 +59,12 @@ jobs:
             -e '/feilong = {/,/^[ \/#]*\}\s*$/d' \
             -e '/feilong =/d' \
             ${{steps.tf_files.outputs.added_modified}}
+
+          for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
+            echo ">$tf_file after<"
+            cat "$tf_file"
+            echo
+          done
 
           # Setup sumaform with the 'null' backend
           cd sumaform
