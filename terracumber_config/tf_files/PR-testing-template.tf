@@ -156,20 +156,7 @@ module "cucumber_testsuite" {
     kvm-host = {
       image = var.IMAGE
       name = "min-kvm"
-      additional_grains = {
-        hvm_disk_image = {
-          leap = {
-            hostname = "suma-pr${var.ENVIRONMENT}-min-nested"
-            image = "http://${var.DOWNLOAD_ENDPOINT}/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
-            hash = "http://${var.DOWNLOAD_ENDPOINT}/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2.sha256"
-          }
-          sles = {
-            hostname = "suma-pr${var.ENVIRONMENT}-min-nested"
-            image = "http://${var.DOWNLOAD_ENDPOINT}/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
-            hash = "http://${var.DOWNLOAD_ENDPOINT}/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
-          }
-        }
-      }
+      
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
       }
@@ -179,8 +166,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  nested_vm_host = "suma-pr${var.ENVIRONMENT}-min-nested"
-  nested_vm_mac =  var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["nested-vm"]
+  
   provider_settings = {
     pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
     network_name       = null

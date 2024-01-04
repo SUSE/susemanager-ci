@@ -213,20 +213,7 @@ module "cucumber_testsuite" {
     kvm-host = {
       image = "opensuse155o"
       name = "min-kvm"
-      additional_grains = {
-        hvm_disk_image = {
-          leap = {
-            hostname = "uyuni-master-min-nested"
-            image = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
-            hash = "http://minima-mirror-ci-bv.mgr.suse.de/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2.sha256"
-          }
-          sles = {
-            hostname = "uyuni-master-min-nested"
-            image = "http://minima-mirror-ci-bv.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2"
-            hash = "http://minima-mirror-ci-bv.mgr.suse.de/install/SLE-15-SP4-Minimal-GM/SLES15-SP4-Minimal-VM.x86_64-OpenStack-Cloud-GM.qcow2.sha256"
-          }
-        }
-      }
+      
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
         vcpu = 4
@@ -236,8 +223,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  nested_vm_host = "uyuni-master-min-nested"
-  nested_vm_mac =  "aa:b2:93:01:00:df"
+  
   provider_settings = {
     pool               = "ssd"
     network_name       = null
