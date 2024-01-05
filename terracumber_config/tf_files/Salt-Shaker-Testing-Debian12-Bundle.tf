@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/salt/job/manager-salt-shaker-products-testing-debian12-bundle"
+  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-products-testing-debian12-bundle"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
