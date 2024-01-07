@@ -80,7 +80,7 @@ def run(params) {
                 if (params.terraform_taint) {
                     switch(params.sumaform_backend) {
                         case "libvirt":
-                            env.TERRAFORM_TAINT = " --taint '.*(domain|main_disk).*'";
+                            env.TERRAFORM_TAINT = " --taint '.*(domain|main_disk|data_disk|database_disk).*'";
                             break;
                         case "aws":
                             env.TERRAFORM_TAINT = " --taint '.*(host).*'";
