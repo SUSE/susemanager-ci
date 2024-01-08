@@ -1,8 +1,8 @@
 def run(params) {
     timestamps {
         //Capybara configuration
-        def capybara_timeout = 60
-        def default_timeout = 500
+        def capybara_timeout = 20
+        def default_timeout = 300
 
         // Init path env variables
         env.resultdir = "${WORKSPACE}/results"
