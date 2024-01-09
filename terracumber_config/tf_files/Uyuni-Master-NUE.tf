@@ -135,7 +135,7 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 16384
       }
-      repository_disk_size = 150
+      repository_disk_size = 200
       database_disk_size   = 50
       login_timeout = 28800
     }
