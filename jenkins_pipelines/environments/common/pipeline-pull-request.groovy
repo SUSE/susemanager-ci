@@ -342,9 +342,9 @@ def run(params) {
                         if(must_test) {
                             if (deployed) {
                                 try {
-                                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing_pr'"
+                                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:finishing'"
                                 } catch(Exception ex) {
-                                    println("ERROR: rake cucumber:finishing_pr failed")
+                                    println("ERROR: rake cucumber:finishing failed")
                                     error = 1
                                 }
                                 try {
