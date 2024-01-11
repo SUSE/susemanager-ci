@@ -127,7 +127,7 @@ def run(params) {
                 }
                 def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:secondary'", returnStatus:true
                 def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; ${env.exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
-                def statusCode3 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; ${env.exports} rake ${params.rake_namespace}:secondary_destructive'", returnStatus:true
+                def statusCode3 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; ${env.exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus:true
                 sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
             }
         }
