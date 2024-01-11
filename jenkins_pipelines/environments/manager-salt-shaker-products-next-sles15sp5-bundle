@@ -4,7 +4,13 @@ node('salt-shaker-tests') {
     properties([
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
-        pipelineTriggers([cron('H 0 * * *')]),
+        pipelineTriggers([
+            URLTrigger(
+                cronTabSpec: '* * * * *',
+                entries: [URLTriggerEntry(url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/next:/SLE15/SLE_15/repodata/repomd.xml')]
+            ),
+            cron('H 0 * * *')],
+        ),
         parameters([
             choice(name: 'salt_flavor', choices: ['bundle'], description: 'Run testsuite for classic Salt or Salt Bundle'),
             booleanParam(name: 'run_unit_tests', defaultValue: true, description: 'Run the Salt unit tests'),
