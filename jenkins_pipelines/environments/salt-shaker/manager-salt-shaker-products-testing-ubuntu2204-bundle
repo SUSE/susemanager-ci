@@ -7,7 +7,11 @@ node('salt-shaker-tests') {
         pipelineTriggers([
             URLTrigger(
                 cronTabSpec: '* * * * *',
-                entries: [URLTriggerEntry(url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/Ubuntu2204/Ubuntu_22.04/Packages')]
+                entries: [URLTriggerEntry(
+                    url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/testsuite/Ubuntu_22.04/Packages',
+                    triggerLabel: "salt-shaker-tests",
+                    contentTypes: [MD5Sum()]
+                    )]
             ),
             cron('H 0 * * *')],
         ),
