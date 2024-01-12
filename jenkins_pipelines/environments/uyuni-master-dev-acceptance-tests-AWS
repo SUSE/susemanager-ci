@@ -33,6 +33,9 @@ node('sumaform-cucumber-provo') {
         checkout scm
     }
     timeout(activity: false, time: 14, unit: 'HOURS') {
+        //Capybara configuration
+        capybara_timeout = 10
+        default_timeout = 250
         def pipeline = load "jenkins_pipelines/environments/common/pipeline.groovy"
         pipeline.run(params)
     }
