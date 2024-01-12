@@ -1,0 +1,19 @@
+#################################################################
+# SUMMARY
+#################################################################
+Build:       $urlprefix/$timestamp
+Console:     $urlprefix/$timestamp/console
+Results:     $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
+Test Report: $urlprefix/$timestamp/testReport
+
+
+#################################################################
+# SALT SHAKER TESTS
+#################################################################
+Total:   $tests
+Passed:  $passed
+Failed:  $failures
+Errors:  $errors
+Skipped: $skipped
+
+$failures_log
