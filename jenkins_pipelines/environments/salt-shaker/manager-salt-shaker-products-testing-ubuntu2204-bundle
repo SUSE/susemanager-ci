@@ -10,6 +10,7 @@ node('salt-shaker-tests') {
                 entries: [URLTriggerEntry(
                     url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/testsuite/Ubuntu_22.04/Packages',
                     triggerLabel: "salt-shaker-tests",
+                    labelRestriction: true,
                     contentTypes: [MD5Sum()]
                     )]
             ),
