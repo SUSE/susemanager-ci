@@ -29,7 +29,7 @@ node('sumaform-cucumber-provo') {
     stage('Checkout pipeline') {
         checkout scm
     }
-    timeout(activity: false, time: 18, unit: 'HOURS') {
+    timeout(activity: false, time: 22, unit: 'HOURS') {
         //Capybara configuration
         capybara_timeout = 20
         default_timeout = 400
