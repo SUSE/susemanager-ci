@@ -26,7 +26,7 @@ variable "MAIL_SUBJECT" {
 
 variable "MAIL_TEMPLATE" {
   type = string
-  default = "../../mail-templates/mail-template-salt-shaker.txt"
+  default = "../../mail_templates/mail-template-salt-shaker.txt"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
@@ -36,7 +36,7 @@ variable "MAIL_SUBJECT_ENV_FAIL" {
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = string
-  default = "../../mail-templates/mail-template-salt-shaker-env-fail.txt"
+  default = "../../mail_templates/mail-template-salt-shaker-env-fail.txt"
 }
 
 variable "MAIL_FROM" {
