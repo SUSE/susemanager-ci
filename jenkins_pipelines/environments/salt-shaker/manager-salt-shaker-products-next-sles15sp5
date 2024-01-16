@@ -7,12 +7,12 @@ node('salt-shaker-tests') {
         pipelineTriggers([
             URLTrigger(
                 cronTabSpec: '* * * * *',
+                labelRestriction: true,
+                triggerLabel: "salt-shaker-tests",
                 entries: [URLTriggerEntry(
                     url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/products:/next/15.5/repodata/repomd.xml',
-                    triggerLabel: "salt-shaker-tests",
-                    labelRestriction: true,
                     contentTypes: [MD5Sum()]
-                    )]
+                )]
             ),
             cron('H 0 * * *')],
         ),
