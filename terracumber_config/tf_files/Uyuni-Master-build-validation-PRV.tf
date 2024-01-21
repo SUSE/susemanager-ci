@@ -826,7 +826,7 @@ module "sles15sp5s390-minion" {
   base_configuration = module.base_s390.configuration
 
   name               = "min-sles15sp5s390"
-  image              = "s15s3-jeos-1part-ext4"
+  image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
     userid             = "UYMMIPRV"
