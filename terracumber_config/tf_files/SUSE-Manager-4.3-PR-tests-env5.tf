@@ -245,18 +245,18 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    debian-minion = {
-      image = "ubuntu2204o"
-      name = "min-deblike"
-      provider_settings = {
-        mac = "aa:b2:92:04:00:47"
-      }
-      additional_repos = {
-        client_repo = var.DEBLIKE_CLIENT_REPO,
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
+//    debian-minion = {
+//      image = "ubuntu2204o"
+//      name = "min-deblike"
+//      provider_settings = {
+//        mac = "aa:b2:92:04:00:47"
+//      }
+//      additional_repos = {
+//        client_repo = var.DEBLIKE_CLIENT_REPO,
+//      }
+//      additional_packages = [ "venv-salt-minion" ]
+//      install_salt_bundle = true
+//    }
     build-host = {
       image = "sles15sp4o"
       name = "min-build"
