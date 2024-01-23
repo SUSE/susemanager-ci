@@ -8,7 +8,7 @@ MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-suma43-pull-re
 MAIL_TEMPLATE          = "../mail_templates/mail-template-jenkins-suma43-pull-request.txt"
 MAIL_SUBJECT           = "$status acceptance tests on SUMA 4.3 Pull Request: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 CUCUMBER_BRANCH        = "Manager-4.3"
-CUCUMBER_GITREPO       = "https://github.com/SUSE/spacewalk/spacewalk.git"
+CUCUMBER_GITREPO       = "https://github.com/SUSE/spacewalk.git"
 CUCUMBER_COMMAND       = "export PRODUCT='SUSE-Manager' && run-testsuite"
 URL_PREFIX             = "https://ci.suse.de/view/Manager/view/Uyuni/job/suma43-prs-ci-tests"
 ADDITIONAL_REPOS_ONLY  = false
