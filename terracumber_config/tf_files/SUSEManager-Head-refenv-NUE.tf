@@ -145,6 +145,7 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containers/suse/manager/5.0"
     }
     proxy = {
+      image = "slemicro55-ign"
       provider_settings = {
         mac = "aa:b2:93:01:00:c2"
         vcpu = 2
