@@ -106,7 +106,9 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55-ign"]
+
+  container_server = true
 
   use_avahi    = false
   name_prefix  = "suma-refhead-"
@@ -131,12 +133,16 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    server = {
+    server_containerized = {
+      image = "slemicro55-ign"
       provider_settings = {
         mac = "aa:b2:93:01:00:c1"
         vcpu = 4
         memory = 16384
       }
+      login_timeout = 28800
+      runtime = "podman"
+      container_repository = "registry.suse.de/devel/galaxy/manager/head/containers/suse/manager/5.0"
     }
     proxy = {
       provider_settings = {
