@@ -144,16 +144,16 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containers/suse/manager/5.0"
     }
-    proxy = {
-      image = "slemicro55-ign"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:c2"
-        vcpu = 2
-        memory = 2048
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
+    #proxy = {
+    #  image = "slemicro55-ign"
+    #  provider_settings = {
+    #    mac = "aa:b2:93:01:00:c2"
+    #    vcpu = 2
+    #    memory = 2048
+    #  }
+    #  additional_packages = [ "venv-salt-minion" ]
+    #  install_salt_bundle = true
+    #}
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
