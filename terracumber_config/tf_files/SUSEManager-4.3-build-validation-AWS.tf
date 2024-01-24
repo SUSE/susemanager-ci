@@ -185,7 +185,8 @@ module "server" {
   use_os_released_updates        = false
   disable_download_tokens        = false
   disable_auto_bootstrap         = true
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  large_deployment               = true
+  ssh_key_path                   = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = "m6a.xlarge"
   }
