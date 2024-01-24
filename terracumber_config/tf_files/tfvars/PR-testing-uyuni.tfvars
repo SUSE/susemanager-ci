@@ -1,7 +1,7 @@
 ############ Uyuni unique variables ############
 
 IMAGE                  = "opensuse155-ci-pro"
-IMAGES                 = ["rocky8o", "opensuse154o", "opensuse155o", "opensuse155-ci-pro", "ubuntu2204o", "sles15sp4o"]
+IMAGES                 = ["rocky9o", "opensuse154o", "opensuse155o", "opensuse155-ci-pro", "ubuntu2204o", "sles15sp4o"]
 SUSE_MINION_IMAGE      = "opensuse155o"
 PRODUCT_VERSION        = "uyuni-pr"
 MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
@@ -12,5 +12,5 @@ CUCUMBER_GITREPO       = "https://github.com/uyuni-project/uyuni.git"
 CUCUMBER_COMMAND       = "export PRODUCT='Uyuni' && run-testsuite"
 URL_PREFIX             = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-prs-ci-tests"
 ADDITIONAL_REPOS_ONLY  = true
-RHLIKE_MINION_IMAGE    = "rocky8o"
+RHLIKE_MINION_IMAGE    = "rocky9o"
 DEBLIKE_MINION_IMAGE   = "ubuntu2204o"
