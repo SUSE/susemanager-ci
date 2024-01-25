@@ -177,6 +177,7 @@ module "server_containerized" {
     vcpu               = 10
     data_pool          = "ssd"
   }
+  main_disk_size = 2000
   runtime = "podman"
   container_repository = "registry.suse.de/devel/galaxy/manager/head/containers/suse/manager/5.0"
 
