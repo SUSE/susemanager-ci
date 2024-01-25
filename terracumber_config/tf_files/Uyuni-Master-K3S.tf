@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse154o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-k3s-"
@@ -148,7 +148,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:36"
@@ -157,7 +157,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:38"
@@ -203,7 +203,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-kvm"
       
       provider_settings = {
