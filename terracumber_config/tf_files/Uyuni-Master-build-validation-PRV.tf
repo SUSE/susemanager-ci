@@ -237,7 +237,7 @@ module "base_retail" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse154o" ]
+  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse155o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -1520,7 +1520,7 @@ module "monitoring-server" {
   base_configuration = module.base_retail.configuration
   product_version    = "uyuni-master"
   name               = "monitoring"
-  image              = "opensuse154o"
+  image              = "opensuse155o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:6f"
     memory             = 2048
