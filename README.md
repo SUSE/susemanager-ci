@@ -55,9 +55,10 @@ image for testing Pull Requests built with the open build service. This needs to
 
 ## Used image versions in the CI test suite
 
-| Version | Minion      | SSH minion  | Client      | RH-like  | Deb-like     | Virthosts   | Buildhost   | Terminal    | Controller | Server      | Proxy       |
-| ------- | ----------- | ----------- | ----------- | -------- | ------------ | ----------- | ----------- | ----------- | ---------- | ----------- | ----------- |
-|  PR test| Leap 15.5   | Leap 15.5   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.5   | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | Leap 15.5   | Leap 15.5   |
-|  Uyuni  | Leap 15.5   | Leap 15.5   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.5   | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | Leap 15.5   | Leap 15.5   |
-|  HEAD   | SLES 15 SP4 | SLES 15 SP4 | -           | Rocky 8  | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | SLES 15 SP4 | SLES 15 SP4 |
-|  4.3    | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | SLES 15 SP4 | SLES 15 SP4 |
+| Version       | Minion      | SSH minion  | Client      | RH-like  | Deb-like     | Virthost    | Buildhost   | Terminal    | Controller | Server        | Proxy       |
+| ------------- | ----------- | ----------- | ----------- | -------- | ------------ | ----------- | ----------- | ----------- | ---------- | ------------- | ----------- |
+|  PR test      | Leap 15.5   | Leap 15.5   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.5   | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | Leap 15.5     | Leap 15.5   |
+|  Uyuni        | Leap 15.5   | Leap 15.5   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.5   | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | Leap 15.5     | Leap 15.5   |
+|  Uyuni Podman | Leap 15.4   | Leap 15.4   | -           | Rocky 8  | Ubuntu 22.04 | Leap 15.4   | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | Leap 15.5     | Leap 15.5   |
+|  HEAD         | SLES 15 SP4 | SLES 15 SP4 | -           | Rocky 8  | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | SLE Micro 5.5 | none        |
+|  4.3          | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | CentOS 7 | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5  | SLES 15 SP4   | SLES 15 SP4 |
