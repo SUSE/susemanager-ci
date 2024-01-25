@@ -148,7 +148,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-minion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:26"
@@ -157,7 +157,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:28"
@@ -203,7 +203,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     kvm-host = {
-      image = "opensuse154o"
+      image = "opensuse155o"
       name = "min-kvm"
       
       provider_settings = {
