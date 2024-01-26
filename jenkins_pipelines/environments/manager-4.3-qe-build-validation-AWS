@@ -1,8 +1,7 @@
 #!/usr/bin/env groovy
 
 node('sumaform-cucumber-provo') {
-    def minionList = 'sle12sp4_client, sle12sp4_minion, sle12sp4_ssh_minion, ' +
-            'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, sle12sp5_paygo_minion, ' +
+    def minionList = 'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, sle12sp5_paygo_minion, ' +
             'sle15sp1_client, sle15sp1_minion, sle15sp1_ssh_minion, ' +
             'sle15sp2_client, sle15sp2_minion, sle15sp2_ssh_minion, ' +
             'sle15sp3_client, sle15sp3_minion, sle15sp3_ssh_minion, ' +
@@ -63,7 +62,7 @@ node('sumaform-cucumber-provo') {
             string(name: 'key_file', defaultValue: '/home/jenkins/.ssh/testing-suma.pem', description: 'Path to SSH private key to access instance in AWS'),
             string(name: 'key_name', defaultValue: 'testing-suma', description: 'SSH key name in AWS'),
             text(name: 'allowed_IPS', defaultValue: '65.132.116.252', description: 'Add the public IPs to add to AWS ingress security group ( keep default Jenkins address ) separated by new line' ),
-            text(name: 'custom_repositories', defaultValue: '{"server":{"server_stack":"","salt15sp3_base":"","salt15sp3_python2_module":"","salt15sp3_server_apps_module":"","extra_sle_that_affects_suma_srv":""},"proxy":{"salt":"","tools":"","salt15sp3":"","extra_sle_that_affects_suma_proxy":""},"sle12sp4_minion":{"salt":"","tools":""},"sle12sp4_client":{"tools":""},"sle12sp5_minion":{"salt":"","tools":""},"sle12sp5_client":{"tools":""},"sle15_minion":{"salt":"","tools":""},"sle15_client":{"tools":""},"sle15sp1_minion":{"salt":"","tools":"","python":"","server_apps":""},"sle15sp1_client":{"tools":""},"sle15sp2_minion":{"salt":"","tools":"","python":"","server_apps":""},"sle15sp2_client":{"tools":""},"sle15sp3_minion":{"salt":"","tools":"","python":"","server_apps":""},"sle15sp3_client":{"tools":""},"debian10_minion":{"salt":"","tools":""},"ubuntu2004_minion":{"salt":"","tools":""},"ceos7_minion":{"salt":"","tools":""},"ceos7_client":{"tools":""},"rocky8_minion":{"salt":"","tools":""},"rocky8_client":{"tools":""},"opensuse154arm_minion":{"salt":"","tools":""}}', description: 'Salt & Client Tools MU Repositories for each client, in json format'),
+            text(name: 'custom_repositories', defaultValue: '{"server":{"server_stack":"","salt15sp3_base":"","salt15sp3_python2_module":"","salt15sp3_server_apps_module":"","extra_sle_that_affects_suma_srv":""},"proxy":{"salt":"","tools":"","salt15sp3":"","extra_sle_that_affects_suma_proxy":""},"sle12sp5_minion":{"salt":"","tools":""},"sle12sp5_client":{"tools":""},"sle15_minion":{"salt":"","tools":""},"sle15_client":{"tools":""},"sle15sp1_minion":{"salt":"","tools":"","python":"","server_apps":""},"sle15sp1_client":{"tools":""},"sle15sp2_minion":{"salt":"","tools":"","python":"","server_apps":""},"sle15sp2_client":{"tools":""},"sle15sp3_minion":{"salt":"","tools":"","python":"","server_apps":""},"sle15sp3_client":{"tools":""},"debian10_minion":{"salt":"","tools":""},"ubuntu2004_minion":{"salt":"","tools":""},"ceos7_minion":{"salt":"","tools":""},"ceos7_client":{"tools":""},"rocky8_minion":{"salt":"","tools":""},"rocky8_client":{"tools":""},"opensuse154arm_minion":{"salt":"","tools":""}}', description: 'Salt & Client Tools MU Repositories for each client, in json format'),
             booleanParam(name: 'use_latest_ami_image', defaultValue: false, description: 'Use latest ami image')
             ])
     ])

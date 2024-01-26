@@ -223,22 +223,6 @@ module "proxy" {
 }
 
 
-module "sles12sp4-client" {
-  source             = "./modules/client"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "cli-sles12sp4"
-  image              = "sles12sp4"
-  server_configuration = module.server.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-}
-
 module "sles12sp5-client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
@@ -378,22 +362,6 @@ module "rocky8-minion" {
   }
 }
 
-module "sles12sp4-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "min-sles12sp4"
-  image              = "sles12sp4"
-  server_configuration = module.server.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-}
-
 module "sles12sp5-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -525,21 +493,6 @@ module "rocky8-sshminion" {
     instance_type = "t3a.medium"
   }
 
-}
-
-module "sles12sp4-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-sles12sp4"
-  image              = "sles12sp4"
-  use_os_released_updates = false
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  gpg_keys                = ["default/gpg_keys/galaxy.key"]
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
 }
 
 module "sles12sp5-sshminion" {
@@ -674,10 +627,6 @@ module "controller" {
 
   server_configuration    = module.server.configuration
   proxy_configuration     = module.proxy.configuration
-
-  sle12sp4_client_configuration    = module.sles12sp4-client.configuration
-  sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
-  sle12sp4_sshminion_configuration = module.sles12sp4-sshminion.configuration
 
   sle12sp5_client_configuration    = module.sles12sp5-client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration

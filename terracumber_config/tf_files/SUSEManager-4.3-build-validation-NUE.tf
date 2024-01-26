@@ -116,7 +116,7 @@ module "base_core" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp4o", "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse155o" ]
+  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse155o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -226,24 +226,6 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = true
   ssh_key_path              = "./salt/controller/id_rsa.pub"
-}
-
-module "sles12sp4-client" {
-  source             = "./modules/client"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "cli-sles12sp4"
-  image              = "sles12sp4o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:a8"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.suse.de"
-  }
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "sles12sp5-client" {
@@ -373,24 +355,6 @@ module "centos7-client" {
 
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
-}
-
-module "sles12sp4-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "min-sles12sp4"
-  image              = "sles12sp4o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:b0"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "sles12sp5-minion" {
@@ -918,22 +882,6 @@ module "slemicro55-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles12sp4-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-sles12sp4"
-  image              = "sles12sp4o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:d0"
-    memory             = 4096
-  }
-
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  gpg_keys                = ["default/gpg_keys/galaxy.key"]
-}
-
 module "sles12sp5-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -1437,10 +1385,6 @@ module "controller" {
 
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
-
-  sle12sp4_client_configuration    = module.sles12sp4-client.configuration
-  sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
-  sle12sp4_sshminion_configuration = module.sles12sp4-sshminion.configuration
 
   sle12sp5_client_configuration    = module.sles12sp5-client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
