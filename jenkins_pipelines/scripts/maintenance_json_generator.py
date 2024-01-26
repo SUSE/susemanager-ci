@@ -7,8 +7,6 @@ import requests
 
 # Default dictionary for client tools, essentially anything that is common between SUMA versions
 defaultdict = {
-    "sle12sp4_client": "/SUSE_Updates_SLE-Manager-Tools_12_x86_64/",
-    "sle12sp4_minion": "/SUSE_Updates_SLE-Manager-Tools_12_x86_64/",
     "sle12sp5_client": "/SUSE_Updates_SLE-Manager-Tools_12_x86_64/",
     "sle12sp5_minion": "/SUSE_Updates_SLE-Manager-Tools_12_x86_64/",
     "sle15_client": ["/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",

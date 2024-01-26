@@ -162,7 +162,7 @@ module "base_old_sle" {
   name_prefix = "suma-bv-50"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles12sp4o", "sles12sp5o" ]
+  images      = [ "sles12sp5o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -373,27 +373,6 @@ module "server_containerized" {
 //   use_os_released_updates   = true
 //   ssh_key_path              = "./salt/controller/id_rsa.pub"
 // }
-
-module "sles12sp4-minion" {
-  providers = {
-    libvirt = libvirt.cosmopolitan
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "head"
-  name               = "min-sles12sp4"
-  image              = "sles12sp4o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:10"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
 
 module "sles12sp5-minion" {
   providers = {
@@ -939,25 +918,6 @@ module "slemicro55-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "sles12sp4-sshminion" {
-  providers = {
-    libvirt = libvirt.cosmopolitan
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_old_sle.configuration
-  product_version    = "head"
-  name               = "minssh-sles12sp4"
-  image              = "sles12sp4o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:30"
-    memory             = 4096
-  }
-
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  gpg_keys                = ["default/gpg_keys/galaxy.key"]
 }
 
 module "sles12sp5-sshminion" {
@@ -1524,9 +1484,6 @@ module "controller" {
 
 // WORKAROUND: We do the initial testing without a proxy and add it later
 //  proxy_configuration  = module.proxy.configuration
-
-  sle12sp4_minion_configuration    = module.sles12sp4-minion.configuration
-  sle12sp4_sshminion_configuration = module.sles12sp4-sshminion.configuration
 
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
