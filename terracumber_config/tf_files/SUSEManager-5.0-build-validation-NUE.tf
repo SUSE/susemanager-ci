@@ -116,7 +116,7 @@ module "base_core" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o" ]
+  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -170,7 +170,7 @@ module "server_containerized" {
   base_configuration = module.base_core.configuration
   product_version    = "head"
   name               = "srv"
-  image              = "slemicro55-ign"
+  image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:51"
     memory             = 40960
@@ -693,7 +693,7 @@ module "slemicro55-minion" {
   base_configuration = module.base_core.configuration
   product_version    = "head"
   name               = "min-slemicro55"
-  image              = "slemicro55-ign"
+  image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:7a"
     memory             = 2048
@@ -1078,7 +1078,7 @@ module "slemicro55-sshminion" {
   base_configuration = module.base_core.configuration
   product_version    = "head"
   name               = "minssh-slemicro55"
-  image              = "slemicro55-ign"
+  image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:9a"
     memory             = 2048

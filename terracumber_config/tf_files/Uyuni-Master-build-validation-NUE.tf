@@ -116,7 +116,7 @@ module "base_core" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55-ign", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse155o" ]
+  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse155o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -720,7 +720,7 @@ module "slemicro55-minion" {
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
   name               = "min-slemicro55"
-  image              = "slemicro55-ign"
+  image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:ca"
     memory             = 2048
@@ -1106,7 +1106,7 @@ module "slemicro55-sshminion" {
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
   name               = "minssh-slemicro55"
-  image              = "slemicro55-ign"
+  image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:ea"
     memory             = 2048
