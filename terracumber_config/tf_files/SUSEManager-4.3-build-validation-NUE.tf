@@ -116,7 +116,7 @@ module "base_core" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55-ign", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse155o" ]
+  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse155o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -863,25 +863,24 @@ module "slemicro54-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// WORKAROUND qemu-guest-agent seems to have disappeared from SLE Micro 5.5
-//module "slemicro55-minion" {
-//  source             = "./modules/minion"
-//  base_configuration = module.base_core.configuration
-//  product_version    = "4.3-released"
-//  name               = "min-slemicro55"
-//  image              = "slemicro55-ign"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:ca"
-//    memory             = 2048
-//  }
-//
-//  server_configuration = {
-//    hostname = "suma-bv-43-pxy.mgr.suse.de"
-//  }
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "slemicro55-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  product_version    = "4.3-released"
+  name               = "min-slemicro55"
+  image              = "slemicro55o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:ca"
+    memory             = 2048
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "sles12sp5-sshminion" {
   source             = "./modules/sshminion"
@@ -1269,20 +1268,19 @@ module "slemicro54-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// WORKAROUND qemu-guest-agent seems to have disappeared from SLE Micro 5.5
-//module "slemicro55-sshminion" {
-//  source             = "./modules/sshminion"
-//  base_configuration = module.base_core.configuration
-//  product_version    = "4.3-released"
-//  name               = "minssh-slemicro55"
-//  image              = "slemicro55-ign"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:ea"
-//    memory             = 2048
-//  }
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "slemicro55-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-slemicro55"
+  image              = "slemicro55o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:ea"
+    memory             = 2048
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "sles12sp5-buildhost" {
   source             = "./modules/build_host"
@@ -1470,9 +1468,8 @@ module "controller" {
   slemicro54_minion_configuration    = module.slemicro54-minion.configuration
   slemicro54_sshminion_configuration = module.slemicro54-sshminion.configuration
 
-// WORKAROUND qemu-guest-agent seems to have disappeared from SLE Micro 5.5
-//  slemicro55_minion_configuration    = module.slemicro55-minion.configuration
-//  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
+  slemicro55_minion_configuration    = module.slemicro55-minion.configuration
+  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
