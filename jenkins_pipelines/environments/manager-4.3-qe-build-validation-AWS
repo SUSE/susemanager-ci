@@ -14,6 +14,7 @@ node('sumaform-cucumber-provo') {
             'rocky8_minion, rocky8_ssh_minion, rocky9_minion, rocky9_ssh_minion, ' +
             'ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
             'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, debian12_minion, debian12_ssh_minion, ' +
+            'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
             'slemicro51_minion, slemicro51_ssh_minion, slemicro52_minion, slemicro52_ssh_minion, slemicro53_minion, slemicro53_ssh_minion, slemicro54_minion, slemicro54_ssh_minion, ' +
             'slemicro55_minion, slemicro55_ssh_minion, ' +
             'salt_migration_minion'
@@ -61,7 +62,7 @@ node('sumaform-cucumber-provo') {
             string(name: 'key_file', defaultValue: '/home/jenkins/.ssh/testing-suma.pem', description: 'Path to SSH private key to access instance in AWS'),
             string(name: 'key_name', defaultValue: 'testing-suma', description: 'SSH key name in AWS'),
             text(name: 'allowed_IPS', defaultValue: '65.132.116.252', description: 'Add the public IPs to add to AWS ingress security group ( keep default Jenkins address ) separated by new line' ),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format')
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format'),
             booleanParam(name: 'use_latest_ami_image', defaultValue: false, description: 'Use latest ami image')
             ])
     ])
