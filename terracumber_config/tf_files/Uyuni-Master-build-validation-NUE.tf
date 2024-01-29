@@ -143,7 +143,7 @@ module "base_core" {
 //  name_prefix = "uyuni-bv-master-"
 //  use_avahi   = false
 //  domain      = "mgr.suse.de"
-//  images      = [ "opensuse155armo" ]
+//  images      = [ "opensuse154armo", "opensuse155armo" ]
 //
 //  mirror = "minima-mirror-ci-bv.mgr.suse.de"
 //  use_mirror_images = true
@@ -555,6 +555,30 @@ module "debian12-minion" {
 }
 
 // WORKAROUND: overdrive3 will be replaced with a new ARM server
+//module "opensuse154arm-minion" {
+//  providers = {
+//    libvirt = libvirt.overdrive3
+//  }
+//  source             = "./modules/minion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "uyuni-master"
+//  name               = "min-opensuse154arm"
+//  image              = "opensuse154armo"
+//  provider_settings = {
+//    mac                = "aa:b2:93:02:01:bf"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  server_configuration = {
+//    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
+//  }
+//  auto_connect_to_master  = false
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //module "opensuse155arm-minion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -964,6 +988,26 @@ module "debian12-sshminion" {
 }
 
 // WORKAROUND: overdrive3 will be replaced with a new ARM server
+//module "opensuse154arm-sshminion" {
+//  providers = {
+//    libvirt = libvirt.overdrive3
+//  }
+//  source             = "./modules/sshminion"
+//  base_configuration = module.base_arm.configuration
+//  product_version    = "uyuni-master"
+//  name               = "minssh-opensuse154arm"
+//  image              = "opensuse154armo"
+//  provider_settings = {
+//    mac                = "aa:b2:93:02:01:df"
+//    memory             = 2048
+//    vcpu               = 2
+//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+//  }
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
+
+// WORKAROUND: overdrive3 will be replaced with a new ARM server
 //module "opensuse155arm-sshminion" {
 //  providers = {
 //    libvirt = libvirt.overdrive3
@@ -1224,6 +1268,9 @@ module "controller" {
   debian12_sshminion_configuration = module.debian12-sshminion.configuration
 
 // WORKAROUND: overdrive3 will be replaced with a new ARM server
+//  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
+//  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+//
 //  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
 //  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
 
