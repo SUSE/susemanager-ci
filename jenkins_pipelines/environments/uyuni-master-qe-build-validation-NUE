@@ -13,7 +13,6 @@ node('sumaform-cucumber') {
             'rocky8_minion, rocky8_ssh_minion, rocky9_minion, rocky9_ssh_minion, ' +
             'ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
             'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, debian12_minion, debian12_ssh_minion, ' +
-            'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
             'opensuse155arm_minion, opensuse155arm_ssh_minion, ' +
             'sles15sp5s390_minion, sles15sp5s390_ssh_minion, ' +
             'slemicro51_minion, slemicro51_ssh_minion, ' +
