@@ -135,9 +135,10 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 16384
       }
-      repository_disk_size = 200
+      main_disk_size       = 20
+      repository_disk_size = 300
       database_disk_size   = 50
-      login_timeout = 28800
+      login_timeout        = 28800
     }
     proxy = {
       provider_settings = {
