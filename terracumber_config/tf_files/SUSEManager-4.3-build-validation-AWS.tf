@@ -167,7 +167,9 @@ module "server" {
   })
   name                       = "server"
   product_version            = "4.3-released"
+  main_disk_size             = 20
   repository_disk_size       = 1500
+  database_disk_size         = 100
   server_registration_code   = var.SERVER_REGISTRATION_CODE
 
   java_debugging                 = false
