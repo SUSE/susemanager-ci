@@ -18,7 +18,7 @@ jobs:
           filter: '*.tf'
       - name: Install terraform
         if: steps.tf_files.outputs.added_modified
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.0.10
       - name: Checkout sumaform
