@@ -93,27 +93,27 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://caipirinha.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://caladan.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "cosmopolitan"
-  uri = "qemu+tcp://cosmopolitan.mgr.prv.suse.net/system"
+  alias = "tatooine"
+  uri = "qemu+tcp://tatooine.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "ginfizz"
-  uri = "qemu+tcp://ginfizz.mgr.prv.suse.net/system"
+  alias = "florina"
+  uri = "qemu+tcp://florina.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "hugo"
-  uri = "qemu+tcp://hugo.mgr.prv.suse.net/system"
+  alias = "terminus"
+  uri = "qemu+tcp://terminus.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "irishcoffee"
-  uri = "qemu+tcp://irishcoffee.mgr.prv.suse.net/system"
+  alias = "trantor"
+  uri = "qemu+tcp://trantor.mgr.prv.suse.net/system"
 }
 
 // WORKAROUND: overdrive4 will be replaced with a new ARM server
@@ -152,7 +152,7 @@ module "base_core" {
 
 module "base_old_sle" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
 
   source = "./modules/base"
@@ -177,7 +177,7 @@ module "base_old_sle" {
 
 module "base_res" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
 
   source = "./modules/base"
@@ -202,7 +202,7 @@ module "base_res" {
 
 module "base_new_sle" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
 
   source = "./modules/base"
@@ -227,7 +227,7 @@ module "base_new_sle" {
 
 module "base_retail" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.terminus
   }
 
   source = "./modules/base"
@@ -253,7 +253,7 @@ module "base_retail" {
 
 module "base_debian" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
 
   source = "./modules/base"
@@ -353,7 +353,7 @@ module "server_containerized" {
 // See https://github.com/SUSE/spacewalk/issues/19280
 // module "proxy" {
 //  providers = {
-//    libvirt = libvirt.hugo
+//    libvirt = libvirt.terminus
 //  }
 //   source             = "./modules/proxy"
 //   base_configuration = module.base_core.configuration
@@ -376,7 +376,7 @@ module "server_containerized" {
 
 module "sles12sp5-minion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
@@ -397,7 +397,7 @@ module "sles12sp5-minion" {
 
 module "sles15sp1-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -419,7 +419,7 @@ module "sles15sp1-minion" {
 
 module "sles15sp2-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -441,7 +441,7 @@ module "sles15sp2-minion" {
 
 module "sles15sp3-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -463,7 +463,7 @@ module "sles15sp3-minion" {
 
 module "sles15sp4-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -485,7 +485,7 @@ module "sles15sp4-minion" {
 
 module "sles15sp5-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -507,7 +507,7 @@ module "sles15sp5-minion" {
 
 module "alma9-minion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -531,7 +531,7 @@ module "alma9-minion" {
 
 module "centos7-minion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -555,7 +555,7 @@ module "centos7-minion" {
 
 module "liberty9-minion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -579,7 +579,7 @@ module "liberty9-minion" {
 
 module "oracle9-minion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -603,7 +603,7 @@ module "oracle9-minion" {
 
 module "rocky8-minion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -627,7 +627,7 @@ module "rocky8-minion" {
 
 module "rocky9-minion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
@@ -651,7 +651,7 @@ module "rocky9-minion" {
 
 module "ubuntu2004-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -676,7 +676,7 @@ module "ubuntu2004-minion" {
 
 module "ubuntu2204-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -697,7 +697,7 @@ module "ubuntu2204-minion" {
 
 module "debian11-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -719,7 +719,7 @@ module "debian11-minion" {
 
 module "debian12-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -812,7 +812,7 @@ module "sles15sp5s390-minion" {
 
 module "slemicro51-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -834,7 +834,7 @@ module "slemicro51-minion" {
 
 module "slemicro52-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -856,7 +856,7 @@ module "slemicro52-minion" {
 
 module "slemicro53-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -878,7 +878,7 @@ module "slemicro53-minion" {
 
 module "slemicro54-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -900,7 +900,7 @@ module "slemicro54-minion" {
 
 module "slemicro55-minion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -922,7 +922,7 @@ module "slemicro55-minion" {
 
 module "sles12sp5-sshminion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
@@ -941,7 +941,7 @@ module "sles12sp5-sshminion" {
 
 module "sles15sp1-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -959,7 +959,7 @@ module "sles15sp1-sshminion" {
 
 module "sles15sp2-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -976,7 +976,7 @@ module "sles15sp2-sshminion" {
 
 module "sles15sp3-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -993,7 +993,7 @@ module "sles15sp3-sshminion" {
 
 module "sles15sp4-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1010,7 +1010,7 @@ module "sles15sp4-sshminion" {
 
 module "sles15sp5-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1027,7 +1027,7 @@ module "sles15sp5-sshminion" {
 
 module "alma9-sshminion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -1047,7 +1047,7 @@ module "alma9-sshminion" {
 
 module "centos7-sshminion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -1067,7 +1067,7 @@ module "centos7-sshminion" {
 
 module "liberty9-sshminion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -1087,7 +1087,7 @@ module "liberty9-sshminion" {
 
 module "oracle9-sshminion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -1107,7 +1107,7 @@ module "oracle9-sshminion" {
 
 module "rocky8-sshminion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -1127,7 +1127,7 @@ module "rocky8-sshminion" {
 
 module "rocky9-sshminion" {
   providers = {
-    libvirt = libvirt.cosmopolitan
+    libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
@@ -1147,7 +1147,7 @@ module "rocky9-sshminion" {
 
 module "ubuntu2004-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1168,7 +1168,7 @@ module "ubuntu2004-sshminion" {
 
 module "ubuntu2204-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1185,7 +1185,7 @@ module "ubuntu2204-sshminion" {
 
 module "debian11-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1202,7 +1202,7 @@ module "debian11-sshminion" {
 
 module "debian12-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.trantor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1282,7 +1282,7 @@ module "sles15sp5s390-sshminion" {
 
 module "slemicro51-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1299,7 +1299,7 @@ module "slemicro51-sshminion" {
 
 module "slemicro52-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1316,7 +1316,7 @@ module "slemicro52-sshminion" {
 
 module "slemicro53-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1333,7 +1333,7 @@ module "slemicro53-sshminion" {
 
 module "slemicro54-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1350,7 +1350,7 @@ module "slemicro54-sshminion" {
 
 module "slemicro55-sshminion" {
   providers = {
-    libvirt = libvirt.ginfizz
+    libvirt = libvirt.florina
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1367,7 +1367,7 @@ module "slemicro55-sshminion" {
 
 module "sles12sp5-buildhost" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.terminus
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
@@ -1389,7 +1389,7 @@ module "sles12sp5-buildhost" {
 
 module "sles12sp5-terminal" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.terminus
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
@@ -1405,7 +1405,7 @@ module "sles12sp5-terminal" {
 
 module "sles15sp4-buildhost" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.terminus
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
@@ -1427,7 +1427,7 @@ module "sles15sp4-buildhost" {
 
 module "sles15sp4-terminal" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.terminus
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
@@ -1443,7 +1443,7 @@ module "sles15sp4-terminal" {
 
 module "monitoring-server" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.terminus
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration

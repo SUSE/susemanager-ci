@@ -93,7 +93,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://caipirinha.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://giediprime.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
@@ -107,13 +107,13 @@ provider "libvirt" {
 }
 
 provider "libvirt" {
-  alias = "hugo"
-  uri = "qemu+tcp://hugo.mgr.prv.suse.net/system"
+  alias = "margarita"
+  uri = "qemu+tcp://margarita.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
-  alias = "irishcoffee"
-  uri = "qemu+tcp://irishcoffee.mgr.prv.suse.net/system"
+  alias = "caipirinha"
+  uri = "qemu+tcp://caipirinha.mgr.prv.suse.net/system"
 }
 
 // WORKAROUND: overdrive4 will be replaced with a new ARM server
@@ -227,7 +227,7 @@ module "base_new_sle" {
 
 module "base_retail" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.margarita
   }
 
   source = "./modules/base"
@@ -253,7 +253,7 @@ module "base_retail" {
 
 module "base_debian" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
 
   source = "./modules/base"
@@ -354,7 +354,7 @@ module "server" {
 
 module "proxy" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.margarita
   }
   source             = "./modules/proxy"
   base_configuration = module.base_retail.configuration
@@ -636,7 +636,7 @@ module "rocky9-minion" {
 
 module "ubuntu2004-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -661,7 +661,7 @@ module "ubuntu2004-minion" {
 
 module "ubuntu2204-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -684,7 +684,7 @@ module "ubuntu2204-minion" {
 
 module "debian10-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -710,7 +710,7 @@ module "debian10-minion" {
 
 module "debian11-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -732,7 +732,7 @@ module "debian11-minion" {
 
 module "debian12-minion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
@@ -1158,7 +1158,7 @@ module "rocky9-sshminion" {
 
 module "ubuntu2004-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1179,7 +1179,7 @@ module "ubuntu2004-sshminion" {
 
 module "ubuntu2204-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1198,7 +1198,7 @@ module "ubuntu2204-sshminion" {
 
 module "debian10-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1219,7 +1219,7 @@ module "debian10-sshminion" {
 
 module "debian11-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1236,7 +1236,7 @@ module "debian11-sshminion" {
 
 module "debian12-sshminion" {
   providers = {
-    libvirt = libvirt.irishcoffee
+    libvirt = libvirt.caipirinha
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
@@ -1399,7 +1399,7 @@ module "slemicro55-sshminion" {
 
 module "sles12sp5-buildhost" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.margarita
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
@@ -1421,7 +1421,7 @@ module "sles12sp5-buildhost" {
 
 module "sles12sp5-terminal" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.margarita
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
@@ -1437,7 +1437,7 @@ module "sles12sp5-terminal" {
 
 module "sles15sp4-buildhost" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.margarita
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
@@ -1459,7 +1459,7 @@ module "sles15sp4-buildhost" {
 
 module "sles15sp4-terminal" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.margarita
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
@@ -1475,7 +1475,7 @@ module "sles15sp4-terminal" {
 
 module "monitoring-server" {
   providers = {
-    libvirt = libvirt.hugo
+    libvirt = libvirt.margarita
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
