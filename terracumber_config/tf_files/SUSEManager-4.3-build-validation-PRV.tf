@@ -102,8 +102,8 @@ provider "libvirt" {
 }
 
 provider "libvirt" {
-  alias = "giediprime"
-  uri = "qemu+tcp://giediprime.mgr.prv.suse.net/system"
+  alias = "moscowmule"
+  uri = "qemu+tcp://moscowmule.mgr.prv.suse.net/system"
 }
 
 provider "libvirt" {
@@ -202,7 +202,7 @@ module "base_res" {
 
 module "base_new_sle" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
 
   source = "./modules/base"
@@ -402,7 +402,7 @@ module "sles12sp5-client" {
 
 module "sles15sp1-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
@@ -423,7 +423,7 @@ module "sles15sp1-client" {
 
 module "sles15sp2-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
@@ -444,7 +444,7 @@ module "sles15sp2-client" {
 
 module "sles15sp3-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
@@ -465,7 +465,7 @@ module "sles15sp3-client" {
 
 module "sles15sp4-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
@@ -486,7 +486,7 @@ module "sles15sp4-client" {
 
 module "sles15sp5-client" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
@@ -552,7 +552,7 @@ module "sles12sp5-minion" {
 
 module "sles15sp1-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -574,7 +574,7 @@ module "sles15sp1-minion" {
 
 module "sles15sp2-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -596,7 +596,7 @@ module "sles15sp2-minion" {
 
 module "sles15sp3-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -618,7 +618,7 @@ module "sles15sp3-minion" {
 
 module "sles15sp4-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -640,7 +640,7 @@ module "sles15sp4-minion" {
 
 module "sles15sp5-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -1012,7 +1012,7 @@ module "salt-migration-minion" {
 
 module "slemicro51-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -1034,7 +1034,7 @@ module "slemicro51-minion" {
 
 module "slemicro52-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -1056,7 +1056,7 @@ module "slemicro52-minion" {
 
 module "slemicro53-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -1078,7 +1078,7 @@ module "slemicro53-minion" {
 
 module "slemicro54-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -1100,7 +1100,7 @@ module "slemicro54-minion" {
 
 module "slemicro55-minion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
@@ -1141,7 +1141,7 @@ module "sles12sp5-sshminion" {
 
 module "sles15sp1-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1159,7 +1159,7 @@ module "sles15sp1-sshminion" {
 
 module "sles15sp2-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1176,7 +1176,7 @@ module "sles15sp2-sshminion" {
 
 module "sles15sp3-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1193,7 +1193,7 @@ module "sles15sp3-sshminion" {
 
 module "sles15sp4-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1210,7 +1210,7 @@ module "sles15sp4-sshminion" {
 
 module "sles15sp5-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1503,7 +1503,7 @@ module "sles15sp5s390-sshminion" {
 
 module "slemicro51-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1520,7 +1520,7 @@ module "slemicro51-sshminion" {
 
 module "slemicro52-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1537,7 +1537,7 @@ module "slemicro52-sshminion" {
 
 module "slemicro53-sshminion" {
   providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1554,7 +1554,7 @@ module "slemicro53-sshminion" {
 
 module "slemicro54-sshminion" {
  providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
@@ -1571,7 +1571,7 @@ module "slemicro54-sshminion" {
 
 module "slemicro55-sshminion" {
  providers = {
-    libvirt = libvirt.giediprime
+    libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
