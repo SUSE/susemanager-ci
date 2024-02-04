@@ -132,12 +132,14 @@ module "cucumber_testsuite" {
       }
     }
     server = {
-      repository_disk_size = 250
       provider_settings = {
         mac = "aa:b2:93:01:00:e1"
         vcpu = 4
         memory = 16384
       }
+      main_disk_size       = 20
+      repository_disk_size = 300
+      database_disk_size   = 80
     }
     proxy = {
       provider_settings = {
