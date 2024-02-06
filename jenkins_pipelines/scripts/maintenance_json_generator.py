@@ -41,7 +41,7 @@ defaultdict = {
     "sle15sp5_minion": ["/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
                         "/SUSE_Updates_SLE-Module-Basesystem_15-SP5_x86_64/",
                         "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_x86_64/"],
-    "sles15sp5s390_minion": ["/SUSE_Updates_SLE-Manager-Tools_15_s390x/",
+    "sle15sp5s390_minion": ["/SUSE_Updates_SLE-Manager-Tools_15_s390x/",
                              "/SUSE_Updates_SLE-Module-Basesystem_15-SP5_s390x/",
                              "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_s390x/"],
     "centos7_client": "/SUSE_Updates_RES_7-CLIENT-TOOLS_x86_64/",
