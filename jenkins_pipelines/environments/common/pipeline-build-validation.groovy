@@ -47,7 +47,7 @@ def run(params) {
             stage('Deploy') {
                 if (params.must_deploy) {
                     // Generate json file in the workspace
-                    if (params.custom_repositories?.trim()){
+                    if (params.custom_repositories?.trim()) {
                         // JSON file passed by parameter
                         writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
                     }
