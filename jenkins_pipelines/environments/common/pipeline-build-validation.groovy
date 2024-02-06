@@ -48,8 +48,8 @@ def run(params) {
                 if (params.must_deploy) {
                     // Generate json file in the workspace
                     if (params.custom_repositories?.trim()){
-                      // JSON file passed by parameter
-                      writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
+                        // JSON file passed by parameter
+                        writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
                     }
                     if (params.mi_ids?.trim()) {
                         // MI Identifiers passed by parameter
@@ -137,7 +137,6 @@ def run(params) {
                     echo "Init Proxy status code: ${res_init_proxy}"
                 }
             }
-
             /** Proxy stages end **/
 
             /** Monitoring stages begin **/
@@ -469,7 +468,7 @@ def clientTestingStages() {
             }
         }
     }
-// Once all the stages have been correctly configured, run in parallel
+    // Once all the stages have been correctly configured, run in parallel
     parallel tests
 }
 

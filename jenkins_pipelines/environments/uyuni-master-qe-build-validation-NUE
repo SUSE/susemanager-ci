@@ -15,13 +15,12 @@ node('sumaform-cucumber') {
             'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, debian12_minion, debian12_ssh_minion, ' +
             'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
             'opensuse155arm_minion, opensuse155arm_ssh_minion, ' +
-            'sles15sp5s390_minion, sles15sp5s390_ssh_minion, ' +
+            'sle15sp5s390_minion, sle15sp5s390_ssh_minion, ' +
             'slemicro51_minion, slemicro51_ssh_minion, ' +
             'slemicro52_minion, slemicro52_ssh_minion, ' +
             'slemicro53_minion, slemicro53_ssh_minion, ' +
             'slemicro54_minion, slemicro54_ssh_minion, ' +
-            'slemicro55_minion, slemicro55_ssh_minion, ' +
-            'salt_migration_minion'
+            'slemicro55_minion, slemicro55_ssh_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
