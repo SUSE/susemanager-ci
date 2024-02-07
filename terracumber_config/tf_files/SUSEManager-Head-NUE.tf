@@ -117,10 +117,10 @@ module "cucumber_testsuite" {
 
   container_server = true
 
-  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images        = true
+  # mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
+  # use_mirror_images        = true
   server_http_proxy        = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
+  # custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
@@ -214,7 +214,7 @@ module "cucumber_testsuite" {
     kvm-host = {
       image = "sles15sp4o"
       name = "min-kvm"
-      
+
       provider_settings = {
         mac = "aa:b2:93:01:00:be"
         vcpu = 4
@@ -224,7 +224,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
   }
-  
+
   provider_settings = {
     pool = "ssd"
     network_name = null
