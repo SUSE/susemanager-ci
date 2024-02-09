@@ -109,18 +109,18 @@ module "cucumber_testsuite" {
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry      = "registry.mgr.suse.de:5000/cucutest"
+  no_auth_registry       = "registry.mgr.suse.de"
+  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   container_server = true
 
   # mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   # use_mirror_images        = true
 
-  server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  server_http_proxy          = "http-proxy.mgr.suse.de:3128"
   # custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
@@ -172,15 +172,15 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:2a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
         vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     debian-minion = {
-      name = "min-ubuntu2204"
       image = "ubuntu2204o"
+      name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:93:01:00:2b"
       }

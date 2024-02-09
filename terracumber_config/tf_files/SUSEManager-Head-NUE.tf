@@ -12,7 +12,7 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
@@ -102,15 +102,15 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-head-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "registry.mgr.suse.de:5000/cucutest"
+  no_auth_registry       = "registry.mgr.suse.de"
+  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
@@ -119,7 +119,8 @@ module "cucumber_testsuite" {
 
   # mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   # use_mirror_images        = true
-  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
+
+  server_http_proxy          = "http-proxy.mgr.suse.de:3128"
   # custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
@@ -142,15 +143,15 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
     }
-    #proxy = {
-    #  provider_settings = {
-    #    mac = "aa:b2:93:01:00:b2"
-    #    vcpu = 2
-    #    memory = 2048
-    #  }
-    #  additional_packages = [ "venv-salt-minion" ]
-    #  install_salt_bundle = true
-    #}
+    proxy = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:b2"
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+    }
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
