@@ -242,6 +242,9 @@ module "sles12sp5-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp1-minion" {
@@ -261,6 +264,9 @@ module "sles15sp1-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp2-minion" {
@@ -280,6 +286,9 @@ module "sles15sp2-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp3-minion" {
@@ -299,6 +308,9 @@ module "sles15sp3-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp4-minion" {
@@ -318,6 +330,9 @@ module "sles15sp4-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp5-minion" {
@@ -337,6 +352,9 @@ module "sles15sp5-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "alma9-minion" {
@@ -503,6 +521,9 @@ module "ubuntu2204-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian11-minion" {
@@ -522,6 +543,9 @@ module "debian11-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian12-minion" {
@@ -568,6 +592,9 @@ module "debian12-minion" {
 //  auto_connect_to_master  = false
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 //}
 
 // WORKAROUND: overdrive3 will be replaced with a new ARM server
@@ -592,6 +619,9 @@ module "debian12-minion" {
 //  auto_connect_to_master  = false
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 //}
 
 module "sles15sp5s390-minion" {
@@ -610,6 +640,9 @@ module "sles15sp5s390-minion" {
 
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro51-minion" {
@@ -629,6 +662,9 @@ module "slemicro51-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro52-minion" {
@@ -648,6 +684,9 @@ module "slemicro52-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro53-minion" {
@@ -667,6 +706,9 @@ module "slemicro53-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true 
 }
 
 module "slemicro54-minion" {
@@ -686,6 +728,9 @@ module "slemicro54-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro55-minion" {
@@ -705,6 +750,9 @@ module "slemicro55-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles12sp5-sshminion" {
@@ -721,6 +769,9 @@ module "sles12sp5-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp1-sshminion" {
@@ -736,6 +787,8 @@ module "sles15sp1-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp2-sshminion" {
@@ -750,6 +803,9 @@ module "sles15sp2-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp3-sshminion" {
@@ -764,6 +820,9 @@ module "sles15sp3-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp4-sshminion" {
@@ -778,6 +837,9 @@ module "sles15sp4-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp5-sshminion" {
@@ -792,6 +854,9 @@ module "sles15sp5-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "alma9-sshminion" {
@@ -926,6 +991,9 @@ module "ubuntu2204-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian11-sshminion" {
@@ -940,6 +1008,9 @@ module "debian11-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "debian12-sshminion" {
@@ -977,6 +1048,9 @@ module "debian12-sshminion" {
 //  }
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 //}
 
 // WORKAROUND: overdrive3 will be replaced with a new ARM server
@@ -997,6 +1071,9 @@ module "debian12-sshminion" {
 //  }
 //  use_os_released_updates = false
 //  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 //}
 
 module "sles15sp5s390-sshminion" {
@@ -1015,6 +1092,9 @@ module "sles15sp5s390-sshminion" {
 
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro51-sshminion" {
@@ -1029,6 +1109,9 @@ module "slemicro51-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro52-sshminion" {
@@ -1043,6 +1126,9 @@ module "slemicro52-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro53-sshminion" {
@@ -1057,6 +1143,9 @@ module "slemicro53-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro54-sshminion" {
@@ -1071,6 +1160,9 @@ module "slemicro54-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "slemicro55-sshminion" {
@@ -1085,6 +1177,9 @@ module "slemicro55-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles12sp5-buildhost" {
@@ -1104,6 +1199,9 @@ module "sles12sp5-buildhost" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles12sp5-terminal" {
@@ -1136,6 +1234,9 @@ module "sles15sp4-buildhost" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "sles15sp4-terminal" {
@@ -1168,6 +1269,9 @@ module "monitoring-server" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "controller" {
