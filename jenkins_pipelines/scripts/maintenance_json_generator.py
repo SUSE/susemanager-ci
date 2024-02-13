@@ -94,13 +94,27 @@ nodesdict43 = {
 }
 nodesdict43.update(defaultdict)
 
+#TODO Find real suffixes here
+nodesdict50 = {
+    "server": ["/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.3_x86_64/",
+               "/SUSE_Updates_SLE-Product-SUSE-Manager-Server_4.3_x86_64/",
+               "/SUSE_Updates_SLE-Module-Basesystem_15-SP4_x86_64/",
+               "/SUSE_Updates_SLE-Module-Web-Scripting_15-SP4_x86_64/",
+               "/SUSE_Updates_SLE-Module-Server-Applications_15-SP4_x86_64/"],
+    "proxy": ["/SUSE_Updates_SLE-Module-SUSE-Manager-Proxy_4.3_x86_64/",
+              "/SUSE_Updates_SLE-Product-SUSE-Manager-Proxy_4.3_x86_64/",
+              "/SUSE_Updates_SLE-Module-Basesystem_15-SP4_x86_64/",
+              "/SUSE_Updates_SLE-Module-Server-Applications_15-SP4_x86_64/"]
+}
+nodesdict50.update(defaultdict)
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description="This script reads the open qam-manager requests and creates a json file that can be fed in the "
                     "BV testsuite pipeline")
     parser.add_argument("-v", "--version", dest="version",
-                        help="Version of SUMA you want to run this script for, the only option for now is 43 for 4.3",
+                        help="Version of SUMA you want to run this script for,
+                             the options are 43 for 4.3 and 50 for 5.0. The default is 43 for now",
                         default="43", action='store')
     parser.add_argument("-i", "--mi_ids", dest="mi_ids", help="MI IDs", default=None, action='store')
 
@@ -134,6 +148,8 @@ def read_requests():
 def find_valid_repos(mi_ids, version):
     if version == '43':
         dict_version = nodesdict43
+    elif version == '50':
+        dict_version = nodesdict50
     else:
         print("You have not given one of the correct options, run the script with -h to see the correct ones")
         sys.exit(1)
