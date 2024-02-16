@@ -709,7 +709,7 @@ module "opensuse154arm-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "4.3-released"
-  name               = "min-opensuse154arm-suma43-nue"
+  name               = "min-opensuse154arm-nue"
   image              = "opensuse154armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:bf"
@@ -733,7 +733,7 @@ module "opensuse155arm-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "4.3-released"
-  name               = "min-opensuse155arm-suma43-nue"
+  name               = "min-opensuse155arm-nue"
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:c0"
@@ -1161,7 +1161,7 @@ module "opensuse154arm-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "4.3-released"
-  name               = "minssh-opensuse154arm-suma43-nue"
+  name               = "minssh-opensuse154arm-nue"
   image              = "opensuse154armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:df"
@@ -1181,7 +1181,7 @@ module "opensuse155arm-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "4.3-released"
-  name               = "minssh-opensuse155arm-suma43-nue"
+  name               = "minssh-opensuse155arm-nue"
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:e0"
