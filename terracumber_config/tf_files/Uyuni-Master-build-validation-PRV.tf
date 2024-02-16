@@ -760,7 +760,7 @@ module "opensuse154arm-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
-  name               = "min-opensuse154arm-uyuni-prv"
+  name               = "min-opensuse154arm-prv"
   image              = "opensuse154armo"
   provider_settings = {
     mac                = "aa:b2:93:02:01:f8"
@@ -784,7 +784,7 @@ module "opensuse155arm-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
-  name               = "min-opensuse155arm-uyuni-prv"
+  name               = "min-opensuse155arm-prv"
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:93:02:01:f9"
@@ -1259,7 +1259,7 @@ module "opensuse154arm-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-opensuse154arm-uyuni-prv"
+  name               = "minssh-opensuse154arm-prv"
   image              = "opensuse154armo"
   provider_settings = {
     mac                = "aa:b2:93:02:01:fa"
@@ -1279,7 +1279,7 @@ module "opensuse155arm-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-opensuse155arm-uyuni-prv"
+  name               = "minssh-opensuse155arm-prv"
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:93:02:01:fb"
