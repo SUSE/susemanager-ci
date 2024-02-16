@@ -96,11 +96,10 @@ provider "libvirt" {
   uri = "qemu+tcp://suma-07.mgr.suse.de/system"
 }
 
-// WORKAROUND: overdrive3 will be replaced with a new ARM server
-//provider "libvirt" {
-//  alias = "overdrive3"
-//  uri = "qemu+tcp://overdrive3.mgr.suse.de/system"
-//}
+provider "libvirt" {
+  alias = "suma-arm"
+  uri = "qemu+tcp:/suma-arm.mgr.suse.de/system"
+}
 
 provider "feilong" {
   connector   = "https://10.144.68.9"
@@ -130,31 +129,30 @@ module "base_core" {
   }
 }
 
-// WORKAROUND: overdrive3 will be replaced with a new ARM server
-//module "base_arm" {
-//  providers = {
-//    libvirt = libvirt.overdrive3
-//  }
-//
-//  source = "./modules/base"
-//
-//  cc_username = var.SCC_USER
-//  cc_password = var.SCC_PASSWORD
-//  name_prefix = "suma-bv-43-"
-//  use_avahi   = false
-//  domain      = "mgr.suse.de"
-//  images      = [ "opensuse154armo", "opensuse155armo" ]
-//
-//  mirror = "minima-mirror-ci-bv.mgr.suse.de"
-//  use_mirror_images = true
-//
-//  testsuite = true
-//
-//  provider_settings = {
-//    pool        = "ssd"
-//    bridge      = "br1"
-//  }
-//}
+module "base_arm" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+
+  source = "./modules/base"
+
+  cc_username = var.SCC_USER
+  cc_password = var.SCC_PASSWORD
+  name_prefix = "suma-bv-43-"
+  use_avahi   = false
+  domain      = "mgr.suse.de"
+  images      = [ "opensuse154armo", "opensuse155armo" ]
+
+  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images = true
+
+  testsuite = true
+
+  provider_settings = {
+    pool        = "ssd"
+    bridge      = "br0"
+  }
+}
 
 module "base_s390" {
   source = "./backend_modules/feilong/base"
@@ -704,53 +702,53 @@ module "debian12-minion" {
   install_salt_bundle = true
 }
 
-// WORKAROUND: overdrive3 will be replaced with a new ARM server
-//module "opensuse154arm-minion" {
-//  providers = {
-//    libvirt = libvirt.overdrive3
-//  }
-//  source             = "./modules/minion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "min-opensuse154arm"
-//  image              = "opensuse154armo"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:bf"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  server_configuration = {
-//    hostname = "suma-bv-43-pxy.mgr.suse.de"
-//  }
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "opensuse154arm-minion" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "min-opensuse154arm-suma43-nue"
+  image              = "opensuse154armo"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:bf"
+    overwrite_fqdn     = "suma-bv-43-min-opensuse154arm.mgr.suse.de"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
-// WORKAROUND: overdrive3 will be replaced with a new ARM server
-//module "opensuse155arm-minion" {
-//  providers = {
-//    libvirt = libvirt.overdrive3
-//  }
-//  source             = "./modules/minion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "min-opensuse155arm"
-//  image              = "opensuse155armo"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:c0"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  server_configuration = {
-//    hostname = "suma-bv-43-pxy.mgr.suse.de"
-//  }
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "opensuse155arm-minion" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "min-opensuse155arm-suma43-nue"
+  image              = "opensuse155armo"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c0"
+    overwrite_fqdn     = "suma-bv-43-min-opensuse155arm.mgr.suse.de"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "sles15sp5s390-minion" {
   source             = "./backend_modules/feilong/host"
@@ -1156,45 +1154,45 @@ module "debian12-sshminion" {
   install_salt_bundle = true
 }
 
-// WORKAROUND: overdrive3 will be replaced with a new ARM server
-//module "opensuse154arm-sshminion" {
-//  providers = {
-//    libvirt = libvirt.overdrive3
-//  }
-//  source             = "./modules/sshminion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "minssh-opensuse154arm"
-//  image              = "opensuse154armo"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:df"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "opensuse154arm-sshminion" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-opensuse154arm-suma43-nue"
+  image              = "opensuse154armo"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:df"
+    overwrite_fqdn     = "suma-bv-43-minssh-opensuse154arm.mgr.suse.de"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
-// WORKAROUND: overdrive3 will be replaced with a new ARM server
-//module "opensuse155arm-sshminion" {
-//  providers = {
-//    libvirt = libvirt.overdrive3
-//  }
-//  source             = "./modules/sshminion"
-//  base_configuration = module.base_arm.configuration
-//  product_version    = "4.3-released"
-//  name               = "minssh-opensuse155arm"
-//  image              = "opensuse155armo"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:e0"
-//    memory             = 2048
-//    vcpu               = 2
-//    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-//  }
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//}
+module "opensuse155arm-sshminion" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-opensuse155arm-suma43-nue"
+  image              = "opensuse155armo"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:e0"
+    overwrite_fqdn     = "suma-bv-43-minssh-opensuse155arm.mgr.suse.de"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "sles15sp5s390-sshminion" {
   source             = "./backend_modules/feilong/host"
@@ -1446,12 +1444,11 @@ module "controller" {
   debian12_minion_configuration    = module.debian12-minion.configuration
   debian12_sshminion_configuration = module.debian12-sshminion.configuration
 
-// WORKAROUND: overdrive3 will be replaced with a new ARM server
-//  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
-//  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
-//
-//  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
-//  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
+  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+
+  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
+  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
 
   sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
   sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
