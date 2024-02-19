@@ -7,7 +7,7 @@ node('sumaform-cucumber-provo') {
             'sle15sp3_client, sle15sp3_minion, sle15sp3_ssh_minion, ' +
             'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, ' +
             'sle15sp5_client, sle15sp5_minion, sle15sp5_ssh_minion, ' +
-            'alma9_minion, alma9_ssh_minion, ' +
+            'alma8_minion, alma8_ssh_minion, alma9_minion, alma9_ssh_minion, ' +
             'centos7_client, centos7_minion, centos7_ssh_minion, ' +
             'liberty9_minion, liberty9_ssh_minion, ' +
             'oracle9_minion, oracle9_ssh_minion, ' +
