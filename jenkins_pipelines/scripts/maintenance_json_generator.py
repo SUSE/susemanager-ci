@@ -113,8 +113,7 @@ def parse_args():
         description="This script reads the open qam-manager requests and creates a json file that can be fed in the "
                     "BV testsuite pipeline")
     parser.add_argument("-v", "--version", dest="version",
-                        help="Version of SUMA you want to run this script for,
-                             the options are 43 for 4.3 and 50 for 5.0. The default is 43 for now",
+                        help="Version of SUMA you want to run this script for, the options are 43 for 4.3 and 50 for 5.0. The default is 43 for now",
                         default="43", action='store')
     parser.add_argument("-i", "--mi_ids", dest="mi_ids", help="MI IDs", default=None, action='store')
 
