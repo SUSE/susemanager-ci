@@ -1354,90 +1354,95 @@ module "sles15sp5s390-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "slemicro51-sshminion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
-  name               = "minssh-slemicro51"
-  image              = "slemicro51-ign"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:b2"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
+// module "slemicro51-sshminion" {
+//   providers = {
+//     libvirt = libvirt.ginfizz
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_new_sle.configuration
+//   product_version    = "uyuni-master"
+//   name               = "minssh-slemicro51"
+//   image              = "slemicro51-ign"
+//   provider_settings = {
+//     mac                = "aa:b2:93:02:01:b2"
+//     memory             = 2048
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
-module "slemicro52-sshminion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
-  name               = "minssh-slemicro52"
-  image              = "slemicro52-ign"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:b3"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
+// module "slemicro52-sshminion" {
+//   providers = {
+//     libvirt = libvirt.ginfizz
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_new_sle.configuration
+//   product_version    = "uyuni-master"
+//   name               = "minssh-slemicro52"
+//   image              = "slemicro52-ign"
+//   provider_settings = {
+//     mac                = "aa:b2:93:02:01:b3"
+//     memory             = 2048
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
-module "slemicro53-sshminion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
-  name               = "minssh-slemicro53"
-  image              = "slemicro53-ign"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:b4"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
+// module "slemicro53-sshminion" {
+//   providers = {
+//     libvirt = libvirt.ginfizz
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_new_sle.configuration
+//   product_version    = "uyuni-master"
+//   name               = "minssh-slemicro53"
+//   image              = "slemicro53-ign"
+//   provider_settings = {
+//     mac                = "aa:b2:93:02:01:b4"
+//     memory             = 2048
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
-module "slemicro54-sshminion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
-  name               = "minssh-slemicro54"
-  image              = "slemicro54-ign"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:b5"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
+// module "slemicro54-sshminion" {
+//   providers = {
+//     libvirt = libvirt.ginfizz
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_new_sle.configuration
+//   product_version    = "uyuni-master"
+//   name               = "minssh-slemicro54"
+//   image              = "slemicro54-ign"
+//   provider_settings = {
+//     mac                = "aa:b2:93:02:01:b5"
+//     memory             = 2048
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
-module "slemicro55-sshminion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
-  name               = "minssh-slemicro55"
-  image              = "slemicro55o"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:b6"
-    memory             = 2048
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
+// module "slemicro55-sshminion" {
+//   providers = {
+//     libvirt = libvirt.ginfizz
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_new_sle.configuration
+//   product_version    = "uyuni-master"
+//   name               = "minssh-slemicro55"
+//   image              = "slemicro55o"
+//   provider_settings = {
+//     mac                = "aa:b2:93:02:01:b6"
+//     memory             = 2048
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+// }
 
 module "sles12sp5-buildhost" {
   providers = {
@@ -1621,19 +1626,19 @@ module "controller" {
   salt_migration_minion_configuration = module.salt-migration-minion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
-  slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
+//  slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
 
   slemicro52_minion_configuration    = module.slemicro52-minion.configuration
-  slemicro52_sshminion_configuration = module.slemicro52-sshminion.configuration
+//  slemicro52_sshminion_configuration = module.slemicro52-sshminion.configuration
 
   slemicro53_minion_configuration    = module.slemicro53-minion.configuration
-  slemicro53_sshminion_configuration = module.slemicro53-sshminion.configuration
+//  slemicro53_sshminion_configuration = module.slemicro53-sshminion.configuration
 
   slemicro54_minion_configuration    = module.slemicro54-minion.configuration
-  slemicro54_sshminion_configuration = module.slemicro54-sshminion.configuration
+//  slemicro54_sshminion_configuration = module.slemicro54-sshminion.configuration
 
   slemicro55_minion_configuration    = module.slemicro55-minion.configuration
-  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
+//  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
