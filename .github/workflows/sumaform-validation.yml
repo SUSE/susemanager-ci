@@ -32,8 +32,8 @@ jobs:
         uses: robinraju/release-downloader@v1.9
         with:
           repository: Bischoff/terraform-provider-feilong
-          tag: v0.0.4
-          fileName: terraform-provider-feilong_0.0.4_linux_amd64.tar.gz
+          tag: v0.0.6
+          fileName: terraform-provider-feilong_0.0.6_linux_amd64.tar.gz
           extract: true
       - name: Validate files
         if: steps.tf_files.outputs.added_modified
