@@ -1825,18 +1825,23 @@ module "controller" {
   salt_migration_minion_configuration = module.salt-migration-minion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
 
   slemicro52_minion_configuration    = module.slemicro52-minion.configuration
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slemicro52_sshminion_configuration = module.slemicro52-sshminion.configuration
 
   slemicro53_minion_configuration    = module.slemicro53-minion.configuration
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slemicro53_sshminion_configuration = module.slemicro53-sshminion.configuration
 
   slemicro54_minion_configuration    = module.slemicro54-minion.configuration
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slemicro54_sshminion_configuration = module.slemicro54-sshminion.configuration
 
   slemicro55_minion_configuration    = module.slemicro55-minion.configuration
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
