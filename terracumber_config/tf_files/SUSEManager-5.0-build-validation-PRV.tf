@@ -1414,8 +1414,9 @@ module "slemicro51-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed  
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 }
 
 module "slemicro52-sshminion" {
@@ -1434,8 +1435,9 @@ module "slemicro52-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed  
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 }
 
 module "slemicro53-sshminion" {
@@ -1454,8 +1456,9 @@ module "slemicro53-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed  
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 }
 
 module "slemicro54-sshminion" {
@@ -1474,8 +1477,9 @@ module "slemicro54-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed  
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 }
 
 module "slemicro55-sshminion" {
@@ -1494,8 +1498,9 @@ module "slemicro55-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed  
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
 }
 
 module "sles12sp5-buildhost" {
