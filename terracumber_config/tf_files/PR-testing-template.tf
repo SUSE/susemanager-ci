@@ -40,6 +40,8 @@ module "cucumber_testsuite" {
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
   git_profiles_repo = var.GIT_PROFILES_REPO
+  container_server = true
+  container_proxy  = true
 
   server_http_proxy = "http-proxy.${var.DOMAIN}:3128"
   custom_download_endpoint = "ftp://${var.DOWNLOAD_ENDPOINT}:445"
@@ -53,32 +55,30 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    server = {
+    server_containerized = {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
         vcpu = 8
         memory = 32768
       }
       main_disk_size       = 400
-      login_timeout        = 28800
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      login_timeout = 28800
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = local.additional_repos["server"]
-      image = var.IMAGE
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
+      image = var.SERVER_IMAGE
       server_mounted_mirror = var.MIRROR
-    }
-    proxy = {
-      provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
-        vcpu = 2
-        memory = 2048
+      main_disk_size = 500
+      proxy_containerized = {
+        provider_settings = {
+          mac = "aa:b2:93:01:00:22"
+        }
+        additional_packages = [ "venv-salt-minion" ]
+        install_salt_bundle = true
+        runtime = "podman"
       }
-      additional_repos_only = var.ADDITIONAL_REPOS_ONLY
-      additional_repos = local.additional_repos["proxy"]
-      image = var.IMAGE
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-minion = {
       image = var.SUSE_MINION_IMAGE
