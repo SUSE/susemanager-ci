@@ -322,7 +322,7 @@ module "server_containerized" {
     data_pool          = "ssd"
   }
   runtime = "podman"
-  container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
+  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
 
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.prv.suse.net"
   java_debugging                 = false
