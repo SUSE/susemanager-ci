@@ -85,14 +85,13 @@ terraform {
 }
 
 provider "libvirt" {
-  //uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
   uri = "qemu+tcp://suma-04.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "4.3-nightly"
+  product_version = "uyuni-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -130,17 +129,10 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:41"
         memory = 12288
       }
-      additional_repos = {
-        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Ion/images/repo/SLE-Module-SUSE-Manager-Server-4.3-POOL-x86_64-Media1/"
-        test_python_remote_bump = "http://download.suse.de/ibs/SUSE:/Maintenance:/31259/SUSE_Updates_SLE-Module-Basesystem_15-SP4_x86_64/"
-      }
     }
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:42"
-      }
-      additional_repos = {
-        server_stack = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Ion/images/repo/SLE-Module-SUSE-Manager-Proxy-4.3-POOL-x86_64-Media1/"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
