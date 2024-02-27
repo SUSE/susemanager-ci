@@ -116,6 +116,7 @@ module "cucumber_testsuite" {
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   container_server = true
+  container_proxy  = true
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -143,16 +144,16 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
     }
-    # commenting out the proxy as per https://github.com/SUSE/susemanager-ci/pull/1089
-    # proxy = {
-    #  provider_settings = {
-    #    mac = "aa:b2:93:01:00:b2"
-    #    vcpu = 2
-    #    memory = 2048
-    #  }
-    #  additional_packages = [ "venv-salt-minion" ]
-    #  install_salt_bundle = true
-    # }
+    proxy_containerized = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:b2"
+        vcpu = 2
+        memory = 2048
+      }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+      runtime = "podman"
+    }
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
