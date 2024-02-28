@@ -92,8 +92,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-master"
-  //product_version = "head"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -104,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-testhexagon-"
@@ -134,28 +133,26 @@ module "cucumber_testsuite" {
     server_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:51"
-        memory = 16384
+        vcpu = 8
+        memory = 32768
       }
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/servercontainer/containers/uyuni"
-      //additional_repos = {
-      //  Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP4/"
-      //}
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/manager/5.0/x86_64"
     }
-    proxy = {
-      provider_settings = {
-        mac = "aa:b2:93:01:00:52"
-      }
-      //additional_repos = {
-      //  Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP4/"
-      //}
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
+    #proxy = {
+    #  provider_settings = {
+    #    mac = "aa:b2:93:01:00:52"
+    #  }
+    #  //additional_repos = {
+    #  //  Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP4/"
+    #  //}
+    #  additional_packages = [ "venv-salt-minion" ]
+    #  install_salt_bundle = true
+    #}
 
     suse-minion = {
-      image = "opensuse155o"
+      image = "sles15sp4o"
       name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:56"
@@ -164,10 +161,12 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     suse-sshminion = {
-      image = "opensuse155o"
+      image = "sles15sp4o"
       name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:58"
+        vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -190,6 +189,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:5b"
         vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -215,7 +215,7 @@ module "cucumber_testsuite" {
       }
     }
     kvm-host = {
-      image = "opensuse155o"
+      image = "sles15sp4o"
       name = "min-kvm"
       
       provider_settings = {
