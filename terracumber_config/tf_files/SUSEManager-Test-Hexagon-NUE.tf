@@ -140,16 +140,6 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/manager/5.0/x86_64"
     }
-    #proxy = {
-    #  provider_settings = {
-    #    mac = "aa:b2:93:01:00:52"
-    #  }
-    #  //additional_repos = {
-    #  //  Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP4/"
-    #  //}
-    #  additional_packages = [ "venv-salt-minion" ]
-    #  install_salt_bundle = true
-    #}
 
     suse-minion = {
       image = "sles15sp4o"
