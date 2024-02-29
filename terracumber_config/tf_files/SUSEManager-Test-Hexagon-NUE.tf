@@ -140,7 +140,7 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/manager/5.0/x86_64"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP5/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP6/"
       }
     }
 
