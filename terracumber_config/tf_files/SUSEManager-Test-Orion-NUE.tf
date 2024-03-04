@@ -92,8 +92,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  //product_version = "head"
-  product_version = "4.3-nightly"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -104,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-testorion-"
@@ -117,6 +116,8 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
+  container_server = true
+
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
@@ -128,15 +129,19 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    server = {
+    server_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
         memory = 16384
       }
+      login_timeout = 28800
+      runtime = "podman"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile/suse/manager/5.0/x86_64"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/4_3-SLE_15_SP4/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP6/"
       }
     }
+/*
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
@@ -147,17 +152,7 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    suse-client = {
-      image = "sles15sp4o"
-      name = "cli-sles15"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:74"
-        vcpu = 2
-        memory = 2048
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
+*/
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
@@ -181,8 +176,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     redhat-minion = {
-      image = "centos7o"
-      name = "min-centos7"
+      image = "rocky8o"
+      name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:93:01:00:79"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -194,8 +189,8 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
-      name = "min-ubuntu2204"
       image = "ubuntu2204o"
+      name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:93:01:00:7b"
         vcpu = 2
