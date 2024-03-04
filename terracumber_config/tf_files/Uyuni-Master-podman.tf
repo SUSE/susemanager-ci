@@ -116,6 +116,7 @@ module "cucumber_testsuite" {
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   container_server = true
+  container_proxy  = true
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -140,12 +141,13 @@ module "cucumber_testsuite" {
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       login_timeout = 28800
     }
-    proxy = {
+    proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:22"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
+      runtime = "podman"
     }
     suse-minion = {
       image = "opensuse155o"
