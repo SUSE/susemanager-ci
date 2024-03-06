@@ -116,6 +116,7 @@ def run(params) {
                     }
                     res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_proxy'", returnStatus: true)
                     echo "Add Proxy Activation Key status code: ${res_add_keys}"
+                    sh "exit ${res_add_keys}"
                 }
             }
             stage('Create bootstrap repository Proxy') {
@@ -126,6 +127,7 @@ def run(params) {
                     }
                     res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_proxy'", returnStatus: true)
                     echo "Create Proxy bootstrap repository status code: ${res_create_bootstrap_repos}"
+                    sh "exit ${res_create_bootstrap_repos}"
                 }
             }
             stage('Bootstrap Proxy') {
@@ -135,6 +137,7 @@ def run(params) {
                     }
                     res_init_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_proxy'", returnStatus: true)
                     echo "Init Proxy status code: ${res_init_proxy}"
+                    sh "exit ${res_init_proxy}"
                 }
             }
             /** Proxy stages end **/
@@ -162,6 +165,7 @@ def run(params) {
                             }
                             res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_monitoring_server'", returnStatus: true)
                             echo "Add Server Monitoring Activation Key status code: ${res_add_keys}"
+                            sh "exit ${res_add_keys}"
                         }
                     }
                     stage('Create bootstrap repository Monitoring') {
@@ -172,6 +176,7 @@ def run(params) {
                             }
                             res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_monitoring_server'", returnStatus: true)
                             echo "Create Server Monitoring bootstrap repository status code: ${res_create_bootstrap_repos}"
+                            sh "exit ${res_create_bootstrap_repos}"
                         }
                     }
                     stage('Bootstrap Monitoring Server') {
@@ -182,6 +187,7 @@ def run(params) {
                             echo 'Register monitoring server as minion with gui'
                             res_init_monitoring = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_monitoring'", returnStatus: true)
                             echo "Init Monitoring Server status code: ${res_init_monitoring}"
+                            sh "exit ${res_init_monitoring}"
                         }
                     }
                 } catch (Exception ex) {
