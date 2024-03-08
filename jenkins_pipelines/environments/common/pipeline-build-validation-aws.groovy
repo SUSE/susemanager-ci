@@ -27,6 +27,7 @@ def run(params) {
         // Variables to store none critical stage run status
         def monitoring_stage_result_fail = false
         def client_stage_result_fail = false
+        def client_paygo_stage_result_fail = false
         def retail_stage_result_fail = false
         def containerization_stage_result_fail = false
 
