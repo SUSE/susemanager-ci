@@ -346,31 +346,27 @@ module "server_containerized" {
 
 }
 
-// WORKAROUND: We do the initial testing without a proxy and add it later
-// This will also use a new upcoming proxy_containerized module
-// See https://github.com/SUSE/spacewalk/issues/19280
-// module "proxy" {
-//  providers = {
-//    libvirt = libvirt.terminus
-//  }
-//   source             = "./modules/proxy"
-//   base_configuration = module.base_core.configuration
-//   product_version    = "head"
-//   name               = "pxy"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:02"
-//     memory             = 4096
-//   }
-//   auto_register             = false
-//   auto_connect_to_master    = false
-//   download_private_ssl_key  = false
-//   install_proxy_pattern     = false
-//   auto_configure            = false
-//   generate_bootstrap_script = false
-//   publish_private_ssl_key   = false
-//   use_os_released_updates   = true
-//   ssh_key_path              = "./salt/controller/id_rsa.pub"
-// }
+module "proxy_containerized" {
+  providers = {
+    libvirt = libvirt.terminus
+  }
+  source             = "./modules/proxy_containerized"
+  base_configuration = module.base_core.configuration
+  product_version    = "head"
+  name               = "pxy"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:02"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    username = "admin"
+    password = "admin"
+  }
+  runtime = "podman"
+  auto_configure            = false
+  ssh_key_path              = "./salt/controller/id_rsa.pub"
+}
 
 module "sles12sp5-minion" {
   providers = {
@@ -1634,8 +1630,7 @@ module "controller" {
 
   server_configuration = module.server_containerized.configuration
 
-// WORKAROUND: We do the initial testing without a proxy and add it later
-//  proxy_configuration  = module.proxy.configuration
+  proxy_configuration  = module.proxy_containerized.configuration
 
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
