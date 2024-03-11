@@ -206,7 +206,7 @@ module "proxy_containerized" {
   product_version    = "head"
   name               = "pxy"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a2"
+    mac                = "aa:b2:92:42:00:52"
     memory             = 4096
   }
   server_configuration = {
