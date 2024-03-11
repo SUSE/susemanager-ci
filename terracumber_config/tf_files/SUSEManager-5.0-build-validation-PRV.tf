@@ -321,6 +321,7 @@ module "server_containerized" {
     vcpu               = 10
     data_pool          = "ssd"
   }
+  main_disk_size = 3000
   runtime = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
 
