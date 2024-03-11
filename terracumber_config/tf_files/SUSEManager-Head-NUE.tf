@@ -144,6 +144,7 @@ module "cucumber_testsuite" {
       login_timeout = 28800
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
+      container_tag = "latest"
     }
     proxy_containerized = {
       provider_settings = {
