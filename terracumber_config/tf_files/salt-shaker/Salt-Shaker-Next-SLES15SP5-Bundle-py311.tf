@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-products-next-sles15sp5-bundle"
+  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-products-next-sles15sp5-bundle-py311"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -103,7 +103,7 @@ module "salt-shaker-products-next" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-shaker-products-next-sles15sp5-bundle"
+  name               = "salt-shaker-products-next-sles15sp5-bundle-py311"
   image              = "sles15sp5o"
   salt_obs_flavor    = "products:next:python311"
 }
