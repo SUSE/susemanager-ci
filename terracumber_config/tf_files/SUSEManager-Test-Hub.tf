@@ -84,7 +84,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://salzbreze.mgr.suse.de/system"
+  uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
 }
 
 module "base_core" {
@@ -93,7 +93,7 @@ module "base_core" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse155o", "sles15sp3o", "sles15sp4o"]
+  images = ["centos7o", "opensuse155o", "sles15sp5o", "sles15sp4o"]
   use_avahi    = false
   name_prefix  = "suma-testhub-"
   domain       = "mgr.suse.de"
@@ -109,10 +109,7 @@ module "hub" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
   name = "hub"
-  product_version = "head"
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
-  }
+  product_version = "4.3-nightly"
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:01:31"
@@ -126,11 +123,8 @@ module "hub" {
 module "prh1" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
-  product_version = "head"
+  product_version = "4.3-nightly"
   name = "prh1"
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
-  }
   auto_accept                    = true
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration.hostname
@@ -145,11 +139,8 @@ module "prh1" {
 module "prh2" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
-  product_version = "head"
+  product_version = "4.3-nightly"
   name = "prh2"
-  additional_repos = {
-    Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP4/"
-  }
   auto_accept                    = true
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration.hostname
@@ -162,22 +153,22 @@ module "prh2" {
 }
 
 
-module "min-sles15sp3" {
+module "min-sles15sp5" {
   source = "./modules/minion"
   base_configuration = module.base_core.configuration
-  name = "min-sles15sp3"
-  image = "sles15sp3o"
+  name = "min-sles15sp5"
+  image = "sles15sp5o"
   server_configuration = module.prh1.configuration
   provider_settings = {
     mac = "aa:b2:93:01:01:34"
   }
 }
 
-module "min-centos7" {
+module "min-sles15sp4" {
   source = "./modules/minion"
   base_configuration = module.base_core.configuration
-  name = "min-centos7"
-  image = "centos7o"
+  name = "min-sles15sp4"
+  image = "sles15sp4o"
   server_configuration = module.prh2.configuration
   provider_settings = {
     mac = "aa:b2:93:01:01:35"
@@ -205,8 +196,8 @@ module "controller" {
   
   server_configuration = module.prh1.configuration
 
-  sle15sp3_minion_configuration = module.min-sles15sp3.configuration
-  centos7_minion_configuration = module.min-centos7.configuration
+  sle15sp4_minion_configuration = module.min-sles15sp4.configuration
+  sle15sp5_minion_configuration = module.min-sles15sp5.configuration
 
   provider_settings = {
     mac = "aa:b2:93:01:01:30"
@@ -218,8 +209,8 @@ output "configuration" {
     hub  = module.hub.configuration
     prh1 = module.prh1.configuration
     prh2 = module.prh2.configuration
-    min-sles15sp3 = module.min-sles15sp3.configuration
-    min-centos7 = module.min-centos7.configuration
+    min-sles15sp4 = module.min-sles15sp4.configuration
+    min-sles15sp5 = module.min-sles15sp5.configuration
     controller = module.controller.configuration
   }
 }
