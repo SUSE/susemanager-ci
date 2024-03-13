@@ -127,7 +127,7 @@ module "prh1" {
   name = "prh1"
   auto_accept                    = true
   from_email                     = "root@suse.de"
-  register_to_server = module.hub.configuration.hostname
+  register_to_server = module.hub.configuration
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:01:32"
@@ -143,7 +143,7 @@ module "prh2" {
   name = "prh2"
   auto_accept                    = true
   from_email                     = "root@suse.de"
-  register_to_server = module.hub.configuration.hostname
+  register_to_server = module.hub.configuration
   image = "sles15sp4o"
   provider_settings = {
     mac = "aa:b2:93:01:01:33"
