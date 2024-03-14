@@ -1,6 +1,7 @@
 from datetime import date, datetime
 import xml.etree.ElementTree as ET
 import subprocess
+from shutil import copyfile, rmtree
 from os import getcwd, path
 
 from smash_client import SmashClient
@@ -52,6 +53,7 @@ class IbsOscClient():
         return False
     
     def _osc_command(self, cmd:str) -> str:
+        # check=True -> raise subprocess.CalledProcessError if the return code is != 0
         result: subprocess.CompletedProcess[bytes] = subprocess.run(
             [f"osc --apiurl {self._api_url} {cmd}"],
             shell=True, check=True,
@@ -83,11 +85,19 @@ class IbsOscClient():
         return False
     
     def _checkout_mi_patchinfo(self, mi_id: str) -> str:
-        patchinfo_dir: str = f"SUSE:Maintenance:{mi_id}/patchinfo"
+        mi_dir: str = f"SUSE:Maintenance:{mi_id}"
+        patchinfo_dir: str = f"{mi_dir}/patchinfo"
         cmd: str = f"checkout {patchinfo_dir}"
         # we don't need to parse the output this time
         self._osc_command(cmd)
-        return path.join(getcwd(), f"{patchinfo_dir}/_patchinfo")
+
+        # rename and keep only the _patchinfo file, cleanup the rest
+        patchinfo_src_path: str = path.join(getcwd(), f"{patchinfo_dir}/_patchinfo")
+        patchinfo_dst_path: str = path.join(getcwd(), f"MI_{mi_id}_patchinfo")
+        copyfile(patchinfo_src_path, patchinfo_dst_path)
+        rmtree(path.join(getcwd(), mi_dir))
+
+        return patchinfo_dst_path
     
     def _get_patchinfo_issues_ids(self, patchinfo_path: str) -> set[str]:
         ids: set[str] = set()
