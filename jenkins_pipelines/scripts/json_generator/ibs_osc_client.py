@@ -1,7 +1,7 @@
 from datetime import date, datetime
 import xml.etree.ElementTree as ET
-import subprocess
 from shutil import copyfile, rmtree
+import subprocess
 from os import getcwd, path
 
 from smash_client import SmashClient
@@ -18,16 +18,16 @@ class IbsOscClient():
         self._current_date: date = date.today()
         self._smash_client = SmashClient()
 
-    def find_maintenance_incidents(self, status = "open", group="qam-manager") -> set[str]:
-        cmd: str = f"qam {status} "
+    def find_maintenance_incidents(self, status: str = 'open', group: str = 'qam-manager') -> set[str]:
+        cmd: str = f"qam {status}"
         if group:
-            cmd += f"-G {group}"
+            cmd += f" -G {group}"
         # TODO Find a better way to query the open requests, this is fragile because it depends on external utils
         # being there
         output: str = self._osc_command(cmd)
         lines: list[str] = output.splitlines()
         # Create a set of the maintenance incidents from the output
-        mi_ids: set[str] = { line.rstrip().split(sep=":")[3] for line in lines if "ReviewRequest" in line }
+        mi_ids: set[str] = { line.rstrip().split(sep=':')[3] for line in lines if 'ReviewRequest' in line }
         return mi_ids
     
     def mi_is_under_embargo(self, mi_id: str, patchinfo_check: bool = True) -> bool:
@@ -39,7 +39,7 @@ class IbsOscClient():
 
         embargo_attribute: ET.Element|None = xml_attributes.find("./attribute[@name='EmbargoDate'][value]")
         if embargo_attribute:
-            embargo_attribute_content: str = embargo_attribute.find("./value").text
+            embargo_attribute_content: str = embargo_attribute.find('./value').text
             embargo_end_date: date = self._parse_embargo_date(embargo_attribute_content)
             if embargo_end_date >= self._current_date:
                 print(f"\tMI {mi_id} is under embargo until {embargo_end_date}. Today is {self._current_date}\n")
@@ -53,7 +53,7 @@ class IbsOscClient():
         print(f"\tMI {mi_id} is not under embargo\n")
         return False
     
-    def _osc_command(self, cmd:str) -> str:
+    def _osc_command(self, cmd: str) -> str:
         # check=True -> raise subprocess.CalledProcessError if the return code is != 0
         result: subprocess.CompletedProcess[bytes] = subprocess.run(
             [f"osc --apiurl {self._api_url} {cmd}"],
@@ -79,7 +79,7 @@ class IbsOscClient():
 
         embargoed_ids: set[str] = patchinfo_ids.intersection(smash_ids)
         if embargoed_ids:
-            print(f"\tMI #{mi_id} patchinfo contains bugs that are still under embargo in SMASH: {embargoed_ids}")
+            print(f"\tMI #{mi_id} patchinfo contains bugs that are still under embargo in SMASH: {embargoed_ids}\n")
             return True
         
         print(f"\tMI #{mi_id} patchinfo contains no bug under embargo in SMASH\n")
@@ -105,7 +105,7 @@ class IbsOscClient():
         with open(patchinfo_path) as patchinfo_file:
             content: str = patchinfo_file.read()
             patchinfo_xml: ET.Element = ET.fromstring(content)
-            issues: list[ET.Element] = patchinfo_xml.findall("./issue")
+            issues: list[ET.Element] = patchinfo_xml.findall('./issue')
             ids = { self._parse_xml_issue(el) for el in issues }
         
         return ids
@@ -113,4 +113,4 @@ class IbsOscClient():
     def _parse_xml_issue(self, issue_xml: ET.Element) -> str:
         issue_id: str = issue_xml.attrib['id']
         tracker: str = issue_xml.attrib['tracker']
-        return f"{tracker}#{issue_id}" if tracker == "bnc" else f"{tracker.upper()}-{issue_id}"
+        return f"{tracker}#{issue_id}" if tracker == 'bnc' else f"{tracker.upper()}-{issue_id}"

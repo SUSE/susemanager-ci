@@ -18,7 +18,6 @@ class MockResponse:
     def raise_for_status(self):
         raise HTTPError()
 
-
 def mock_requests_get_success(*args) -> MockResponse:
     if args[0] == f"{IBS_MAINTENANCE_URL_PREFIX}1234/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/":
         return MockResponse(200, True)
