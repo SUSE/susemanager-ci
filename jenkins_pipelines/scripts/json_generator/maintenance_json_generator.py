@@ -173,7 +173,7 @@ nodes_by_version: dict[str, dict[str, set[str]]] = {
     "50": v50_nodes
 }
 
-def parse_args() -> argparse.Namespace:
+def parse_cli_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="This script reads the open qam-manager requests and creates a json file that can be fed to the BV testsuite pipeline"
     )
@@ -181,7 +181,7 @@ def parse_args() -> argparse.Namespace:
         help="Version of SUMA you want to run this script for, the options are 43 for 4.3 and 50 for 5.0. The default is 43 for now",
         choices=["43", "50"], default="43", action='store', 
     )
-    parser.add_argument("-i", "--mi_ids", dest="mi_ids", help="MI IDs", default=None, action='store')
+    parser.add_argument("-i", "--mi_ids", required=False, dest="mi_ids", help="Space separated list of MI IDs", nargs='*', action='store')
     parser.add_argument("-e", "--no_embargo", dest="embargo_check", help="Reject MIs under embargo",  action='store_true')
 
     args: argparse.Namespace = parser.parse_args()
@@ -240,17 +240,15 @@ def find_valid_repos(mi_ids: set[str], version: str):
         json.dump(custom_repositories, f, indent=2)
 
 def main():
-    args: argparse.Namespace = parse_args()
+    args: argparse.Namespace = parse_cli_args()
     osc_client: IbsOscClient = IbsOscClient()
 
-    if args.mi_ids:
-        # Ignore spaces before or after the comma
-        mi_ids: set[str] = { id.strip() for id in args.mi_ids.split(",") }
-    else:
-        mi_ids: set[str] = osc_client.find_maintenance_incidents()
+    mi_ids: set[str] = args.mi_ids
+    if not mi_ids:
+        mi_ids = osc_client.find_maintenance_incidents()
 
     if args.embargo_check:
-        mi_ids: set[str] = { id for id in mi_ids if not osc_client.mi_is_under_embargo(id) }
+        mi_ids = { id for id in mi_ids if not osc_client.mi_is_under_embargo(id) }
 
     find_valid_repos(mi_ids, args.version)
 

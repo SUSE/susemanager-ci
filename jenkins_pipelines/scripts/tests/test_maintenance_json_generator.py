@@ -1,12 +1,48 @@
+from argparse import Namespace
+import sys
 import unittest
 from unittest.mock import patch
 
-from json_generator.maintenance_json_generator import create_url, IBS_MAINTENANCE_URL_PREFIX
+from json_generator.maintenance_json_generator import create_url, IBS_MAINTENANCE_URL_PREFIX, parse_cli_args
 from tests.mock_response import mock_requests_get_success
 
 
 class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
+
+    def test_parse_cli_args_default_values(self):
+        sys.argv= ['maintenance_json_generator.py']
+        args = parse_cli_args()
+        self.assertEqual(args.version, "43")
+        self.assertIsNone(args.mi_ids)
+        self.assertFalse(args.embargo_check)
+
+    def test_parse_cli_args_success(self):
+        # shorthand flags
+        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
+        args: Namespace = parse_cli_args()
+        self.assertEqual(args.version, "50")
+        self.assertListEqual(args.mi_ids, ['1234', '5678'])
+        self.assertTrue(args.embargo_check)
+        # long flags
+        sys.argv= ['maintenance_json_generator.py', '--version', '50', '--mi_ids', '1234', '5678', '--no_embargo']
+        args: Namespace = parse_cli_args()
+        self.assertEqual(args.version, "50")
+        self.assertListEqual(args.mi_ids, ['1234', '5678'])
+        self.assertTrue(args.embargo_check)
     
+    def test_parse_cli_args_failure(self):
+        sys.argv= ['maintenance_json_generator.py',  '-x']
+        with self.assertRaises(SystemExit) as cm:
+            parse_cli_args()
+            self.assertEqual(cm.exception.code, 2)
+            self.assertIn("error: unrecognized arguments: -x", cm.msg)
+
+        sys.argv= ['maintenance_json_generator.py',  '-v' , '999']
+        with self.assertRaises(SystemExit) as cm:
+            parse_cli_args()
+            self.assertEqual(cm.exception.code, 2)
+            self.assertIn("error: argument -v/--version: invalid choice: '999'", cm.msg)
+
     @patch('requests.get')
     def test_create_url(self, mock_http_call):
         mock_http_call.side_effect = mock_requests_get_success
