@@ -19,7 +19,7 @@ class IbsOscClient():
         self._smash_client = SmashClient()
 
     def find_maintenance_incidents(self, status = "open", group="qam-manager") -> set[str]:
-        cmd: str = f"qam {status}"
+        cmd: str = f"qam {status} "
         if group:
             cmd += f"-G {group}"
         # TODO Find a better way to query the open requests, this is fragile because it depends on external utils
@@ -31,6 +31,7 @@ class IbsOscClient():
         return mi_ids
     
     def mi_is_under_embargo(self, mi_id: str, patchinfo_check: bool = True) -> bool:
+        print(f"MI {mi_id} - checking embargo\n")
         # MI under embargo should have the attribute OBS:EmbargoDate set to the embargo end
         cmd: str = f"meta attribute SUSE:Maintenance:{mi_id}"
         output: str = self._osc_command(cmd)
@@ -41,15 +42,15 @@ class IbsOscClient():
             embargo_attribute_content: str = embargo_attribute.find("./value").text
             embargo_end_date: date = self._parse_embargo_date(embargo_attribute_content)
             if embargo_end_date >= self._current_date:
-                print(f"MI {mi_id} is under embargo until {embargo_end_date}. Today is {self._current_date}")
+                print(f"\tMI {mi_id} is under embargo until {embargo_end_date}. Today is {self._current_date}\n")
                 return True
             
-            print(f"MI {mi_id} embargo was lifted after {embargo_end_date}. Today is {self._current_date}")
+            print(f"\tMI {mi_id} embargo was lifted after {embargo_end_date}. Today is {self._current_date}")
             if patchinfo_check:
-                print("Double checking _patchinfo file for issues under embargo in SMASH ...")
+                print("\tDouble checking _patchinfo file for issues under embargo in SMASH ...")
                 return self._mi_has_issues_under_embargo(mi_id)
 
-        print(f"MI {mi_id} is not under embargo")
+        print(f"\tMI {mi_id} is not under embargo\n")
         return False
     
     def _osc_command(self, cmd:str) -> str:
@@ -67,7 +68,7 @@ class IbsOscClient():
             try:
                 return datetime.strptime(text, format).date()
             except:
-                print(f"Invalid date format {format} for OBS:EmbargoDate value {text}")
+                print(f"\tInvalid date format {format} for OBS:EmbargoDate value {text}")
         
         raise ValueError(f"Failed to parse OBS:EmbargoDate value {text} with all available date formats")
     
@@ -78,10 +79,10 @@ class IbsOscClient():
 
         embargoed_ids: set[str] = patchinfo_ids.intersection(smash_ids)
         if embargoed_ids:
-            print(f"MI #{mi_id} patchinfo contains bugs that are still under embargo in SMASH: {embargoed_ids}")
+            print(f"\tMI #{mi_id} patchinfo contains bugs that are still under embargo in SMASH: {embargoed_ids}")
             return True
         
-        print(f"MI #{mi_id} patchinfo contains no bug under embargo in SMASH")
+        print(f"\tMI #{mi_id} patchinfo contains no bug under embargo in SMASH\n")
         return False
     
     def _checkout_mi_patchinfo(self, mi_id: str) -> str:
