@@ -59,7 +59,7 @@ def run(params) {
                             json_content = sh(script: "python3 jenkins_pipelines/scripts/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStdout: true)
                             echo "Build Validation JSON:\n ${json_content}"
                         }
-                        if (json_content?.trim() || json_content.trim() != 'Dictionary is empty, something went wrong'){
+                        if (json_content?.trim() || json_content.trim() != 'Empty custom_repositories dictionary, something went wrong'){
                             writeFile file: 'custom_repositories.json', text: json_content.trim()
                         } else {
                             echo "MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)"
