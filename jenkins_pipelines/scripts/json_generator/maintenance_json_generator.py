@@ -197,7 +197,7 @@ def create_url(mi_id:str, suffix: str) -> str:
     return ""
 
 def find_valid_repos(mi_ids: set[str], version: str):
-    version_nodes: dict[str, dict[str, set[str]]] = nodes_by_version.get(version, None)
+    version_nodes: dict[str, set[str]] = nodes_by_version.get(version, None)
     if not version_nodes:
         raise SystemExit(f"No nodes for version {version} - supported versions: {nodes_by_version.keys()}")
 
@@ -211,27 +211,26 @@ def find_valid_repos(mi_ids: set[str], version: str):
         custom_repositories['server'] = {'server_50': server_url}
         custom_repositories['proxy'] = {'proxy_50': proxy_url}
 
-    for node, suffixraw in version_nodes.items():
+    for node, repositories in version_nodes.items():
         for mi_id in mi_ids:
-            for suffix in suffixraw:
-                repo: str = create_url(mi_id, suffix)
-                if repo:
+            for repo in repositories:
+                repo_url: str = create_url(mi_id, repo)
+                if repo_url:
                     if node in custom_repositories:
                         # This is needed for mi_ids that have multiple repos for each node
                         # e.g. basesystem and server apps for server
-                        final_id = mi_id
+                        final_id: str = mi_id
                         if final_id in custom_repositories[node]:
                             for i in range(1, 100):
-                                new_id = f"{mi_id}-{i}" 
+                                new_id: str = f"{mi_id}-{i}" 
                                 if new_id not in custom_repositories[node]:
                                     final_id = new_id
                                     break
                         # for each mi_id we have multiple repos sometimes for each node
-                        custom_repositories[node][final_id] = repo
+                        custom_repositories[node][final_id] = repo_url
                     else:
-                        custom_repositories[node] = {mi_id: repo}
+                        custom_repositories[node] = {mi_id: repo_url}
 
-    # Format into json and print
     # Check that it's not empty and save to file
     if not custom_repositories:
         raise SystemExit("Empty custom_repositories dictionary, something went wrong")
