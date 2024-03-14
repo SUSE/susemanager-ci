@@ -59,6 +59,10 @@ module "cucumber_testsuite" {
         vcpu = 8
         memory = 32768
       }
+      main_disk_size       = 20
+      repository_disk_size = 300
+      database_disk_size   = 50
+      login_timeout        = 28800
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = local.additional_repos["server"]
       image = var.IMAGE
