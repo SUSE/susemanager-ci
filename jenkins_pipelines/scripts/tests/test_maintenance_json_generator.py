@@ -2,14 +2,14 @@ import unittest
 from unittest.mock import patch
 
 from json_generator.maintenance_json_generator import create_url, IBS_MAINTENANCE_URL_PREFIX
-from tests.mock_response import MockResponse
+from tests.mock_response import mock_requests_get_success
 
 
 class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
     
     @patch('requests.get')
-    def test_create_url(self, mock_requests_get):
-        mock_requests_get.side_effect = _mock_create_url_requests_get
+    def test_create_url(self, mock_http_call):
+        mock_http_call.side_effect = mock_requests_get_success
 
         test_cases: list[tuple[str, str, bool]] = [
             ("1234", "/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/", True),
@@ -25,11 +25,11 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             self.assertEqual(expected_url, res)
         
     @patch('requests.get')
-    def test_create_url_cache(self, mock_requests_get):
+    def test_create_url_cache(self, mock_http_call):
         create_url.cache_clear()
         # requests.get is only called by create_url when the results is not present in the LRU cache,
         # therefore we can check the number of times it gets called to verify if there was a cache hit
-        mock_requests_get.side_effect = _mock_create_url_requests_get
+        mock_http_call.side_effect = mock_requests_get_success
 
         ids: set[str] = {"1234", "5678", "9012"}
         suffixes: set[str] = {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/", "/some/other/url/"}
@@ -41,14 +41,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             for id in ids:
                 for suffix in suffixes:
                     create_url(id, suffix)
-            self.assertEqual(mock_requests_get.call_count, num_entries, f"Iteration N°{i+1} of {iterations}")
-    
-
-# This method will be used by the mock to replace requests.get for create_url calls
-def _mock_create_url_requests_get(*args, **kwargs):
-    if args[0] == f"{IBS_MAINTENANCE_URL_PREFIX}1234/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/":
-        return MockResponse(200, True)
-    return MockResponse(404, False)
+            self.assertEqual(mock_http_call.call_count, num_entries, f"Iteration N°{i+1} of {iterations}")
 
 if __name__ == '__main__':
     unittest.main()

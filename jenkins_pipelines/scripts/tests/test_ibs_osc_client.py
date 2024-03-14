@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch
 
 from json_generator.ibs_osc_client import IbsOscClient
-from tests.mock_response import MockResponse
+from tests.mock_response import mock_requests_get_success
 
 _TEST_EMBARGO_PATCHINFO_PATH: str = './tests/testdata/_patchinfo_with_embargo'
 _TEST_NO_EMBARGO_PATCHINFO_PATH: str = './tests/testdata/_patchinfo_no_embargo'
@@ -49,8 +49,8 @@ class IbsOscClientTestCase(unittest.TestCase):
     # decorators will be applied bottom-up, args order is in reverse
     @patch.object(IbsOscClient, '_checkout_mi_patchinfo')
     @patch('requests.get')
-    def test_mi_has_issues_under_embargo(self, mock_requests_get, mock_client_method):
-        mock_requests_get.side_effect = _mock_requests_get
+    def test_mi_has_issues_under_embargo(self, mock_api_call, mock_client_method):
+        mock_api_call.side_effect = mock_requests_get_success
         mock_client_method.side_effect = _mock_checkout_mi_patchinfo
 
         self.assertTrue(self.ibs_client._mi_has_issues_under_embargo('12345'))
@@ -64,10 +64,6 @@ def _mock_checkout_mi_patchinfo(*args) -> str:
         return _TEST_NO_EMBARGO_PATCHINFO_PATH
     return ""
     
-def _mock_requests_get(*args) -> MockResponse:
-    with open('./tests/testdata/smash_embargoed_bugs.json') as smash_embargo_json:
-        json_content: str = smash_embargo_json.read()
-        return MockResponse(200, True, json_content)
 
 if __name__ == '__main__':
     unittest.main()
