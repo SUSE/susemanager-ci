@@ -70,14 +70,16 @@ class IbsOscClient():
         raise ValueError(f"Failed to parse OBS:EmbargoDate value {text} with all available date formats")
     
     def _mi_has_issues_under_embargo(self, mi_id: str) -> bool:
-        patchinfo_abs_path : str = self._checkout_mi_patchinfo(mi_id)
+        patchinfo_abs_path: str = self._checkout_mi_patchinfo(mi_id)
         patchinfo_ids: set[str] = self._get_patchinfo_issues_ids(patchinfo_abs_path)
         smash_ids: set[str] = self._smash_client.get_embargoed_bugs_ids()
 
         embargoed_ids: set[str] = patchinfo_ids.intersection(smash_ids)
         if embargoed_ids:
-            print(f"MI #{mi_id}'s patchinfo contains bugs that are still under embargo: {embargoed_ids}")
+            print(f"MI #{mi_id} patchinfo contains bugs that are still under embargo in SMASH: {embargoed_ids}")
             return True
+        
+        print(f"MI #{mi_id} patchinfo contains no bug under embargo in SMASH")
         return False
     
     def _checkout_mi_patchinfo(self, mi_id: str) -> str:
