@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 import xml.etree.ElementTree as ET
+from subprocess import CalledProcessError
 import unittest
 from unittest.mock import patch
 
@@ -13,6 +14,21 @@ class IbsOscClientTestCase(unittest.TestCase):
 
     def setUp(self):
         self.ibs_client: IbsOscClient = IbsOscClient()
+
+    def test_osc_command_success(self):
+        version:str = self.ibs_client._osc_command('version')
+        # as an example:
+        # '1.6.1\n' --> [1, 6, 1] --> [True, True, True] --> all([True, True, True]) will return True
+        self.assertTrue(all([char.isdigit() for char in version.replace('\n', '').split('.')]))
+    
+    def test_osc_command_failure(self):
+        self.assertRaises(CalledProcessError, self.ibs_client._osc_command, '')
+        self.assertRaises(CalledProcessError, self.ibs_client._osc_command, 'something')
+        # invalid subcommands
+        self.assertRaises(CalledProcessError, self.ibs_client._osc_command, 'meta attr')
+        self.assertRaises(CalledProcessError, self.ibs_client._osc_command, 'meta attribute')
+        self.assertRaises(CalledProcessError, self.ibs_client._osc_command, 'checkout -x')
+        self.assertRaises(CalledProcessError, self.ibs_client._osc_command, 'checkout SUSE:Maintenance:0000')
 
     def test_parse_embargo_date(self):
         test_date: datetime = datetime.now(tz=timezone.utc)
