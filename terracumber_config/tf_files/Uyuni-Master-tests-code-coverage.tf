@@ -109,7 +109,6 @@ module "cucumber_testsuite" {
   domain       = "mgr.prv.suse.net"
   from_email   = "root@suse.com"
 
-  mirror      = "minima-mirror-ci-bv.mgr.prv.suse.net"
   no_auth_registry = "registry.mgr.prv.suse.net"
   auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
   auth_registry_username = "cucutest"
@@ -133,7 +132,10 @@ module "cucumber_testsuite" {
         memory = 65536
         vcpu = 6
       }
-      server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+      main_disk_size       = 20
+      repository_disk_size = 300
+      database_disk_size   = 50
+      login_timeout        = 28800
     }
     proxy = {
       provider_settings = {
@@ -205,9 +207,10 @@ module "cucumber_testsuite" {
       
       provider_settings = {
         mac = "aa:b2:92:04:00:fa"
+        vcpu = 4
         memory = 8192
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion", "mkisofs" ]
       install_salt_bundle = true
     }
   }
