@@ -271,7 +271,7 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|main_disk|data_disk|database_disk).*' --runstep provision"
                         deployed = true
   
                         // Collect and tag Flaky tests from the GitHub Board
