@@ -109,6 +109,9 @@ module "cucumber_testsuite" {
   domain       = "mgr.prv.suse.net"
   from_email   = "root@suse.com"
 
+  mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  use_mirror_images        = true
+  
   no_auth_registry = "registry.mgr.prv.suse.net"
   auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
   auth_registry_username = "cucutest"
