@@ -136,6 +136,7 @@ module "cucumber_testsuite" {
         vcpu = 8
         memory = 32768
       }
+      main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/manager/5.0/x86_64"
