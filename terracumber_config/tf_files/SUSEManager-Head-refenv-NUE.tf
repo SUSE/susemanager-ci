@@ -13,7 +13,7 @@ variable "CUCUMBER_COMMAND" {
 // Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 // Not really used in this pipeline, as we do not run cucumber
@@ -106,9 +106,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55o"]
-
-  container_server = true
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-refhead-"
@@ -120,6 +118,10 @@ module "cucumber_testsuite" {
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+
+  container_server = true
+  container_proxy  = true
+
 
   server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
@@ -140,21 +142,23 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 16384
       }
-      main_disk_size = 300
+      main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
+      container_tag = "latest"
     }
-    #proxy = {
-    #  image = "slemicro55o"
-    #  provider_settings = {
-    #    mac = "aa:b2:93:01:00:c2"
-    #    vcpu = 2
-    #    memory = 2048
-    #  }
-    #  additional_packages = [ "venv-salt-minion" ]
-    #  install_salt_bundle = true
-    #}
+    proxy_containerized = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:c2"
+        vcpu = 2
+        memory = 2048
+      }
+      main_disk_size = 200
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+      runtime = "podman"
+    }
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
@@ -203,6 +207,7 @@ module "cucumber_testsuite" {
     }
     build-host = {
       image = "sles15sp4o"
+      name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:cd"
         vcpu = 2
