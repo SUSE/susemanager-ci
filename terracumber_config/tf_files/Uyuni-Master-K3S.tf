@@ -140,7 +140,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server-helm"
       login_timeout = 28800
-      main_disk_size = 250
+      main_disk_size = 300
     }
     proxy = {
       provider_settings = {
