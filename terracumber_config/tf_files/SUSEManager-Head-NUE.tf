@@ -140,7 +140,7 @@ module "cucumber_testsuite" {
         vcpu = 8
         memory = 32768
       }
-      main_disk_size = 300
+      main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
@@ -152,6 +152,7 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      main_disk_size = 200
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "podman"
