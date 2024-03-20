@@ -3,7 +3,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from json_generator.maintenance_json_generator import create_url, IBS_MAINTENANCE_URL_PREFIX, parse_cli_args
+from json_generator.maintenance_json_generator import clean_mi_ids, create_url, IBS_MAINTENANCE_URL_PREFIX, parse_cli_args
 from tests.mock_response import mock_requests_get_success
 
 
@@ -22,6 +22,18 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         args: Namespace = parse_cli_args()
         self.assertEqual(args.version, "50")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
+        self.assertTrue(args.embargo_check)
+        # shorthand flags - mi_ids variant 1
+        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-i', '1234,5678', '-e']
+        args: Namespace = parse_cli_args()
+        self.assertEqual(args.version, "50")
+        self.assertListEqual(args.mi_ids, ['1234,5678'])
+        self.assertTrue(args.embargo_check)
+        # shorthand flags - mi_ids variant 2
+        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-i', '1234,', '5678', '-e']
+        args: Namespace = parse_cli_args()
+        self.assertEqual(args.version, "50")
+        self.assertListEqual(args.mi_ids, ['1234,' , '5678'])
         self.assertTrue(args.embargo_check)
         # long flags
         sys.argv= ['maintenance_json_generator.py', '--version', '50', '--mi_ids', '1234', '5678', '--no_embargo']
@@ -42,6 +54,24 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             parse_cli_args()
             self.assertEqual(cm.exception.code, 2)
             self.assertIn("error: argument -v/--version: invalid choice: '999'", cm.msg)
+
+    def test_clean_mi_ids(self):
+        # support 1234 4567 8901 format
+        clean_ids: set[str] = clean_mi_ids(['123', '456', '789'])
+        self.assertEqual(len(clean_ids), 3)
+        self.assertSetEqual(clean_ids, {'123', '456', '789'})
+        # support 1234,4567,8901 format
+        clean_ids = clean_mi_ids(['123,456,789'])
+        self.assertEqual(len(clean_ids), 3)
+        self.assertSetEqual(clean_ids, {'123', '456', '789'})
+        # support 1234, 4567, 8901 format
+        clean_ids = clean_mi_ids(['123,', '456,', '789'])
+        self.assertEqual(len(clean_ids), 3)
+        self.assertSetEqual(clean_ids, {'123', '456', '789'})
+        # handle duplicates
+        clean_ids = clean_mi_ids(['123,', '456,', '123,', '456'])
+        self.assertEqual(len(clean_ids), 2)
+        self.assertSetEqual(clean_ids, {'123', '456'})
 
     @patch('requests.get')
     def test_create_url(self, mock_http_call):

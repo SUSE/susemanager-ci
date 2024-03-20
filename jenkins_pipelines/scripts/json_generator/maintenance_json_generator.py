@@ -187,6 +187,13 @@ def parse_cli_args() -> argparse.Namespace:
     args: argparse.Namespace = parser.parse_args()
     return args
 
+def clean_mi_ids(mi_ids: list[str]) -> set[str]:
+    # support 1234,4567,8901 format
+    if(len(mi_ids) == 1):
+        return {id.strip() for id in mi_ids[0].split(",")}
+    # support 1234, 4567, 8901 format
+    return {id.replace(',', '') for id in mi_ids}
+
 @cache
 def create_url(mi_id:str, suffix: str) -> str:
     url = f"{IBS_MAINTENANCE_URL_PREFIX}{mi_id}{suffix}"
@@ -242,10 +249,11 @@ def main():
     args: argparse.Namespace = parse_cli_args()
     osc_client: IbsOscClient = IbsOscClient()
 
-    mi_ids: set[str] = args.mi_ids
-    if not mi_ids:
-        mi_ids = osc_client.find_maintenance_incidents()
+    raw_mi_ids: list[str] = args.mi_ids
+    if not raw_mi_ids:
+        raw_mi_ids = osc_client.find_maintenance_incidents()
 
+    mi_ids: set[str] = clean_mi_ids(raw_mi_ids)
     if args.embargo_check:
         mi_ids = { id for id in mi_ids if not osc_client.mi_is_under_embargo(id) }
 
