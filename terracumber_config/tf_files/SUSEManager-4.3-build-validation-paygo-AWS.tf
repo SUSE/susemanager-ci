@@ -169,7 +169,7 @@ module "server" {
   name                       = "server"
   product_version            = "paygo"
   image                      = "suma-server-43-ltd-paygo"
-  main_disk_size             = 20
+  main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
 
