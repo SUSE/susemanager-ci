@@ -139,7 +139,7 @@ module "base" {
   testsuite                = true
   use_avahi                = false
   use_eip_bastion          = false
-  is_server_paygo_instance       = false
+  is_server_paygo_instance = false
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
