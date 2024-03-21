@@ -87,6 +87,10 @@ v43_client_tools: dict[str, set[str]] = {
     "slemicro55_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SUSE-MicroOS_5.5_x86_64/",
                           "/SUSE_Updates_SLE-Micro_5.5_x86_64/"},
+# TODO Verify that these are accurate
+    "slemicro60_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_6_x86_64/",
+                          "/SUSE_Updates_SUSE-MicroOS_6.0_x86_64/",
+                          "/SUSE_Updates_SLE-Micro_6.0_x86_64/"},
     "salt_migration_minion": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
                               "/SUSE_Updates_SLE-Module-Basesystem_15-SP5_x86_64/",
                               "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_x86_64/"},
@@ -134,6 +138,9 @@ v50_client_tools_beta: dict[str, set[str]] = {
     "slemicro54_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
     "slemicro55_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
+                          "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
+# TODO Verify these are accurate
+    "slemicro60_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_6_x86_64/",
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
     "salt_migration_minion": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64-BETA/"}
 }
@@ -190,7 +197,7 @@ def parse_cli_args() -> argparse.Namespace:
     )
     parser.add_argument("-v", "--version", dest="version",
         help="Version of SUMA you want to run this script for, the options are 43 for 4.3 and 50 for 5.0. The default is 43 for now",
-        choices=["43", "50"], default="43", action='store', 
+        choices=["43", "50"], default="43", action='store',
     )
     parser.add_argument("-i", "--mi_ids", required=False, dest="mi_ids", help="Space separated list of MI IDs", nargs='*', action='store')
     parser.add_argument("-e", "--no_embargo", dest="embargo_check", help="Reject MIs under embargo",  action='store_true')
@@ -217,7 +224,7 @@ def create_url(mi_id:str, suffix: str) -> str:
 def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
     if not custom_repositories:
         raise SystemExit("Empty custom_repositories dictionary, something went wrong")
-    
+
     found_ids: set[str] = { id for custom_repo in custom_repositories.values() for id in custom_repo.keys() }
     # there should be no set difference if all MI IDs are in the JSON
     missing_ids: set[str] = expected_ids.difference(found_ids)
@@ -253,7 +260,7 @@ def find_valid_repos(mi_ids: set[str], version: str):
                         final_id: str = mi_id
                         if final_id in custom_repositories[node]:
                             for i in range(1, 100):
-                                new_id: str = f"{mi_id}-{i}" 
+                                new_id: str = f"{mi_id}-{i}"
                                 if new_id not in custom_repositories[node]:
                                     final_id = new_id
                                     break
@@ -261,7 +268,7 @@ def find_valid_repos(mi_ids: set[str], version: str):
                         custom_repositories[node][final_id] = repo_url
                     else:
                         custom_repositories[node] = {mi_id: repo_url}
-    
+
     validate_and_store_results(mi_ids, custom_repositories)
 
 def main():
