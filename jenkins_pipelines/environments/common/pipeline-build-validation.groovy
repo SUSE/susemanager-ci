@@ -46,23 +46,19 @@ def run(params) {
 
             stage('Deploy') {
                 if (params.must_deploy) {
-                    // Generate json file in the workspace
+                    // Generate custom_repositories.json file in the workspace from the value passed by parameter
                     if (params.custom_repositories?.trim()) {
-                        // JSON file passed by parameter
                         writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
                     }
+                    // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
                     if (params.mi_ids?.trim()) {
-                        // MI Identifiers passed by parameter
-                        def json_content = ''
                         node('manager-jenkins-node') {
                             checkout scm
-                            json_content = sh(script: "python3 jenkins_pipelines/scripts/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStdout: true)
-                            echo "Build Validation JSON:\n ${json_content}"
-                        }
-                        if (json_content?.trim() || json_content.trim() != 'Dictionary is empty, something went wrong'){
-                            writeFile file: 'custom_repositories.json', text: json_content.trim()
-                        } else {
-                            echo "MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)"
+                            res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
+                            echo "Build Validation JSON script return code:\n ${json_content}"
+                            if res_python_script != 0 {
+                                error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                            }
                         }
                     }
                     // Run Terracumber to deploy the environment

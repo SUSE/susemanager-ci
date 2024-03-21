@@ -1,0 +1,15 @@
+[
+    {
+        "bug":{"name":"bnc#1234567","url":"","source":"SUSE Bugzilla"},
+        "cves":[]
+    },
+    {
+        "bug":{"name":"bnc#4567890","url":"","source":"SUSE Bugzilla"},
+        "cves":[
+            {"name":"CVE-2024-00004","url":"","source":"National Vulnerability Database"}
+        ]
+    },
+    {
+        "bug":{"name":"bnc#1122330","url":"","source":"SUSE Bugzilla"}
+    }
+]
