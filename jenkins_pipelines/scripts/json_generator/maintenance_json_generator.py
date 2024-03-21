@@ -7,6 +7,7 @@ from ibs_osc_client import IbsOscClient
 
 
 IBS_MAINTENANCE_URL_PREFIX: str = 'http://download.suse.de/ibs/SUSE:/Maintenance:/'
+JSON_OUTPUT_FILE_NAME: str = 'custom_repositories.json'
 
 # dictionary for 4.3 client tools
 v43_client_tools: dict[str, set[str]] = {
@@ -190,9 +191,9 @@ def parse_cli_args() -> argparse.Namespace:
 def clean_mi_ids(mi_ids: list[str]) -> set[str]:
     # support 1234,4567,8901 format
     if(len(mi_ids) == 1):
-        return {id.strip() for id in mi_ids[0].split(",")}
+        return { id.strip() for id in mi_ids[0].split(",") }
     # support 1234, 4567, 8901 format
-    return {id.replace(',', '') for id in mi_ids}
+    return { id.replace(',', '') for id in mi_ids }
 
 @cache
 def create_url(mi_id:str, suffix: str) -> str:
@@ -202,6 +203,19 @@ def create_url(mi_id:str, suffix: str) -> str:
     if res.ok:
         return url
     return ""
+
+def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
+    if not custom_repositories:
+        raise SystemExit("Empty custom_repositories dictionary, something went wrong")
+    
+    found_ids: set[str] = { id for custom_repo in custom_repositories.values() for id in custom_repo.keys() }
+    # there should be no set difference if all MI IDs are in the JSON
+    missing_ids: set[str] = expected_ids.difference(found_ids)
+    if missing_ids:
+        raise SystemExit(f"MI IDs #{missing_ids} do not exist in custom_repositories dictionary.")
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(custom_repositories, f, indent=2)
 
 def find_valid_repos(mi_ids: set[str], version: str):
     version_nodes: dict[str, set[str]] = nodes_by_version.get(version, None)
@@ -237,13 +251,8 @@ def find_valid_repos(mi_ids: set[str], version: str):
                         custom_repositories[node][final_id] = repo_url
                     else:
                         custom_repositories[node] = {mi_id: repo_url}
-
-    # Check that it's not empty and save to file
-    if not custom_repositories:
-        raise SystemExit("Empty custom_repositories dictionary, something went wrong")
-
-    with open('custom_repositories.json', 'w', encoding='utf-8') as f:
-        json.dump(custom_repositories, f, indent=2)
+    
+    validate_and_store_results(mi_ids, custom_repositories)
 
 def main():
     args: argparse.Namespace = parse_cli_args()

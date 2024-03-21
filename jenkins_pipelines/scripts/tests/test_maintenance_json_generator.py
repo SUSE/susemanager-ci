@@ -1,9 +1,11 @@
 from argparse import Namespace
+import json
+from os import path, remove
 import sys
 import unittest
 from unittest.mock import patch
 
-from json_generator.maintenance_json_generator import clean_mi_ids, create_url, IBS_MAINTENANCE_URL_PREFIX, parse_cli_args
+from json_generator.maintenance_json_generator import clean_mi_ids, create_url, IBS_MAINTENANCE_URL_PREFIX, parse_cli_args, validate_and_store_results
 from tests.mock_response import mock_requests_get_success
 
 
@@ -108,6 +110,32 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
                 for suffix in suffixes:
                     create_url(id, suffix)
             self.assertEqual(mock_http_call.call_count, num_entries, f"Iteration N°{i+1} of {iterations}")
+
+    def test_validate_and_store_results(self):
+        test_output_file: str = 'test_custom_repositories.json'
+        test_mi_ids: set[str] = {"123", "456", "789"}
+        # empty custom_repositories
+        self.assertRaises(SystemExit, validate_and_store_results, test_mi_ids, {}, test_output_file)
+        
+        test_custom_repos: dict[str, dict[str, str]] = {
+            'server': {'123': 'some repo', '789': 'some repo'},
+            'proxy': {'123': 'some_repo', 'proxy_50': 'some repo'},
+            'some minion': {'789': 'some repo'}
+        }
+        # missing MI ID 456
+        self.assertRaises(SystemExit, validate_and_store_results, test_mi_ids, test_custom_repos, test_output_file) 
+        
+        test_custom_repos['some minion']['456'] = "some repo"
+        validate_and_store_results(test_mi_ids, test_custom_repos, test_output_file)
+        self.assertTrue(path.isfile(test_output_file))
+        
+        with open(test_output_file) as json_output:
+            output_json: dict[str, dict[str, str]] = json.load(json_output)
+            self.assertDictEqual(test_custom_repos, output_json)
+        
+        # cleanup
+        remove(test_output_file)
+
 
 if __name__ == '__main__':
     unittest.main()
