@@ -68,7 +68,6 @@ def run(params) {
             if (params.prepare_aws_env) {
                 stage("Prepare AWS environment") {
                     parallel(
-
                             "upload_latest_image": {
                                 if (params.use_latest_ami_image) {
                                     stage('Clean old images') {
@@ -116,8 +115,22 @@ def run(params) {
                             },
                             "create_local_mirror_with_mu": {
                                 stage("Create local mirror with MU") {
+                                    // Generate custom_repositories.json file in the workspace from the value passed by parameter
+                                    if (params.custom_repositories?.trim()) {
+                                        writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
+                                    }
+                                    // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
+                                    if (params.mi_ids?.trim()) {
+                                        node('manager-jenkins-node') {
+                                            checkout scm
+                                            res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids} --no_embargo", returnStatus: true)
+                                            echo "Build Validation JSON script return code:\n ${json_content}"
+                                            if (res_python_script != 0) {
+                                                error("MI IDs (${params.mi_ids}) passed by parameter are wrong, already released or all under embargo")
+                                            }
+                                        }
+                                    }
                                     // Save MU json into local file
-                                    writeFile file: "custom_repositories.json", text: params.custom_repositories, encoding: "UTF-8"
                                     mu_repositories = sh(script: "cat ${WORKSPACE}/custom_repositories.json | jq -r ' to_entries[] |  \" \\(.value)\"' | jq -r ' to_entries[] |  \" \\(.value)\"'",
                                             returnStdout: true)
                                     // Get the testsuite defaults repositories list
@@ -137,7 +150,6 @@ def run(params) {
                                     // Deploy local mirror
                                     sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_mirror_params} --logfile ${resultdirbuild}/sumaform-mirror-local.log --init --taint '.*(domain|main_disk|data_disk|database_disk).*' --runstep provision --sumaform-backend libvirt"
                                     deployed_local = true
-
                                 }
                             },
                             "create_empty_aws_mirror": {
