@@ -56,7 +56,7 @@ def run(params) {
                             checkout scm
                             res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
                             echo "Build Validation JSON script return code:\n ${json_content}"
-                            if res_python_script != 0 {
+                            if (res_python_script != 0) {
                                 error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
                             }
                         }
