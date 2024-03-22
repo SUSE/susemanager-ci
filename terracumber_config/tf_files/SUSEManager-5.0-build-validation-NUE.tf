@@ -117,8 +117,9 @@ module "base_core" {
   domain      = "mgr.suse.de"
   images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images = true
+//  Temporary WORKAROUND to verify issues in the Product Wizard
+//  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+//  use_mirror_images = true
 
   testsuite          = true
 
@@ -143,8 +144,9 @@ module "base_arm" {
   domain      = "mgr.suse.de"
   images      = [ "opensuse154armo", "opensuse155armo" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images = true
+//  Temporary WORKAROUND to verify issues in the Product Wizard
+//  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+//  use_mirror_images = true
 
   testsuite = true
 
@@ -177,9 +179,14 @@ module "server_containerized" {
   }
   main_disk_size = 3000
   runtime = "podman"
-  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+// WORKAROUND
+// We want to test the most recent code right now until the submissions for Beta 2 are ready
+//  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+  container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
 
-  server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
+
+//  Temporary WORKAROUND to verify issues in the Product Wizard
+//  server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
   java_debugging                 = false
   auto_accept                    = false
   disable_firewall               = false
