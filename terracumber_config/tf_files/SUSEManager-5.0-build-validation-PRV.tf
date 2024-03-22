@@ -1543,6 +1543,8 @@ module "sles12sp5-terminal" {
     manufacturer       = "Supermicro"
     product            = "X9DR3-F"
   }
+  private_ip = "1"
+  private_name = " "
 }
 
 module "sles15sp4-buildhost" {
@@ -1584,6 +1586,8 @@ module "sles15sp4-terminal" {
     manufacturer       = "HP"
     product            = "ProLiant DL360 Gen9"
   }
+  private_ip = "1"
+  private_name = " "
 }
 
 module "monitoring-server" {
