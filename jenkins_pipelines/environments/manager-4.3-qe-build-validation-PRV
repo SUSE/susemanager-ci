@@ -38,6 +38,7 @@ node('sumaform-cucumber-provo') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
+            choice(name: 'proxy_type', choices: ['proxy_traditional', 'proxy_container'], description: 'The proxy type'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
