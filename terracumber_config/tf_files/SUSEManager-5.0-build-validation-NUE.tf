@@ -115,14 +115,11 @@ module "base_core" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-//  Temporary WORKAROUND
-//  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o" ]
-  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o" ]
+  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o" ]
 
 
-//  Temporary WORKAROUND to verify issues in the Product Wizard
-//  mirror = "minima-mirror-ci-bv.mgr.suse.de"
-//  use_mirror_images = true
+  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images = true
 
   testsuite          = true
 
@@ -147,9 +144,8 @@ module "base_arm" {
   domain      = "mgr.suse.de"
   images      = [ "opensuse154armo", "opensuse155armo" ]
 
-//  Temporary WORKAROUND to verify issues in the Product Wizard
-//  mirror = "minima-mirror-ci-bv.mgr.suse.de"
-//  use_mirror_images = true
+  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images = true
 
   testsuite = true
 
@@ -188,8 +184,7 @@ module "server_containerized" {
   container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
 
 
-//  Temporary WORKAROUND to verify issues in the Product Wizard
-//  server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
+  server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
   java_debugging                 = false
   auto_accept                    = false
   disable_firewall               = false
@@ -423,27 +418,26 @@ module "centos7-minion" {
   install_salt_bundle = true
 }
 
-// Temporary WORKAROUND
-// module "liberty9-minion" {
-//   source             = "./modules/minion"
-//   base_configuration = module.base_core.configuration
-//   product_version    = "head"
-//   name               = "min-liberty9"
-//   image              = "libertylinux9o"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:75"
-//     memory             = 4096
-//   }
-//   server_configuration = {
-//     hostname = "suma-bv-50-srv.mgr.suse.de"
-//   }
-//   auto_connect_to_master  = false
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+module "liberty9-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  product_version    = "head"
+  name               = "min-liberty9"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:75"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-50-srv.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-//   additional_packages = [ "venv-salt-minion" ]
-//   install_salt_bundle = true
-// }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "oracle9-minion" {
   source             = "./modules/minion"
@@ -940,23 +934,23 @@ module "centos7-sshminion" {
   install_salt_bundle = true
 }
 
-// Temporary WORKAROUND
-// module "liberty9-sshminion" {
-//   source             = "./modules/sshminion"
-//   base_configuration = module.base_core.configuration
-//   product_version    = "head"
-//   name               = "minssh-liberty9"
-//   image              = "libertylinux9o"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:95"
-//     memory             = 4096
-//   }
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-//   additional_packages = [ "venv-salt-minion" ]
-//   install_salt_bundle = true
-// }
+module "liberty9-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  product_version    = "head"
+  name               = "minssh-liberty9"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:95"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "oracle9-sshminion" {
   source             = "./modules/sshminion"
@@ -1378,9 +1372,8 @@ module "controller" {
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-// Temporary WORKAROUND
-//  liberty9_minion_configuration    = module.liberty9-minion.configuration
-//  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
+  liberty9_minion_configuration    = module.liberty9-minion.configuration
+  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9-minion.configuration
   oracle9_sshminion_configuration = module.oracle9-sshminion.configuration
