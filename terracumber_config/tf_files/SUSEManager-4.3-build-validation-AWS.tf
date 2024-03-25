@@ -139,6 +139,7 @@ module "base" {
   testsuite                = true
   use_avahi                = false
   use_eip_bastion          = false
+  is_server_paygo_instance = false
 
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -167,9 +168,9 @@ module "server" {
   })
   name                       = "server"
   product_version            = "4.3-released"
-  main_disk_size             = 20
+  main_disk_size             = 200
   repository_disk_size       = 1500
-  database_disk_size         = 100
+  database_disk_size         = 0
   server_registration_code   = var.SERVER_REGISTRATION_CODE
 
   java_debugging                 = false
@@ -184,7 +185,7 @@ module "server" {
   create_sample_activation_key   = false
   create_sample_bootstrap_script = false
   publish_private_ssl_key        = false
-  use_os_released_updates        = false
+  use_os_released_updates        = true
   disable_download_tokens        = false
   disable_auto_bootstrap         = true
   large_deployment               = true
@@ -239,6 +240,7 @@ module "sles12sp5-client" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
+  additional_packages = [ "chrony" ]
 }
 
 module "sles15sp2-client" {
@@ -378,6 +380,7 @@ module "sles12sp5-minion" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
+  additional_packages = [ "chrony" ]
 }
 
 module "sles15sp2-minion" {
@@ -510,6 +513,7 @@ module "sles12sp5-sshminion" {
   provider_settings = {
     instance_type = "t3a.medium"
   }
+  additional_packages = [ "chrony" ]
 }
 
 module "sles15sp2-sshminion" {

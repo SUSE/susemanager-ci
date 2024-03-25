@@ -169,9 +169,9 @@ module "server" {
   name                       = "server"
   product_version            = "paygo"
   image                      = "suma-server-43-ltd-paygo"
-  main_disk_size             = 20
+  main_disk_size             = 200
   repository_disk_size       = 1500
-  database_disk_size         = 100
+  database_disk_size         = 0
 
   auto_accept                    = false
   monitored                      = false
@@ -184,7 +184,7 @@ module "server" {
   create_sample_activation_key   = false
   create_sample_bootstrap_script = false
   publish_private_ssl_key        = false
-  use_os_released_updates        = false
+  use_os_released_updates        = true
   disable_download_tokens        = false
   large_deployment               = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
