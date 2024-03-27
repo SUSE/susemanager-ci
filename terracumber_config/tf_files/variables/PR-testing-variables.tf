@@ -136,6 +136,10 @@ variable "IMAGES" {
   type = list(string)
 }
 
+variable "SERVER_IMAGE" {
+  type = string
+}
+
 variable "SUSE_MINION_IMAGE" {
   type = string
 }
