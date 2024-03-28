@@ -25,6 +25,9 @@ fixed some or whether your failing tests are also failing in master:
 
 https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-NUE/
 
+Check for the "flaky" tests by looking at the statistics of the last 7 days:
+
+http://grafana.mgr.suse.de/d/PO3YoiMMz/testsuites-wip?orgId=1&var-jobname=uyuni-master-dev-acceptance-tests-NUE&viewPanel=19&from=now-7d&to=now&refresh=5m
 
 In case of failure, you can connect to the server host. See $urlprefix/$timestamp for connection details.
 
