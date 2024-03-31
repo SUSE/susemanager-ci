@@ -1543,8 +1543,8 @@ module "sles12sp5-terminal" {
     manufacturer       = "Supermicro"
     product            = "X9DR3-F"
   }
-  private_ip = "1"
-  private_name = " "
+  private_ip         = 5
+  private_name       = "sle12sp5terminal"
 }
 
 module "sles15sp4-buildhost" {
@@ -1586,8 +1586,16 @@ module "sles15sp4-terminal" {
     manufacturer       = "HP"
     product            = "ProLiant DL360 Gen9"
   }
-  private_ip = "1"
-  private_name = " "
+  private_ip         = 6
+  private_name       = "sle15sp4terminal"
+}
+
+module "dhcp-dns" {
+  source             = "./modules/dhcp_dns"
+  base_configuration = module.base_core.configuration
+  name               = "dhcp-dns"
+  image              = "opensuse155o"
+  private_hosts      = [ module.proxy_containerized.configuration, module.sles12sp5-terminal.configuration, module.sles15sp4-terminal.configuration ]
 }
 
 module "monitoring-server" {

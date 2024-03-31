@@ -1262,7 +1262,7 @@ module "sles12sp5-terminal" {
     product            = "X9DR3-F"
   }
   private_ip         = 5
-  private_name       = "sles12sp5_terminal"
+  private_name       = "sle12sp5terminal"
 }
 
 module "sles15sp4-buildhost" {
@@ -1299,7 +1299,7 @@ module "sles15sp4-terminal" {
     product            = "ProLiant DL360 Gen9"
   }
   private_ip         = 6
-  private_name       = "sles15sp4_terminal"
+  private_name       = "sle15sp4terminal"
 }
 
 module "dhcp-dns" {
