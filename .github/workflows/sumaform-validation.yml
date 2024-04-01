@@ -79,6 +79,10 @@ jobs:
           cd sumaform
           ln -sfn ../backend_modules/null modules/backend
 
+          # Provide a fake private SSH key
+          mkdir -p ~/.ssh
+          touch ~/.ssh/id_rsa
+
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
             echo "::notice::Validating '`basename $tf_file`'..."
             cp ../$tf_file main.tf

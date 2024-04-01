@@ -351,7 +351,7 @@ module "proxy_containerized" {
     libvirt = libvirt.terminus
   }
   source             = "./modules/proxy_containerized"
-  base_configuration = module.base_core.configuration
+  base_configuration = module.base_retail.configuration
   product_version    = "head"
   name               = "pxy"
   provider_settings = {
@@ -1592,10 +1592,19 @@ module "sles15sp4-terminal" {
 
 module "dhcp-dns" {
   source             = "./modules/dhcp_dns"
-  base_configuration = module.base_core.configuration
+  base_configuration = module.base_retail.configuration
   name               = "dhcp-dns"
   image              = "opensuse155o"
-  private_hosts      = [ module.proxy_containerized.configuration, module.sles12sp5-terminal.configuration, module.sles15sp4-terminal.configuration ]
+  private_hosts = [
+    module.proxy_containerized.configuration,
+    module.sles12sp5-terminal.configuration,
+    module.sles15sp4-terminal.configuration
+  ]
+  hypervisor = {
+    host        = "terminus.mgr.prv.suse.net"
+    user        = "root"
+    private_key = file("~/.ssh/id_rsa")
+  }
 }
 
 module "monitoring-server" {
