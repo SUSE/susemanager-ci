@@ -1307,7 +1307,16 @@ module "dhcp-dns" {
   base_configuration = module.base_core.configuration
   name               = "dhcp-dns"
   image              = "opensuse155o"
-  private_hosts      = [ module.proxy_containerized.configuration, module.sles12sp5-terminal.configuration, module.sles15sp4-terminal.configuration ]
+  private_hosts = [
+    module.proxy_containerized.configuration,
+    module.sles12sp5-terminal.configuration,
+    module.sles15sp4-terminal.configuration
+  ]
+  hypervisor = {
+    host        = "suma-06.mgr.suse.de"
+    user        = "root"
+    private_key = file("~/.ssh/id_rsa")
+  }
 }
 
 module "monitoring-server" {
