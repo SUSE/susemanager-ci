@@ -22,7 +22,6 @@ short_product_name = "suma"
 update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates/"
 additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy/"
 build_packages = true
-default_timeout = 500
 
 if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     first_env = 10;
