@@ -28,6 +28,7 @@ def run(params) {
         def monitoring_stage_result_fail = false
         def client_stage_result_fail = false
         def client_paygo_stage_result_fail = false
+        def products_and_salt_migration_stage_result_fail = false
         def retail_stage_result_fail = false
         def containerization_stage_result_fail = false
 
@@ -381,6 +382,7 @@ def run(params) {
             }
             /** Monitoring stages end **/
 
+            /** Clients stages begin **/
             if (params.enable_client_stages) {
                 // Call the minion testing.
                 try {
@@ -393,6 +395,47 @@ def run(params) {
                     client_stage_result_fail = true
                 }
             }
+            /** Clients stages end **/
+
+            /** Products and Salt migration stages begin **/
+            try {
+                stage('Products and Salt migration stages') {
+                    if(params.must_run_products_and_salt_migration_tests) {
+                        migration_tests = [:]
+                        migration_features = sh(script: 'ls -1 /root/spacewalk/testsuite/features/build_validation/migration/', returnStdout: true)
+                        String[] features_list = migration_features.split("\n")
+
+                        // create a set of stages for each migration feature
+                        features_list.each( feature -> {
+                            minion = feature.replace("_migration.feature", "")
+
+                            migration_tests["${minion}"] = {
+                                if (params.confirm_before_continue) {
+                                    input "Press any key to start testing the migration of ${minion}"
+                                }
+                                stage("${minion}") {
+                                    echo "Testing migration of ${minion}"
+                                }
+                                stage("${minion} migration") {
+                                    res_minion_migration = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; cucumber features/build_validation/migration/${feature}'", returnStatus: true)
+                                    echo "${minion} migration status code: ${res_minion_migration}"
+                                    if (res_minion_migration != 0) {
+                                        error("Migration test for ${minion} failed with status code: ${res_minion_migration}")
+                                    }
+                                }
+                            }
+                        })
+                        // run them in parallel
+                        parallel migration_tests
+                    }
+                }
+            } catch (Exception ex) {
+                println('ERROR: one or more migrations have failed')
+                products_and_salt_migration_stage_result_fail = true
+            }
+            /** Products and Salt migration stages end **/      
+
+            /** Retail stages begin **/
             try {
                 stage('Prepare and run Retail') {
                     if (params.must_prepare_retail) {
@@ -415,12 +458,14 @@ def run(params) {
                             error("Run retail failed")
                         }
                     }
-                }
+                } 
             } catch (Exception ex) {
                 println("ERROR: Retail testing fail.\\nException: ${ex}")
                 retail_stage_result_fail = true
             }
+            /** Retail stages end **/
 
+            /** Containerization stages start **/
             try {
                 stage('Containerization') {
                     if (params.must_run_containerization_tests) {
@@ -439,6 +484,7 @@ def run(params) {
                 println("ERROR: Containerization failed\\nException: ${ex}")
                 containerization_stage_result_fail = true
             }
+            /** Containerization stages end **/
         }
         finally {
             stage('Save TF state') {
@@ -486,6 +532,10 @@ def run(params) {
                 // Fail pipeline if monitoring stages failed
                 if (monitoring_stage_result_fail) {
                     error("Monitoring stage failed")
+                }
+                // Fail pipeline if product or Salt migration stages failed
+                if (products_and_salt_migration_stage_result_fail) {
+                    error("Products and/or Salt migration stage failed")
                 }
                 // Fail pipeline if retail stages failed
                 if (retail_stage_result_fail) {
@@ -572,7 +622,8 @@ def clientTestingStages(capybara_timeout, default_timeout, minion_type = 'defaul
                 }
             }
             stage("Add Activation Keys ${node}") {
-                if (params.must_add_keys) {
+                 // skip this stage for Salt migration minion
+                if (params.must_add_keys && !node.contains('salt_migration_minion')) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start adding activation keys'
                     }
