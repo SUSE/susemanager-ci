@@ -1188,7 +1188,10 @@ module "sles12sp5-terminal" {
     manufacturer       = "Supermicro"
     product            = "X9DR3-F"
   }
+  private_ip         = 5
+  private_name       = "sle12sp5terminal"
 }
+
 
 module "sles15sp4-buildhost" {
   source             = "./modules/build_host"
@@ -1219,6 +1222,24 @@ module "sles15sp4-terminal" {
     vcpu               = 2
     manufacturer       = "HP"
     product            = "ProLiant DL360 Gen9"
+  }
+  private_ip         = 6
+  private_name       = "sle15sp4terminal"
+}
+
+module "dhcp-dns" {
+  source             = "./modules/dhcp_dns"
+  base_configuration = module.base_core.configuration
+  name               = "dhcp-dns"
+  image              = "opensuse155o"
+  private_hosts = [
+    module.sles12sp5-terminal.configuration,
+    module.sles15sp4-terminal.configuration
+  ]
+  hypervisor = {
+    host        = "suma-06.mgr.suse.de"
+    user        = "root"
+    private_key = file("~/.ssh/id_rsa")
   }
 }
 
