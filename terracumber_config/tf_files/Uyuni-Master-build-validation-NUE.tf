@@ -1227,22 +1227,6 @@ module "sles15sp4-terminal" {
   private_name       = "sle15sp4terminal"
 }
 
-module "dhcp-dns" {
-  source             = "./modules/dhcp_dns"
-  base_configuration = module.base_core.configuration
-  name               = "dhcp-dns"
-  image              = "opensuse155o"
-  private_hosts = [
-    module.sles12sp5-terminal.configuration,
-    module.sles15sp4-terminal.configuration
-  ]
-  hypervisor = {
-    host        = "suma-06.mgr.suse.de"
-    user        = "root"
-    private_key = file("~/.ssh/id_rsa")
-  }
-}
-
 module "monitoring-server" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration

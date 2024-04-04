@@ -1524,22 +1524,6 @@ module "sles15sp4-terminal" {
   private_name       = "sle15sp4terminal"
 }
 
-module "dhcp-dns" {
-  source             = "./modules/dhcp_dns"
-  base_configuration = module.base_retail.configuration
-  name               = "dhcp-dns"
-  image              = "opensuse155o"
-  private_hosts = [
-    module.sles12sp5-terminal.configuration,
-    module.sles15sp4-terminal.configuration
-  ]
-  hypervisor = {
-    host        = "margarita.mgr.prv.suse.net"
-    user        = "root"
-    private_key = file("~/.ssh/id_rsa")
-  }
-}
-
 module "monitoring-server" {
   providers = {
     libvirt = libvirt.margarita
