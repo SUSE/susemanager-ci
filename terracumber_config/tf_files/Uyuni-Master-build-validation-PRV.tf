@@ -1534,7 +1534,7 @@ module "dhcp-dns" {
     module.sles15sp4-terminal.configuration
   ]
   hypervisor = {
-    host        = "terminus.mgr.prv.suse.net"
+    host        = "margarita.mgr.prv.suse.net"
     user        = "root"
     private_key = file("~/.ssh/id_rsa")
   }
