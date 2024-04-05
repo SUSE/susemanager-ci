@@ -92,12 +92,13 @@ def run(params) {
                                     stage('Download last ami image') {
                                         sh "rm -rf ${resultdir}/images"
                                         sh "mkdir -p ${resultdir}/images"
-                                        server_image_name = sh(script: "curl ${suma43_build_url} | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Server-BYOS.*raw.xz\$'",
-                                                returnStdout: true).trim()
-                                        proxy_image_name = sh(script: "curl ${suma43_build_url} | grep -oP '<a href=\".+?\">\\K.+?(?=<)' | grep 'SUSE-Manager-Proxy-BYOS.*raw.xz\$'",
-                                                returnStdout: true).trim()
-                                        sh(script: "cd ${resultdir}/images; wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${server_image_name}")
-                                        sh(script: "cd ${resultdir}/images; wget https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/${proxy_image_name}")
+
+                                        sh(script: "curl ${suma43_build_url} > images.html")
+                                        server_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Server-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+                                        proxy_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Proxy-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+
+                                        sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${server_image_name}")
+                                        sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${proxy_image_name}")
                                         sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_server' --wait-count 3 -n '${server_image_name}' '${resultdir}/images/${server_image_name}'")
                                         sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_proxy' --wait-count 3 -n '${proxy_image_name}' '${resultdir}/images/${proxy_image_name}'")
                                         env.server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
