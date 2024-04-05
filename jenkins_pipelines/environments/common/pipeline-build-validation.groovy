@@ -98,10 +98,20 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start adding Maintenance Update repositories'
                     }
-                    echo 'Add custom channels and MU repositories'
                     res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${params.proxy_type}'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                     sh "exit ${res_mu_repos}"
+                }
+            }
+            stage('Add non MUs Proxy') {
+                if (params.must_add_non_MU_repositories && params.enable_proxy_stages) {
+                    echo 'Add proxy non MUs channels '
+                    if (params.confirm_before_continue) {
+                        input 'Press any key to start adding non Maintenance Update repositories'
+                    }
+                    res_non_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_proxy_tools_channels'", returnStatus: true)
+                    echo "Custom non MU repositories status code: ${res_non_mu_repos}"
+                    sh "exit ${res_non_mu_repos}"
                 }
             }
             stage('Add Activation Keys Proxy') {
