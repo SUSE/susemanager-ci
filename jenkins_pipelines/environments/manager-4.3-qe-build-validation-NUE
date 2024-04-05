@@ -16,6 +16,7 @@ node('sumaform-cucumber') {
             'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, debian12_minion, debian12_ssh_minion, ' +
             'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
             'opensuse155arm_minion, opensuse155arm_ssh_minion, ' +
+            'opensuse156arm_minion, opensuse156arm_ssh_minion, ' +
             'sle15sp5s390_minion, sle15sp5s390_ssh_minion, ' +
             'slemicro51_minion, slemicro52_minion, slemicro53_minion, slemicro54_minion, slemicro55_minion'
     properties([

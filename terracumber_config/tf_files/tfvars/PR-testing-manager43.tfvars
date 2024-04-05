@@ -1,7 +1,7 @@
 ############ Spacewalk unique variables ############
 
 IMAGE                  = "sles15sp4o"
-IMAGES                 = ["rocky9o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
+IMAGES                 = ["rocky9o", "opensuse155o", "opensuse156o", "sles15sp4o", "ubuntu2204o"]
 SUSE_MINION_IMAGE      = "sles15sp4o"
 PRODUCT_VERSION        = "4.3-pr"
 MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-suma43-pull-request-env-fail.txt"
