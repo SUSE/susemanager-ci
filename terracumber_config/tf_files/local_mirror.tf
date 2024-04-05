@@ -106,7 +106,7 @@ module "base" {
   cc_password = var.SCC_PASSWORD
   name_prefix = "mirror-mu-aws-"
   images = [
-    "opensuse155o", "opensuse156o"]
+    "opensuse155o"]
 
   provider_settings = {
     pool = local.pool
