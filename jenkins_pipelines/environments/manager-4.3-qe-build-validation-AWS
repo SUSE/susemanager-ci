@@ -15,6 +15,8 @@ node('sumaform-cucumber-provo') {
             'ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
             'debian10_minion, debian10_ssh_minion, debian11_minion, debian11_ssh_minion, debian12_minion, debian12_ssh_minion, ' +
             'opensuse154arm_minion, opensuse154arm_ssh_minion, ' +
+            'opensuse155arm_minion, opensuse155arm_ssh_minion, ' +
+            'opensuse156arm_minion, opensuse156arm_ssh_minion, ' +
             'slemicro51_minion, slemicro52_minion, slemicro53_minion, slemicro54_minion, slemicro55_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),

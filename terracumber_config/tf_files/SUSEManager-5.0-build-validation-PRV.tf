@@ -236,7 +236,7 @@ module "base_retail" {
   name_prefix = "suma-bv-50"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse155o" ]
+  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse155o", "opensuse156o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -287,7 +287,7 @@ module "base_arm" {
   name_prefix = "suma-bv-50"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse154armo", "opensuse155armo" ]
+  images      = [ "opensuse154armo", "opensuse155armo", "opensuse156armo" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -843,6 +843,33 @@ module "opensuse155arm-minion" {
   install_salt_bundle = true
 }
 
+module "opensuse156arm-minion" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "head"
+  name               = "prv-min-opensuse156arm"
+  image              = "opensuse156armo"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:0a"
+    overwrite_fqdn     = "suma-bv-50-min-opensuse156arm.mgr.prv.suse.net"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  server_configuration = {
+    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
 module "sles15sp5s390-minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
@@ -1383,6 +1410,29 @@ module "opensuse155arm-sshminion" {
   install_salt_bundle = true
 }
 
+module "opensuse156arm-sshminion" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "head"
+  name               = "prv-minssh-opensuse156arm"
+  image              = "opensuse156armo"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:0b"
+    overwrite_fqdn     = "suma-bv-50-minssh-opensuse156arm.mgr.prv.suse.net"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
 module "sles15sp5s390-sshminion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
@@ -1714,6 +1764,9 @@ module "controller" {
 
   opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
   opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+
+  opensuse156arm_minion_configuration    = module.opensuse156arm-minion.configuration
+  opensuse156arm_sshminion_configuration = module.opensuse156arm-sshminion.configuration
 
   sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
   sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
