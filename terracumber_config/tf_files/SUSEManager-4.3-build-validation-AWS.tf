@@ -404,7 +404,7 @@ module "sles15sp4-minion" {
 
 module "salt-migration-minion" {
   source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
+  base_configuration = module.base.configuration
   name               = "min-salt-migration"
   product_version    = "4.3-released"
   image              = "sles15sp5o"
