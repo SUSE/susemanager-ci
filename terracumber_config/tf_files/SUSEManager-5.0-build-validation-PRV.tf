@@ -366,6 +366,9 @@ module "proxy_containerized" {
     password = "admin"
   }
   runtime = "podman"
+  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+  // Most recent code. Enable again once Beta 2 will be approved:
+  // container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 }
