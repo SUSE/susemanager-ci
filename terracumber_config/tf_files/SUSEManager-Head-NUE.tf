@@ -153,8 +153,9 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       main_disk_size = 200
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
+      // WORKAROUND: The Salt bundle causes onboarding issues.
+      // See https://github.com/SUSE/spacewalk/issues/24074
+      install_salt_bundle = false
       runtime = "podman"
     }
     suse-minion = {
