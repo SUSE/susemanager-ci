@@ -125,6 +125,10 @@ variable "NAME_PREFIX" {
   default = null
 }
 
+locals {
+  domain            = "suma.ci.aws"
+}
+
 provider "aws" {
   region     = var.REGION
 }
