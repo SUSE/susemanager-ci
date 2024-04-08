@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-k3s-"
@@ -131,6 +131,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
+      image = "opensuse155o"
       provider_settings = {
         mac = "aa:b2:93:01:00:31"
         memory = 16384
@@ -143,6 +144,7 @@ module "cucumber_testsuite" {
       main_disk_size = 300
     }
     proxy = {
+      image = "opensuse155o"
       provider_settings = {
         mac = "aa:b2:93:01:00:32"
       }
