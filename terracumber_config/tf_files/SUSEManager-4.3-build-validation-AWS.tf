@@ -524,7 +524,7 @@ module "sles15sp4-sshminion" {
   }
 }
 
-module "sles15sp4-sshminion" {
+module "sles15sp5-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
