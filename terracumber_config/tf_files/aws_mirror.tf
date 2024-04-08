@@ -133,15 +133,14 @@ module "base" {
   testsuite                = true
   use_avahi                = false
   use_eip_bastion          = false
-
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region = var.REGION
     ssh_allowed_ips = var.ALLOWED_IPS
     key_name = var.KEY_NAME
     key_file = var.KEY_FILE
-//    route53_domain    = local.domain
-//    bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
+    route53_domain    = local.domain
+    bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
   }
 }
 
