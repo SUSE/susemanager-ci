@@ -178,10 +178,9 @@ module "server_containerized" {
   }
   main_disk_size = 3000
   runtime = "podman"
-// WORKAROUND
-// We want to test the most recent code right now until the submissions for Beta 2 are ready
-//  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
-  container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
+  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+  // Most recent code. Enable again once Beta 2 will be approved:
+  // container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
 
 
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
