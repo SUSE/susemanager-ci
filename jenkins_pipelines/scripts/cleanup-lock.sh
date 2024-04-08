@@ -42,3 +42,4 @@ else
   echo "DEBUG: Nothing to do"
 fi
 
+echo "start"
