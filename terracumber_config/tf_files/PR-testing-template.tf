@@ -71,14 +71,15 @@ module "cucumber_testsuite" {
       image = var.SERVER_IMAGE
       server_mounted_mirror = var.MIRROR
       main_disk_size = 500
-      proxy_containerized = {
-        provider_settings = {
-          mac = "aa:b2:93:01:00:22"
-        }
-        additional_packages = [ "venv-salt-minion" ]
-        install_salt_bundle = true
-        runtime = "podman"
+    }
+    proxy_containerized = {
+      image = var.PROXY_IMAGE
+      provider_settings = {
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
       }
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+      runtime = "podman"
     }
     suse-minion = {
       image = var.SUSE_MINION_IMAGE
