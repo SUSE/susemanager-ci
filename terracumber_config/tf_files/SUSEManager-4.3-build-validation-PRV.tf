@@ -1707,6 +1707,8 @@ module "sles15sp4-terminal" {
     manufacturer       = "HP"
     product            = "ProLiant DL360 Gen9"
   }
+  private_ip         = 6
+  private_name       = "sle15sp4terminal"
 }
 
 module "monitoring-server" {
