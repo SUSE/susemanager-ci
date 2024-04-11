@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-04.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky9o", "opensuse155o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "suma-testnaica-"
@@ -127,14 +127,13 @@ module "cucumber_testsuite" {
     server = {
       provider_settings = {
         mac = "aa:b2:93:01:00:61"
+        memory = 12288
       }
-      /* TODO: needs to be upgraded to openSUSE_Leap_15.4?
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/openSUSE_Leap_15.3/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SLE_15_SP6/"
       }
-      */
     }
-    /*
+/*
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:62"
@@ -145,71 +144,37 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    */
-    suse-client = {
-      image = "sles15sp4o"
-      name = "cli-sles15"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:64"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
+*/
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:00:66"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
-    suse-sshminion = {
-      image = "sles15sp4o"
-      name = "minssh-sles15"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:68"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
-    redhat-minion = {
-      image = "centos7o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:69"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
+        mac = "aa:b2:93:01:00:76"
         vcpu = 2
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
-    debian-minion = {
-      name = "min-ubuntu2204"
-      image = "ubuntu2204o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:6b"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
-    build-host = {
-      image = "sles15sp4o"
-      name = "min-build"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:6d"
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
+#   redhat-minion = {
+#     image = "rocky9o"
+#     name = "min-rocky9"
+#     provider_settings = {
+#       mac = "aa:b2:93:01:00:69"
+#       // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+#       // Also, openscap cannot run with less than 1.25 GB of RAM
+#       memory = 2048
+#       vcpu = 2
+#     }
+#     additional_packages = [ "venv-salt-minion" ]
+#     install_salt_bundle = true
+#   }
   }
   provider_settings = {
     pool               = "ssd"
     network_name       = null
     bridge             = "br0"
-    additional_network = "192.168.142.0/24"
+    #additional_network = "192.168.142.0/24"
   }
 }
 
