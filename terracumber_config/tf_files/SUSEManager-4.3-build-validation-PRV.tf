@@ -1669,6 +1669,8 @@ module "sles12sp5-terminal" {
     manufacturer       = "Supermicro"
     product            = "X9DR3-F"
   }
+  private_ip         = 5
+  private_name       = "sle12sp5terminal"
 }
 
 module "sles15sp4-buildhost" {
