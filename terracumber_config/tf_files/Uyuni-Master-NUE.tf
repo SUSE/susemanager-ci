@@ -144,9 +144,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:d2"
         vcpu = 2
-        # WORKAROUND: the 2 GB advertised in our documentation seem not enough anymore?
-        # memory = 2048
-        memory = 3072
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
