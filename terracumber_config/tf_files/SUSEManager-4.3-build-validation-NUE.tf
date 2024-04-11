@@ -141,7 +141,7 @@ module "base_arm" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "opensuse154armo", "opensuse155armo", "opensuse156armo" ]
+  images      = [ "opensuse154armo", "opensuse155armo" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true

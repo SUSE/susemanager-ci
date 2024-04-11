@@ -62,8 +62,6 @@ v43_client_tools: dict[str, set[str]] = {
                               "/SUSE_Updates_SLE-Manager-Tools_15_aarch64/"},
     "opensuse155arm_minion": {"/SUSE_Updates_openSUSE-SLE_15.5/",
                               "/SUSE_Updates_SLE-Manager-Tools_15_aarch64/"},
-    "opensuse156arm_minion": {"/SUSE_Updates_openSUSE-SLE_15.6/",
-                              "/SUSE_Updates_SLE-Manager-Tools_15_aarch64/"},
     "rhel9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "rocky9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "alma9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
