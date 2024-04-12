@@ -122,7 +122,7 @@ variable "ALLOWED_IPS" {
 
 variable "NAME_PREFIX" {
   type = string
-  default = null
+  default = "manager-4-3-qe-build-validation-aws"
 }
 
 locals {
