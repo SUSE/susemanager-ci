@@ -113,7 +113,7 @@ variable "PROXY_REGISTRATION_CODE" {
 
 variable "NAME_PREFIX" {
   type = string
-  default = null
+  default = "aws-mirror"
 }
 
 locals {
