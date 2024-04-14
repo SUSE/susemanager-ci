@@ -142,7 +142,7 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP6/"
       }
     }
-    proxy = {
+    proxy_containerized = {
       image = "leapmicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
