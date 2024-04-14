@@ -147,9 +147,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
       }
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP6/"
-      }
+      main_disk = 200
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "podman"
