@@ -141,7 +141,6 @@ module "cucumber_testsuite" {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP6/"
       }
     }
-/*
     proxy = {
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
@@ -151,8 +150,8 @@ module "cucumber_testsuite" {
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
+      runtime = "podman"
     }
-*/
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
