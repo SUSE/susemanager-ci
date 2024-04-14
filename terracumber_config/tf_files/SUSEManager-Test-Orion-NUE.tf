@@ -155,7 +155,6 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
       runtime = "podman"
     }
-/*
     suse-minion = {
       image = "sles15sp4o"
       name = "min-sles15"
@@ -167,7 +166,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-*/
     suse-sshminion = {
       image = "sles15sp4o"
       name = "minssh-sles15"
