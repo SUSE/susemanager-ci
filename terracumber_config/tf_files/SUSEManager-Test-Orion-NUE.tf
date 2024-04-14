@@ -146,9 +146,11 @@ module "cucumber_testsuite" {
     proxy_containerized = {
       image = "leapmicro55o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:72"
+        mac = "aa:b2:93:01:00:b2"
+        vcpu = 2
+        memory = 2048
       }
-      main_disk = 200
+      main_disk_size = 200
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "podman"
