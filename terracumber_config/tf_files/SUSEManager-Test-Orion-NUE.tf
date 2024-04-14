@@ -103,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55o"]
+  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55o", "leapmicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-testorion-"
@@ -143,7 +143,7 @@ module "cucumber_testsuite" {
       }
     }
     proxy = {
-      image = "slemicro55o"
+      image = "leapmicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
       }
