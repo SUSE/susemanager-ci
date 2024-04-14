@@ -130,6 +130,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
+      image = "slemicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
         memory = 16384
@@ -142,6 +143,7 @@ module "cucumber_testsuite" {
       }
     }
     proxy = {
+      image = "slemicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
       }
