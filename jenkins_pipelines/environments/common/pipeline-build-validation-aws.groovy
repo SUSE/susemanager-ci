@@ -669,7 +669,7 @@ def getNodesHandler() {
     Set<String> envVar = new HashSet<String>()
     def BootstrapRepositoryStatus = [:]
     def CustomChannelStatus       = [:]
-    modules = sh(script: "cd ${resultdir}/sumaform; terraform state list",
+    modules = sh(script: "cd ${resultdir}/sumaform-aws; terraform state list",
             returnStdout: true)
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
