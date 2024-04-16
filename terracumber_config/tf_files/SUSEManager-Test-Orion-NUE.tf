@@ -146,7 +146,7 @@ module "cucumber_testsuite" {
     proxy_containerized = {
       image = "leapmicro55o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:b2"
+        mac = "aa:b2:93:01:00:72"
         vcpu = 2
         memory = 2048
       }
