@@ -127,13 +127,13 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:30"
+        mac = "aa:b2:93:01:00:10"
       }
     }
     server_containerized = {
       image = "opensuse155o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:31"
+        mac = "aa:b2:93:01:00:11"
         memory = 16384
       }
       runtime = "k3s"
@@ -146,7 +146,7 @@ module "cucumber_testsuite" {
     proxy = {
       image = "opensuse155o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:32"
+        mac = "aa:b2:93:01:00:12"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -155,7 +155,7 @@ module "cucumber_testsuite" {
       image = "opensuse155o"
       name = "min-suse"
       provider_settings = {
-        mac = "aa:b2:93:01:00:36"
+        mac = "aa:b2:93:01:00:16"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -164,7 +164,7 @@ module "cucumber_testsuite" {
       image = "opensuse155o"
       name = "minssh-suse"
       provider_settings = {
-        mac = "aa:b2:93:01:00:38"
+        mac = "aa:b2:93:01:00:18"
       }
       additional_packages = [ "venv-salt-minion", "iptables" ]
       install_salt_bundle = true
@@ -173,7 +173,7 @@ module "cucumber_testsuite" {
       image = "rocky8o"
       name = "min-rocky8"
       provider_settings = {
-        mac = "aa:b2:93:01:00:3a"
+        mac = "aa:b2:93:01:00:1a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         memory = 2048
@@ -186,7 +186,7 @@ module "cucumber_testsuite" {
       name = "min-ubuntu2204"
       image = "ubuntu2204o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:3b"
+        mac = "aa:b2:93:01:00:1b"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -195,7 +195,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-build"
       provider_settings = {
-        mac = "aa:b2:93:01:00:3d"
+        mac = "aa:b2:93:01:00:1d"
         memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
@@ -211,7 +211,7 @@ module "cucumber_testsuite" {
       name = "min-kvm"
       
       provider_settings = {
-        mac = "aa:b2:93:01:00:3e"
+        mac = "aa:b2:93:01:00:1e"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
