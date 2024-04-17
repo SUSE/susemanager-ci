@@ -686,7 +686,7 @@ module "slemicro51-minion" {
 
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
+  install_salt_bundle = false
 }
 
 module "slemicro52-minion" {
@@ -709,7 +709,7 @@ module "slemicro52-minion" {
 
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
+  install_salt_bundle = false
 }
 
 module "slemicro53-minion" {
@@ -732,7 +732,7 @@ module "slemicro53-minion" {
 
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
+  install_salt_bundle = false
 }
 
 module "slemicro54-minion" {
@@ -755,7 +755,7 @@ module "slemicro54-minion" {
 
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
+  install_salt_bundle = false
 }
 
 module "slemicro55-minion" {
@@ -778,7 +778,7 @@ module "slemicro55-minion" {
 
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
+  install_salt_bundle = false
 }
 
 module "sles12sp5-sshminion" {
