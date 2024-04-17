@@ -220,6 +220,11 @@ module "cucumber_testsuite" {
     dhcp-dns = {
       name = "dhcp-dns"
       image = "opensuse155o"
+      hypervisor = {
+        host        = "suma-01.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_rsa")
+      }
     }
     kvm-host = {
       image = "sles15sp4o"
