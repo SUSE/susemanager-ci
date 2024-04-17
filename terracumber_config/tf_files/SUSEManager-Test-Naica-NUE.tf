@@ -149,7 +149,7 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       name = "min-sles15"
       provider_settings = {
-        mac = "aa:b2:93:01:00:76"
+        mac = "aa:b2:93:01:00:66"
         vcpu = 2
         memory = 2048
       }
