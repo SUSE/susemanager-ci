@@ -205,6 +205,10 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
+    dhcp-dns = {
+      name = "dhcp-dns"
+      image = "opensuse155o"
+    }
     kvm-host = {
       image = "opensuse155o"
       name = "min-kvm"

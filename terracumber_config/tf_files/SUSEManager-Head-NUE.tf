@@ -217,6 +217,10 @@ module "cucumber_testsuite" {
     pxeboot-minion = {
       image = "sles15sp4o"
     }
+    dhcp-dns = {
+      name = "dhcp-dns"
+      image = "opensuse155o"
+    }
     kvm-host = {
       image = "sles15sp4o"
       name = "min-kvm"
