@@ -802,6 +802,10 @@ module "slemicro51-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  // WORKAROUND: Does not work in sumaform, yet
+  //  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = false
 }
 
 module "slemicro52-minion" {
@@ -821,6 +825,10 @@ module "slemicro52-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  // WORKAROUND: Does not work in sumaform, yet
+  //  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = false
 }
 
 module "slemicro53-minion" {
@@ -840,6 +848,10 @@ module "slemicro53-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  // WORKAROUND: Does not work in sumaform, yet
+  //  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = false
 }
 
 module "slemicro54-minion" {
@@ -859,6 +871,10 @@ module "slemicro54-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  // WORKAROUND: Does not work in sumaform, yet
+  //  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = false
 }
 
 module "slemicro55-minion" {
@@ -878,6 +894,10 @@ module "slemicro55-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  // WORKAROUND: Does not work in sumaform, yet
+  //  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = false
 }
 
 module "sles12sp5-sshminion" {
