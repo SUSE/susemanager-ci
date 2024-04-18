@@ -262,7 +262,7 @@ module "base_debian" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o" ]
+  images      = [ "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -872,33 +872,7 @@ module "ubuntu2204-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// Debian 9 is not supported by 4.3
-
-module "debian10-minion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.3-released"
-  name               = "min-debian10"
-  image              = "debian10o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:bd"
-    memory             = 4096
-  }
-
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
+// Debian 9 and 10 are not supported by 4.3
 
 module "debian11-minion" {
   providers = {
@@ -1425,28 +1399,7 @@ module "ubuntu2204-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// Debian 9 is not supported by 4.3
-
-module "debian10-sshminion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-debian10"
-  image              = "debian10o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:dd"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
+// Debian 9 and 10 are not supported by 4.3
 
 module "debian11-sshminion" {
   providers = {
@@ -1807,9 +1760,6 @@ module "controller" {
 
   ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
-
-  debian10_minion_configuration    = module.debian10-minion.configuration
-  debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration
