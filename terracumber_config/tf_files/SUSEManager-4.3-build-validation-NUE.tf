@@ -677,9 +677,7 @@ module "debian10-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
+  install_salt_bundle = false
 }
 
 module "debian11-minion" {
@@ -719,8 +717,6 @@ module "debian12-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "opensuse154arm-minion" {
@@ -825,6 +821,7 @@ module "slemicro51-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = false
 }
 
 module "slemicro52-minion" {
@@ -844,6 +841,7 @@ module "slemicro52-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = false
 }
 
 module "slemicro53-minion" {
@@ -863,6 +861,7 @@ module "slemicro53-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = false
 }
 
 module "slemicro54-minion" {
@@ -882,6 +881,7 @@ module "slemicro54-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = false
 }
 
 module "slemicro55-minion" {
@@ -901,6 +901,7 @@ module "slemicro55-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = false
 }
 
 module "sles12sp5-sshminion" {
@@ -1003,8 +1004,6 @@ module "alma8-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "alma9-sshminion" {
@@ -1020,8 +1019,6 @@ module "alma9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "centos7-sshminion" {
@@ -1037,8 +1034,6 @@ module "centos7-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "liberty9-sshminion" {
@@ -1054,8 +1049,6 @@ module "liberty9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "oracle9-sshminion" {
@@ -1071,8 +1064,6 @@ module "oracle9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "rocky8-sshminion" {
@@ -1088,8 +1079,6 @@ module "rocky8-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "rocky9-sshminion" {
@@ -1105,8 +1094,6 @@ module "rocky9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "ubuntu2004-sshminion" {
@@ -1122,9 +1109,6 @@ module "ubuntu2004-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "ubuntu2204-sshminion" {
@@ -1156,9 +1140,7 @@ module "debian10-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
+  install_salt_bundle = false
 }
 
 module "debian11-sshminion" {
@@ -1188,8 +1170,6 @@ module "debian12-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "opensuse154arm-sshminion" {
@@ -1237,7 +1217,7 @@ module "sles15sp5s390-sshminion" {
   base_configuration = module.base_s390.configuration
 
   name               = "minssh-sles15sp5s390"
-  image              = "s15s5-minimal-2part-xfs"
+  image              = "s15s3-jeos-1part-ext4"
 
   provider_settings = {
     userid             = "S43SSNUE"
