@@ -41,4 +41,3 @@ else
   echo "DEBUG: No lockfiles found"
   echo "DEBUG: Nothing to do"
 fi
-
