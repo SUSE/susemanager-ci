@@ -1403,7 +1403,6 @@ module "controller" {
   }
   swap_file_size = null
   catch_timeout_message = true
-
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
