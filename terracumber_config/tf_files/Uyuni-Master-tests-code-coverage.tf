@@ -148,7 +148,7 @@ module "cucumber_testsuite" {
     }
     suse-minion = {
       image = "opensuse155o"
-      name = "min-suse"
+      name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f4"
         memory = 4096
@@ -158,7 +158,7 @@ module "cucumber_testsuite" {
     }
     suse-sshminion = {
       image = "opensuse155o"
-      name = "minssh-suse"
+      name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f5"
         memory = 4096
