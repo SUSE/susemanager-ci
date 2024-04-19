@@ -23,7 +23,6 @@ node('sumaform-cucumber-provo') {
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
             // This is different than other pipelines to make it work with the simple proxy_traditional without refactoring all feature files
-            choice(name: 'proxy_type', choices: ['proxy', 'proxy_container'], description: 'The proxy type'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),

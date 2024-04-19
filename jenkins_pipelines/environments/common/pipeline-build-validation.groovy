@@ -99,7 +99,7 @@ def run(params) {
                         input 'Press any key to start adding Maintenance Update repositories'
                     }
                     echo 'Add custom channels and MU repositories'
-                    res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${params.proxy_type}'", returnStatus: true)
+                    res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_proxy'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                     sh "exit ${res_mu_repos}"
                 }
@@ -110,7 +110,7 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start adding activation keys'
                     }
-                    res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${params.proxy_type}'", returnStatus: true)
+                    res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_proxy'", returnStatus: true)
                     echo "Add Proxy Activation Key status code: ${res_add_keys}"
                     sh "exit ${res_add_keys}"
                 }
@@ -121,7 +121,7 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start creating the proxy bootstrap repository'
                     }
-                    res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_${params.proxy_type}'", returnStatus: true)
+                    res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_proxy'", returnStatus: true)
                     echo "Create Proxy bootstrap repository status code: ${res_create_bootstrap_repos}"
                     sh "exit ${res_create_bootstrap_repos}"
                 }
@@ -131,7 +131,7 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start bootstraping the Proxy'
                     }
-                    res_init_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_${params.proxy_type}'", returnStatus: true)
+                    res_init_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_proxy'", returnStatus: true)
                     echo "Init Proxy status code: ${res_init_proxy}"
                     sh "exit ${res_init_proxy}"
                 }
