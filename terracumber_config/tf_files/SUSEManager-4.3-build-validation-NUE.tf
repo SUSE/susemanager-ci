@@ -1211,23 +1211,24 @@ module "opensuse155arm-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp5s390-sshminion" {
-  source             = "./backend_modules/feilong/host"
-  base_configuration = module.base_s390.configuration
+// Disable until sles15sp5s390-sshminion is correctly cleaned from feilong
+// module "sles15sp5s390-sshminion" {
+//  source             = "./backend_modules/feilong/host"
+//  base_configuration = module.base_s390.configuration
 
-  name               = "minssh-sles15sp5s390"
-  image              = "s15s5-minimal-2part-xfs"
+//  name               = "minssh-sles15sp5s390"
+//  image              = "s15s5-minimal-2part-xfs"
 
-  provider_settings = {
-    userid             = "S4313SSNUE"
-    mac                = "02:3a:fc:42:00:29"
-    ssh_user           = "sles"
-    vswitch            = "VSUMA"
-  }
+//  provider_settings = {
+//    userid             = "S43SSNUE"
+//    mac                = "02:3a:fc:42:00:29"
+//    ssh_user           = "sles"
+//    vswitch            = "VSUMA"
+//  }
 
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
+//  use_os_released_updates = false
+//  ssh_key_path            = "./salt/controller/id_rsa.pub"
+//}
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro51-sshminion" {
