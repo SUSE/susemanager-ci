@@ -1219,7 +1219,7 @@ module "sles15sp5s390-sshminion" {
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
-    userid             = "S43SSNUE"
+    userid             = "S4313SSNUE"
     mac                = "02:3a:fc:42:00:29"
     ssh_user           = "sles"
     vswitch            = "VSUMA"
