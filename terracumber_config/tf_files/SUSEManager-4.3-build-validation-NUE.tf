@@ -1478,7 +1478,8 @@ module "controller" {
   opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
 
   sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
-  sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
+// Disable until  sle15sp5s390_sshminion correctly clean from feilong
+//  sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
 
   salt_migration_minion_configuration = module.salt-migration-minion.configuration
 
