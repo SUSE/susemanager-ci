@@ -163,7 +163,7 @@ module "base_s390" {
   testsuite   = true
 }
 
-module "server" {
+module "server_containerized" {
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
@@ -200,15 +200,22 @@ module "server" {
   from_email                     = "root@suse.de"
   accept_all_ssl_protocols       = true
 
+  runtime = "podman"
+  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+  container_tag = "latest"
+  helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+  login_timeout = 28800
+
   //server_additional_repos
 
 }
 
-module "proxy" {
+module "proxy_containerized" {
   source             = "./modules/proxy"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
   name               = "pxy"
+  runtime = "podman"
   provider_settings = {
     mac                = "aa:b2:93:02:01:a2"
     memory             = 4096
