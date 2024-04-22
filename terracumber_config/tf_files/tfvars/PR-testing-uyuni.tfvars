@@ -2,7 +2,7 @@
 
 IMAGE                  = "opensuse155-ci-pro"
 SERVER_IMAGE           = "leapmicro55o"
-PROXY_IMAGE            = "sles15sp4o"
+PROXY_IMAGE            = "opensuse155o"
 IMAGES                 = ["rocky9o", "opensuse155o", "opensuse155-ci-pro", "ubuntu2204o", "sles15sp4o", "leapmicro55o"]
 SUSE_MINION_IMAGE      = "opensuse155o"
 PRODUCT_VERSION        = "uyuni-pr"
