@@ -632,6 +632,10 @@ module "controller" {
   sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
   sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
 
+  sle15sp5_client_configuration    = module.sles15sp5-client.configuration
+  sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
+  sle15sp5_sshminion_configuration = module.sles15sp5-sshminion.configuration
+
   rocky8_minion_configuration    = module.rocky8-minion.configuration
   rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
 
@@ -641,13 +645,9 @@ module "controller" {
   ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
 
-//  debian11_minion_configuration    = module.debian11-minion.configuration
-//  debian11_sshminion_configuration = module.debian11-sshminion.configuration
-
-//  debian12_minion_configuration    = module.debian12-minion.configuration
-//  debian12_sshminion_configuration = module.debian12-sshminion.configuration
-
   rhel9_minion_configuration          = module.rhel9-minion.configuration
+
+  salt_migration_minion_configuration = module.salt-migration-minion.configuration
 
 }
 
