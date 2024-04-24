@@ -3,7 +3,7 @@
 node('sumaform-cucumber-provo') {
     def minionList = 'sle15sp4_minion'
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),

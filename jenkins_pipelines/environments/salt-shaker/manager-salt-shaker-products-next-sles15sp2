@@ -2,7 +2,7 @@
 
 node('salt-shaker-tests') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4', artifactNumToKeepStr: '3')),
+        buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         pipelineTriggers([cron('H 0 * * *')]),
         parameters([

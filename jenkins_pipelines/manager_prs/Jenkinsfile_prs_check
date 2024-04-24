@@ -2,7 +2,7 @@
 
 // Configure the build properties
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '500', daysToKeepStr: '4'))
+    buildDiscarder(logRotator(numToKeepStr: '500'))
 ])
 
 pipeline {
