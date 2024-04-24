@@ -2,7 +2,7 @@
 
 node('sumaform-cucumber') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '4')),
+        buildDiscarder(logRotator(numToKeepStr: '20')),
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),

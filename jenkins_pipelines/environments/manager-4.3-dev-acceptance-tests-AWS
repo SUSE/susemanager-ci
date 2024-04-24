@@ -2,7 +2,7 @@
 
 node('sumaform-cucumber-provo') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30', artifactNumToKeepStr: '3')),
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),

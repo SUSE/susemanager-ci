@@ -1,6 +1,6 @@
 node('sumaform-cucumber-provo') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '1', daysToKeepStr: '30', artifactNumToKeepStr: '1')),
+        buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1')),
         pipelineTriggers([cron('0 0 * * 7')]),
         disableConcurrentBuilds(),
         parameters([

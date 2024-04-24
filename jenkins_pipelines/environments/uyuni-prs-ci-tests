@@ -2,7 +2,7 @@
 
 node('pull-request-test') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '30', daysToKeepStr: '15')),
+        buildDiscarder(logRotator(numToKeepStr: '30')),
         parameters([
             string(name: 'platform_localisation', defaultValue: 'PRV', description: 'Decide if it will be run in \'PRV\' or \'NUE\''),
             string(name: 'product_version', defaultValue: 'uyuni', description: 'Select if we are using \'uyuni\' or \'manager43\' project'),
