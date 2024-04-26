@@ -7,7 +7,7 @@ node('sumaform-cucumber') {
         pipelineTriggers([cron('H 3 * * *')]),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'fix-reference-repo-sync', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-Head-refenv-NUE.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
