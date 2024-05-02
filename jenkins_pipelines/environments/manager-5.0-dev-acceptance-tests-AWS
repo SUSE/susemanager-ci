@@ -28,7 +28,7 @@ node('sumaform-cucumber-provo') {
             string(name: 'aws_availability_zone', defaultValue: 'eu-central-1a', description: 'Describe the AWS availability zone to deploy the server'),
             string(name: 'key_file', defaultValue: '/home/jenkins/.ssh/testing-suma.pem', description: 'Path to SSH private key to access instance in AWS'),
             string(name: 'key_name', defaultValue: 'testing-suma', description: 'SSH key name in AWS'),
-            text(name: 'allowed_IPS', defaultValue: '65.132.116.252', description: 'Add the public IPs to add to AWS ingress security group ( keep default Jenkins address ) separated by new line' ),
+            text(name: 'allowed_IPS', defaultValue: '65.132.116.254', description: 'Add the public IPs to add to AWS ingress security group ( keep default Jenkins address ) separated by new line' ),
             text(name: 'build_image', description: 'Build image url' )
             ])
     ])
