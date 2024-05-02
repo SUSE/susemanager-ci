@@ -88,13 +88,12 @@ def run(params) {
                 sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${local_mirror_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
                 sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws --runstep gitsync"
             }
-
-            if (params.build_image != null) {
+            if (params.prepare_aws_env) {
                 stage("Prepare AWS environment") {
                     parallel(
 
                             "upload_latest_image": {
-                                if (params.use_latest_ami_image) {
+                                if (params.build_image != null) {
 //                                    stage('Clean old images') {
 //                                        // Get all image ami ids
 //                                        image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
