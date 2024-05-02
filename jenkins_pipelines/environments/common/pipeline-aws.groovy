@@ -3,14 +3,13 @@ def run(params) {
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         local_mirror_dir = "${resultdir}/sumaform-local"
         aws_mirror_dir = "${resultdir}/sumaform-aws"
         awscli = '/usr/local/bin/aws'
-        suma43_build_url = "https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/"
         node_user = 'jenkins'
-        build_validation = true
         ssh_option = '-o StrictHostKeyChecking=no -o ConnectTimeout=7200 -o ServerAliveInterval=60'
 
         server_ami = null
@@ -20,21 +19,17 @@ def run(params) {
         deployed_local = false
         deployed_aws = false
 
-        // Declare lock resource use during node bootstrap
-        mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
-        def client_stage_result_fail = false
-
         local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir}"
         aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir}"
         env.common_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/${params.tf_file} --gitfolder ${aws_mirror_dir} --bastion_ssh_key ${params.key_file}"
+        env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; "
 
-        //Capybara configuration
-        def capybara_timeout =30
-        def default_timeout = 300
+        // Upload image variables
+        security_group_id = 'sg-0778949b97990ce04'
+        subnet_id = 'subnet-05b9d049f3af01c38'
+        image_help_ami = 'ami-0ad2088f58aad429e'
 
-        // Path to JSON run set file for non MU repositories
-        env.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json'
-
+        pattern = ~/\/([^\/]*Manager-(?:Server|Proxy)-[^\/]*)-[^\/]*BYOS[^\/]*-Build(\d+\.\d+)\.raw\.xz/
 
         if (params.terraform_parallelism) {
             local_mirror_params = "${local_mirror_params} --parallelism ${params.terraform_parallelism}"
@@ -43,9 +38,46 @@ def run(params) {
         }
         // Public IP for AWS ingress
         String[] ALLOWED_IPS = params.allowed_IPS.split("\n")
+        if (params.bastion_ssh_key_file) {
+            env.common_params = "${env.common_params} --bastion_ssh_key ${params.bastion_ssh_key_file} --bastion_user ${params.bastion_username}"
+            if (params.bastion_hostname) {
+                env.common_params = "${env.common_params} --bastion_hostname ${params.bastion_hostname}"
+            }
+        }
+
+        def previous_commit = null
+        def product_commit = null
+        if (params.show_product_changes) {
+            // Retrieve the hash commit of the last product built in OBS/IBS and previous job
+            def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
+            if (prefix == "uyuni-master-dev") {
+                prefix = "manager-Head-dev"
+            }
+            // The 2obs jobs are releng, not dev
+            prefix = prefix.replaceAll("-dev", "-releng")
+            def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
+            def requestJson = readJSON text: request.getContent()
+            product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
+            product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
+            print "Current product commit: ${product_commit}"
+            previous_commit = currentBuild.getPreviousBuild().description
+            if (previous_commit == null) {
+                previous_commit = product_commit
+            } else {
+                previous_commit = previous_commit.substring(previous_commit.indexOf('[') + 1, previous_commit.indexOf(']'));
+            }
+            print "Previous product commit: ${previous_commit}"
+        }
+        // Start pipeline
+        deployed = false
 
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
+                if (params.show_product_changes) {
+                    // Rename build using product commit hash
+                    currentBuild.description =  "[${product_commit}]"
+                }
+
                 // Create a directory for  to place the directory with the build results (if it does not exist)
                 sh "mkdir -p ${resultdir}"
                 git url: params.terracumber_gitrepo, branch: params.terracumber_ref
@@ -53,55 +85,54 @@ def run(params) {
                     checkout scm
                 }
                 // Clone sumaform for aws and local repositories
-                sh "./terracumber-cli ${local_mirror_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend libvirt"
-                sh "./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws"
+                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${local_mirror_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync --sumaform-backend aws --runstep gitsync"
             }
 
-
-            if (params.prepare_aws_env) {
+            if (params.build_image != null) {
                 stage("Prepare AWS environment") {
                     parallel(
 
                             "upload_latest_image": {
                                 if (params.use_latest_ami_image) {
-                                    stage('Clean old images') {
-                                        // Get all image ami ids
-                                        image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
-                                                returnStdout: true)
-                                        // Get all snapshot ids
-                                        image_snapshots = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].BlockDeviceMappings[0].Ebs.SnapshotId'",
-                                                returnStdout: true)
-
-                                        String[] ami_list = image_amis.split("\n")
-                                        String[] snapshot_list = image_snapshots.split("\n")
-
-                                        // Deregister all BYOS images
-                                        ami_list.each { ami ->
-                                            if (ami) {
-                                                sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
-                                            }
-                                        }
-                                        // Delete all BYOS snapshot
-                                        snapshot_list.each { snapshot ->
-                                            if (snapshot) {
-                                                sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
-                                            }
-                                        }
-                                    }
+//                                    stage('Clean old images') {
+//                                        // Get all image ami ids
+//                                        image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
+//                                                returnStdout: true)
+//                                        // Get all snapshot ids
+//                                        image_snapshots = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].BlockDeviceMappings[0].Ebs.SnapshotId'",
+//                                                returnStdout: true)
+//
+//                                        String[] ami_list = image_amis.split("\n")
+//                                        String[] snapshot_list = image_snapshots.split("\n")
+//
+//                                        // Deregister all BYOS images
+//                                        ami_list.each { ami ->
+//                                            if (ami) {
+//                                                sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
+//                                            }
+//                                        }
+//                                        // Delete all BYOS snapshot
+//                                        snapshot_list.each { snapshot ->
+//                                            if (snapshot) {
+//                                                sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
+//                                            }
+//                                        }
+//                                    }
 
                                     stage('Download last ami image') {
                                         sh "rm -rf ${resultdir}/images"
                                         sh "mkdir -p ${resultdir}/images"
 
-                                        sh(script: "curl ${suma43_build_url} > images.html")
-                                        server_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Server-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
-                                        proxy_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Proxy-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
-
-                                        sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${server_image_name}")
-                                        sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${proxy_image_name}")
-                                        sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_server' --wait-count 3 -n '${server_image_name}' '${resultdir}/images/${server_image_name}'")
-                                        sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_proxy' --wait-count 3 -n '${proxy_image_name}' '${resultdir}/images/${proxy_image_name}'")
-                                        env.server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
+//                                        sh(script: "curl ${build_image} > images.html")
+//                                        server_image_name = sh(script: "grep -oP '(?<=href=\")Manager-Server-.*BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+//                                        proxy_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Proxy-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+                                        def server_image_name = extractBuildName(build_image)
+                                        sh(script: "cd ${resultdir}/images; wget ${build_image}")
+//                                        sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${proxy_image_name}")
+                                        sh(script: "ec2uploadimg -a default --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --wait-count 3 --ena-support --verbose --regions '${params.aws_region}' -n '${server_image_name[0]}' -d 'build image' --ssh-key-pair 'testing-suma' --private-key-file '/home/jenkins/.ssh/testing-suma.pem' --security-group-ids '${security_group_id}' --vpc-subnet ${subnet_id} --type 't2.2xlarge' --user 'ec2-user' -e '${image_help_ami}'  '${resultdir}/images/${server_image_name[1]}'")
+//                                        sh(script: "ec2uploadimg -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_proxy' --wait-count 3 -n '${proxy_image_name}' '${resultdir}/images/${proxy_image_name}'")
+                                        env.server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
                                                 returnStdout: true).trim()
                                         env.proxy_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
                                                 returnStdout: true).trim()
@@ -175,6 +206,21 @@ def run(params) {
                 }
             }
 
+            stage('Product changes') {
+                if (params.show_product_changes) {
+                    sh """
+                        # Comparison between:
+                        #  - the previous git revision of spacewalk (or uyuni) repository pushed in IBS (or OBS)
+                        #  - the git revision of the current spacewalk (or uyuni) repository pushed in IBS (or OBS)
+                        # Note: This is a trade-off, we should be comparing the git revisions of all the packages composing our product
+                        #       For that extra mile, we need a new tag in the repo metadata of each built, with the git revision of the related repository.
+                    """
+                    sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\"%h %<(16,trunc)%cn  %s  %d\" ${previous_commit}..${product_commit}'", returnStatus:true
+                } else {
+                    println("Product changes disabled, checkbox 'show_product_changes' was not enabled'")
+                }
+            }
+
             if (params.must_deploy) {
                 stage("Deploy AWS with MU") {
                     int count = 0
@@ -192,17 +238,17 @@ def run(params) {
             }
 
             stage('Sanity Check') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:sanity_check'"
             }
             stage('Core - Setup') {
                 if (params.must_run_core && (deployed_aws || !params.must_deploy)) {
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:core'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:reposync'"
                 }
             }
             stage('Core - Initialize clients') {
                 if (params.must_init_clients) {
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake ${params.rake_namespace}:init_clients'"
                 }
             }
             stage('Secondary features') {
@@ -211,12 +257,12 @@ def run(params) {
                     if (params.functional_scopes) {
                         exports += "export TAGS=${params.functional_scopes}; "
                     }
-                    def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus: true
-                    def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
-                    sh "exit \$(( ${statusCode1}|${statusCode2} ))"
+                    def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:secondary'", returnStatus: true
+                    def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; ${env.exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
+                    def statusCode3 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; ${env.exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true
+                    sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
                 }
             }
-
         }
         finally {
             stage('Save TF state') {
@@ -253,13 +299,23 @@ def run(params) {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
-                // Fail pipeline if client stages failed
-                if (client_stage_result_fail) {
-                    error("Client stage failed")
-                }
-                sh "exit ${result_error}"
+                sh "exit ${error}"
             }
         }
+    }
+}
+
+def extractBuildName(String url) {
+    def matcher = (url =~ ${pattern})
+    def lastIndex = url.lastIndexOf('/')
+    def fileImageName = url.substring(lastIndex + 1)
+
+    if (matcher.find()) {
+        def imageName = matcher.group(1)
+        def buildNumber = matcher.group(2)
+        return ["${imageName}-build${buildNumber}", fileImageName]
+    } else {
+        return null
     }
 }
 
