@@ -29,7 +29,7 @@ def run(params) {
         subnet_id = 'subnet-05b9d049f3af01c38'
         image_help_ami = 'ami-0ad2088f58aad429e'
 
-        pattern = ~/\/([^\/]*Manager-(?:Server|Proxy)-[^\/]*)-[^\/]*BYOS[^\/]*-Build(\d+\.\d+)\.raw\.xz/
+
 
         if (params.terraform_parallelism) {
             local_mirror_params = "${local_mirror_params} --parallelism ${params.terraform_parallelism}"
@@ -305,7 +305,8 @@ def run(params) {
 }
 
 def extractBuildName(String url) {
-    def matcher = (url =~ ${pattern})
+    def pattern = ~/\/([^\/]*Manager-(?:Server|Proxy)-[^\/]*)-[^\/]*BYOS[^\/]*-Build(\d+\.\d+)\.raw\.xz/
+    def matcher = (url =~ pattern)
     def lastIndex = url.lastIndexOf('/')
     def fileImageName = url.substring(lastIndex + 1)
 
