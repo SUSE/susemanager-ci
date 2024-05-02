@@ -203,6 +203,12 @@ def run(params) {
                     env.mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                             returnStdout: true).trim()
                 }
+                stage("Get uploaded image amis") {
+                    env.server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
+                            returnStdout: true).trim()
+                    env.proxy_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
+                            returnStdout: true).trim()
+                }
             }
 
             stage('Product changes') {
