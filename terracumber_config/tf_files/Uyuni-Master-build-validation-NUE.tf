@@ -115,7 +115,7 @@ module "base_core" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse155o" ]
+  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o", "opensuse155o", "opensuse156o"  ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -141,7 +141,7 @@ module "base_arm" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "opensuse154armo", "opensuse155armo" ]
+  images      = [ "opensuse154armo", "opensuse155armo", "opensuse156armo" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -630,6 +630,30 @@ module "opensuse155arm-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "opensuse156arm-minion" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "uyuni-master"
+  name               = "nue-min-opensuse156arm"
+  image              = "opensuse1556rmo"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:ce"
+    overwrite_fqdn     = "uyuni-bv-master-min-opensuse156arm.mgr.suse.de"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  server_configuration = {
+    hostname = "uyuni-bv-master-pxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "sles15sp5s390-minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
@@ -1072,6 +1096,26 @@ module "opensuse155arm-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "opensuse156arm-sshminion" {
+  providers = {
+    libvirt = libvirt.suma-arm
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_arm.configuration
+  product_version    = "uyuni-master"
+  name               = "nue-minssh-opensuse156arm"
+  image              = "opensuse156armo"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:ee"
+    overwrite_fqdn     = "uyuni-bv-master-minssh-opensuse156arm.mgr.suse.de"
+    memory             = 2048
+    vcpu               = 2
+    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "sles15sp5s390-sshminion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
@@ -1330,6 +1374,9 @@ module "controller" {
 
   opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
   opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+
+  opensuse156arm_minion_configuration    = module.opensuse156arm-minion.configuration
+  opensuse156arm_sshminion_configuration = module.opensuse156arm-sshminion.configuration
 
   sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
   sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
