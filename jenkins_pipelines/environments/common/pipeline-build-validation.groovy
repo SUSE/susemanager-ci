@@ -212,32 +212,7 @@ def run(params) {
             try {
                 stage('Products and Salt migration stages') {
                     if(params.must_run_products_and_salt_migration_tests){
-                        migration_tests = [:]
-                        migration_features = sh(script: 'ls -1 /root/spacewalk/testsuite/features/build_validation/migration/', returnStdout: true)
-                        String[] features_list = migration_features.split("\n")
-
-                        // create a set of stages for each migration feature
-                        features_list.each{ feature ->
-                            minion = feature.replace("_migration.feature", "")
-
-                            migration_tests["${minion}"] = {
-                                if (params.confirm_before_continue) {
-                                    input "Press any key to start testing the migration of ${minion}"
-                                }
-                                stage("${minion}") {
-                                    echo "Testing migration of ${minion}"
-                                }
-                                stage("${minion} migration") {
-                                    res_minion_migration = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; cucumber features/build_validation/migration/${feature}'", returnStatus: true)
-                                    echo "${minion} migration status code: ${res_minion_migration}"
-                                    if (res_minion_migration != 0) {
-                                        error("Migration test for ${minion} failed with status code: ${res_minion_migration}")
-                                    }
-                                }
-                            }
-                        }
-                        // run them in parallel
-                        parallel migration_tests
+                        clientMigrationStages()
                     }                   
                 } 
             } catch (Exception ex) {
@@ -342,7 +317,7 @@ def run(params) {
                 }
                 // Fail pipeline if products or Salt migration stages failed
                 if (products_and_salt_migration_stage_result_fail) {
-                    error("PRoducts and/or Salt migration stage failed")
+                    error("Product or Salt migration stage failed")
                 }
                 // Fail pipeline if retail stages failed
                 if (retail_stage_result_fail) {
@@ -560,6 +535,34 @@ def getNodesHandler() {
         CustomChannelStatus[node]       = 'NOT_CREATED'
     }
     return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes, CustomChannelStatus:CustomChannelStatus, BootstrapRepositoryStatus:BootstrapRepositoryStatus]
+}
+
+// Creates a stage for each product or client migration feature.
+// Proceeds to execute them concurrently.
+def clientMigrationStages() {
+    def migration_tests = [:]
+
+    features_list = sh(script: "./terracumber-cli ${common_params} --runstep cucumber --cucumber-cmd 'ls -1 /root/spacewalk/testsuite/features/build_validation/migration/'", returnStdout: true)
+    String[] migration_features = features_list.split("\n").findAll { it.contains("_migration.feature") }
+    // create a stage for each migration feature
+    migration_features.each{ feature ->
+        def minion = feature.replace("_migration.feature", "")
+
+        migration_tests["${minion}"] = {
+            if (params.confirm_before_continue) {
+                input "Press any key to start testing the migration of ${minion}"
+            }
+            stage("${minion} migration") {
+                res_minion_migration = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; cucumber features/build_validation/migration/${feature}'", returnStatus: true)
+                echo "${minion} migration status code: ${res_minion_migration}"
+                if (res_minion_migration != 0) {
+                    error("Migration test for ${minion} failed with status code: ${res_minion_migration}")
+                }
+            }
+        }
+    }
+    // run them in parallel
+    parallel migration_tests
 }
 
 def randomWait() {
