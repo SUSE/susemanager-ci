@@ -94,7 +94,7 @@ def run(params) {
                     parallel(
 
                             "upload_latest_image": {
-                                if (params.build_image != null or params.build_last_image) {
+                                if (params.build_image != null || params.build_last_image) {
 //                                    stage('Clean old images') {
 //                                        // Get all image ami ids
 //                                        image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
