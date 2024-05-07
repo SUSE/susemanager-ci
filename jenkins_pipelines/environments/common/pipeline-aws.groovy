@@ -14,6 +14,7 @@ def run(params) {
 
         server_ami = null
         proxy_ami = null
+        url_build_image = "https://download.suse.de/ibs/Devel:/PubCloud:/Stable:/CrossCloud:/SLE15-SP5/images/"
 
         //Deployment variables
         deployed_local = false
@@ -93,7 +94,7 @@ def run(params) {
                     parallel(
 
                             "upload_latest_image": {
-                                if (params.build_image != null) {
+                                if (params.build_image != null or params.build_last_image) {
 //                                    stage('Clean old images') {
 //                                        // Get all image ami ids
 //                                        image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
@@ -123,8 +124,9 @@ def run(params) {
                                         sh "rm -rf ${resultdir}/images"
                                         sh "mkdir -p ${resultdir}/images"
 
-//                                        sh(script: "curl ${build_image} > images.html")
-//                                        server_image_name = sh(script: "grep -oP '(?<=href=\")Manager-Server-.*BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+                                        sh(script: "curl ${url_build_image} > images.html")
+                                        server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+                                        build_image = "${url_build_image}/${server_raw_image}"
 //                                        proxy_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Proxy-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
                                         def server_image_name = extractBuildName(build_image)
                                         sh(script: "cd ${resultdir}/images; wget ${build_image}")
