@@ -126,7 +126,7 @@ def run(params) {
 
                                         sh(script: "curl ${url_build_image} > images.html")
                                         server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.x86.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
-                                        build_image = "${url_build_image}/${server_raw_image}"
+                                        build_image = "${url_build_image}${server_raw_image}"
 //                                        proxy_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Proxy-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
                                         def server_image_name = extractBuildName(build_image)
                                         sh(script: "cd ${resultdir}/images; wget ${build_image}")
