@@ -218,7 +218,7 @@ def run(params) {
                     def server_image_name = extractBuildName(build_image)
                     server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
                             returnStdout: true).trim()
-                    sh script:"echo SERVER_AMI = \"${server_ami}\" >> ${aws_mirror_dir}/terraform.tfvars"
+                    sh script:"echo SERVER_AMI = \\\"${server_ami}\\\" >> ${aws_mirror_dir}/terraform.tfvars"
                 }
             }
 
