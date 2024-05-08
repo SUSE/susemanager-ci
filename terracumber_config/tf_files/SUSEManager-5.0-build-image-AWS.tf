@@ -125,6 +125,10 @@ variable "NAME_PREFIX" {
   default = null
 }
 
+variable "SERVER_AMI" {
+  type = string
+  default = "slemicro55"
+}
 
 locals {
   domain            = "suma.ci.aws"
