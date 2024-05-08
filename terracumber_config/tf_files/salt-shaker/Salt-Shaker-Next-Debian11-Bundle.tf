@@ -21,7 +21,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Salt Shaker - products:next - Debian11 Salt Bundle $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Salt Shaker - saltstack:products:next - Debian11 Salt Bundle $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -31,7 +31,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Salt Shaker - products:next - Debian11 Salt Bundle: Environment setup failed"
+  default = "Results Salt Shaker - saltstack:products:next - Debian11 Salt Bundle: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -105,7 +105,7 @@ module "salt-shaker-products-next" {
 
   name               = "salt-shaker-products-next-debian11-bundle"
   image              = "debian11o"
-  salt_obs_flavor    = "products:next"
+  salt_obs_flavor    = "saltstack:products:next"
 }
 
 output "configuration" {
