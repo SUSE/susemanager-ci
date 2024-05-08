@@ -124,9 +124,11 @@ def run(params) {
                                         sh "rm -rf ${resultdir}/images"
                                         sh "mkdir -p ${resultdir}/images"
 
-                                        sh(script: "curl ${url_build_image} > images.html")
-                                        server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.x86.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
-                                        build_image = "${url_build_image}${server_raw_image}"
+                                        if (params.build_last_image) {
+                                            sh(script: "curl ${url_build_image} > images.html")
+                                            server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.x86.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+                                            build_image = "${url_build_image}${server_raw_image}"
+                                        }
 //                                        proxy_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Proxy-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
                                         def server_image_name = extractBuildName(build_image)
                                         sh(script: "cd ${resultdir}/images; wget ${build_image}")
@@ -206,10 +208,16 @@ def run(params) {
                             returnStdout: true).trim()
                 }
                 stage("Get uploaded image amis") {
+                    if (params.build_last_image) {
+                        sh(script: "curl ${url_build_image} > images.html")
+                        server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.x86.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+                        build_image = "${url_build_image}${server_raw_image}"
+                    }
+                    def server_image_name = extractBuildName(build_image)
                     env.server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
                             returnStdout: true).trim()
-                    env.proxy_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
-                            returnStdout: true).trim()
+//                    env.proxy_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
+//                            returnStdout: true).trim()
                 }
             }
 
