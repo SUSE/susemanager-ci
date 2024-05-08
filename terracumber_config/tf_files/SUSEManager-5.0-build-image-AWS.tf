@@ -176,7 +176,7 @@ module "server" {
   product_version            = "head"
   repository_disk_size       = 1500
   image                      = var.SERVER_AMI
-  server_registration_code   = var.SERVER_REGISTRATION_CODE
+#   server_registration_code   = var.SERVER_REGISTRATION_CODE
 
   runtime = "podman"
   container_repository = "registry.suse.com/suse/manager/5.0/x86_64"
