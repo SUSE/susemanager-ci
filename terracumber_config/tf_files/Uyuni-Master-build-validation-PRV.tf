@@ -842,7 +842,7 @@ module "opensuse156arm-minion" {
   name               = "prv-min-opensuse156arm"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:10"
+    mac                = "aa:b2:92:05:00:10"
     overwrite_fqdn     = "uyuni-bv-master-min-opensuse156arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -1377,7 +1377,7 @@ module "opensuse156arm-sshminion" {
   name               = "prv-minssh-opensuse156arm"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:11"
+    mac                = "aa:b2:92:05:00:11"
     overwrite_fqdn     = "uyuni-bv-master-minssh-opensuse156arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
