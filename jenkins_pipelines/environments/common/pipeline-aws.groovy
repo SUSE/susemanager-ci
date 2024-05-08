@@ -218,7 +218,7 @@ def run(params) {
                     def server_image_name = extractBuildName(build_image)
                     server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
                             returnStdout: true).trim()
-                    writeFile file: "${aws_mirror_dir}/terraform.tfvars", text: "${env.aws_configuration}\nSERVER_AMI = \"${server_ami}\"", encoding: "UTF-8"
+                    sh script:"echo SERVER_AMI = \"${server_ami}\" >> ${aws_mirror_dir}/terraform.tfvars"
                 }
             }
 
