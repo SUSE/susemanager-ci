@@ -132,7 +132,7 @@ module "base_core" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-50"
+  name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp4o", "opensuse155o" ]
@@ -158,7 +158,7 @@ module "base_old_sle" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-50"
+  name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles12sp5o" ]
@@ -183,7 +183,7 @@ module "base_res" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-50"
+  name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o" ]
@@ -208,7 +208,7 @@ module "base_new_sle" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-50"
+  name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o" ]
@@ -233,7 +233,7 @@ module "base_retail" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-50"
+  name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse155o", "opensuse156o" ]
@@ -259,7 +259,7 @@ module "base_debian" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-50"
+  name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "ubuntu2204o", "debian10o", "debian11o", "debian12o" ]
@@ -284,7 +284,7 @@ module "base_arm" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-bv-50"
+  name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
   images      = [ "opensuse154armo", "opensuse155armo", "opensuse156armo" ]
