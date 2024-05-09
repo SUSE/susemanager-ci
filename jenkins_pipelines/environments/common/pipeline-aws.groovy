@@ -158,6 +158,8 @@ def run(params) {
                                             "NAME_PREFIX = \"${NAME_PREFIX}\"\n" +
                                             "KEY_FILE = \"${params.key_file}\"\n" +
                                             "KEY_NAME = \"${params.key_name}\"\n" +
+                                            "LOG = \"DEBUG\"\n" +
+                                            "LOG_PATH = \"${aws_mirror_dir}\"\n" +
                                             "ALLOWED_IPS = [ \n"
 
                                     ALLOWED_IPS.each { ip ->
