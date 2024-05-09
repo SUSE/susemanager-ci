@@ -129,15 +129,12 @@ def run(params) {
                                             server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.x86.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
                                             build_image = "${url_build_image}${server_raw_image}"
                                         }
-//                                        proxy_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Proxy-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
                                         def server_image_name = extractBuildName(build_image)
                                         sh(script: "cd ${resultdir}/images; wget ${build_image}")
-//                                        sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${proxy_image_name}")
                                         sh(script: "ec2uploadimg -a default --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --wait-count 3 --ena-support --verbose --regions '${params.aws_region}' -n '${server_image_name[0]}' -d 'build image' --ssh-key-pair 'testing-suma' --private-key-file '/home/jenkins/.ssh/testing-suma.pem' --security-group-ids '${security_group_id}' --vpc-subnet ${subnet_id} --type 't2.2xlarge' --user 'ec2-user' -e '${image_help_ami}'  '${resultdir}/images/${server_image_name[1]}'")
-//                                        sh(script: "ec2uploadimg -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_proxy' --wait-count 3 -n '${proxy_image_name}' '${resultdir}/images/${proxy_image_name}'")
-
-//                                        env.proxy_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
-//                                                returnStdout: true).trim()
+                                        server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
+                                                returnStdout: true).trim()
+                                        sh script:"echo SERVER_AMI = \\\"${server_ami}\\\" >> ${aws_mirror_dir}/terraform.tfvars"
                                     }
                                 }
                             },
@@ -205,20 +202,6 @@ def run(params) {
                 stage("Get mirror private IP") {
                     env.mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                             returnStdout: true).trim()
-                }
-            }
-
-            if (params.build_image != null || params.build_last_image) {
-                stage("Get uploaded image amis") {
-                    if (params.build_last_image) {
-                        sh(script: "curl ${url_build_image} > images.html")
-                        server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.x86.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
-                        build_image = "${url_build_image}${server_raw_image}"
-                    }
-                    def server_image_name = extractBuildName(build_image)
-                    server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
-                            returnStdout: true).trim()
-                    sh script:"echo SERVER_AMI = \\\"${server_ami}\\\" >> ${aws_mirror_dir}/terraform.tfvars"
                 }
             }
 
