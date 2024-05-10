@@ -138,7 +138,7 @@ module "cucumber_testsuite" {
         memory = 16384
       }
       main_disk_size       = 20
-      repository_disk_size = 300
+      repository_disk_size = 400
       database_disk_size   = 80
     }
     proxy = {
