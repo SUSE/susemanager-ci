@@ -105,6 +105,8 @@ module "base" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   name_prefix = "mirror-mu-aws-"
+  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images = true
   images = [
     "opensuse155o"]
 
