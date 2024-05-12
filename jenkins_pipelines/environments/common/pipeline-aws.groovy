@@ -130,8 +130,8 @@ def run(params) {
                                             build_image = "${url_build_image}${server_raw_image}"
                                         }
                                         def server_image_name = extractBuildName(build_image)
-                                        sh(script: "cd ${resultdir}/images; wget ${build_image}")
-                                        sh(script: "ec2uploadimg -a default --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --wait-count 3 --ena-support --verbose --regions '${params.aws_region}' -n '${server_image_name[0]}' -d 'build image' --ssh-key-pair 'testing-suma' --private-key-file '/home/jenkins/.ssh/testing-suma.pem' --security-group-ids '${security_group_id}' --vpc-subnet ${subnet_id} --type 't2.2xlarge' --user 'ec2-user' -e '${image_help_ami}'  '${resultdir}/images/${server_image_name[1]}'")
+                                        sh "cd ${resultdir}/images; wget ${build_image}"
+                                        sh "ec2uploadimg -a default --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --wait-count 3 --ena-support --verbose --regions '${params.aws_region}' -n '${server_image_name[0]}' -d 'build image' --ssh-key-pair 'testing-suma' --private-key-file '/home/jenkins/.ssh/testing-suma.pem' --security-group-ids '${security_group_id}' --vpc-subnet ${subnet_id} --type 't2.2xlarge' --user 'ec2-user' -e '${image_help_ami}'  '${resultdir}/images/${server_image_name[1]}'"
                                         server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
                                                 returnStdout: true).trim()
                                         sh script:"echo SERVER_AMI = \\\"${server_ami}\\\" >> ${aws_mirror_dir}/terraform.tfvars"
