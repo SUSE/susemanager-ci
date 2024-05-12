@@ -92,7 +92,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
+  uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
 }
 
 locals {
@@ -105,8 +105,6 @@ module "base" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   name_prefix = "mirror-mu-aws-"
-  mirror = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images = true
   images = [
     "opensuse155o"]
 
