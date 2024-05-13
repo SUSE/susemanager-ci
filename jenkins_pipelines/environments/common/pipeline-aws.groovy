@@ -93,61 +93,61 @@ def run(params) {
                 stage("Prepare AWS environment") {
                     parallel(
 
-                            "upload_latest_image": {
-                                if (params.build_image != null || params.build_last_image) {
-//                                    stage('Clean old images') {
-//                                        // Get all image ami ids
-//                                        image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
-//                                                returnStdout: true)
-//                                        // Get all snapshot ids
-//                                        image_snapshots = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].BlockDeviceMappings[0].Ebs.SnapshotId'",
-//                                                returnStdout: true)
+//                            "upload_latest_image": {
+//                                if (params.build_image != null || params.build_last_image) {
+////                                    stage('Clean old images') {
+////                                        // Get all image ami ids
+////                                        image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
+////                                                returnStdout: true)
+////                                        // Get all snapshot ids
+////                                        image_snapshots = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].BlockDeviceMappings[0].Ebs.SnapshotId'",
+////                                                returnStdout: true)
+////
+////                                        String[] ami_list = image_amis.split("\n")
+////                                        String[] snapshot_list = image_snapshots.split("\n")
+////
+////                                        // Deregister all BYOS images
+////                                        ami_list.each { ami ->
+////                                            if (ami) {
+////                                                sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
+////                                            }
+////                                        }
+////                                        // Delete all BYOS snapshot
+////                                        snapshot_list.each { snapshot ->
+////                                            if (snapshot) {
+////                                                sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
+////                                            }
+////                                        }
+////                                    }
 //
-//                                        String[] ami_list = image_amis.split("\n")
-//                                        String[] snapshot_list = image_snapshots.split("\n")
+//                                    stage('Download last ami image') {
+//                                        sh "rm -rf ${resultdir}/images"
+//                                        sh "mkdir -p ${resultdir}/images"
 //
-//                                        // Deregister all BYOS images
-//                                        ami_list.each { ami ->
-//                                            if (ami) {
-//                                                sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
-//                                            }
+//                                        if (params.build_last_image) {
+//                                            sh(script: "curl ${url_build_image} > images.html")
+//                                            server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.x86.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
+//                                            build_image = "${url_build_image}${server_raw_image}"
 //                                        }
-//                                        // Delete all BYOS snapshot
-//                                        snapshot_list.each { snapshot ->
-//                                            if (snapshot) {
-//                                                sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
-//                                            }
-//                                        }
+//                                        def server_image_name = extractBuildName(build_image)
+//                                        sh "cd ${resultdir}/images; wget ${build_image}"
+//                                        sh "ec2uploadimg -a default --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --wait-count 3 --ena-support --verbose --regions '${params.aws_region}' -n '${server_image_name[0]}' -d 'build image' --ssh-key-pair 'testing-suma' --private-key-file '/home/jenkins/.ssh/testing-suma.pem' --security-group-ids '${security_group_id}' --vpc-subnet ${subnet_id} --type 't2.2xlarge' --user 'ec2-user' -e '${image_help_ami}'  '${resultdir}/images/${server_image_name[1]}'"
+//                                        server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
+//                                                returnStdout: true).trim()
+//                                        sh script:"echo SERVER_AMI = \\\"${server_ami}\\\" >> ${aws_mirror_dir}/terraform.tfvars"
 //                                    }
-
-                                    stage('Download last ami image') {
-                                        sh "rm -rf ${resultdir}/images"
-                                        sh "mkdir -p ${resultdir}/images"
-
-                                        if (params.build_last_image) {
-                                            sh(script: "curl ${url_build_image} > images.html")
-                                            server_raw_image = sh(script: "grep -oP '(?<=href=\"./).*Manager-Server-.*BYOS.x86.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
-                                            build_image = "${url_build_image}${server_raw_image}"
-                                        }
-                                        def server_image_name = extractBuildName(build_image)
-                                        sh "cd ${resultdir}/images; wget ${build_image}"
-                                        sh "ec2uploadimg -a default --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --wait-count 3 --ena-support --verbose --regions '${params.aws_region}' -n '${server_image_name[0]}' -d 'build image' --ssh-key-pair 'testing-suma' --private-key-file '/home/jenkins/.ssh/testing-suma.pem' --security-group-ids '${security_group_id}' --vpc-subnet ${subnet_id} --type 't2.2xlarge' --user 'ec2-user' -e '${image_help_ami}'  '${resultdir}/images/${server_image_name[1]}'"
-                                        server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name[0]}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
-                                                returnStdout: true).trim()
-                                        sh script:"echo SERVER_AMI = \\\"${server_ami}\\\" >> ${aws_mirror_dir}/terraform.tfvars"
-                                    }
-                                }
-                            },
-                            "create_local_mirror_with_mu": {
-                                stage("Create local mirror with MU") {
-                                    // Copy minimum repo list to mirror
-                                    sh "cp ${local_mirror_dir}/salt/mirror/etc/minimum_repositories_testsuite.yaml ${local_mirror_dir}/salt/mirror/etc/minima-customize.yaml"
-                                    // Deploy local mirror
-                                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_mirror_params} --logfile ${resultdirbuild}/sumaform-mirror-local.log --init --taint '.*(domain|main_disk|data_disk|database_disk).*' --runstep provision --sumaform-backend libvirt"
-                                    deployed_local = true
-
-                                }
-                            },
+//                                }
+//                            },
+//                            "create_local_mirror_with_mu": {
+//                                stage("Create local mirror with MU") {
+//                                    // Copy minimum repo list to mirror
+//                                    sh "cp ${local_mirror_dir}/salt/mirror/etc/minimum_repositories_testsuite.yaml ${local_mirror_dir}/salt/mirror/etc/minima-customize.yaml"
+//                                    // Deploy local mirror
+//                                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${local_mirror_params} --logfile ${resultdirbuild}/sumaform-mirror-local.log --init --taint '.*(domain|main_disk|data_disk|database_disk).*' --runstep provision --sumaform-backend libvirt"
+//                                    deployed_local = true
+//
+//                                }
+//                            },
                             "create_empty_aws_mirror": {
                                 stage("Create empty AWS mirror") {
                                     // Fix issue where result folder is created at the same time by local mirror and aws mirror
