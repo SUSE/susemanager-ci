@@ -389,7 +389,6 @@ def run(params) {
                     stage('Clients stages') {
                         clientTestingStages(capybara_timeout, default_timeout)
                     }
-
                 } catch (Exception ex) {
                     println("ERROR: one or more clients have failed\\nException: ${ex}")
                     client_stage_result_fail = true
@@ -398,15 +397,15 @@ def run(params) {
             /** Clients stages end **/
 
             /** Products and Salt migration stages begin **/
-            try {
-                stage('Products and Salt migration stages') {
-                    if(params.must_run_products_and_salt_migration_tests) {
+            if(params.must_run_products_and_salt_migration_tests) {
+                try {
+                    stage('Products and Salt migration stages') {
                         clientMigrationStages()
                     }
+                } catch (Exception ex) {
+                    println("ERROR: one or more migrations have failed\\nException: ${ex}")
+                    products_and_salt_migration_stage_result_fail = true
                 }
-            } catch (Exception ex) {
-                println('ERROR: one or more migrations have failed')
-                products_and_salt_migration_stage_result_fail = true
             }
             /** Products and Salt migration stages end **/      
 
