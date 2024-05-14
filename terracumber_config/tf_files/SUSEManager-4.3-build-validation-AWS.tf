@@ -420,6 +420,7 @@ module "salt-migration-minion" {
   auto_connect_to_master  = true
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = false
 }
 
 module "sles15sp5-minion" {
