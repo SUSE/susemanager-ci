@@ -28,7 +28,7 @@ def run(params) {
         // Upload image variables
         security_group_id = 'sg-0778949b97990ce04'
         subnet_id = 'subnet-05b9d049f3af01c38'
-        image_help_ami = 'ami-0ad2088f58aad429e'
+        image_help_ami = 'ami-0fd8993005af51cc4'
 
 
 
