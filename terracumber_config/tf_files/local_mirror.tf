@@ -92,7 +92,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
 }
 
 locals {
@@ -107,7 +107,8 @@ module "base" {
   name_prefix = "mirror-mu-aws-"
   images = [
     "opensuse155o"]
-
+  mirror = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images = true
   provider_settings = {
     pool = local.pool
     network_name = null
