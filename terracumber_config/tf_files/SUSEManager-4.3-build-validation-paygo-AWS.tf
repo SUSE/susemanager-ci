@@ -254,6 +254,22 @@ module "sles15sp5-paygo-minion" {
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
+module "sles15sp6-paygo-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "paygo"
+  name               = "min-sles15sp6-paygo"
+  image              = "sles15sp6-paygo"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "python-instance-billing-flavor-check" ]
+}
+
 module "slesforsap15sp5-paygo-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -376,6 +392,22 @@ module "sles15sp5-minion" {
 
 }
 
+module "sles15sp6-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-sles15sp6"
+  image              = "sles15sp6o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+}
 
 module "sles12sp5-sshminion" {
   source             = "./modules/sshminion"
@@ -423,6 +455,21 @@ module "sles15sp5-sshminion" {
 
 }
 
+module "sles15sp6-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-sles15sp6"
+  image              = "sles15sp6o"
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+}
+
 module "controller" {
   source             = "./modules/controller"
   name               = "ctl"
@@ -455,6 +502,7 @@ module "controller" {
   sle12sp5_paygo_minion_configuration       = module.sles12sp5-paygo-minion.configuration
   sle15sp4_byos_minion_configuration       = module.sles15sp4-byos-minion.configuration
   sle15sp5_paygo_minion_configuration       = module.sles15sp5-paygo-minion.configuration
+  sle15sp6_paygo_minion_configuration       = module.sles15sp6-paygo-minion.configuration
   sleforsap15sp5_paygo_minion_configuration = module.slesforsap15sp5-paygo-minion.configuration
 
   sle12sp5_client_configuration    = module.sles12sp5-client.configuration
@@ -466,7 +514,7 @@ module "controller" {
   sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
 
   sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
-
+  sle15sp6_minion_configuration    = module.sles15sp6-minion.configuration
 }
 
 output "bastion_public_name" {

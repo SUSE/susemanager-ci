@@ -211,7 +211,7 @@ module "base_new_sle" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o" ]
+  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -507,6 +507,28 @@ module "sles15sp5-minion" {
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:7e"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "sles15sp6-minion" {
+  providers = {
+    libvirt = libvirt.ginfizz
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "uyuni-master"
+  name               = "min-sles15sp6"
+  image              = "sles15sp6o"
+  provider_settings = {
+    mac                = "aa:b2:93:04:05:7c"
     memory             = 4096
   }
 
@@ -1109,6 +1131,23 @@ module "sles15sp5-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "sles15sp6-sshminion" {
+  providers = {
+    libvirt = libvirt.ginfizz
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_new_sle.configuration
+  product_version    = "uyuni-master"
+  name               = "minssh-sles15sp6"
+  image              = "sles15sp6o"
+  provider_settings = {
+    mac                = "aa:b2:93:04:05:9c"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "alma8-sshminion" {
   providers = {
     libvirt = libvirt.cosmopolitan
@@ -1635,6 +1674,9 @@ module "controller" {
 
   sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
   sle15sp5_sshminion_configuration = module.sles15sp5-sshminion.configuration
+
+  sle15sp6_minion_configuration    = module.sles15sp6-minion.configuration
+  sle15sp6_sshminion_configuration = module.sles15sp6-sshminion.configuration
 
   alma8_minion_configuration    = module.alma8-minion.configuration
   alma8_sshminion_configuration = module.alma8-sshminion.configuration
