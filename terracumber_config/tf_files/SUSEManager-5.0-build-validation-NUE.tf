@@ -118,8 +118,8 @@ module "base_core" {
   images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
 
 
-  mirror = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images = true
+  // mirror = "minima-mirror-ci-bv.mgr.suse.de"
+  // use_mirror_images = true
 
   testsuite          = true
 
@@ -144,8 +144,8 @@ module "base_arm" {
   domain      = "mgr.suse.de"
   images      = [ "opensuse154armo", "opensuse155armo", "opensuse156armo" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images = true
+  // mirror = "minima-mirror-ci-bv.mgr.suse.de"
+  // use_mirror_images = true
 
   testsuite = true
 
@@ -183,7 +183,7 @@ module "server_containerized" {
   // container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
 
 
-  server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
+  // server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
   java_debugging                 = false
   auto_accept                    = false
   disable_firewall               = false
