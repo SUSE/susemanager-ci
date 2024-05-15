@@ -96,10 +96,12 @@ provider "libvirt" {
   uri = "qemu+tcp://suma-06.mgr.suse.de/system"
 }
 
+/*
 provider "libvirt" {
   alias = "suma-arm"
   uri = "qemu+tcp://suma-arm.mgr.suse.de/system"
 }
+*/
 
 provider "feilong" {
   connector   = "https://10.144.68.9"
@@ -115,7 +117,7 @@ module "base_core" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
+  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o" /*, "opensuse156armo" */ ]
 
 
   // mirror = "minima-mirror-ci-bv.mgr.suse.de"
@@ -130,6 +132,7 @@ module "base_core" {
   }
 }
 
+/*
 module "base_arm" {
   providers = {
     libvirt = libvirt.suma-arm
@@ -154,6 +157,7 @@ module "base_arm" {
     bridge      = "br0"
   }
 }
+*/
 
 module "base_s390" {
   source = "./backend_modules/feilong/base"
@@ -591,6 +595,8 @@ module "debian12-minion" {
   install_salt_bundle = true
 }
 
+/*
+
 module "opensuse154arm-minion" {
   providers = {
     libvirt = libvirt.suma-arm
@@ -671,6 +677,7 @@ module "opensuse156arm-minion" {
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
+*/
 
 module "sles15sp5s390-minion" {
   source             = "./backend_modules/feilong/host"
@@ -1101,6 +1108,7 @@ module "debian12-sshminion" {
   install_salt_bundle = true
 }
 
+/*
 module "opensuse154arm-sshminion" {
   providers = {
     libvirt = libvirt.suma-arm
@@ -1169,6 +1177,7 @@ module "opensuse156arm-sshminion" {
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
+*/
 
 module "sles15sp5s390-sshminion" {
   source             = "./backend_modules/feilong/host"
@@ -1465,6 +1474,7 @@ module "controller" {
   debian12_minion_configuration    = module.debian12-minion.configuration
   debian12_sshminion_configuration = module.debian12-sshminion.configuration
 
+/*
   opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
   opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 
@@ -1473,6 +1483,7 @@ module "controller" {
 
   opensuse156arm_minion_configuration    = module.opensuse156arm-minion.configuration
   opensuse156arm_sshminion_configuration = module.opensuse156arm-sshminion.configuration
+*/
 
   sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
   sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
