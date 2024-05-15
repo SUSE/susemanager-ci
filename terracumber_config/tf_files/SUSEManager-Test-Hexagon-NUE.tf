@@ -143,6 +143,7 @@ module "cucumber_testsuite" {
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP6/"
       }
+      container_tag = "latest"
     }
 
     suse-minion = {
