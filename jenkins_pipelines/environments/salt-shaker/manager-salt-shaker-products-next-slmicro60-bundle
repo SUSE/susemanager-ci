@@ -10,7 +10,7 @@ node('salt-shaker-tests') {
                 triggerLabel: "salt-shaker-tests",
                 labelRestriction: true,
                 entries: [URLTriggerEntry(
-                    url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/testing:/testsuite/SLMicro6/repodata/repomd.xml',
+                    url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/next:/testsuite/SLMicro60/repodata/repomd.xml',
                     contentTypes: [MD5Sum()]
                 )]
             ),
@@ -24,7 +24,7 @@ node('salt-shaker-tests') {
             string(name: 'testsuite_dir', defaultValue: '/var/tmp/salt-testsuite-bundle/', description: 'Optional: Run testsuite from this directory'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'skip_list_url', defaultValue: 'https://raw.githubusercontent.com/openSUSE/salt-test-skiplist/main/skipped_tests.toml', description: 'URL to the skiplist.toml file to run Salt shaker'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/salt-shaker/Salt-Shaker-Testing-SLMicro6-Bundle.tf', description: 'Path to the tf file to be used'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/salt-shaker/Salt-Shaker-Next-SLMicro60-Bundle.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),

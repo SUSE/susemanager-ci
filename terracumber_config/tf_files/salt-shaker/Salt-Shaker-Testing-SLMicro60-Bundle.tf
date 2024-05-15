@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-products-next-slmicro6-bundle"
+  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-products-testing-slmicro60-bundle"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -21,7 +21,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Salt Shaker - products:next - SLMicro6 Salt Bundle $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Salt Shaker - products:testing - SLMicro6.0 Salt Bundle $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -31,7 +31,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Salt Shaker - products:next - SLMicro6 Salt Bundle: Environment setup failed"
+  default = "Results Salt Shaker - products:testing - SLMicro6.0 Salt Bundle: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -81,7 +81,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-04.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-03.mgr.suse.de/system"
 }
 
 module "base" {
@@ -96,18 +96,18 @@ module "base" {
     bridge             = "br0"
   }
 
-  images = [ "slmicro6o" ]
+  images = [ "slmicro60o" ]
 }
 
-module "salt-shaker-products-next" {
+module "salt-shaker-products-testing" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-shaker-products-next-slmicro6-bundle"
-  image              = "slmicro6o"
-  salt_obs_flavor    = "products:next"
+  name               = "salt-shaker-products-testing-slmicro60-bundle"
+  image              = "slmicro60o"
+  salt_obs_flavor    = "products:testing"
 }
 
 output "configuration" {
-  value = module.salt-shaker-products-next.configuration
+  value = module.salt-shaker-products-testing.configuration
 }
