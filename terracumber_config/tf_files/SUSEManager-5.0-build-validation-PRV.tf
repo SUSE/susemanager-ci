@@ -211,7 +211,7 @@ module "base_new_sle" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slemicro60o"  ]
+  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o"  ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -1046,15 +1046,15 @@ module "slemicro55-minion" {
 //  install_salt_bundle = true
 }
 
-module "slemicro60-minion" {
+module "slmicro60-minion" {
   providers = {
     libvirt = libvirt.florina
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "head"
-  name               = "min-slemicro60"
-  image              = "slemicro60o"
+  name               = "min-slmicro60"
+  image              = "slmicro60o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:2b"
     memory             = 2048
@@ -1631,15 +1631,15 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro60-sshminion" {
+// module "slmicro60-sshminion" {
 //   providers = {
 //     libvirt = libvirt.florina
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "head"
-//   name               = "minssh-slemicro60"
-//   image              = "slemicro60o"
+//   name               = "minssh-slmicro60"
+//   image              = "slmicro60o"
 //   provider_settings = {
 //     mac                = "aa:b2:92:42:00:4b"
 //     memory             = 2048
@@ -1886,9 +1886,9 @@ module "controller" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
 
-  slemicro60_minion_configuration    = module.slemicro60-minion.configuration
+  slmicro60_minion_configuration    = module.slmicro60-minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro60_sshminion_configuration = module.slemicro60-sshminion.configuration
+//  slmicro60_sshminion_configuration = module.slmicro60-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration

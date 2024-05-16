@@ -115,7 +115,7 @@ module "base_core" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slemicro60o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
+  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -829,12 +829,12 @@ module "slemicro55-minion" {
   install_salt_bundle = false
 }
 
-module "slemicro60-minion" {
+module "slmicro60-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "head"
-  name               = "min-slemicro60"
-  image              = "slemicro60o"
+  name               = "min-slmicro60"
+  image              = "slmicro60o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:7b"
     memory             = 2048
@@ -1342,12 +1342,12 @@ module "sles15sp5s390-sshminion" {
 //}
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro60-sshminion" {
+// module "slmicro60-sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_core.configuration
 //   product_version    = "head"
-//   name               = "minssh-slemicro60"
-//   image              = "slemicro60o"
+//   name               = "minssh-slmicro60"
+//   image              = "slmicro60o"
 //   provider_settings = {
 //     mac                = "aa:b2:92:42:00:9b"
 //     memory             = 2048
@@ -1578,9 +1578,9 @@ module "controller" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
 
-  slemicro60_minion_configuration    = module.slemicro60-minion.configuration
+  slmicro60_minion_configuration    = module.slmicro60-minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro60_sshminion_configuration = module.slemicro60-sshminion.configuration
+//  slmicro60_sshminion_configuration = module.slmicro60-sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
