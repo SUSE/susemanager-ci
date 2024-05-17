@@ -105,7 +105,7 @@ module "salt-shaker-products-next" {
 
   name               = "salt-shaker-products-next-sles15sp6-bundle"
   image              = "sles15sp6o"
-  salt_obs_flavor    = "products:next"
+  salt_obs_flavor    = "saltstack:products:next"
 }
 
 output "configuration" {
