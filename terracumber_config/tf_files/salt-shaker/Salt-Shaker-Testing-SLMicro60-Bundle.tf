@@ -105,7 +105,7 @@ module "salt-shaker-products-testing" {
 
   name               = "salt-shaker-products-testing-slmicro60-bundle"
   image              = "slmicro60o"
-  salt_obs_flavor    = "products:testing"
+  salt_obs_flavor    = "saltstack:products:testing"
 }
 
 output "configuration" {
