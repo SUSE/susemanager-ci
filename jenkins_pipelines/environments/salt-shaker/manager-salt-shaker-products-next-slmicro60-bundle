@@ -22,7 +22,7 @@ node('salt-shaker-tests') {
             booleanParam(name: 'run_integration_tests', defaultValue: true, description: 'Run the Salt integration tests'),
             booleanParam(name: 'run_functional_tests', defaultValue: true, description: 'Run the Salt functional tests'),
             string(name: 'testsuite_dir', defaultValue: '/opt/salt-testsuite-bundle/', description: 'Optional: Run testsuite from this directory'),
-            string(name: 'wait_after_deploy', defaultValue: '120', description: 'Optional: Seconds to wait after deployment is done (usually to allow transactional systems to reboot')),
+            string(name: 'wait_after_deploy', defaultValue: '120', description: 'Optional: Seconds to wait after deployment is done (usually to allow transactional systems to reboot)'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'skip_list_url', defaultValue: 'https://raw.githubusercontent.com/openSUSE/salt-test-skiplist/main/skipped_tests.toml', description: 'URL to the skiplist.toml file to run Salt shaker'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/salt-shaker/Salt-Shaker-Next-SLMicro60-Bundle.tf', description: 'Path to the tf file to be used'),
