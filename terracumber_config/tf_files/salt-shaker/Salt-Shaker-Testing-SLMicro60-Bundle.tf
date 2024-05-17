@@ -106,6 +106,9 @@ module "salt-shaker-products-testing" {
   name               = "salt-shaker-products-testing-slmicro60-bundle"
   image              = "slmicro60o"
   salt_obs_flavor    = "saltstack:products:testing"
+  provider_settings = {
+    mac = "aa:b2:93:01:01:b1"
+  }
 }
 
 output "configuration" {
