@@ -50,48 +50,52 @@ def run(params) {
                 retry(count: 3) {
                     sh "set +x; source /home/jenkins/.credentials set -x; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
                     deployed = true
+                    if (params.wait_after_deploy) {
+                        echo "Waiting ${params.wait_after_deploy} seconds after sumaform deployment (usually to allow transactional system to reboot)"
+                        sh "sleep ${params.wait_after_deploy}"
+                    }
                 }
             }
             stage('Salt Shaker testsuite - Unit tests') {
-	        if (!params.run_unit_tests) {
-	            echo "Skipping unit tests as they were not selected for this execution"
-		    return
-		}
-		catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-	            if (!params.testsuite_dir) {
+                if (!params.run_unit_tests) {
+                    echo "Skipping unit tests as they were not selected for this execution"
+                    return
+                }
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    if (!params.testsuite_dir) {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --tb=native'"
-		    } else {
+                    } else {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --tb=native'"
-		    }
-		}
+                    }
+                }
             }
 
             stage('Salt Shaker testsuite - Integration tests') {
-	        if (!params.run_integration_tests) {
-	            echo "Skipping integration tests as they were not selected for this execution"
-		    return
-		}
-		catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-	            if (!params.testsuite_dir) {
+                if (!params.run_integration_tests) {
+                    echo "Skipping integration tests as they were not selected for this execution"
+                    return
+                }
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    if (!params.testsuite_dir) {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --tb=native'"
-		    } else {
+                    } else {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --tb=native'"
-		    }
-		}
+                    }
+                }
             }
 
             stage('Salt Shaker testsuite - Functional tests') {
-	        if (!params.run_functional_tests) {
-	            echo "Skipping functional tests as they were not selected for this execution"
-		    return
-		}
-		catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-	            if (!params.testsuite_dir) {
-	                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native'"
-		    } else {
-	                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native'"
-		    }
-		}
+                if (!params.run_functional_tests) {
+                    echo "Skipping functional tests as they were not selected for this execution"
+                    return
+                }
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    if (!params.testsuite_dir) {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native'"
+                    } else {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native'"
+                    }
+                }
             }
         }
         finally {
