@@ -714,6 +714,26 @@ module "sles15sp5s390-minion" {
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
+// This is an x86_64 SLES 15 SP5 minion (like sles15sp5-minion),
+// dedicated to testing migration from OS Salt to Salt bundle
+module "salt-migration-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  name               = "min-salt-migration"
+  product_version    = "head"
+  image              = "sles15sp5o"
+  provider_settings  = {
+    mac                = "aa:b2:92:42:00:7f"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-50-srv.mgr.suse.de"
+  }
+  auto_connect_to_master  = true
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
 
 module "slemicro51-minion" {
   source             = "./modules/minion"
@@ -1518,6 +1538,8 @@ module "controller" {
 
   sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
   sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
+
+  salt_migration_minion_configuration = module.salt-migration-minion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51-minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed

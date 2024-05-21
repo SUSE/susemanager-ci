@@ -422,6 +422,8 @@ module "sles15sp4-minion" {
   }
 }
 
+// This is an x86_64 SLES 15 SP5 minion (like sles15sp5-minion),
+// dedicated to testing migration from OS Salt to Salt bundle
 module "salt-migration-minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -680,6 +682,8 @@ module "controller" {
   sle15sp5_client_configuration    = module.sles15sp5-client.configuration
   sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
   sle15sp5_sshminion_configuration = module.sles15sp5-sshminion.configuration
+
+  salt_migration_minion_configuration = module.salt-migration-minion.configuration
 
   sle15sp6_client_configuration    = module.sles15sp6-client.configuration
   sle15sp6_minion_configuration    = module.sles15sp6-minion.configuration
