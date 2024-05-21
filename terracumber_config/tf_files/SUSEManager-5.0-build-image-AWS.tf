@@ -206,7 +206,7 @@ module "server" {
   provider_settings = {
     instance_type = "m6a.xlarge"
   }
-  install_salt_bundle = true
+  install_salt_bundle = false
   //server_additional_repos
 
 }
