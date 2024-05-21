@@ -715,6 +715,25 @@ module "sles15sp5s390-minion" {
   install_salt_bundle = true
 }
 
+module "salt-migration-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  name               = "min-salt-migration"
+  product_version    = "head"
+  image              = "sles15sp5o"
+  provider_settings  = {
+    mac                = "aa:b2:92:42:00:7f"
+    memory             = 4096
+  }
+
+  server_configuration = {
+    hostname = "suma-bv-50-srv.mgr.suse.de"
+  }
+  auto_connect_to_master  = true
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "slemicro51-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
