@@ -916,6 +916,8 @@ module "sles15sp5s390-minion" {
   install_salt_bundle = true
 }
 
+// This is an x86_64 SLES 15 SP5 minion (like sles15sp5-minion),
+// dedicated to testing migration from OS Salt to Salt bundle
 module "salt-migration-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
