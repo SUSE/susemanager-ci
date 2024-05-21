@@ -43,7 +43,7 @@ node('salt-shaker-tests') {
     stage('Checkout pipeline') {
         checkout scm
     }
-    timeout(activity: false, time: 3, unit: 'HOURS') {
+    timeout(activity: false, time: 6, unit: 'HOURS') {
         def pipeline = load "jenkins_pipelines/environments/common/pipeline-salt-shaker.groovy"
         pipeline.run(params)
     }
