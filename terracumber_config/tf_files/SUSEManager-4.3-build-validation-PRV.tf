@@ -1054,7 +1054,12 @@ module "sles15sp5s390-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+// This is an x86_64 SLES 15 SP5 minion (like sles15sp5-minion),
+// dedicated to testing migration from OS Salt to Salt bundle
 module "salt-migration-minion" {
+  providers = {
+    libvirt = libvirt.moscowmule
+  }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   name               = "min-salt-migration"
