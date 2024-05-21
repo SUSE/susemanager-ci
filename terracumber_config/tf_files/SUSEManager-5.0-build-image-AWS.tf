@@ -154,8 +154,8 @@ module "base" {
     ssh_allowed_ips   = var.ALLOWED_IPS
     key_name          = var.KEY_NAME
     key_file          = var.KEY_FILE
-#     route53_domain    = local.domain
-#     bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
+    route53_domain    = local.domain
+    bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
   }
 }
 
@@ -211,171 +211,171 @@ module "server" {
 
 }
 
-# module "proxy" {
-#
-#   source                    = "./modules/proxy"
-#   base_configuration        = module.base.configuration
-#   server_configuration      = module.server.configuration
-#   product_version           = "head"
-#   name                      = "proxy"
-#   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
-#
-#   auto_register             = false
-#   auto_connect_to_master    = false
-#   download_private_ssl_key  = false
-#   install_proxy_pattern     = false
-#   auto_configure            = false
-#   generate_bootstrap_script = false
-#   publish_private_ssl_key   = false
-#   use_os_released_updates   = false
-#   proxy_containerized       = false
-#   ssh_key_path              = "./salt/controller/id_rsa.pub"
-#   additional_packages = [ "venv-salt-minion" ]
-#   install_salt_bundle = true
-#   //proxy_additional_repos
-#
-# }
-#
-# module "suse-client" {
-#
-#   source             = "./modules/client"
-#   base_configuration = module.base.configuration
-#   name                 = "cli-sles15"
-#   image                = "sles15sp4o"
-#   product_version      = "4.3-released"
-#   server_configuration = module.server.configuration
-#   sles_registration_code = var.SLES_REGISTRATION_CODE
-#   auto_register           = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-#   additional_packages = [ "venv-salt-minion" ]
-#   install_salt_bundle = true
-#   provider_settings = {
-#     instance_type = "t3a.medium"
-#   }
-#   //sle15sp4-client_additional_repos
-# }
-#
-# module "suse-minion" {
-#   source             = "./modules/minion"
-#   base_configuration = module.base.configuration
-#   product_version    = "4.3-released"
-#   name               = "min-sles15"
-#   image              = "sles15sp4o"
-#   server_configuration = module.server.configuration
-#   sles_registration_code = var.SLES_REGISTRATION_CODE
-#   auto_connect_to_master  = false
-#   use_os_released_updates = true
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-#   additional_packages = [ "venv-salt-minion" ]
-#   install_salt_bundle = true
-#   provider_settings = {
-#     instance_type = "t3a.medium"
-#   }
-#   //sle15sp4-minion_additional_repos
-#
-# }
-#
-# module "suse-sshminion" {
-#   source             = "./modules/sshminion"
-#   base_configuration = module.base.configuration
-#   product_version    = "4.3-released"
-#   name               = "minssh-sles15"
-#   image              = "sles15sp4o"
-#   sles_registration_code = var.SLES_REGISTRATION_CODE
-#   use_os_released_updates = true
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-#   gpg_keys                = ["default/gpg_keys/galaxy.key"]
-#   additional_packages = [ "venv-salt-minion" , "iptables"]
-#   install_salt_bundle = true
-#   provider_settings = {
-#     instance_type = "t3a.medium"
-#   }
-#
-# }
-#
-# module "redhat-minion"  {
-#   image = "rocky8"
-#   name = "min-rocky8"
-#   provider_settings = {
-#     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-#     // Also, openscap cannot run with less than 1.25 GB of RAM
-#     memory = 2048
-#     vcpu = 2
-#     instance_type = "t3a.medium"
-#   }
-#   source             = "./modules/minion"
-#   base_configuration = module.base.configuration
-#   product_version    = "4.3-released"
-#   server_configuration = module.server.configuration
-#   auto_connect_to_master = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-#   additional_packages = [ "venv-salt-minion" ]
-#   install_salt_bundle = true
-# }
-#
-# module "debian-minion" {
-#   name = "min-ubuntu2204"
-#   image = "ubuntu2204"
-#   source             = "./modules/minion"
-#   base_configuration = module.base.configuration
-#   product_version    = "4.3-released"
-#   server_configuration = module.server.configuration
-#   auto_connect_to_master  = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-#   additional_packages = [ "venv-salt-minion" ]
-#   install_salt_bundle = true
-#   provider_settings = {
-#     instance_type = "t3a.medium"
-#   }
-# }
-#
-# module "controller" {
-#   source             = "./modules/controller"
-#   base_configuration = module.base.configuration
-#   name               = "ctl"
-#   provider_settings = {
-#     memory             = 16384
-#     vcpu               = 8
-#   }
-#   swap_file_size = null
-#   no_mirror = true
-#   is_using_build_image = true
-#   is_using_scc_repositories = true
-#   // Cucumber repository configuration for the controller
-#   git_username = var.GIT_USER
-#   git_password = var.GIT_PASSWORD
-#   git_repo     = var.CUCUMBER_GITREPO
-#   branch       = var.CUCUMBER_BRANCH
-#
-#   server_configuration    = module.server.configuration
-#   proxy_configuration     = module.proxy.configuration
-#   client_configuration    = module.suse-client.configuration
-#   minion_configuration    = module.suse-minion.configuration
-# //  buildhost_configuration = module.build-host.configuration
-#   sshminion_configuration = module.suse-sshminion.configuration
-#   redhat_configuration    = module.redhat-minion.configuration
-#   debian_configuration    = module.debian-minion.configuration
-#
-# }
-#
-# output "bastion_public_name" {
-#   value = lookup(module.base.configuration, "bastion_host", null)
-# }
-#
-# output "aws_mirrors_private_name" {
-#   value = module.mirror.configuration.hostnames
-# }
-#
-# output "aws_mirrors_public_name" {
-#   value = module.mirror.configuration.public_names
-# }
-#
-# output "configuration" {
-#   value = {
-#     controller = module.controller.configuration
-#     bastion = {
-#       hostname = lookup(module.base.configuration, "bastion_host", null)
-#     }
-#   }
-# }
+module "proxy" {
+
+  source                    = "./modules/proxy"
+  base_configuration        = module.base.configuration
+  server_configuration      = module.server.configuration
+  product_version           = "head"
+  name                      = "proxy"
+  proxy_registration_code   = var.PROXY_REGISTRATION_CODE
+
+  auto_register             = false
+  auto_connect_to_master    = false
+  download_private_ssl_key  = false
+  install_proxy_pattern     = false
+  auto_configure            = false
+  generate_bootstrap_script = false
+  publish_private_ssl_key   = false
+  use_os_released_updates   = false
+  proxy_containerized       = false
+  ssh_key_path              = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+  //proxy_additional_repos
+
+}
+
+module "suse-client" {
+
+  source             = "./modules/client"
+  base_configuration = module.base.configuration
+  name                 = "cli-sles15"
+  image                = "sles15sp4o"
+  product_version      = "4.3-released"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+  //sle15sp4-client_additional_repos
+}
+
+module "suse-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-sles15"
+  image              = "sles15sp4o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = true
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+  //sle15sp4-minion_additional_repos
+
+}
+
+module "suse-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-sles15"
+  image              = "sles15sp4o"
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  use_os_released_updates = true
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  gpg_keys                = ["default/gpg_keys/galaxy.key"]
+  additional_packages = [ "venv-salt-minion" , "iptables"]
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+}
+
+module "redhat-minion"  {
+  image = "rocky8"
+  name = "min-rocky8"
+  provider_settings = {
+    // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+    // Also, openscap cannot run with less than 1.25 GB of RAM
+    memory = 2048
+    vcpu = 2
+    instance_type = "t3a.medium"
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  server_configuration = module.server.configuration
+  auto_connect_to_master = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
+module "debian-minion" {
+  name = "min-ubuntu2204"
+  image = "ubuntu2204"
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "controller" {
+  source             = "./modules/controller"
+  base_configuration = module.base.configuration
+  name               = "ctl"
+  provider_settings = {
+    memory             = 16384
+    vcpu               = 8
+  }
+  swap_file_size = null
+  no_mirror = true
+  is_using_build_image = true
+  is_using_scc_repositories = true
+  // Cucumber repository configuration for the controller
+  git_username = var.GIT_USER
+  git_password = var.GIT_PASSWORD
+  git_repo     = var.CUCUMBER_GITREPO
+  branch       = var.CUCUMBER_BRANCH
+
+  server_configuration    = module.server.configuration
+  proxy_configuration     = module.proxy.configuration
+  client_configuration    = module.suse-client.configuration
+  minion_configuration    = module.suse-minion.configuration
+//  buildhost_configuration = module.build-host.configuration
+  sshminion_configuration = module.suse-sshminion.configuration
+  redhat_configuration    = module.redhat-minion.configuration
+  debian_configuration    = module.debian-minion.configuration
+
+}
+
+output "bastion_public_name" {
+  value = lookup(module.base.configuration, "bastion_host", null)
+}
+
+output "aws_mirrors_private_name" {
+  value = module.mirror.configuration.hostnames
+}
+
+output "aws_mirrors_public_name" {
+  value = module.mirror.configuration.public_names
+}
+
+output "configuration" {
+  value = {
+    controller = module.controller.configuration
+    bastion = {
+      hostname = lookup(module.base.configuration, "bastion_host", null)
+    }
+  }
+}
