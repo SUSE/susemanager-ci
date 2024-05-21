@@ -177,7 +177,7 @@ module "server" {
     mirror = null
   })
   name                       = "server"
-  product_version            = "head"
+  product_version            = "head-build_image"
   repository_disk_size       = 1500
   image                      = var.SERVER_AMI
 #   server_registration_code   = var.SERVER_REGISTRATION_CODE
