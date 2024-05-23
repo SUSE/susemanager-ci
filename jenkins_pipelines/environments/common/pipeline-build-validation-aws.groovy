@@ -443,7 +443,7 @@ def run(params) {
             /** Containerization stages start **/
             try {
                 stage('Containerization') {
-                    if (params.must_run_containerization_tests) {
+                    if (params.must_run_containerization_tests ?: false) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start running the containerization tests'
                         }
