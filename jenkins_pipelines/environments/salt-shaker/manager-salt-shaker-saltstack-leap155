@@ -9,7 +9,7 @@ node('salt-shaker-tests') {
                 cronTabSpec: '* * * * *',
                 triggerLabel: "salt-shaker-tests",
                 labelRestriction: true,
-                entries: [URLTriggerEntr
+                entries: [URLTriggerEntry(
                     url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack/15.5/repodata/repomd.xml',
                     contentTypes: [MD5Sum()]
                 )]
