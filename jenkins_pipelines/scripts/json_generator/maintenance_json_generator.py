@@ -87,7 +87,6 @@ v43_client_tools: dict[str, set[str]] = {
     "slemicro55_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SUSE-MicroOS_5.5_x86_64/",
                           "/SUSE_Updates_SLE-Micro_5.5_x86_64/"},
-# TODO Verify that these are accurate
     "slmicro60_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_6_x86_64/",
                           "/SUSE_Updates_SUSE-MicroOS_6.0_x86_64/",
                           "/SUSE_Updates_SLE-Micro_6.0_x86_64/"},
@@ -139,7 +138,6 @@ v50_client_tools_beta: dict[str, set[str]] = {
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
     "slemicro55_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
-# TODO Verify these are accurate
     "slmicro60_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_6_x86_64/",
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
     "salt_migration_minion": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64-BETA/"}
