@@ -215,7 +215,6 @@ module "proxy_containerized" {
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
   name               = "pxy"
-  runtime = "podman"
   provider_settings = {
     mac                = "aa:b2:93:02:01:a2"
     memory             = 4096
@@ -234,6 +233,10 @@ module "proxy_containerized" {
   publish_private_ssl_key   = false
   use_os_released_updates   = true
   ssh_key_path              = "./salt/controller/id_rsa.pub"
+
+  runtime = "podman"
+  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+  container_tag = "latest"
 }
 
 // No traditional clients in Uyuni

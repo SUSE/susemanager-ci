@@ -149,6 +149,8 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+      container_tag = "latest"
     }
     suse-minion = {
       image = "opensuse155o"
