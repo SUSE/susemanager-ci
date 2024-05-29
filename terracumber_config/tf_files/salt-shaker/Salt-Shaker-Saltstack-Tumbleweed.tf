@@ -106,6 +106,7 @@ module "salt-shaker-saltstack-tumbleweed" {
   name               = "salt-shaker-saltstack-tumbleweed"
   image              = "tumbleweedo"
   salt_obs_flavor    = "saltstack"
+  install_salt_bundle = false
 }
 
 output "configuration" {
