@@ -236,6 +236,21 @@ module "proxy" {
 
 }
 
+# module "proxy_containerized" {
+#   source             = "./modules/proxy_containerized"
+#   base_configuration = module.base_core.configuration
+#   product_version    = "head"
+#   name               = "pxy"
+#
+#   server_configuration      = module.server.configuration
+#   runtime = "podman"
+# #   container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+#   // Most recent code. Enable again once Beta 2 will be approved:
+#   // container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
+#   auto_configure            = false
+#   ssh_key_path              = "./salt/controller/id_rsa.pub"
+# }
+
 module "suse-client" {
 
   source             = "./modules/client"
@@ -292,26 +307,6 @@ module "suse-sshminion" {
     instance_type = "t3a.medium"
   }
 
-}
-
-module "redhat-minion"  {
-  image = "rocky8"
-  name = "min-rocky8"
-  provider_settings = {
-    // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-    // Also, openscap cannot run with less than 1.25 GB of RAM
-    memory = 2048
-    vcpu = 2
-    instance_type = "t3a.medium"
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  server_configuration = module.server.configuration
-  auto_connect_to_master = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "debian-minion" {
