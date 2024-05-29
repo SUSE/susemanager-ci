@@ -349,7 +349,7 @@ module "controller" {
   minion_configuration    = module.suse-minion.configuration
 //  buildhost_configuration = module.build-host.configuration
   sshminion_configuration = module.suse-sshminion.configuration
-  redhat_configuration    = module.redhat-minion.configuration
+#   redhat_configuration    = module.redhat-minion.configuration
   debian_configuration    = module.debian-minion.configuration
 
 }
