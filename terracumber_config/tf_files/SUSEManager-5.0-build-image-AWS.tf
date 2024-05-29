@@ -216,7 +216,7 @@ module "proxy" {
   source                    = "./modules/proxy"
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
-  product_version           = "head"
+  product_version           = "4.3"
   name                      = "proxy"
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
 
