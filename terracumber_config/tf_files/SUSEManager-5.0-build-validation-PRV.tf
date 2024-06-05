@@ -1091,6 +1091,7 @@ module "slmicro60-minion" {
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
 //  install_salt_bundle = true
+  install_salt_bundle = false
 }
 
 module "sles12sp5-sshminion" {
