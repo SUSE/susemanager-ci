@@ -115,7 +115,7 @@ module "server" {
   product_version    = "4.3-released"
   name               = "srv"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:f9"
+    mac                = "aa:b2:92:05:00:f9"
     memory             = 40960
     vcpu               = 10
     data_pool          = "ssd"
@@ -151,7 +151,7 @@ module "proxy" {
   product_version    = "4.3-released"
   name               = "pxy"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:fa"
+    mac                = "aa:b2:92:05:00:fa"
     memory             = 4096
   }
   server_configuration = {
@@ -180,7 +180,7 @@ module "sles15sp4-minion" {
   name               = "min-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:fb"
+    mac                = "aa:b2:92:05:00:fb"
     memory             = 4096
   }
 
@@ -200,7 +200,7 @@ module "controller" {
   base_configuration = module.base.configuration
   name               = "ctl"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:f8"
+    mac                = "aa:b2:92:05:00:f8"
     memory             = 16384
     vcpu               = 8
   }
