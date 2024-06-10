@@ -131,7 +131,7 @@ module "mirror" {
     //    volume_snapshot_id = data.aws_ebs_snapshot.data_disk_snapshot.id
   }
   provider_settings = {
-    mac                = "52:54:00:ba:b7:98"
+    mac                = "52:54:00:ba:b7:99"
     memory             = 4096
   }
 }
