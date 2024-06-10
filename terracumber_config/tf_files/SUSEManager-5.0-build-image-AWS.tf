@@ -325,6 +325,23 @@ module "debian-minion" {
   }
 }
 
+module "rocky8-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-rocky8"
+  image              = "rocky8"
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base.configuration
