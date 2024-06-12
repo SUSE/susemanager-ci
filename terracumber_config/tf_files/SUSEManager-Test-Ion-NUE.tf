@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-ion-"
@@ -137,14 +137,14 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    suse-client = {
-      image = "sles15sp4o"
-      name = "cli-sles15"
+    suse-transactional-minion = {
+      image = "slemicro55o"
+      name = "min-slem55"
       provider_settings = {
         mac = "aa:b2:93:01:00:44"
       }
       additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
+      install_salt_bundle = false
     }
     suse-minion = {
       image = "sles15sp4o"
