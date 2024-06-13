@@ -137,14 +137,11 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    suse-transactional-minion = {
-      image = "slemicro55o"
-      name = "min-slem55"
+    slemicro-minion = {
       provider_settings = {
         mac = "aa:b2:93:01:00:44"
       }
       additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = false
     }
     suse-minion = {
       image = "sles15sp4o"
