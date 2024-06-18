@@ -323,7 +323,7 @@ module "server_containerized" {
 
   server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   main_disk_size        = 20
-  repository_disk_size  = 2048
+  repository_disk_size  = 3072
   database_disk_size    = 150
 
   java_debugging                 = false
