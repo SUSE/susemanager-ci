@@ -177,7 +177,7 @@ module "server" {
 
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
   main_disk_size                 = 20
-  repository_disk_size           = 2048
+  repository_disk_size           = 3072
   database_disk_size             = 150
   java_debugging                 = false
   auto_accept                    = false
