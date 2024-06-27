@@ -111,7 +111,8 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
                     create_url(id, suffix)
             self.assertEqual(mock_http_call.call_count, num_entries, f"Iteration N°{i+1} of {iterations}")
 
-    def test_validate_and_store_results(self):
+    @patch('builtins.print')
+    def test_validate_and_store_results(self, mock_print):
         test_output_file: str = 'test_custom_repositories.json'
         test_mi_ids: set[str] = {"123", "456", "789"}
         # empty custom_repositories
@@ -123,7 +124,8 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             'some minion': {'789': 'some repo'}
         }
         # missing MI ID 456
-        self.assertRaises(SystemExit, validate_and_store_results, test_mi_ids, test_custom_repos, test_output_file) 
+        validate_and_store_results(test_mi_ids, test_custom_repos, test_output_file)
+        mock_print.assert_called_with("MI IDs #{'456'} do not exist in custom_repositories dictionary.")
         
         test_custom_repos['some minion']['456'] = "some repo"
         validate_and_store_results(test_mi_ids, test_custom_repos, test_output_file)

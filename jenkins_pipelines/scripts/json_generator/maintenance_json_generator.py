@@ -73,6 +73,7 @@ v43_client_tools: dict[str, set[str]] = {
     "rhel9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "rocky9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "alma9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
+    "liberty9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "oracle9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "slemicro51_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SUSE-MicroOS_5.1_x86_64/"},
@@ -128,6 +129,7 @@ v50_client_tools_beta: dict[str, set[str]] = {
     "rocky9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
     "alma9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
     "oracle9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
+    "liberty9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
     "slemicro51_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
     "slemicro52_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
@@ -180,7 +182,12 @@ v50_nodes: dict[str, set[str]] = {
     "server": {"/SUSE_Products_SUSE-Manager-Server_5.0_x86_64/",
                "/SUSE_Updates_SUSE-Manager-Server_5.0_x86_64/"},
     "proxy": {"/SUSE_Products_SUSE-Manager-Proxy_5.0_x86_64/",
-              "/SUSE_Updates_SUSE-Manager-Proxy_5.0_x86_64/"}
+              "/SUSE_Updates_SUSE-Manager-Proxy_5.0_x86_64/"
+              "/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
+              "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/",
+              "/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
+              "/SUSE_Updates_SUSE-MicroOS_5.5_x86_64/",
+              "/SUSE_Updates_SLE-Micro_5.5_x86_64/"},
 }
 v50_nodes.update(merged_client_tools)
 
@@ -227,7 +234,7 @@ def validate_and_store_results(expected_ids: set [str], custom_repositories: dic
     # there should be no set difference if all MI IDs are in the JSON
     missing_ids: set[str] = expected_ids.difference(found_ids)
     if missing_ids:
-        raise SystemExit(f"MI IDs #{missing_ids} do not exist in custom_repositories dictionary.")
+        print(f"MI IDs #{missing_ids} do not exist in custom_repositories dictionary.")
 
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(custom_repositories, f, indent=2)
