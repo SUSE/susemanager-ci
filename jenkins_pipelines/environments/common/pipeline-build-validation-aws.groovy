@@ -723,7 +723,7 @@ def clientMigrationStages() {
                 input "Press any key to start testing the migration of ${minion}"
             }
             stage("${minion} migration") {
-                res_minion_migration = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; cucumber features/build_validation/migration/${feature}'", returnStatus: true)
+                res_minion_migration = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_${minion}_migration'", returnStatus: true)
                 echo "${minion} migration status code: ${res_minion_migration}"
                 if (res_minion_migration != 0) {
                     error("Migration test for ${minion} failed with status code: ${res_minion_migration}")
