@@ -106,6 +106,9 @@ module "salt-shaker-products-testing" {
   name               = "salt-shaker-products-testing-centos7-bundle"
   image              = "centos7o"
   salt_obs_flavor    = "saltstack:products:testing"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:d4"
+  }
 }
 
 output "configuration" {

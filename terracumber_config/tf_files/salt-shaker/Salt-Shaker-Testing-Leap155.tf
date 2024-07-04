@@ -106,6 +106,9 @@ module "salt-shaker-products-testing" {
   name               = "salt-shaker-products-testing-leap155"
   image              = "opensuse155o"
   salt_obs_flavor    = "saltstack:products:testing"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:d9"
+  }
 }
 
 output "configuration" {

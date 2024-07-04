@@ -106,6 +106,9 @@ module "salt-shaker-products-testing" {
   name               = "salt-shaker-products-testing-sles15sp3"
   image              = "sles15sp3o"
   salt_obs_flavor    = "saltstack:products:testing"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:e0"
+  }
 }
 
 output "configuration" {

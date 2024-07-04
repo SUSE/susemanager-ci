@@ -106,6 +106,9 @@ module "salt-shaker-products-testing" {
   name               = "salt-shaker-products-testing-ubuntu2004-bundle"
   image              = "ubuntu2004o"
   salt_obs_flavor    = "saltstack:products:testing"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:e9"
+  }
 }
 
 output "configuration" {

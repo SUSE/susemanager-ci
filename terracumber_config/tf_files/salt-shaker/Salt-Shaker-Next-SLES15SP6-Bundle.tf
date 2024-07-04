@@ -106,6 +106,9 @@ module "salt-shaker-products-next" {
   name               = "salt-shaker-products-next-sles15sp6-bundle"
   image              = "sles15sp6o"
   salt_obs_flavor    = "saltstack:products:next"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:ca"
+  }
 }
 
 output "configuration" {

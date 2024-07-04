@@ -106,6 +106,9 @@ module "salt-shaker-products-next" {
   name               = "salt-shaker-products-next-ubuntu2204-bundle"
   image              = "ubuntu2204o"
   salt_obs_flavor    = "saltstack:products:next"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:cf"
+  }
 }
 
 output "configuration" {
