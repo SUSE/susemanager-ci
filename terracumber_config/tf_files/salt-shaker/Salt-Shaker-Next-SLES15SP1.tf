@@ -93,7 +93,7 @@ module "base" {
   provider_settings = {
     pool               = "ssd"
     network_name       = null
-    bridge             = "br0"
+    bridge             = "br1"
   }
 
   images = [ "sles15sp1o" ]
