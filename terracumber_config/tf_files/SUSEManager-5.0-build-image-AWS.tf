@@ -146,7 +146,7 @@ module "base" {
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
-  images      = [ "opensuse155o"]
+#   images      = [ "opensuse155o"]
 #   images = ["rocky8", "opensuse155o", "sles15sp5o", "sles15sp4o", "ubuntu2204"]
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
@@ -154,8 +154,8 @@ module "base" {
     ssh_allowed_ips   = var.ALLOWED_IPS
     key_name          = var.KEY_NAME
     key_file          = var.KEY_FILE
-    route53_domain    = local.domain
-    bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
+#     route53_domain    = local.domain
+#     bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
   }
 }
 
