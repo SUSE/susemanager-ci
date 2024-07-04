@@ -93,7 +93,7 @@ module "base" {
   provider_settings = {
     pool               = "ssd"
     network_name       = null
-    bridge             = "br0"
+    bridge             = "br1"
   }
 
   images = [ "opensuse155o" ]
@@ -106,6 +106,9 @@ module "salt-shaker-saltstack" {
   name               = "salt-shaker-saltstack-leap155"
   image              = "opensuse155o"
   salt_obs_flavor    = "saltstack"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:eb"
+  }
 }
 
 output "configuration" {

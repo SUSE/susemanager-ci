@@ -93,7 +93,7 @@ module "base" {
   provider_settings = {
     pool               = "ssd"
     network_name       = null
-    bridge             = "br0"
+    bridge             = "br1"
   }
 
   images = [ "sles15sp4o" ]
@@ -106,6 +106,9 @@ module "salt-shaker-products-next" {
   name               = "salt-shaker-products-next-sles15sp4"
   image              = "sles15sp4o"
   salt_obs_flavor    = "saltstack:products:next"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:c5"
+  }
 }
 
 output "configuration" {
