@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-5.0"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -312,7 +312,7 @@ module "base_s390" {
 module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "srv"
   image              = "slemicro55o"
   provider_settings = {
@@ -324,8 +324,6 @@ module "server_containerized" {
   main_disk_size = 3000
   runtime = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
-  // Most recent code. Enable again once Beta 2 will be approved:
-  // container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
 
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.prv.suse.net"
   java_debugging                 = false
@@ -354,7 +352,7 @@ module "proxy_containerized" {
   }
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_retail.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "pxy"
   provider_settings = {
     mac                = "aa:b2:92:05:00:02"
@@ -403,7 +401,7 @@ module "sles15sp1-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
@@ -428,7 +426,7 @@ module "sles15sp2-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
@@ -453,7 +451,7 @@ module "sles15sp3-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
@@ -478,7 +476,7 @@ module "sles15sp4-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
@@ -503,7 +501,7 @@ module "sles15sp5-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-sles15sp5"
   image              = "sles15sp5o"
   provider_settings = {
@@ -528,7 +526,7 @@ module "sles15sp6-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-sles15sp6"
   image              = "sles15sp6o"
   provider_settings = {
@@ -553,7 +551,7 @@ module "alma8-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-alma8"
   image              = "almalinux8o"
   provider_settings = {
@@ -577,7 +575,7 @@ module "alma9-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-alma9"
   image              = "almalinux9o"
   provider_settings = {
@@ -601,7 +599,7 @@ module "centos7-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-centos7"
   image              = "centos7o"
   provider_settings = {
@@ -625,7 +623,7 @@ module "liberty9-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-liberty9"
   image              = "libertylinux9o"
   provider_settings = {
@@ -649,7 +647,7 @@ module "oracle9-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-oracle9"
   image              = "oraclelinux9o"
   provider_settings = {
@@ -673,7 +671,7 @@ module "rocky8-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-rocky8"
   image              = "rocky8o"
   provider_settings = {
@@ -697,7 +695,7 @@ module "rocky9-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-rocky9"
   image              = "rocky9o"
   provider_settings = {
@@ -721,7 +719,7 @@ module "ubuntu2004-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
@@ -746,7 +744,7 @@ module "ubuntu2204-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-ubuntu2204"
   image              = "ubuntu2204o"
   provider_settings = {
@@ -770,7 +768,7 @@ module "debian11-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-debian11"
   image              = "debian11o"
   provider_settings = {
@@ -795,7 +793,7 @@ module "debian12-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-debian12"
   image              = "debian12o"
   provider_settings = {
@@ -820,7 +818,7 @@ module "opensuse154arm-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "prv-min-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
@@ -847,7 +845,7 @@ module "opensuse155arm-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "prv-min-opensuse155arm"
   image              = "opensuse155armo"
   provider_settings = {
@@ -874,7 +872,7 @@ module "opensuse156arm-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "prv-min-opensuse156arm"
   image              = "opensuse156armo"
   provider_settings = {
@@ -922,7 +920,7 @@ module "salt-migration-minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   name               = "min-salt-migration"
-  product_version    = "head"
+  product_version    = "5.0-released"
   image              = "sles15sp5o"
   provider_settings  = {
     mac                = "aa:b2:92:05:00:2f"
@@ -943,7 +941,7 @@ module "slemicro51-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-slemicro51"
   image              = "slemicro51-ign"
   provider_settings = {
@@ -969,7 +967,7 @@ module "slemicro52-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-slemicro52"
   image              = "slemicro52-ign"
   provider_settings = {
@@ -995,7 +993,7 @@ module "slemicro53-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-slemicro53"
   image              = "slemicro53-ign"
   provider_settings = {
@@ -1021,7 +1019,7 @@ module "slemicro54-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-slemicro54"
   image              = "slemicro54-ign"
   provider_settings = {
@@ -1047,7 +1045,7 @@ module "slemicro55-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-slemicro55"
   image              = "slemicro55o"
   provider_settings = {
@@ -1073,7 +1071,7 @@ module "slmicro60-minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "min-slmicro60"
   image              = "slmicro60o"
   provider_settings = {
@@ -1100,7 +1098,7 @@ module "sles12sp5-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
@@ -1122,7 +1120,7 @@ module "sles15sp1-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-sles15sp1"
   image              = "sles15sp1o"
   provider_settings = {
@@ -1142,7 +1140,7 @@ module "sles15sp2-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
@@ -1162,7 +1160,7 @@ module "sles15sp3-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
@@ -1182,7 +1180,7 @@ module "sles15sp4-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
@@ -1202,7 +1200,7 @@ module "sles15sp5-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-sles15sp5"
   image              = "sles15sp5o"
   provider_settings = {
@@ -1222,7 +1220,7 @@ module "sles15sp6-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-sles15sp6"
   image              = "sles15sp6o"
   provider_settings = {
@@ -1242,7 +1240,7 @@ module "alma8-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-alma8"
   image              = "almalinux8o"
   provider_settings = {
@@ -1262,7 +1260,7 @@ module "alma9-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-alma9"
   image              = "almalinux9o"
   provider_settings = {
@@ -1282,7 +1280,7 @@ module "centos7-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-centos7"
   image              = "centos7o"
   provider_settings = {
@@ -1302,7 +1300,7 @@ module "liberty9-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-liberty9"
   image              = "libertylinux9o"
   provider_settings = {
@@ -1322,7 +1320,7 @@ module "oracle9-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-oracle9"
   image              = "oraclelinux9o"
   provider_settings = {
@@ -1342,7 +1340,7 @@ module "rocky8-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-rocky8"
   image              = "rocky8o"
   provider_settings = {
@@ -1362,7 +1360,7 @@ module "rocky9-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-rocky9"
   image              = "rocky9o"
   provider_settings = {
@@ -1382,7 +1380,7 @@ module "ubuntu2004-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004o"
   provider_settings = {
@@ -1403,7 +1401,7 @@ module "ubuntu2204-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-ubuntu2204"
   image              = "ubuntu2204o"
   provider_settings = {
@@ -1423,7 +1421,7 @@ module "debian11-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-debian11"
   image              = "debian11o"
   provider_settings = {
@@ -1443,7 +1441,7 @@ module "debian12-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "minssh-debian12"
   image              = "debian12o"
   provider_settings = {
@@ -1463,7 +1461,7 @@ module "opensuse154arm-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "prv-minssh-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
@@ -1486,7 +1484,7 @@ module "opensuse155arm-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "prv-minssh-opensuse155arm"
   image              = "opensuse155armo"
   provider_settings = {
@@ -1509,7 +1507,7 @@ module "opensuse156arm-sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "prv-minssh-opensuse156arm"
   image              = "opensuse156armo"
   provider_settings = {
@@ -1554,7 +1552,7 @@ module "sles15sp5s390-sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "head"
+//   product_version    = "5.0-released"
 //   name               = "minssh-slemicro51"
 //   image              = "slemicro51-ign"
 //   provider_settings = {
@@ -1575,7 +1573,7 @@ module "sles15sp5s390-sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "head"
+//   product_version    = "5.0-released"
 //   name               = "minssh-slemicro52"
 //   image              = "slemicro52-ign"
 //   provider_settings = {
@@ -1596,7 +1594,7 @@ module "sles15sp5s390-sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "head"
+//   product_version    = "5.0-released"
 //   name               = "minssh-slemicro53"
 //   image              = "slemicro53-ign"
 //   provider_settings = {
@@ -1617,7 +1615,7 @@ module "sles15sp5s390-sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "head"
+//   product_version    = "5.0-released"
 //   name               = "minssh-slemicro54"
 //   image              = "slemicro54-ign"
 //   provider_settings = {
@@ -1638,7 +1636,7 @@ module "sles15sp5s390-sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "head"
+//   product_version    = "5.0-released"
 //   name               = "minssh-slemicro55"
 //   image              = "slemicro55o"
 //   provider_settings = {
@@ -1659,7 +1657,7 @@ module "sles15sp5s390-sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "head"
+//   product_version    = "5.0-released"
 //   name               = "minssh-slmicro60"
 //   image              = "slmicro60o"
 //   provider_settings = {
@@ -1679,7 +1677,7 @@ module "sles12sp5-buildhost" {
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "build-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
@@ -1722,7 +1720,7 @@ module "sles15sp4-buildhost" {
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "build-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
@@ -1782,7 +1780,7 @@ module "monitoring-server" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
-  product_version    = "head"
+  product_version    = "5.0-released"
   name               = "monitoring"
   image              = "sles15sp4o"
   provider_settings = {
