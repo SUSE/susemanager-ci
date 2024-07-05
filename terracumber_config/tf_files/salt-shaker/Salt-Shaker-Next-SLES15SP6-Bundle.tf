@@ -89,6 +89,8 @@ module "base" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+  use_avahi   = false
+  domain      = "mgr.suse.de"
 
   provider_settings = {
     pool               = "ssd"
