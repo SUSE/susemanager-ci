@@ -89,7 +89,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://selektah.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://suma-02.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -144,7 +144,7 @@ module "cucumber_testsuite" {
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+      container_repository = "registry.suse.de/devel/galaxy/manager/5.0/containerfile/suse/manager/5.0/x86_64"
       container_tag = "latest"
     }
     proxy_containerized = {
