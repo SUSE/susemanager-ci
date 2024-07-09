@@ -180,7 +180,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "rocky8o"
-      name = "min-rocky8o"
+      name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:92:03:00:8a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
