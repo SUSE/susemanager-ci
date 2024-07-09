@@ -1,0 +1,16 @@
+
+node('sumadocker-nue') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '1')),
+        disableConcurrentBuilds()
+    ])
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    stage('pull all images') {
+        sh "jenkins_pipelines/scripts/extract_images_info.sh"
+    }
+    stage('Publish result') {
+        archiveArtifacts artifacts: "images-info.json"
+    }
+}
