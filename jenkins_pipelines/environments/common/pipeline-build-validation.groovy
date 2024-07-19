@@ -473,7 +473,7 @@ def clientTestingStages() {
                     randomWait()
                     echo 'Bootstrap clients'
                     // Increase by 1.6 the default timeout (800 seconds) to manage the events taking up to 750 seconds during bootstrap
-                    def temporary_timeout = env.default_timeout*1.6
+                    def temporary_timeout = env.default_timeout * 1.6
                     res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} export DEFAULT_TIMEOUT=${temporary_timeout}; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${node}'", returnStatus: true)
                     echo "Init clients status code: ${res_init_clients}"
                     if (res_init_clients != 0) {
