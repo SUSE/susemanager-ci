@@ -1868,7 +1868,7 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
-  catch_timeout_message = true
+  catch_timeout_message = false
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
