@@ -447,7 +447,7 @@ def clientTestingStages() {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start creating bootstrap repositories'
                         }
-                        // Make sure s390 minions are creating its bootstrap repository after the x86_64 equivalent to avoid flushing the repository folders.
+                        // Make sure s390 minions create their bootstrap repositories after the x86_64 equivalents to avoid flushing the repository folders.
                         if (node.contains('s390')){
                             def minion_name_without_s390 = node.replaceAll('s390', '')
                             waitUntil {
