@@ -447,12 +447,6 @@ def clientTestingStages() {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start creating bootstrap repositories'
                         }
-                        if (node.contains('s390')){
-                            def minion_name_without_s390 = node.replaceAll('s390', '')
-                            waitUntil {
-                                bootstrap_repository_status[minion_name_without_s390] != 'NOT_CREATED'
-                            }
-                        }
                         // Employ a lock resource to prevent concurrent calls to create the bootstrap repository in the manager.
                         // Utilize a try-catch mechanism to release the resource for other nodes in the event of a failed bootstrap.
                         lock(resource: mgrCreateBootstrapRepo, timeout: 320) {
