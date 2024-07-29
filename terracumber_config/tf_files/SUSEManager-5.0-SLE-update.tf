@@ -124,7 +124,7 @@ module "server_containerized" {
 
   main_disk_size        = 1500
   runtime               = "podman"
-  container_repository  = "registry.suse.com/suse/manager/5.0/x86_64/server"
+  container_repository  = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
   server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
 
   auto_accept                    = false
@@ -163,8 +163,7 @@ module "proxy_containerized" {
   }
 
   runtime              = "podman"
-  container_repository = "registry.suse.com/suse/manager/5.0/x86_64/proxy"
-
+  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 
