@@ -211,7 +211,7 @@ module "base_new_sle" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o" ]
+  images      = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -262,7 +262,7 @@ module "base_debian" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu2004o", "ubuntu2204o", "debian10o", "debian11o", "debian12o" ]
+  images      = [ "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -403,28 +403,6 @@ module "sles12sp5-minion" {
     mac                = "aa:b2:93:04:05:7d"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "sles15sp1-minion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
-  name               = "min-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:7f"
-    memory             = 4096
-  }
-
   server_configuration = {
     hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
   }
@@ -732,34 +710,6 @@ module "ubuntu2204-minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-// Debian 9 is not supported by 4.3
-
-module "debian10-minion" {
-  providers = {
-    libvirt = libvirt.caipirinha
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
-  name               = "min-debian10"
-  image              = "debian10o"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:89"
-    memory             = 4096
-  }
-
-  server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "debian11-minion" {
@@ -1072,24 +1022,6 @@ module "sles12sp5-sshminion" {
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
 }
 
-module "sles15sp1-sshminion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
-  name               = "minssh-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:9f"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-}
-
 module "sles15sp2-sshminion" {
   providers = {
     libvirt = libvirt.ginfizz
@@ -1331,29 +1263,6 @@ module "ubuntu2204-sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-// Debian 9 is not supported by 4.3
-
-module "debian10-sshminion" {
-  providers = {
-    libvirt = libvirt.caipirinha
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
-  name               = "minssh-debian10"
-  image              = "debian10o"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:a9"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "debian11-sshminion" {
@@ -1705,9 +1614,6 @@ module "controller" {
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
 
-  sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
-  sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
-
   sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
   sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
 
@@ -1746,9 +1652,6 @@ module "controller" {
 
   ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
-
-  debian10_minion_configuration    = module.debian10-minion.configuration
-  debian10_sshminion_configuration = module.debian10-sshminion.configuration
 
   debian11_minion_configuration    = module.debian11-minion.configuration
   debian11_sshminion_configuration = module.debian11-sshminion.configuration

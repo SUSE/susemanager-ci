@@ -115,7 +115,7 @@ module "base_core" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp5o", "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o", "opensuse156o" ]
+  images      = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o", "opensuse155o", "opensuse156o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -236,24 +236,6 @@ module "sles12sp5-client" {
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:a9"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.suse.de"
-  }
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "sles15sp1-client" {
-  source             = "./modules/client"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "cli-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:ab"
     memory             = 4096
   }
   server_configuration = {
@@ -385,25 +367,6 @@ module "sles12sp5-minion" {
     mac                = "aa:b2:92:42:00:b1"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-bv-43-pxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "sles15sp1-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "min-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:b3"
-    memory             = 4096
-  }
-
   server_configuration = {
     hostname = "suma-bv-43-pxy.mgr.suse.de"
   }
@@ -694,8 +657,6 @@ module "ubuntu2204-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
-// Debian 9 and 10 are not supported by 4.3
 
 module "debian11-minion" {
   source             = "./modules/minion"
@@ -1001,21 +962,6 @@ module "sles12sp5-sshminion" {
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
 }
 
-module "sles15sp1-sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:d3"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-}
-
 module "sles15sp2-sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -1237,8 +1183,6 @@ module "ubuntu2204-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
-
-// Debian 9 and 10 are not supported by 4.3
 
 module "debian11-sshminion" {
   source             = "./modules/sshminion"
@@ -1550,10 +1494,6 @@ module "controller" {
   sle12sp5_client_configuration    = module.sles12sp5-client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
-
-  sle15sp1_client_configuration    = module.sles15sp1-client.configuration
-  sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
-  sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
 
   sle15sp2_client_configuration    = module.sles15sp2-client.configuration
   sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
