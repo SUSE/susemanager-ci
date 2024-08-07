@@ -211,7 +211,7 @@ module "base_new_sle" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp1o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o"  ]
+  images      = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o"  ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -262,7 +262,7 @@ module "base_debian" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu2204o", "debian10o", "debian11o", "debian12o" ]
+  images      = [ "ubuntu2204o", "debian11o", "debian12o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -384,31 +384,6 @@ module "sles12sp5-minion" {
     mac                = "aa:b2:92:05:00:11"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "sles15sp1-minion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "5.0-released"
-  name               = "min-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "aa:b2:92:05:00:13"
-    memory             = 4096
-  }
-
   server_configuration = {
     hostname = "suma-bv-50-srv.mgr.prv.suse.net"
   }
@@ -1115,26 +1090,6 @@ module "sles12sp5-sshminion" {
   install_salt_bundle = true
 }
 
-module "sles15sp1-sshminion" {
-  providers = {
-    libvirt = libvirt.florina
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  product_version    = "5.0-released"
-  name               = "minssh-sles15sp1"
-  image              = "sles15sp1o"
-  provider_settings = {
-    mac                = "aa:b2:92:05:00:33"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
 module "sles15sp2-sshminion" {
   providers = {
     libvirt = libvirt.florina
@@ -1823,9 +1778,6 @@ module "controller" {
 
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
-
-  sle15sp1_minion_configuration    = module.sles15sp1-minion.configuration
-  sle15sp1_sshminion_configuration = module.sles15sp1-sshminion.configuration
 
   sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
   sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
