@@ -17,13 +17,13 @@ def run(params) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
         }
         try {
-//            stage('Clone terracumber, susemanager-ci and sumaform') {
-//                // Create a directory for  to place the directory with the build results (if it does not exist)
-//                sh "mkdir -p ${resultdir}"
-//                git url: params.terracumber_gitrepo, branch: params.terracumber_ref
-//                dir("susemanager-ci") {
-//                    checkout scm
-//                }
+            stage('Clone terracumber, susemanager-ci and sumaform') {
+                // Create a directory for  to place the directory with the build results (if it does not exist)
+                sh "mkdir -p ${resultdir}"
+                git url: params.terracumber_gitrepo, branch: params.terracumber_ref
+                dir("susemanager-ci") {
+                    checkout scm
+                }
 //                // Clone sumaform
 //                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
 //
@@ -31,16 +31,13 @@ def run(params) {
 //                if (params.use_previous_terraform_state) {
 //                    copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
 //                }
-//            }
+            }
 
             stage('Delete the systems') {
                 sh(script: "${api_program} ${params.manager_hostname} delete_systems")
             }
             stage('Delete config projects') {
                 sh(script: "${api_program} ${params.manager_hostname} delete_config_projects")
-            }
-            stage('Delete software channels') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_software_channels")
             }
             stage('Delete software channels') {
                 sh(script: "${api_program} ${params.manager_hostname} delete_software_channels")
@@ -52,7 +49,7 @@ def run(params) {
                 sh(script: "${api_program} ${params.manager_hostname} delete_users")
             }
             stage('Delete channel repositories') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_channel_repos")
+                sh(script: "${api_program} ${params.manager_hostname} delete_repositories")
             }
             stage('Delete salt keys') {
                 sh(script: "${api_program} ${params.manager_hostname} delete_salt_keys")
