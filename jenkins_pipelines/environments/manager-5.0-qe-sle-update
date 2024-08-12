@@ -35,7 +35,6 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
             booleanParam(name: 'must_boot_node', defaultValue: true, description: 'Bootstrap Node'),
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
-            booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
             booleanParam(name: 'must_run_containerization_tests', defaultValue: false, description: 'Run Containerization Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
