@@ -200,7 +200,6 @@ nodes_by_version: dict[str, dict[str, set[str]]] = {
 def setup_logging():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
 def parse_cli_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="This script reads the open qam-manager requests and creates a json file that can be fed to the BV testsuite pipeline"
