@@ -135,7 +135,7 @@ module "base_core" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sle15sp4o", "opensuse155o" ]
+  images      = [ "sles15sp4o", "opensuse155o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -211,7 +211,7 @@ module "base_new_sle" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sle15sp2o", "sle15sp3o", "sle15sp4o", "sle15sp5o", "sle15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o" ]
+  images      = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -236,7 +236,7 @@ module "base_retail" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles12sp5o", "sle15sp3o", "sle15sp4o"]
+  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o"]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -377,15 +377,15 @@ module "proxy" {
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 }
 
-module "sles12sp5_client" {
+module "sle12sp5_client" {
   providers = {
     libvirt = libvirt.endor
   }
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sles12sp5"
-  image              = "sles12sp5o"
+  name               = "cli-sle12sp5"
+  image              = "sle12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a9"
     memory             = 4096
@@ -527,15 +527,15 @@ module "centos7_client" {
   install_salt_bundle = true
 }
 
-module "sles12sp5_minion" {
+module "sle12sp5_minion" {
   providers = {
     libvirt = libvirt.endor
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sles12sp5"
-  image              = "sles12sp5o"
+  name               = "min-sle12sp5"
+  image              = "sle12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b1"
     memory             = 4096
@@ -1188,15 +1188,15 @@ module "slmicro60_minion" {
   install_salt_bundle = false
 }
 
-module "sles12sp5_ssh_minion" {
+module "sle12sp5_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sles12sp5"
-  image              = "sles12sp5o"
+  name               = "minssh-sle12sp5"
+  image              = "sle12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d1"
     memory             = 4096
@@ -1694,15 +1694,15 @@ module "sle15sp5s390_ssh_minion" {
 //   ssh_key_path            = "./salt/controller/id_rsa.pub"
 // }
 
-module "sles12sp5-buildhost" {
+module "sle12sp5-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
-  name               = "build-sles12sp5"
-  image              = "sles12sp5o"
+  name               = "build-sle12sp5"
+  image              = "sle12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a4"
     memory             = 2048
@@ -1716,14 +1716,14 @@ module "sles12sp5-buildhost" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles12sp5-terminal" {
+module "sle12sp5-terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sles12sp5"
-  image              = "sles12sp5o"
+  name               = "terminal-sle12sp5"
+  image              = "sle12sp5o"
   provider_settings = {
     memory             = 2048
     vcpu               = 1
@@ -1817,9 +1817,9 @@ module "controller" {
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
 
-  sle12sp5_client_configuration    = module.sles12sp5_client.configuration
-  sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
-  sle12sp5_sshminion_configuration = module.sles12sp5_ssh_minion.configuration
+  sle12sp5_client_configuration    = module.sle12sp5_client.configuration
+  sle12sp5_minion_configuration    = module.sle12sp5_minion.configuration
+  sle12sp5_sshminion_configuration = module.sle12sp5_ssh_minion.configuration
 
   sle15sp2_client_configuration    = module.sle15sp2_client.configuration
   sle15sp2_minion_configuration    = module.sle15sp2_minion.configuration
@@ -1913,10 +1913,10 @@ module "controller" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slmicro60_sshminion_configuration = module.slmicro60_ssh_minion.configuration
 
-  sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
+  sle12sp5_buildhost_configuration = module.sle12sp5-buildhost.configuration
   sle15sp4_buildhost_configuration = module.sle15sp4-buildhost.configuration
 
-  sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
+  sle12sp5_terminal_configuration = module.sle12sp5-terminal.configuration
   sle15sp4_terminal_configuration = module.sle15sp4-terminal.configuration
 
   monitoringserver_configuration = module.monitoring-server.configuration
