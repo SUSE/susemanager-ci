@@ -821,6 +821,7 @@ module "opensuse156arm-minion" {
 module "sles15sp5s390-minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
+  product_version    = "uyuni-master"
 
   name               = "min-sles15sp5s390"
   image              = "s15s5-minimal-2part-xfs"
@@ -1352,6 +1353,7 @@ module "opensuse156arm-sshminion" {
 module "sles15sp5s390-sshminion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
+  product_version    = "uyuni-master"
 
   name               = "minssh-sles15sp5s390"
   image              = "s15s5-minimal-2part-xfs"
