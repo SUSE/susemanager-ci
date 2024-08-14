@@ -1012,7 +1012,7 @@ module "sle15sp5s390_minion" {
 
 // This is an x86_64 SLES 15 SP5 minion (like sle15sp5_minion),
 // dedicated to testing migration from OS Salt to Salt bundle
-module "salt-migration_minion" {
+module "salt_migration_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
