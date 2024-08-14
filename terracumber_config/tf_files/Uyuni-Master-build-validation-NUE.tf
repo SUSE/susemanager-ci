@@ -164,7 +164,7 @@ module "base_s390" {
 }
 
 module "server_containerized" {
-  source             = "./modules/server"
+  source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
   name               = "srv"
@@ -211,7 +211,7 @@ module "server_containerized" {
 }
 
 module "proxy_containerized" {
-  source             = "./modules/proxy"
+  source             = "./modules/proxy_containerized"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
   name               = "pxy"
@@ -1312,8 +1312,8 @@ module "controller" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  server_configuration = module.server.configuration
-  proxy_configuration  = module.proxy.configuration
+  server_configuration = module.server_containerized.configuration
+  proxy_configuration  = module.proxy_containerized.configuration
 
   sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
