@@ -219,7 +219,7 @@ module "base_new_sle" {
   testsuite          = true
 
   provider_settings = {
-    pool        = "ssd"
+    pool        = "default"
     bridge      = "br1"
   }
 }
