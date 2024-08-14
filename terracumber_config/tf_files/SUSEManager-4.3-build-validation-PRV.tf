@@ -135,7 +135,7 @@ module "base_core" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp4o", "opensuse155o" ]
+  images      = [ "sle15sp4o", "opensuse155o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -211,7 +211,7 @@ module "base_new_sle" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o" ]
+  images      = [ "sle15sp2o", "sle15sp3o", "sle15sp4o", "sle15sp5o", "sle15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -236,7 +236,7 @@ module "base_retail" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o"]
+  images      = [ "sles12sp5o", "sle15sp3o", "sle15sp4o"]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -377,7 +377,7 @@ module "proxy" {
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 }
 
-module "sles12sp5-client" {
+module "sles12sp5_client" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -398,15 +398,15 @@ module "sles12sp5-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp2-client" {
+module "sle15sp2_client" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sles15sp2"
-  image              = "sles15sp2o"
+  name               = "cli-sle15sp2"
+  image              = "sle15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ac"
     memory             = 4096
@@ -419,15 +419,15 @@ module "sles15sp2-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp3-client" {
+module "sle15sp3_client" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sles15sp3"
-  image              = "sles15sp3o"
+  name               = "cli-sle15sp3"
+  image              = "sle15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ad"
     memory             = 4096
@@ -440,15 +440,15 @@ module "sles15sp3-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp4-client" {
+module "sle15sp4_client" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sles15sp4"
-  image              = "sles15sp4o"
+  name               = "cli-sle15sp4"
+  image              = "sle15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ae"
     memory             = 4096
@@ -461,15 +461,15 @@ module "sles15sp4-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp5-client" {
+module "sle15sp5_client" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sles15sp5"
-  image              = "sles15sp5o"
+  name               = "cli-sle15sp5"
+  image              = "sle15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:aa"
     memory             = 4096
@@ -482,15 +482,15 @@ module "sles15sp5-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp6-client" {
+module "sle15sp6_client" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sles15sp6"
-  image              = "sles15sp6o"
+  name               = "cli-sle15sp6"
+  image              = "sle15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:a8"
     memory             = 4096
@@ -503,7 +503,7 @@ module "sles15sp6-client" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "centos7-client" {
+module "centos7_client" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -523,11 +523,11 @@ module "centos7-client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "sles12sp5-minion" {
+module "sles12sp5_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -548,15 +548,15 @@ module "sles12sp5-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp2-minion" {
+module "sle15sp2_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sles15sp2"
-  image              = "sles15sp2o"
+  name               = "min-sle15sp2"
+  image              = "sle15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b4"
     memory             = 4096
@@ -570,15 +570,15 @@ module "sles15sp2-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp3-minion" {
+module "sle15sp3_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sles15sp3"
-  image              = "sles15sp3o"
+  name               = "min-sle15sp3"
+  image              = "sle15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b5"
     memory             = 4096
@@ -592,15 +592,15 @@ module "sles15sp3-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp4-minion" {
+module "sle15sp4_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sles15sp4"
-  image              = "sles15sp4o"
+  name               = "min-sle15sp4"
+  image              = "sle15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b6"
     memory             = 4096
@@ -614,15 +614,15 @@ module "sles15sp4-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp5-minion" {
+module "sle15sp5_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sles15sp5"
-  image              = "sles15sp5o"
+  name               = "min-sle15sp5"
+  image              = "sle15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b2"
     memory             = 4096
@@ -636,15 +636,15 @@ module "sles15sp5-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp6-minion" {
+module "sle15sp6_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sles15sp6"
-  image              = "sles15sp6o"
+  name               = "min-sle15sp6"
+  image              = "sle15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:b0"
     memory             = 4096
@@ -658,7 +658,7 @@ module "sles15sp6-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "alma8-minion" {
+module "alma8_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -678,11 +678,11 @@ module "alma8-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "alma9-minion" {
+module "alma9_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -702,11 +702,11 @@ module "alma9-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "centos7-minion" {
+module "centos7_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -726,11 +726,11 @@ module "centos7-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "liberty9-minion" {
+module "liberty9_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -750,11 +750,11 @@ module "liberty9-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "oracle9-minion" {
+module "oracle9_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -774,11 +774,11 @@ module "oracle9-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "rocky8-minion" {
+module "rocky8_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -798,11 +798,11 @@ module "rocky8-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "rocky9-minion" {
+module "rocky9_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -822,11 +822,11 @@ module "rocky9-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "ubuntu2004-minion" {
+module "ubuntu2004_minion" {
   providers = {
     libvirt = libvirt.mandalore
   }
@@ -847,11 +847,11 @@ module "ubuntu2004-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "ubuntu2204-minion" {
+module "ubuntu2204_minion" {
   providers = {
     libvirt = libvirt.mandalore
   }
@@ -872,7 +872,7 @@ module "ubuntu2204-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian11-minion" {
+module "debian11_minion" {
   providers = {
     libvirt = libvirt.mandalore
   }
@@ -894,7 +894,7 @@ module "debian11-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian12-minion" {
+module "debian12_minion" {
   providers = {
     libvirt = libvirt.mandalore
   }
@@ -915,11 +915,11 @@ module "debian12-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "opensuse154arm-minion" {
+module "opensuse154arm_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -943,7 +943,7 @@ module "opensuse154arm-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "opensuse155arm-minion" {
+module "opensuse155arm_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -967,7 +967,7 @@ module "opensuse155arm-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "opensuse156arm-minion" {
+module "opensuse156arm_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -991,12 +991,12 @@ module "opensuse156arm-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp5s390-minion" {
+module "sle15sp5s390_minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
   product_version    = "4.3-released"
 
-  name               = "min-sles15sp5s390"
+  name               = "min-sle15sp5s390"
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
@@ -1010,9 +1010,9 @@ module "sles15sp5s390-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-// This is an x86_64 SLES 15 SP5 minion (like sles15sp5-minion),
+// This is an x86_64 SLES 15 SP5 minion (like sle15sp5_minion),
 // dedicated to testing migration from OS Salt to Salt bundle
-module "salt-migration-minion" {
+module "salt-migration_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
@@ -1020,7 +1020,7 @@ module "salt-migration-minion" {
   base_configuration = module.base_new_sle.configuration
   name               = "min-salt-migration"
   product_version    = "4.3-released"
-  image              = "sles15sp5o"
+  image              = "sle15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:cf"
     memory             = 4096
@@ -1035,7 +1035,7 @@ module "salt-migration-minion" {
   install_salt_bundle = false
 }
 
-module "slemicro51-minion" {
+module "slemicro51_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
@@ -1057,11 +1057,11 @@ module "slemicro51-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt-minion" ]
+  //  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = false
 }
 
-module "slemicro52-minion" {
+module "slemicro52_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
@@ -1083,11 +1083,11 @@ module "slemicro52-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt-minion" ]
+  //  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = false
 }
 
-module "slemicro53-minion" {
+module "slemicro53_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
@@ -1109,11 +1109,11 @@ module "slemicro53-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt-minion" ]
+  //  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = false
 }
 
-module "slemicro54-minion" {
+module "slemicro54_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
@@ -1135,11 +1135,11 @@ module "slemicro54-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt-minion" ]
+  //  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = false
 }
 
-module "slemicro55-minion" {
+module "slemicro55_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
@@ -1161,11 +1161,11 @@ module "slemicro55-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt-minion" ]
+  //  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = false
 }
 
-module "slmicro60-minion" {
+module "slmicro60_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
@@ -1188,7 +1188,7 @@ module "slmicro60-minion" {
   install_salt_bundle = false
 }
 
-module "sles12sp5-sshminion" {
+module "sles12sp5_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -1207,15 +1207,15 @@ module "sles12sp5-sshminion" {
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
 }
 
-module "sles15sp2-sshminion" {
+module "sle15sp2_ssh_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sles15sp2"
-  image              = "sles15sp2o"
+  name               = "minssh-sle15sp2"
+  image              = "sle15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d4"
     memory             = 4096
@@ -1224,15 +1224,15 @@ module "sles15sp2-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp3-sshminion" {
+module "sle15sp3_ssh_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sles15sp3"
-  image              = "sles15sp3o"
+  name               = "minssh-sle15sp3"
+  image              = "sle15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d5"
     memory             = 4096
@@ -1241,15 +1241,15 @@ module "sles15sp3-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp4-sshminion" {
+module "sle15sp4_ssh_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sles15sp4"
-  image              = "sles15sp4o"
+  name               = "minssh-sle15sp4"
+  image              = "sle15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d6"
     memory             = 4096
@@ -1258,15 +1258,15 @@ module "sles15sp4-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp5-sshminion" {
+module "sle15sp5_ssh_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sles15sp5"
-  image              = "sles15sp5o"
+  name               = "minssh-sle15sp5"
+  image              = "sle15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d2"
     memory             = 4096
@@ -1275,15 +1275,15 @@ module "sles15sp5-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp6-sshminion" {
+module "sle15sp6_ssh_minion" {
   providers = {
     libvirt = libvirt.moscowmule
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sles15sp6"
-  image              = "sles15sp6o"
+  name               = "minssh-sle15sp6"
+  image              = "sle15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:d0"
     memory             = 4096
@@ -1292,7 +1292,7 @@ module "sles15sp6-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "alma8-sshminion" {
+module "alma8_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -1308,11 +1308,11 @@ module "alma8-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "alma9-sshminion" {
+module "alma9_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -1328,11 +1328,11 @@ module "alma9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "centos7-sshminion" {
+module "centos7_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -1348,11 +1348,11 @@ module "centos7-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "liberty9-sshminion" {
+module "liberty9_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -1368,11 +1368,11 @@ module "liberty9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "oracle9-sshminion" {
+module "oracle9_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -1388,11 +1388,11 @@ module "oracle9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "rocky8-sshminion" {
+module "rocky8_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -1408,11 +1408,11 @@ module "rocky8-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "rocky9-sshminion" {
+module "rocky9_ssh_minion" {
   providers = {
     libvirt = libvirt.endor
   }
@@ -1428,11 +1428,11 @@ module "rocky9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "ubuntu2004-sshminion" {
+module "ubuntu2004_ssh_minion" {
   providers = {
     libvirt = libvirt.mandalore
   }
@@ -1449,11 +1449,11 @@ module "ubuntu2004-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "ubuntu2204-sshminion" {
+module "ubuntu2204_ssh_minion" {
   providers = {
     libvirt = libvirt.mandalore
   }
@@ -1470,7 +1470,7 @@ module "ubuntu2204-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian11-sshminion" {
+module "debian11_ssh_minion" {
   providers = {
     libvirt = libvirt.mandalore
   }
@@ -1487,7 +1487,7 @@ module "debian11-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian12-sshminion" {
+module "debian12_ssh_minion" {
   providers = {
     libvirt = libvirt.mandalore
   }
@@ -1503,11 +1503,11 @@ module "debian12-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
+  additional_packages = [ "venv-salt_minion" ]
   install_salt_bundle = true
 }
 
-module "opensuse154arm-sshminion" {
+module "opensuse154arm_ssh_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1527,7 +1527,7 @@ module "opensuse154arm-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "opensuse155arm-sshminion" {
+module "opensuse155arm_ssh_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1547,7 +1547,7 @@ module "opensuse155arm-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "opensuse156arm-sshminion" {
+module "opensuse156arm_ssh_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1567,12 +1567,12 @@ module "opensuse156arm-sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp5s390-sshminion" {
+module "sle15sp5s390_ssh_minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
   product_version    = "4.3-released"
 
-  name               = "minssh-sles15sp5s390"
+  name               = "minssh-sle15sp5s390"
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
@@ -1587,7 +1587,7 @@ module "sles15sp5s390-sshminion" {
 }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro51-sshminion" {
+// module "slemicro51_ssh_minion" {
 //   providers = {
 //     libvirt = libvirt.moscowmule
 //   }
@@ -1605,7 +1605,7 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro52-sshminion" {
+// module "slemicro52_ssh_minion" {
 //   providers = {
 //     libvirt = libvirt.moscowmule
 //   }
@@ -1623,7 +1623,7 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro53-sshminion" {
+// module "slemicro53_ssh_minion" {
 //   providers = {
 //     libvirt = libvirt.moscowmule
 //   }
@@ -1641,7 +1641,7 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro54-sshminion" {
+// module "slemicro54_ssh_minion" {
 //  providers = {
 //     libvirt = libvirt.moscowmule
 //   }
@@ -1659,7 +1659,7 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro55-sshminion" {
+// module "slemicro55_ssh_minion" {
 //  providers = {
 //     libvirt = libvirt.moscowmule
 //   }
@@ -1677,7 +1677,7 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slmicro60-sshminion" {
+// module "slmicro60_ssh_minion" {
 //  providers = {
 //     libvirt = libvirt.moscowmule
 //   }
@@ -1734,15 +1734,15 @@ module "sles12sp5-terminal" {
   private_name       = "sle12sp5terminal"
 }
 
-module "sles15sp4-buildhost" {
+module "sle15sp4-buildhost" {
   providers = {
     libvirt = libvirt.coruscant
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
-  name               = "build-sles15sp4"
-  image              = "sles15sp4o"
+  name               = "build-sle15sp4"
+  image              = "sle15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a5"
     memory             = 2048
@@ -1756,14 +1756,14 @@ module "sles15sp4-buildhost" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp4-terminal" {
+module "sle15sp4-terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sles15sp4"
-  image              = "sles15sp4o"
+  name               = "terminal-sle15sp4"
+  image              = "sle15sp4o"
   provider_settings = {
     memory             = 2048
     vcpu               = 2
@@ -1782,7 +1782,7 @@ module "monitoring-server" {
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
   name               = "monitoring"
-  image              = "sles15sp4o"
+  image              = "sle15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a3"
     memory             = 2048
@@ -1817,107 +1817,107 @@ module "controller" {
   server_configuration = module.server.configuration
   proxy_configuration  = module.proxy.configuration
 
-  sle12sp5_client_configuration    = module.sles12sp5-client.configuration
-  sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
-  sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+  sle12sp5_client_configuration    = module.sles12sp5_client.configuration
+  sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5_ssh_minion.configuration
 
-  sle15sp2_client_configuration    = module.sles15sp2-client.configuration
-  sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
-  sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
+  sle15sp2_client_configuration    = module.sle15sp2_client.configuration
+  sle15sp2_minion_configuration    = module.sle15sp2_minion.configuration
+  sle15sp2_sshminion_configuration = module.sle15sp2_ssh_minion.configuration
 
-  sle15sp3_client_configuration    = module.sles15sp3-client.configuration
-  sle15sp3_minion_configuration    = module.sles15sp3-minion.configuration
-  sle15sp3_sshminion_configuration = module.sles15sp3-sshminion.configuration
+  sle15sp3_client_configuration    = module.sle15sp3_client.configuration
+  sle15sp3_minion_configuration    = module.sle15sp3_minion.configuration
+  sle15sp3_sshminion_configuration = module.sle15sp3_ssh_minion.configuration
 
-  sle15sp4_client_configuration    = module.sles15sp4-client.configuration
-  sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
-  sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
+  sle15sp4_client_configuration    = module.sle15sp4_client.configuration
+  sle15sp4_minion_configuration    = module.sle15sp4_minion.configuration
+  sle15sp4_sshminion_configuration = module.sle15sp4_ssh_minion.configuration
 
-  sle15sp5_client_configuration    = module.sles15sp5-client.configuration
-  sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
-  sle15sp5_sshminion_configuration = module.sles15sp5-sshminion.configuration
+  sle15sp5_client_configuration    = module.sle15sp5_client.configuration
+  sle15sp5_minion_configuration    = module.sle15sp5_minion.configuration
+  sle15sp5_sshminion_configuration = module.sle15sp5_ssh_minion.configuration
 
-  sle15sp6_client_configuration    = module.sles15sp6-client.configuration
-  sle15sp6_minion_configuration    = module.sles15sp6-minion.configuration
-  sle15sp6_sshminion_configuration = module.sles15sp6-sshminion.configuration
+  sle15sp6_client_configuration    = module.sle15sp6_client.configuration
+  sle15sp6_minion_configuration    = module.sle15sp6_minion.configuration
+  sle15sp6_sshminion_configuration = module.sle15sp6_ssh_minion.configuration
 
-  alma8_minion_configuration    = module.alma8-minion.configuration
-  alma8_sshminion_configuration = module.alma8-sshminion.configuration
+  alma8_minion_configuration    = module.alma8_minion.configuration
+  alma8_sshminion_configuration = module.alma8_ssh_minion.configuration
 
-  alma9_minion_configuration    = module.alma9-minion.configuration
-  alma9_sshminion_configuration = module.alma9-sshminion.configuration
+  alma9_minion_configuration    = module.alma9_minion.configuration
+  alma9_sshminion_configuration = module.alma9_ssh_minion.configuration
 
-  centos7_client_configuration    = module.centos7-client.configuration
-  centos7_minion_configuration    = module.centos7-minion.configuration
-  centos7_sshminion_configuration = module.centos7-sshminion.configuration
+  centos7_client_configuration    = module.centos7_client.configuration
+  centos7_minion_configuration    = module.centos7_minion.configuration
+  centos7_sshminion_configuration = module.centos7_ssh_minion.configuration
 
-  liberty9_minion_configuration    = module.liberty9-minion.configuration
-  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
+  liberty9_minion_configuration    = module.liberty9_minion.configuration
+  liberty9_sshminion_configuration = module.liberty9_ssh_minion.configuration
 
-  oracle9_minion_configuration    = module.oracle9-minion.configuration
-  oracle9_sshminion_configuration = module.oracle9-sshminion.configuration
+  oracle9_minion_configuration    = module.oracle9_minion.configuration
+  oracle9_sshminion_configuration = module.oracle9_ssh_minion.configuration
 
-  rocky8_minion_configuration    = module.rocky8-minion.configuration
-  rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
+  rocky8_minion_configuration    = module.rocky8_minion.configuration
+  rocky8_sshminion_configuration = module.rocky8_ssh_minion.configuration
 
-  rocky9_minion_configuration    = module.rocky9-minion.configuration
-  rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
+  rocky9_minion_configuration    = module.rocky9_minion.configuration
+  rocky9_sshminion_configuration = module.rocky9_ssh_minion.configuration
 
-  ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+  ubuntu2004_minion_configuration    = module.ubuntu2004_minion.configuration
+  ubuntu2004_sshminion_configuration = module.ubuntu2004_ssh_minion.configuration
 
-  ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
-  ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
+  ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
+  ubuntu2204_sshminion_configuration = module.ubuntu2204_ssh_minion.configuration
 
-  debian11_minion_configuration    = module.debian11-minion.configuration
-  debian11_sshminion_configuration = module.debian11-sshminion.configuration
+  debian11_minion_configuration    = module.debian11_minion.configuration
+  debian11_sshminion_configuration = module.debian11_ssh_minion.configuration
 
-  debian12_minion_configuration    = module.debian12-minion.configuration
-  debian12_sshminion_configuration = module.debian12-sshminion.configuration
+  debian12_minion_configuration    = module.debian12_minion.configuration
+  debian12_sshminion_configuration = module.debian12_ssh_minion.configuration
 
-  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
-  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+  opensuse154arm_minion_configuration    = module.opensuse154arm_minion.configuration
+  opensuse154arm_sshminion_configuration = module.opensuse154arm_ssh_minion.configuration
 
-  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
-  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+  opensuse155arm_minion_configuration    = module.opensuse155arm_minion.configuration
+  opensuse155arm_sshminion_configuration = module.opensuse155arm_ssh_minion.configuration
 
-  opensuse156arm_minion_configuration    = module.opensuse156arm-minion.configuration
-  opensuse156arm_sshminion_configuration = module.opensuse156arm-sshminion.configuration
+  opensuse156arm_minion_configuration    = module.opensuse156arm_minion.configuration
+  opensuse156arm_sshminion_configuration = module.opensuse156arm_ssh_minion.configuration
 
-  sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
-  sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
+  sle15sp5s390_minion_configuration    = module.sle15sp5s390_minion.configuration
+  sle15sp5s390_sshminion_configuration = module.sle15sp5s390_ssh_minion.configuration
 
-  salt_migration_minion_configuration = module.salt-migration-minion.configuration
+  salt_migration_minion_configuration = module.salt-migration_minion.configuration
 
-  slemicro51_minion_configuration    = module.slemicro51-minion.configuration
+  slemicro51_minion_configuration    = module.slemicro51_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
+//  slemicro51_sshminion_configuration = module.slemicro51_ssh_minion.configuration
 
-  slemicro52_minion_configuration    = module.slemicro52-minion.configuration
+  slemicro52_minion_configuration    = module.slemicro52_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro52_sshminion_configuration = module.slemicro52-sshminion.configuration
+//  slemicro52_sshminion_configuration = module.slemicro52_ssh_minion.configuration
 
-  slemicro53_minion_configuration    = module.slemicro53-minion.configuration
+  slemicro53_minion_configuration    = module.slemicro53_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro53_sshminion_configuration = module.slemicro53-sshminion.configuration
+//  slemicro53_sshminion_configuration = module.slemicro53_ssh_minion.configuration
 
-  slemicro54_minion_configuration    = module.slemicro54-minion.configuration
+  slemicro54_minion_configuration    = module.slemicro54_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro54_sshminion_configuration = module.slemicro54-sshminion.configuration
+//  slemicro54_sshminion_configuration = module.slemicro54_ssh_minion.configuration
 
-  slemicro55_minion_configuration    = module.slemicro55-minion.configuration
+  slemicro55_minion_configuration    = module.slemicro55_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
+//  slemicro55_sshminion_configuration = module.slemicro55_ssh_minion.configuration
 
-  slmicro60_minion_configuration    = module.slmicro60-minion.configuration
+  slmicro60_minion_configuration    = module.slmicro60_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slmicro60_sshminion_configuration = module.slmicro60-sshminion.configuration
+//  slmicro60_sshminion_configuration = module.slmicro60_ssh_minion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
-  sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
+  sle15sp4_buildhost_configuration = module.sle15sp4-buildhost.configuration
 
   sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
-  sle15sp4_terminal_configuration = module.sles15sp4-terminal.configuration
+  sle15sp4_terminal_configuration = module.sle15sp4-terminal.configuration
 
   monitoringserver_configuration = module.monitoring-server.configuration
 }
