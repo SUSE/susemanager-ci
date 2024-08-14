@@ -182,11 +182,9 @@ module "server_containerized" {
 
   java_debugging                 = false
   auto_accept                    = false
-  monitored                      = true
   disable_firewall               = false
   allow_postgres_connections     = false
   skip_changelog_import          = false
-  create_first_user              = false
   mgr_sync_autologin             = false
   create_sample_channel          = false
   create_sample_activation_key   = false
@@ -194,11 +192,9 @@ module "server_containerized" {
   publish_private_ssl_key        = false
   use_os_released_updates        = true
   disable_download_tokens        = false
-  disable_auto_bootstrap         = true
   large_deployment               = true
   ssh_key_path                   = "./salt/controller/id_rsa.pub"
   from_email                     = "root@suse.de"
-  accept_all_ssl_protocols       = true
 
   runtime = "podman"
   container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
@@ -224,19 +220,12 @@ module "proxy_containerized" {
     username = "admin"
     password = "admin"
   }
-  auto_register             = false
-  auto_connect_to_master    = false
-  download_private_ssl_key  = false
-  install_proxy_pattern     = false
-  auto_configure            = false
-  generate_bootstrap_script = false
-  publish_private_ssl_key   = false
-  use_os_released_updates   = true
-  ssh_key_path              = "./salt/controller/id_rsa.pub"
 
   runtime = "podman"
   container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
   container_tag = "latest"
+  auto_configure            = false
+  ssh_key_path              = "./salt/controller/id_rsa.pub"
 }
 
 // No traditional clients in Uyuni
