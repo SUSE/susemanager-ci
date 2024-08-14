@@ -384,7 +384,7 @@ module "sle12sp5_client" {
   source             = "./modules/client"
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sle12sp5"
+  name               = "cli-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a9"
@@ -405,7 +405,7 @@ module "sle15sp2_client" {
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sle15sp2"
+  name               = "cli-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ac"
@@ -426,7 +426,7 @@ module "sle15sp3_client" {
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sle15sp3"
+  name               = "cli-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ad"
@@ -447,7 +447,7 @@ module "sle15sp4_client" {
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sle15sp4"
+  name               = "cli-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ae"
@@ -468,7 +468,7 @@ module "sle15sp5_client" {
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sle15sp5"
+  name               = "cli-sles15sp5"
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:aa"
@@ -489,7 +489,7 @@ module "sle15sp6_client" {
   source             = "./modules/client"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "cli-sle15sp6"
+  name               = "cli-sles15sp6"
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:a8"
@@ -534,7 +534,7 @@ module "sle12sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sle12sp5"
+  name               = "min-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b1"
@@ -555,7 +555,7 @@ module "sle15sp2_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sle15sp2"
+  name               = "min-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b4"
@@ -577,7 +577,7 @@ module "sle15sp3_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sle15sp3"
+  name               = "min-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b5"
@@ -599,7 +599,7 @@ module "sle15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sle15sp4"
+  name               = "min-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b6"
@@ -621,7 +621,7 @@ module "sle15sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sle15sp5"
+  name               = "min-sles15sp5"
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b2"
@@ -643,7 +643,7 @@ module "sle15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "min-sle15sp6"
+  name               = "min-sles15sp6"
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:b0"
@@ -996,7 +996,7 @@ module "sle15sp5s390_minion" {
   base_configuration = module.base_s390.configuration
   product_version    = "4.3-released"
 
-  name               = "min-sle15sp5s390"
+  name               = "min-sles15sp5s390"
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
@@ -1195,7 +1195,7 @@ module "sle12sp5_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sle12sp5"
+  name               = "minssh-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d1"
@@ -1214,7 +1214,7 @@ module "sle15sp2_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sle15sp2"
+  name               = "minssh-sles15sp2"
   image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d4"
@@ -1231,7 +1231,7 @@ module "sle15sp3_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sle15sp3"
+  name               = "minssh-sles15sp3"
   image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d5"
@@ -1248,7 +1248,7 @@ module "sle15sp4_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sle15sp4"
+  name               = "minssh-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d6"
@@ -1265,7 +1265,7 @@ module "sle15sp5_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sle15sp5"
+  name               = "minssh-sles15sp5"
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d2"
@@ -1282,7 +1282,7 @@ module "sle15sp6_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sle15sp6"
+  name               = "minssh-sles15sp6"
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:d0"
@@ -1572,7 +1572,7 @@ module "sle15sp5s390_ssh_minion" {
   base_configuration = module.base_s390.configuration
   product_version    = "4.3-released"
 
-  name               = "minssh-sle15sp5s390"
+  name               = "minssh-sles15sp5s390"
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
