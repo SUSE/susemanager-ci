@@ -385,7 +385,7 @@ module "sle12sp5_client" {
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
   name               = "cli-sle12sp5"
-  image              = "sle12sp5o"
+  image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a9"
     memory             = 4096
@@ -406,7 +406,7 @@ module "sle15sp2_client" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "cli-sle15sp2"
-  image              = "sle15sp2o"
+  image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ac"
     memory             = 4096
@@ -427,7 +427,7 @@ module "sle15sp3_client" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "cli-sle15sp3"
-  image              = "sle15sp3o"
+  image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ad"
     memory             = 4096
@@ -448,7 +448,7 @@ module "sle15sp4_client" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "cli-sle15sp4"
-  image              = "sle15sp4o"
+  image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ae"
     memory             = 4096
@@ -469,7 +469,7 @@ module "sle15sp5_client" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "cli-sle15sp5"
-  image              = "sle15sp5o"
+  image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:aa"
     memory             = 4096
@@ -490,7 +490,7 @@ module "sle15sp6_client" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "cli-sle15sp6"
-  image              = "sle15sp6o"
+  image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:a8"
     memory             = 4096
@@ -523,7 +523,7 @@ module "centos7_client" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -535,7 +535,7 @@ module "sle12sp5_minion" {
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
   name               = "min-sle12sp5"
-  image              = "sle12sp5o"
+  image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b1"
     memory             = 4096
@@ -556,7 +556,7 @@ module "sle15sp2_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "min-sle15sp2"
-  image              = "sle15sp2o"
+  image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b4"
     memory             = 4096
@@ -578,7 +578,7 @@ module "sle15sp3_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "min-sle15sp3"
-  image              = "sle15sp3o"
+  image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b5"
     memory             = 4096
@@ -600,7 +600,7 @@ module "sle15sp4_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "min-sle15sp4"
-  image              = "sle15sp4o"
+  image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b6"
     memory             = 4096
@@ -622,7 +622,7 @@ module "sle15sp5_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "min-sle15sp5"
-  image              = "sle15sp5o"
+  image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:b2"
     memory             = 4096
@@ -644,7 +644,7 @@ module "sle15sp6_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "min-sle15sp6"
-  image              = "sle15sp6o"
+  image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:b0"
     memory             = 4096
@@ -678,7 +678,7 @@ module "alma8_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -702,7 +702,7 @@ module "alma9_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -726,7 +726,7 @@ module "centos7_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -750,7 +750,7 @@ module "liberty9_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -774,7 +774,7 @@ module "oracle9_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -798,7 +798,7 @@ module "rocky8_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -822,7 +822,7 @@ module "rocky9_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -847,7 +847,7 @@ module "ubuntu2004_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -915,7 +915,7 @@ module "debian12_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1020,7 +1020,7 @@ module "salt-migration_minion" {
   base_configuration = module.base_new_sle.configuration
   name               = "min-salt-migration"
   product_version    = "4.3-released"
-  image              = "sle15sp5o"
+  image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:cf"
     memory             = 4096
@@ -1057,7 +1057,7 @@ module "slemicro51_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt_minion" ]
+  //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -1083,7 +1083,7 @@ module "slemicro52_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt_minion" ]
+  //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -1109,7 +1109,7 @@ module "slemicro53_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt_minion" ]
+  //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -1135,7 +1135,7 @@ module "slemicro54_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt_minion" ]
+  //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -1161,7 +1161,7 @@ module "slemicro55_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   // WORKAROUND: Does not work in sumaform, yet
-  //  additional_packages = [ "venv-salt_minion" ]
+  //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -1196,7 +1196,7 @@ module "sle12sp5_ssh_minion" {
   base_configuration = module.base_old_sle.configuration
   product_version    = "4.3-released"
   name               = "minssh-sle12sp5"
-  image              = "sle12sp5o"
+  image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d1"
     memory             = 4096
@@ -1215,7 +1215,7 @@ module "sle15sp2_ssh_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "minssh-sle15sp2"
-  image              = "sle15sp2o"
+  image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d4"
     memory             = 4096
@@ -1232,7 +1232,7 @@ module "sle15sp3_ssh_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "minssh-sle15sp3"
-  image              = "sle15sp3o"
+  image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d5"
     memory             = 4096
@@ -1249,7 +1249,7 @@ module "sle15sp4_ssh_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "minssh-sle15sp4"
-  image              = "sle15sp4o"
+  image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d6"
     memory             = 4096
@@ -1266,7 +1266,7 @@ module "sle15sp5_ssh_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "minssh-sle15sp5"
-  image              = "sle15sp5o"
+  image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:d2"
     memory             = 4096
@@ -1283,7 +1283,7 @@ module "sle15sp6_ssh_minion" {
   base_configuration = module.base_new_sle.configuration
   product_version    = "4.3-released"
   name               = "minssh-sle15sp6"
-  image              = "sle15sp6o"
+  image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:42:00:d0"
     memory             = 4096
@@ -1308,7 +1308,7 @@ module "alma8_ssh_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1328,7 +1328,7 @@ module "alma9_ssh_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1348,7 +1348,7 @@ module "centos7_ssh_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1368,7 +1368,7 @@ module "liberty9_ssh_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1388,7 +1388,7 @@ module "oracle9_ssh_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1408,7 +1408,7 @@ module "rocky8_ssh_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1428,7 +1428,7 @@ module "rocky9_ssh_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1449,7 +1449,7 @@ module "ubuntu2004_ssh_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
   # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1503,7 +1503,7 @@ module "debian12_ssh_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt_minion" ]
+  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
@@ -1702,7 +1702,7 @@ module "sle12sp5_buildhost" {
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
   name               = "build-sle12sp5"
-  image              = "sle12sp5o"
+  image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a4"
     memory             = 2048
@@ -1723,7 +1723,7 @@ module "sle12sp5_terminal" {
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
   name               = "terminal-sle12sp5"
-  image              = "sle12sp5o"
+  image              = "sles12sp5o"
   provider_settings = {
     memory             = 2048
     vcpu               = 1
@@ -1742,7 +1742,7 @@ module "sle15sp4_buildhost" {
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
   name               = "build-sle15sp4"
-  image              = "sle15sp4o"
+  image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a5"
     memory             = 2048
@@ -1763,7 +1763,7 @@ module "sle15sp4_terminal" {
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
   name               = "terminal-sle15sp4"
-  image              = "sle15sp4o"
+  image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048
     vcpu               = 2
@@ -1782,7 +1782,7 @@ module "monitoring-server" {
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
   name               = "monitoring"
-  image              = "sle15sp4o"
+  image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a3"
     memory             = 2048
