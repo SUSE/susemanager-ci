@@ -70,7 +70,6 @@ def run(params) {
                     // Generate rake files
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake jenkins:generate_rake_files_build_validation'"
                     deployed = true
-                    nodesHandler.nodeList
                 }
             }
 
