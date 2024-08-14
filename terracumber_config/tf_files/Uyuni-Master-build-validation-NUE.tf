@@ -606,7 +606,7 @@ module "opensuse156arm-minion" {
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
   name               = "nue-min-opensuse156arm"
-  image              = "opensuse1556rmo"
+  image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:93:02:01:ce"
     overwrite_fqdn     = "uyuni-bv-master-min-opensuse156arm.mgr.suse.de"
