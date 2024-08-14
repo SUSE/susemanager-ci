@@ -1694,7 +1694,7 @@ module "sle15sp5s390_ssh_minion" {
 //   ssh_key_path            = "./salt/controller/id_rsa.pub"
 // }
 
-module "sle12sp5-buildhost" {
+module "sle12sp5_buildhost" {
   providers = {
     libvirt = libvirt.coruscant
   }
@@ -1716,7 +1716,7 @@ module "sle12sp5-buildhost" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sle12sp5-terminal" {
+module "sle12sp5_terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
@@ -1734,7 +1734,7 @@ module "sle12sp5-terminal" {
   private_name       = "sle12sp5terminal"
 }
 
-module "sle15sp4-buildhost" {
+module "sle15sp4_buildhost" {
   providers = {
     libvirt = libvirt.coruscant
   }
@@ -1756,7 +1756,7 @@ module "sle15sp4-buildhost" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sle15sp4-terminal" {
+module "sle15sp4_terminal" {
   providers = {
     libvirt = libvirt.coruscant
   }
@@ -1913,11 +1913,11 @@ module "controller" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slmicro60_sshminion_configuration = module.slmicro60_ssh_minion.configuration
 
-  sle12sp5_buildhost_configuration = module.sle12sp5-buildhost.configuration
-  sle15sp4_buildhost_configuration = module.sle15sp4-buildhost.configuration
+  sle12sp5_buildhost_configuration = module.sle12sp5_buildhost.configuration
+  sle15sp4_buildhost_configuration = module.sle15sp4_buildhost.configuration
 
-  sle12sp5_terminal_configuration = module.sle12sp5-terminal.configuration
-  sle15sp4_terminal_configuration = module.sle15sp4-terminal.configuration
+  sle12sp5_terminal_configuration = module.sle12sp5_terminal.configuration
+  sle15sp4_terminal_configuration = module.sle15sp4_terminal.configuration
 
   monitoringserver_configuration = module.monitoring-server.configuration
 }
