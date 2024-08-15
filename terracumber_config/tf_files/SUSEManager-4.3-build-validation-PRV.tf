@@ -1887,7 +1887,7 @@ module "controller" {
   sle15sp5s390_minion_configuration    = module.sle15sp5s390_minion.configuration
   sle15sp5s390_sshminion_configuration = module.sle15sp5s390_ssh_minion.configuration
 
-  salt_migration_minion_configuration = module.salt-migration_minion.configuration
+  salt_migration_minion_configuration = module.salt_migration_minion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
