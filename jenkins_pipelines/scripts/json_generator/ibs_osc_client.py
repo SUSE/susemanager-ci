@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import logging
 import xml.etree.ElementTree as ET
 from shutil import copyfile, rmtree
 import subprocess
@@ -31,7 +32,7 @@ class IbsOscClient():
         return mi_ids
     
     def mi_is_under_embargo(self, mi_id: str, patchinfo_check: bool = True) -> bool:
-        print(f"MI {mi_id} - checking embargo\n")
+        logging.info(f"MI {mi_id} - checking embargo\n")
         # MI under embargo should have the attribute OBS:EmbargoDate set to the embargo end
         cmd: str = f"meta attribute SUSE:Maintenance:{mi_id}"
         output: str = self._osc_command(cmd)
@@ -42,15 +43,15 @@ class IbsOscClient():
             embargo_attribute_content: str = embargo_attribute.find('./value').text
             embargo_end_date: date = self._parse_embargo_date(embargo_attribute_content)
             if embargo_end_date >= self._current_date:
-                print(f"\tMI {mi_id} is under embargo until {embargo_end_date}. Today is {self._current_date}\n")
+                logging.info(f"\tMI {mi_id} is under embargo until {embargo_end_date}. Today is {self._current_date}\n")
                 return True
             
-            print(f"\tMI {mi_id} embargo was lifted after {embargo_end_date}. Today is {self._current_date}")
+            logging.info(f"\tMI {mi_id} embargo was lifted after {embargo_end_date}. Today is {self._current_date}")
             if patchinfo_check:
-                print("\tDouble checking _patchinfo file for issues under embargo in SMASH ...")
+                logging.info("\tDouble checking _patchinfo file for issues under embargo in SMASH ...")
                 return self._mi_has_issues_under_embargo(mi_id)
 
-        print(f"\tMI {mi_id} is not under embargo\n")
+        logging.info(f"\tMI {mi_id} is not under embargo\n")
         return False
     
     def _osc_command(self, cmd: str) -> str:
@@ -68,7 +69,7 @@ class IbsOscClient():
             try:
                 return datetime.strptime(text, format).date()
             except:
-                print(f"\tInvalid date format {format} for OBS:EmbargoDate value {text}")
+                logging.error(f"\tInvalid date format {format} for OBS:EmbargoDate value {text}")
         
         raise ValueError(f"Failed to parse OBS:EmbargoDate value {text} with all available date formats")
     
@@ -79,10 +80,10 @@ class IbsOscClient():
 
         embargoed_ids: set[str] = patchinfo_ids.intersection(smash_ids)
         if embargoed_ids:
-            print(f"\tMI #{mi_id} patchinfo contains bugs that are still under embargo in SMASH: {embargoed_ids}\n")
+            logging.info(f"\tMI #{mi_id} patchinfo contains bugs that are still under embargo in SMASH: {embargoed_ids}\n")
             return True
         
-        print(f"\tMI #{mi_id} patchinfo contains no bug under embargo in SMASH\n")
+        logging.info(f"\tMI #{mi_id} patchinfo contains no bug under embargo in SMASH\n")
         return False
     
     def _checkout_mi_patchinfo(self, mi_id: str) -> str:
