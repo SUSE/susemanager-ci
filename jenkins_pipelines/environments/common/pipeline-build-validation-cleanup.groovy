@@ -34,32 +34,32 @@ def run(params) {
 //                }
             }
 
-            stage('Delete the systems') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_systems")
-            }
-            stage('Delete config projects') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_config_projects")
-            }
-            stage('Delete software channels') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_software_channels")
-            }
-            stage('Delete activation keys') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_activation_keys")
-            }
-            stage('Delete minion users') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_users")
-            }
-            stage('Delete channel repositories') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_repositories")
-            }
-            stage('Delete salt keys') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_salt_keys")
-            }
-            stage('Delete ssh know hosts') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_known_hosts")
-            }
+//            stage('Delete the systems') {
+//                sh(script: "${api_program} ${params.manager_hostname} delete_systems")
+//            }
+//            stage('Delete config projects') {
+//                sh(script: "${api_program} ${params.manager_hostname} delete_config_projects")
+//            }
+//            stage('Delete software channels') {
+//                sh(script: "${api_program} ${params.manager_hostname} delete_software_channels")
+//            }
+//            stage('Delete activation keys') {
+//                sh(script: "${api_program} ${params.manager_hostname} delete_activation_keys")
+//            }
+//            stage('Delete minion users') {
+//                sh(script: "${api_program} ${params.manager_hostname} delete_users")
+//            }
+//            stage('Delete channel repositories') {
+//                sh(script: "${api_program} ${params.manager_hostname} delete_repositories")
+//            }
+//            stage('Delete salt keys') {
+//                sh(script: "${api_program} ${params.manager_hostname} delete_salt_keys")
+//            }
+//            stage('Delete ssh know hosts') {
+//                sh(script: "${api_program} ${params.manager_hostname} delete_known_hosts")
+//            }
 
-            stage('Delete client VM') {
+            stage('Delete client VMs') {
                 // Copy tfstate from project
                 sh "cp /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate"
                 sh "cp -r /home/jenkins/workspace/${params.targeted_project}/results/sumaform/.terraform ${env.resultdir}/sumaform/"
