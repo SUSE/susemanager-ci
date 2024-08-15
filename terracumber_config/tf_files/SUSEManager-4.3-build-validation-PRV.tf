@@ -1701,7 +1701,7 @@ module "sle12sp5_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
-  name               = "build-sle12sp5"
+  name               = "build-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a4"
@@ -1722,7 +1722,7 @@ module "sle12sp5_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sle12sp5"
+  name               = "terminal-sles12sp5"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 2048
@@ -1741,7 +1741,7 @@ module "sle15sp4_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "4.3-released"
-  name               = "build-sle15sp4"
+  name               = "build-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:a5"
@@ -1762,7 +1762,7 @@ module "sle15sp4_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sle15sp4"
+  name               = "terminal-sles15sp4"
   image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048
