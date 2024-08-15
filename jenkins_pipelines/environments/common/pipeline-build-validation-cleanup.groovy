@@ -8,10 +8,11 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
+        def tf_file = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/main.tf"
 
         // Variables to store none critical stage run status
 
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
+        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
 
         if (params.terraform_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
@@ -63,7 +64,7 @@ def run(params) {
                 sh "cp /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate"
                 sh "cp -r /home/jenkins/workspace/${params.targeted_project}/results/sumaform/.terraform ${env.resultdir}/sumaform/"
                 // Run Terracumber to deploy the environment without clients
-                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --use-minion-cleaner --runstep provision"
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --use-tf-resource-cleaner proxy retail monitoring-server --runstep provision"
             }
 
             stage('Redeploy the environment with new client VMs and update custom repositories into cucumber') {
@@ -83,7 +84,7 @@ def run(params) {
                     }
                 }
                 // Run Terracumber to deploy the environment
-                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --runstep provision"
                 // Copy  back the tftstate to targeted project
                 sh "cp ${env.resultdir}/sumaform/terraform.tfstate /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
             }
