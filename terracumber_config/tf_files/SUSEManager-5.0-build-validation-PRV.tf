@@ -797,7 +797,7 @@ module "opensuse154arm-minion" {
   name               = "prv-min-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:f4"
+    mac                = "aa:b2:92:42:00:06"
     overwrite_fqdn     = "suma-bv-50-min-opensuse154arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -824,7 +824,7 @@ module "opensuse155arm-minion" {
   name               = "prv-min-opensuse155arm"
   image              = "opensuse155armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:f5"
+    mac                = "aa:b2:92:42:00:08"
     overwrite_fqdn     = "suma-bv-50-min-opensuse155arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -851,7 +851,7 @@ module "opensuse156arm-minion" {
   name               = "prv-min-opensuse156arm"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = "aa:b2:92:05:00:0a"
+    mac                = "aa:b2:92:42:00:0a"
     overwrite_fqdn     = "suma-bv-50-min-opensuse156arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -1422,7 +1422,7 @@ module "opensuse154arm-sshminion" {
   name               = "prv-minssh-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:f6"
+    mac                = "aa:b2:92:42:00:07"
     overwrite_fqdn     = "suma-bv-50-minssh-opensuse154arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -1445,7 +1445,7 @@ module "opensuse155arm-sshminion" {
   name               = "prv-minssh-opensuse155arm"
   image              = "opensuse155armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:f7"
+    mac                = "aa:b2:92:42:00:09"
     overwrite_fqdn     = "suma-bv-50-minssh-opensuse155arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -1468,7 +1468,7 @@ module "opensuse156arm-sshminion" {
   name               = "prv-minssh-opensuse156arm"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = "aa:b2:92:05:00:0b"
+    mac                = "aa:b2:92:42:00:0b"
     overwrite_fqdn     = "suma-bv-50-minssh-opensuse156arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
