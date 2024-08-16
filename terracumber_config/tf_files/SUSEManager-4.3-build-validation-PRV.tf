@@ -492,7 +492,7 @@ module "sles15sp6-client" {
   name               = "cli-sles15sp6"
   image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:a8"
+    mac                = "aa:b2:92:05:00:a8"
     memory             = 4096
   }
   server_configuration = {
@@ -646,7 +646,7 @@ module "sles15sp6-minion" {
   name               = "min-sles15sp6"
   image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:b0"
+    mac                = "aa:b2:92:05:00:b0"
     memory             = 4096
   }
 
@@ -1175,7 +1175,7 @@ module "slmicro60-minion" {
   name               = "min-slmicro60"
   image              = "slmicro60o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:cb"
+    mac                = "aa:b2:92:05:00:cb"
     memory             = 2048
   }
 
@@ -1285,7 +1285,7 @@ module "sles15sp6-sshminion" {
   name               = "minssh-sles15sp6"
   image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:92:42:00:d0"
+    mac                = "aa:b2:92:05:00:d0"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1687,7 +1687,7 @@ module "sles15sp5s390-sshminion" {
 //   name               = "minssh-slmicro60"
 //   image              = "slmicro60o"
 //   provider_settings = {
-//     mac                = "aa:b2:92:42:00:eb"
+//     mac                = "aa:b2:92:05:00:eb"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
