@@ -314,6 +314,7 @@ module "server_containerized" {
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
   name               = "srv"
+  image              = "leapmicro55o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:6d"
     memory             = 40960
@@ -1606,7 +1607,6 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
-  catch_timeout_message = false
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
