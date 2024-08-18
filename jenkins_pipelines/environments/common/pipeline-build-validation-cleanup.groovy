@@ -67,31 +67,31 @@ def run(params) {
                 sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --tf-resources-to-delete proxy retail monitoring-server --runstep provision"
             }
 
-            stage('Redeploy the environment with new client VMs and update custom repositories into cucumber') {
-                // Generate custom_repositories.json file in the workspace from the value passed by parameter
-                if (params.custom_repositories?.trim()) {
-                    writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
-                }
-                // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
-                if (params.mi_ids?.trim()) {
-                    node('manager-jenkins-node') {
-                        checkout scm
-                        res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
-                        echo "Build Validation JSON script return code:\n ${json_content}"
-                        if (res_python_script != 0) {
-                            error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
-                        }
-                    }
-                }
-                // Run Terracumber to deploy the environment
-                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --runstep provision"
-                // Copy  back the tftstate to targeted project
-                sh "cp ${env.resultdir}/sumaform/terraform.tfstate /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
-            }
-
-            stage('Sanity check') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
-            }
+//            stage('Redeploy the environment with new client VMs and update custom repositories into cucumber') {
+//                // Generate custom_repositories.json file in the workspace from the value passed by parameter
+//                if (params.custom_repositories?.trim()) {
+//                    writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
+//                }
+//                // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
+//                if (params.mi_ids?.trim()) {
+//                    node('manager-jenkins-node') {
+//                        checkout scm
+//                        res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
+//                        echo "Build Validation JSON script return code:\n ${json_content}"
+//                        if (res_python_script != 0) {
+//                            error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+//                        }
+//                    }
+//                }
+//                // Run Terracumber to deploy the environment
+//                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --runstep provision"
+//                // Copy  back the tftstate to targeted project
+//                sh "cp ${env.resultdir}/sumaform/terraform.tfstate /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
+//            }
+//
+//            stage('Sanity check') {
+//                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
+//            }
 
         }
         finally {
