@@ -222,7 +222,7 @@ module "proxy_containerized" {
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 }
 
-module "sles12sp5-minion" {
+module "sles12sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -243,7 +243,7 @@ module "sles12sp5-minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp2-minion" {
+module "sles15sp2_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -265,7 +265,7 @@ module "sles15sp2-minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp3-minion" {
+module "sles15sp3_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -287,7 +287,7 @@ module "sles15sp3-minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp4-minion" {
+module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -309,7 +309,7 @@ module "sles15sp4-minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp5-minion" {
+module "sles15sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -331,7 +331,7 @@ module "sles15sp5-minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp6-minion" {
+module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -353,7 +353,7 @@ module "sles15sp6-minion" {
   install_salt_bundle = true
 }
 
-module "alma8-minion" {
+module "alma8_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -374,7 +374,7 @@ module "alma8-minion" {
   install_salt_bundle = true
 }
 
-module "alma9-minion" {
+module "alma9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -395,7 +395,7 @@ module "alma9-minion" {
   install_salt_bundle = true
 }
 
-module "centos7-minion" {
+module "centos7_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -416,7 +416,7 @@ module "centos7-minion" {
   install_salt_bundle = true
 }
 
-//module "liberty9-minion" {
+//module "liberty9_minion" {
 //  source             = "./modules/minion"
 //  base_configuration = module.base_core.configuration
 //  product_version    = "5.0-released"
@@ -437,7 +437,7 @@ module "centos7-minion" {
 //  install_salt_bundle = true
 //}
 
-module "oracle9-minion" {
+module "oracle9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -458,7 +458,7 @@ module "oracle9-minion" {
   install_salt_bundle = true
 }
 
-module "rocky8-minion" {
+module "rocky8_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -479,7 +479,7 @@ module "rocky8-minion" {
   install_salt_bundle = true
 }
 
-module "rocky9-minion" {
+module "rocky9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -500,7 +500,7 @@ module "rocky9-minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004-minion" {
+module "ubuntu2004_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -522,7 +522,7 @@ module "ubuntu2004-minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2204-minion" {
+module "ubuntu2204_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -543,7 +543,7 @@ module "ubuntu2204-minion" {
   install_salt_bundle = true
 }
 
-module "debian11-minion" {
+module "debian11_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -565,7 +565,7 @@ module "debian11-minion" {
   install_salt_bundle = true
 }
 
-module "debian12-minion" {
+module "debian12_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -587,7 +587,7 @@ module "debian12-minion" {
   install_salt_bundle = true
 }
 
-module "opensuse154arm-minion" {
+module "opensuse154arm_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -614,7 +614,7 @@ module "opensuse154arm-minion" {
   install_salt_bundle = true
 }
 
-module "opensuse155arm-minion" {
+module "opensuse155arm_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -641,7 +641,7 @@ module "opensuse155arm-minion" {
   install_salt_bundle = true
 }
 
-module "opensuse156arm-minion" {
+module "opensuse156arm_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -668,7 +668,7 @@ module "opensuse156arm-minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp5s390-minion" {
+module "sles15sp5s390_minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
   product_version    = "5.0-released"
@@ -691,7 +691,7 @@ module "sles15sp5s390-minion" {
 }
 // This is an x86_64 SLES 15 SP5 minion (like sles15sp5-minion),
 // dedicated to testing migration from OS Salt to Salt bundle
-module "salt-migration-minion" {
+module "salt_migration_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   name               = "min-salt-migration"
@@ -711,7 +711,7 @@ module "salt-migration-minion" {
   install_salt_bundle = false
 }
 
-module "slemicro51-minion" {
+module "slemicro51_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -734,7 +734,7 @@ module "slemicro51-minion" {
   install_salt_bundle = false
 }
 
-module "slemicro52-minion" {
+module "slemicro52_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -757,7 +757,7 @@ module "slemicro52-minion" {
   install_salt_bundle = false
 }
 
-module "slemicro53-minion" {
+module "slemicro53_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -780,7 +780,7 @@ module "slemicro53-minion" {
   install_salt_bundle = false
 }
 
-module "slemicro54-minion" {
+module "slemicro54_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -803,7 +803,7 @@ module "slemicro54-minion" {
   install_salt_bundle = false
 }
 
-module "slemicro55-minion" {
+module "slemicro55_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -826,7 +826,7 @@ module "slemicro55-minion" {
   install_salt_bundle = false
 }
 
-module "slmicro60-minion" {
+module "slmicro60_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -850,7 +850,7 @@ module "slmicro60-minion" {
   install_salt_bundle = false
 }
 
-module "sles12sp5-sshminion" {
+module "sles12sp5_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -869,7 +869,7 @@ module "sles12sp5-sshminion" {
   install_salt_bundle = true
 }
 
-module "sles15sp2-sshminion" {
+module "sles15sp2_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -886,7 +886,7 @@ module "sles15sp2-sshminion" {
   install_salt_bundle = true
 }
 
-module "sles15sp3-sshminion" {
+module "sles15sp3_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -903,7 +903,7 @@ module "sles15sp3-sshminion" {
   install_salt_bundle = true
 }
 
-module "sles15sp4-sshminion" {
+module "sles15sp4_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -920,7 +920,7 @@ module "sles15sp4-sshminion" {
   install_salt_bundle = true
 }
 
-module "sles15sp5-sshminion" {
+module "sles15sp5_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -937,7 +937,7 @@ module "sles15sp5-sshminion" {
   install_salt_bundle = true
 }
 
-module "sles15sp6-sshminion" {
+module "sles15sp6_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -954,7 +954,7 @@ module "sles15sp6-sshminion" {
   install_salt_bundle = true
 }
 
-module "alma8-sshminion" {
+module "alma8_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -971,7 +971,7 @@ module "alma8-sshminion" {
   install_salt_bundle = true
 }
 
-module "alma9-sshminion" {
+module "alma9_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -988,7 +988,7 @@ module "alma9-sshminion" {
   install_salt_bundle = true
 }
 
-module "centos7-sshminion" {
+module "centos7_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1006,7 +1006,7 @@ module "centos7-sshminion" {
 }
 
 
-//module "liberty9-sshminion" {
+//module "liberty9_ssh_minion" {
 //  source             = "./modules/sshminion"
 //  base_configuration = module.base_core.configuration
 //  product_version    = "5.0-released"
@@ -1023,7 +1023,7 @@ module "centos7-sshminion" {
 //  install_salt_bundle = true
 //}
 
-module "oracle9-sshminion" {
+module "oracle9_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1040,7 +1040,7 @@ module "oracle9-sshminion" {
   install_salt_bundle = true
 }
 
-module "rocky8-sshminion" {
+module "rocky8_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1057,7 +1057,7 @@ module "rocky8-sshminion" {
   install_salt_bundle = true
 }
 
-module "rocky9-sshminion" {
+module "rocky9_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1074,7 +1074,7 @@ module "rocky9-sshminion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004-sshminion" {
+module "ubuntu2004_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1092,7 +1092,7 @@ module "ubuntu2004-sshminion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2204-sshminion" {
+module "ubuntu2204_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1109,7 +1109,7 @@ module "ubuntu2204-sshminion" {
   install_salt_bundle = true
 }
 
-module "debian11-sshminion" {
+module "debian11_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1126,7 +1126,7 @@ module "debian11-sshminion" {
   install_salt_bundle = true
 }
 
-module "debian12-sshminion" {
+module "debian12_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1143,7 +1143,7 @@ module "debian12-sshminion" {
   install_salt_bundle = true
 }
 
-module "opensuse154arm-sshminion" {
+module "opensuse154arm_ssh_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1166,7 +1166,7 @@ module "opensuse154arm-sshminion" {
   install_salt_bundle = true
 }
 
-module "opensuse155arm-sshminion" {
+module "opensuse155arm_ssh_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1189,7 +1189,7 @@ module "opensuse155arm-sshminion" {
   install_salt_bundle = true
 }
 
-module "opensuse156arm-sshminion" {
+module "opensuse156arm_ssh_minion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1212,7 +1212,7 @@ module "opensuse156arm-sshminion" {
   install_salt_bundle = true
 }
 
-module "sles15sp5s390-sshminion" {
+module "sles15sp5s390_ssh_minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
   product_version    = "5.0-released"
@@ -1235,7 +1235,7 @@ module "sles15sp5s390-sshminion" {
 }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro51-sshminion" {
+// module "slemicro51_ssh_minion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_core.configuration
 //   product_version    = "5.0-released"
@@ -1253,7 +1253,7 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro52-sshminion" {
+// module "slemicro52_ssh_minion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_core.configuration
 //   product_version    = "5.0-released"
@@ -1271,7 +1271,7 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro53-sshminion" {
+// module "slemicro53_ssh_minion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_core.configuration
 //   product_version    = "5.0-released"
@@ -1289,7 +1289,7 @@ module "sles15sp5s390-sshminion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro54-sshminion" {
+// module "slemicro54_ssh_minion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_core.configuration
 //   product_version    = "5.0-released"
@@ -1307,7 +1307,7 @@ module "sles15sp5s390-sshminion" {
 //}
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro55-sshminion" {
+// module "slemicro55_ssh_minion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_core.configuration
 //   product_version    = "5.0-released"
@@ -1324,7 +1324,7 @@ module "sles15sp5s390-sshminion" {
 //}
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slmicro60-sshminion" {
+// module "slmicro60_ssh_minion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_core.configuration
 //   product_version    = "5.0-released"
@@ -1340,7 +1340,7 @@ module "sles15sp5s390-sshminion" {
 //  install_salt_bundle = true
 //}
 
-module "sles12sp5-buildhost" {
+module "sles12sp5_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1362,7 +1362,7 @@ module "sles12sp5-buildhost" {
   install_salt_bundle = true
 }
 
-module "sles12sp5-terminal" {
+module "sles12sp5_terminal" {
   source             = "./modules/pxe_boot"
   base_configuration = module.base_core.configuration
   name               = "terminal-sles12sp5"
@@ -1377,7 +1377,7 @@ module "sles12sp5-terminal" {
   private_name       = "sle12sp5terminal"
 }
 
-module "sles15sp4-buildhost" {
+module "sles15sp4_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1399,7 +1399,7 @@ module "sles15sp4-buildhost" {
   install_salt_bundle = true
 }
 
-module "sles15sp4-terminal" {
+module "sles15sp4_terminal" {
   source             = "./modules/pxe_boot"
   base_configuration = module.base_core.configuration
   name               = "terminal-sles15sp4"
@@ -1414,15 +1414,15 @@ module "sles15sp4-terminal" {
   private_name       = "sle15sp4terminal"
 }
 
-module "dhcp-dns" {
+module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
   base_configuration = module.base_core.configuration
   name               = "dhcp-dns"
   image              = "opensuse155o"
   private_hosts = [
     module.proxy_containerized.configuration,
-    module.sles12sp5-terminal.configuration,
-    module.sles15sp4-terminal.configuration
+    module.sles12sp5_terminal.configuration,
+    module.sles15sp4_terminal.configuration
   ]
   hypervisor = {
     host        = "suma-06.mgr.suse.de"
@@ -1431,7 +1431,7 @@ module "dhcp-dns" {
   }
 }
 
-module "monitoring-server" {
+module "monitoring_server" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
@@ -1474,102 +1474,102 @@ module "controller" {
 
   proxy_configuration  = module.proxy_containerized.configuration
 
-  sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
-  sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+  sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5_ssh_minion.configuration
 
-  sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
-  sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
+  sle15sp2_minion_configuration    = module.sles15sp2_minion.configuration
+  sle15sp2_sshminion_configuration = module.sles15sp2_ssh_minion.configuration
 
-  sle15sp3_minion_configuration    = module.sles15sp3-minion.configuration
-  sle15sp3_sshminion_configuration = module.sles15sp3-sshminion.configuration
+  sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
+  sle15sp3_sshminion_configuration = module.sles15sp3_ssh_minion.configuration
 
-  sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
-  sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
+  sle15sp4_minion_configuration    = module.sles15sp4_minion.configuration
+  sle15sp4_sshminion_configuration = module.sles15sp4_ssh_minion.configuration
 
-  sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
-  sle15sp5_sshminion_configuration = module.sles15sp5-sshminion.configuration
+  sle15sp5_minion_configuration    = module.sles15sp5_minion.configuration
+  sle15sp5_sshminion_configuration = module.sles15sp5_ssh_minion.configuration
 
-  sle15sp6_minion_configuration    = module.sles15sp6-minion.configuration
-  sle15sp6_sshminion_configuration = module.sles15sp6-sshminion.configuration
+  sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
+  sle15sp6_sshminion_configuration = module.sles15sp6_ssh_minion.configuration
 
-  alma8_minion_configuration    = module.alma8-minion.configuration
-  alma8_sshminion_configuration = module.alma8-sshminion.configuration
+  alma8_minion_configuration    = module.alma8_minion.configuration
+  alma8_sshminion_configuration = module.alma8_ssh_minion.configuration
 
-  alma9_minion_configuration    = module.alma9-minion.configuration
-  alma9_sshminion_configuration = module.alma9-sshminion.configuration
+  alma9_minion_configuration    = module.alma9_minion.configuration
+  alma9_sshminion_configuration = module.alma9_ssh_minion.configuration
 
-  centos7_minion_configuration    = module.centos7-minion.configuration
-  centos7_sshminion_configuration = module.centos7-sshminion.configuration
+  centos7_minion_configuration    = module.centos7_minion.configuration
+  centos7_sshminion_configuration = module.centos7_ssh_minion.configuration
 
-//  liberty9_minion_configuration    = module.liberty9-minion.configuration
-//  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
+//  liberty9_minion_configuration    = module.liberty9_minion.configuration
+//  liberty9_sshminion_configuration = module.liberty9_ssh_minion.configuration
 
-  oracle9_minion_configuration    = module.oracle9-minion.configuration
-  oracle9_sshminion_configuration = module.oracle9-sshminion.configuration
+  oracle9_minion_configuration    = module.oracle9_minion.configuration
+  oracle9_sshminion_configuration = module.oracle9_ssh_minion.configuration
 
-  rocky8_minion_configuration    = module.rocky8-minion.configuration
-  rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
+  rocky8_minion_configuration    = module.rocky8_minion.configuration
+  rocky8_sshminion_configuration = module.rocky8_ssh_minion.configuration
 
-  rocky9_minion_configuration    = module.rocky9-minion.configuration
-  rocky9_sshminion_configuration = module.rocky9-sshminion.configuration
+  rocky9_minion_configuration    = module.rocky9_minion.configuration
+  rocky9_sshminion_configuration = module.rocky9_ssh_minion.configuration
 
-  ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+  ubuntu2004_minion_configuration    = module.ubuntu2004_minion.configuration
+  ubuntu2004_sshminion_configuration = module.ubuntu2004_ssh_minion.configuration
 
-  ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
-  ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
+  ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
+  ubuntu2204_sshminion_configuration = module.ubuntu2204_ssh_minion.configuration
 
-  debian11_minion_configuration    = module.debian11-minion.configuration
-  debian11_sshminion_configuration = module.debian11-sshminion.configuration
+  debian11_minion_configuration    = module.debian11_minion.configuration
+  debian11_sshminion_configuration = module.debian11_ssh_minion.configuration
 
-  debian12_minion_configuration    = module.debian12-minion.configuration
-  debian12_sshminion_configuration = module.debian12-sshminion.configuration
+  debian12_minion_configuration    = module.debian12_minion.configuration
+  debian12_sshminion_configuration = module.debian12_ssh_minion.configuration
 
-  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
-  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
+  opensuse154arm_minion_configuration    = module.opensuse154arm_minion.configuration
+  opensuse154arm_sshminion_configuration = module.opensuse154arm_ssh_minion.configuration
 
-  opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
-  opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
+  opensuse155arm_minion_configuration    = module.opensuse155arm_minion.configuration
+  opensuse155arm_sshminion_configuration = module.opensuse155arm_ssh_minion.configuration
 
-  opensuse156arm_minion_configuration    = module.opensuse156arm-minion.configuration
-  opensuse156arm_sshminion_configuration = module.opensuse156arm-sshminion.configuration
+  opensuse156arm_minion_configuration    = module.opensuse156arm_minion.configuration
+  opensuse156arm_sshminion_configuration = module.opensuse156arm_ssh_minion.configuration
 
-  sle15sp5s390_minion_configuration    = module.sles15sp5s390-minion.configuration
-  sle15sp5s390_sshminion_configuration = module.sles15sp5s390-sshminion.configuration
+  sle15sp5s390_minion_configuration    = module.sles15sp5s390_minion.configuration
+  sle15sp5s390_sshminion_configuration = module.sles15sp5s390_ssh_minion.configuration
 
-  salt_migration_minion_configuration = module.salt-migration-minion.configuration
+  salt_migration_minion_configuration = module.salt_migration_minion.configuration
 
-  slemicro51_minion_configuration    = module.slemicro51-minion.configuration
+  slemicro51_minion_configuration    = module.slemicro51_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro51_sshminion_configuration = module.slemicro51-sshminion.configuration
+//  slemicro51_sshminion_configuration = module.slemicro51_ssh_minion.configuration
 
-  slemicro52_minion_configuration    = module.slemicro52-minion.configuration
+  slemicro52_minion_configuration    = module.slemicro52_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro52_sshminion_configuration = module.slemicro52-sshminion.configuration
+//  slemicro52_sshminion_configuration = module.slemicro52_ssh_minion.configuration
 
-  slemicro53_minion_configuration    = module.slemicro53-minion.configuration
+  slemicro53_minion_configuration    = module.slemicro53_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro53_sshminion_configuration = module.slemicro53-sshminion.configuration
+//  slemicro53_sshminion_configuration = module.slemicro53_ssh_minion.configuration
 
-  slemicro54_minion_configuration    = module.slemicro54-minion.configuration
+  slemicro54_minion_configuration    = module.slemicro54_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro54_sshminion_configuration = module.slemicro54-sshminion.configuration
+//  slemicro54_sshminion_configuration = module.slemicro54_ssh_minion.configuration
 
-  slemicro55_minion_configuration    = module.slemicro55-minion.configuration
+  slemicro55_minion_configuration    = module.slemicro55_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro55_sshminion_configuration = module.slemicro55-sshminion.configuration
+//  slemicro55_sshminion_configuration = module.slemicro55_ssh_minion.configuration
 
-  slmicro60_minion_configuration    = module.slmicro60-minion.configuration
+  slmicro60_minion_configuration    = module.slmicro60_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slmicro60_sshminion_configuration = module.slmicro60-sshminion.configuration
+//  slmicro60_sshminion_configuration = module.slmicro60_ssh_minion.configuration
 
-  sle12sp5_buildhost_configuration = module.sles12sp5-buildhost.configuration
-  sle15sp4_buildhost_configuration = module.sles15sp4-buildhost.configuration
+  sle12sp5_buildhost_configuration = module.sles12sp5_buildhost.configuration
+  sle15sp4_buildhost_configuration = module.sles15sp4_buildhost.configuration
 
-  sle12sp5_terminal_configuration = module.sles12sp5-terminal.configuration
-  sle15sp4_terminal_configuration = module.sles15sp4-terminal.configuration
+  sle12sp5_terminal_configuration = module.sles12sp5_terminal.configuration
+  sle15sp4_terminal_configuration = module.sles15sp4_terminal.configuration
 
-  monitoringserver_configuration = module.monitoring-server.configuration
+  monitoringserver_configuration = module.monitoring_server.configuration
 }
 
 output "configuration" {
