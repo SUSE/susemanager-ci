@@ -74,7 +74,8 @@ def run(params) {
             }
 
             stage('Sanity check') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
+                def nodesHandler = getNodesHandler()
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable}; cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
             }
 
             stage('Run core features') {
@@ -87,7 +88,7 @@ def run(params) {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
                     // Get minion list from terraform state list command
                     def nodesHandler = getNodesHandler()
-                    res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
+                    res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     sh "exit ${res_products}"
                 }
@@ -542,7 +543,7 @@ def getNodesHandler() {
         BootstrapRepositoryStatus[node] = 'NOT_CREATED'
         CustomChannelStatus[node]       = 'NOT_CREATED'
     }
-    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes, CustomChannelStatus:CustomChannelStatus, BootstrapRepositoryStatus:BootstrapRepositoryStatus]
+    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes.join(' '), CustomChannelStatus:CustomChannelStatus, BootstrapRepositoryStatus:BootstrapRepositoryStatus]
 }
 
 // Creates a stage for each product or client migration feature.
