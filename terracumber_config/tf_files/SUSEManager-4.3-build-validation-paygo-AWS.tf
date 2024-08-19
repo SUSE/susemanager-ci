@@ -222,7 +222,7 @@ module "proxy" {
 
 }
 
-module "sles12sp5-paygo-minion" {
+module "sles12sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "paygo"
@@ -238,7 +238,7 @@ module "sles12sp5-paygo-minion" {
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
-module "sles15sp5-paygo-minion" {
+module "sles15sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "paygo"
@@ -254,7 +254,7 @@ module "sles15sp5-paygo-minion" {
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
-module "sles15sp6-paygo-minion" {
+module "sles15sp6_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "paygo"
@@ -270,7 +270,7 @@ module "sles15sp6-paygo-minion" {
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
-module "slesforsap15sp5-paygo-minion" {
+module "slesforsap15sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "paygo"
@@ -287,7 +287,7 @@ module "slesforsap15sp5-paygo-minion" {
 }
 
 
-module "sles12sp5-client" {
+module "sles12sp5_client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -305,7 +305,7 @@ module "sles12sp5-client" {
 
 }
 
-module "sles15sp4-client" {
+module "sles15sp4_client" {
 
   source             = "./modules/client"
   base_configuration = module.base.configuration
@@ -323,7 +323,7 @@ module "sles15sp4-client" {
 
 }
 
-module "sles12sp5-minion" {
+module "sles12sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -341,7 +341,7 @@ module "sles12sp5-minion" {
 
 }
 
-module "sles15sp4-byos-minion" {
+module "sles15sp4_byos_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -358,7 +358,7 @@ module "sles15sp4-byos-minion" {
 
 }
 
-module "sles15sp4-minion" {
+module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -375,7 +375,7 @@ module "sles15sp4-minion" {
 
 }
 
-module "sles15sp5-minion" {
+module "sles15sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -392,7 +392,7 @@ module "sles15sp5-minion" {
 
 }
 
-module "sles15sp6-minion" {
+module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -409,7 +409,7 @@ module "sles15sp6-minion" {
 
 }
 
-module "sles12sp5-sshminion" {
+module "sles12sp5_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -425,7 +425,7 @@ module "sles12sp5-sshminion" {
   additional_packages = [ "chrony" ]
 }
 
-module "sles15sp4-sshminion" {
+module "sles15sp4_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -440,7 +440,7 @@ module "sles15sp4-sshminion" {
 }
 
 
-module "sles15sp5-sshminion" {
+module "sles15sp5_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -455,7 +455,7 @@ module "sles15sp5-sshminion" {
 
 }
 
-module "sles15sp6-sshminion" {
+module "sles15sp6_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -499,22 +499,22 @@ module "controller" {
   server_configuration    = module.server.configuration
   proxy_configuration     = module.proxy.configuration
 
-  sle12sp5_paygo_minion_configuration       = module.sles12sp5-paygo-minion.configuration
-  sle15sp4_byos_minion_configuration       = module.sles15sp4-byos-minion.configuration
-  sle15sp5_paygo_minion_configuration       = module.sles15sp5-paygo-minion.configuration
-  sle15sp6_paygo_minion_configuration       = module.sles15sp6-paygo-minion.configuration
-  sleforsap15sp5_paygo_minion_configuration = module.slesforsap15sp5-paygo-minion.configuration
+  sle12sp5_paygo_minion_configuration       = module.sles12sp5_paygo_minion.configuration
+  sle15sp4_byos_minion_configuration       = module.sles15sp4_byos_minion.configuration
+  sle15sp5_paygo_minion_configuration       = module.sles15sp5_paygo_minion.configuration
+  sle15sp6_paygo_minion_configuration       = module.sles15sp6_paygo_minion.configuration
+  sleforsap15sp5_paygo_minion_configuration = module.slesforsap15sp5_paygo_minion.configuration
 
-  sle12sp5_client_configuration    = module.sles12sp5-client.configuration
-  sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
-  sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+  sle12sp5_client_configuration    = module.sles12sp5_client.configuration
+  sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5_ssh_minion.configuration
 
-  sle15sp4_client_configuration    = module.sles15sp4-client.configuration
-  sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
-  sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
+  sle15sp4_client_configuration    = module.sles15sp4_client.configuration
+  sle15sp4_minion_configuration    = module.sles15sp4_minion.configuration
+  sle15sp4_sshminion_configuration = module.sles15sp4_ssh_minion.configuration
 
-  sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
-  sle15sp6_minion_configuration    = module.sles15sp6-minion.configuration
+  sle15sp5_minion_configuration    = module.sles15sp5_minion.configuration
+  sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
 }
 
 output "bastion_public_name" {
