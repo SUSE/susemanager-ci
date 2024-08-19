@@ -757,7 +757,7 @@ module "opensuse154arm-minion" {
   name               = "prv-min-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:f8"
+    mac                = "aa:b2:92:42:00:0c"
     overwrite_fqdn     = "uyuni-bv-master-min-opensuse154arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -781,7 +781,7 @@ module "opensuse155arm-minion" {
   name               = "prv-min-opensuse155arm"
   image              = "opensuse155armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:f9"
+    mac                = "aa:b2:92:42:00:0e"
     overwrite_fqdn     = "uyuni-bv-master-min-opensuse155arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -805,7 +805,7 @@ module "opensuse156arm-minion" {
   name               = "prv-min-opensuse156arm"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = "aa:b2:92:05:00:10"
+    mac                = "aa:b2:92:42:00:10"
     overwrite_fqdn     = "uyuni-bv-master-min-opensuse156arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -994,7 +994,7 @@ module "slmicro60-minion" {
   name               = "min-slmicro60"
   image              = "slmicro60o"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:97"
+    mac                = "aa:b2:93:04:05:97"
     memory             = 2048
   }
 
@@ -1318,7 +1318,7 @@ module "opensuse154arm-sshminion" {
   name               = "prv-minssh-opensuse154arm"
   image              = "opensuse154armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:fa"
+    mac                = "aa:b2:92:42:00:0d"
     overwrite_fqdn     = "uyuni-bv-master-minssh-opensuse154arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -1338,7 +1338,7 @@ module "opensuse155arm-sshminion" {
   name               = "prv-minssh-opensuse155arm"
   image              = "opensuse155armo"
   provider_settings = {
-    mac                = "aa:b2:93:02:01:fb"
+    mac                = "aa:b2:92:42:00:0f"
     overwrite_fqdn     = "uyuni-bv-master-minssh-opensuse155arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -1358,7 +1358,7 @@ module "opensuse156arm-sshminion" {
   name               = "prv-minssh-opensuse156arm"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = "aa:b2:92:05:00:11"
+    mac                = "aa:b2:92:42:00:11"
     overwrite_fqdn     = "uyuni-bv-master-minssh-opensuse156arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
@@ -1488,7 +1488,7 @@ module "sles15sp5s390-sshminion" {
 //   name               = "minssh-slmicro60"
 //   image              = "slmicro60o"
 //   provider_settings = {
-//     mac                = "aa:b2:93:02:01:b7"
+//     mac                = "aa:b2:93:04:05:b7"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
