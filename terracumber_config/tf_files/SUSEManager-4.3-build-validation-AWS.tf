@@ -226,7 +226,7 @@ module "proxy" {
   }
 }
 
-module "sles12sp5-client" {
+module "sles12sp5_client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -243,7 +243,7 @@ module "sles12sp5-client" {
   additional_packages = [ "chrony" ]
 }
 
-module "sles15sp2-client" {
+module "sles15sp2_client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -259,7 +259,7 @@ module "sles15sp2-client" {
   }
 }
 
-module "sles15sp3-client" {
+module "sles15sp3_client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   name                 = "cli-sles15sp3"
@@ -276,7 +276,7 @@ module "sles15sp3-client" {
 }
 
 
-module "sles15sp4-client" {
+module "sles15sp4_client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   name                 = "cli-sles15sp4"
@@ -293,7 +293,7 @@ module "sles15sp4-client" {
 }
 
 
-module "sles15sp5-client" {
+module "sles15sp5_client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   name                 = "cli-sles15sp5"
@@ -309,7 +309,7 @@ module "sles15sp5-client" {
   }
 }
 
-module "sles15sp6-client" {
+module "sles15sp6_client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
   name                 = "cli-sles15sp6"
@@ -325,7 +325,7 @@ module "sles15sp6-client" {
   }
 }
 
-module "ubuntu2004-minion" {
+module "ubuntu2004_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -340,7 +340,7 @@ module "ubuntu2004-minion" {
   }
 }
 
-module "rocky8-minion" {
+module "rocky8_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -357,7 +357,7 @@ module "rocky8-minion" {
   }
 }
 
-module "sles12sp5-minion" {
+module "sles12sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -374,7 +374,7 @@ module "sles12sp5-minion" {
   additional_packages = [ "chrony" ]
 }
 
-module "sles15sp2-minion" {
+module "sles15sp2_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -390,7 +390,7 @@ module "sles15sp2-minion" {
   }
 }
 
-module "sles15sp3-minion" {
+module "sles15sp3_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -406,7 +406,7 @@ module "sles15sp3-minion" {
   }
 }
 
-module "sles15sp4-minion" {
+module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -424,7 +424,7 @@ module "sles15sp4-minion" {
 
 // This is an x86_64 SLES 15 SP5 minion (like sles15sp5-minion),
 // dedicated to testing migration from OS Salt to Salt bundle
-module "salt-migration-minion" {
+module "salt_migration_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   name               = "min-salt-migration"
@@ -440,7 +440,7 @@ module "salt-migration-minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "sles15sp5-minion" {
+module "sles15sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -456,7 +456,7 @@ module "sles15sp5-minion" {
   }
 }
 
-module "sles15sp6-minion" {
+module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -472,7 +472,7 @@ module "sles15sp6-minion" {
   }
 }
 
-module "ubuntu2004-sshminion" {
+module "ubuntu2004_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -486,7 +486,7 @@ module "ubuntu2004-sshminion" {
   }
 }
 
-module "rocky8-sshminion" {
+module "rocky8_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -504,7 +504,7 @@ module "rocky8-sshminion" {
 
 }
 
-module "sles12sp5-sshminion" {
+module "sles12sp5_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -520,7 +520,7 @@ module "sles12sp5-sshminion" {
   additional_packages = [ "chrony" ]
 }
 
-module "sles15sp2-sshminion" {
+module "sles15sp2_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -534,7 +534,7 @@ module "sles15sp2-sshminion" {
   }
 }
 
-module "sles15sp3-sshminion" {
+module "sles15sp3_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -548,7 +548,7 @@ module "sles15sp3-sshminion" {
   }
 }
 
-module "sles15sp4-sshminion" {
+module "sles15sp4_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -562,7 +562,7 @@ module "sles15sp4-sshminion" {
   }
 }
 
-module "sles15sp5-sshminion" {
+module "sles15sp5_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -576,7 +576,7 @@ module "sles15sp5-sshminion" {
   }
 }
 
-module "sles15sp6-sshminion" {
+module "sles15sp6_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -590,7 +590,7 @@ module "sles15sp6-sshminion" {
   }
 }
 
-module "rhel9-minion" {
+module "rhel9_minion" {
 
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -610,7 +610,7 @@ module "rhel9-minion" {
 
 }
 
-module "ubuntu2204-sshminion" {
+module "ubuntu2204_ssh_minion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -624,7 +624,7 @@ module "ubuntu2204-sshminion" {
 
 }
 
-module "ubuntu2204-minion" {
+module "ubuntu2204_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   server_configuration = module.server.configuration
@@ -663,48 +663,48 @@ module "controller" {
   server_configuration    = module.server.configuration
   proxy_configuration     = module.proxy.configuration
 
-  sle12sp5_client_configuration    = module.sles12sp5-client.configuration
-  sle12sp5_minion_configuration    = module.sles12sp5-minion.configuration
-  sle12sp5_sshminion_configuration = module.sles12sp5-sshminion.configuration
+  sle12sp5_client_configuration    = module.sles12sp5_client.configuration
+  sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5_ssh_minion.configuration
 
-  sle15sp2_client_configuration    = module.sles15sp2-client.configuration
-  sle15sp2_minion_configuration    = module.sles15sp2-minion.configuration
-  sle15sp2_sshminion_configuration = module.sles15sp2-sshminion.configuration
+  sle15sp2_client_configuration    = module.sles15sp2_client.configuration
+  sle15sp2_minion_configuration    = module.sles15sp2_minion.configuration
+  sle15sp2_sshminion_configuration = module.sles15sp2_ssh_minion.configuration
 
-  sle15sp3_client_configuration    = module.sles15sp3-client.configuration
-  sle15sp3_minion_configuration    = module.sles15sp3-minion.configuration
-  sle15sp3_sshminion_configuration = module.sles15sp3-sshminion.configuration
+  sle15sp3_client_configuration    = module.sles15sp3_client.configuration
+  sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
+  sle15sp3_sshminion_configuration = module.sles15sp3_ssh_minion.configuration
 
-  sle15sp4_client_configuration    = module.sles15sp4-client.configuration
-  sle15sp4_minion_configuration    = module.sles15sp4-minion.configuration
-  sle15sp4_sshminion_configuration = module.sles15sp4-sshminion.configuration
+  sle15sp4_client_configuration    = module.sles15sp4_client.configuration
+  sle15sp4_minion_configuration    = module.sles15sp4_minion.configuration
+  sle15sp4_sshminion_configuration = module.sles15sp4_ssh_minion.configuration
 
-  sle15sp5_client_configuration    = module.sles15sp5-client.configuration
-  sle15sp5_minion_configuration    = module.sles15sp5-minion.configuration
-  sle15sp5_sshminion_configuration = module.sles15sp5-sshminion.configuration
+  sle15sp5_client_configuration    = module.sles15sp5_client.configuration
+  sle15sp5_minion_configuration    = module.sles15sp5_minion.configuration
+  sle15sp5_sshminion_configuration = module.sles15sp5_ssh_minion.configuration
 
-  salt_migration_minion_configuration = module.salt-migration-minion.configuration
+  salt_migration_minion_configuration = module.salt_migration_minion.configuration
 
-  sle15sp6_client_configuration    = module.sles15sp6-client.configuration
-  sle15sp6_minion_configuration    = module.sles15sp6-minion.configuration
-  sle15sp6_sshminion_configuration = module.sles15sp6-sshminion.configuration
+  sle15sp6_client_configuration    = module.sles15sp6_client.configuration
+  sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
+  sle15sp6_sshminion_configuration = module.sles15sp6_ssh_minion.configuration
 
-  rocky8_minion_configuration    = module.rocky8-minion.configuration
-  rocky8_sshminion_configuration = module.rocky8-sshminion.configuration
+  rocky8_minion_configuration    = module.rocky8_minion.configuration
+  rocky8_sshminion_configuration = module.rocky8_ssh_minion.configuration
 
-  ubuntu2004_minion_configuration    = module.ubuntu2004-minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004-sshminion.configuration
+  ubuntu2004_minion_configuration    = module.ubuntu2004_minion.configuration
+  ubuntu2004_sshminion_configuration = module.ubuntu2004_ssh_minion.configuration
 
-  ubuntu2204_minion_configuration    = module.ubuntu2204-minion.configuration
-  ubuntu2204_sshminion_configuration = module.ubuntu2204-sshminion.configuration
+  ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
+  ubuntu2204_sshminion_configuration = module.ubuntu2204_ssh_minion.configuration
 
-//  debian11_minion_configuration    = module.debian11-minion.configuration
-//  debian11_sshminion_configuration = module.debian11-sshminion.configuration
+//  debian11_minion_configuration    = module.debian11_minion.configuration
+//  debian11_sshminion_configuration = module.debian11_ssh_minion.configuration
 
-//  debian12_minion_configuration    = module.debian12-minion.configuration
-//  debian12_sshminion_configuration = module.debian12-sshminion.configuration
+//  debian12_minion_configuration    = module.debian12_minion.configuration
+//  debian12_sshminion_configuration = module.debian12_ssh_minion.configuration
 
-  rhel9_minion_configuration          = module.rhel9-minion.configuration
+  rhel9_minion_configuration          = module.rhel9_minion.configuration
 
 }
 
