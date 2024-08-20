@@ -8,12 +8,10 @@ from unittest.mock import patch
 from json_generator.maintenance_json_generator import clean_mi_ids, read_mi_ids_from_file, merge_mi_ids, create_url, IBS_MAINTENANCE_URL_PREFIX, parse_cli_args, validate_and_store_results
 from tests.mock_response import mock_requests_get_success
 
-_TEST_MI_IDS_FILE_PATH: str = './tests/testdata/mi_ids_file.txt'
-
 class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_parse_cli_args_default_values(self):
-        sys.argv= ['maintenance_json_generator.py']
+        sys.argv = ['maintenance_json_generator.py']
         args = parse_cli_args()
         self.assertEqual(args.version, "43")
         self.assertIsNone(args.mi_ids)
@@ -21,27 +19,27 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_parse_cli_args_success(self):
         # shorthand flags
-        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
         args: Namespace = parse_cli_args()
         self.assertEqual(args.version, "50")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
         self.assertTrue(args.embargo_check)
         # shorthand flags - mi_ids variant 1
-        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-i', '1234,5678', '-f', 'some_file', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234,5678', '-f', 'some_file', '-e']
         args: Namespace = parse_cli_args()
         self.assertEqual(args.version, "50")
         self.assertListEqual(args.mi_ids, ['1234,5678'])
         self.assertTrue(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
         # shorthand flags - mi_ids variant 2
-        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-i', '1234,', '5678', '-f', 'some_file', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234,', '5678', '-f', 'some_file', '-e']
         args: Namespace = parse_cli_args()
         self.assertEqual(args.version, "50")
         self.assertListEqual(args.mi_ids, ['1234,' , '5678'])
         self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
         # long flags
-        sys.argv= ['maintenance_json_generator.py', '--version', '50', '--mi_ids', '1234', '5678', '--file', 'some_file', '--no_embargo']
+        sys.argv = ['maintenance_json_generator.py', '--version', '50', '--mi_ids', '1234', '5678', '--file', 'some_file', '--no_embargo']
         args: Namespace = parse_cli_args()
         self.assertEqual(args.version, "50")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
@@ -49,13 +47,13 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertTrue(args.embargo_check)
     
     def test_parse_cli_args_failure(self):
-        sys.argv= ['maintenance_json_generator.py',  '-x']
+        sys.argv = ['maintenance_json_generator.py',  '-x']
         with self.assertRaises(SystemExit) as cm:
             parse_cli_args()
             self.assertEqual(cm.exception.code, 2)
             self.assertIn("error: unrecognized arguments: -x", cm.msg)
 
-        sys.argv= ['maintenance_json_generator.py',  '-v' , '999']
+        sys.argv = ['maintenance_json_generator.py',  '-v' , '999']
         with self.assertRaises(SystemExit) as cm:
             parse_cli_args()
             self.assertEqual(cm.exception.code, 2)
@@ -143,29 +141,32 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         remove(test_output_file)
 
     def test_read_mi_ids_from_file(self):
-        file_ids: list[str] = read_mi_ids_from_file(_TEST_MI_IDS_FILE_PATH)
+        test_file_path: str = './tests/testdata/mi_ids_file.txt'
+
+        file_ids: list[str] = read_mi_ids_from_file(test_file_path)
         self.assertEqual(file_ids, ['11111', '22222', '33333'])
 
         self.assertRaises(OSError, read_mi_ids_from_file, 'file_not_found.txt')
 
     def test_merge_mi_ids(self):
+        test_file_path: str = './tests/testdata/mi_ids_file.txt'
         # no ids at all
-        sys.argv= ['maintenance_json_generator.py', '-v', '50']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50']
         args = parse_cli_args()
         ids: list[str] = merge_mi_ids(args)
         self.assertEqual(ids, [])
         # no mi ids file
-        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
         args = parse_cli_args()
         ids: list[str] = merge_mi_ids(args)
         self.assertEqual(ids, ['1234', '5678'])
         # only mi ids file
-        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-f', _TEST_MI_IDS_FILE_PATH, '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-e']
         args = parse_cli_args()
         ids: list[str] = merge_mi_ids(args)
         self.assertEqual(ids, ['11111', '22222', '33333'])
         # ids both from flag and file
-        sys.argv= ['maintenance_json_generator.py', '-v', '50', '-f', _TEST_MI_IDS_FILE_PATH, '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '1234', '5678', '-e']
         args = parse_cli_args()
         ids: list[str] = merge_mi_ids(args)
         self.assertEqual(ids, ['1234', '5678', '11111', '22222', '33333'])
