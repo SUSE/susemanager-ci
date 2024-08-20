@@ -173,7 +173,7 @@ module "proxy" {
 
 }
 
-module "sles15sp4-minion" {
+module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -214,7 +214,7 @@ module "controller" {
 
   server_configuration          = module.server.configuration
   proxy_configuration           = module.proxy.configuration
-  sle15sp4_minion_configuration = module.sles15sp4-minion.configuration
+  sle15sp4_minion_configuration = module.sles15sp4_minion.configuration
 }
 
 output "configuration" {
