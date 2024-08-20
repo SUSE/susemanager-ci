@@ -172,7 +172,7 @@ module "proxy_containerized" {
 
 }
 
-module "sles15sp6-minion" {
+module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "5.0-released"
@@ -213,7 +213,7 @@ module "controller" {
 
   server_configuration          = module.server_containerized.configuration
   proxy_configuration           = module.proxy_containerized.configuration
-  sle15sp6_minion_configuration = module.sles15sp6-minion.configuration
+  sle15sp6_minion_configuration = module.sles15sp6_minion.configuration
 }
 
 output "configuration" {
