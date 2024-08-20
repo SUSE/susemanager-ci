@@ -32,10 +32,6 @@ def run(params) {
         def capybara_timeout =30
         def default_timeout = 300
 
-        // Path to JSON run set file for non MU repositories
-        env.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks.json'
-
-
         if (params.terraform_parallelism) {
             local_mirror_params = "${local_mirror_params} --parallelism ${params.terraform_parallelism}"
             aws_mirror_params = "${aws_mirror_params} --parallelism ${params.terraform_parallelism}"

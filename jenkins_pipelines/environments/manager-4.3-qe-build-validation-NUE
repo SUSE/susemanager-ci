@@ -66,6 +66,7 @@ node('sumaform-cucumber') {
     stage('Checkout pipeline') {
         checkout scm
     }
+    non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_43.json'
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(params)
 }
