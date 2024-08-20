@@ -256,7 +256,7 @@ def validate_and_store_results(expected_ids: set [str], custom_repositories: dic
         logging.info(f"MI IDs #{missing_ids} do not exist in custom_repositories dictionary.")
 
     with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(custom_repositories, f, indent=2)
+        json.dump(custom_repositories, f, indent=2, sort_keys=True)
 
 def find_valid_repos(mi_ids: set[str], version: str):
     version_nodes: dict[str, set[str]] = nodes_by_version.get(version, None)
