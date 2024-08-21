@@ -124,6 +124,7 @@ module "server_containerized" {
 
   main_disk_size        = 1500
   runtime               = "podman"
+  // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
   container_repository  = "registry.suse.de/suse/maintenance/35237/suse_sle-15-sp6_update_products_manager50_update_containerfile/suse/manager/5.0/"
   server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
 
@@ -163,7 +164,8 @@ module "proxy_containerized" {
   }
 
   runtime              = "podman"
-  container_repository  = "registry.suse.de/suse/maintenance/35237/suse_sle-15-sp6_update_products_manager50_update_containerfile/suse/manager/5.0/"
+  // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
+  container_repository = "registry.suse.de/suse/maintenance/35237/suse_sle-15-sp6_update_products_manager50_update_containerfile/suse/manager/5.0/"
 
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
