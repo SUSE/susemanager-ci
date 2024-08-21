@@ -45,7 +45,14 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
         self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
-    
+        # doubly defined -i flag
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '9012', '3456' , '-f', 'some_file', '-i', '1234', '5678', '-e']
+        args: Namespace = parse_cli_args()
+        self.assertEqual(args.version, "50")
+        self.assertListEqual(args.mi_ids, ['1234', '5678'])
+        self.assertEqual(args.file, 'some_file')
+        self.assertTrue(args.embargo_check)
+
     def test_parse_cli_args_failure(self):
         sys.argv = ['maintenance_json_generator.py',  '-x']
         with self.assertRaises(SystemExit) as cm:
@@ -153,23 +160,33 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         # no ids at all
         sys.argv = ['maintenance_json_generator.py', '-v', '50']
         args = parse_cli_args()
-        ids: list[str] = merge_mi_ids(args)
-        self.assertEqual(ids, [])
+        ids: set[str] = merge_mi_ids(args)
+        self.assertEqual(ids, set())
         # no mi ids file
         sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
         args = parse_cli_args()
-        ids: list[str] = merge_mi_ids(args)
-        self.assertEqual(ids, ['1234', '5678'])
+        ids: set[str] = merge_mi_ids(args)
+        self.assertEqual(ids, {'1234', '5678'})
         # only mi ids file
         sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-e']
         args = parse_cli_args()
-        ids: list[str] = merge_mi_ids(args)
-        self.assertEqual(ids, ['11111', '22222', '33333'])
+        ids: set[str] = merge_mi_ids(args)
+        self.assertEqual(ids, {'11111', '22222', '33333'})
         # ids both from flag and file
         sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '1234', '5678', '-e']
         args = parse_cli_args()
-        ids: list[str] = merge_mi_ids(args)
-        self.assertEqual(ids, ['1234', '5678', '11111', '22222', '33333'])
+        ids: set[str] = merge_mi_ids(args)
+        self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})
+        # duplicated IDs from flag and file should be removed
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '11111', '1234', '33333', '5678', '-e']
+        args = parse_cli_args()
+        ids: set[str] = merge_mi_ids(args)
+        self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})
+        # check alternate -i flag values format
+        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '11111,1234,33333,5678', '-e']
+        args = parse_cli_args()
+        ids: set[str] = merge_mi_ids(args)
+        self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})
 
 if __name__ == '__main__':
     unittest.main()

@@ -218,11 +218,12 @@ def read_mi_ids_from_file(file_path: str) -> list[str]:
     with open(file_path, 'r') as file:
         return file.read().strip().split()
 
-def merge_mi_ids(args: argparse.Namespace) -> list[str]:
-    mi_ids = args.mi_ids if args.mi_ids else []
+def merge_mi_ids(args: argparse.Namespace) -> set[str]:
+    mi_ids: set[str] = clean_mi_ids(args.mi_ids) if args.mi_ids else set()
     if args.file:
-        file_mi_ids = read_mi_ids_from_file(args.file)
-        mi_ids.extend(file_mi_ids)
+        file_mi_ids: set[str] = set(read_mi_ids_from_file(args.file))
+        mi_ids.update(file_mi_ids)
+
     return mi_ids
 
 def clean_mi_ids(mi_ids: list[str]) -> set[str]:
@@ -296,12 +297,11 @@ def main():
     args: argparse.Namespace = parse_cli_args()
     osc_client: IbsOscClient = IbsOscClient()
 
-    raw_mi_ids: list[str] = merge_mi_ids(args)
-    logging.info(f"MI IDs: {raw_mi_ids}")
-    if not raw_mi_ids:
-        raw_mi_ids = osc_client.find_maintenance_incidents()
+    mi_ids: set[str] = merge_mi_ids(args)
+    logging.info(f"MI IDs: {mi_ids}")
+    if not mi_ids:
+        mi_ids = osc_client.find_maintenance_incidents()
 
-    mi_ids: set[str] = clean_mi_ids(raw_mi_ids)
     if args.embargo_check:
         logging.info(f"Remove MIs under embargo")
         mi_ids = { id for id in mi_ids if not osc_client.mi_is_under_embargo(id) }
