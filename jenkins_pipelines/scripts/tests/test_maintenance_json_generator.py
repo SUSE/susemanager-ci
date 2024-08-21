@@ -153,7 +153,15 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         # 5.0
         self.assertDictEqual(v50_nodes, get_version_nodes('50'))
         # invalid
-        self.assertRaises(ValueError, get_version_nodes, '99') 
+        self.assertRaises(ValueError, get_version_nodes, '99')
+
+    def test_init_custom_repositories(self):
+        # 5.0
+        custom_repos: dict[str, dict[str, str]] = init_custom_repositories('50')
+        self.assertIsNotNone(custom_repos['server'])
+        self.assertIsNotNone(custom_repos['proxy'])
+        # everything else
+        self.assertEqual({}, init_custom_repositories('43'))
 
     def test_update_custom_repositories(self):
         custom_repos: dict[str, dict[str, str]] = {}

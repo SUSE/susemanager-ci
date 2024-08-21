@@ -262,6 +262,19 @@ def get_version_nodes(version: str) -> dict[str, set[str]]:
         raise ValueError(f"No nodes for version {version} - supported versions: {supported_versions}")
     return version_nodes
 
+def init_custom_repositories(version: str) -> dict[str, dict[str, str]]:
+    custom_repositories = {}
+    if version == '50':
+        # TODO Remove the following hardcoding at GA, we should start getting MIs for server and proxy
+        # Add exception for specific URL for "server" and "proxy" nodes in version 5.0
+        # Hardcoded URLs for "server" and "proxy" nodes until we get MIs with them
+        server_url = "http://download.suse.de/ibs/SUSE:/SLE-15-SP5:/Update:/Products:/Manager50/images/repo/SUSE-Manager-Server-5.0-POOL-x86_64-Media1/"
+        proxy_url = "http://download.suse.de/ibs/SUSE:/SLE-15-SP5:/Update:/Products:/Manager50/images/repo/SUSE-Manager-Proxy-5.0-POOL-x86_64-Media1/"
+        custom_repositories['server'] = {'server_50': server_url}
+        custom_repositories['proxy'] = {'proxy_50': proxy_url}
+
+    return custom_repositories
+
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
     node_ids: dict[str, str] = custom_repositories.get(node, None)
     if node_ids:
@@ -279,16 +292,7 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
 
 def find_valid_repos(mi_ids: set[str], version: str):
     version_nodes: dict[str, set[str]] = get_version_nodes(version)
-
-    custom_repositories: dict[str, dict[str, str]] = {}
-    if version == '50':
-        # TODO Remove the following hardcoding at GA, we should start getting MIs for server and proxy
-        # Add exception for specific URL for "server" and "proxy" nodes in version 5.0
-        # Hardcoded URLs for "server" and "proxy" nodes until we get MIs with them
-        server_url = "http://download.suse.de/ibs/SUSE:/SLE-15-SP5:/Update:/Products:/Manager50/images/repo/SUSE-Manager-Server-5.0-POOL-x86_64-Media1/"
-        proxy_url = "http://download.suse.de/ibs/SUSE:/SLE-15-SP5:/Update:/Products:/Manager50/images/repo/SUSE-Manager-Proxy-5.0-POOL-x86_64-Media1/"
-        custom_repositories['server'] = {'server_50': server_url}
-        custom_repositories['proxy'] = {'proxy_50': proxy_url}
+    custom_repositories: dict[str, dict[str, str]] = init_custom_repositories(version)
 
     for node, repositories in version_nodes.items():
         for mi_id in mi_ids:
