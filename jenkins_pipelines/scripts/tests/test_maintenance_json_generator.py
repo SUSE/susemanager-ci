@@ -5,7 +5,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from json_generator.maintenance_json_generator import clean_mi_ids, read_mi_ids_from_file, merge_mi_ids, create_url, IBS_MAINTENANCE_URL_PREFIX, parse_cli_args, validate_and_store_results, update_custom_repositories
+from json_generator.maintenance_json_generator import *
 from tests.mock_response import mock_requests_get_success
 
 class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
@@ -146,6 +146,14 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         
         # cleanup
         remove(test_output_file)
+
+    def test_get_version_nodes(self):
+        # 4.3
+        self.assertDictEqual(v43_nodes, get_version_nodes('43'))
+        # 5.0
+        self.assertDictEqual(v50_nodes, get_version_nodes('50'))
+        # invalid
+        self.assertRaises(ValueError, get_version_nodes, '99') 
 
     def test_update_custom_repositories(self):
         custom_repos: dict[str, dict[str, str]] = {}

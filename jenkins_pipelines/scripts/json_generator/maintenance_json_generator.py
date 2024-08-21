@@ -255,6 +255,13 @@ def validate_and_store_results(expected_ids: set [str], custom_repositories: dic
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(custom_repositories, f, indent=2, sort_keys=True)
 
+def get_version_nodes(version: str) -> dict[str, set[str]]:
+    version_nodes = nodes_by_version.get(version)
+    if not version_nodes:
+        supported_versions = ', '.join(nodes_by_version.keys())
+        raise ValueError(f"No nodes for version {version} - supported versions: {supported_versions}")
+    return version_nodes
+
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
     node_ids: dict[str, str] = custom_repositories.get(node, None)
     if node_ids:
@@ -271,9 +278,7 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
         custom_repositories[node] = {mi_id: url}
 
 def find_valid_repos(mi_ids: set[str], version: str):
-    version_nodes: dict[str, set[str]] = nodes_by_version.get(version, None)
-    if not version_nodes:
-        raise SystemExit(f"No nodes for version {version} - supported versions: {nodes_by_version.keys()}")
+    version_nodes: dict[str, set[str]] = get_version_nodes(version)
 
     custom_repositories: dict[str, dict[str, str]] = {}
     if version == '50':
