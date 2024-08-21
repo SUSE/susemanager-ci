@@ -2,7 +2,7 @@ from requests import HTTPError
 import unittest
 from unittest.mock import patch
 
-from tests.mock_response import MockResponse, mock_requests_get_success, mock_requests_get_fail
+from tests.mock_response import mock_requests_get_success, mock_requests_get_fail
 from json_generator.smash_client import SmashClient
 
 

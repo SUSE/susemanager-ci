@@ -215,18 +215,15 @@ def parse_cli_args() -> argparse.Namespace:
     return args
 
 def read_mi_ids_from_file(file_path: str) -> list[str]:
-    try:
-        with open(file_path, 'r') as file:
-            return file.read().strip().split()
-    except Exception as e:
-        logging.error(f"Error reading file: {e}")
-        return []
+    with open(file_path, 'r') as file:
+        return file.read().strip().split()
 
-def merge_mi_ids(args: argparse.Namespace) -> list[str]:
-    mi_ids = args.mi_ids if args.mi_ids else []
+def merge_mi_ids(args: argparse.Namespace) -> set[str]:
+    mi_ids: set[str] = clean_mi_ids(args.mi_ids) if args.mi_ids else set()
     if args.file:
-        file_mi_ids = read_mi_ids_from_file(args.file)
-        mi_ids.extend(file_mi_ids)
+        file_mi_ids: set[str] = set(read_mi_ids_from_file(args.file))
+        mi_ids.update(file_mi_ids)
+
     return mi_ids
 
 def clean_mi_ids(mi_ids: list[str]) -> set[str]:
@@ -253,7 +250,7 @@ def validate_and_store_results(expected_ids: set [str], custom_repositories: dic
     # there should be no set difference if all MI IDs are in the JSON
     missing_ids: set[str] = expected_ids.difference(found_ids)
     if missing_ids:
-        logging.info(f"MI IDs #{missing_ids} do not exist in custom_repositories dictionary.")
+        logging.error(f"MI IDs #{missing_ids} do not exist in custom_repositories dictionary.")
 
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(custom_repositories, f, indent=2, sort_keys=True)
@@ -300,12 +297,11 @@ def main():
     args: argparse.Namespace = parse_cli_args()
     osc_client: IbsOscClient = IbsOscClient()
 
-    raw_mi_ids: list[str] = merge_mi_ids(args)
-    logging.info(f"MI IDs: {raw_mi_ids}")
-    if not raw_mi_ids:
-        raw_mi_ids = osc_client.find_maintenance_incidents()
+    mi_ids: set[str] = merge_mi_ids(args)
+    logging.info(f"MI IDs: {mi_ids}")
+    if not mi_ids:
+        mi_ids = osc_client.find_maintenance_incidents()
 
-    mi_ids: set[str] = clean_mi_ids(raw_mi_ids)
     if args.embargo_check:
         logging.info(f"Remove MIs under embargo")
         mi_ids = { id for id in mi_ids if not osc_client.mi_is_under_embargo(id) }
