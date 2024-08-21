@@ -1,7 +1,7 @@
 def run(params) {
     timestamps {
         //Capybara configuration
-        def api_program = "./api_program/main.py"
+        def api_program = "./susemanager-ci/jenkins_pipelines/scripts/api_program/main.py"
 
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
