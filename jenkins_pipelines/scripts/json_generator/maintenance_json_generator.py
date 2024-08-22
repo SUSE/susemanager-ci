@@ -255,12 +255,15 @@ def validate_and_store_results(expected_ids: set [str], custom_repositories: dic
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(custom_repositories, f, indent=2, sort_keys=True)
 
-def find_valid_repos(mi_ids: set[str], version: str):
-    version_nodes: dict[str, set[str]] = nodes_by_version.get(version, None)
+def get_version_nodes(version: str) -> dict[str, set[str]]:
+    version_nodes = nodes_by_version.get(version)
     if not version_nodes:
-        raise SystemExit(f"No nodes for version {version} - supported versions: {nodes_by_version.keys()}")
+        supported_versions = ', '.join(nodes_by_version.keys())
+        raise ValueError(f"No nodes for version {version} - supported versions: {supported_versions}")
+    return version_nodes
 
-    custom_repositories: dict[str, dict[str, str]] = {}
+def init_custom_repositories(version: str) -> dict[str, dict[str, str]]:
+    custom_repositories = {}
     if version == '50':
         # TODO Remove the following hardcoding at GA, we should start getting MIs for server and proxy
         # Add exception for specific URL for "server" and "proxy" nodes in version 5.0
@@ -270,25 +273,33 @@ def find_valid_repos(mi_ids: set[str], version: str):
         custom_repositories['server'] = {'server_50': server_url}
         custom_repositories['proxy'] = {'proxy_50': proxy_url}
 
+    return custom_repositories
+
+def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
+    node_ids: dict[str, str] = custom_repositories.get(node, None)
+    if node_ids:
+        # This is needed for mi_ids that have multiple repos for each node
+        # e.g. basesystem and server apps for server
+        final_id: str = mi_id
+        i: int = 1
+        while(final_id in node_ids):
+            final_id = f"{mi_id}-{i}"
+            i += 1
+        # for each mi_id we have multiple repos sometimes for each node
+        node_ids[final_id] = url
+    else:
+        custom_repositories[node] = {mi_id: url}
+
+def find_valid_repos(mi_ids: set[str], version: str):
+    version_nodes: dict[str, set[str]] = get_version_nodes(version)
+    custom_repositories: dict[str, dict[str, str]] = init_custom_repositories(version)
+
     for node, repositories in version_nodes.items():
         for mi_id in mi_ids:
             for repo in repositories:
                 repo_url: str = create_url(mi_id, repo)
                 if repo_url:
-                    if node in custom_repositories:
-                        # This is needed for mi_ids that have multiple repos for each node
-                        # e.g. basesystem and server apps for server
-                        final_id: str = mi_id
-                        if final_id in custom_repositories[node]:
-                            for i in range(1, 100):
-                                new_id: str = f"{mi_id}-{i}"
-                                if new_id not in custom_repositories[node]:
-                                    final_id = new_id
-                                    break
-                        # for each mi_id we have multiple repos sometimes for each node
-                        custom_repositories[node][final_id] = repo_url
-                    else:
-                        custom_repositories[node] = {mi_id: repo_url}
+                    update_custom_repositories(custom_repositories, node, mi_id, repo_url)
 
     validate_and_store_results(mi_ids, custom_repositories)
 
