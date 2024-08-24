@@ -110,16 +110,16 @@ module "cucumber_testsuite" {
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "registry.mgr.suse.de:5000/cucutest"
+  no_auth_registry       = "registry.mgr.suse.de"
+  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   container_server = true
   container_proxy  = true
 
-  server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   host_settings = {
@@ -134,6 +134,7 @@ module "cucumber_testsuite" {
       image = "slemicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
+        vcpu = 4
         memory = 16384
       }
       login_timeout = 28800
@@ -141,7 +142,7 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile/suse/manager/5.0/x86_64"
       container_tag = "latest"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP6/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP5/"
       }
     }
     proxy_containerized = {
@@ -187,8 +188,8 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:79"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
         vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
@@ -209,31 +210,32 @@ module "cucumber_testsuite" {
       name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:7d"
-        memory = 2048
         vcpu = 2
+        memory = 2048
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     pxeboot-minion = {
       image = "sles15sp4o"
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     kvm-host = {
       image = "sles15sp4o"
       name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:93:01:00:7c"
+        vcpu = 4
+        memory = 4096
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
   }
+
   provider_settings = {
-    pool         = "ssd"
+    pool = "ssd"
     network_name = null
-    bridge       = "br0"
+    bridge = "br0"
   }
 }
 
