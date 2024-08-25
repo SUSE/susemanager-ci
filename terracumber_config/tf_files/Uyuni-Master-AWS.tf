@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse155o", "sles15sp4o", "ubuntu2204"]
+  images = ["rocky8", "opensuse155o", "leapmicro55o", "sles15sp4o", "ubuntu2204"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -145,15 +145,20 @@ module "cucumber_testsuite" {
         overwrite_fqdn = "uyuni-master-ctl.sumaci.aws"
       }
     }
-    server = {
+    server_containerized = {
       provider_settings = {
         instance_type = "m6a.xlarge"
         volume_size = "100"
         private_ip = "172.16.3.6"
         overwrite_fqdn = "uyuni-master-srv.sumaci.aws"
       }
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
+      container_tag = "latest"
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      login_timeout = 28800
     }
-    proxy = {
+    proxy_containerized = {
       provider_settings = {
         instance_type = "c6i.large"
         private_ip = "172.16.3.7"
@@ -161,6 +166,9 @@ module "cucumber_testsuite" {
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
+      container_tag = "latest"
     }
     suse-minion = {
       image = "opensuse155o"
