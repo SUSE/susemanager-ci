@@ -130,6 +130,9 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/cloud_aws"
 
+  container_server = true
+  container_proxy  = true
+
   mirror = "mirror.sumaci.aws"
   // use_mirror_images = true
 
