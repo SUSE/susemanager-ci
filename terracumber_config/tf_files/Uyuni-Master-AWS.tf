@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse155o", "leapmicro55o", "sles15sp4o", "ubuntu2204"]
+  images = ["rocky8", "opensuse155o", "sles15sp4o", "ubuntu2204"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -146,6 +146,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
+      image = "opensuse155o"
       provider_settings = {
         instance_type = "m6a.xlarge"
         volume_size = "100"
@@ -159,6 +160,7 @@ module "cucumber_testsuite" {
       login_timeout = 28800
     }
     proxy_containerized = {
+      image = "opensuse155o"
       provider_settings = {
         instance_type = "c6i.large"
         private_ip = "172.16.3.7"
