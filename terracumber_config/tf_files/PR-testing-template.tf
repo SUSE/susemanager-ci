@@ -74,6 +74,7 @@ module "cucumber_testsuite" {
     }
     proxy_containerized = {
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag = "latest"
       image = var.PROXY_IMAGE
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
