@@ -1,9 +1,9 @@
 ############ Uyuni unique variables ############
 
-IMAGE                  = "opensuse155-ci-pro"
+IMAGE                  = "opensuse155o"
 SERVER_IMAGE           = "leapmicro55o"
 PROXY_IMAGE            = "leapmicro55o"
-IMAGES                 = ["rocky9o", "opensuse155o", "opensuse155-ci-pro", "ubuntu2204o", "sles15sp4o", "leapmicro55o"]
+IMAGES                 = ["rocky9o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "leapmicro55o"]
 SUSE_MINION_IMAGE      = "opensuse155o"
 PRODUCT_VERSION        = "uyuni-pr"
 MAIL_TEMPLATE_ENV_FAIL = "../../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
