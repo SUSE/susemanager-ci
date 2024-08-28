@@ -79,7 +79,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
       }
-      additional_packages = [ "venv-salt-minion" ]
+      additional_packages = [ "venv-salt-minion, NetworkManager" ]
       install_salt_bundle = true
       runtime = "podman"
     }
