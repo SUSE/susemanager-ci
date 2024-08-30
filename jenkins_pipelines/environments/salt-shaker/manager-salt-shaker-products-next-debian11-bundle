@@ -23,7 +23,7 @@ node('salt-shaker-tests') {
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'terraform_taint', defaultValue: true, description: 'Call terraform taint (so the resources, except volumes, are recreated)'),
-            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
         ])
     ])
 
