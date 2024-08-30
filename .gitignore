@@ -1,3 +1,5 @@
 .idea
 susemanager-ci.iml
 __pycache__
+# vim undo files
+*.un~
