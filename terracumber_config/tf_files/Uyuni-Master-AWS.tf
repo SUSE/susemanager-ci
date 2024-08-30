@@ -157,7 +157,7 @@ module "cucumber_testsuite" {
         overwrite_fqdn = "uyuni-master-srv.sumaci.aws"
       }
       runtime = "podman"
-      container_repository = "mirror.sumaci.aws/systemsmanagement/uyuni/master/containers_leap_15.6"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
       container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       login_timeout = 28800
@@ -172,7 +172,7 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "podman"
-      container_repository = "mirror.sumaci.aws/systemsmanagement/uyuni/master/containers_leap_15.6"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
       container_tag = "latest"
     }
     suse-minion = {
