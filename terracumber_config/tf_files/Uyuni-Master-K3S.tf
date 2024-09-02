@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-k3s-"
@@ -116,6 +116,7 @@ module "cucumber_testsuite" {
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
   
   container_server = true
+  container_proxy  = true
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -131,29 +132,40 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "opensuse155o"
       provider_settings = {
         mac = "aa:b2:93:01:00:11"
         memory = 16384
       }
       runtime = "k3s"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
       container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server-helm"
+      #cannot use immutable OS, since K3s installation requires a reboot
+      #also 15.6 had issue on container startup
+      image = "opensuse155o"
+      additional_repos = {
+          containerUtils = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
+      }
+
       login_timeout = 28800
       main_disk_size = 300
     }
-    proxy = {
-      image = "opensuse155o"
+    proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:12"
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "k3s"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+      additional_repos = {
+          containerUtils = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
+      }
+      #cannot use immutable OS, since K3s installation requires a reboot
+      #also 15.6 had issue on container startup
+      image = "opensuse155o"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
       container_tag = "latest"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server-helm"
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/proxy-helm"
     }
     suse-minion = {
       image = "opensuse155o"
