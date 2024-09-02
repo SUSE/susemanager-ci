@@ -533,27 +533,27 @@ module "centos7_minion" {
   install_salt_bundle = true
 }
 
-# Temporarily disabled du to issues on rmt.scc.suse.de
-# module "liberty9_minion" {
-#   source             = "./modules/minion"
-#   base_configuration = module.base_core.configuration
-#   product_version    = "4.3-released"
-#   name               = "min-liberty9"
-#   image              = "libertylinux9o"
-#   provider_settings = {
-#     mac                = "aa:b2:92:42:00:c5"
-#     memory             = 4096
-#   }
-#   server_configuration = {
-#     hostname = "suma-bv-43-pxy.mgr.suse.de"
-#   }
-#   auto_connect_to_master  = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-#   additional_packages = [ "venv-salt-minion" ]
-#   install_salt_bundle = true
-# }
+module "liberty9_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  product_version    = "4.3-released"
+  name               = "min-liberty9"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c5"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-pxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "oracle9_minion" {
   source             = "./modules/minion"
@@ -1084,23 +1084,22 @@ module "centos7_ssh_minion" {
   install_salt_bundle = true
 }
 
-# Temporarily disabled du to issues on rmt.scc.suse.de
-# module "liberty9_ssh_minion" {
-#   source             = "./modules/sshminion"
-#   base_configuration = module.base_core.configuration
-#   product_version    = "4.3-released"
-#   name               = "minssh-liberty9"
-#   image              = "libertylinux9o"
-#   provider_settings = {
-#     mac                = "aa:b2:92:42:00:e5"
-#     memory             = 4096
-#   }
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
+module "liberty9_ssh_minion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-liberty9"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:e5"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-#   additional_packages = [ "venv-salt-minion" ]
-#   install_salt_bundle = true
-# }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "oracle9_ssh_minion" {
   source             = "./modules/sshminion"
@@ -1527,9 +1526,8 @@ module "controller" {
   centos7_minion_configuration    = module.centos7_minion.configuration
   centos7_sshminion_configuration = module.centos7_ssh_minion.configuration
 
-# Temporarily disabled du to issues on rmt.scc.suse.de
-# liberty9_minion_configuration    = module.liberty9_minion.configuration
-# liberty9_sshminion_configuration = module.liberty9_ssh_minion.configuration
+ liberty9_minion_configuration    = module.liberty9_minion.configuration
+ liberty9_sshminion_configuration = module.liberty9_ssh_minion.configuration
 
   oracle9_minion_configuration    = module.oracle9_minion.configuration
   oracle9_sshminion_configuration = module.oracle9_ssh_minion.configuration

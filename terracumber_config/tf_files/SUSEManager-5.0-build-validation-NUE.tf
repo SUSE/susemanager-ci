@@ -416,26 +416,26 @@ module "centos7-minion" {
   install_salt_bundle = true
 }
 
-//module "liberty9-minion" {
-//  source             = "./modules/minion"
-//  base_configuration = module.base_core.configuration
-//  product_version    = "5.0-released"
-//  name               = "min-liberty9"
-//  image              = "libertylinux9o"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:75"
-//    memory             = 4096
-//  }
-//  server_configuration = {
-//    hostname = "suma-bv-50-srv.mgr.suse.de"
-//  }
-//  auto_connect_to_master  = false
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//
-//  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
-//}
+module "liberty9-minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  product_version    = "5.0-released"
+  name               = "min-liberty9"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:75"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-50-srv.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "oracle9-minion" {
   source             = "./modules/minion"
@@ -1006,22 +1006,22 @@ module "centos7-sshminion" {
 }
 
 
-//module "liberty9-sshminion" {
-//  source             = "./modules/sshminion"
-//  base_configuration = module.base_core.configuration
-//  product_version    = "5.0-released"
-//  name               = "minssh-liberty9"
-//  image              = "libertylinux9o"
-//  provider_settings = {
-//    mac                = "aa:b2:92:42:00:95"
-//    memory             = 4096
-//  }
-//  use_os_released_updates = false
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//
-//  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
-//}
+module "liberty9-sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  product_version    = "5.0-released"
+  name               = "minssh-liberty9"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:95"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "oracle9-sshminion" {
   source             = "./modules/sshminion"
@@ -1501,8 +1501,8 @@ module "controller" {
   centos7_minion_configuration    = module.centos7-minion.configuration
   centos7_sshminion_configuration = module.centos7-sshminion.configuration
 
-//  liberty9_minion_configuration    = module.liberty9-minion.configuration
-//  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
+  liberty9_minion_configuration    = module.liberty9-minion.configuration
+  liberty9_sshminion_configuration = module.liberty9-sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9-minion.configuration
   oracle9_sshminion_configuration = module.oracle9-sshminion.configuration
