@@ -323,7 +323,7 @@ module "server_containerized" {
   }
   main_disk_size = 3000
   runtime = "podman"
-  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile"
 
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.prv.suse.net"
   java_debugging                 = false
@@ -365,8 +365,6 @@ module "proxy_containerized" {
   }
   runtime = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
-  // Most recent code. Enable again once Beta 2 will be approved:
-  // container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile/suse/manager/5.0/x86_64"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 }
