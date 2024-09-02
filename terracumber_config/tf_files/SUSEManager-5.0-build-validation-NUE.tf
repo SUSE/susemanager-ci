@@ -433,11 +433,8 @@ module "liberty9-minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-// disabled since we do not register Liberty with an RMT server
-// so we do not have a repository available to install the Salt
-// Bundle from
-//  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "oracle9-minion" {
@@ -1022,11 +1019,8 @@ module "liberty9-sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-// disabled since we do not register Liberty with an RMT server
-// so we do not have a repository available to install the Salt
-// Bundle from
-//  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
 }
 
 module "oracle9-sshminion" {
