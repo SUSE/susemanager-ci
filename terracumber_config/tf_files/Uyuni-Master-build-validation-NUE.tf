@@ -198,7 +198,7 @@ module "server_containerized" {
   from_email                     = "root@suse.de"
 
   runtime = "podman"
-  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6/uyuni"
   container_tag = "latest"
   helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
 
@@ -222,7 +222,7 @@ module "proxy_containerized" {
   }
 
   runtime = "podman"
-  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6/uyuni"
   container_tag = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
