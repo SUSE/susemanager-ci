@@ -139,7 +139,7 @@ module "cucumber_testsuite" {
       }
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile/suse/manager/5.0/x86_64"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
       container_tag = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP5/"
@@ -156,7 +156,7 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile/suse/manager/5.0/x86_64"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
       container_tag = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP5/"
