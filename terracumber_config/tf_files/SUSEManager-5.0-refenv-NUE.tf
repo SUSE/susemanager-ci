@@ -158,7 +158,7 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "podman"
-      container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+      container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile"
       container_tag = "latest"
     }
     suse-minion = {

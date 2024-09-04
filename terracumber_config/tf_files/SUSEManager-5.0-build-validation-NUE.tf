@@ -215,7 +215,7 @@ module "proxy_containerized" {
     password = "admin"
   }
   runtime = "podman"
-  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile/suse/manager/5.0/x86_64"
+  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 }

@@ -117,6 +117,7 @@ module "cucumber_testsuite" {
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
   
   container_server = true
+  container_proxy = true
   
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -139,7 +140,7 @@ module "cucumber_testsuite" {
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/manager/5.0/x86_64"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP6/"
       }

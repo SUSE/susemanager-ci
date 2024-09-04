@@ -166,7 +166,7 @@ module "proxy_containerized" {
 
   runtime              = "podman"
   // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
-  container_repository = "registry.suse.de/suse/maintenance/35237/suse_sle-15-sp6_update_products_manager50_update_containerfile/suse/manager/5.0/x86_64"
+  container_repository = "registry.suse.de/suse/maintenance/35237/suse_sle-15-sp6_update_products_manager50_update_containerfile"
   container_tag         = "latest"
 
   auto_configure            = false
