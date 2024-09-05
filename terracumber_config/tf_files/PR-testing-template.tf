@@ -55,6 +55,14 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
+    dhcp-dns = {
+      name = "dhcp-dns"
+      image = "opensuse155o"
+      hypervisor = {
+        host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
+        user        = "root"
+        private_key = file("~/.ssh/id_rsa")
+    }
     server_containerized = {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
