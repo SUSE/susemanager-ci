@@ -62,6 +62,7 @@ module "cucumber_testsuite" {
         host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
         user        = "root"
         private_key = file("~/.ssh/id_rsa")
+      }
     }
     server_containerized = {
       provider_settings = {
