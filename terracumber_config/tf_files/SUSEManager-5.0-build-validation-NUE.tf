@@ -141,7 +141,7 @@ module "base_arm" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "opensuse154armo", "opensuse155armo", "opensuse156armo" ]
+  images      = [ "opensuse155armo", "opensuse156armo" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -574,33 +574,6 @@ module "debian12-minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
-module "opensuse154arm-minion" {
-  providers = {
-    libvirt = libvirt.suma-arm
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "5.0-released"
-  name               = "nue-min-opensuse154arm"
-  image              = "opensuse154armo"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:6f"
-    overwrite_fqdn     = "suma-bv-50-min-opensuse154arm.mgr.suse.de"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
   server_configuration = {
     hostname = "suma-bv-50-srv.mgr.suse.de"
   }
@@ -1141,29 +1114,6 @@ module "debian12-sshminion" {
   install_salt_bundle = true
 }
 
-module "opensuse154arm-sshminion" {
-  providers = {
-    libvirt = libvirt.suma-arm
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_arm.configuration
-  product_version    = "5.0-released"
-  name               = "nue-minssh-opensuse154arm"
-  image              = "opensuse154armo"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:8f"
-    overwrite_fqdn     = "suma-bv-50-minssh-opensuse154arm.mgr.suse.de"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
 module "opensuse155arm-sshminion" {
   providers = {
     libvirt = libvirt.suma-arm
@@ -1522,9 +1472,6 @@ module "controller" {
 
   debian12_minion_configuration    = module.debian12-minion.configuration
   debian12_sshminion_configuration = module.debian12-sshminion.configuration
-
-  opensuse154arm_minion_configuration    = module.opensuse154arm-minion.configuration
-  opensuse154arm_sshminion_configuration = module.opensuse154arm-sshminion.configuration
 
   opensuse155arm_minion_configuration    = module.opensuse155arm-minion.configuration
   opensuse155arm_sshminion_configuration = module.opensuse155arm-sshminion.configuration
