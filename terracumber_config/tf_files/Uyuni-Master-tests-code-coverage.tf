@@ -111,9 +111,6 @@ module "cucumber_testsuite" {
 
   container_server = true
   container_proxy  = true
-
-  mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
-  use_mirror_images        = true
   
   no_auth_registry = "registry.mgr.prv.suse.net"
   auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
@@ -141,8 +138,6 @@ module "cucumber_testsuite" {
       main_disk_size       = 400
       login_timeout        = 28800
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
-      container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
     }
     proxy_containerized = {
@@ -153,8 +148,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
-      container_tag = "latest"
     }
     suse-minion = {
       image = "opensuse155o"
