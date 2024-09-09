@@ -11,8 +11,10 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Manage SUSE Manager API actions.")
-    parser.add_argument("url", help="The URL of the SUSE Manager XML-RPC API.")
-    parser.add_argument("mode", choices=["delete_users", "delete_activation_keys", "delete_config_projects", "delete_software_channels", "delete_systems", "delete_repositories","full_cleanup", "delete_salt_keys", "delete_known_hosts"], help="The mode of operation.")
+    parser.add_argument("--url", help="The URL of the SUSE Manager XML-RPC API.")
+    parser.add_argument("--mode", choices=["delete_users", "delete_activation_keys", "delete_config_projects", "delete_software_channels", "delete_systems", "delete_repositories","full_cleanup", "delete_salt_keys", "delete_known_hosts"], help="The mode of operation.")
+    parser.add_argument('--tf-resources-to-delete', type=str, nargs='*', choices=['proxy', 'monitoring-server', 'retail'], default=[],
+                         help='List of default modules to force deletion')
 
     args = parser.parse_args()
 
