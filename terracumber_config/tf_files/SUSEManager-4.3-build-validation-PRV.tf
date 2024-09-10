@@ -930,7 +930,7 @@ module "opensuse155arm_minion" {
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:02"
-    overwrite_fqdn     = "suma-bv-43-min-opensuse155arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-43-opensuse155arm.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -954,7 +954,7 @@ module "opensuse156arm_minion" {
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:04"
-    overwrite_fqdn     = "suma-bv-43-min-opensuse156arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-43-opensuse156arm-minion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1494,7 +1494,7 @@ module "opensuse155arm_ssh_minion" {
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:03"
-    overwrite_fqdn     = "suma-bv-43-minssh-opensuse155arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-43-opensuse155arm-sshminion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1514,7 +1514,7 @@ module "opensuse156arm_ssh_minion" {
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:05"
-    overwrite_fqdn     = "suma-bv-43-minssh-opensuse156arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-43-opensuse156arm-sshminion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
