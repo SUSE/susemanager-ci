@@ -39,7 +39,9 @@ information for the SUSE Manager BV testsuite pipeline.
 that are under embargo.
 
 ## Usage
+
 Command-Line Arguments
+
 The script accepts several command-line arguments to control its behavior.
 
 ```bash
@@ -59,6 +61,7 @@ Example:
 ```bash
 python script.py --version 50 --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
 ```
+
 This command will:
 
 1. Run the script for SUSE Manager 5.0 (`--version 50`).
@@ -67,22 +70,27 @@ mi_ids.txt.
 3. Reject any MIs that are under embargo (`--no_embargo`).
 
 ## Output
+
 The script generates a file named custom_repositories.json, which contains the
 repository data for the provided MI IDs.
 
 ## Logging
+
 The script includes basic logging for informational messages. To enable logging,
 ensure the setup_logging function is called at the beginning of the script. Log
 messages will display timestamped INFO-level messages.
 
 ## Functions
+
 ### Main Functions
+
 - `parse_cli_args()`: Parses the command-line arguments using argparse.
 - `merge_mi_ids()`: Merges MI IDs provided from the CLI or file input.
 - `read_mi_ids_from_file()`: Reads MI IDs from a file.
 - `clean_mi_ids()`: Cleans and formats MI IDs for consistency.
 
 ### Repository Data
+
 The script contains two main dictionaries for SUSE Manager client tools
 repositories:
 
@@ -101,11 +109,13 @@ The final repository information is stored in the nodes_by_version dictionary,
 which maps SUMA version numbers (`43`, `50`) to the corresponding repository data.
 
 ## Error Handling
+
 - If no MI IDs are provided via CLI or file, the script will print an error
 message and halt execution.
 - Invalid MI IDs or missing files will result in appropriate error messages.
 
 ## Dependencies
+
 The following Python libraries are required to run this script:
 
 - `argparse`: For parsing command-line arguments (standard library).
@@ -115,8 +125,10 @@ The following Python libraries are required to run this script:
 - `logging`: For logging informational messages (standard library).
 
 ### External Dependencies
+
 `ibs_osc_client`: This module is used to interact with the IBS (Internal Build
 Service) Open Service Client.
 
 ## License
+
 This script is licensed under the [MIT License](https://opensource.org/licenses/MIT).

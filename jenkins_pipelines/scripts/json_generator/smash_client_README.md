@@ -13,7 +13,7 @@
 - [License](#license)
 - [Notes](#notes)
 
-
+---
 
 ## Overview
 
@@ -77,13 +77,16 @@ retrieve the latest embargoed bug IDs.
 4. Updates Cache: Stores the fetched data in the cache for subsequent calls.
 
 ## Dependencies
+
 `requests`: A popular Python library for making HTTP requests. It is used here to
 handle communication with the SMASH API.
 
 ## License
+
 This script is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Notes
+
 Ensure that the requests library is installed in your environment.
 This script relies on the SMASH API being available and responsive. Handle
 possible exceptions appropriately in production environments.

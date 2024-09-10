@@ -14,6 +14,7 @@
 - [License](#license)
 - [Notes](#notes)
 
+---
 
 ## Overview
 
@@ -55,6 +56,7 @@ client = IbsOscClient()
 ```
 
 ### Find Maintenance Incidents
+
 Find open maintenance incidents in a specified group:
 
 ```python
@@ -62,6 +64,7 @@ mi_ids = client.find_maintenance_incidents(status='open', group='qam-manager')
 ```
 
 ### Check if MI is Under Embargo
+
 Check if a specific MI is under embargo:
 
 ```python
@@ -69,15 +72,19 @@ is_under_embargo = client.mi_is_under_embargo(mi_id='123456')
 ```
 
 ## Output
+
 The script outputs a JSON file compatible with the BV testsuite pipeline.
 
 ## Dependencies
+
 `smash_client` library
 
 ## License
+
 This script is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Notes
+
 The script uses osc commands for interacting with SUSE build service and may
 require these utilities to be installed and properly configured.
 Ensure that the environment is set up with the appropriate credentials and

@@ -12,4 +12,5 @@ processing of open QAM SLE requests that affect SUMA 4.3 and 5.0 and generates J
 
 
 ## License
+
 Licensed under the [MIT License](https://opensource.org/licenses/MIT).
