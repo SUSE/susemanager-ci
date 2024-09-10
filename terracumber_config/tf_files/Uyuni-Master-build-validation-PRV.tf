@@ -343,7 +343,7 @@ module "server_containerized" {
   ssh_key_path                   = "./salt/controller/id_rsa.pub"
   from_email                     = "root@suse.de"
   runtime = "podman"
-  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
   container_tag = "latest"
   helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
 
