@@ -21,9 +21,11 @@ def run(params) {
 
         def previous_commit = null
         def product_commit = null
+        def mirror_scope = null
         if (params.show_product_changes) {
             // Retrieve the hash commit of the last product built in OBS/IBS and previous job
             def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
+            mirror_scope = prefix.replaceAll("-dev", "")
             if (prefix == "uyuni-master-dev") {
                 prefix = "manager-Head-dev"
             }
@@ -63,6 +65,11 @@ def run(params) {
                 // Restore Terraform states from artifacts
                 if (params.use_previous_terraform_state) {
                     copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                }
+
+                // run minima sync on mirror
+                if (mirror_scope != null) {
+                    sh "ssh root@minima-mirror-ci-bv.mgr.suse.de -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh\""
                 }
             }
             stage('Deploy') {
