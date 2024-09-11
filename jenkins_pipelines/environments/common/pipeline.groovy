@@ -21,11 +21,11 @@ def run(params) {
 
         def previous_commit = null
         def product_commit = null
-        def mirror_scope = null
+        def mirror_scope = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
+        mirror_scope = prefix.replaceAll("-dev", "")
         if (params.show_product_changes) {
             // Retrieve the hash commit of the last product built in OBS/IBS and previous job
             def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
-            mirror_scope = prefix.replaceAll("-dev", "")
             if (prefix == "uyuni-master-dev") {
                 prefix = "manager-Head-dev"
             }
