@@ -12,7 +12,7 @@ node('sumaform-cucumber-provo') {
             'centos7_minion, centos7_sshminion, ' +
             'oracle9_minion, oracle9_sshminion, ' +
             'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, ' +
-            'ubuntu2004_minion, ubuntu2004_sshminion, ubuntu2204_minion, ubuntu2204_sshminion, ' +
+            'ubuntu2004_minion, ubuntu2004_sshminion, ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
             'debian11_minion, debian11_sshminion, debian12_minion, debian12_sshminion, ' +
             'opensuse155arm_minion, opensuse155arm_sshminion, ' +
             'opensuse156arm_minion, opensuse156arm_sshminion, ' +
