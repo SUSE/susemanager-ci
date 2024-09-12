@@ -69,7 +69,7 @@ def run(params) {
 
                 // run minima sync on mirror
                 if (mirror_scope != null) {
-                    sh "ssh root@minima-mirror-ci-bv.`hostname -d` -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh\""
+                    sh "ssh root@minima-mirror-ci-bv.`hostname -d` -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh || echo 'no mirror script for this scope'\""
                 }
             }
             stage('Deploy') {
