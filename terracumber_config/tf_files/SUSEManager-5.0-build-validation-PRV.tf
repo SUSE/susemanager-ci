@@ -1067,7 +1067,7 @@ module "slmicro60_minion" {
   install_salt_bundle = false
 }
 
-module "sles12sp5_ssh_minion" {
+module "sles12sp5_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
@@ -1089,7 +1089,7 @@ module "sles12sp5_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp2_ssh_minion" {
+module "sles15sp2_sshminion" {
   providers = {
     libvirt = libvirt.florina
   }
@@ -1109,7 +1109,7 @@ module "sles15sp2_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp3_ssh_minion" {
+module "sles15sp3_sshminion" {
   providers = {
     libvirt = libvirt.florina
   }
@@ -1129,7 +1129,7 @@ module "sles15sp3_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp4_ssh_minion" {
+module "sles15sp4_sshminion" {
   providers = {
     libvirt = libvirt.florina
   }
@@ -1149,7 +1149,7 @@ module "sles15sp4_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp5_ssh_minion" {
+module "sles15sp5_sshminion" {
   providers = {
     libvirt = libvirt.florina
   }
@@ -1169,7 +1169,7 @@ module "sles15sp5_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp6_ssh_minion" {
+module "sles15sp6_sshminion" {
   providers = {
     libvirt = libvirt.florina
   }
@@ -1189,7 +1189,7 @@ module "sles15sp6_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "alma8_ssh_minion" {
+module "alma8_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
@@ -1209,7 +1209,7 @@ module "alma8_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "alma9_ssh_minion" {
+module "alma9_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
@@ -1229,7 +1229,7 @@ module "alma9_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "centos7_ssh_minion" {
+module "centos7_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
@@ -1249,7 +1249,7 @@ module "centos7_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "liberty9_ssh_minion" {
+module "liberty9_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
@@ -1269,7 +1269,7 @@ module "liberty9_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "oracle9_ssh_minion" {
+module "oracle9_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
@@ -1289,7 +1289,7 @@ module "oracle9_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "rocky8_ssh_minion" {
+module "rocky8_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
@@ -1309,7 +1309,7 @@ module "rocky8_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "rocky9_ssh_minion" {
+module "rocky9_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
   }
@@ -1329,7 +1329,7 @@ module "rocky9_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004_ssh_minion" {
+module "ubuntu2004_sshminion" {
   providers = {
     libvirt = libvirt.trantor
   }
@@ -1350,7 +1350,7 @@ module "ubuntu2004_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2204_ssh_minion" {
+module "ubuntu2204_sshminion" {
   providers = {
     libvirt = libvirt.trantor
   }
@@ -1370,7 +1370,7 @@ module "ubuntu2204_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "debian11_ssh_minion" {
+module "debian11_sshminion" {
   providers = {
     libvirt = libvirt.trantor
   }
@@ -1390,7 +1390,7 @@ module "debian11_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "debian12_ssh_minion" {
+module "debian12_sshminion" {
   providers = {
     libvirt = libvirt.trantor
   }
@@ -1410,7 +1410,7 @@ module "debian12_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "opensuse154arm_ssh_minion" {
+module "opensuse154arm_sshminion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1433,7 +1433,7 @@ module "opensuse154arm_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "opensuse155arm_ssh_minion" {
+module "opensuse155arm_sshminion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1456,7 +1456,7 @@ module "opensuse155arm_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "opensuse156arm_ssh_minion" {
+module "opensuse156arm_sshminion" {
   providers = {
     libvirt = libvirt.suma-arm
   }
@@ -1479,7 +1479,7 @@ module "opensuse156arm_ssh_minion" {
   install_salt_bundle = true
 }
 
-module "sles15sp5s390_ssh_minion" {
+module "sles15sp5s390_sshminion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
   product_version    = "5.0-released"
@@ -1502,7 +1502,7 @@ module "sles15sp5s390_ssh_minion" {
 }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro51_ssh_minion" {
+// module "slemicro51_sshminion" {
 //   providers = {
 //     libvirt = libvirt.florina
 //   }
@@ -1523,7 +1523,7 @@ module "sles15sp5s390_ssh_minion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro52_ssh_minion" {
+// module "slemicro52_sshminion" {
 //   providers = {
 //     libvirt = libvirt.florina
 //   }
@@ -1544,7 +1544,7 @@ module "sles15sp5s390_ssh_minion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro53_ssh_minion" {
+// module "slemicro53_sshminion" {
 //   providers = {
 //     libvirt = libvirt.florina
 //   }
@@ -1565,7 +1565,7 @@ module "sles15sp5s390_ssh_minion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro54_ssh_minion" {
+// module "slemicro54_sshminion" {
 //   providers = {
 //     libvirt = libvirt.florina
 //   }
@@ -1586,7 +1586,7 @@ module "sles15sp5s390_ssh_minion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro55_ssh_minion" {
+// module "slemicro55_sshminion" {
 //   providers = {
 //     libvirt = libvirt.florina
 //   }
@@ -1607,7 +1607,7 @@ module "sles15sp5s390_ssh_minion" {
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slmicro60_ssh_minion" {
+// module "slmicro60_sshminion" {
 //   providers = {
 //     libvirt = libvirt.florina
 //   }
@@ -1777,93 +1777,93 @@ module "controller" {
   proxy_configuration  = module.proxy_containerized.configuration
 
   sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
-  sle12sp5_sshminion_configuration = module.sles12sp5_ssh_minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5_sshminion.configuration
 
   sle15sp2_minion_configuration    = module.sles15sp2_minion.configuration
-  sle15sp2_sshminion_configuration = module.sles15sp2_ssh_minion.configuration
+  sle15sp2_sshminion_configuration = module.sles15sp2_sshminion.configuration
 
   sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
-  sle15sp3_sshminion_configuration = module.sles15sp3_ssh_minion.configuration
+  sle15sp3_sshminion_configuration = module.sles15sp3_sshminion.configuration
 
   sle15sp4_minion_configuration    = module.sles15sp4_minion.configuration
-  sle15sp4_sshminion_configuration = module.sles15sp4_ssh_minion.configuration
+  sle15sp4_sshminion_configuration = module.sles15sp4_sshminion.configuration
 
   sle15sp5_minion_configuration    = module.sles15sp5_minion.configuration
-  sle15sp5_sshminion_configuration = module.sles15sp5_ssh_minion.configuration
+  sle15sp5_sshminion_configuration = module.sles15sp5_sshminion.configuration
 
   sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
-  sle15sp6_sshminion_configuration = module.sles15sp6_ssh_minion.configuration
+  sle15sp6_sshminion_configuration = module.sles15sp6_sshminion.configuration
 
   alma8_minion_configuration    = module.alma8_minion.configuration
-  alma8_sshminion_configuration = module.alma8_ssh_minion.configuration
+  alma8_sshminion_configuration = module.alma8_sshminion.configuration
 
   alma9_minion_configuration    = module.alma9_minion.configuration
-  alma9_sshminion_configuration = module.alma9_ssh_minion.configuration
+  alma9_sshminion_configuration = module.alma9_sshminion.configuration
 
   centos7_minion_configuration    = module.centos7_minion.configuration
-  centos7_sshminion_configuration = module.centos7_ssh_minion.configuration
+  centos7_sshminion_configuration = module.centos7_sshminion.configuration
 
   liberty9_minion_configuration    = module.liberty9_minion.configuration
-  liberty9_sshminion_configuration = module.liberty9_ssh_minion.configuration
+  liberty9_sshminion_configuration = module.liberty9_sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9_minion.configuration
-  oracle9_sshminion_configuration = module.oracle9_ssh_minion.configuration
+  oracle9_sshminion_configuration = module.oracle9_sshminion.configuration
 
   rocky8_minion_configuration    = module.rocky8_minion.configuration
-  rocky8_sshminion_configuration = module.rocky8_ssh_minion.configuration
+  rocky8_sshminion_configuration = module.rocky8_sshminion.configuration
 
   rocky9_minion_configuration    = module.rocky9_minion.configuration
-  rocky9_sshminion_configuration = module.rocky9_ssh_minion.configuration
+  rocky9_sshminion_configuration = module.rocky9_sshminion.configuration
 
   ubuntu2004_minion_configuration    = module.ubuntu2004_minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004_ssh_minion.configuration
+  ubuntu2004_sshminion_configuration = module.ubuntu2004_sshminion.configuration
 
   ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
-  ubuntu2204_sshminion_configuration = module.ubuntu2204_ssh_minion.configuration
+  ubuntu2204_sshminion_configuration = module.ubuntu2204_sshminion.configuration
 
   debian11_minion_configuration    = module.debian11_minion.configuration
-  debian11_sshminion_configuration = module.debian11_ssh_minion.configuration
+  debian11_sshminion_configuration = module.debian11_sshminion.configuration
 
   debian12_minion_configuration    = module.debian12_minion.configuration
-  debian12_sshminion_configuration = module.debian12_ssh_minion.configuration
+  debian12_sshminion_configuration = module.debian12_sshminion.configuration
 
   opensuse154arm_minion_configuration    = module.opensuse154arm_minion.configuration
-  opensuse154arm_sshminion_configuration = module.opensuse154arm_ssh_minion.configuration
+  opensuse154arm_sshminion_configuration = module.opensuse154arm_sshminion.configuration
 
   opensuse155arm_minion_configuration    = module.opensuse155arm_minion.configuration
-  opensuse155arm_sshminion_configuration = module.opensuse155arm_ssh_minion.configuration
+  opensuse155arm_sshminion_configuration = module.opensuse155arm_sshminion.configuration
 
   opensuse156arm_minion_configuration    = module.opensuse156arm_minion.configuration
-  opensuse156arm_sshminion_configuration = module.opensuse156arm_ssh_minion.configuration
+  opensuse156arm_sshminion_configuration = module.opensuse156arm_sshminion.configuration
 
   sle15sp5s390_minion_configuration    = module.sles15sp5s390_minion.configuration
-  sle15sp5s390_sshminion_configuration = module.sles15sp5s390_ssh_minion.configuration
+  sle15sp5s390_sshminion_configuration = module.sles15sp5s390_sshminion.configuration
 
   salt_migration_minion_configuration = module.salt_migration_minion.configuration
 
   slemicro51_minion_configuration    = module.slemicro51_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro51_sshminion_configuration = module.slemicro51_ssh_minion.configuration
+//  slemicro51_sshminion_configuration = module.slemicro51_sshminion.configuration
 
   slemicro52_minion_configuration    = module.slemicro52_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro52_sshminion_configuration = module.slemicro52_ssh_minion.configuration
+//  slemicro52_sshminion_configuration = module.slemicro52_sshminion.configuration
 
   slemicro53_minion_configuration    = module.slemicro53_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro53_sshminion_configuration = module.slemicro53_ssh_minion.configuration
+//  slemicro53_sshminion_configuration = module.slemicro53_sshminion.configuration
 
   slemicro54_minion_configuration    = module.slemicro54_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro54_sshminion_configuration = module.slemicro54_ssh_minion.configuration
+//  slemicro54_sshminion_configuration = module.slemicro54_sshminion.configuration
 
   slemicro55_minion_configuration    = module.slemicro55_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro55_sshminion_configuration = module.slemicro55_ssh_minion.configuration
+//  slemicro55_sshminion_configuration = module.slemicro55_sshminion.configuration
 
   slmicro60_minion_configuration    = module.slmicro60_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slmicro60_sshminion_configuration = module.slmicro60_ssh_minion.configuration
+//  slmicro60_sshminion_configuration = module.slmicro60_sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5_buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4_buildhost.configuration

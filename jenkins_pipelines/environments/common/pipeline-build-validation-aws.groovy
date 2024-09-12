@@ -540,15 +540,15 @@ def clientTestingStages(capybara_timeout, default_timeout, minion_type = 'defaul
         tests["${node}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
-            def temporaryList = nodesHandler.envVariableList.toList() - node.replaceAll("ssh_minion", "sshminion").toUpperCase()
+            def temporaryList = nodesHandler.envVariableList.toList() - node.toUpperCase()
             stage("${node}") {
                 echo "Testing ${node}"
             }
             stage("Add MUs ${node}") {
                 if (params.must_add_MU_repositories) {
-                    if (node.contains('ssh_minion')) {
+                    if (node.contains('sshminion')) {
                         // SSH minion need minion MU channel. This section wait until minion finish creating MU channel
-                        def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
+                        def minion_name_without_ssh = node.replaceAll('sshminion', 'minion')
                         println "Waiting for the MU channel creation by ${minion_name_without_ssh} for ${node}."
                         waitUntil {
                             mu_sync_status[minion_name_without_ssh] != 'UNSYNC'
@@ -675,11 +675,11 @@ def getNodesHandler(minionType = 'default') {
     moduleList.each { lane ->
         def nodeName = lane.tokenize(".")[1]
         if ( minionType == 'default' && (nodeName.contains('minion') || nodeName.contains('client'))) {
-            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
             envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
         else if (( minionType == 'paygo' && (nodeName.contains('paygo') || nodeName.contains('byos')))) {
-            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
             envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
     }
@@ -692,7 +692,7 @@ def getNodesHandler(minionType = 'default') {
     // This difference will be the nodes to disable
     def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }
     // Convert this list to cucumber compatible environment variable
-    def envVarDisabledNodes = disabledNodes.collect { it.replaceAll('ssh_minion', 'sshminion').toUpperCase() }
+    def envVarDisabledNodes = disabledNodes.collect { it.toUpperCase() }
     // Create a node list without the disabled nodes. ( use to configure the client stage )
     def nodeListWithDisabledNodes = nodeList - disabledNodes
     // Create a map storing mu synchronization state for each minion.

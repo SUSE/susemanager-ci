@@ -351,7 +351,7 @@ def clientTestingStages() {
         tests["${node}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
-            def temporaryList = nodesHandler.envVariableList.toList() - node.replaceAll("ssh_minion", "sshminion").toUpperCase()
+            def temporaryList = nodesHandler.envVariableList.toList() - node.toUpperCase()
             stage("${node}") {
                 echo "Testing ${node}"
             }
@@ -402,10 +402,10 @@ def clientTestingStages() {
             stage("Add Activation Keys ${node}") {
                  // skip this stage for Salt migration minion
                 if (params.must_add_keys && !node.contains('salt_migration_minion')) {
-                    if (node.contains('ssh_minion')) {
+                    if (node.contains('sshminion')) {
                         // SSH minion need mandatory custom channel repository. The channel is created during minion stage.
                         // This section wait until minion creates custom channel.
-                        def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
+                        def minion_name_without_ssh = node.replaceAll('sshminion', 'minion')
                         println "Waiting for mandatory custom channel for ${node} to be created by ${minion_name_without_ssh}."
                         waitUntil {
                             required_custom_channel_status[minion_name_without_ssh] != 'NOT_CREATED'
@@ -428,10 +428,10 @@ def clientTestingStages() {
             }
             stage("Create bootstrap repository ${node}") {
                 if (params.must_create_bootstrap_repos) {
-                    if (node.contains('ssh_minion')) {
+                    if (node.contains('sshminion')) {
                         // SSH minion need bootstrap repository. The bootstrap repository is created during minion stage.
                         // This section wait until minion creates bootstrap repository
-                        def minion_name_without_ssh = node.replaceAll('ssh_minion', 'minion')
+                        def minion_name_without_ssh = node.replaceAll('sshminion', 'minion')
                         println "Waiting for bootstrap repository creation by ${minion_name_without_ssh} for ${node}."
                         waitUntil {
                             bootstrap_repository_status[minion_name_without_ssh] != 'NOT_CREATED'
@@ -518,7 +518,7 @@ def getNodesHandler() {
     moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
         if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sshminion', 'ssh_minion').replaceAll('sles', 'sle'))
+            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle'))
             envVar.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
     }
@@ -531,7 +531,7 @@ def getNodesHandler() {
     // This difference will be the nodes to disable
     def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }
     // Convert this list to cucumber compatible environment variable
-    def envVarDisabledNodes = disabledNodes.collect { it.replaceAll('ssh_minion', 'sshminion').toUpperCase() }
+    def envVarDisabledNodes = disabledNodes.collect { it.toUpperCase() }
     // Create a node list without the disabled nodes. ( use to configure the client stage )
     def nodeListWithDisabledNodes = nodeList - disabledNodes
     // Create a map storing mu synchronization state for each minion.
