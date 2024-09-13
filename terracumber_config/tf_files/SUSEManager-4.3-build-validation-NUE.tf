@@ -533,27 +533,26 @@ module "centos7_minion" {
   install_salt_bundle = true
 }
 
+module "liberty9_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  product_version    = "4.3-released"
+  name               = "liberty9-minion"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:00:c5"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-proxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-# module "liberty9_minion" {
-#   source             = "./modules/minion"
-#   base_configuration = module.base_core.configuration
-#   product_version    = "4.3-released"
-#   name               = "liberty9-minion"
-#   image              = "libertylinux9o"
-#   provider_settings = {
-#     mac                = "aa:b2:92:42:00:c5"
-#     memory             = 4096
-#   }
-#   server_configuration = {
-#     hostname = "suma-bv-43-proxy.mgr.suse.de"
-#   }
-#   auto_connect_to_master  = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_rsa.pub"
-#
-#   additional_packages = [ "venv-salt-minion" ]
-#   install_salt_bundle = true
-# }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
 
 module "oracle9_minion" {
   source             = "./modules/minion"
