@@ -1312,6 +1312,7 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
+  product_version    = "uyuni-master"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

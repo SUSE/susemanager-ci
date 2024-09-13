@@ -205,6 +205,7 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
+  product_version    = "4.3-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

@@ -1480,6 +1480,7 @@ module "controller" {
     memory             = 16384
     vcpu               = 8
   }
+  product_version    = "4.3-released"
   swap_file_size = null
   catch_timeout_message = false
 
