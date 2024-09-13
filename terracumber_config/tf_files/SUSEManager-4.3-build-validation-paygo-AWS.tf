@@ -482,7 +482,7 @@ module "controller" {
       cc_password = var.SCC_PASSWORD
     })
 
-
+  product_version    = "4.3-released"
   swap_file_size = null
   no_mirror = true
   is_using_build_image      = false

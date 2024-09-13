@@ -649,6 +649,7 @@ module "controller" {
   provider_settings = {
     instance_type = "c6i.xlarge"
   }
+  product_version    = "4.3-released"
 
   swap_file_size = null
   no_mirror = true

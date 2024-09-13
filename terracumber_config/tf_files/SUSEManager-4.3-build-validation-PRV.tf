@@ -1807,6 +1807,7 @@ module "controller" {
   }
   swap_file_size = null
   catch_timeout_message = false
+  product_version    = "4.3-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
