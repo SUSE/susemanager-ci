@@ -409,7 +409,7 @@ module "sles15sp6_minion" {
 
 }
 
-module "sles12sp5_ssh_minion" {
+module "sles12sp5_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -425,7 +425,7 @@ module "sles12sp5_ssh_minion" {
   additional_packages = [ "chrony" ]
 }
 
-module "sles15sp4_ssh_minion" {
+module "sles15sp4_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -440,7 +440,7 @@ module "sles15sp4_ssh_minion" {
 }
 
 
-module "sles15sp5_ssh_minion" {
+module "sles15sp5_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -455,7 +455,7 @@ module "sles15sp5_ssh_minion" {
 
 }
 
-module "sles15sp6_ssh_minion" {
+module "sles15sp6_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
@@ -507,11 +507,11 @@ module "controller" {
 
   sle12sp5_client_configuration    = module.sles12sp5_client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
-  sle12sp5_sshminion_configuration = module.sles12sp5_ssh_minion.configuration
+  sle12sp5_sshminion_configuration = module.sles12sp5_sshminion.configuration
 
   sle15sp4_client_configuration    = module.sles15sp4_client.configuration
   sle15sp4_minion_configuration    = module.sles15sp4_minion.configuration
-  sle15sp4_sshminion_configuration = module.sles15sp4_ssh_minion.configuration
+  sle15sp4_sshminion_configuration = module.sles15sp4_sshminion.configuration
 
   sle15sp5_minion_configuration    = module.sles15sp5_minion.configuration
   sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
