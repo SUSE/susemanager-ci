@@ -106,7 +106,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-refmaster-"
@@ -118,6 +118,9 @@ module "cucumber_testsuite" {
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+
+  container_server = true
+  container_proxy  = true
 
   server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
@@ -131,24 +134,31 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    server = {
+    server_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:e1"
         vcpu = 4
         memory = 16384
       }
-      main_disk_size       = 20
-      repository_disk_size = 400
-      database_disk_size   = 80
+      main_disk_size = 500
+      login_timeout = 28800
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
+      container_tag = "latest"
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
     }
-    proxy = {
+    proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:e2"
         vcpu = 2
         memory = 2048
       }
+      main_disk_size = 200
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers_leap_15.6"
+      container_tag = "latest"
     }
     suse-minion = {
       image = "opensuse155o"
