@@ -351,7 +351,7 @@ def clientTestingStages() {
         tests["${node}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
-            def temporaryList = nodesHandler.envVariableList.toList() - node.replaceAll("ssh_minion", "sshminion").toUpperCase()
+            def temporaryList = nodesHandler.envVariableList.toList() - node.toUpperCase()
             stage("${node}") {
                 echo "Testing ${node}"
             }
