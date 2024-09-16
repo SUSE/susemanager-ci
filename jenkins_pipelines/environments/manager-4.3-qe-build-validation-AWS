@@ -1,22 +1,22 @@
 #!/usr/bin/env groovy
 
 node('sumaform-cucumber-provo') {
-    def minionList = 'sle12sp5_client, sle12sp5_minion, sle12sp5_ssh_minion, sle12sp5_paygo_minion, ' +
-            'sle15sp2_client, sle15sp2_minion, sle15sp2_ssh_minion, ' +
-            'sle15sp3_client, sle15sp3_minion, sle15sp3_ssh_minion, ' +
-            'sle15sp4_client, sle15sp4_minion, sle15sp4_ssh_minion, sle15sp4_byos_minion, ' +
-            'sle15sp5_client, sle15sp5_minion, sle15sp5_ssh_minion, sle15sp5_paygo_minion, ' +
-            'sle15sp6_client, sle15sp6_minion, sle15sp6_ssh_minion, sle15sp6_paygo_minion, ' +
+    def minionList = 'sle12sp5_client, sle12sp5_minion, sle12sp5_sshminion, sle12sp5_paygo_minion, ' +
+            'sle15sp2_client, sle15sp2_minion, sle15sp2_sshminion, ' +
+            'sle15sp3_client, sle15sp3_minion, sle15sp3_sshminion, ' +
+            'sle15sp4_client, sle15sp4_minion, sle15sp4_sshminion, sle15sp4_byos_minion, ' +
+            'sle15sp5_client, sle15sp5_minion, sle15sp5_sshminion, sle15sp5_paygo_minion, ' +
+            'sle15sp6_client, sle15sp6_minion, sle15sp6_sshminion, sle15sp6_paygo_minion, ' +
             'salt_migration_minion, ' +
-            'alma8_minion, alma8_ssh_minion, alma9_minion, alma9_ssh_minion, ' +
-            'centos7_client, centos7_minion, centos7_ssh_minion, ' +
-            'liberty9_minion, liberty9_ssh_minion, ' +
-            'oracle9_minion, oracle9_ssh_minion, ' +
-            'rocky8_minion, rocky8_ssh_minion, rocky9_minion, rocky9_ssh_minion, ' +
-            'ubuntu2004_minion, ubuntu2004_ssh_minion, ubuntu2204_minion, ubuntu2204_ssh_minion, ' +
-            'debian11_minion, debian11_ssh_minion, debian12_minion, debian12_ssh_minion, ' +
-            'opensuse155arm_minion, opensuse155arm_ssh_minion, ' +
-            'opensuse156arm_minion, opensuse156arm_ssh_minion, ' +
+            'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, ' +
+            'centos7_client, centos7_minion, centos7_sshminion, ' +
+            'liberty9_minion, liberty9_sshminion, ' +
+            'oracle9_minion, oracle9_sshminion, ' +
+            'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, ' +
+            'ubuntu2004_minion, ubuntu2004_sshminion, ubuntu2204_minion, ubuntu2204_sshminion, ' +
+            'debian11_minion, debian11_sshminion, debian12_minion, debian12_sshminion, ' +
+            'opensuse155arm_minion, opensuse155arm_sshminion, ' +
+            'opensuse156arm_minion, opensuse156arm_sshminion, ' +
             'slemicro51_minion, slemicro52_minion, slemicro53_minion, slemicro54_minion, slemicro55_minion, slmicro60_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
