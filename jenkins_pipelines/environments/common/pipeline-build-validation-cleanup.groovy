@@ -33,39 +33,39 @@ def run(params) {
                     copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                 }
             }
-//
-//            stage('Delete the systems') {
-//                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_systems")
-//            }
-//            stage('Delete config projects') {
-//                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_config_projects")
-//            }
-//            stage('Delete software channels') {
-//                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_software_channels")
-//            }
-//            stage('Delete activation keys') {
-//                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_activation_keys")
-//            }
-//            stage('Delete minion users') {
-//                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_users")
-//            }
-//            stage('Delete channel repositories') {
-//                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_repositories")
-//            }
-//            stage('Delete salt keys') {
-//                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_salt_keys")
-//            }
-//            stage('Delete ssh know hosts') {
-//                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
-//            }
-//
-//            stage('Delete client VMs') {
-//                // Copy tfstate from project
-//                sh "cp /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate"
-//                sh "cp -r /home/jenkins/workspace/${params.targeted_project}/results/sumaform/.terraform ${env.resultdir}/sumaform/"
-//                // Run Terracumber to deploy the environment without clients
-//                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --tf-resources-to-delete proxy retail monitoring-server --runstep provision"
-//            }
+
+            stage('Delete the systems') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_systems")
+            }
+            stage('Delete config projects') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_config_projects")
+            }
+            stage('Delete software channels') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_software_channels")
+            }
+            stage('Delete activation keys') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_activation_keys")
+            }
+            stage('Delete minion users') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_users")
+            }
+            stage('Delete channel repositories') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_repositories")
+            }
+            stage('Delete salt keys') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_salt_keys")
+            }
+            stage('Delete ssh know hosts') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
+            }
+
+            stage('Delete client VMs') {
+                // Copy tfstate from project
+                sh "cp /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate"
+                sh "cp -r /home/jenkins/workspace/${params.targeted_project}/results/sumaform/.terraform ${env.resultdir}/sumaform/"
+                // Run Terracumber to deploy the environment without clients
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --tf-resources-to-delete proxy retail monitoring-server --runstep provision"
+            }
 
             stage('Redeploy the environment with new client VMs and update custom repositories into cucumber') {
                 // Generate custom_repositories.json file in the workspace from the value passed by parameter
@@ -84,8 +84,7 @@ def run(params) {
                     }
                 }
                 // Run Terracumber to deploy the environment
-                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} --runstep provision"
-                // Copy  back the tftstate to targeted project
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --runstep provision"
             }
 
             stage('Sanity check') {
@@ -95,6 +94,7 @@ def run(params) {
         }
         finally {
             stage('Copy back tfstate') {
+                // Copy  back the tftstate to targeted project
                 sh "cp ${env.resultdir}/sumaform/terraform.tfstate /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
             }
             stage('Save TF state') {
