@@ -65,7 +65,7 @@ def delete_software_channels(client, session_key):
 def delete_systems(client, session_key):
     systems = client.system.listSystems(session_key)
     for system in systems:
-        if "pxy" not in system['name'] and "monitoring" not in system['name'] and "build" not in system['name']:
+        if "proxy" not in system['name'] and "monitoring" not in system['name'] and "build" not in system['name']:
             logger.info(f"Delete system : {system['name']} | id : {system['id']}")
             client.system.deleteSystem(session_key, system['id'])
 
@@ -80,6 +80,6 @@ def delete_salt_keys(client,session_key):
     accepted_salt_keys = client.saltkey.acceptedList(session_key)
 #     logger.info(f"Accepted salt keys : {accepted_salt_keys}")
     for accepted_salt_key in accepted_salt_keys:
-        if "pxy" not in accepted_salt_key and "monitoring" not in accepted_salt_key and "build" not in accepted_salt_key:
+        if "proxy" not in accepted_salt_key and "monitoring" not in accepted_salt_key and "build" not in accepted_salt_key:
             logger.info(f"Delete remaining accepted key : {accepted_salt_key}")
             client.saltkey.delete(session_key,accepted_salt_key)
