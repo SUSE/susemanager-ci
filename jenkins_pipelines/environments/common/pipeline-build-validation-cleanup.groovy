@@ -35,28 +35,28 @@ def run(params) {
             }
 
             stage('Delete the systems') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_systems")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_systems")
             }
             stage('Delete config projects') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_config_projects")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_config_projects")
             }
             stage('Delete software channels') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_software_channels")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_software_channels")
             }
             stage('Delete activation keys') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_activation_keys")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_activation_keys")
             }
             stage('Delete minion users') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_users")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_users")
             }
             stage('Delete channel repositories') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_repositories")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_repositories")
             }
             stage('Delete salt keys') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_salt_keys")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_salt_keys")
             }
             stage('Delete ssh know hosts') {
-                sh(script: "${api_program} ${params.manager_hostname} delete_known_hosts")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
             }
 
             stage('Delete client VMs') {
