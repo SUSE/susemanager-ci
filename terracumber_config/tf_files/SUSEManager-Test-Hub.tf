@@ -116,7 +116,6 @@ module "hub" {
     memory = 10240
     vcpu = 8
   }
-  login_timeout = 28800
   runtime = "podman"
   container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
   container_tag = "latest"
@@ -136,7 +135,6 @@ module "prh1" {
   provider_settings = {
     mac = "aa:b2:93:01:01:32"
   }
-  login_timeout = 28800
   runtime = "podman"
   container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
   container_tag = "latest"
