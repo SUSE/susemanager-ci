@@ -219,14 +219,6 @@ module "cucumber_testsuite" {
         private_key = file("~/.ssh/id_rsa")
       }
     }
-    kvm_host = {
-      image             = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:be"
-        vcpu = 4
-        memory = 4096
-      }
-    }
   }
 
   provider_settings = {

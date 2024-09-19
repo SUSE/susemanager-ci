@@ -147,16 +147,6 @@ module "cucumber_testsuite" {
         tools_update_pr = var.SLE_CLIENT_REPO
       }
     }
-    kvm_host = {
-      image = var.IMAGE
-
-      provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
-      }
-      additional_repos_only = var.ADDITIONAL_REPOS_ONLY
-      additional_repos = local.additional_repos["kvm-host"]
-      additional_packages = [ "mkisofs" ]
-    }
   }
   
   provider_settings = {

@@ -200,14 +200,6 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    kvm_host = {
-      image = "opensuse155o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:ee"
-        vcpu = 2
-        memory = 2048
-      }
-    }
   }
   provider_settings = {
     pool = "ssd"
