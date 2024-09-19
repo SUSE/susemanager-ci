@@ -16,7 +16,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:93:01:03:56"
       deblike-minion  = "aa:b2:93:01:03:57"
       build-host     = "aa:b2:93:01:03:59"
-      kvm-host       = "aa:b2:93:01:03:5a"
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.111.0/24"
@@ -33,7 +32,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:93:01:03:62"
       deblike-minion  = "aa:b2:93:01:03:63"
       build-host     = "aa:b2:93:01:03:65"
-      kvm-host       = "aa:b2:93:01:03:66"
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.112.0/24"
@@ -50,7 +48,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:93:01:03:6e"
       deblike-minion  = "aa:b2:93:01:03:6f"
       build-host     = "aa:b2:93:01:03:71"
-      kvm-host       = "aa:b2:93:01:03:72"
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.113.0/24"
@@ -67,7 +64,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:93:01:03:7a"
       deblike-minion  = "aa:b2:93:01:03:7b"
       build-host     = "aa:b2:93:01:03:7d"
-      kvm-host       = "aa:b2:93:01:03:7e"
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.114.0/24"
@@ -84,7 +80,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:93:01:03:86"
       deblike-minion  = "aa:b2:93:01:03:87"
       build-host     = "aa:b2:93:01:03:89"
-      kvm-host       = "aa:b2:93:01:03:8a"
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.115.0/24"
@@ -101,7 +96,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:93:01:03:92"
       deblike-minion  = "aa:b2:93:01:03:93"
       build-host     = "aa:b2:93:01:03:95"
-      kvm-host       = "aa:b2:93:01:03:96"
     }
     hypervisor = "suma-08.mgr.suse.de"
     additional_network = "192.168.116.0/24"

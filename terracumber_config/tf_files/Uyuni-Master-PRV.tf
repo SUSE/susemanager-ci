@@ -200,14 +200,6 @@ module "cucumber_testsuite" {
     pxeboot_minion = {
       image = "sles15sp4o"
     }
-    kvm_host = {
-      image = "opensuse155o"
-      provider_settings = {
-        mac = "aa:b2:92:03:00:de"
-        vcpu = 4
-        memory = 4096
-      }
-    }
   }
   
   provider_settings = {
