@@ -216,16 +216,6 @@ module "cucumber_testsuite" {
         private_key = file("~/.ssh/id_rsa")
       }
     }
-    kvm-host = {
-      image = "opensuse155o"
-      name = "min-kvm"
-
-      provider_settings = {
-        mac = "aa:b2:93:01:00:2e"
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
   }
 
   provider_settings = {

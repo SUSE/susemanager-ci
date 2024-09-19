@@ -216,17 +216,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    kvm-host = {
-      image = "opensuse155o"
-      name = "min-kvm"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:ee"
-        vcpu = 2
-        memory = 2048
-      }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
   }
   provider_settings = {
     pool = "ssd"
