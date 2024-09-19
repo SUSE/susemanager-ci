@@ -93,7 +93,7 @@ module "base_core" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse155o", "sles15sp5o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "sles15sp5o", "slemicro55o"]
   use_avahi    = false
   name_prefix  = "suma-testhub-"
   domain       = "mgr.suse.de"
@@ -106,36 +106,45 @@ module "base_core" {
 }
 
 module "hub" {
-  source = "./modules/server"
+  source = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name = "hub"
-  product_version = "4.3-nightly"
-  image = "sles15sp4o"
+  product_version = "head"
+  image = "slemicro55o"
   provider_settings = {
     mac = "aa:b2:93:01:01:31"
     memory = 10240
     vcpu = 8
   }
+  login_timeout = 28800
+  runtime = "podman"
+  container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+  container_tag = "latest"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
 module "prh1" {
-  source = "./modules/server"
+  source = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
-  product_version = "4.3-nightly"
+  product_version = "head"
   name = "prh1"
   auto_accept                    = true
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration
-  image = "sles15sp4o"
+  image = "slemicro55o"
   provider_settings = {
     mac = "aa:b2:93:01:01:32"
   }
+  login_timeout = 28800
+  runtime = "podman"
+  container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+  container_tag = "latest"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
 
+/*
 module "prh2" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
@@ -176,6 +185,7 @@ module "min-sles15sp4" {
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 }
+*/
 
 module "controller" {
   source = "./modules/controller"
@@ -196,8 +206,8 @@ module "controller" {
   
   server_configuration = module.prh1.configuration
 
-  sle15sp4_minion_configuration = module.min-sles15sp4.configuration
-  sle15sp5_minion_configuration = module.min-sles15sp5.configuration
+  //sle15sp4_minion_configuration = module.min-sles15sp4.configuration
+  //sle15sp5_minion_configuration = module.min-sles15sp5.configuration
 
   provider_settings = {
     mac = "aa:b2:93:01:01:30"
@@ -208,9 +218,9 @@ output "configuration" {
   value = {
     hub  = module.hub.configuration
     prh1 = module.prh1.configuration
-    prh2 = module.prh2.configuration
-    min-sles15sp4 = module.min-sles15sp4.configuration
-    min-sles15sp5 = module.min-sles15sp5.configuration
+    //prh2 = module.prh2.configuration
+    //min-sles15sp4 = module.min-sles15sp4.configuration
+    //min-sles15sp5 = module.min-sles15sp5.configuration
     controller = module.controller.configuration
   }
 }
