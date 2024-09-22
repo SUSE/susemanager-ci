@@ -170,7 +170,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     suse-sshminion = {
@@ -181,7 +180,7 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
+      additional_packages = [ "iptables" ]
       install_salt_bundle = true
     }
     redhat-minion = {
@@ -194,7 +193,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     debian-minion = {
@@ -205,7 +203,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     build-host = {
@@ -216,7 +213,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
     pxeboot-minion = {
@@ -230,7 +226,6 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
   }
