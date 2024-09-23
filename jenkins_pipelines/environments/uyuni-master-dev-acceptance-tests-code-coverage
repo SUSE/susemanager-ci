@@ -90,7 +90,7 @@ node('sumaform-cucumber-provo') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O /var/lib/containers/storage/volumes/var-cache/_data/jacocoagent.jar ${jacocoagent_url}; wget ${jacococli_url} -O /var/lib/containers/storage/volumes/var-cache/_data/jacococli.jar\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"systemctl restart tomcat.service\\\"\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'wget -O /tmp/uyuni_master.zip ${uyuni_master}; cd /tmp;unzip uyuni_master.zip'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'scp -o StrictHostKeyChecking=no \$SERVER /tmp/uyuni-master /var/lib/containers/storage/volumes/var-cache/_data/'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'scp -o StrictHostKeyChecking=no /tmp/uyuni-master \$SERVER:/var/lib/containers/storage/volumes/var-cache/_data/'"
             }
 
 
