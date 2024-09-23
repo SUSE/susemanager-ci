@@ -9,77 +9,93 @@ logger = logging.getLogger(__name__)
 username = "admin"
 password = "admin"
 
-def get_session_key(manager_url):
-    client = xmlrpc.client.ServerProxy(f"http://{manager_url}/rpc/api")
+class ResourceManager:
+    def __init__(self, manager_url, resources_to_delete):
+        self.manager_url = manager_url
+        self.resources_to_delete = {"proxy", "monitoring", "build"} - set(resources_to_delete)
+        self.client = None
+        self.session_key = None
 
-    # Authenticate
-    session_key = client.auth.login(username, password)
-    logger.info("Session key obtained.")
-    return session_key, client
+    def get_session_key(self):
+        self.client = xmlrpc.client.ServerProxy(f"http://{self.manager_url}/rpc/api")
+        self.session_key = self.client.auth.login(username, password)
+        logger.info("Session key obtained.")
 
-def logout_session(client, session_key):
-    client.auth.logout(session_key)
-    logger.info("Logged out from session.")
+    def logout_session(self):
+        self.client.auth.logout(self.session_key)
+        logger.info("Logged out from session.")
 
-def delete_users(client, session_key):
-    users = client.user.listUsers(session_key)
-    for user in users:
-        if user["login"] != "admin":
-            logger.info(f"Delete user: {user['login']}")
-            client.user.delete(session_key, user["login"])
+    def delete_users(self):
+        users = self.client.user.listUsers(self.session_key)
+        for user in users:
+            if user["login"] != "admin":
+                logger.info(f"Delete user: {user['login']}")
+                self.client.user.delete(self.session_key, user["login"])
 
-def delete_activation_keys(client, session_key):
-    activation_keys = client.activationkey.listActivationKeys(session_key)
-    for activation_key in activation_keys:
-        if "proxy" not in activation_key['key'] and "monitoring" not in activation_key['key']:
-            logger.info(f"Delete activation key: {activation_key['key']}")
-            client.activationkey.delete(session_key, activation_key['key'])
+    def delete_activation_keys(self):
+        activation_keys = self.client.activationkey.listActivationKeys(self.session_key)
+        for activation_key in activation_keys:
+            if not any(protected in activation_key['key'] for protected in self.resources_to_delete):
+                logger.info(f"Delete activation key: {activation_key['key']}")
+                self.client.activationkey.delete(self.session_key, activation_key['key'])
 
-def delete_config_projects(client, session_key):
-    projects = client.contentmanagement.listProjects(session_key)
-    for project in projects:
-        logger.info(f"Delete project: {project['label']}")
-        client.contentmanagement.removeProject(session_key, project['label'])
+    def delete_config_projects(self):
+        projects = self.client.contentmanagement.listProjects(self.session_key)
+        for project in projects:
+            logger.info(f"Delete project: {project['label']}")
+            self.client.contentmanagement.removeProject(self.session_key, project['label'])
 
-def delete_software_channels(client, session_key):
-    channels = client.channel.listMyChannels(session_key)
-    for channel in channels:
-        details = client.channel.software.getDetails(session_key, channel['label'])
-        if "proxy" not in channel['label'] and "monitoring" not in channel['label'] and "appstream" in channel['label'] and details['parent_channel_label']:
-            logger.info(f"Delete sub channel appstream: {channel['label']}")
-            client.channel.software.delete(session_key, channel['label'])
+    def delete_software_channels(self):
+        channels = self.client.channel.listMyChannels(self.session_key)
+        for channel in channels:
+            details = self.client.channel.software.getDetails(self.session_key, channel['label'])
+            if "appstream" in channel['label'] and details['parent_channel_label']:
+                if not any(protected in channel['label'] for protected in self.resources_to_delete):
+                    logger.info(f"Delete sub channel appstream: {channel['label']}")
+                    self.client.channel.software.delete(self.session_key, channel['label'])
 
-    channels = client.channel.listMyChannels(session_key)
-    for channel in channels:
-        details = client.channel.software.getDetails(session_key, channel['label'])
-        if "proxy" not in channel['label'] and "monitoring" not in channel['label'] and "appstream" in channel['label']:
-            logger.info(f"Delete parent channel appstream: {channel['label']}")
-            client.channel.software.delete(session_key, channel['label'])
+        channels = self.client.channel.listMyChannels(self.session_key)
+        for channel in channels:
+            details = self.client.channel.software.getDetails(self.session_key, channel['label'])
+            if "appstream" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_delete):
+                logger.info(f"Delete parent channel appstream: {channel['label']}")
+                self.client.channel.software.delete(self.session_key, channel['label'])
 
-    channels = client.channel.listMyChannels(session_key)
-    for channel in channels:
-        if "proxy" not in channel['label'] and "monitoring" not in channel['label']:
-            logger.info(f"Delete common channel: {channel['label']}")
-            client.channel.software.delete(session_key, channel['label'])
+        channels = self.client.channel.listMyChannels(self.session_key)
+        for channel in channels:
+            if not any(protected in channel['label'] for protected in self.resources_to_delete):
+                logger.info(f"Delete common channel: {channel['label']}")
+                self.client.channel.software.delete(self.session_key, channel['label'])
 
-def delete_systems(client, session_key):
-    systems = client.system.listSystems(session_key)
-    for system in systems:
-        if "proxy" not in system['name'] and "monitoring" not in system['name'] and "build" not in system['name']:
-            logger.info(f"Delete system : {system['name']} | id : {system['id']}")
-            client.system.deleteSystem(session_key, system['id'])
+    def delete_systems(self):
+        systems = self.client.system.listSystems(self.session_key)
+        for system in systems:
+            if not any(protected in system['name'] for protected in self.resources_to_delete):
+                logger.info(f"Delete system : {system['name']} | id : {system['id']}")
+                self.client.system.deleteSystem(self.session_key, system['id'])
 
-def delete_channel_repos(client,session_key):
-    repositories = client.channel.software.listUserRepos(session_key)
-#     logger.info(f"Repositories : {repositories}")
-    for repository in repositories:
-        logger.info(f"Delete repository : {repository['label']}")
-        client.channel.software.removeRepo(session_key, repository['label'])
+    def delete_channel_repos(self):
+        repositories = self.client.channel.software.listUserRepos(self.session_key)
+        for repository in repositories:
+            logger.info(f"Delete repository : {repository['label']}")
+            self.client.channel.software.removeRepo(self.session_key, repository['label'])
 
-def delete_salt_keys(client,session_key):
-    accepted_salt_keys = client.saltkey.acceptedList(session_key)
-#     logger.info(f"Accepted salt keys : {accepted_salt_keys}")
-    for accepted_salt_key in accepted_salt_keys:
-        if "proxy" not in accepted_salt_key and "monitoring" not in accepted_salt_key and "build" not in accepted_salt_key:
-            logger.info(f"Delete remaining accepted key : {accepted_salt_key}")
-            client.saltkey.delete(session_key,accepted_salt_key)
+    def delete_salt_keys(self):
+        accepted_salt_keys = self.client.saltkey.acceptedList(self.session_key)
+        for accepted_salt_key in accepted_salt_keys:
+            if not any(protected in accepted_salt_key for protected in self.resources_to_delete):
+                logger.info(f"Delete remaining accepted key : {accepted_salt_key}")
+                self.client.saltkey.delete(self.session_key, accepted_salt_key)
+
+    def run(self):
+        try:
+            self.get_session_key()
+            self.delete_users()
+            self.delete_activation_keys()
+            self.delete_config_projects()
+            self.delete_software_channels()
+            self.delete_systems()
+            self.delete_channel_repos()
+            self.delete_salt_keys()
+        finally:
+            self.logout_session()
