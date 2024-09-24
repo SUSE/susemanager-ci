@@ -994,7 +994,7 @@ module "salt_migration_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  name               = "minion-migration-salt"
+  name               = "salt-migration-minion"
   product_version    = "4.3-released"
   image              = "sles15sp5o"
   provider_settings = {
