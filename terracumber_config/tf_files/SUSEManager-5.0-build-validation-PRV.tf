@@ -313,7 +313,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   product_version    = "5.0-released"
-  name               = "srv"
+  name               = "server"
   image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:01"
@@ -353,7 +353,7 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_retail.configuration
   product_version    = "5.0-released"
-  name               = "pxy"
+  name               = "proxy"
   provider_settings = {
     mac                = "aa:b2:92:05:00:02"
     memory             = 4096
@@ -376,14 +376,14 @@ module "sles12sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
   product_version    = "head"
-  name               = "min-sles12sp5"
+  name               = "sles12sp5-minion"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:11"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -400,7 +400,7 @@ module "sles15sp2_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-sles15sp2"
+  name               = "sles15sp2-minion"
   image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:14"
@@ -408,7 +408,7 @@ module "sles15sp2_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -425,7 +425,7 @@ module "sles15sp3_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-sles15sp3"
+  name               = "sles15sp3-minion"
   image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:15"
@@ -433,7 +433,7 @@ module "sles15sp3_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -450,7 +450,7 @@ module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-sles15sp4"
+  name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:16"
@@ -458,7 +458,7 @@ module "sles15sp4_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -475,7 +475,7 @@ module "sles15sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-sles15sp5"
+  name               = "sles15sp5-minion"
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:12"
@@ -483,7 +483,7 @@ module "sles15sp5_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -500,7 +500,7 @@ module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-sles15sp6"
+  name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:10"
@@ -508,7 +508,7 @@ module "sles15sp6_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -525,14 +525,14 @@ module "alma8_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "min-alma8"
+  name               = "alma8-minion"
   image              = "almalinux8o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:19"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -549,14 +549,14 @@ module "alma9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "min-alma9"
+  name               = "alma9-minion"
   image              = "almalinux9o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:22"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -573,14 +573,14 @@ module "centos7_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "min-centos7"
+  name               = "centos7-minion"
   image              = "centos7o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:17"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -597,14 +597,14 @@ module "liberty9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "min-liberty9"
+  name               = "liberty9-minion"
   image              = "libertylinux9o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:25"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -621,14 +621,14 @@ module "oracle9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "min-oracle9"
+  name               = "oracle9-minion"
   image              = "oraclelinux9o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:23"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -645,14 +645,14 @@ module "rocky8_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "min-rocky8"
+  name               = "rocky8-minion"
   image              = "rocky8o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:18"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -669,14 +669,14 @@ module "rocky9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "min-rocky9"
+  name               = "rocky9-minion"
   image              = "rocky9o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:21"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -693,14 +693,14 @@ module "ubuntu2004_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
   product_version    = "5.0-released"
-  name               = "min-ubuntu2004"
+  name               = "ubuntu2004-minion"
   image              = "ubuntu2004o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:1a"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -718,14 +718,14 @@ module "ubuntu2204_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
   product_version    = "5.0-released"
-  name               = "min-ubuntu2204"
+  name               = "ubuntu2204-minion"
   image              = "ubuntu2204o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:1b"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -742,7 +742,7 @@ module "debian11_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
   product_version    = "5.0-released"
-  name               = "min-debian11"
+  name               = "debian11-minion"
   image              = "debian11o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:1e"
@@ -750,7 +750,7 @@ module "debian11_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -767,7 +767,7 @@ module "debian12_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
   product_version    = "5.0-released"
-  name               = "min-debian12"
+  name               = "debian12-minion"
   image              = "debian12o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:1c"
@@ -775,7 +775,7 @@ module "debian12_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -792,17 +792,17 @@ module "opensuse155arm_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "5.0-released"
-  name               = "prv-min-opensuse155arm"
+  name               = "opensuse155arm-minion-prv"
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:08"
-    overwrite_fqdn     = "suma-bv-50-min-opensuse155arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-50-opensuse155arm-minion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -819,17 +819,17 @@ module "opensuse156arm_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "5.0-released"
-  name               = "prv-min-opensuse156arm"
+  name               = "opensuse156arm-minion-prv"
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:0a"
-    overwrite_fqdn     = "suma-bv-50-min-opensuse156arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-50-opensuse156arm-minion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -844,7 +844,7 @@ module "sles15sp5s390_minion" {
   base_configuration = module.base_s390.configuration
   product_version    = "5.0-released"
 
-  name               = "min-sles15sp5s390"
+  name               = "sles15sp5s390-minion"
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
@@ -866,7 +866,7 @@ module "sles15sp5s390_minion" {
 module "salt_migration_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
-  name               = "min-salt-migration"
+  name               = "salt-migration-minion"
   product_version    = "5.0-released"
   image              = "sles15sp5o"
   provider_settings  = {
@@ -875,7 +875,7 @@ module "salt_migration_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = true
   use_os_released_updates = false
@@ -890,7 +890,7 @@ module "slemicro51_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-slemicro51"
+  name               = "slemicro51-minion"
   image              = "slemicro51-ign"
   provider_settings = {
     mac                = "aa:b2:92:05:00:26"
@@ -898,7 +898,7 @@ module "slemicro51_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -916,7 +916,7 @@ module "slemicro52_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-slemicro52"
+  name               = "slemicro52-minion"
   image              = "slemicro52-ign"
   provider_settings = {
     mac                = "aa:b2:92:05:00:27"
@@ -924,7 +924,7 @@ module "slemicro52_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -942,7 +942,7 @@ module "slemicro53_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-slemicro53"
+  name               = "slemicro53-minion"
   image              = "slemicro53-ign"
   provider_settings = {
     mac                = "aa:b2:92:05:00:28"
@@ -950,7 +950,7 @@ module "slemicro53_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -968,7 +968,7 @@ module "slemicro54_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-slemicro54"
+  name               = "slemicro54-minion"
   image              = "slemicro54-ign"
   provider_settings = {
     mac                = "aa:b2:92:05:00:29"
@@ -976,7 +976,7 @@ module "slemicro54_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -994,7 +994,7 @@ module "slemicro55_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-slemicro55"
+  name               = "slemicro55-minion"
   image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:2a"
@@ -1002,7 +1002,7 @@ module "slemicro55_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1020,7 +1020,7 @@ module "slmicro60_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "min-slmicro60"
+  name               = "slmicro60-minion"
   image              = "slmicro60o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:2b"
@@ -1028,7 +1028,7 @@ module "slmicro60_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1047,7 +1047,7 @@ module "sles12sp5_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
   product_version    = "5.0-released"
-  name               = "minssh-sles12sp5"
+  name               = "sles12sp5-sshminion"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:31"
@@ -1069,7 +1069,7 @@ module "sles15sp2_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "minssh-sles15sp2"
+  name               = "sles15sp2-sshminion"
   image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:34"
@@ -1089,7 +1089,7 @@ module "sles15sp3_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "minssh-sles15sp3"
+  name               = "sles15sp3-sshminion"
   image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:35"
@@ -1109,7 +1109,7 @@ module "sles15sp4_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "minssh-sles15sp4"
+  name               = "sles15sp4-sshminion"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:36"
@@ -1129,7 +1129,7 @@ module "sles15sp5_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "minssh-sles15sp5"
+  name               = "sles15sp5-sshminion"
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:32"
@@ -1149,7 +1149,7 @@ module "sles15sp6_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "5.0-released"
-  name               = "minssh-sles15sp6"
+  name               = "sles15sp6-sshminion"
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:30"
@@ -1169,7 +1169,7 @@ module "alma8_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "minssh-alma8"
+  name               = "alma8-sshminion"
   image              = "almalinux8o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:39"
@@ -1189,7 +1189,7 @@ module "alma9_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "minssh-alma9"
+  name               = "alma9-sshminion"
   image              = "almalinux9o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:42"
@@ -1209,7 +1209,7 @@ module "centos7_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "minssh-centos7"
+  name               = "centos7-sshminion"
   image              = "centos7o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:37"
@@ -1229,7 +1229,7 @@ module "liberty9_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "minssh-liberty9"
+  name               = "liberty9-sshminion"
   image              = "libertylinux9o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:45"
@@ -1249,7 +1249,7 @@ module "oracle9_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "minssh-oracle9"
+  name               = "oracle9-sshminion"
   image              = "oraclelinux9o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:43"
@@ -1269,7 +1269,7 @@ module "rocky8_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "minssh-rocky8"
+  name               = "rocky8-sshminion"
   image              = "rocky8o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:38"
@@ -1289,7 +1289,7 @@ module "rocky9_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "5.0-released"
-  name               = "minssh-rocky9"
+  name               = "rocky9-sshminion"
   image              = "rocky9o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:41"
@@ -1309,7 +1309,7 @@ module "ubuntu2004_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
   product_version    = "5.0-released"
-  name               = "minssh-ubuntu2004"
+  name               = "ubuntu2004-sshminion"
   image              = "ubuntu2004o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:3a"
@@ -1330,7 +1330,7 @@ module "ubuntu2204_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
   product_version    = "5.0-released"
-  name               = "minssh-ubuntu2204"
+  name               = "ubuntu2204-sshminion"
   image              = "ubuntu2204o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:3b"
@@ -1350,7 +1350,7 @@ module "debian11_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
   product_version    = "5.0-released"
-  name               = "minssh-debian11"
+  name               = "debian11-sshminion"
   image              = "debian11o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:3e"
@@ -1370,7 +1370,7 @@ module "debian12_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
   product_version    = "5.0-released"
-  name               = "minssh-debian12"
+  name               = "debian12-sshminion"
   image              = "debian12o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:3c"
@@ -1390,11 +1390,11 @@ module "opensuse155arm_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "5.0-released"
-  name               = "prv-minssh-opensuse155arm"
+  name               = "opensuse155arm-sshminion-prv"
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:09"
-    overwrite_fqdn     = "suma-bv-50-minssh-opensuse155arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-50-opensuse155arm-sshminion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1413,11 +1413,11 @@ module "opensuse156arm_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "5.0-released"
-  name               = "prv-minssh-opensuse156arm"
+  name               = "opensuse156arm-sshminion-prv"
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:0b"
-    overwrite_fqdn     = "suma-bv-50-minssh-opensuse156arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-50-opensuse156arm-sshminion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1434,7 +1434,7 @@ module "sles15sp5s390_sshminion" {
   base_configuration = module.base_s390.configuration
   product_version    = "5.0-released"
 
-  name               = "minssh-sles15sp5s390"
+  name               = "sles15sp5s390-sshminion"
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
@@ -1459,7 +1459,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "5.0-released"
-//   name               = "minssh-slemicro51"
+//   name               = "slemicro51-sshminion"
 //   image              = "slemicro51-ign"
 //   provider_settings = {
 //     mac                = "aa:b2:92:05:00:46"
@@ -1480,7 +1480,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "5.0-released"
-//   name               = "minssh-slemicro52"
+//   name               = "slemicro52-sshminion"
 //   image              = "slemicro52-ign"
 //   provider_settings = {
 //     mac                = "aa:b2:92:05:00:47"
@@ -1501,7 +1501,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "5.0-released"
-//   name               = "minssh-slemicro53"
+//   name               = "slemicro53-sshminion"
 //   image              = "slemicro53-ign"
 //   provider_settings = {
 //     mac                = "aa:b2:92:05:00:48"
@@ -1522,7 +1522,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "5.0-released"
-//   name               = "minssh-slemicro54"
+//   name               = "slemicro54-sshminion"
 //   image              = "slemicro54-ign"
 //   provider_settings = {
 //     mac                = "aa:b2:92:05:00:49"
@@ -1543,7 +1543,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "5.0-released"
-//   name               = "minssh-slemicro55"
+//   name               = "slemicro55-sshminion"
 //   image              = "slemicro55o"
 //   provider_settings = {
 //     mac                = "aa:b2:92:05:00:4a"
@@ -1564,7 +1564,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "5.0-released"
-//   name               = "minssh-slmicro60"
+//   name               = "slmicro60-sshminion"
 //   image              = "slmicro60o"
 //   provider_settings = {
 //     mac                = "aa:b2:92:05:00:4b"
@@ -1584,7 +1584,7 @@ module "sles12sp5_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "5.0-released"
-  name               = "build-sles12sp5"
+  name               = "sles12sp5-build"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:04"
@@ -1592,7 +1592,7 @@ module "sles12sp5_buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1608,7 +1608,7 @@ module "sles12sp5_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sles12sp5"
+  name               = "sles12sp5-terminional"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 2048
@@ -1627,7 +1627,7 @@ module "sles15sp4_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "5.0-released"
-  name               = "build-sles15sp4"
+  name               = "sles15sp4-build"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:05"
@@ -1635,7 +1635,7 @@ module "sles15sp4_buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1651,7 +1651,7 @@ module "sles15sp4_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sles15sp4"
+  name               = "sles15sp4-terminional"
   image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048
@@ -1666,7 +1666,7 @@ module "sles15sp4_terminal" {
 module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
   base_configuration = module.base_retail.configuration
-  name               = "dhcp-dns"
+  name               = "dns-dhcp"
   image              = "opensuse155o"
   private_hosts = [
     module.proxy_containerized.configuration,
@@ -1695,7 +1695,7 @@ module "monitoring_server" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1708,7 +1708,7 @@ module "monitoring_server" {
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
-  name               = "ctl"
+  name               = "controller"
   provider_settings = {
     mac                = "aa:b2:92:05:00:00"
     memory             = 16384

@@ -313,7 +313,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   product_version    = "uyuni-master"
-  name               = "srv"
+  name               = "server"
   image              = "leapmicro55o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:6d"
@@ -358,7 +358,7 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_retail.configuration
   product_version    = "uyuni-master"
-  name               = "pxy"
+  name               = "proxy"
   provider_settings = {
     mac                = "aa:b2:93:04:05:6e"
     memory             = 4096
@@ -385,14 +385,14 @@ module "sles12sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-sles12sp5"
+  name               = "sles12sp5-minion"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:7d"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -406,7 +406,7 @@ module "sles15sp2_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-sles15sp2"
+  name               = "sles15sp2-minion"
   image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:80"
@@ -414,7 +414,7 @@ module "sles15sp2_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -428,7 +428,7 @@ module "sles15sp3_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-sles15sp3"
+  name               = "sles15sp3-minion"
   image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:81"
@@ -436,7 +436,7 @@ module "sles15sp3_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -450,7 +450,7 @@ module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-sles15sp4"
+  name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:82"
@@ -458,7 +458,7 @@ module "sles15sp4_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -472,7 +472,7 @@ module "sles15sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-sles15sp5"
+  name               = "sles15sp5-minion"
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:7e"
@@ -480,7 +480,7 @@ module "sles15sp5_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -494,7 +494,7 @@ module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-sles15sp6"
+  name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:7c"
@@ -502,7 +502,7 @@ module "sles15sp6_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -516,14 +516,14 @@ module "alma8_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "min-alma8"
+  name               = "alma8-minion"
   image              = "almalinux8o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:85"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -540,14 +540,14 @@ module "alma9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "min-alma9"
+  name               = "alma9-minion"
   image              = "almalinux9o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:8e"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -564,14 +564,14 @@ module "centos7_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "min-centos7"
+  name               = "centos7-minion"
   image              = "centos7o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:83"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -589,14 +589,14 @@ module "oracle9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "min-oracle9"
+  name               = "oracle9-minion"
   image              = "oraclelinux9o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:8f"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -613,14 +613,14 @@ module "rocky8_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "min-rocky8"
+  name               = "rocky8-minion"
   image              = "rocky8o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:84"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -637,14 +637,14 @@ module "rocky9_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "min-rocky9"
+  name               = "rocky9-minion"
   image              = "rocky9o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:8d"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -661,14 +661,14 @@ module "ubuntu2004_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
   product_version    = "uyuni-master"
-  name               = "min-ubuntu2004"
+  name               = "ubuntu2004-minion"
   image              = "ubuntu2004o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:86"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -686,14 +686,14 @@ module "ubuntu2204_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
   product_version    = "uyuni-master"
-  name               = "min-ubuntu2204"
+  name               = "ubuntu2204-minion"
   image              = "ubuntu2204o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:87"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -707,7 +707,7 @@ module "debian11_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
   product_version    = "uyuni-master"
-  name               = "min-debian11"
+  name               = "debian11-minion"
   image              = "debian11o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:8a"
@@ -715,7 +715,7 @@ module "debian11_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -729,7 +729,7 @@ module "debian12_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
   product_version    = "uyuni-master"
-  name               = "min-debian12"
+  name               = "debian12-minion"
   image              = "debian12o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:88"
@@ -737,7 +737,7 @@ module "debian12_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -754,17 +754,17 @@ module "opensuse155arm_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
-  name               = "prv-min-opensuse155arm"
+  name               = "opensuse155arm-minion-prv"
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:0e"
-    overwrite_fqdn     = "uyuni-bv-master-min-opensuse155arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "uyuni-bv-master-opensuse155arm-minion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -778,17 +778,17 @@ module "opensuse156arm_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
-  name               = "prv-min-opensuse156arm"
+  name               = "opensuse156arm-minion-prv"
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:10"
-    overwrite_fqdn     = "uyuni-bv-master-min-opensuse156arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "uyuni-bv-master-opensuse156arm-minion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -800,7 +800,7 @@ module "sles15sp5s390_minion" {
   base_configuration = module.base_s390.configuration
   product_version    = "uyuni-master"
 
-  name               = "min-sles15sp5s390"
+  name               = "sles15sp5s390-minion"
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
@@ -817,7 +817,7 @@ module "sles15sp5s390_minion" {
 module "salt_migration_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  name               = "min-salt-migration"
+  name               = "salt-migration-minion"
   product_version    = "uyuni-master"
   image              = "sles15sp5o"
   provider_settings = {
@@ -826,7 +826,7 @@ module "salt_migration_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = true
   use_os_released_updates = false
@@ -842,7 +842,7 @@ module "slemicro51_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-slemicro51"
+  name               = "slemicro51-minion"
   image              = "slemicro51-ign"
   provider_settings = {
     mac                = "aa:b2:93:04:05:92"
@@ -850,7 +850,7 @@ module "slemicro51_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -867,7 +867,7 @@ module "slemicro52_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-slemicro52"
+  name               = "slemicro52-minion"
   image              = "slemicro52-ign"
   provider_settings = {
     mac                = "aa:b2:93:04:05:93"
@@ -875,7 +875,7 @@ module "slemicro52_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -892,7 +892,7 @@ module "slemicro53_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-slemicro53"
+  name               = "slemicro53-minion"
   image              = "slemicro53-ign"
   provider_settings = {
     mac                = "aa:b2:93:04:05:94"
@@ -900,7 +900,7 @@ module "slemicro53_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -917,7 +917,7 @@ module "slemicro54_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-slemicro54"
+  name               = "slemicro54-minion"
   image              = "slemicro54-ign"
   provider_settings = {
     mac                = "aa:b2:93:04:05:95"
@@ -925,7 +925,7 @@ module "slemicro54_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -942,7 +942,7 @@ module "slemicro55_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-slemicro55"
+  name               = "slemicro55-minion"
   image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:96"
@@ -950,7 +950,7 @@ module "slemicro55_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -967,7 +967,7 @@ module "slmicro60_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "min-slmicro60"
+  name               = "slmicro60-minion"
   image              = "slmicro60o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:97"
@@ -975,7 +975,7 @@ module "slmicro60_minion" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -992,7 +992,7 @@ module "sles12sp5_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-sles12sp5"
+  name               = "sles12sp5-sshminion"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:9d"
@@ -1011,7 +1011,7 @@ module "sles15sp2_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-sles15sp2"
+  name               = "sles15sp2-sshminion"
   image              = "sles15sp2o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a0"
@@ -1028,7 +1028,7 @@ module "sles15sp3_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-sles15sp3"
+  name               = "sles15sp3-sshminion"
   image              = "sles15sp3o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a1"
@@ -1045,7 +1045,7 @@ module "sles15sp4_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-sles15sp4"
+  name               = "sles15sp4-sshminion"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a2"
@@ -1062,7 +1062,7 @@ module "sles15sp5_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-sles15sp5"
+  name               = "sles15sp5-sshminion"
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:9e"
@@ -1079,7 +1079,7 @@ module "sles15sp6_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-sles15sp6"
+  name               = "sles15sp6-sshminion"
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:9c"
@@ -1096,7 +1096,7 @@ module "alma8_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-alma8"
+  name               = "alma8-sshminion"
   image              = "almalinux8o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a5"
@@ -1116,7 +1116,7 @@ module "alma9_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-alma9"
+  name               = "alma9-sshminion"
   image              = "almalinux9o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:ae"
@@ -1136,7 +1136,7 @@ module "centos7_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-centos7"
+  name               = "centos7-sshminion"
   image              = "centos7o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a3"
@@ -1156,7 +1156,7 @@ module "oracle9_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-oracle9"
+  name               = "oracle9-sshminion"
   image              = "oraclelinux9o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:af"
@@ -1176,7 +1176,7 @@ module "rocky8_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-rocky8"
+  name               = "rocky8-sshminion"
   image              = "rocky8o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a4"
@@ -1196,7 +1196,7 @@ module "rocky9_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-rocky9"
+  name               = "rocky9-sshminion"
   image              = "rocky9o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:ad"
@@ -1216,7 +1216,7 @@ module "ubuntu2004_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-ubuntu2004"
+  name               = "ubuntu2004-sshminion"
   image              = "ubuntu2004o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a6"
@@ -1237,7 +1237,7 @@ module "ubuntu2204_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-ubuntu2204"
+  name               = "ubuntu2204-sshminion"
   image              = "ubuntu2204o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a7"
@@ -1254,7 +1254,7 @@ module "debian11_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-debian11"
+  name               = "debian11-sshminion"
   image              = "debian11o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:aa"
@@ -1271,7 +1271,7 @@ module "debian12_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
   product_version    = "uyuni-master"
-  name               = "minssh-debian12"
+  name               = "debian12-sshminion"
   image              = "debian12o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a8"
@@ -1291,11 +1291,11 @@ module "opensuse155arm_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
-  name               = "prv-minssh-opensuse155arm"
+  name               = "opensuse155arm-sshminion-prv"
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:0f"
-    overwrite_fqdn     = "uyuni-bv-master-minssh-opensuse155arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "uyuni-bv-master-opensuse155arm-sshminion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1311,11 +1311,11 @@ module "opensuse156arm_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
   product_version    = "uyuni-master"
-  name               = "prv-minssh-opensuse156arm"
+  name               = "opensuse156arm-sshminion-prv"
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:11"
-    overwrite_fqdn     = "uyuni-bv-master-minssh-opensuse156arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "uyuni-bv-master-opensuse156arm-sshminion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -1329,7 +1329,7 @@ module "sles15sp5s390_sshminion" {
   base_configuration = module.base_s390.configuration
   product_version    = "uyuni-master"
 
-  name               = "minssh-sles15sp5s390"
+  name               = "sles15sp5s390-sshminion"
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
@@ -1351,7 +1351,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "uyuni-master"
-//   name               = "minssh-slemicro51"
+//   name               = "slemicro51-sshminion"
 //   image              = "slemicro51-ign"
 //   provider_settings = {
 //     mac                = "aa:b2:93:04:05:b2"
@@ -1369,7 +1369,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "uyuni-master"
-//   name               = "minssh-slemicro52"
+//   name               = "slemicro52-sshminion"
 //   image              = "slemicro52-ign"
 //   provider_settings = {
 //     mac                = "aa:b2:93:04:05:b3"
@@ -1387,7 +1387,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "uyuni-master"
-//   name               = "minssh-slemicro53"
+//   name               = "slemicro53-sshminion"
 //   image              = "slemicro53-ign"
 //   provider_settings = {
 //     mac                = "aa:b2:93:04:05:b4"
@@ -1405,7 +1405,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "uyuni-master"
-//   name               = "minssh-slemicro54"
+//   name               = "slemicro54-sshminion"
 //   image              = "slemicro54-ign"
 //   provider_settings = {
 //     mac                = "aa:b2:93:04:05:b5"
@@ -1423,7 +1423,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "uyuni-master"
-//   name               = "minssh-slemicro55"
+//   name               = "slemicro55-sshminion"
 //   image              = "slemicro55o"
 //   provider_settings = {
 //     mac                = "aa:b2:93:04:05:b6"
@@ -1441,7 +1441,7 @@ module "sles15sp5s390_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
 //   product_version    = "uyuni-master"
-//   name               = "minssh-slmicro60"
+//   name               = "slmicro60-sshminion"
 //   image              = "slmicro60o"
 //   provider_settings = {
 //     mac                = "aa:b2:93:04:05:b7"
@@ -1458,7 +1458,7 @@ module "sles12sp5_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "uyuni-master"
-  name               = "build-sles12sp5"
+  name               = "sles12sp5-build"
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:70"
@@ -1466,7 +1466,7 @@ module "sles12sp5_buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1479,7 +1479,7 @@ module "sles12sp5_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sles12sp5"
+  name               = "sles12sp5-terminional"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 2048
@@ -1498,7 +1498,7 @@ module "sles15sp4_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
   product_version    = "uyuni-master"
-  name               = "build-sles15sp4"
+  name               = "sles15sp4-build"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:71"
@@ -1506,7 +1506,7 @@ module "sles15sp4_buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1519,7 +1519,7 @@ module "sles15sp4_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "terminal-sles15sp4"
+  name               = "sles15sp4-terminional"
   image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048
@@ -1546,7 +1546,7 @@ module "monitoring_server" {
   }
 
   server_configuration = {
-    hostname = "uyuni-bv-master-pxy.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1556,7 +1556,7 @@ module "monitoring_server" {
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
-  name               = "ctl"
+  name               = "controller"
   provider_settings = {
     mac                = "aa:b2:93:04:05:6c"
     memory             = 16384
