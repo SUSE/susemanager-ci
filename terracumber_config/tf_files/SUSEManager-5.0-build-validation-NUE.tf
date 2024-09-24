@@ -665,7 +665,7 @@ module "sles15sp5s390_minion" {
 module "salt_migration_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
-  name               = "minion-migration-salt"
+  name               = "salt-migration-minion"
   product_version    = "5.0-released"
   image              = "sles15sp5o"
   provider_settings  = {
