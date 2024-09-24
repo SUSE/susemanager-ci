@@ -383,7 +383,7 @@ module "sles12sp5_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -408,7 +408,7 @@ module "sles15sp2_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -433,7 +433,7 @@ module "sles15sp3_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -458,7 +458,7 @@ module "sles15sp4_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -483,7 +483,7 @@ module "sles15sp5_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -508,7 +508,7 @@ module "sles15sp6_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -532,7 +532,7 @@ module "alma8_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -556,7 +556,7 @@ module "alma9_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -580,7 +580,7 @@ module "centos7_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -604,7 +604,7 @@ module "liberty9_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -628,7 +628,7 @@ module "oracle9_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -652,7 +652,7 @@ module "rocky8_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -676,7 +676,7 @@ module "rocky9_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -700,7 +700,7 @@ module "ubuntu2004_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -725,7 +725,7 @@ module "ubuntu2204_minion" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -750,7 +750,7 @@ module "debian11_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -775,7 +775,7 @@ module "debian12_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -802,7 +802,7 @@ module "opensuse155arm_minion" {
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -829,7 +829,7 @@ module "opensuse156arm_minion" {
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -875,7 +875,7 @@ module "salt_migration_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = true
   use_os_released_updates = false
@@ -898,7 +898,7 @@ module "slemicro51_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -924,7 +924,7 @@ module "slemicro52_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -950,7 +950,7 @@ module "slemicro53_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -976,7 +976,7 @@ module "slemicro54_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1002,7 +1002,7 @@ module "slemicro55_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1028,7 +1028,7 @@ module "slmicro60_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1592,7 +1592,7 @@ module "sles12sp5_buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1635,7 +1635,7 @@ module "sles15sp4_buildhost" {
     vcpu               = 2
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -1695,7 +1695,7 @@ module "monitoring_server" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-pxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
