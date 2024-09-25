@@ -518,8 +518,8 @@ def getNodesHandler() {
     moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
         if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle'))
-            envVar.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+            nodeList.add(instanceList[1])
+            envVar.add(instanceList[1].replaceAll('sles', 'sle').toUpperCase())
         }
     }
     // Convert jenkins minions list parameter to list
