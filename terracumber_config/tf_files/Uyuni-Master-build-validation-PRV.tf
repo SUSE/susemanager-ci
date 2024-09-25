@@ -364,7 +364,7 @@ module "proxy_containerized" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "uyuni-bv-master-srv.mgr.prv.suse.net"
+    hostname = "uyuni-bv-master-server.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }

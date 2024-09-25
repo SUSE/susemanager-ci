@@ -113,7 +113,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base.configuration
   product_version    = "5.0-released"
-  name               = "srv"
+  name               = "server"
   image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:fd"
@@ -152,14 +152,14 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base.configuration
   product_version    = "5.0-released"
-  name               = "pxy"
+  name               = "proxy"
   image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:fe"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-su-50-srv.mgr.prv.suse.net"
+    hostname = "suma-su-50-server.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }
@@ -180,7 +180,7 @@ module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "5.0-released"
-  name               = "min-sles15sp6"
+  name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:ff"
@@ -188,7 +188,7 @@ module "sles15sp6_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-su-50-pxy.mgr.prv.suse.net"
+    hostname = "suma-su-50-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -201,7 +201,7 @@ module "sles15sp6_minion" {
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base.configuration
-  name               = "ctl"
+  name               = "controller"
   provider_settings = {
     mac                = "aa:b2:92:05:00:fc"
     memory             = 16384

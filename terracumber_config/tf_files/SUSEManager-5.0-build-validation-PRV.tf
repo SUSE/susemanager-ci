@@ -359,7 +359,7 @@ module "proxy_containerized" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-50-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-50-server.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }
