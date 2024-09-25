@@ -362,7 +362,7 @@ module "proxy" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-43-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-43-server.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }

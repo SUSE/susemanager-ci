@@ -113,7 +113,7 @@ module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
-  name               = "srv"
+  name               = "server"
   provider_settings = {
     mac                = "aa:b2:92:05:00:f9"
     memory             = 16384
@@ -149,13 +149,13 @@ module "proxy" {
   source             = "./modules/proxy"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
-  name               = "pxy"
+  name               = "proxy"
   provider_settings = {
     mac                = "aa:b2:92:05:00:fa"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-su-43-srv.mgr.prv.suse.net"
+    hostname = "suma-su-43-server.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }
@@ -177,7 +177,7 @@ module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
-  name               = "min-sles15sp4"
+  name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:fb"
@@ -185,7 +185,7 @@ module "sles15sp4_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-su-43-pxy.mgr.prv.suse.net"
+    hostname = "suma-su-43-proxy.mgr.prv.suse.net"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -198,7 +198,7 @@ module "sles15sp4_minion" {
 module "controller" {
   source             = "./modules/controller"
   base_configuration = module.base.configuration
-  name               = "ctl"
+  name               = "controller"
   provider_settings = {
     mac                = "aa:b2:92:05:00:f8"
     memory             = 16384
