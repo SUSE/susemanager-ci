@@ -340,7 +340,14 @@ def clientTestingStages() {
     def tests = [:]
 
     // Load JSON matching non MU repositories data (non_MU_channels_tasks_file variable declared at the pipeline description level)
-    def json_matching_non_MU_data = readJSON(file: non_MU_channels_tasks_file)
+    def json_matching_non_MU_data = null
+    try {
+        json_matching_non_MU_data = readJSON(file: non_MU_channels_tasks_file)
+    } catch (FileNotFoundException e) {
+        echo "File not found: ${non_MU_channels_tasks_file}, proceeding with empty data."
+    } catch (Exception e) {
+        echo "An error occurred while reading the file: ${e.message}"
+    }
 
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler()
