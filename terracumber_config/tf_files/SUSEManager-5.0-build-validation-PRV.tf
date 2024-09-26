@@ -135,7 +135,7 @@ module "base_core" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp4o", "opensuse155o", "slemicro55o" ]
+  images      = [ "sles15sp4o", "opensuse155o", "slemicro55o", "sles15sp5o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -865,7 +865,7 @@ module "sles15sp5s390_minion" {
 // dedicated to testing migration from OS Salt to Salt bundle
 module "salt_migration_minion" {
   source             = "./modules/minion"
-  base_configuration = module.base_new_sle.configuration
+  base_configuration = module.base_core.configuration
   name               = "salt-migration-minion"
   product_version    = "5.0-released"
   image              = "sles15sp5o"
