@@ -135,7 +135,7 @@ module "base_core" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp4o", "opensuse155o" ]
+  images      = [ "sles15sp4o", "opensuse155o", "slemicro55o", "sles15sp5o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -186,7 +186,7 @@ module "base_res" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o" ]
+  images      = [ "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "libertylinux9o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -236,7 +236,7 @@ module "base_retail" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse155o", "opensuse156o" ]
+  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse155o", "opensuse156o", "slemicro55o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -262,7 +262,7 @@ module "base_debian" {
   name_prefix = "suma-bv-50-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu2204o", "debian11o", "debian12o" ]
+  images      = [ "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
