@@ -1361,7 +1361,7 @@ module "sles12sp5_buildhost" {
 module "sles12sp5_terminal" {
   source             = "./modules/pxe_boot"
   base_configuration = module.base_core.configuration
-  name               = "sles12sp5-terminional"
+  name               = "sles12sp5-terminal"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 2048
