@@ -1479,7 +1479,7 @@ module "sles12sp5_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "sles12sp5-terminional"
+  name               = "sles12sp5-terminal"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 2048
@@ -1519,7 +1519,7 @@ module "sles15sp4_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "sles15sp4-terminional"
+  name               = "sles15sp4-terminal"
   image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048
