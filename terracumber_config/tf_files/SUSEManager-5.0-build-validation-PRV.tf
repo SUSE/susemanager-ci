@@ -735,6 +735,30 @@ module "ubuntu2204_minion" {
   install_salt_bundle = true
 }
 
+module "ubuntu2404_minion" {
+  providers = {
+    libvirt = libvirt.trantor
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "5.0-released"
+  name               = "ubuntu2404-minion"
+  image              = "ubuntu2404o"
+  provider_settings = {
+    mac                = "aa:b2:92:05:00:1d"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-50-proxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
 module "debian11_minion" {
   providers = {
     libvirt = libvirt.trantor
@@ -1334,6 +1358,26 @@ module "ubuntu2204_sshminion" {
   image              = "ubuntu2204o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:3b"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
+module "ubuntu2404_sshminion" {
+  providers = {
+    libvirt = libvirt.trantor
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "5.0-released"
+  name               = "ubuntu2404-sshminion"
+  image              = "ubuntu2404o"
+  provider_settings = {
+    mac                = "aa:b2:92:05:00:3d"
     memory             = 4096
   }
   use_os_released_updates = false

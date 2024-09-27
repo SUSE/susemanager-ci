@@ -510,6 +510,24 @@ module "ubuntu2204_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "ubuntu2404_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "ubuntu2404-minion"
+  image              = "ubuntu2404o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:bd"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "debian11_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -984,6 +1002,20 @@ module "ubuntu2204_sshminion" {
   image              = "ubuntu2204o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:db"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "ubuntu2404_sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "ubuntu2404-sshminion"
+  image              = "ubuntu2404o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:dd"
     memory             = 4096
   }
   use_os_released_updates = false
