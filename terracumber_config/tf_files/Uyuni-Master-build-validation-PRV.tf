@@ -700,6 +700,27 @@ module "ubuntu2204_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "ubuntu2404_minion" {
+  providers = {
+    libvirt = libvirt.caipirinha
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "uyuni-master"
+  name               = "ubuntu2404-minion"
+  image              = "ubuntu2404o"
+  provider_settings = {
+    mac                = "aa:b2:93:04:05:89"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "uyuni-bv-master-proxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "debian11_minion" {
   providers = {
     libvirt = libvirt.caipirinha
@@ -1241,6 +1262,23 @@ module "ubuntu2204_sshminion" {
   image              = "ubuntu2204o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:a7"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
+module "ubuntu2404_sshminion" {
+  providers = {
+    libvirt = libvirt.caipirinha
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "uyuni-master"
+  name               = "ubuntu2404-sshminion"
+  image              = "ubuntu2404o"
+  provider_settings = {
+    mac                = "aa:b2:93:04:05:a9"
     memory             = 4096
   }
   use_os_released_updates = false
