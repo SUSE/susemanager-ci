@@ -362,7 +362,7 @@ module "proxy" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-43-srv.mgr.prv.suse.net"
+    hostname = "suma-bv-43-server.mgr.prv.suse.net"
     username = "admin"
     password = "admin"
   }
@@ -930,7 +930,7 @@ module "opensuse155arm_minion" {
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:92:42:00:02"
-    overwrite_fqdn     = "suma-bv-43-opensuse155arm.mgr.prv.suse.net"
+    overwrite_fqdn     = "suma-bv-43-opensuse155arm-minion.mgr.prv.suse.net"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -994,7 +994,7 @@ module "salt_migration_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  name               = "minion-migration-salt"
+  name               = "salt-migration-minion"
   product_version    = "4.3-released"
   image              = "sles15sp5o"
   provider_settings = {
@@ -1678,7 +1678,7 @@ module "sle12sp5_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "sles12sp5-terminional"
+  name               = "sles12sp5-terminal"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 2048
@@ -1718,7 +1718,7 @@ module "sle15sp4_terminal" {
   }
   source             = "./modules/pxe_boot"
   base_configuration = module.base_retail.configuration
-  name               = "sles15sp4-terminional"
+  name               = "sles15sp4-terminal"
   image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048

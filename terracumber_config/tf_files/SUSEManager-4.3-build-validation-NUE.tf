@@ -213,7 +213,7 @@ module "proxy" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-bv-43-srv.mgr.suse.de"
+    hostname = "suma-bv-43-server.mgr.suse.de"
     username = "admin"
     password = "admin"
   }
@@ -1361,7 +1361,7 @@ module "sles12sp5_buildhost" {
 module "sles12sp5_terminal" {
   source             = "./modules/pxe_boot"
   base_configuration = module.base_core.configuration
-  name               = "sles12sp5-terminional"
+  name               = "sles12sp5-terminal"
   image              = "sles12sp5o"
   provider_settings = {
     memory             = 2048
@@ -1395,7 +1395,7 @@ module "sles15sp4_buildhost" {
 module "sles15sp4_terminal" {
   source             = "./modules/pxe_boot"
   base_configuration = module.base_core.configuration
-  name               = "sles15sp4-terminional"
+  name               = "sles15sp4-terminal"
   image              = "sles15sp4o"
   provider_settings = {
     memory             = 2048

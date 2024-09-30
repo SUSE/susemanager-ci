@@ -63,6 +63,7 @@ v43_client_tools: dict[str, set[str]] = {
     "alma8_minion": {"/SUSE_Updates_RES_8-CLIENT-TOOLS_x86_64/"},
     "ubuntu2004_minion": {"/SUSE_Updates_Ubuntu_20.04-CLIENT-TOOLS_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_Ubuntu_22.04-CLIENT-TOOLS_x86_64/"},
+    # no Ubuntu 24.04 on 4.3
     "debian11_minion": {"/SUSE_Updates_Debian_11-CLIENT-TOOLS_x86_64/"},
     "debian12_minion": {"/SUSE_Updates_Debian_12-CLIENT-TOOLS_x86_64/"},
     "opensuse154arm_minion": {"/SUSE_Updates_openSUSE-SLE_15.4/",
@@ -122,6 +123,8 @@ v50_client_tools_beta: dict[str, set[str]] = {
     "alma8_minion": {"/SUSE_Updates_RES_8-CLIENT-TOOLS-BETA_x86_64/"},
     "ubuntu2004_minion": {"/SUSE_Updates_Ubuntu_20.04-CLIENT-TOOLS-BETA_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_Ubuntu_22.04-CLIENT-TOOLS-BETA_x86_64/"},
+    "ubuntu2404_minion": {"/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS-BETA_x86_64/",
+                          "/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS_x86_64/"},
     "debian11_minion": {"/SUSE_Updates_Debian_11-CLIENT-TOOLS-BETA_x86_64/"},
     "debian12_minion": {"/SUSE_Updates_Debian_12-CLIENT-TOOLS-BETA_x86_64/"},
     "opensuse154arm_minion": {"/SUSE_Updates_SLE-Manager-Tools_15-BETA_aarch64/"},
@@ -192,9 +195,12 @@ v50_nodes: dict[str, set[str]] = {
 }
 v50_nodes.update(merged_client_tools)
 
-nodes_by_version: dict[str, dict[str, set[str]]] = {
-    "43": v43_nodes,
-    "50": v50_nodes
+v43_nodes_sorted: dict[str, list[str]] = {k:sorted(v) for k,v in v43_nodes.items()}
+v50_nodes_sorted: dict[str, list[str]] = {k:sorted(v) for k,v in v50_nodes.items()}
+
+nodes_by_version: dict[str, dict[str, list[str]]] = {
+    "43": v43_nodes_sorted,
+    "50": v50_nodes_sorted
 }
 
 def setup_logging():
@@ -255,8 +261,8 @@ def validate_and_store_results(expected_ids: set [str], custom_repositories: dic
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(custom_repositories, f, indent=2, sort_keys=True)
 
-def get_version_nodes(version: str) -> dict[str, set[str]]:
-    version_nodes = nodes_by_version.get(version)
+def get_version_nodes(version: str) -> dict[str, list[str]]:
+    version_nodes: dict[str, list[str]] = nodes_by_version.get(version)
     if not version_nodes:
         supported_versions = ', '.join(nodes_by_version.keys())
         raise ValueError(f"No nodes for version {version} - supported versions: {supported_versions}")
@@ -291,7 +297,7 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
         custom_repositories[node] = {mi_id: url}
 
 def find_valid_repos(mi_ids: set[str], version: str):
-    version_nodes: dict[str, set[str]] = get_version_nodes(version)
+    version_nodes: dict[str, list[str]] = get_version_nodes(version)
     custom_repositories: dict[str, dict[str, str]] = init_custom_repositories(version)
 
     for node, repositories in version_nodes.items():
