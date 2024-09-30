@@ -61,7 +61,7 @@ def run(params) {
                         }
                     }
                     // Run Terracumber to deploy the environment
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --taint '.*(domain|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --taint '.*(domain|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} --runstep provision"
                     // Generate features
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake utils:generate_build_validation_features'"
                     // Generate rake files
@@ -518,8 +518,8 @@ def getNodesHandler() {
     moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
         if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            nodeList.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle'))
-            envVar.add(instanceList[1].replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+            nodeList.add(instanceList[1])
+            envVar.add(instanceList[1].replaceAll('sles', 'sle').toUpperCase())
         }
     }
     // Convert jenkins minions list parameter to list
