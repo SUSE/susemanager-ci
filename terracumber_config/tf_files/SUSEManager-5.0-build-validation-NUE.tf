@@ -175,9 +175,11 @@ module "server_containerized" {
     vcpu               = 10
     data_pool          = "ssd"
   }
-  main_disk_size = 3000
   runtime = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile"
+  main_disk_size        = 40
+  repository_disk_size  = 3072
+  database_disk_size    = 150
 
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
   java_debugging                 = false
