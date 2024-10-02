@@ -144,6 +144,7 @@ module "base" {
   use_avahi                = false
   use_eip_bastion          = false
   is_server_paygo_instance = false
+  product_version            = "4.3-released"
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
     region            = var.REGION
@@ -172,7 +173,6 @@ module "server" {
     mirror = null
   })
   name                       = "server"
-  product_version            = "4.3-released"
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0

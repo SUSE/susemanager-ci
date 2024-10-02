@@ -128,19 +128,20 @@ provider "feilong" {
 }
 
 module "base_core" {
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-master-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp4o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "uyuni-master"
+  name_prefix       = "uyuni-bv-master-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "sles15sp4o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite          = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -154,19 +155,20 @@ module "base_old_sle" {
     libvirt = libvirt.cosmopolitan
   }
 
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-master-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "sles12sp5o" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "uyuni-master"
+  name_prefix       = "uyuni-bv-master-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "sles12sp5o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite          = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -179,19 +181,20 @@ module "base_res" {
     libvirt = libvirt.cosmopolitan
   }
 
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-master-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "uyuni-master"
+  name_prefix       = "uyuni-bv-master-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite          = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -204,19 +207,20 @@ module "base_new_sle" {
     libvirt = libvirt.ginfizz
   }
 
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-master-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "uyuni-master"
+  name_prefix       = "uyuni-bv-master-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite          = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -229,19 +233,20 @@ module "base_retail" {
     libvirt = libvirt.margarita
   }
 
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-master-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse155o", "leapmicro55o" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "uyuni-master"
+  name_prefix       = "uyuni-bv-master-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "opensuse155o", "leapmicro55o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite          = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -255,19 +260,20 @@ module "base_debian" {
     libvirt = libvirt.caipirinha
   }
 
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-master-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "uyuni-master"
+  name_prefix       = "uyuni-bv-master-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite          = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -280,19 +286,20 @@ module "base_arm" {
     libvirt = libvirt.suma-arm
   }
 
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "uyuni-bv-master-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "opensuse155armo", "opensuse156armo" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "uyuni-master"
+  name_prefix       = "uyuni-bv-master-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "opensuse155armo", "opensuse156armo" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -301,18 +308,18 @@ module "base_arm" {
 }
 
 module "base_s390" {
-  source = "./backend_modules/feilong/base"
+  source            = "./backend_modules/feilong/base"
 
-  name_prefix = "uyuni-bv-master-"
-  domain      = "mgr.prv.suse.net"
+  name_prefix       = "uyuni-bv-master-"
+  domain            = "mgr.prv.suse.net"
+  product_version   = "uyuni-master"
 
-  testsuite   = true
+  testsuite         = true
 }
 
 module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
-  product_version    = "uyuni-master"
   name               = "server"
   image              = "leapmicro55o"
   provider_settings = {
@@ -357,7 +364,6 @@ module "proxy_containerized" {
   }
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_retail.configuration
-  product_version    = "uyuni-master"
   name               = "proxy"
   provider_settings = {
     mac                = "aa:b2:93:04:05:6e"
@@ -384,7 +390,6 @@ module "sles12sp5_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles12sp5-minion"
   image              = "sles12sp5o"
   provider_settings = {
@@ -405,7 +410,6 @@ module "sles15sp2_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp2-minion"
   image              = "sles15sp2o"
   provider_settings = {
@@ -427,7 +431,6 @@ module "sles15sp3_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp3-minion"
   image              = "sles15sp3o"
   provider_settings = {
@@ -449,7 +452,6 @@ module "sles15sp4_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings = {
@@ -471,7 +473,6 @@ module "sles15sp5_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp5-minion"
   image              = "sles15sp5o"
   provider_settings = {
@@ -493,7 +494,6 @@ module "sles15sp6_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings = {
@@ -515,7 +515,6 @@ module "alma8_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "alma8-minion"
   image              = "almalinux8o"
   provider_settings = {
@@ -539,7 +538,6 @@ module "alma9_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "alma9-minion"
   image              = "almalinux9o"
   provider_settings = {
@@ -563,7 +561,6 @@ module "centos7_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "centos7-minion"
   image              = "centos7o"
   provider_settings = {
@@ -587,7 +584,6 @@ module "liberty9_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "liberty9-minion"
   image              = "libertylinux9o"
   provider_settings = {
@@ -611,7 +607,6 @@ module "oracle9_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "oracle9-minion"
   image              = "oraclelinux9o"
   provider_settings = {
@@ -635,7 +630,6 @@ module "rocky8_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "rocky8-minion"
   image              = "rocky8o"
   provider_settings = {
@@ -659,7 +653,6 @@ module "rocky9_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "rocky9-minion"
   image              = "rocky9o"
   provider_settings = {
@@ -683,7 +676,6 @@ module "ubuntu2004_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "ubuntu2004-minion"
   image              = "ubuntu2004o"
   provider_settings = {
@@ -708,7 +700,6 @@ module "ubuntu2204_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "ubuntu2204-minion"
   image              = "ubuntu2204o"
   provider_settings = {
@@ -729,7 +720,6 @@ module "ubuntu2404_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "ubuntu2404-minion"
   image              = "ubuntu2404o"
   provider_settings = {
@@ -750,7 +740,6 @@ module "debian11_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "debian11-minion"
   image              = "debian11o"
   provider_settings = {
@@ -772,7 +761,6 @@ module "debian12_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "debian12-minion"
   image              = "debian12o"
   provider_settings = {
@@ -797,7 +785,6 @@ module "opensuse155arm_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
-  product_version    = "uyuni-master"
   name               = "opensuse155arm-minion-prv"
   image              = "opensuse155armo"
   provider_settings = {
@@ -821,7 +808,6 @@ module "opensuse156arm_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
-  product_version    = "uyuni-master"
   name               = "opensuse156arm-minion-prv"
   image              = "opensuse156armo"
   provider_settings = {
@@ -842,7 +828,6 @@ module "opensuse156arm_minion" {
 module "sles15sp5s390_minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
-  product_version    = "uyuni-master"
 
   name               = "sles15sp5s390-minion"
   image              = "s15s5-minimal-2part-xfs"
@@ -862,7 +847,6 @@ module "salt_migration_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
   name               = "salt-migration-minion"
-  product_version    = "uyuni-master"
   image              = "sles15sp5o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:9b"
@@ -885,7 +869,6 @@ module "slemicro51_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "slemicro51-minion"
   image              = "slemicro51-ign"
   provider_settings = {
@@ -910,7 +893,6 @@ module "slemicro52_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "slemicro52-minion"
   image              = "slemicro52-ign"
   provider_settings = {
@@ -935,7 +917,6 @@ module "slemicro53_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "slemicro53-minion"
   image              = "slemicro53-ign"
   provider_settings = {
@@ -960,7 +941,6 @@ module "slemicro54_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "slemicro54-minion"
   image              = "slemicro54-ign"
   provider_settings = {
@@ -985,7 +965,6 @@ module "slemicro55_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "slemicro55-minion"
   image              = "slemicro55o"
   provider_settings = {
@@ -1010,7 +989,6 @@ module "slmicro60_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "slmicro60-minion"
   image              = "slmicro60o"
   provider_settings = {
@@ -1035,7 +1013,6 @@ module "sles12sp5_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_old_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles12sp5-sshminion"
   image              = "sles12sp5o"
   provider_settings = {
@@ -1054,7 +1031,6 @@ module "sles15sp2_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp2-sshminion"
   image              = "sles15sp2o"
   provider_settings = {
@@ -1071,7 +1047,6 @@ module "sles15sp3_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp3-sshminion"
   image              = "sles15sp3o"
   provider_settings = {
@@ -1088,7 +1063,6 @@ module "sles15sp4_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp4-sshminion"
   image              = "sles15sp4o"
   provider_settings = {
@@ -1105,7 +1079,6 @@ module "sles15sp5_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp5-sshminion"
   image              = "sles15sp5o"
   provider_settings = {
@@ -1122,7 +1095,6 @@ module "sles15sp6_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_new_sle.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp6-sshminion"
   image              = "sles15sp6o"
   provider_settings = {
@@ -1139,7 +1111,6 @@ module "alma8_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "alma8-sshminion"
   image              = "almalinux8o"
   provider_settings = {
@@ -1159,7 +1130,6 @@ module "alma9_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "alma9-sshminion"
   image              = "almalinux9o"
   provider_settings = {
@@ -1179,7 +1149,6 @@ module "centos7_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "centos7-sshminion"
   image              = "centos7o"
   provider_settings = {
@@ -1199,7 +1168,6 @@ module "liberty9_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "5.0-released"
   name               = "liberty9-sshminion"
   image              = "libertylinux9o"
   provider_settings = {
@@ -1219,7 +1187,6 @@ module "oracle9_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "oracle9-sshminion"
   image              = "oraclelinux9o"
   provider_settings = {
@@ -1239,7 +1206,6 @@ module "rocky8_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "rocky8-sshminion"
   image              = "rocky8o"
   provider_settings = {
@@ -1259,7 +1225,6 @@ module "rocky9_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_res.configuration
-  product_version    = "uyuni-master"
   name               = "rocky9-sshminion"
   image              = "rocky9o"
   provider_settings = {
@@ -1279,7 +1244,6 @@ module "ubuntu2004_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "ubuntu2004-sshminion"
   image              = "ubuntu2004o"
   provider_settings = {
@@ -1300,7 +1264,6 @@ module "ubuntu2204_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "ubuntu2204-sshminion"
   image              = "ubuntu2204o"
   provider_settings = {
@@ -1317,7 +1280,6 @@ module "ubuntu2404_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "ubuntu2404-sshminion"
   image              = "ubuntu2404o"
   provider_settings = {
@@ -1334,7 +1296,6 @@ module "debian11_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "debian11-sshminion"
   image              = "debian11o"
   provider_settings = {
@@ -1351,7 +1312,6 @@ module "debian12_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_debian.configuration
-  product_version    = "uyuni-master"
   name               = "debian12-sshminion"
   image              = "debian12o"
   provider_settings = {
@@ -1371,7 +1331,6 @@ module "opensuse155arm_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
-  product_version    = "uyuni-master"
   name               = "opensuse155arm-sshminion-prv"
   image              = "opensuse155armo"
   provider_settings = {
@@ -1391,7 +1350,6 @@ module "opensuse156arm_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
-  product_version    = "uyuni-master"
   name               = "opensuse156arm-sshminion-prv"
   image              = "opensuse156armo"
   provider_settings = {
@@ -1408,7 +1366,6 @@ module "opensuse156arm_sshminion" {
 module "sles15sp5s390_sshminion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
-  product_version    = "uyuni-master"
 
   name               = "sles15sp5s390-sshminion"
   image              = "s15s5-minimal-2part-xfs"
@@ -1431,7 +1388,6 @@ module "sles15sp5s390_sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "uyuni-master"
 //   name               = "slemicro51-sshminion"
 //   image              = "slemicro51-ign"
 //   provider_settings = {
@@ -1449,7 +1405,6 @@ module "sles15sp5s390_sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "uyuni-master"
 //   name               = "slemicro52-sshminion"
 //   image              = "slemicro52-ign"
 //   provider_settings = {
@@ -1467,7 +1422,6 @@ module "sles15sp5s390_sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "uyuni-master"
 //   name               = "slemicro53-sshminion"
 //   image              = "slemicro53-ign"
 //   provider_settings = {
@@ -1485,7 +1439,6 @@ module "sles15sp5s390_sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "uyuni-master"
 //   name               = "slemicro54-sshminion"
 //   image              = "slemicro54-ign"
 //   provider_settings = {
@@ -1503,7 +1456,6 @@ module "sles15sp5s390_sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "uyuni-master"
 //   name               = "slemicro55-sshminion"
 //   image              = "slemicro55o"
 //   provider_settings = {
@@ -1521,7 +1473,6 @@ module "sles15sp5s390_sshminion" {
 //   }
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_new_sle.configuration
-//   product_version    = "uyuni-master"
 //   name               = "slmicro60-sshminion"
 //   image              = "slmicro60o"
 //   provider_settings = {
@@ -1538,7 +1489,6 @@ module "sles12sp5_buildhost" {
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
-  product_version    = "uyuni-master"
   name               = "sles12sp5-build"
   image              = "sles12sp5o"
   provider_settings = {
@@ -1578,7 +1528,6 @@ module "sles15sp4_buildhost" {
   }
   source             = "./modules/build_host"
   base_configuration = module.base_retail.configuration
-  product_version    = "uyuni-master"
   name               = "sles15sp4-build"
   image              = "sles15sp4o"
   provider_settings = {
@@ -1618,7 +1567,6 @@ module "monitoring_server" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
-  product_version    = "uyuni-master"
   name               = "monitoring"
   image              = "opensuse155o"
   provider_settings = {
@@ -1644,7 +1592,6 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
-  product_version    = "uyuni-master"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
