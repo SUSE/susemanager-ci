@@ -89,19 +89,20 @@ provider "libvirt" {
 }
 
 module "base" {
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-su-50-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp6o", "opensuse155o", "slemicro55o" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "5.0-released"
+  name_prefix       = "suma-su-50-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "sles15sp6o", "opensuse155o", "slemicro55o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite          = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -112,7 +113,6 @@ module "base" {
 module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base.configuration
-  product_version    = "5.0-released"
   name               = "server"
   image              = "slemicro55o"
   provider_settings = {
@@ -151,7 +151,6 @@ module "server_containerized" {
 module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base.configuration
-  product_version    = "5.0-released"
   name               = "proxy"
   image              = "slemicro55o"
   provider_settings = {
@@ -179,7 +178,6 @@ module "proxy_containerized" {
 module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-released"
   name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings = {
@@ -208,7 +206,6 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
-  product_version    = "5.0-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

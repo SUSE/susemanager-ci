@@ -89,19 +89,20 @@ provider "libvirt" {
 }
 
 module "base" {
-  source = "./modules/base"
+  source            = "./modules/base"
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = "suma-su-43-"
-  use_avahi   = false
-  domain      = "mgr.prv.suse.net"
-  images      = [ "sles15sp4o", "opensuse155o" ]
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "4.3-released"
+  name_prefix       = "suma-su-43-"
+  use_avahi         = false
+  domain            = "mgr.prv.suse.net"
+  images            = [ "sles15sp4o", "opensuse155o" ]
 
-  mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
 
-  testsuite          = true
+  testsuite         = true
 
   provider_settings = {
     pool        = "ssd"
@@ -112,7 +113,6 @@ module "base" {
 module "server" {
   source             = "./modules/server"
   base_configuration = module.base.configuration
-  product_version    = "4.3-released"
   name               = "server"
   provider_settings = {
     mac                = "aa:b2:92:05:00:f9"
@@ -148,7 +148,6 @@ module "server" {
 module "proxy" {
   source             = "./modules/proxy"
   base_configuration = module.base.configuration
-  product_version    = "4.3-released"
   name               = "proxy"
   provider_settings = {
     mac                = "aa:b2:92:05:00:fa"
@@ -176,7 +175,6 @@ module "proxy" {
 module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "4.3-released"
   name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings = {
@@ -205,7 +203,6 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
-  product_version    = "4.3-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
