@@ -63,7 +63,7 @@ v43_client_tools: dict[str, set[str]] = {
     "alma8_minion": {"/SUSE_Updates_RES_8-CLIENT-TOOLS_x86_64/"},
     "ubuntu2004_minion": {"/SUSE_Updates_Ubuntu_20.04-CLIENT-TOOLS_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_Ubuntu_22.04-CLIENT-TOOLS_x86_64/"},
-    # no Ubuntu 24.04 on 4.3
+    "ubuntu2404_minion": {"/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS_x86_64/"},
     "debian11_minion": {"/SUSE_Updates_Debian_11-CLIENT-TOOLS_x86_64/"},
     "debian12_minion": {"/SUSE_Updates_Debian_12-CLIENT-TOOLS_x86_64/"},
     "opensuse154arm_minion": {"/SUSE_Updates_openSUSE-SLE_15.4/",
@@ -123,8 +123,7 @@ v50_client_tools_beta: dict[str, set[str]] = {
     "alma8_minion": {"/SUSE_Updates_RES_8-CLIENT-TOOLS-BETA_x86_64/"},
     "ubuntu2004_minion": {"/SUSE_Updates_Ubuntu_20.04-CLIENT-TOOLS-BETA_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_Ubuntu_22.04-CLIENT-TOOLS-BETA_x86_64/"},
-    "ubuntu2404_minion": {"/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS-BETA_x86_64/",
-                          "/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS_x86_64/"},
+    "ubuntu2404_minion": {"/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS-BETA_x86_64/"},
     "debian11_minion": {"/SUSE_Updates_Debian_11-CLIENT-TOOLS-BETA_x86_64/"},
     "debian12_minion": {"/SUSE_Updates_Debian_12-CLIENT-TOOLS-BETA_x86_64/"},
     "opensuse154arm_minion": {"/SUSE_Updates_SLE-Manager-Tools_15-BETA_aarch64/"},

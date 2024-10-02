@@ -262,7 +262,7 @@ module "base_debian" {
   name_prefix = "suma-bv-43-"
   use_avahi   = false
   domain      = "mgr.prv.suse.net"
-  images      = [ "ubuntu2004o", "ubuntu2204o", "debian11o", "debian12o" ]
+  images      = [ "ubuntu2004o", "ubuntu2204o", "ubuntu2404", "debian11o", "debian12o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -872,6 +872,27 @@ module "ubuntu2204_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "ubuntu2404_minion" {
+  providers = {
+    libvirt = libvirt.mandalore
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "4.3-released"
+  name               = "ubuntu2404-minion"
+  image              = "ubuntu2404o"
+  provider_settings = {
+    mac                = "aa:b2:92:05:00:bd"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "suma-bv-43-proxy.mgr.prv.suse.net"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "debian11_minion" {
   providers = {
     libvirt = libvirt.mandalore
@@ -1446,6 +1467,23 @@ module "ubuntu2204_sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
+module "ubuntu2404_sshminion" {
+  providers = {
+    libvirt = libvirt.mandalore
+  }
+  source             = "./modules/sshminion"
+  base_configuration = module.base_debian.configuration
+  product_version    = "4.3-released"
+  name               = "ubuntu2404-sshminion"
+  image              = "ubuntu2404o"
+  provider_settings = {
+    mac                = "aa:b2:92:05:00:dd"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+}
+
 module "debian11_sshminion" {
   providers = {
     libvirt = libvirt.mandalore
@@ -1825,6 +1863,9 @@ module "controller" {
 
   ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204_sshminion.configuration
+
+  ubuntu2404_minion_configuration    = module.ubuntu2404_minion.configuration
+  ubuntu2404_sshminion_configuration = module.ubuntu2404_sshminion.configuration
 
   debian11_minion_configuration    = module.debian11_minion.configuration
   debian11_sshminion_configuration = module.debian11_sshminion.configuration
