@@ -115,7 +115,7 @@ module "base_core" {
   name_prefix = "uyuni-bv-master-"
   use_avahi   = false
   domain      = "mgr.suse.de"
-  images      = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
+  images      = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
 
   mirror = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -393,6 +393,27 @@ module "centos7_minion" {
   image              = "centos7o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:b7"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
+module "liberty9_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "liberty9-minion"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:c5"
     memory             = 4096
   }
   server_configuration = {
@@ -925,6 +946,23 @@ module "centos7_sshminion" {
   install_salt_bundle = true
 }
 
+module "liberty9_sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  product_version    = "uyuni-master"
+  name               = "liberty9-sshminion"
+  image              = "libertylinux9o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:e5"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
 module "oracle9_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -1337,6 +1375,9 @@ module "controller" {
 
   centos7_minion_configuration    = module.centos7_minion.configuration
   centos7_sshminion_configuration = module.centos7_sshminion.configuration
+
+  liberty9_minion_configuration    = module.liberty9_minion.configuration
+  liberty9_sshminion_configuration = module.liberty9_sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9_minion.configuration
   oracle9_sshminion_configuration = module.oracle9_sshminion.configuration
