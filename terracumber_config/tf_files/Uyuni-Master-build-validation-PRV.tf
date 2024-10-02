@@ -323,7 +323,7 @@ module "server_containerized" {
   }
 
   server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
-  main_disk_size        = 20
+  main_disk_size        = 40
   repository_disk_size  = 3072
   database_disk_size    = 150
 
