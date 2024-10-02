@@ -696,7 +696,6 @@ module "opensuse155arm_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
-
   name               = "opensuse155arm-minion-nue"
   image              = "opensuse155armo"
   provider_settings = {
@@ -720,7 +719,6 @@ module "opensuse156arm_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
-
   name               = "opensuse156arm-minion-nue"
   image              = "opensuse156armo"
   provider_settings = {
@@ -741,8 +739,6 @@ module "opensuse156arm_minion" {
 module "sles15sp5s390_minion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
-
-
   name               = "sles15sp5s390-minion"
   image              = "s15s5-minimal-2part-xfs"
 
@@ -761,8 +757,8 @@ module "sles15sp5s390_minion" {
 // dedicated to testing migration from OS Salt to Salt bundle
 module "salt_migration_minion" {
   source             = "./modules/minion"
-  base_configuration = module.base_core.configuration  name               = "salt-migration-minion"
-
+  base_configuration = module.base_core.configuration
+  name               = "salt-migration-minion"
   image              = "sles15sp5o"
   provider_settings  = {
     mac                = "aa:b2:92:42:00:cf"
@@ -780,7 +776,7 @@ module "salt_migration_minion" {
 
 module "slemicro51_minion" {
   source             = "./modules/minion"
-
+  base_configuration = module.base_core.configuration
   name               = "slemicro51-minion"
   image              = "slemicro51-ign"
   provider_settings = {
@@ -802,7 +798,7 @@ module "slemicro51_minion" {
 
 module "slemicro52_minion" {
   source             = "./modules/minion"
-
+  base_configuration = module.base_core.configuration
   name               = "slemicro52-minion"
   image              = "slemicro52-ign"
   provider_settings = {
@@ -824,7 +820,7 @@ module "slemicro52_minion" {
 
 module "slemicro53_minion" {
   source             = "./modules/minion"
-
+  base_configuration = module.base_core.configuration
   name               = "slemicro53-minion"
   image              = "slemicro53-ign"
   provider_settings = {
@@ -846,7 +842,7 @@ module "slemicro53_minion" {
 
 module "slemicro54_minion" {
   source             = "./modules/minion"
-
+  base_configuration = module.base_core.configuration
   name               = "slemicro54-minion"
   image              = "slemicro54-ign"
   provider_settings = {
@@ -868,7 +864,7 @@ module "slemicro54_minion" {
 
 module "slemicro55_minion" {
   source             = "./modules/minion"
-
+  base_configuration = module.base_core.configuration
   name               = "slemicro55-minion"
   image              = "slemicro55o"
   provider_settings = {
@@ -890,7 +886,7 @@ module "slemicro55_minion" {
 
 module "slmicro60_minion" {
   source             = "./modules/minion"
-
+  base_configuration = module.base_core.configuration
   name               = "slmicro60-minion"
   image              = "slmicro60o"
   provider_settings = {
@@ -909,7 +905,7 @@ module "slmicro60_minion" {
 
 module "sles12sp5_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "sles12sp5-sshminion"
   image              = "sles12sp5o"
   provider_settings = {
@@ -924,7 +920,7 @@ module "sles12sp5_sshminion" {
 
 module "sles15sp2_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "sles15sp2-sshminion"
   image              = "sles15sp2o"
   provider_settings = {
@@ -937,7 +933,7 @@ module "sles15sp2_sshminion" {
 
 module "sles15sp3_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "sles15sp3-sshminion"
   image              = "sles15sp3o"
   provider_settings = {
@@ -950,7 +946,7 @@ module "sles15sp3_sshminion" {
 
 module "sles15sp4_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "sles15sp4-sshminion"
   image              = "sles15sp4o"
   provider_settings = {
@@ -963,7 +959,7 @@ module "sles15sp4_sshminion" {
 
 module "sles15sp5_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "sles15sp5-sshminion"
   image              = "sles15sp5o"
   provider_settings = {
@@ -976,7 +972,7 @@ module "sles15sp5_sshminion" {
 
 module "sles15sp6_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "sles15sp6-sshminion"
   image              = "sles15sp6o"
   provider_settings = {
@@ -989,7 +985,7 @@ module "sles15sp6_sshminion" {
 
 module "alma8_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "alma8-sshminion"
   image              = "almalinux8o"
   provider_settings = {
@@ -1005,7 +1001,7 @@ module "alma8_sshminion" {
 
 module "alma9_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "alma9-sshminion"
   image              = "almalinux9o"
   provider_settings = {
@@ -1021,7 +1017,7 @@ module "alma9_sshminion" {
 
 module "centos7_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "centos7-sshminion"
   image              = "centos7o"
   provider_settings = {
@@ -1037,7 +1033,7 @@ module "centos7_sshminion" {
 
 module "liberty9_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "liberty9-sshminion"
   image              = "libertylinux9o"
   provider_settings = {
@@ -1053,7 +1049,7 @@ module "liberty9_sshminion" {
 
 module "oracle9_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "oracle9-sshminion"
   image              = "oraclelinux9o"
   provider_settings = {
@@ -1069,7 +1065,7 @@ module "oracle9_sshminion" {
 
 module "rocky8_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "rocky8-sshminion"
   image              = "rocky8o"
   provider_settings = {
@@ -1085,7 +1081,7 @@ module "rocky8_sshminion" {
 
 module "rocky9_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "rocky9-sshminion"
   image              = "rocky9o"
   provider_settings = {
@@ -1101,7 +1097,7 @@ module "rocky9_sshminion" {
 
 module "ubuntu2004_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "ubuntu2004-sshminion"
   image              = "ubuntu2004o"
   provider_settings = {
@@ -1118,7 +1114,7 @@ module "ubuntu2004_sshminion" {
 
 module "ubuntu2204_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "ubuntu2204-sshminion"
   image              = "ubuntu2204o"
   provider_settings = {
@@ -1131,7 +1127,7 @@ module "ubuntu2204_sshminion" {
 
 module "ubuntu2404_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "ubuntu2404-sshminion"
   image              = "ubuntu2404o"
   provider_settings = {
@@ -1144,7 +1140,7 @@ module "ubuntu2404_sshminion" {
 
 module "debian11_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "debian11-sshminion"
   image              = "debian11o"
   provider_settings = {
@@ -1157,7 +1153,7 @@ module "debian11_sshminion" {
 
 module "debian12_sshminion" {
   source             = "./modules/sshminion"
-
+  base_configuration = module.base_core.configuration
   name               = "debian12-sshminion"
   image              = "debian12o"
   provider_settings = {
@@ -1177,7 +1173,6 @@ module "opensuse155arm_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
-
   name               = "opensuse155arm-sshminion-nue"
   image              = "opensuse155armo"
   provider_settings = {
@@ -1197,7 +1192,6 @@ module "opensuse156arm_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
-
   name               = "opensuse156arm-sshminion-nue"
   image              = "opensuse156armo"
   provider_settings = {
@@ -1214,8 +1208,6 @@ module "opensuse156arm_sshminion" {
 module "sles15sp5s390_sshminion" {
   source             = "./backend_modules/feilong/host"
   base_configuration = module.base_s390.configuration
-
-
   name               = "sles15sp5s390-sshminion"
   image              = "s15s5-minimal-2part-xfs"
 
@@ -1233,7 +1225,7 @@ module "sles15sp5s390_sshminion" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro51_sshminion" {
 //   source             = "./modules/sshminion"
-// //
+//   base_configuration = module.base_core.configuration
 //   name               = "slemicro51-sshminion"
 //   image              = "slemicro51-ign"
 //   provider_settings = {
@@ -1247,7 +1239,7 @@ module "sles15sp5s390_sshminion" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro52_sshminion" {
 //   source             = "./modules/sshminion"
-// //
+//   base_configuration = module.base_core.configuration
 //   name               = "slemicro52-sshminion"
 //   image              = "slemicro52-ign"
 //   provider_settings = {
@@ -1261,7 +1253,7 @@ module "sles15sp5s390_sshminion" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro53_sshminion" {
 //   source             = "./modules/sshminion"
-// //
+//   base_configuration = module.base_core.configuration
 //   name               = "slemicro53-sshminion"
 //   image              = "slemicro53-ign"
 //   provider_settings = {
@@ -1275,7 +1267,7 @@ module "sles15sp5s390_sshminion" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro54_sshminion" {
 //   source             = "./modules/sshminion"
-// //
+//   base_configuration = module.base_core.configuration
 //   name               = "slemicro54-sshminion"
 //   image              = "slemicro54-ign"
 //   provider_settings = {
@@ -1289,7 +1281,7 @@ module "sles15sp5s390_sshminion" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro55_sshminion" {
 //   source             = "./modules/sshminion"
-// //
+//   base_configuration = module.base_core.configuration
 //   name               = "slemicro55-sshminion"
 //   image              = "slemicro55o"
 //   provider_settings = {
@@ -1303,7 +1295,7 @@ module "sles15sp5s390_sshminion" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slmicro60_sshminion" {
 //   source             = "./modules/sshminion"
-// //
+//   base_configuration = module.base_core.configuration
 //   name               = "slmicro60-sshminion"
 //   image              = "slmicro60o"
 //   provider_settings = {
@@ -1316,7 +1308,7 @@ module "sles15sp5s390_sshminion" {
 
 module "sles12sp5_buildhost" {
   source             = "./modules/build_host"
-
+  base_configuration = module.base_core.configuration
   name               = "sles12sp5-build"
   image              = "sles12sp5o"
   provider_settings = {
@@ -1349,7 +1341,7 @@ module "sles12sp5_terminal" {
 
 module "sles15sp4_buildhost" {
   source             = "./modules/build_host"
-
+  base_configuration = module.base_core.configuration
   name               = "sles15sp4-build"
   image              = "sles15sp4o"
   provider_settings = {
@@ -1382,7 +1374,7 @@ module "sles15sp4_terminal" {
 
 module "monitoring_server" {
   source             = "./modules/minion"
-
+  base_configuration = module.base_core.configuration
   name               = "monitoring"
   image              = "sles15sp4o"
   provider_settings = {
