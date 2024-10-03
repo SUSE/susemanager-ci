@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "fix-code-coverage-exec-path"
 }
 
 variable "CUCUMBER_RESULTS" {
