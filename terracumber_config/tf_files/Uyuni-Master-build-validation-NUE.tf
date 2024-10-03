@@ -400,7 +400,10 @@ module "centos7_minion" {
 
 module "liberty9_minion" {
   source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
+  base_configuration = merge(module.base_core.configuration,
+  {
+    testsuite = false
+  })
   name               = "liberty9-minion"
   image              = "libertylinux9o"
   provider_settings = {
@@ -912,7 +915,10 @@ module "centos7_sshminion" {
 
 module "liberty9_sshminion" {
   source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
+  base_configuration = merge(module.base_core.configuration,
+  {
+    testsuite = false
+  })
   name               = "liberty9-sshminion"
   image              = "libertylinux9o"
   provider_settings = {

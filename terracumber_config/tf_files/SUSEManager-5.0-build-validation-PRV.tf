@@ -568,7 +568,10 @@ module "liberty9_minion" {
     libvirt = libvirt.tatooine
   }
   source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
+  base_configuration = merge(module.base_res.configuration,
+  {
+    testsuite = false
+  })
   name               = "liberty9-minion"
   image              = "libertylinux9o"
   provider_settings = {
@@ -1132,7 +1135,10 @@ module "liberty9_sshminion" {
     libvirt = libvirt.tatooine
   }
   source             = "./modules/sshminion"
-  base_configuration = module.base_res.configuration
+  base_configuration = merge(module.base_res.configuration,
+  {
+    testsuite = false
+  })
   name               = "liberty9-sshminion"
   image              = "libertylinux9o"
   provider_settings = {
