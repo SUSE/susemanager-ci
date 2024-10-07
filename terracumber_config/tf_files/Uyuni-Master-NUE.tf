@@ -165,7 +165,7 @@ module "cucumber_testsuite" {
     }
     suse-sshminion = {
       image = "opensuse155o"
-      name = "suse-minion"
+      name = "suse-sshminion"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
         vcpu = 2
