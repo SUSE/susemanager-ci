@@ -16,7 +16,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:06"
       deblike-minion = "aa:b2:92:04:00:07"
       build-host     = "aa:b2:92:04:00:09"
-      kvm-host       = "aa:b2:92:04:00:0a"
     }
     hypervisor = "romulus.mgr.prv.suse.net"
     additional_network = "192.168.101.0/24"
@@ -33,7 +32,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:16"
       deblike-minion = "aa:b2:92:04:00:17"
       build-host     = "aa:b2:92:04:00:19"
-      kvm-host       = "aa:b2:92:04:00:1a"
     }
     hypervisor = "romulus.mgr.prv.suse.net"
     additional_network = "192.168.102.0/24"
@@ -50,7 +48,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:26"
       deblike-minion = "aa:b2:92:04:00:27"
       build-host     = "aa:b2:92:04:00:29"
-      kvm-host       = "aa:b2:92:04:00:2a"
     }
     hypervisor = "vulcan.mgr.prv.suse.net"
     additional_network = "192.168.103.0/24"
@@ -67,7 +64,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:36"
       deblike-minion = "aa:b2:92:04:00:37"
       build-host     = "aa:b2:92:04:00:39"
-      kvm-host       = "aa:b2:92:04:00:3a"
     }
     hypervisor = "vulcan.mgr.prv.suse.net"
     additional_network = "192.168.104.0/24"
@@ -84,7 +80,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:46"
       deblike-minion = "aa:b2:92:04:00:47"
       build-host     = "aa:b2:92:04:00:49"
-      kvm-host       = "aa:b2:92:04:00:4a"
     }
     hypervisor = "hyperion.mgr.prv.suse.net"
     additional_network = "192.168.105.0/24"
@@ -101,7 +96,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:56"
       deblike-minion = "aa:b2:92:04:00:57"
       build-host     = "aa:b2:92:04:00:59"
-      kvm-host       = "aa:b2:92:04:00:5a"
     }
     hypervisor = "hyperion.mgr.prv.suse.net"
     additional_network = "192.168.106.0/24"
@@ -118,7 +112,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:66"
       deblike-minion = "aa:b2:92:04:00:67"
       build-host     = "aa:b2:92:04:00:69"
-      kvm-host       = "aa:b2:92:04:00:6a"
     }
     hypervisor = "daiquiri.mgr.prv.suse.net"
     additional_network = "192.168.107.0/24"
@@ -135,7 +128,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:76"
       deblike-minion = "aa:b2:92:04:00:77"
       build-host     = "aa:b2:92:04:00:79"
-      kvm-host       = "aa:b2:92:04:00:7a"
     }
     hypervisor = "daiquiri.mgr.prv.suse.net"
     additional_network = "192.168.108.0/24"
@@ -152,7 +144,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:86"
       deblike-minion = "aa:b2:92:04:00:87"
       build-host     = "aa:b2:92:04:00:89"
-      kvm-host       = "aa:b2:92:04:00:8a"
     }
     hypervisor = "mojito.mgr.prv.suse.net"
     additional_network = "192.168.109.0/24"
@@ -169,7 +160,6 @@ ENVIRONMENT_CONFIGURATION = {
       rhlike-minion  = "aa:b2:92:04:00:96"
       deblike-minion = "aa:b2:92:04:00:97"
       build-host     = "aa:b2:92:04:00:99"
-      kvm-host       = "aa:b2:92:04:00:9a"
     }
     hypervisor = "mojito.mgr.prv.suse.net"
     additional_network = "192.168.110.0/24"
