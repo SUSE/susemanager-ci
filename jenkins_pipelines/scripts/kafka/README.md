@@ -7,12 +7,12 @@ Messaging system to speed up business processes via services API.
 ### Host
 
 Tested on the SLE 15 SP6 host deployed in a fully trusted environment with the following packages installed:
-* `docker` package from [Virtualization repository](https://download.opensuse.org/repositories/Virtualization:/containers/15.6/)
+* `docker` package from [Virtualization repository](https://download.opensuse.org/repositories/Virtualization:/containers/15.6/).
 
 ### Variables
 
 The following environment variables need to be exported on the container's host:
-* [`JENKINS_API_TOKEN`](https://ci.suse.de/user/manager/configure)
+* [`JENKINS_API_TOKEN`](https://ci.suse.de/user/manager/configure).
 
 ### Networking
 
@@ -44,7 +44,8 @@ docker run --env JENKINS_API_TOKEN=${JENKINS_API_TOKEN} --network "host" kafka
   1. Pulls the latest [MU requests](https://smelt.suse.de/overview/) to be accepted and generates json based on the latest [susemanager-ci](https://github.com/SUSE/susemanager-ci/tree/master) scripts.
   2. Start a [new manager-4.3-qe-sle-update pipeline](https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-sle-update/) and monitors the status running.
   3. Send message to the dedicated Slack channel [andy-test](https://app.slack.com/client/T02863RC2AC/C033KJKDF9V) informing about the status.
-  :Warning: _Producing script should be integrated to the https://smelt.suse.de site, at the moment it is sending requests from container_.
+
+  ⚠️ _Producing script should be integrated to the https://smelt.suse.de site, at the moment it is sending requests from container_.
 
 ### Debugging
 
@@ -56,6 +57,6 @@ docker logs "kafka"
 
 ## Additional resources
 
-* [SLE MU pipeline automation concept](https://github.com/SUSE/spacewalk/issues/24966)
-* [SLE Maintenance updates document](https://confluence.suse.com/display/SUSEMANAGER/QE+SLE+Maintenance+Updates)
+* [SLE MU pipeline automation concept](https://github.com/SUSE/spacewalk/issues/24966).
+* [SLE Maintenance updates document](https://confluence.suse.com/display/SUSEMANAGER/QE+SLE+Maintenance+Updates).
 
