@@ -123,6 +123,7 @@ module "cucumber_testsuite" {
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
+      name = "controller"
       provider_settings = {
         mac = "aa:b2:93:01:00:d0"
         vcpu = 2
@@ -130,6 +131,7 @@ module "cucumber_testsuite" {
       }
     }
     server = {
+      name = "server"
       provider_settings = {
         mac = "aa:b2:93:01:00:d1"
         vcpu = 4
@@ -141,6 +143,7 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
     }
     proxy = {
+      name = "proxy"
       provider_settings = {
         mac = "aa:b2:93:01:00:d2"
         vcpu = 2
@@ -151,7 +154,7 @@ module "cucumber_testsuite" {
     }
     suse-minion = {
       image = "opensuse155o"
-      name = "min-suse"
+      name = "suse-minion"
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
         vcpu = 2
@@ -162,7 +165,7 @@ module "cucumber_testsuite" {
     }
     suse-sshminion = {
       image = "opensuse155o"
-      name = "minssh-suse"
+      name = "suse-minion"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
         vcpu = 2
@@ -173,7 +176,7 @@ module "cucumber_testsuite" {
     }
     redhat-minion = {
       image = "rocky8o"
-      name = "min-rocky8"
+      name = "rocky8-minion"
       provider_settings = {
         mac = "aa:b2:93:01:00:d9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -185,7 +188,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
     }
     debian-minion = {
-      name = "min-ubuntu2204"
+      name = "ubuntu2204-minion"
       image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:93:01:00:db"
@@ -197,7 +200,7 @@ module "cucumber_testsuite" {
     }
     build-host = {
       image = "sles15sp4o"
-      name = "min-build"
+      name = "build-minion"
       provider_settings = {
         mac = "aa:b2:93:01:00:dd"
         vcpu = 2
@@ -213,7 +216,7 @@ module "cucumber_testsuite" {
     }
     kvm-host = {
       image = "opensuse155o"
-      name = "min-kvm"
+      name = "kvm-minion"
       
       provider_settings = {
         mac = "aa:b2:93:01:00:de"
