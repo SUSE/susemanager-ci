@@ -106,7 +106,7 @@ module "base" {
 
   provider_settings = {
     pool        = "ssd"
-    bridge      = "br0"
+    bridge      = "br1"
   }
 }
 
