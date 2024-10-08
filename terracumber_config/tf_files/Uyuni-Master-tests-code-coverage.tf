@@ -263,10 +263,10 @@ resource "null_resource" "configure_jacoco" {
   // This is just a temporary Redis instance for this PoC, no worries about it for now, but it will be good in the future to hide it as secrets in this repo
   // Only an admin of this repo will have rights to do that.
   provisioner "remote-exec" {
-    inline = [ "echo export REDIS_HOST=redis-19269.c285.us-west-2-2.ec2.cloud.redislabs.com >> ~/.bashrc",
+    inline = [ "echo export REDIS_HOST=ec2-3-64-192-250.eu-central-1.compute.amazonaws.com >> ~/.bashrc",
                "echo export REDIS_PORT=19269 >> ~/.bashrc",
-               "echo export REDIS_USERNAME=default >> ~/.bashrc",
-               "echo export REDIS_PASSWORD=I4Wxta4v5wpZGWQgUAUpnMQf35zmZGqx >> ~/.bashrc",
+               "echo export REDIS_USERNAME=ci_user >> ~/.bashrc",
+               "echo export REDIS_PASSWORD=21dcfda975fb29b81cbfe91e3bb605fc >> ~/.bashrc",
                "source ~/.bashrc"
              ]
     connection {
