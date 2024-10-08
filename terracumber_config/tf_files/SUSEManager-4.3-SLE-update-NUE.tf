@@ -66,12 +66,12 @@ variable "SCC_PASSWORD" {
 
 variable "GIT_USER" {
   type = string
-  default = null // Not needed for master, as it is public
+  default = null
 }
 
 variable "GIT_PASSWORD" {
   type = string
-  default = null // Not needed for master, as it is public
+  default = null
 }
 
 terraform {
@@ -115,7 +115,7 @@ module "server" {
   base_configuration = module.base.configuration
   name               = "server"
   provider_settings = {
-    mac                = "aa:b2:93:01:03:98"
+    mac                = "aa:b2:93:01:02:61"
     memory             = 16384
     vcpu               = 4
     data_pool          = "ssd"
@@ -150,7 +150,7 @@ module "proxy" {
   base_configuration = module.base.configuration
   name               = "proxy"
   provider_settings  = {
-    mac      = "aa:b2:93:01:03:99"
+    mac      = "aa:b2:93:01:02:62"
     memory   = 4096
   }
   server_configuration = {
@@ -177,7 +177,7 @@ module "sles15sp4_minion" {
   name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings  = {
-    mac    = "aa:b2:93:01:03:9a"
+    mac    = "aa:b2:93:01:02:63"
     vcpu   = 2
     memory = 2048
   }
@@ -192,7 +192,7 @@ module "controller" {
   base_configuration = module.base.configuration
   name               = "controller"
   provider_settings = {
-    mac                = "aa:b2:93:01:03:97"
+    mac                = "aa:b2:93:01:02:60"
     memory             = 16384
     vcpu               = 8
   }

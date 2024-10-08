@@ -66,12 +66,12 @@ variable "SCC_PASSWORD" {
 
 variable "GIT_USER" {
   type = string
-  default = null // Not needed for master, as it is public
+  default = null
 }
 
 variable "GIT_PASSWORD" {
   type = string
-  default = null // Not needed for master, as it is public
+  default = null
 }
 
 terraform {
@@ -171,8 +171,6 @@ module "proxy_containerized" {
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 
-  //proxy_additional_repos
-
 }
 
 module "sles15sp6_minion" {
@@ -191,8 +189,6 @@ module "sles15sp6_minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  //sle15sp6-minion_additional_repos
 
 }
 
