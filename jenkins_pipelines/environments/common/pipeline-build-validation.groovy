@@ -533,6 +533,7 @@ def getNodesHandler() {
     def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }
     // Convert this list to cucumber compatible environment variable
     def envVarDisabledNodes = disabledNodes.collect { it.toUpperCase() }
+    println "Disable node ! ${envVarDisabledNodes}"
     // Create a node list without the disabled nodes. ( use to configure the client stage )
     def nodeListWithDisabledNodes = nodeList - disabledNodes
     // Create a map storing mu synchronization state for each minion.
