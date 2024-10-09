@@ -269,15 +269,7 @@ def get_version_nodes(version: str) -> dict[str, list[str]]:
 
 def init_custom_repositories(version: str) -> dict[str, dict[str, str]]:
     custom_repositories = {}
-    if version == '50':
-        # TODO Remove the following hardcoding at GA, we should start getting MIs for server and proxy
-        # Add exception for specific URL for "server" and "proxy" nodes in version 5.0
-        # Hardcoded URLs for "server" and "proxy" nodes until we get MIs with them
-        server_url = "http://download.suse.de/ibs/SUSE:/SLE-15-SP5:/Update:/Products:/Manager50/images/repo/SUSE-Manager-Server-5.0-POOL-x86_64-Media1/"
-        proxy_url = "http://download.suse.de/ibs/SUSE:/SLE-15-SP5:/Update:/Products:/Manager50/images/repo/SUSE-Manager-Proxy-5.0-POOL-x86_64-Media1/"
-        custom_repositories['server'] = {'server_50': server_url}
-        custom_repositories['proxy'] = {'proxy_50': proxy_url}
-
+    custom_repositories['slmicro60_minion'] = { 'slmicro60_staging' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/standard/" }
     return custom_repositories
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
