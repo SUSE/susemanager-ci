@@ -212,11 +212,6 @@ module "proxy_containerized" {
     mac                = "aa:b2:92:42:00:52"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-bv-50-server.mgr.suse.de"
-    username = "admin"
-    password = "admin"
-  }
   runtime = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile"
   auto_configure            = false
@@ -231,9 +226,6 @@ module "sles12sp5_minion" {
   provider_settings = {
     mac                = "aa:b2:92:42:00:61"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -250,9 +242,6 @@ module "sles15sp2_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -268,9 +257,6 @@ module "sles15sp3_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -286,9 +272,6 @@ module "sles15sp4_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -304,9 +287,6 @@ module "sles15sp5_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -322,9 +302,6 @@ module "sles15sp6_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -338,9 +315,6 @@ module "alma8_minion" {
   provider_settings = {
     mac                = "aa:b2:92:42:00:69"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -356,9 +330,6 @@ module "alma9_minion" {
     mac                = "aa:b2:92:42:00:72"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -372,9 +343,6 @@ module "centos7_minion" {
   provider_settings = {
     mac                = "aa:b2:92:42:00:67"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -390,9 +358,6 @@ module "liberty9_minion" {
     mac                = "aa:b2:92:42:00:75"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -406,9 +371,6 @@ module "oracle9_minion" {
   provider_settings = {
     mac                = "aa:b2:92:42:00:73"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -424,9 +386,6 @@ module "rocky8_minion" {
     mac                = "aa:b2:92:42:00:68"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -440,9 +399,6 @@ module "rocky9_minion" {
   provider_settings = {
     mac                = "aa:b2:92:42:00:71"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -458,9 +414,6 @@ module "ubuntu2004_minion" {
     mac                = "aa:b2:92:42:00:6a"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -475,9 +428,6 @@ module "ubuntu2204_minion" {
     mac                = "aa:b2:92:42:00:6b"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -491,9 +441,6 @@ module "ubuntu2404_minion" {
   provider_settings = {
     mac                = "aa:b2:92:42:00:6d"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -510,9 +457,6 @@ module "debian11_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -528,9 +472,6 @@ module "debian12_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -551,9 +492,6 @@ module "opensuse155arm_minion" {
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -573,9 +511,6 @@ module "opensuse156arm_minion" {
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -631,15 +566,11 @@ module "slemicro51_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
 // WORKAROUND: Does not work in sumaform, yet
-//  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -653,15 +584,11 @@ module "slemicro52_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
 // WORKAROUND: Does not work in sumaform, yet
-//  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -675,15 +602,11 @@ module "slemicro53_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
 // WORKAROUND: Does not work in sumaform, yet
-//  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -697,15 +620,11 @@ module "slemicro54_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
 // WORKAROUND: Does not work in sumaform, yet
-//  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -719,15 +638,11 @@ module "slemicro55_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
 // WORKAROUND: Does not work in sumaform, yet
-//  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
 }
 
@@ -741,16 +656,11 @@ module "slmicro60_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
 // WORKAROUND: Does not work in sumaform, yet
-//  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
   install_salt_bundle = false
 }
 
@@ -1148,14 +1058,8 @@ module "sles12sp5_buildhost" {
     memory             = 2048
     vcpu               = 2
   }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  
 
 }
 
@@ -1184,13 +1088,8 @@ module "sles15sp4_buildhost" {
     memory             = 2048
     vcpu               = 2
   }
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
 
 }
 
@@ -1236,9 +1135,6 @@ module "monitoring_server" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "suma-bv-50-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
