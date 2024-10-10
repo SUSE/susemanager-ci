@@ -74,6 +74,21 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+variable "REDIS_HOST" {
+  type = string
+  default = null
+}
+
+variable "REDIS_USERNAME" {
+  type = string
+  default = null
+}
+
+variable "REDIS_PASSWORD" {
+  type = string
+  default = null
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -263,10 +278,10 @@ resource "null_resource" "configure_jacoco" {
   // This is just a temporary Redis instance for this PoC, no worries about it for now, but it will be good in the future to hide it as secrets in this repo
   // Only an admin of this repo will have rights to do that.
   provisioner "remote-exec" {
-    inline = [ "echo export REDIS_HOST=redis-19269.c285.us-west-2-2.ec2.cloud.redislabs.com >> ~/.bashrc",
+    inline = [ "echo export REDIS_HOST=${var.REDIS_HOST} >> ~/.bashrc",
                "echo export REDIS_PORT=19269 >> ~/.bashrc",
-               "echo export REDIS_USERNAME=default >> ~/.bashrc",
-               "echo export REDIS_PASSWORD=I4Wxta4v5wpZGWQgUAUpnMQf35zmZGqx >> ~/.bashrc",
+               "echo export REDIS_USERNAME=${var.REDIS_USERNAME} >> ~/.bashrc",
+               "echo export REDIS_PASSWORD=${var.REDIS_PASSWORD} >> ~/.bashrc",
                "source ~/.bashrc"
              ]
     connection {
