@@ -365,21 +365,16 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_retail.configuration
   name               = "proxy"
-  provider_settings = {
+  provider_settings  = {
     mac                = "aa:b2:93:04:05:6e"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-server.mgr.prv.suse.net"
-    username = "admin"
-    password = "admin"
-  }
 
-  runtime = "podman"
-  container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
-  container_tag = "latest"
-  auto_configure            = false
-  ssh_key_path              = "./salt/controller/id_rsa.pub"
+  runtime               = "podman"
+  container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
+  container_tag         = "latest"
+  auto_configure        = false
+  ssh_key_path          = "./salt/controller/id_rsa.pub"
 }
 
 // No traditional clients in Uyuni

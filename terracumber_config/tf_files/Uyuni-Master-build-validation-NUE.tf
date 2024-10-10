@@ -216,11 +216,6 @@ module "proxy_containerized" {
     mac                = "aa:b2:93:02:01:a2"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-server.mgr.suse.de"
-    username = "admin"
-    password = "admin"
-  }
 
   runtime = "podman"
   container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
@@ -1066,7 +1061,6 @@ module "sles12sp5_buildhost" {
     memory             = 2048
     vcpu               = 2
   }
-  auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -1097,7 +1091,6 @@ module "sles15sp4_buildhost" {
     memory             = 2048
     vcpu               = 2
   }
-  auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
