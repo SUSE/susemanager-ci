@@ -14,6 +14,7 @@ def parse_cli_args() -> argparse.Namespace:
         help="return only issues missing submissions"
     )
     # query params with fixed choices
+    parser.add_argument("--reference", dest="reference", help="source to filter the issues by", action="store")
     parser.add_argument("--category", dest="category", help="category to filter issues by", action='store', choices=["maintenance", "security"])
     parser.add_argument("--group", dest="group", help="group to filter issues by", action='store', choices=["Maintenance", "Kernel Maintenance", "Security"])
     parser.add_argument("--severity", dest="severity", help="severity to filter issues by", action='store', choices=["not-set", "low", "moderate", "important", "critical"])
