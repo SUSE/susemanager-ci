@@ -19,40 +19,22 @@ other_build_repo = 'openSUSE_Leap_15.5'
 url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
 product_name = "Uyuni"
 short_product_name = "suma"
-update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates/"
-additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy/"
+update_repo = "http://minima-mirror-ci-bv.${domain}/jordi/some-updates/"
+additional_repo = "http://minima-mirror-ci-bv.${domain}/jordi/dummy/"
 build_packages = true
 
-if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
-    first_env = 10;
-    last_env = 10;
-    // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
-    sumaform_gitrepo = "https://github.com/jordimassaguerpla/sumaform.git";
-    sumaform_ref = "add_fixes_to_combustion_and_add_pr_fixes";
-} else if (env.JOB_NAME == "uyuni-prs-ci-tests-ion") {
-    first_env = 7;
-    last_env = 7;
-    // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
-    sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
-    sumaform_ref = "master-cobbler-3.3.1";
-} else if (env.JOB_NAME == "uyuni-prs-ci-tests-qe") {
-    first_env = 8;
-    last_env = 8;
-    // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
-    sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
-    sumaform_ref = "revert-1704-revert-zypper-in-clout-init";
+if (env.JOB_NAME == "uyuni-prs-ci-tests") {
+    first_env = 1;
+    last_env = 5;
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
     // email aliases for slack channel discuss-susemanager-pr-tests-results
     email_to = "discuss-susemanager-p-aaaag32rrv4bcp3adzknwc42m4@suse.slack.com";
     pull_request_number = "master";
-    first_env = 9;
-    last_env = 9;
-    additional_repo_url = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/reference_job_additional_repo";
-} else if (env.JOB_NAME == "uyuni-prs-ci-tests") {
-    first_env = 1;
-    last_env = 4;
+    first_env = 6;
+    last_env = 6;
+    additional_repo_url = "http://minima-mirror-ci-bv.${domain}/pull-request-repositories/reference_job_additional_repo";
 } else if (env.JOB_NAME == "suma43-prs-ci-tests") {
-    first_env =5;
+    first_env = 1;
     last_env = 5;
     // spacewalk suma43 settings
     // TODO: what happens if we change the environment? Will it break the environment??
@@ -76,8 +58,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     url_prefix="https://ci.suse.de/view/Manager/view/Manager-4.3/job/${env.JOB_NAME}"
     product_name = "SUSE-Manager-4.3"
     short_product_name = "suma43"
-    update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates43/"
-    additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy43/"
+    update_repo = "http://minima-mirror-ci-bv.${domain}/jordi/some-updates43/"
+    additional_repo = "http://minima-mirror-ci-bv.${domain}/jordi/dummy43/"
     rn_package = "release-notes-susemanager"
     rn_project = "Devel:Galaxy:Manager:4.3:ToSLE"
 } else if (env.JOB_NAME == "suma43-prs-ci-tests-reference") {
@@ -86,7 +68,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     cucumber_ref = "Manager-4.3";
     pull_request_number = "Manager-4.3";
     product_version = "manager43";
-    first_env =6;
+    first_env = 6;
     last_env = 6;
     // spacewalk suma43 settings
     // TODO: what happens if we change the environment? Will it break the environment??
@@ -110,8 +92,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     url_prefix="https://ci.suse.de/view/Manager/view/Manager-4.3/job/${env.JOB_NAME}"
     product_name = "SUSE-Manager-4.3"
     short_product_name = "suma43"
-    update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates43/"
-    additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy43/"
+    update_repo = "http://minima-mirror-ci-bv.${domain}/jordi/some-updates43/"
+    additional_repo = "http://minima-mirror-ci-bv.${domain}/jordi/dummy43/"
     rn_package = "release-notes-susemanager"
     rn_project = "Devel:Galaxy:Manager:4.3:ToSLE"
 } else {
