@@ -23,34 +23,16 @@ update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates/"
 additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy/"
 build_packages = true
 
-if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
-    first_env = 10;
-    last_env = 10;
-    // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
-    sumaform_gitrepo = "https://github.com/jordimassaguerpla/sumaform.git";
-    sumaform_ref = "add_fixes_to_combustion_and_add_pr_fixes";
-} else if (env.JOB_NAME == "uyuni-prs-ci-tests-ion") {
-    first_env = 7;
-    last_env = 7;
-    // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
-    sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
-    sumaform_ref = "master-cobbler-3.3.1";
-} else if (env.JOB_NAME == "uyuni-prs-ci-tests-qe") {
-    first_env = 8;
-    last_env = 8;
-    // if you change the sumaform repo or reference, you need to remove the sumaform directory from the results folder
-    sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
-    sumaform_ref = "revert-1704-revert-zypper-in-clout-init";
+if (env.JOB_NAME == "uyuni-prs-ci-tests") {
+    first_env = 1;
+    last_env = 3;
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
     // email aliases for slack channel discuss-susemanager-pr-tests-results
     email_to = "discuss-susemanager-p-aaaag32rrv4bcp3adzknwc42m4@suse.slack.com";
     pull_request_number = "master";
-    first_env = 6;
-    last_env = 6;
-    additional_repo_url = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/reference_job_additional_repo";
-} else if (env.JOB_NAME == "uyuni-prs-ci-tests") {
-    first_env = 1;
+    first_env = 4;
     last_env = 4;
+    additional_repo_url = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/reference_job_additional_repo";
 } else if (env.JOB_NAME == "suma43-prs-ci-tests") {
     first_env =5;
     last_env = 5;
@@ -86,8 +68,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     cucumber_ref = "Manager-4.3";
     pull_request_number = "Manager-4.3";
     product_version = "manager43";
-    first_env =9;
-    last_env = 9;
+    first_env = 6;
+    last_env = 6;
     // spacewalk suma43 settings
     // TODO: what happens if we change the environment? Will it break the environment??
     server_release_package = '000product:sle-module-suse-manager-server-release'
