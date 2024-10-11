@@ -95,6 +95,5 @@ def main():
     issues: list[dict] = ibs_client.get_issues_list(missing_subs, **query_params)
     store_results(issues, output_file, output_format)
 
-
 if __name__ == '__main__':
     main()
