@@ -45,8 +45,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     // email aliases for slack channel discuss-susemanager-pr-tests-results
     email_to = "discuss-susemanager-p-aaaag32rrv4bcp3adzknwc42m4@suse.slack.com";
     pull_request_number = "master";
-    first_env = 9;
-    last_env = 9;
+    first_env = 6;
+    last_env = 6;
     additional_repo_url = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/reference_job_additional_repo";
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests") {
     first_env = 1;
@@ -86,8 +86,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests-jordi") {
     cucumber_ref = "Manager-4.3";
     pull_request_number = "Manager-4.3";
     product_version = "manager43";
-    first_env =6;
-    last_env = 6;
+    first_env =9;
+    last_env = 9;
     // spacewalk suma43 settings
     // TODO: what happens if we change the environment? Will it break the environment??
     server_release_package = '000product:sle-module-suse-manager-server-release'
