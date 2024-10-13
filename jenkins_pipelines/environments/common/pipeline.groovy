@@ -31,7 +31,7 @@ def run(params) {
             }
             // The 2obs jobs are releng, not dev
             prefix = prefix.replaceAll("-dev", "-releng")
-            def request = httpRequest "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
+            def request = httpRequest ignoreSslErrors: true url: "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
             def requestJson = readJSON text: request.getContent()
             product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
             product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
