@@ -32,7 +32,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests") {
     pull_request_number = "master";
     first_env = 4;
     last_env = 4;
-    additional_repo_url = "http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/reference_job_additional_repo";
+    additional_repo_url = "http://minima-mirror-ci-bv.${domain}/pull-request-repositories/reference_job_additional_repo";
 } else if (env.JOB_NAME == "suma43-prs-ci-tests") {
     first_env =5;
     last_env = 5;
