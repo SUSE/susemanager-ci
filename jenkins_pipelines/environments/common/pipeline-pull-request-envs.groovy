@@ -19,8 +19,8 @@ other_build_repo = 'openSUSE_Leap_15.5'
 url_prefix="https://ci.suse.de/view/Manager/view/Uyuni/job/${env.JOB_NAME}"
 product_name = "Uyuni"
 short_product_name = "suma"
-update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates/"
-additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy/"
+update_repo = "http://minima-mirror-ci-bv.${domain}/jordi/some-updates/"
+additional_repo = "http://minima-mirror-ci-bv.${domain}/jordi/dummy/"
 build_packages = true
 
 if (env.JOB_NAME == "uyuni-prs-ci-tests") {
@@ -58,8 +58,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests") {
     url_prefix="https://ci.suse.de/view/Manager/view/Manager-4.3/job/${env.JOB_NAME}"
     product_name = "SUSE-Manager-4.3"
     short_product_name = "suma43"
-    update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates43/"
-    additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy43/"
+    update_repo = "http://minima-mirror-ci-bv.${domain}/jordi/some-updates43/"
+    additional_repo = "http://minima-mirror-ci-bv.${domain}/jordi/dummy43/"
     rn_package = "release-notes-susemanager"
     rn_project = "Devel:Galaxy:Manager:4.3:ToSLE"
 } else if (env.JOB_NAME == "suma43-prs-ci-tests-reference") {
@@ -92,8 +92,8 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests") {
     url_prefix="https://ci.suse.de/view/Manager/view/Manager-4.3/job/${env.JOB_NAME}"
     product_name = "SUSE-Manager-4.3"
     short_product_name = "suma43"
-    update_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/some-updates43/"
-    additional_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/jordi/dummy43/"
+    update_repo = "http://minima-mirror-ci-bv.${domain}/jordi/some-updates43/"
+    additional_repo = "http://minima-mirror-ci-bv.${domain}/jordi/dummy43/"
     rn_package = "release-notes-susemanager"
     rn_project = "Devel:Galaxy:Manager:4.3:ToSLE"
 } else {

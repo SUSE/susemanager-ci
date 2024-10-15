@@ -35,6 +35,14 @@ node('pull-request-test-nue') {
         first_env = 1;
         last_env = 10;
         email_to = params.email_to;
+        if (platform_localisation == "NUE") {
+          domain = "mgr.suse.de"
+	} else if (platform_localisation == "PRV") {
+          domain = "mgr.prv.suse.net"
+        } else {
+          print("Platform not supporeted");
+          sh "exit 1"
+        }
         run_all_scopes = params.run_all_scopes;
         pull_request_number = params.pull_request_number.trim();
         additional_repo_url = params.additional_repo_url;
