@@ -4,7 +4,7 @@ import logging
 from typing import Any
 from ibs_osc_client import IbsOscClient
 
-FORMATS_DEFAULT_FILE_NAMES: dict[str, str] = {
+_FORMATS_DEFAULT_FILE_NAMES: dict[str, str] = {
     "json": "smash_issues_list.json",
     "txt": "smash_issues_list.txt"
 }
@@ -71,7 +71,7 @@ def store_results(issues: list[dict], output_file: str, output_format: str):
             issues_links: list[str] = [ issue_to_bsc_link(issue) for issue in issues if issue ]
             f.writelines(issues_links)
         else:
-            raise ValueError(f"Invalid output format: {output_format} - supported formats {FORMATS_DEFAULT_FILE_NAMES.keys()}")
+            raise ValueError(f"Invalid output format: {output_format} - supported formats {_FORMATS_DEFAULT_FILE_NAMES.keys()}")
     
 def cli_args_to_query_params(args: argparse.Namespace) -> dict[str, str|bool]:
     query_params: dict[str, str|bool] = { k: v for k, v in vars(args).items() if v is not None }
@@ -88,7 +88,7 @@ def main():
     ibs_client: IbsOscClient = IbsOscClient(args.smash_token)
 
     output_format: str = args.output_format
-    output_file: str = args.output_file if args.output_file else FORMATS_DEFAULT_FILE_NAMES[output_format]
+    output_file: str = args.output_file if args.output_file else _FORMATS_DEFAULT_FILE_NAMES[output_format]
     missing_subs: bool = args.missing_subs
     query_params: dict[str, str|bool] = cli_args_to_query_params(args)
 

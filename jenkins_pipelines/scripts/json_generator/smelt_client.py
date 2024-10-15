@@ -4,12 +4,12 @@ import requests
 
 # an online tool, GraphiQL, is available at the same URL and allows to see the API Schema and
 # write, validate and test GraphQL queries
-SMELT_GRAPHQL_API_URL: str = "https://smelt.suse.de/graphql/"
+_SMELT_GRAPHQL_API_URL: str = "https://smelt.suse.de/graphql/"
 
 class SmeltGraphQLClient():
 
-    def __init__(self):
-        self._api_url: str = SMELT_GRAPHQL_API_URL
+    def __init__(self, api_url: str = _SMELT_GRAPHQL_API_URL):
+        self._api_url: str = api_url
 
     def find_products(self, contains) -> list[dict, Any]:
         query: str = f'''{{

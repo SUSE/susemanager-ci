@@ -3,79 +3,82 @@ from os import path, remove
 import sys
 import unittest
 
-from bsc_list_generator.bsc_finder import parse_cli_args, get_bugzilla_product, bugs_to_links_list, store_results, BUGZILLA_SHOW_BUG_URL
-
-_MOCK_BUGS: dict[str, list[dict]] = {
-    "Test Product": [
-        {
-            "classification": "Test",
-            "component": "Test components",
-            "creation_time": "2024-01-01T00:00:00Z",
-            "creator": "tester@suse.com",
-            "deadline": None,
-            "depends_on": [],
-            "id": 1,
-            "is_cc_accessible": True,
-            "is_confirmed": True,
-            "is_creator_accessible": True,
-            "is_open": True,
-            "priority": "P3 - Medium",
-            "product": "Test Product",
-            "remaining_time": 0,
-            "resolution": "",
-            "severity": "Normal",
-            "status": "CONFIRMED",
-            "summary": "Test BSC 1",
-            "version": "Test"
-        },
-        {
-            "classification": "Test",
-            "component": "Test components",
-            "creation_time": "2024-02-02T00:00:00Z",
-            "creator": "tester@suse.com",
-            "deadline": None,
-            "depends_on": [],
-            "id": 2,
-            "is_cc_accessible": True,
-            "is_confirmed": True,
-            "is_creator_accessible": True,
-            "is_open": True,
-            "priority": "P2 - High",
-            "product": "Test Product",
-            "remaining_time": 0,
-            "resolution": "",
-            "severity": "Critical",
-            "status": "CONFIRMED",
-            "summary": "Test BSC 2",
-            "version": "Test"
-        },
-    ],
-    "Test Product in Public Clouds": [
-        {
-            "classification": "Test",
-            "component": "Test components",
-            "creation_time": "2024-03-03T00:00:00Z",
-            "creator": "tester@suse.com",
-            "deadline": None,
-            "depends_on": [],
-            "id": 3,
-            "is_cc_accessible": True,
-            "is_confirmed": True,
-            "is_creator_accessible": True,
-            "is_open": True,
-            "priority": "P4 - Low",
-            "product": "Test Product",
-            "remaining_time": 0,
-            "resolution": "",
-            "severity": "Low",
-            "status": "CONFIRMED",
-            "summary": "Test BSC 3",
-            "version": "Test"
-        }
-    ]
-}
+from bsc_list_generator.bsc_finder import parse_cli_args, get_bugzilla_product, bugs_to_links_list, store_results
+from bsc_list_generator.bugzilla_client import BugzillaClient
 
 class BscFinderTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.bugzilla_client: BugzillaClient = BugzillaClient("test_key")
+        self.mock_bugs: dict[str, list[dict]] = {
+            "Test Product": [
+                {
+                    "classification": "Test",
+                    "component": "Test components",
+                    "creation_time": "2024-01-01T00:00:00Z",
+                    "creator": "tester@suse.com",
+                    "deadline": None,
+                    "depends_on": [],
+                    "id": 1,
+                    "is_cc_accessible": True,
+                    "is_confirmed": True,
+                    "is_creator_accessible": True,
+                    "is_open": True,
+                    "priority": "P3 - Medium",
+                    "product": "Test Product",
+                    "remaining_time": 0,
+                    "resolution": "",
+                    "severity": "Normal",
+                    "status": "CONFIRMED",
+                    "summary": "Test BSC 1",
+                    "version": "Test"
+                },
+                {
+                    "classification": "Test",
+                    "component": "Test components",
+                    "creation_time": "2024-02-02T00:00:00Z",
+                    "creator": "tester@suse.com",
+                    "deadline": None,
+                    "depends_on": [],
+                    "id": 2,
+                    "is_cc_accessible": True,
+                    "is_confirmed": True,
+                    "is_creator_accessible": True,
+                    "is_open": True,
+                    "priority": "P2 - High",
+                    "product": "Test Product",
+                    "remaining_time": 0,
+                    "resolution": "",
+                    "severity": "Critical",
+                    "status": "CONFIRMED",
+                    "summary": "Test BSC 2",
+                    "version": "Test"
+                },
+            ],
+            "Test Product in Public Clouds": [
+                {
+                    "classification": "Test",
+                    "component": "Test components",
+                    "creation_time": "2024-03-03T00:00:00Z",
+                    "creator": "tester@suse.com",
+                    "deadline": None,
+                    "depends_on": [],
+                    "id": 3,
+                    "is_cc_accessible": True,
+                    "is_confirmed": True,
+                    "is_creator_accessible": True,
+                    "is_open": True,
+                    "priority": "P4 - Low",
+                    "product": "Test Product",
+                    "remaining_time": 0,
+                    "resolution": "",
+                    "severity": "Low",
+                    "status": "CONFIRMED",
+                    "summary": "Test BSC 3",
+                    "version": "Test"
+                }
+            ]
+        }
         
     def test_parse_cli_args_default_values(self):
         # missing required api key
@@ -136,15 +139,15 @@ class BscFinderTestCase(unittest.TestCase):
     def test_bugs_to_link_list(self):
         expected_output: list[str] = [
             "## Test Product\n\n",
-            f"- [ ] [Bug 1]({BUGZILLA_SHOW_BUG_URL}?id=1) - P3 - Medium - (Test components) Test BSC 1\n",
-            f"- [ ] [Bug 2]({BUGZILLA_SHOW_BUG_URL}?id=2) - P2 - High - (Test components) Test BSC 2\n",
+            f"- [ ] [Bug 1]({self.bugzilla_client.show_bug_url}?id=1) - P3 - Medium - (Test components) Test BSC 1\n",
+            f"- [ ] [Bug 2]({self.bugzilla_client.show_bug_url}?id=2) - P2 - High - (Test components) Test BSC 2\n",
             "\n",
             "## Test Product in Public Clouds\n\n",
-            f"- [ ] [Bug 3]({BUGZILLA_SHOW_BUG_URL}?id=3) - P4 - Low - (Test components) Test BSC 3\n",
+            f"- [ ] [Bug 3]({self.bugzilla_client.show_bug_url}?id=3) - P4 - Low - (Test components) Test BSC 3\n",
             "\n"
         ]
 
-        links_list: list[str] = bugs_to_links_list(_MOCK_BUGS)
+        links_list: list[str] = bugs_to_links_list(self.mock_bugs, self.bugzilla_client.show_bug_url)
         self.assertListEqual(links_list, expected_output)
 
     def test_store_results(self):
@@ -152,11 +155,11 @@ class BscFinderTestCase(unittest.TestCase):
         test_output_txt_file: str = 'test_bsc_list.txt'
 
         # JSON output
-        store_results(_MOCK_BUGS, test_output_json_file, "json")
+        store_results(self.mock_bugs, test_output_json_file, "json")
         self.assertTrue(path.isfile(test_output_json_file))
         with open(test_output_json_file) as json_output:
             output_json: dict[str, dict[str, str]] = json.load(json_output)
-            self.assertDictEqual(_MOCK_BUGS, output_json)
+            self.assertDictEqual(self.mock_bugs, output_json)
 
         # cleanup
         remove(test_output_json_file)
@@ -165,16 +168,16 @@ class BscFinderTestCase(unittest.TestCase):
         expected_output: list[str] = [
             "## Test Product\n",
             "\n",
-            f"- [ ] [Bug 1]({BUGZILLA_SHOW_BUG_URL}?id=1) - P3 - Medium - (Test components) Test BSC 1\n",
-            f"- [ ] [Bug 2]({BUGZILLA_SHOW_BUG_URL}?id=2) - P2 - High - (Test components) Test BSC 2\n",
+            f"- [ ] [Bug 1]({self.bugzilla_client.show_bug_url}?id=1) - P3 - Medium - (Test components) Test BSC 1\n",
+            f"- [ ] [Bug 2]({self.bugzilla_client.show_bug_url}?id=2) - P2 - High - (Test components) Test BSC 2\n",
             "\n",
             "## Test Product in Public Clouds\n",
             "\n",
-            f"- [ ] [Bug 3]({BUGZILLA_SHOW_BUG_URL}?id=3) - P4 - Low - (Test components) Test BSC 3\n",
+            f"- [ ] [Bug 3]({self.bugzilla_client.show_bug_url}?id=3) - P4 - Low - (Test components) Test BSC 3\n",
             "\n"
         ]
 
-        store_results(_MOCK_BUGS, test_output_txt_file, "txt")
+        store_results(self.mock_bugs, test_output_txt_file, "txt", self.bugzilla_client.show_bug_url)
         self.assertTrue(path.isfile(test_output_txt_file))
         with open(test_output_txt_file) as txt_file:
             lines: list[str] = txt_file.readlines()

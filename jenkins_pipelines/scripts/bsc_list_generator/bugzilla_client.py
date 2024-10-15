@@ -1,24 +1,27 @@
 import requests
 from typing import Any
 
-BUGZILLA_BASE_URL = "https://bugzilla.suse.com"
-BUGZILLA_SHOW_BUG_URL = f"{BUGZILLA_BASE_URL}/show_bug.cgi"
-BUGZILLA_API_URL = f"{BUGZILLA_BASE_URL}/rest"
-BUGZILLA_BUGS_ENDPOINT = f"{BUGZILLA_API_URL}/bug"
+_SUSE_BUGZILLA_BASE_URL = "https://bugzilla.suse.com"
 
 class BugzillaClient:
 
-    def __init__(self, api_key):
-        self.base_url: str = BUGZILLA_API_URL
-        self.api_key: str = api_key
-        self.params: dict[str, Any] = { 'Bugzilla_api_key': self.api_key }
+    def __init__(self, api_key: str, base_url: str = _SUSE_BUGZILLA_BASE_URL, api_type: str = "rest"):
+        # private
+        self._api_key: str = api_key
+        self._base_url: str = base_url
+        self._api_url: str = f"{base_url}/{api_type}"
+        self._bugs_endpoint = f"{base_url}/{api_type}/bug"
+        self._params: dict[str, Any] = { 'Bugzilla_api_key': self._api_key }
+        # public 
+        self.show_bug_url: str = f"{base_url}/show_bug.cgi"
 
     def get_bugs(self, **kwargs) -> list[dict[str, Any]]:
         additional_params: dict[str, Any] = { k: v for k, v in kwargs.items() if v is not None }
-        response: requests.Response = requests.get(BUGZILLA_BUGS_ENDPOINT, params={**self.params, **additional_params})
+        response: requests.Response = requests.get(self._bugs_endpoint, params={**self._params, **additional_params})
         if not response.ok:
             response.raise_for_status()
 
         json_res: dict = response.json()
         bugs: list[dict[str, Any]] = json_res['bugs']
         return bugs
+    
