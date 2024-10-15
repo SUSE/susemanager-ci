@@ -351,7 +351,7 @@ def clientTestingStages() {
         tests["${node}"] = {
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
-            def temporaryList = nodesHandler.envVariableList.toList() - node.toUpperCase()
+            def temporaryList = nodesHandler.envVariableList.toList() - node.replaceAll('sles', 'sle').toUpperCase()
             def nodeTag = node.replace('sles1','sle1')
             stage("${node}") {
                 echo "Testing ${node}"
@@ -532,7 +532,7 @@ def getNodesHandler() {
     // This difference will be the nodes to disable
     def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }
     // Convert this list to cucumber compatible environment variable
-    def envVarDisabledNodes = disabledNodes.collect { it.toUpperCase() }
+    def envVarDisabledNodes = disabledNodes.collect { it.replaceAll('sles', 'sle').toUpperCase() }
     // Create a node list without the disabled nodes. ( use to configure the client stage )
     def nodeListWithDisabledNodes = nodeList - disabledNodes
     // Create a map storing mu synchronization state for each minion.

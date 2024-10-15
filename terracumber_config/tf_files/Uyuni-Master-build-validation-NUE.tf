@@ -216,11 +216,6 @@ module "proxy_containerized" {
     mac                = "aa:b2:93:02:01:a2"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-server.mgr.suse.de"
-    username = "admin"
-    password = "admin"
-  }
 
   runtime = "podman"
   container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers/uyuni"
@@ -240,9 +235,7 @@ module "sles12sp5_minion" {
     mac                = "aa:b2:93:02:01:b1"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
+
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -258,9 +251,6 @@ module "sles15sp2_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -276,9 +266,6 @@ module "sles15sp3_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -294,9 +281,6 @@ module "sles15sp4_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -312,9 +296,6 @@ module "sles15sp5_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -330,9 +311,6 @@ module "sles15sp6_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -347,15 +325,9 @@ module "alma8_minion" {
     mac                = "aa:b2:93:02:01:b9"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "alma9_minion" {
@@ -367,15 +339,9 @@ module "alma9_minion" {
     mac                = "aa:b2:93:02:01:c2"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "centos7_minion" {
@@ -387,15 +353,9 @@ module "centos7_minion" {
     mac                = "aa:b2:93:02:01:b7"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "liberty9_minion" {
@@ -407,15 +367,9 @@ module "liberty9_minion" {
     mac                = "aa:b2:93:02:01:c5"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "oracle9_minion" {
@@ -427,15 +381,9 @@ module "oracle9_minion" {
     mac                = "aa:b2:93:02:01:c3"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "rocky8_minion" {
@@ -448,15 +396,9 @@ module "rocky8_minion" {
 
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "rocky9_minion" {
@@ -468,15 +410,9 @@ module "rocky9_minion" {
     mac                = "aa:b2:93:02:01:c1"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "ubuntu2004_minion" {
@@ -488,16 +424,10 @@ module "ubuntu2004_minion" {
     mac                = "aa:b2:93:02:01:ba"
     memory             = 4096
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "ubuntu2204_minion" {
@@ -508,9 +438,6 @@ module "ubuntu2204_minion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:bb"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -525,9 +452,6 @@ module "ubuntu2404_minion" {
   provider_settings = {
     mac                = "aa:b2:93:02:01:bd"
     memory             = 4096
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -544,9 +468,6 @@ module "debian11_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -562,15 +483,9 @@ module "debian12_minion" {
     memory             = 4096
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "opensuse155arm_minion" {
@@ -587,9 +502,6 @@ module "opensuse155arm_minion" {
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -610,9 +522,6 @@ module "opensuse156arm_minion" {
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -666,9 +575,6 @@ module "slemicro51_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -687,9 +593,6 @@ module "slemicro52_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -708,9 +611,6 @@ module "slemicro53_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -729,9 +629,6 @@ module "slemicro54_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -750,9 +647,6 @@ module "slemicro55_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -771,9 +665,6 @@ module "slmicro60_minion" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -874,8 +765,6 @@ module "alma8_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "alma9_sshminion" {
@@ -889,9 +778,6 @@ module "alma9_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "centos7_sshminion" {
@@ -905,9 +791,6 @@ module "centos7_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "liberty9_sshminion" {
@@ -921,9 +804,6 @@ module "liberty9_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "oracle9_sshminion" {
@@ -937,9 +817,6 @@ module "oracle9_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "rocky8_sshminion" {
@@ -953,9 +830,6 @@ module "rocky8_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "rocky9_sshminion" {
@@ -969,9 +843,6 @@ module "rocky9_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "ubuntu2004_sshminion" {
@@ -986,9 +857,6 @@ module "ubuntu2004_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "ubuntu2204_sshminion" {
@@ -1041,9 +909,6 @@ module "debian12_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
 module "opensuse155arm_sshminion" {
@@ -1196,10 +1061,6 @@ module "sles12sp5_buildhost" {
     memory             = 2048
     vcpu               = 2
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -1230,10 +1091,6 @@ module "sles15sp4_buildhost" {
     memory             = 2048
     vcpu               = 2
   }
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
@@ -1263,9 +1120,6 @@ module "monitoring_server" {
     memory             = 2048
   }
 
-  server_configuration = {
-    hostname = "uyuni-bv-master-proxy.mgr.suse.de"
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
