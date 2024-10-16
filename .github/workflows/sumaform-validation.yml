@@ -53,6 +53,7 @@ jobs:
           TF_VAR_DEBLIKE_CLIENT_REPO: ""
           TF_VAR_OPENSUSE_CLIENT_REPO: ""
           TF_VAR_ZVM_ADMIN_TOKEN: ""
+          TF_VAR_CONTAINER_REPOSITORY: ""
         run: |
           # Install feilong provider
           srcdir=/home/runner/work/susemanager-ci/susemanager-ci/
