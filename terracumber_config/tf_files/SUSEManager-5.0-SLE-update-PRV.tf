@@ -64,6 +64,10 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "CONTAINER_REPOSITORY" {
+  type = string
+}
+
 variable "GIT_USER" {
   type = string
   default = null
@@ -125,7 +129,7 @@ module "server_containerized" {
   main_disk_size        = 1500
   runtime               = "podman"
   // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
-  container_repository  = "registry.suse.de/suse/maintenance/347951/suse_sle-15-sp6_update_products_manager50_update_containerfile"
+  container_repository  = var.CONTAINER_REPOSITORY
   container_tag         = "latest"
   server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
 
@@ -165,7 +169,7 @@ module "proxy_containerized" {
 
   runtime              = "podman"
   // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
-  container_repository = "registry.suse.de/suse/maintenance/347951/suse_sle-15-sp6_update_products_manager50_update_containerfile"
+  container_repository = var.CONTAINER_REPOSITORY
   container_tag         = "latest"
 
   auto_configure            = false

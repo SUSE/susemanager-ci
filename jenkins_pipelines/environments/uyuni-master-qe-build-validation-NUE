@@ -39,6 +39,7 @@ node('sumaform-cucumber') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
+            string(name: 'container_repository', defaultValue: 'registry.opensuse.org/systemsmanagement/uyuni/master/containers', description: 'Proxy and server container registry'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
