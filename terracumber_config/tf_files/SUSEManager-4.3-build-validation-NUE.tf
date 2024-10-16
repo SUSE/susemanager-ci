@@ -1445,11 +1445,13 @@ module "controller" {
   centos7_minion_configuration    = module.centos7_minion.configuration
   centos7_sshminion_configuration = module.centos7_sshminion.configuration
 
- liberty9_minion_configuration    = module.liberty9_minion.configuration
- liberty9_sshminion_configuration = module.liberty9_sshminion.configuration
+  liberty9_minion_configuration    = module.liberty9_minion.configuration
+  liberty9_sshminion_configuration = module.liberty9_sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9_minion.configuration
   oracle9_sshminion_configuration = module.oracle9_sshminion.configuration
+
+  // rhel9 is tested only in AWS for legal reasons
 
   rocky8_minion_configuration    = module.rocky8_minion.configuration
   rocky8_sshminion_configuration = module.rocky8_sshminion.configuration
