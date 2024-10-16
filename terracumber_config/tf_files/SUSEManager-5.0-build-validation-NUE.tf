@@ -183,7 +183,6 @@ module "server_containerized" {
   }
   runtime = "podman"
   container_repository = var.CONTAINER_REPOSITORY
-  registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile
   main_disk_size        = 40
   repository_disk_size  = 3072
   database_disk_size    = 150
