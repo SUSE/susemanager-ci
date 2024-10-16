@@ -107,7 +107,7 @@ module "salt-shaker-products-next" {
   image              = "ubuntu2404o"
   salt_obs_flavor    = "saltstack:products:next"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:ef"
+    mac = "aa:b2:93:01:01:ee"
   }
 }
 
