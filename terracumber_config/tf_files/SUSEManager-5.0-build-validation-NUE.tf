@@ -182,10 +182,11 @@ module "server_containerized" {
     data_pool          = "ssd"
   }
   runtime = "podman"
-  container_repository = var.CONTAINER_REPOSITORY
+  container_repository  = var.CONTAINER_REPOSITORY
   main_disk_size        = 40
   repository_disk_size  = 3072
   database_disk_size    = 150
+  container_tag         = "latest"
 
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
   java_debugging                 = false
@@ -218,6 +219,7 @@ module "proxy_containerized" {
   }
   runtime                   = "podman"
   container_repository      = var.CONTAINER_REPOSITORY
+  container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 }
