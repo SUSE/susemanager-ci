@@ -64,6 +64,10 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "CONTAINER_REPOSITORY" {
+  type = string
+}
+
 variable "GIT_USER" {
   type = string
   default = null // Not needed for master, as it is public
@@ -178,7 +182,8 @@ module "server_containerized" {
     data_pool          = "ssd"
   }
   runtime = "podman"
-  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile"
+  container_repository = var.CONTAINER_REPOSITORY
+  registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile
   main_disk_size        = 40
   repository_disk_size  = 3072
   database_disk_size    = 150
@@ -212,8 +217,8 @@ module "proxy_containerized" {
     mac                = "aa:b2:92:42:00:52"
     memory             = 4096
   }
-  runtime = "podman"
-  container_repository = "registry.suse.de/suse/sle-15-sp6/update/products/manager50/containerfile"
+  runtime                   = "podman"
+  container_repository      = var.CONTAINER_REPOSITORY
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
 }
