@@ -340,6 +340,22 @@ module "ubuntu2004_minion" {
   }
 }
 
+module "rhel9_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  server_configuration = module.server.configuration
+  product_version    = "4.3-released"
+  name               = "min-rhel9"
+  image              = "rhel9"
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  install_salt_bundle = true
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
 module "rocky8_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -590,26 +606,6 @@ module "sles15sp6_sshminion" {
   }
 }
 
-module "rhel9_minion" {
-
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  server_configuration = module.server.configuration
-  product_version    = "4.3-released"
-  name               = "min-rhel9"
-  image              = "rhel9"
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  install_salt_bundle = true
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-
-  //rhel9-minion_additional_repos
-
-}
-
 module "ubuntu2204_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
@@ -690,6 +686,8 @@ module "controller" {
   sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
   sle15sp6_sshminion_configuration = module.sles15sp6_sshminion.configuration
 
+  rhel9_minion_configuration       = module.rhel9_minion.configuration
+
   rocky8_minion_configuration    = module.rocky8_minion.configuration
   rocky8_sshminion_configuration = module.rocky8_sshminion.configuration
 
@@ -704,9 +702,6 @@ module "controller" {
 
 //  debian12_minion_configuration    = module.debian12_minion.configuration
 //  debian12_sshminion_configuration = module.debian12_sshminion.configuration
-
-  rhel9_minion_configuration          = module.rhel9_minion.configuration
-
 }
 
 output "bastion_public_name" {
