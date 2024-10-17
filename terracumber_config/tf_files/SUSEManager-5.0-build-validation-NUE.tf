@@ -218,7 +218,8 @@ module "proxy_containerized" {
     memory             = 4096
   }
   runtime                   = "podman"
-  container_repository      = var.CONTAINER_REPOSITORY
+  // The proxy is not appending this path via product code, we need to do it in our infra
+  container_repository = "${var.CONTAINER_REPOSITORY}/suse/manager/5.0/x86_64"
   container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
@@ -1018,7 +1019,7 @@ module "sles15sp5s390_sshminion" {
 //   use_os_released_updates = false
 //   ssh_key_path            = "./salt/controller/id_rsa.pub"
 //
-//  
+//
 //
 //}
 
@@ -1034,7 +1035,7 @@ module "sles15sp5s390_sshminion" {
 //   }
 //   use_os_released_updates = false
 //   ssh_key_path            = "./salt/controller/id_rsa.pub"
-//  
+//
 //
 //}
 
@@ -1050,7 +1051,7 @@ module "sles15sp5s390_sshminion" {
 //   }
 //   use_os_released_updates = false
 //   ssh_key_path            = "./salt/controller/id_rsa.pub"
-//  
+//
 //
 //}
 
