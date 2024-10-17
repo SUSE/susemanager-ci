@@ -31,7 +31,7 @@ ENVIRONMENT_CONFIGURATION = {
       suse-minion    = "aa:b2:93:01:03:60"
       suse-sshminion = "aa:b2:93:01:03:61"
       rhlike-minion  = "aa:b2:93:01:03:62"
-      deblike-minion  = "aa:b2:93:01:03:64"
+      deblike-minion  = "aa:b2:93:01:03:63"
       build-host     = "aa:b2:93:01:03:65"
       kvm-host       = "aa:b2:93:01:03:66"
     }
@@ -48,7 +48,7 @@ ENVIRONMENT_CONFIGURATION = {
       suse-minion    = "aa:b2:93:01:03:6c"
       suse-sshminion = "aa:b2:93:01:03:6d"
       rhlike-minion  = "aa:b2:93:01:03:6e"
-      deblike-minion  = "aa:b2:93:01:03:70"
+      deblike-minion  = "aa:b2:93:01:03:6f"
       build-host     = "aa:b2:93:01:03:71"
       kvm-host       = "aa:b2:93:01:03:72"
     }
@@ -65,7 +65,7 @@ ENVIRONMENT_CONFIGURATION = {
       suse-minion    = "aa:b2:93:01:03:78"
       suse-sshminion = "aa:b2:93:01:03:79"
       rhlike-minion  = "aa:b2:93:01:03:7a"
-      deblike-minion  = "aa:b2:93:01:03:7c"
+      deblike-minion  = "aa:b2:93:01:03:7b"
       build-host     = "aa:b2:93:01:03:7d"
       kvm-host       = "aa:b2:93:01:03:7e"
     }
@@ -82,7 +82,7 @@ ENVIRONMENT_CONFIGURATION = {
       suse-minion    = "aa:b2:93:01:03:84"
       suse-sshminion = "aa:b2:93:01:03:85"
       rhlike-minion  = "aa:b2:93:01:03:86"
-      deblike-minion  = "aa:b2:93:01:03:88"
+      deblike-minion  = "aa:b2:93:01:03:87"
       build-host     = "aa:b2:93:01:03:89"
       kvm-host       = "aa:b2:93:01:03:8a"
     }
@@ -99,7 +99,7 @@ ENVIRONMENT_CONFIGURATION = {
       suse-minion    = "aa:b2:93:01:03:90"
       suse-sshminion = "aa:b2:93:01:03:91"
       rhlike-minion  = "aa:b2:93:01:03:92"
-      deblike-minion  = "aa:b2:93:01:03:94"
+      deblike-minion  = "aa:b2:93:01:03:93"
       build-host     = "aa:b2:93:01:03:95"
       kvm-host       = "aa:b2:93:01:03:96"
     }
