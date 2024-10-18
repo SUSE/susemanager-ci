@@ -167,18 +167,6 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
     }
-    kvm-host = {
-      image = var.IMAGE
-      name = "min-kvm"
-      
-      provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
-      }
-      additional_repos_only = var.ADDITIONAL_REPOS_ONLY
-      additional_repos = local.additional_repos["kvm-host"]
-      additional_packages = [ "venv-salt-minion", "mkisofs" ]
-      install_salt_bundle = true
-    }
   }
   
   provider_settings = {
