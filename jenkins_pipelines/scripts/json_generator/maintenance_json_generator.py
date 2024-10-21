@@ -185,7 +185,7 @@ v50_nodes: dict[str, set[str]] = {
     "server": {"/SUSE_Products_SUSE-Manager-Server_5.0_x86_64/",
                "/SUSE_Updates_SUSE-Manager-Server_5.0_x86_64/"},
     "proxy": {"/SUSE_Products_SUSE-Manager-Proxy_5.0_x86_64/",
-              "/SUSE_Updates_SUSE-Manager-Proxy_5.0_x86_64/"
+              "/SUSE_Updates_SUSE-Manager-Proxy_5.0_x86_64/",
               "/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
               "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/",
               "/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
