@@ -9,6 +9,7 @@ def run(params) {
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
         def tf_file = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/main.tf"
+        def container_repository = params.container_repository ?: null
 
         // Variables to store none critical stage run status
 
@@ -84,7 +85,7 @@ def run(params) {
                     }
                 }
                 // Run Terracumber to deploy the environment
-                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CONTAINER_REPOSITORY=${container_repository}; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --runstep provision"
             }
 
             stage('Sanity check') {
