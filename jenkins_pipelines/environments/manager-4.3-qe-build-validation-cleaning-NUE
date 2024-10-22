@@ -35,7 +35,7 @@ node('sumaform-cucumber') {
             // Temporary: should move to uyuni-project
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
-            string(name: 'container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy and server container registry')
+            string(name: 'container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy and server container registry'),
             string(name: 'manager_hostname', defaultValue: 'suma-bv-43-srv.mgr.suse.de', description: 'Manager hostname'),
             extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
                     value: minionList,
