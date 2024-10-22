@@ -377,8 +377,7 @@ module "proxy_containerized" {
     password = "admin"
   }
   runtime                   = "podman"
-  // The proxy is not appending this path via product code, we need to do it in our infra
-  container_repository = "${var.CONTAINER_REPOSITORY}/suse/manager/5.0/x86_64"
+  container_repository = "${var.CONTAINER_REPOSITORY}"
   container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
