@@ -35,10 +35,11 @@ node('pull-request-test-nue') {
         first_env = 1;
         last_env = 10;
         email_to = params.email_to;
+        pipeline_node = ""
         if (platform_localisation == "NUE") {
-          domain = "mgr.suse.de"
+          pipeline_node = "pull-request-test-nue"
 	} else if (platform_localisation == "PRV") {
-          domain = "mgr.prv.suse.net"
+          pipeline_node = "pull-request-test"
         } else {
           print("Platform not supporeted");
           sh "exit 1"
@@ -67,7 +68,9 @@ node('pull-request-test-nue') {
           }
         }
         echo "DEBUG: Secondary test tags: ${secondary_exports}"
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline-pull-request.groovy"
-        pipeline.run(params)
+        node(pipeline_node) {
+          def pipeline = load "jenkins_pipelines/environments/common/pipeline-pull-request.groovy"
+          pipeline.run(params)
+        }
     }
 }
