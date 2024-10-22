@@ -381,6 +381,9 @@ module "proxy_containerized" {
   container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
+
+  //proxy_additional_repos
+
 }
 
 module "sles12sp5_minion" {
