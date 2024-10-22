@@ -4,7 +4,7 @@ locals {
       pull_request_repo = "${var.PULL_REQUEST_REPO}"
       master_repo = "${var.MASTER_REPO}"
       master_repo_other = "${var.MASTER_OTHER_REPO}"
-      master_sumaform_tools_repo = "${var.MASTER_SUMAFORM_TOOLS_REPO}"
+      // master_sumaform_tools_repo = "${var.MASTER_SUMAFORM_TOOLS_REPO}"
       test_packages_repo = "${var.TEST_PACKAGES_REPO}"
       non_os_pool = "http://${var.MIRROR}/distribution/leap/15.5/repo/non-oss/"
       os_pool = "http://${var.MIRROR}/distribution/leap/15.5/repo/oss/"
@@ -16,7 +16,7 @@ locals {
       pull_request_repo = "${var.PULL_REQUEST_REPO}"
       master_repo = "${var.MASTER_REPO}"
       master_repo_other = "${var.MASTER_OTHER_REPO}"
-      master_sumaform_tools_repo = "${var.MASTER_SUMAFORM_TOOLS_REPO}"
+      // master_sumaform_tools_repo = "${var.MASTER_SUMAFORM_TOOLS_REPO}"
       test_packages_repo = "${var.TEST_PACKAGES_REPO}"
       non_os_pool = "http://${var.MIRROR}/distribution/leap/15.5/repo/non-oss/"
       os_pool = "http://${var.MIRROR}/distribution/leap/15.5/repo/oss/"
@@ -31,7 +31,7 @@ locals {
     }
     kvm-host = {
       client_repo = "${var.OPENSUSE_CLIENT_REPO}"
-      master_sumaform_tools_repo = "${var.MASTER_SUMAFORM_TOOLS_REPO}"
+      // master_sumaform_tools_repo = "${var.MASTER_SUMAFORM_TOOLS_REPO}"
       test_packages_repo = "${var.TEST_PACKAGES_REPO}"
       non_os_pool = "http://${var.MIRROR}/distribution/leap/15.5/repo/non-oss/"
       os_pool = "http://${var.MIRROR}/distribution/leap/15.5/repo/oss/"
