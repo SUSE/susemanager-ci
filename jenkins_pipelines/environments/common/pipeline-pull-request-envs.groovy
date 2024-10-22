@@ -1,4 +1,14 @@
 // Default to uyuni
+
+domain = ""
+if (params.platform_localisation == "NUE") {
+  domain = "mgr.suse.de"
+} else if (params.platform_localisation == "PRV") {
+  domain = "mgr.prv.suse.net"
+} else {
+  print("Platform not supporeted");
+  sh "exit 1"
+}
 server_release_package = '000product:Uyuni-Server-release'
 proxy_release_package = '000product:Uyuni-Proxy-release'
 pull_request_repo = 'https://github.com/uyuni-project/uyuni.git'
