@@ -35,17 +35,17 @@ build_packages = true
 
 if (env.JOB_NAME == "uyuni-prs-ci-tests") {
     first_env = 1;
-    last_env = 5;
+    last_env = 4;
 } else if (env.JOB_NAME == "uyuni-prs-ci-tests-reference") {
     // email aliases for slack channel discuss-susemanager-pr-tests-results
     email_to = "discuss-susemanager-p-aaaag32rrv4bcp3adzknwc42m4@suse.slack.com";
     pull_request_number = "master";
-    first_env = 6;
-    last_env = 6;
+    first_env = 5;
+    last_env = 5;
     additional_repo_url = "http://minima-mirror-ci-bv.${domain}/pull-request-repositories/reference_job_additional_repo";
 } else if (env.JOB_NAME == "suma43-prs-ci-tests") {
-    first_env = 1;
-    last_env = 5;
+    first_env = 6;
+    last_env = 6;
     // spacewalk suma43 settings
     // TODO: what happens if we change the environment? Will it break the environment??
     server_release_package = '000product:sle-module-suse-manager-server-release'
