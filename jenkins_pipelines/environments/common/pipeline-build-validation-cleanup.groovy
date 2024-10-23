@@ -106,12 +106,6 @@ def run(params) {
                     sh "mv ${env.resultdir}/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate.old"
                 }
             }
-
-            stage('Save TF state') {
-                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
-                }
-            }
         }
     }
 }
