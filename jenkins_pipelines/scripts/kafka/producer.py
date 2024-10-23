@@ -1,4 +1,3 @@
-
 import confluent_kafka
 import requests
 

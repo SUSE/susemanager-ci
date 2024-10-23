@@ -74,14 +74,19 @@ class KafkaConsumer:
             str(incident['incident']['incident_id'])
             for incident in incidents['data']
         )
-        subprocess.run(
-            [
-                "python3",
-                "susemanager-ci/jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py",
-                "-i", incident_numbers
-            ],
-            check=True
-        )
+        try:
+            subprocess.run(
+                [
+                    "python3",
+                    "susemanager-ci/jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py",
+                    "-i", incident_numbers
+                ],
+                check=True
+            )
+        except subprocess.CalledProcessError:
+            susemanager_ci_latest_commit = git.Repo('/home/appuser/susemanager-ci').head.commit
+            logging.error(f"Cannot generate JSON file on the {susemanager_ci_latest_commit} commit of susemanager-ci repository with {incident_numbers} MI IDs")
+
 
     def run_jenkins_pipeline(self) -> int | None:
         instances_involved = ['server', 'proxy', 'sle15sp4_client', 'sle15sp4_minion']
@@ -124,7 +129,7 @@ class KafkaConsumer:
         }
 
         request = self.api_clients.post(
-            'https://ci.suse.de/job/manager-4.3-qe-sle-update/buildWithParameters',
+            'https://ci.suse.de/job/manager-4.3-qe-sle-update-NUE/buildWithParameters',
             params=build_parameters
         )
 
@@ -143,11 +148,11 @@ class KafkaConsumer:
             logging.error(f'Request is too big, perhaps too many RRs to be accepted generated big JSON, run pipeline manually using generated custom_repositories.json in {os.getcwd()}')
         return None
 
-    def pipeline_status(self):
-        return not self.api_clients.get(f'https://ci.suse.de/job/manager-4.3-qe-sle-update/api/json').json()['color'] == 'disabled'
+    def pipeline_enabled(self) -> bool:
+        return not self.api_clients.get(f'https://ci.suse.de/job/manager-4.3-qe-sle-update-NUE/api/json').json()['color'] == 'disabled'
 
     def build_status(self, build_number: int) -> str:
-        request = self.api_clients.get(f'https://ci.suse.de/job/manager-4.3-qe-sle-update/{build_number}/api/json')
+        request = self.api_clients.get(f'https://ci.suse.de/job/manager-4.3-qe-sle-update-NUE/{build_number}/api/json')
         response = request.json()
         if response['inProgress']:
             return 'INPROGRESS'
@@ -159,10 +164,10 @@ class KafkaConsumer:
             for incident in incidents['data']
         ]
         message = {
-            'message': f'SLE MU pipeline https://ci.suse.de/job/manager-4.3-qe-sle-update/{build_number} has status: {status} with the following requests: {mu_requests}'
+            'message': f'SLE MU pipeline https://ci.suse.de/job/manager-4.3-qe-sle-update-NUE/{build_number} has status: {status} with the following requests: {mu_requests}'
         }
         self.api_clients.post(
-            'https://hooks.slack.com/triggers/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',
+            f"https://hooks.slack.com/triggers/{os.getenv('SLACK_API_URL_APPENDIX')}",
             data=message
         )
 
@@ -171,7 +176,7 @@ class KafkaConsumer:
         try:
             while True:
                 time.sleep(300)
-                if self.pipeline_status() or build_number:
+                if self.pipeline_enabled() or build_number:
                     if build_number:
                         status = self.build_status(build_number)
                         logging.info(f'Pipeline build {build_number} STATUS: {status}')

@@ -1,6 +1,6 @@
 # Kafka automation concept
 
-Messaging system to speed up business processes via services API.
+Messaging system to automate manual tasks with SUSE internal services via API.
 
 ## Requirements
 
@@ -13,6 +13,7 @@ Tested on the SLE 15 SP6 host deployed in a fully trusted environment with the f
 
 The following environment variables need to be exported on the container's host:
 * [`JENKINS_API_TOKEN`](https://ci.suse.de/user/manager/configure).
+* [`SLACK_API_URL_APPENDIX`](https://app.slack.com/client/T02863RC2AC/platform) (_in the form of `"T02863RC2AC/<alphanumeric data>/<alphanumeric data>"`_).
 
 ### Networking
 
@@ -42,7 +43,7 @@ docker run --env JENKINS_API_TOKEN=${JENKINS_API_TOKEN} --network "host" kafka
 
 * `sle_mu_43`:
   1. Pulls the latest [MU requests](https://smelt.suse.de/overview/) to be accepted and generates json based on the latest [susemanager-ci](https://github.com/SUSE/susemanager-ci/tree/master) scripts.
-  2. Start a [new manager-4.3-qe-sle-update pipeline](https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-sle-update/) and monitors the status running.
+  2. Start a [new manager-4.3-qe-sle-update pipeline](https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-sle-update-NUE/) and monitors the status running.
   3. Send message to the dedicated Slack channel [andy-test](https://app.slack.com/client/T02863RC2AC/C033KJKDF9V) informing about the status.
 
   ⚠️ _Producing script should be integrated to the https://smelt.suse.de site, at the moment it is sending requests from container_.
