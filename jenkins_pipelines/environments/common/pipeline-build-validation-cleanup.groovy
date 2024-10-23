@@ -98,6 +98,8 @@ def run(params) {
             stage('Copy back tfstate') {
                 // Copy  back the tftstate to targeted project
                 sh "cp ${env.resultdir}/sumaform/terraform.tfstate /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
+            }
+            stage('Rename tfstate to avoid copying it between runs') {
                 sh "mv ${env.resultdir}/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate.old"
             }
             stage('Save TF state') {
