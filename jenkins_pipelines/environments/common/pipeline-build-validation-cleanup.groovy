@@ -96,16 +96,31 @@ def run(params) {
         }
         finally {
             stage('Copy back tfstate') {
-                // Copy  back the tftstate to targeted project
-                sh "cp ${env.resultdir}/sumaform/terraform.tfstate /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
-            }
-            stage('Rename tfstate to avoid copying it between runs') {
-                sh "mv ${env.resultdir}/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate.old"
-            }
-            stage('Save TF state') {
-                archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+                try {
+                    // Copy back the terraform state file to the targeted project
+                    sh "cp ${env.resultdir}/sumaform/terraform.tfstate /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
+                } catch (Exception e) {
+                    echo "Warning: Failed to copy back tfstate. Error: ${e}"
+                }
             }
 
+            stage('Rename tfstate to avoid copying it between runs') {
+                try {
+                    // Rename the terraform state file to avoid copying it between runs
+                    sh "mv ${env.resultdir}/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate.old"
+                } catch (Exception e) {
+                    echo "Warning: Failed to rename tfstate. Error: ${e}"
+                }
+            }
+
+            stage('Save TF state') {
+                try {
+                    // Archive the terraform state and other related files
+                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+                } catch (Exception e) {
+                    echo "Warning: Failed to archive TF state. Error: ${e}"
+                }
+            }
         }
     }
 }
