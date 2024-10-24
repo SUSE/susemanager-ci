@@ -101,7 +101,7 @@ class KafkaConsumer:
         build_parameters = {
             'cucumber_gitrepo': 'https://github.com/SUSE/spacewalk.git',
             'cucumber_ref': 'Manager-4.3',
-            'tf_file': 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.3-SLE-update.tf',
+            'tf_file': 'susemanager-ci/terracumber_config/tf_files/SUSEManager-4.3-SLE-update-NUE.tf',
             'sumaform_gitrepo': 'https://github.com/uyuni-project/sumaform.git',
             'sumaform_ref': 'master',
             'sumaform_backend': 'libvirt',
@@ -110,7 +110,7 @@ class KafkaConsumer:
             'terraform_parallelism': '',
             'terracumber_gitrepo': 'https://github.com/uyuni-project/terracumber.git',
             'terracumber_ref': 'master',
-            'minions_to_run': 'sle15sp4_minion',
+            'minions_to_run': 'sles15sp4_minion',
             'use_previous_terraform_state': 'false',
             'must_deploy': 'true',
             'must_run_core': 'true',

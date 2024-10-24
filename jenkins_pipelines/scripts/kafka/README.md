@@ -36,7 +36,7 @@ docker build . --tag "kafka"
 With exported `JENKINS_API_TOKEN`, run `kafka` container:
 
 ```bash
-docker run --env JENKINS_API_TOKEN=${JENKINS_API_TOKEN} --network "host" kafka
+docker run --name "kafka" --env JENKINS_API_TOKEN=${JENKINS_API_TOKEN} --env SLACK_API_URL_APPENDIX=${SLACK_API_URL_APPENDIX} --network "host" kafka
 ```
 
 ### Topics Available
