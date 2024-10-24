@@ -33,7 +33,7 @@ Being in the `susemanager-ci/jenkins_pipelines/scripts/kafka` catalog, build `ka
 docker build . --tag "kafka"
 ```
 
-With exported `JENKINS_API_TOKEN`, run `kafka` container:
+With exported `JENKINS_API_TOKEN` and `SLACK_API_URL_APPENDIX`, run `kafka` container:
 
 ```bash
 docker run --name "kafka" --env JENKINS_API_TOKEN=${JENKINS_API_TOKEN} --env SLACK_API_URL_APPENDIX=${SLACK_API_URL_APPENDIX} --network "host" kafka
