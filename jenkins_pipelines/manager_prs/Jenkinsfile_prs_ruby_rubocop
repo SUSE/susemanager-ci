@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 properties([
-        buildDiscarder(logRotator(numToKeepStr: '500'))
+    buildDiscarder(logRotator(numToKeepStr: '500'))
 ])
 
 pipeline {
@@ -27,12 +27,15 @@ pipeline {
         gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro/gitarro.rb'
         runtest = "${gitarro_common_params} -u ${env.BUILD_URL}"
-
     }
+
     agent { label 'suse-manager-unit-tests' }
 
     stages {
         stage('Clean Up Workspace') {
+            when {
+                changeset "**/*.rb"
+            }
             steps {
                 echo 'Clean up previous workspace'
                 cleanWs()
@@ -51,12 +54,15 @@ pipeline {
             }
         }
         stage('Run tests against PR') {
+            when {
+                changeset "**/*.rb"
+            }
             steps {
                 echo 'Run tests!'
                 script {
                     commands = "${gitarro_cmd} ${runtest}"
                     if (params.GITARRO_PR_NUMBER != '') {
-                            commands = "${gitarro_local} ${runtest}"
+                        commands = "${gitarro_local} ${runtest}"
                     }
                     if (params.PR_NUMBER != '') {
                         commands = "${commands} -P ${params.PR_NUMBER}"
