@@ -34,7 +34,9 @@ pipeline {
     stages {
         stage('Clean Up Workspace') {
             when {
-                changeset "**/*.rb"
+                anyOf {
+                    changeset "**/*.rb"
+                }
             }
             steps {
                 echo 'Clean up previous workspace'
@@ -55,7 +57,9 @@ pipeline {
         }
         stage('Run tests against PR') {
             when {
-                changeset "**/*.rb"
+                anyOf {
+                    changeset "**/*.rb"
+                }
             }
             steps {
                 echo 'Run tests!'
