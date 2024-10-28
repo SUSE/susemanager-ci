@@ -12,8 +12,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Manage SUSE Manager API actions.")
     parser.add_argument("--url", required=True, help="The URL of the SUSE Manager XML-RPC API.")
     parser.add_argument("--mode", choices=["delete_users", "delete_activation_keys", "delete_config_projects", "delete_software_channels", "delete_systems", "delete_repositories", "full_cleanup", "delete_salt_keys", "delete_known_hosts", "update_custom_repositories"], help="The mode of operation.")
-    parser.add_argument('--tf-resources-to-delete', type=str, nargs='*', choices=['proxy', 'monitoring-server', 'retail'], default=[],
+    parser.add_argument("--tf-resources-to-delete", type=str, nargs='*', choices=['proxy', 'monitoring-server', 'retail'], default=[],
                          help='List of default modules to force deletion')
+    parser.add_argument("--product_version", type=str, choices=['5.0','4.3'])
 
     args = parser.parse_args()
 
@@ -42,21 +43,20 @@ if __name__ == "__main__":
 
         resource_manager.logout_session()
 
-    elif args.mode == "delete_known_hosts_43":
-        run_ssh_command(manager_url, "rm /var/lib/salt/.ssh/known_hosts")
+    elif args.mode == "delete_known_hosts":
+        if (args.product_version == "4.3"):
+            run_ssh_command(manager_url, "rm /var/lib/salt/.ssh/known_hosts")
+        elif (args.product_version == "5.0"):
+            run_ssh_command(manager_url, "rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
         logger.info("Deleted known_hosts file on server")
 
-    elif args.mode == "delete_known_hosts_50":
-        run_ssh_command(manager_url, "rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
-        logger.info("Deleted known_hosts file on server")
-
-    ## TODO: add delete distribution for 4.3
-    elif args.mode == "delete_distributions_43":
-        logger.info("Deleted distributions directory on 4.3 server")
-
-    elif args.mode == "delete_distributions_50":
-        run_ssh_command(manager_url, "rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
-        logger.info("Deleted distributions directory on 5.0 server")
+    elif args.mode == "delete_known_hosts":
+        ## TODO: add delete distribution for 4.3
+        if (args.product_version == "4.3"):
+            logger.warning("Distribution delete to do 4.3")
+        elif (args.product_version == "5.0"):
+            run_ssh_command(manager_url, "rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
+        logger.info("Deleted distributions directory on server")
 
     elif args.mode == "update_custom_repositories":
         copy_file_over_ssh(manager_url, "", "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json")

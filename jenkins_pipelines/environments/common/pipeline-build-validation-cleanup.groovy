@@ -10,6 +10,7 @@ def run(params) {
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
         def tf_file = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/main.tf"
         def container_repository = params.container_repository ?: null
+        def product_version = null
 
         // Variables to store none critical stage run status
 
@@ -33,13 +34,12 @@ def run(params) {
                 if (params.use_previous_terraform_state) {
                     copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                 }
-            }
 
-            stage('Delete ssh know hosts') {
+                // Set product version
                 if (params.targeted_project.contains("5.0")) {
-                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts_50")
+                    product_version = '5.0'
                 } else if (params.targeted_project.contains("4.3")) {
-                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts_43")
+                    product_version = '4.3'
                 } else {
                     // Error if neither "5.0" nor "4.3" is found
                     throw new IllegalArgumentException("Error: targeted_project must contain either '5.0' or '4.3'.")
@@ -69,26 +69,11 @@ def run(params) {
             }
 
             stage('Delete ssh know hosts') {
-                if (params.targeted_project.contains("5.0")) {
-                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
-                } else if (params.targeted_project.contains("4.3")) {
-                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
-                } else {
-                    // Error if neither "5.0" nor "4.3" is found
-                    throw new IllegalArgumentException("Error: targeted_project must contain either '5.0' or '4.3'.")
-                }
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts --product_version ${product_version}")
             }
 
             stage('Delete distributions folders') {
-                if (params.targeted_project.contains("5.0")) {
-                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions_50")
-                } else if (params.targeted_project.contains("4.3")) {
-                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions_43")
-                } else {
-                    // Error if neither "5.0" nor "4.3" is found
-                    throw new IllegalArgumentException("Error: targeted_project must contain either '5.0' or '4.3'.")
-                }
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions --product_version ${product_version}")
             }
 
             stage('Delete client VMs') {
