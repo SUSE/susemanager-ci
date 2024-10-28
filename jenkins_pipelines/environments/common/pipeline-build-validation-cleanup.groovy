@@ -60,6 +60,10 @@ def run(params) {
                 sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
             }
 
+            stage('Delete distributions folerds') {
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions")
+            }
+
             stage('Delete client VMs') {
                 // Copy tfstate from project
                 sh "cp /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate"
