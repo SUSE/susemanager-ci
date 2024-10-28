@@ -46,5 +46,9 @@ if __name__ == "__main__":
         run_ssh_command(manager_url, "rm /var/lib/salt/.ssh/known_hosts")
         logger.info("Deleted known_hosts file on server")
 
+    elif args.mode == "delete_distributions":
+        run_ssh_command(manager_url, "rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
+        logger.info("Deleted distributions directory on 5.0 server")
+
     elif args.mode == "update_custom_repositories":
         copy_file_over_ssh(manager_url, "", "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json")
