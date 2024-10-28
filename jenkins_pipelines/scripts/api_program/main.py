@@ -42,11 +42,19 @@ if __name__ == "__main__":
 
         resource_manager.logout_session()
 
-    elif args.mode == "delete_known_hosts":
+    elif args.mode == "delete_known_hosts_43":
         run_ssh_command(manager_url, "rm /var/lib/salt/.ssh/known_hosts")
         logger.info("Deleted known_hosts file on server")
 
-    elif args.mode == "delete_distributions":
+    elif args.mode == "delete_known_hosts_50":
+        run_ssh_command(manager_url, "rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
+        logger.info("Deleted known_hosts file on server")
+
+    ## TODO: add delete distribution for 4.3
+    elif args.mode == "delete_distributions_43":
+        logger.info("Deleted distributions directory on 4.3 server")
+
+    elif args.mode == "delete_distributions_50":
         run_ssh_command(manager_url, "rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
         logger.info("Deleted distributions directory on 5.0 server")
 
