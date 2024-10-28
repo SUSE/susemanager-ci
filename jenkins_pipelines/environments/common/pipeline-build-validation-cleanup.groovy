@@ -35,6 +35,17 @@ def run(params) {
                 }
             }
 
+            stage('Delete ssh know hosts') {
+                if (params.targeted_project.contains("5.0")) {
+                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts_50")
+                } else if (params.targeted_project.contains("4.3")) {
+                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts_43")
+                } else {
+                    // Error if neither "5.0" nor "4.3" is found
+                    throw new IllegalArgumentException("Error: targeted_project must contain either '5.0' or '4.3'.")
+                }
+            }
+
             stage('Delete the systems') {
                 sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_systems")
             }
@@ -56,12 +67,28 @@ def run(params) {
             stage('Delete salt keys') {
                 sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_salt_keys")
             }
+
             stage('Delete ssh know hosts') {
+                if (params.targeted_project.contains("5.0")) {
+                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
+                } else if (params.targeted_project.contains("4.3")) {
+                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
+                } else {
+                    // Error if neither "5.0" nor "4.3" is found
+                    throw new IllegalArgumentException("Error: targeted_project must contain either '5.0' or '4.3'.")
+                }
                 sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts")
             }
 
-            stage('Delete distributions folerds') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions")
+            stage('Delete distributions folders') {
+                if (params.targeted_project.contains("5.0")) {
+                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions_50")
+                } else if (params.targeted_project.contains("4.3")) {
+                    sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions_43")
+                } else {
+                    // Error if neither "5.0" nor "4.3" is found
+                    throw new IllegalArgumentException("Error: targeted_project must contain either '5.0' or '4.3'.")
+                }
             }
 
             stage('Delete client VMs') {
