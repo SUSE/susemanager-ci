@@ -19,14 +19,22 @@ def run(params) {
         if (params.terraform_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
         }
+
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
+
+                // Prevent rebuild option
+                if (currentBuild.getBuildCauses().toString().contains("RebuildCause")) {
+                    error "Rebuild is blocked for this job."
+                }
+
                 // Create a directory for  to place the directory with the build results (if it does not exist)
                 sh "mkdir -p ${resultdir}"
                 git url: params.terracumber_gitrepo, branch: params.terracumber_ref
                 dir("susemanager-ci") {
                     checkout scm
                 }
+
                 // Clone sumaform
                 sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
 
