@@ -39,7 +39,11 @@ class TestResourceManager(unittest.TestCase):
             {"key": "test-key"},
         ]
         self.resource_manager.delete_activation_keys()
-        self.mock_client.activationkey.delete.assert_called_once_with("mock_session_key", "test-key")
+
+        # Check that delete was called with both keys
+        self.mock_client.activationkey.delete.assert_any_call("mock_session_key", "test-key-proxy")
+        self.mock_client.activationkey.delete.assert_any_call("mock_session_key", "test-key")
+
 
     def test_delete_config_projects(self):
         self.mock_client.contentmanagement.listProjects.return_value = [{"label": "test_project"}]
@@ -64,7 +68,10 @@ class TestResourceManager(unittest.TestCase):
             {"name": "test-system", "id": 2},
         ]
         self.resource_manager.delete_systems()
-        self.mock_client.system.deleteSystem.assert_called_once_with("mock_session_key", 2)
+
+        # Check that deleteSystem was called with both IDs
+        self.mock_client.system.deleteSystem.assert_any_call("mock_session_key", 1)
+        self.mock_client.system.deleteSystem.assert_any_call("mock_session_key", 2)
 
     def test_delete_channel_repos(self):
         self.mock_client.channel.software.listUserRepos.return_value = [{"label": "repo1"}, {"label": "repo2"}]
@@ -75,7 +82,11 @@ class TestResourceManager(unittest.TestCase):
     def test_delete_salt_keys(self):
         self.mock_client.saltkey.acceptedList.return_value = ["salt-key-monitoring", "salt-key-other"]
         self.resource_manager.delete_salt_keys()
-        self.mock_client.saltkey.delete.assert_called_once_with("mock_session_key", "salt-key-other")
+
+        # Check that delete was called with both keys
+        self.mock_client.saltkey.delete.assert_any_call("mock_session_key", "salt-key-monitoring")
+        self.mock_client.saltkey.delete.assert_any_call("mock_session_key", "salt-key-other")
+
 
     @patch.object(ResourceManager, 'get_session_key')
     @patch.object(ResourceManager, 'logout_session')
