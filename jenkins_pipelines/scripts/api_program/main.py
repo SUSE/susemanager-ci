@@ -22,25 +22,27 @@ if __name__ == "__main__":
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects", "delete_software_channels", "delete_systems", "delete_repositories", "full_cleanup", "delete_salt_keys"]:
         resource_manager = ResourceManager(manager_url, args.tf_resources_to_delete)
         resource_manager.get_session_key()
+        # Mapping args.mode to the corresponding ResourceManager method
+        mode_actions = {
+            "delete_users": resource_manager.delete_users,
+            "delete_activation_keys": resource_manager.delete_activation_keys,
+            "delete_config_projects": resource_manager.delete_config_projects,
+            "delete_software_channels": resource_manager.delete_software_channels,
+            "delete_systems": resource_manager.delete_systems,
+            "delete_repositories": resource_manager.delete_channel_repos,
+            "delete_salt_keys": resource_manager.delete_salt_keys,
+            "full_cleanup": resource_manager.run,
+        }
         try:
-            if args.mode == "delete_users":
-                resource_manager.delete_users()
-            elif args.mode == "delete_activation_keys":
-                resource_manager.delete_activation_keys()
-            elif args.mode == "delete_config_projects":
-                resource_manager.delete_config_projects()
-            elif args.mode == "delete_software_channels":
-                resource_manager.delete_software_channels()
-            elif args.mode == "delete_systems":
-                resource_manager.delete_systems()
-            elif args.mode == "delete_repositories":
-                resource_manager.delete_channel_repos()
-            elif args.mode == "delete_salt_keys":
-                resource_manager.delete_salt_keys()
-            elif args.mode == "full_cleanup":
-                resource_manager.run()
+            # Execute the method based on the mode
+            action = mode_actions.get(args.mode)
+            if action:
+                action()
+            else:
+                logger.error(f"Mode '{args.mode}' is not recognized.")
         finally:
             resource_manager.logout_session()
+
     # Server commands part
     else:
         # Initialize SSH Manager
