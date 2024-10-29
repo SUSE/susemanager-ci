@@ -47,7 +47,10 @@ if __name__ == "__main__":
         if (args.product_version == "4.3"):
             run_ssh_command(manager_url, "rm /var/lib/salt/.ssh/known_hosts")
         elif (args.product_version == "5.0"):
+            result = run_ssh_command(manager_url, "ls -la /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
+            logger.info(f"Files in salt ssh before cleanup : {result}")
             run_ssh_command(manager_url, "rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
+            logger.info(f"Files in salt ssh after cleanup : {result}")
         logger.info("Deleted known_hosts file on server")
 
     elif args.mode == "delete_distributions":
