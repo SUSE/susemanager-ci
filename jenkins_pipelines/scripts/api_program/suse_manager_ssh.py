@@ -3,7 +3,6 @@ import re
 import logging
 from urllib.parse import urlparse
 
-
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -35,38 +34,47 @@ def run_ssh_command(url, command):
     """
     Connects to a server using SSH and runs a command.
 
-    :param url: The server api url
+    :param url: The server API URL.
     :param command: The command to run on the remote server.
-    :return: The output of the command.
+    :return: The output of the command or an error message if connection fails.
     """
-    try:
-#         ip_address = extract_ip_from_url(url)
-        logger.info(f"Server address : {url}")
-        # Create an SSH client
-        client = paramiko.SSHClient()
-        # Automatically add the server's host key (use with caution)
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        private_key = paramiko.RSAKey(filename="/home/maxime/github/sumaform/salt/controller/id_rsa")
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    private_key = paramiko.RSAKey(filename="/home/maxime/github/sumaform/salt/controller/id_rsa")
 
-        # Connect to the server
+    try:
+        logger.info(f"Connecting to server at: {url}")
+        # Attempt to connect to the server
         client.connect(url, port=port, username=username, pkey=private_key)
+        logger.info("Connection successful.")
 
         # Run the command
         stdin, stdout, stderr = client.exec_command(command)
-
-        # Read the command output and error (if any)
         output = stdout.read().decode()
         error = stderr.read().decode()
 
-        # Close the connection
-        client.close()
-        logger.info(f"Command output : {output}")
+        # Log and return the output or error
         if error:
+            logger.error(f"Command error: {error}")
             return f"Error: {error}"
+
+        logger.info(f"Command output: {output}")
         return output
 
+    except paramiko.AuthenticationException:
+        logger.error("Authentication failed while connecting to the server.")
+        return "Authentication failed."
+
+    except paramiko.SSHException as ssh_exception:
+        logger.error(f"SSH connection error: {str(ssh_exception)}")
+        return f"SSH connection error: {str(ssh_exception)}"
+
     except Exception as e:
+        logger.error(f"Exception: {str(e)}")
         return f"Exception: {str(e)}"
+
+    finally:
+        client.close()
 
 def copy_file_over_ssh(url, local_path, remote_path):
     """
@@ -77,21 +85,34 @@ def copy_file_over_ssh(url, local_path, remote_path):
     :param remote_path: The destination path on the remote server.
     :return: Success message or error details.
     """
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    private_key = paramiko.RSAKey(filename="/home/maxime/github/sumaform/salt/controller/id_rsa")
+
     try:
-        logger.info(f"Copying file to server at: {url}")
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        private_key = paramiko.RSAKey(filename="/home/maxime/github/sumaform/salt/controller/id_rsa")
-
+        logger.info(f"Connecting to server at: {url} to copy file.")
+        # Attempt to connect to the server
         client.connect(url, port=port, username=username, pkey=private_key)
+        logger.info("Connection successful for file transfer.")
 
+        # Open SFTP session and transfer the file
         sftp = client.open_sftp()
         sftp.put(local_path, remote_path)
         sftp.close()
-
-        client.close()
         logger.info(f"File {local_path} copied to {remote_path} on server {url}")
         return "File copy successful"
 
+    except paramiko.AuthenticationException:
+        logger.error("Authentication failed during file copy.")
+        return "Authentication failed during file copy."
+
+    except paramiko.SSHException as ssh_exception:
+        logger.error(f"SSH error during file copy: {str(ssh_exception)}")
+        return f"SSH error during file copy: {str(ssh_exception)}"
+
     except Exception as e:
+        logger.error(f"Exception during file copy: {str(e)}")
         return f"Exception during file copy: {str(e)}"
+
+    finally:
+        client.close()
