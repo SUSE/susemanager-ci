@@ -88,8 +88,6 @@ class ResourceManager:
                 self.client.saltkey.delete(self.session_key, accepted_salt_key)
 
     def run(self):
-        try:
-            self.get_session_key()
             self.delete_users()
             self.delete_activation_keys()
             self.delete_config_projects()
@@ -97,5 +95,3 @@ class ResourceManager:
             self.delete_systems()
             self.delete_channel_repos()
             self.delete_salt_keys()
-        finally:
-            self.logout_session()
