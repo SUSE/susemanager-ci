@@ -67,13 +67,12 @@ class TestResourceManager(unittest.TestCase):
             {"name": "test-system-monitoring", "id": 3}
         ]
         self.resource_manager.delete_systems()
-        self.mock_client.system.deleteSystem.assert_any_call("mock_session_key", "test-system-sles15sp5")
-        self.mock_client.system.deleteSystem.assert_any_call("mock_session_key", "test-system-monitoring")
+        self.mock_client.system.deleteSystem.assert_any_call("mock_session_key", 1)
+        self.mock_client.system.deleteSystem.assert_any_call("mock_session_key", 3)
         delete_calls = self.mock_client.system.deleteSystem.call_args_list
         proxy_deleted = any(call[0][1] == "test-system-proxy" for call in delete_calls)
-        self.assertFalse(proxy_deleted, "delete() should not have been called with 'test-system-proxy'")
+        self.assertFalse(proxy_deleted, "delete() should not have been called with 2")
         self.assertEqual(len(delete_calls), 2)
-        self.mock_client.system.deleteSystem.assert_any_call("mock_session_key", 2)
 
     def test_delete_channel_repos(self):
         self.mock_client.channel.software.listUserRepos.return_value = [
@@ -92,13 +91,12 @@ class TestResourceManager(unittest.TestCase):
             "salt-key-proxy"
         ]
         self.resource_manager.delete_salt_keys()
-        self.mock_client.saltkey.delete.assert_any_call("mock_session_key", "test-system-sles15sp5")
-        self.mock_client.saltkey.delete.assert_any_call("mock_session_key", "test-system-monitoring")
+        self.mock_client.saltkey.delete.assert_any_call("mock_session_key", "salt-key-sles15sp5")
+        self.mock_client.saltkey.delete.assert_any_call("mock_session_key", "salt-key-monitoring")
         delete_calls = self.mock_client.saltkey.delete.call_args_list
-        proxy_deleted = any(call[0][1] == "test-system-proxy" for call in delete_calls)
-        self.assertFalse(proxy_deleted, "delete() should not have been called with 'test-system-proxy'")
+        proxy_deleted = any(call[0][1] == "salt-key-proxy" for call in delete_calls)
+        self.assertFalse(proxy_deleted, "delete() should not have been called with 'salt-key-proxy'")
         self.assertEqual(len(delete_calls), 2)
-        self.mock_client.saltkey.delete.assert_any_call("mock_session_key", 2)
 
     def test_run(self):
         with patch.object(self.resource_manager, 'delete_users') as mock_delete_users, \
