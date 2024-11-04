@@ -1,0 +1,27 @@
+name: Run Api Program Tests
+
+on:
+  pull_request:
+    paths:
+      - 'jenkins_pipelines/scripts/api_program/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate api manager script
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r jenkins_pipelines/scripts/api_program/requirements.txt
+
+      - name: Run tests
+        run: cd jenkins_pipelines/scripts/; python -m unittest discover -s api_program/tests -p "test_suse_manager_api.py"
