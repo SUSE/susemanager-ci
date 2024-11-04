@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Manage SUSE Manager API actions.")
     parser.add_argument("--url", required=True, help="The URL of the SUSE Manager XML-RPC API.")
     parser.add_argument("--mode", choices=["delete_users", "delete_activation_keys", "delete_config_projects", "delete_software_channels", "delete_systems", "delete_repositories", "full_cleanup", "delete_salt_keys", "delete_known_hosts", "update_custom_repositories", "delete_distributions"], help="The mode of operation.")
-    parser.add_argument("--tf-resources-to-delete", type=str, nargs='*', choices=['proxy', 'monitoring-server', 'retail'], default=[], help='List of default modules to force deletion')
+    parser.add_argument("--default-resources-to-delete", type=str, nargs='*', choices=['proxy', 'monitoring-server', 'retail'], default=[], help='List of default modules to force deletion')
     parser.add_argument("--product_version", type=str, choices=['5.0', '4.3'])
 
     args = parser.parse_args()
@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
    # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects", "delete_software_channels", "delete_systems", "delete_repositories", "full_cleanup", "delete_salt_keys"]:
-        resource_manager = ResourceManager(manager_url, args.tf_resources_to_delete)
+        resource_manager = ResourceManager(manager_url, args.default_resources_to_delete)
         resource_manager.get_session_key()
         # Mapping args.mode to the corresponding ResourceManager method
         mode_actions = {

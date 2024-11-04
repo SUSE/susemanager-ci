@@ -33,5 +33,5 @@ python3 main.py --url <SUSE_Manager_URL> --mode <operation_mode> [options]
     `delete_distributions`: Deletes distributions from the server.
     `delete_known_hosts`: Deletes known SSH hosts in server.
     `update_custom_repositories`: Updates custom repositories in controller.
- - `--tf-resources-to-delete`: Optional list of resources (proxy, monitoring-server, retail) to enforce deletion during API cleanup operations.
+ - `--default-resources-to-delete`: Optional list of resources (proxy, monitoring-server, retail) to enforce deletion during API cleanup operations.
  - `--product_version`: SUSE Manager version (5.0 or 4.3). Used for handling different paths in specific operations.
