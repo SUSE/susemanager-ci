@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import argparse
 import logging
+import sys
 from suse_manager_api import ResourceManager
 from suse_manager_ssh import SSHClientManager
 
@@ -8,21 +9,32 @@ from suse_manager_ssh import SSHClientManager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-if __name__ == "__main__":
+# Define the available modes
+MODES = [
+    'delete_users', 'delete_activation_keys', 'delete_config_projects',
+    'delete_software_channels', 'delete_systems', 'delete_repositories',
+    'full_cleanup', 'delete_salt_keys', 'delete_known_hosts',
+    'update_custom_repositories', 'delete_distributions'
+]
+
+def main():
     parser = argparse.ArgumentParser(description="Manage SUSE Manager API actions.")
     parser.add_argument("--url", required=True, help="The URL of the SUSE Manager XML-RPC API.")
-    parser.add_argument("--mode", choices=["delete_users", "delete_activation_keys", "delete_config_projects", "delete_software_channels", "delete_systems", "delete_repositories", "full_cleanup", "delete_salt_keys", "delete_known_hosts", "update_custom_repositories", "delete_distributions"], help="The mode of operation.")
-    parser.add_argument("--default-resources-to-delete", type=str, nargs='*', choices=['proxy', 'monitoring-server', 'retail'], default=[], help='List of default modules to force deletion')
+    parser.add_argument("--mode", required=True, choices=MODES, help="The mode of operation.")
+    parser.add_argument("--default-resources-to-delete", type=str, nargs='*',
+                        choices=['proxy', 'monitoring-server', 'retail'],
+                        default=[], help='List of default modules to force deletion')
     parser.add_argument("--product_version", type=str, choices=['5.0', '4.3'])
 
     args = parser.parse_args()
     manager_url = args.url
 
-   # API part
-    if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects", "delete_software_channels", "delete_systems", "delete_repositories", "full_cleanup", "delete_salt_keys"]:
+    # API part
+    if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
+                     "delete_software_channels", "delete_systems", "delete_repositories",
+                     "full_cleanup", "delete_salt_keys"]:
         resource_manager = ResourceManager(manager_url, args.default_resources_to_delete)
         resource_manager.get_session_key()
-        # Mapping args.mode to the corresponding ResourceManager method
         mode_actions = {
             "delete_users": resource_manager.delete_users,
             "delete_activation_keys": resource_manager.delete_activation_keys,
@@ -34,7 +46,6 @@ if __name__ == "__main__":
             "full_cleanup": resource_manager.run,
         }
         try:
-            # Execute the method based on the mode
             action = mode_actions.get(args.mode)
             if action:
                 action()
@@ -45,7 +56,6 @@ if __name__ == "__main__":
 
     # Server commands part
     else:
-        # Initialize SSH Manager
         ssh_manager = SSHClientManager(url=manager_url)
         try:
             if args.mode == "delete_known_hosts":
@@ -69,5 +79,7 @@ if __name__ == "__main__":
             elif args.mode == "update_custom_repositories":
                 ssh_manager.copy_file("", "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json")
         finally:
-            # Ensure the connection is closed
             ssh_manager.close()
+
+if __name__ == "__main__":
+    main()
