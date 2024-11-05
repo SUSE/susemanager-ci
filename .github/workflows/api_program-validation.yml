@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python3.11 -m pip install --upgrade pip
-          pip3.11 install -r jenkins_pipelines/scripts/api_program/requirements.txt
+          pip3.11 install -r jenkins_pipelines/scripts/SUSEManager_cleaner/requirements.txt
 
       - name: Run tests
-        run: cd jenkins_pipelines/scripts/; python3.11 -m unittest discover -s api_program/tests -p "test_suse_manager_api.py"
+        run: cd jenkins_pipelines/scripts/SUSEManager_cleaner; ./run_tests.sh
