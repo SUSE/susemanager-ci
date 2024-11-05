@@ -3,7 +3,7 @@ name: Run Api Program Tests
 on:
   pull_request:
     paths:
-      - 'jenkins_pipelines/scripts/api_program/**'
+      - 'jenkins_pipelines/scripts/SUSEManager_cleaner/**'
 
 jobs:
   test:
