@@ -1,7 +1,7 @@
 def run(params) {
     timestamps {
         //Capybara configuration
-        def api_program = "./susemanager-ci/jenkins_pipelines/scripts/api_program/SUSEManagerCleaner.py"
+        String api_program = "./susemanager-ci/jenkins_pipelines/scripts/SUSEManager_cleaner/suse_manager_cleaner_program/SUSEManagerCleaner.py"
 
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
@@ -12,7 +12,19 @@ def run(params) {
         def container_repository = params.container_repository ?: null
         def product_version = null
 
-        // Variables to store none critical stage run status
+        // Construct the --tf-resources-to-delete argument dynamically
+        ArrayList defaultResourcesToDelete = []
+        if (params.clean_proxy) {
+            defaultResourcesToDelete.add('proxy')
+        }
+        if (params.clean_monitoring_server) {
+            defaultResourcesToDelete.add('monitoring-server')
+        }
+        if (params.clean_retail) {
+            defaultResourcesToDelete.add('retail')
+        }
+
+        String defaultResourcesToDeleteArgs = defaultResourcesToDelete.isEmpty() ? '' : "--default-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
 
         env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform"
 
@@ -86,25 +98,25 @@ def run(params) {
             }
 
             stage('Delete the systems') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_systems")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_systems ${defaultResourcesToDeleteArgs}")
             }
             stage('Delete config projects') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_config_projects")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_config_projects ${defaultResourcesToDeleteArgs}")
             }
             stage('Delete software channels') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_software_channels")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_software_channels ${defaultResourcesToDeleteArgs}")
             }
             stage('Delete activation keys') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_activation_keys")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_activation_keys ${defaultResourcesToDeleteArgs}")
             }
             stage('Delete minion users') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_users")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_users ${defaultResourcesToDeleteArgs}")
             }
             stage('Delete channel repositories') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_repositories")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_repositories ${defaultResourcesToDeleteArgs}")
             }
             stage('Delete salt keys') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_salt_keys")
+                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_salt_keys ${defaultResourcesToDeleteArgs}")
             }
 
             stage('Delete ssh know hosts') {
@@ -115,7 +127,7 @@ def run(params) {
                 sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions --product_version ${product_version}")
             }
 
-            // Define shared environment for terraform calls
+            // Define shared environment variables for terraform calls
             GString environmentVars = """
                 set -x
                 source /home/jenkins/.credentials
@@ -145,7 +157,7 @@ def run(params) {
                 }
 
                 // Join the resources into a comma-separated string if there are any to delete
-                String tfResourcesToDeleteArg = tfResourcesToDelete.isEmpty() ? '' : "--tf-resources-to-delete ${tfResourcesToDelete.join(' ')}"
+                String tfResourcesToDeleteArg = defaultResourcesToDelete.isEmpty() ? '' : "--tf-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
 
                 // Execute Terracumber CLI to deploy the environment without clients
                 sh """
