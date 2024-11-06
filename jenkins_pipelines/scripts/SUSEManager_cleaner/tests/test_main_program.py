@@ -81,7 +81,7 @@ class TestMainProgram(unittest.TestCase):
             main()
 
             # Check copy_file is called with the correct arguments
-            mock_ssh_manager.copy_file.assert_called_once_with("", "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json")
+            mock_ssh_manager.copy_file.assert_called_once_with("./custom_repositories.json", "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json")
             mock_ssh_manager.close.assert_called_once()
 
 if __name__ == "__main__":
