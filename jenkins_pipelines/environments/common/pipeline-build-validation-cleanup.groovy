@@ -48,10 +48,9 @@ def run(params) {
                     product_version = '5.0'
                 } else if (params.targeted_project.contains("4.3")) {
                     product_version = '4.3'
+                } else if (params.targeted_project.contains("uyuni")) {
+                    product_version = 'uyuni'
                 }
-//                else if (params.targeted_project.contains("uyuni")) {
-//                    product_version = '5.0'
-//                }
                 else {
                     // Use the `error` step instead of `throw`
                     error("Error: targeted_project must contain either '5.0', '4.3' or uyuni.")
