@@ -54,6 +54,38 @@ def run(params) {
                 }
             }
 
+            stage('Confirm Environment Cleanup') {
+                steps {
+                    script {
+                        // Ask the user if they are sure they want to clean the environment
+                        def userConfirmed = input(
+                                message: 'Are you sure you want to clean this environment?',
+                                parameters: [
+                                        choice(name: 'Confirm_Cleanup', choices: ['yes', 'no'], description: 'Do you want to clean this environment?')
+                                ]
+                        )
+
+                        // Check if the user confirmed
+                        if (userConfirmed != 'yes') {
+                            error('User did not confirm cleanup. Aborting pipeline.')
+                        }
+
+                        // Ask the user what environment they are cleaning, ensuring the answer matches params.targeted_project
+                        def environmentChoice = input(
+                                message: 'What environment are you cleaning?',
+                                parameters: [
+                                        string(name: 'Environment_Name', description: 'Enter the name of the environment you are cleaning.')
+                                ]
+                        )
+
+                        // Validate that the user entered the correct environment
+                        if (environmentChoice != params.targeted_project) {
+                            error("The environment name entered does not match the targeted project. Aborting pipeline.")
+                        }
+                    }
+                }
+            }
+
             stage('Delete the systems') {
                 sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_systems")
             }
@@ -84,20 +116,53 @@ def run(params) {
                 sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions --product_version ${product_version}")
             }
 
+            // Define shared environment for terraform calls
+            GString environmentVars = """
+                set -x
+                source /home/jenkins/.credentials
+                export TF_VAR_CONTAINER_REPOSITORY=${container_repository}
+                export TERRAFORM=${terraform_bin}
+                export TERRAFORM_PLUGINS=${terraform_bin_plugins}
+            """
+
             stage('Delete client VMs') {
-                // Copy tfstate from project
-                sh "cp /home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate ${env.resultdir}/sumaform/terraform.tfstate"
-                sh "cp -r /home/jenkins/workspace/${params.targeted_project}/results/sumaform/.terraform ${env.resultdir}/sumaform/"
-                // Run Terracumber to deploy the environment without clients
-                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CONTAINER_REPOSITORY=${container_repository}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision"
-//                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CONTAINER_REPOSITORY=${container_repository}; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --tf-resources-to-delete proxy retail monitoring-server --init --runstep provision"
+
+                // Copy tfstate and terraform directory to the result directory
+                sh """
+                    cp ${tfStatePath} ${targetTfStateDir}terraform.tfstate
+                    cp -r ${terraformDir}.terraform ${targetTfStateDir}
+                """
+
+                // Construct the --tf-resources-to-delete argument dynamically
+                ArrayList tfResourcesToDelete = []
+                if (params.clean_proxy) {
+                    tfResourcesToDelete.add('proxy')
+                }
+                if (params.clean_monitoring_server) {
+                    tfResourcesToDelete.add('monitoring-server')
+                }
+                if (params.clean_retail) {
+                    tfResourcesToDelete.add('retail')
+                }
+
+                // Join the resources into a comma-separated string if there are any to delete
+                String tfResourcesToDeleteArg = tfResourcesToDelete.isEmpty() ? '' : "--tf-resources-to-delete ${tfResourcesToDelete.join(' ')}"
+
+                // Execute Terracumber CLI to deploy the environment without clients
+                sh """
+                    ${environmentVars}
+                    set +x
+                    ./terracumber-cli ${common_params} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
+                """
             }
 
             stage('Redeploy the environment with new client VMs and update custom repositories into cucumber') {
+
                 // Generate custom_repositories.json file in the workspace from the value passed by parameter
                 if (params.custom_repositories?.trim()) {
                     writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
                 }
+
                 // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
                 if (params.mi_ids?.trim()) {
                     node('manager-jenkins-node') {
@@ -109,8 +174,13 @@ def run(params) {
                         }
                     }
                 }
+
                 // Run Terracumber to deploy the environment
-                sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CONTAINER_REPOSITORY=${container_repository}; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision"
+                sh """
+                    ${environmentVars}
+                    set +x
+                    ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
+                """
             }
 
             stage('Sanity check') {
