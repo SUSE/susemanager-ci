@@ -6,7 +6,9 @@ class TestResourceManager(unittest.TestCase):
     def setUp(self):
         self.manager_url = "localhost"
         self.resources_to_delete = {"monitoring"}
-        self.resource_manager = ResourceManager(self.manager_url, self.resources_to_delete)
+        self.product_version = "5.0"
+        self.resource_manager = ResourceManager(self.manager_url, self.resources_to_delete, self.product_version)
+
 
         # Mock the ServerProxy and session key to avoid actual API calls
         self.mock_server_proxy = patch('xmlrpc.client.ServerProxy').start()
