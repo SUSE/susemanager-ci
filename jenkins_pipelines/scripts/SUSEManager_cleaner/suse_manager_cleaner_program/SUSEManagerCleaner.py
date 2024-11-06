@@ -24,7 +24,7 @@ def main():
     parser.add_argument("--default-resources-to-delete", type=str, nargs='*',
                         choices=['proxy', 'monitoring-server', 'retail'],
                         default=[], help='List of default modules to force deletion')
-    parser.add_argument("--product_version", type=str, choices=['5.0', '4.3'])
+    parser.add_argument("--product_version", type=str, choices=['5.0', '4.3', 'uyuni'])
 
     args = parser.parse_args()
     manager_url = args.url
@@ -61,7 +61,7 @@ def main():
             if args.mode == "delete_known_hosts":
                 if args.product_version == "4.3":
                     ssh_manager.run_command("rm /var/lib/salt/.ssh/known_hosts")
-                elif args.product_version == "5.0":
+                elif args.product_version == "5.0" or args.product_version == "uyuni":
                     result = ssh_manager.run_command("ls -la /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
                     logger.info(f"Files in salt ssh before cleanup : {result}")
                     ssh_manager.run_command("rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
