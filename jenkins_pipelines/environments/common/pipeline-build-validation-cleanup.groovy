@@ -85,33 +85,37 @@ def run(params) {
             }
 
             stage('Delete the systems') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_systems ${defaultResourcesToDeleteArgs}")
+                sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_systems")
             }
             stage('Delete config projects') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_config_projects ${defaultResourcesToDeleteArgs}")
+                sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_config_projects")
             }
+
             stage('Delete software channels') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_software_channels ${defaultResourcesToDeleteArgs}")
+                if (product_version != "uyuni") {
+                    sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_software_channels")
+                }
             }
+
             stage('Delete activation keys') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_activation_keys ${defaultResourcesToDeleteArgs}")
+                sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_activation_keys")
             }
             stage('Delete minion users') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_users ${defaultResourcesToDeleteArgs}")
+                sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_users")
             }
             stage('Delete channel repositories') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_repositories ${defaultResourcesToDeleteArgs}")
+                sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_repositories")
             }
             stage('Delete salt keys') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_salt_keys ${defaultResourcesToDeleteArgs}")
+                sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_salt_keys")
             }
 
             stage('Delete ssh know hosts') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_known_hosts --product_version ${product_version}")
+                sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} --mode delete_known_hosts")
             }
 
             stage('Delete distributions folders') {
-                sh(script: "${api_program} --url ${params.manager_hostname} --mode delete_distributions --product_version ${product_version}")
+                sh(script: "${api_program} --url ${params.manager_hostname} --product_version ${product_version} --mode delete_distributions")
             }
 
             // Define shared environment variables for terraform calls

@@ -24,7 +24,7 @@ def main():
     parser.add_argument("--default-resources-to-delete", type=str, nargs='*',
                         choices=['proxy', 'monitoring-server', 'retail'],
                         default=[], help='List of default modules to force deletion')
-    parser.add_argument("--product_version", type=str, choices=['5.0', '4.3', 'uyuni'])
+    parser.add_argument("--product_version", required=True, type=str, choices=['5.0', '4.3', 'uyuni'])
 
     args = parser.parse_args()
     manager_url = args.url
@@ -33,7 +33,7 @@ def main():
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
                      "full_cleanup", "delete_salt_keys"]:
-        resource_manager = ResourceManager(manager_url, args.default_resources_to_delete)
+        resource_manager = ResourceManager(manager_url, args.default_resources_to_delete, args.product_version)
         resource_manager.get_session_key()
         mode_actions = {
             "delete_users": resource_manager.delete_users,

@@ -10,9 +10,10 @@ username = "admin"
 password = "admin"
 
 class ResourceManager:
-    def __init__(self, manager_url, resources_to_delete):
+    def __init__(self, manager_url, resources_to_delete, product_version):
         self.manager_url = manager_url
         self.resources_to_delete = {"proxy", "monitoring", "build"} - set(resources_to_delete)
+        self.product_version = product_version
         self.client = None
         self.session_key = None
 
@@ -46,6 +47,10 @@ class ResourceManager:
             self.client.contentmanagement.removeProject(self.session_key, project['label'])
 
     def delete_software_channels(self):
+        if self.product_version == "uyuni":
+            logging.warning("Delete channels not supported for uyuni")
+            return  # Exit early if deletion is not supported
+
         channels = self.client.channel.listMyChannels(self.session_key)
         for channel in channels:
             details = self.client.channel.software.getDetails(self.session_key, channel['label'])
