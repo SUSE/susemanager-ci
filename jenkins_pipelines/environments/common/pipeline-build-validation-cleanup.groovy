@@ -97,15 +97,33 @@ def run(params) {
 
             }
 
-            stage("Extract the controller and server hostname"){
-                controllerHostname = sh(
-                        script: "terraform output -json configuration | jq -r '.controller.hostname'",
+            stage("Extract the controller and server hostname") {
+                try {
+                    controllerHostname = sh(
+                        script: """
+                            set -e
+                            cd ${localSumaformDirPath}
+                            terraform output -json configuration | jq -r '.controller.hostname'
+                        """,
                         returnStdout: true
-                ).trim()
-                serverHostname = sh(
-                        script: "terraform output -json configuration | jq -r '.server.hostname'",
+                    ).trim()
+
+                    serverHostname = sh(
+                        script: """
+                            set -e
+                            cd ${localSumaformDirPath}
+                            terraform output -json configuration | jq -r '.server.hostname'
+                        """,
                         returnStdout: true
-                ).trim()
+                    ).trim()
+
+                    // Print the values for confirmation
+                    echo "Extracted controller hostname: ${controllerHostname}"
+                    echo "Extracted server hostname: ${serverHostname}"
+
+                } catch (Exception e) {
+                    error("Failed to extract hostnames: ${e.message}")
+                }
             }
 
             stage('Delete the systems') {
