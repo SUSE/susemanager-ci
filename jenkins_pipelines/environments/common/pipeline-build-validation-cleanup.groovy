@@ -62,7 +62,7 @@ def run(params) {
                 def userConfirmed = input(
                         message: 'Are you sure you want to clean this environment?',
                         parameters: [
-                                choice(name: 'Confirm_Cleanup', choices: ['yes', 'no'], description: 'Do you want to clean this environment?')
+                                choice(name: 'Confirm_Cleanup', description: 'Are you sure to clean this environment? (yes/no)')
                         ]
                 )
 
