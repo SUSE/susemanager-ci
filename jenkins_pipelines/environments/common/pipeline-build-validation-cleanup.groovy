@@ -100,21 +100,21 @@ def run(params) {
             stage("Extract the controller and server hostname") {
                 try {
                     controllerHostname = sh(
-                        script: """
+                            script: """
                             set -e
                             cd ${localSumaformDirPath}
                             terraform output -json configuration | jq -r '.controller.hostname'
                         """,
-                        returnStdout: true
+                            returnStdout: true
                     ).trim()
 
                     serverHostname = sh(
-                        script: """
+                            script: """
                             set -e
                             cd ${localSumaformDirPath}
                             terraform output -json configuration | jq -r '.server.hostname'
                         """,
-                        returnStdout: true
+                            returnStdout: true
                     ).trim()
 
                     // Print the values for confirmation
@@ -134,9 +134,7 @@ def run(params) {
             }
 
             stage('Delete software channels') {
-                if (product_version != "uyuni") {
-                    sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_software_channels")
-                }
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_software_channels")
             }
 
             stage('Delete activation keys') {
