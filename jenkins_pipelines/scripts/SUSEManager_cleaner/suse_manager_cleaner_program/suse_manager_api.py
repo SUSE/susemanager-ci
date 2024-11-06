@@ -47,11 +47,17 @@ class ResourceManager:
             self.client.contentmanagement.removeProject(self.session_key, project['label'])
 
     def delete_software_channels(self):
-        if self.product_version == "uyuni":
-            logging.warning("Delete channels not supported for uyuni")
-            return  # Exit early if deletion is not supported
-
         channels = self.client.channel.listMyChannels(self.session_key)
+
+        if self.product_version == "uyuni":
+            channels = self.client.channel.listMyChannels(self.session_key)
+            for channel in channels:
+                if "custom" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_delete):
+                    logger.info(f"Delete custom channel: {channel['label']}")
+                    self.client.channel.software.delete(self.session_key, channel['label'])
+            logging.warning("Delete only custom channels for uyuni.")
+            return
+
         for channel in channels:
             details = self.client.channel.software.getDetails(self.session_key, channel['label'])
             if "appstream" in channel['label'] and details['parent_channel_label']:
@@ -61,7 +67,6 @@ class ResourceManager:
 
         channels = self.client.channel.listMyChannels(self.session_key)
         for channel in channels:
-            details = self.client.channel.software.getDetails(self.session_key, channel['label'])
             if "appstream" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_delete):
                 logger.info(f"Delete parent channel appstream: {channel['label']}")
                 self.client.channel.software.delete(self.session_key, channel['label'])
