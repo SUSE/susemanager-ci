@@ -5,13 +5,15 @@ def run(params) {
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
-        def container_repository = params.container_repository ?: null
-        def product_version = null
-
+        String container_repository = params.container_repository ?: null
+        String product_version = null
+        String controllerHostname = null
+        String serverHostname = null
         GString targetedTfFile = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/main.tf"
         GString targetedTfStateFile = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
         GString targetedTerraformDirPath = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/"
-        GString currentSumaformDirPath = "${resultdir}/sumaform/"
+        GString localSumaformDirPath = "${resultdir}/sumaform/"
+        GString localTfStateFile = "${localSumaformDirPath}/terraform.tfstate"
         GString logFile = "${resultdirbuild}/sumaform.log"
 
         // Construct the --tf-resources-to-delete argument dynamically
@@ -86,38 +88,58 @@ def run(params) {
                 }
             }
 
+            stage("Copy terraform files from ${params.targeted_project}"){
+                // Copy tfstate and terraform directory to the result directory
+                sh """
+                    cp ${targetedTfStateFile} ${localTfStateFile}
+                    cp -r ${targetedTerraformDirPath}.terraform ${localSumaformDirPath}
+                """
+
+            }
+
+            stage("Extract the controller and server hostname"){
+                controllerHostname = sh(
+                        script: "terraform output -json configuration | jq -r '.controller.hostname'",
+                        returnStdout: true
+                ).trim()
+                serverHostname = sh(
+                        script: "terraform output -json configuration | jq -r '.server.hostname'",
+                        returnStdout: true
+                ).trim()
+            }
+
             stage('Delete the systems') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_systems")
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_systems")
             }
             stage('Delete config projects') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_config_projects")
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_config_projects")
             }
 
             stage('Delete software channels') {
                 if (product_version != "uyuni") {
-                    sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_software_channels")
+                    sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_software_channels")
                 }
             }
 
             stage('Delete activation keys') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_activation_keys")
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_activation_keys")
             }
             stage('Delete minion users') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_users")
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_users")
             }
             stage('Delete channel repositories') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_repositories")
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_repositories")
             }
             stage('Delete salt keys') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_salt_keys")
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_salt_keys")
             }
 
             stage('Delete ssh know hosts') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} --mode delete_known_hosts")
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_known_hosts")
             }
 
             stage('Delete distributions folders') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${params.manager_hostname} --product_version ${product_version} --mode delete_distributions")
+                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_distributions")
             }
 
             // Define shared environment variables for terraform calls
@@ -130,12 +152,6 @@ def run(params) {
             """
 
             stage('Delete client VMs') {
-
-                // Copy tfstate and terraform directory to the result directory
-                sh """
-                    cp ${targetedTfStateFile} ${currentSumaformDirPath}terraform.tfstate
-                    cp -r ${targetedTerraformDirPath}.terraform ${currentSumaformDirPath}
-                """
 
                 // Construct the --tf-resources-to-delete argument dynamically
                 ArrayList tfResourcesToDelete = []
@@ -162,6 +178,15 @@ def run(params) {
 
             stage('Redeploy the environment with new client VMs and update custom repositories into cucumber') {
 
+                // Run Terracumber to deploy the environment
+                sh """
+                    ${environmentVars}
+                    set +x
+                    ./terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
+                """
+            }
+
+            stage('Copy the new custom repository json file to controller') {
                 // Generate custom_repositories.json file in the workspace from the value passed by parameter
                 if (params.custom_repositories?.trim()) {
                     writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
@@ -178,13 +203,8 @@ def run(params) {
                         }
                     }
                 }
+                sh(script: "${SUSEManagerCleanerProgram} --url ${controllerHostname} --product_version ${product_version} --mode update_custom_repositories")
 
-                // Run Terracumber to deploy the environment
-                sh """
-                    ${environmentVars}
-                    set +x
-                    ./terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
-                """
             }
 
             stage('Sanity check') {
@@ -195,14 +215,14 @@ def run(params) {
         finally {
             stage('Copy back tfstate') {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "cp ${currentSumaformDirPath}terraform.tfstate ${targetedTfStateFile}"
+                    sh "cp ${localTfStateFile} ${targetedTfStateFile}"
                 }
             }
 
             stage('Rename tfstate to avoid copying it between runs') {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "mv ${currentSumaformDirPath}terraform.tfstate ${currentSumaformDirPath}terraform.tfstate.old"
-                    sh "cp ${currentSumaformDirPath}terraform.tfstate.old ${resultdirbuild}"
+                    sh "mv ${localTfStateFile} ${localTfStateFile}.old"
+                    sh "cp ${localTfStateFile}.old ${resultdirbuild}"
                 }
             }
         }

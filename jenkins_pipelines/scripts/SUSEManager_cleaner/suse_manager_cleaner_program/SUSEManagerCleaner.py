@@ -77,7 +77,7 @@ def main():
                 logger.info("Deleted distributions directory on server")
 
             elif args.mode == "update_custom_repositories":
-                ssh_manager.copy_file("", "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json")
+                ssh_manager.copy_file("./custom_repositories.json", "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json")
         finally:
             ssh_manager.close()
 
