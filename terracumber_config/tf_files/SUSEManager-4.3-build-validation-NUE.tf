@@ -1521,5 +1521,6 @@ module "controller" {
 output "configuration" {
   value = {
     controller = module.controller.configuration
+    server = module.server.configuration
   }
 }
