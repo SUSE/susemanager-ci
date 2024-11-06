@@ -58,34 +58,30 @@ def run(params) {
             }
 
             stage('Confirm Environment Cleanup') {
-                steps {
-                    script {
-                        // Ask the user if they are sure they want to clean the environment
-                        def userConfirmed = input(
-                                message: 'Are you sure you want to clean this environment?',
-                                parameters: [
-                                        choice(name: 'Confirm_Cleanup', choices: ['yes', 'no'], description: 'Do you want to clean this environment?')
-                                ]
-                        )
+                // Ask the user if they are sure they want to clean the environment
+                def userConfirmed = input(
+                        message: 'Are you sure you want to clean this environment?',
+                        parameters: [
+                                choice(name: 'Confirm_Cleanup', choices: ['yes', 'no'], description: 'Do you want to clean this environment?')
+                        ]
+                )
 
-                        // Check if the user confirmed
-                        if (userConfirmed != 'yes') {
-                            error('User did not confirm cleanup. Aborting pipeline.')
-                        }
+                // Check if the user confirmed
+                if (userConfirmed != 'yes') {
+                    error('User did not confirm cleanup. Aborting pipeline.')
+                }
 
-                        // Ask the user what environment they are cleaning, ensuring the answer matches params.targeted_project
-                        def environmentChoice = input(
-                                message: 'What environment are you cleaning?',
-                                parameters: [
-                                        string(name: 'Environment_Name', description: 'Enter the name of the environment you are cleaning.')
-                                ]
-                        )
+                // Ask the user what environment they are cleaning, ensuring the answer matches params.targeted_project
+                def environmentChoice = input(
+                        message: 'What environment are you cleaning?',
+                        parameters: [
+                                string(name: 'Environment_Name', description: 'Enter the name of the environment you are cleaning.')
+                        ]
+                )
 
-                        // Validate that the user entered the correct environment
-                        if (environmentChoice != params.targeted_project) {
-                            error("The environment name entered does not match the targeted project. Aborting pipeline.")
-                        }
-                    }
+                // Validate that the user entered the correct environment
+                if (environmentChoice != params.targeted_project) {
+                    error("The environment name entered does not match the targeted project. Aborting pipeline.")
                 }
             }
 
