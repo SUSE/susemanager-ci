@@ -86,6 +86,19 @@ class TestResourceManager(unittest.TestCase):
         self.mock_client.channel.software.removeRepo.assert_any_call("mock_session_key", "repo1")
         self.mock_client.channel.software.removeRepo.assert_any_call("mock_session_key", "repo2")
 
+    def test_delete_software_channels_skipped_for_uyuni(self):
+        # Set the product_version to "uyuni" to simulate Uyuni environment
+        self.resource_manager.product_version = "uyuni"
+
+        # Patch logging to capture warning message
+        with patch('logging.warning') as mock_warning:
+            self.resource_manager.delete_software_channels()
+            # Check if the warning message was logged
+            mock_warning.assert_called_once_with("Delete channels not supported for uyuni")
+
+        # Ensure no deletion calls were made
+        self.mock_client.channel.software.delete.assert_not_called()
+
     def test_delete_salt_keys(self):
         self.mock_client.saltkey.acceptedList.return_value = [
             "salt-key-monitoring",
