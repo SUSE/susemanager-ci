@@ -183,7 +183,7 @@ module "server_containerized" {
   }
   runtime = "podman"
   container_repository  = var.CONTAINER_REPOSITORY
-  main_disk_size        = 40
+  main_disk_size        = 100
   repository_disk_size  = 3072
   database_disk_size    = 150
   container_tag         = "latest"
