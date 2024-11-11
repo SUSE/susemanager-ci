@@ -89,7 +89,7 @@ provider "libvirt" {
 }
 
 module "cucumber_testsuite" {
-  source = "./modules/cucumber_testsuite"
+  source = "./modules/acceptance_tests_module"
 
   product_version = "uyuni-master"
 
@@ -149,8 +149,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-minion = {
       image = "opensuse155o"
@@ -160,8 +158,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     suse-sshminion = {
       image = "opensuse155o"
@@ -171,8 +167,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
     }
     redhat-minion = {
       image = "rocky8o"
@@ -184,8 +178,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     debian-minion = {
       name = "ubuntu2204-minion"
@@ -195,8 +187,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     build-host = {
       image = "sles15sp4o"
@@ -206,8 +196,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     pxeboot-minion = {
       name = "pxeboot-minion"
@@ -224,8 +212,7 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion", "mkisofs" ]
-      install_salt_bundle = true
+      additional_packages = [ "mkisofs" ]
     }
   }
   
