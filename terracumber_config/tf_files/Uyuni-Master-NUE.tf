@@ -150,7 +150,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    suse-minion = {
+    suse_minion = {
       image = "opensuse155o"
       name = "suse-minion"
       provider_settings = {
@@ -159,7 +159,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = "opensuse155o"
       name = "suse-sshminion"
       provider_settings = {
@@ -168,7 +168,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    redhat-minion = {
+    redhat_minion = {
       image = "rocky8o"
       name = "rocky8-minion"
       provider_settings = {
@@ -179,7 +179,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    debian-minion = {
+    debian_minion = {
       name = "ubuntu2204-minion"
       image = "ubuntu2204o"
       provider_settings = {
@@ -188,7 +188,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
       name = "build-minion"
       provider_settings = {
@@ -197,7 +197,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    pxeboot-minion = {
+    pxeboot_minion = {
       name = "pxeboot-minion"
       image = "sles15sp4o"
       additional_packages = [ "venv-salt-minion" ]
