@@ -74,6 +74,11 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+variable "PROMETHEUS_PUSH_GATEWAY_URL" {
+  type = string
+  default = null
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -248,6 +253,27 @@ module "cucumber_testsuite" {
     bridge = "br0"
     additional_network = "192.168.50.0/24"
   }
+}
+
+resource "null_resource" "configure_quality_intelligence" {
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [ "echo export QUALITY_INTELLIGENCE=true >> ~/.bashrc",
+      "echo export PROMETHEUS_PUSH_GATEWAY_URL=${var.PROMETHEUS_PUSH_GATEWAY_URL} >> ~/.bashrc",
+      "source ~/.bashrc"
+    ]
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "linux"
+      host     = "${module.cucumber_testsuite.configuration.controller.hostname}"
+    }
+  }
+
 }
 
 output "configuration" {
