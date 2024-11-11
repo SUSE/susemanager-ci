@@ -105,7 +105,7 @@ module "cucumber_testsuite" {
   images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
-  name_prefix  = "uyuni-master-"
+  name_prefix  = "uyuni-ci-master-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
