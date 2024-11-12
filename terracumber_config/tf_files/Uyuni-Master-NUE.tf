@@ -89,7 +89,7 @@ provider "libvirt" {
 }
 
 module "cucumber_testsuite" {
-  source = "./modules/acceptance_tests_module"
+  source = "./modules/cucumber_testsuite_temporary"
 
   product_version = "uyuni-master"
 
@@ -168,9 +168,9 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    redhat_minion = {
+    rhlike_minion = {
       image = "rocky8o"
-      name = "rocky8-minion"
+      name = "rhlike-minion"
       provider_settings = {
         mac = "aa:b2:93:01:00:d9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -179,8 +179,8 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    debian_minion = {
-      name = "ubuntu2204-minion"
+    deblike_minion = {
+      name = "deblike-minion"
       image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:93:01:00:db"
