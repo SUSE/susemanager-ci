@@ -74,6 +74,11 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+variable "PROMETHEUS_PUSH_GATEWAY_URL" {
+  type = string
+  default = null
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -139,7 +144,6 @@ module "cucumber_testsuite" {
         vcpu    = 4
         memory  = 16384
       }
-
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
       container_tag = "latest"
@@ -150,7 +154,6 @@ module "cucumber_testsuite" {
       login_timeout         = 28800
     }
     proxy_containerized = {
-      name              = "proxy"
       provider_settings = {
         mac     = "aa:b2:93:01:00:d2"
         vcpu    = 2
@@ -212,6 +215,15 @@ module "cucumber_testsuite" {
       image                 = "sles15sp4o"
       additional_packages   = [ "venv-salt-minion" ]
       install_salt_bundle   = true
+    }
+    dhcp-dns = {
+      name = "dhcp-dns"
+      image = "opensuse155o"
+      hypervisor = {
+        host        = "suma-01.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_rsa")
+      }
     }
     kvm-host = {
       name  = "kvm-minion"
