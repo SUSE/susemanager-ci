@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi     = false
   name_prefix   = "uyuni-ci-master-"
@@ -115,6 +115,9 @@ module "cucumber_testsuite" {
   auth_registry_password    = "cucusecret"
   git_profiles_repo         = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
+  container_server = true
+  container_proxy  = true
+
   mirror                    = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images         = true
   server_http_proxy         = "http-proxy.mgr.suse.de:3128"
@@ -123,32 +126,39 @@ module "cucumber_testsuite" {
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
-      name              = "controller"
       provider_settings = {
         mac     = "aa:b2:93:01:00:d0"
         vcpu    = 2
         memory  = 2048
       }
     }
-    server = {
+    server_containerized = {
       name                  = "server"
       provider_settings     = {
         mac     = "aa:b2:93:01:00:d1"
         vcpu    = 4
         memory  = 16384
       }
+
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag = "latest"
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       main_disk_size        = 20
       repository_disk_size  = 300
       database_disk_size    = 50
       login_timeout         = 28800
     }
-    proxy = {
+    proxy_containerized = {
       name              = "proxy"
       provider_settings = {
         mac     = "aa:b2:93:01:00:d2"
         vcpu    = 2
         memory  = 2048
       }
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag = "latest"
     }
     suse_minion = {
       name              = "suse-minion"
