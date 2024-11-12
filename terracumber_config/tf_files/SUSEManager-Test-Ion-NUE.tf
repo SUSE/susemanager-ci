@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-released"
+  product_version = "5.0-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -124,13 +124,13 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:40"
       }
     }
-    server = {
+    server_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:41"
         memory = 12288
       }
     }
-    proxy = {
+    proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:42"
       }
