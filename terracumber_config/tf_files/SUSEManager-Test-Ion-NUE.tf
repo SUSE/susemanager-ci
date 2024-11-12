@@ -118,6 +118,9 @@ module "cucumber_testsuite" {
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
+  container_server = true
+  container_proxy = true
+
   host_settings = {
     controller = {
       provider_settings = {
