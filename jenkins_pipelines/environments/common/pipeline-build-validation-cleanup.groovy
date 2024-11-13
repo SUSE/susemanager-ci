@@ -203,24 +203,25 @@ def run(params) {
             }
 
             stage('Copy the new custom repository json file to controller') {
-                // Generate custom_repositories.json file in the workspace from the value passed by parameter
-                if (params.custom_repositories?.trim()) {
-                    writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
-                }
+                if (params.push_new_custom_repositories) {
+                    // Generate custom_repositories.json file in the workspace from the value passed by parameter
+                    if (params.custom_repositories?.trim()) {
+                        writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
+                    }
 
-                // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
-                if (params.mi_ids?.trim()) {
-                    node('manager-jenkins-node') {
-                        checkout scm
-                        res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
-                        echo "Build Validation JSON script return code:\n ${json_content}"
-                        if (res_python_script != 0) {
-                            error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                    // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
+                    if (params.mi_ids?.trim()) {
+                        node('manager-jenkins-node') {
+                            checkout scm
+                            res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
+                            echo "Build Validation JSON script return code:\n ${json_content}"
+                            if (res_python_script != 0) {
+                                error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                            }
                         }
                     }
+                    sh(script: "${SUSEManagerCleanerProgram} --url ${controllerHostname} --product_version ${product_version} --mode update_custom_repositories")
                 }
-                sh(script: "${SUSEManagerCleanerProgram} --url ${controllerHostname} --product_version ${product_version} --mode update_custom_repositories")
-
             }
 
             stage('Sanity check') {
