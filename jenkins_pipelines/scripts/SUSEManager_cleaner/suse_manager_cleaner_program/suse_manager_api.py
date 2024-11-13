@@ -55,7 +55,7 @@ class ResourceManager:
                 if "custom" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_delete):
                     logger.info(f"Delete custom channel: {channel['label']}")
                     self.client.channel.software.delete(self.session_key, channel['label'])
-            logging.warning("Delete only custom channels for uyuni.")
+            logging.warning("Delete only custom channels for uyuni")
             return
 
         for channel in channels:
