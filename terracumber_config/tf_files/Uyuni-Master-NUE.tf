@@ -213,10 +213,8 @@ module "cucumber_testsuite" {
     pxeboot_minion = {
       name                  = "pxeboot-minion"
       image                 = "sles15sp4o"
-      additional_packages   = [ "venv-salt-minion" ]
-      install_salt_bundle   = true
     }
-    dhcp-dns = {
+    dhcp_dns = {
       name = "dhcp-dns"
       image = "opensuse155o"
       hypervisor = {
@@ -225,7 +223,7 @@ module "cucumber_testsuite" {
         private_key = file("~/.ssh/id_rsa")
       }
     }
-    kvm-host = {
+    kvm_host = {
       name  = "kvm-host"
       image = "opensuse155o"
       
