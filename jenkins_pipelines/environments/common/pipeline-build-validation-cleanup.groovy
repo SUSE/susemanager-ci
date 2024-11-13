@@ -192,7 +192,7 @@ def run(params) {
                 """
             }
 
-            stage('Redeploy the environment with new client VMs and update custom repositories into cucumber') {
+            stage('Redeploy the environment with new client VMs') {
 
                 // Run Terracumber to deploy the environment
                 sh """
