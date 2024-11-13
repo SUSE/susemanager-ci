@@ -94,7 +94,7 @@ provider "libvirt" {
 }
 
 module "cucumber_testsuite" {
-  source = "./modules/cucumber_testsuite_temporary"
+  source = "./modules/cucumber_testsuite"
 
   product_version = "uyuni-master"
 
@@ -226,7 +226,7 @@ module "cucumber_testsuite" {
       }
     }
     kvm-host = {
-      name  = "kvm-minion"
+      name  = "kvm-host"
       image = "opensuse155o"
       
       provider_settings = {
