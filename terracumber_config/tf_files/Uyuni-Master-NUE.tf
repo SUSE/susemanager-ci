@@ -104,10 +104,10 @@ module "cucumber_testsuite" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
+  cc_username   = var.SCC_USER
+  cc_password   = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
+  images        = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi     = false
   name_prefix   = "uyuni-ci-master-"
@@ -120,8 +120,8 @@ module "cucumber_testsuite" {
   auth_registry_password    = "cucusecret"
   git_profiles_repo         = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  container_server = true
-  container_proxy  = true
+  container_server          = true
+  container_proxy           = true
 
   mirror                    = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images         = true
@@ -138,7 +138,6 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      name                  = "server"
       provider_settings     = {
         mac     = "aa:b2:93:01:00:d1"
         vcpu    = 4
@@ -164,7 +163,6 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_minion = {
-      name              = "suse-minion"
       image             = "opensuse155o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:d6"
@@ -173,7 +171,6 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      name              = "suse-sshminion"
       image             = "opensuse155o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:d8"
@@ -182,7 +179,6 @@ module "cucumber_testsuite" {
       }
     }
     rhlike_minion = {
-      name              = "rhlike-minion"
       image             = "rocky8o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:d9"
@@ -193,7 +189,6 @@ module "cucumber_testsuite" {
       }
     }
     deblike_minion = {
-      name              = "deblike-minion"
       image             = "ubuntu2204o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:db"
@@ -202,7 +197,6 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      name              = "build-host"
       image             = "sles15sp4o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:dd"
@@ -211,8 +205,7 @@ module "cucumber_testsuite" {
       }
     }
     pxeboot_minion = {
-      name                  = "pxeboot-minion"
-      image                 = "sles15sp4o"
+      image  = "sles15sp4o"
     }
     dhcp_dns = {
       name = "dhcp-dns"
@@ -224,9 +217,7 @@ module "cucumber_testsuite" {
       }
     }
     kvm_host = {
-      name  = "kvm-host"
       image = "opensuse155o"
-      
       provider_settings = {
         mac     = "aa:b2:93:01:00:de"
         vcpu    = 4
@@ -234,7 +225,6 @@ module "cucumber_testsuite" {
       }
     }
   }
-
   provider_settings = {
     pool               = "ssd"
     network_name       = null
