@@ -144,7 +144,7 @@ module "cucumber_testsuite" {
       #also 15.6 had issue on container startup
       image = "opensuse155o"
       additional_repos = {
-          containerUtils = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
+          containerUtils = "https://download.opensuse.org/repositories/home:/cbosdonnat:/branches:/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
       }
 
       login_timeout = 28800
