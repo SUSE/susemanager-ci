@@ -21,6 +21,7 @@ class IbsOscClient():
 
     def get_bsc_links_list(self, **kwargs) -> list[str]:
         issues: list[dict] = self._smash_client.get_issues(**kwargs)
+        print(f"Found {len(issues)} issues")
 
         return [ self._issue_to_bsc_link(issue) for issue in issues ]
 
@@ -126,4 +127,7 @@ class IbsOscClient():
             if ref['source'] == 'SUSE Bugzilla':
                 bsc_num: str = ref['name'].split("#")[1]
                 return f"- [ ] [Bug {bsc_num}]({ref['url']}) - {issue['summary']}\n"
-        raise ValueError(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}")
+            
+        print(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}\n")
+        return ""
+        # raise ValueError(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}")
