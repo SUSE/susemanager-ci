@@ -48,7 +48,7 @@ def bugs_to_links_list(products_bugs: dict[str, list[dict]]) -> list[str]:
         for bug in bugs_list:
             id: str = bug['id']
             bugzilla_url: str = f"{BUGZILLA_SHOW_BUG_URL}?id={id}"
-            lines.append(f"- [ ] [Bug {id}]({bugzilla_url}) - {bug['summary']}\n")
+            lines.append(f"- [ ] [Bug {id}]({bugzilla_url}) - {bug['priority']} - ({bug['component']}) {bug['summary']}\n")
         lines.append("\n")
     
     return lines

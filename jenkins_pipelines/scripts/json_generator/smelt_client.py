@@ -69,5 +69,3 @@ class SmeltGraphQLClient():
             response.raise_for_status()
 
         return response.json()['data']
-        
-        
