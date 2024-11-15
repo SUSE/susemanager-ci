@@ -38,12 +38,13 @@ def parse_cli_args() -> argparse.Namespace:
     parser.add_argument("-p", "--product-version", dest="product_version", help="Product version of SUMA you want to run this script for, the options are 4.3 and 5.0. The default is 4.3 for now",
         choices=_PRODUCT_VERSIONS, default="4.3", action='store'
     )
-    parser.add_argument("-n", "--release-notes", dest="use_release", default=False, help="Obrain the bugs list from the release notes for the specified SUMA version", action="store_true")
+    parser.add_argument("-n", "--release-notes", dest="use_release", default=False, help="Obtain the bugs list from the release notes for the specified SUMA version", action="store_true")
     parser.add_argument("-c", "--cloud", dest="cloud", default=False, help="Return BSCs for SUMA in Public Clouds", action="store_true")
     parser.add_argument("-s", "--status", dest="status", help="Status to filter BSCs by", action="store",
         choices=["NEW", "CONFIRMED", "IN_PROGRESS", "RESOLVED"]
     )
     parser.add_argument("-r", "--resolution", dest="resolution", help="Resolution to filter issues for (default empty string means open bugs)", action="store")
+    parser.add_argument("-t", "--reporter", dest="reporter", help="Email address of the person who opened the bug to filter issues for", action="store")
     # output related flags
     parser.add_argument("-o", "--output", dest="output_file", help="File in which the results will be saved", action="store")
     parser.add_argument("-f", "--format", dest="output_format", default="txt", help="Output file format (txt default)", action="store",
@@ -104,10 +105,10 @@ def main():
         product_versions: list[str] = _PRODUCT_VERSIONS if args.all else [args.product_version]
         for version in product_versions:
             release_notes_paths: tuple[tuple[str, str, str]] =_IBS_RELEASE_NOTES_FOR_SUMA_VERSION[version]
-            product_bugs[f"SUSE Manager {version}"] = bugzilla_client.bscs_from_release_notes(release_notes_paths, status = args.status, resolution = args.resolution)
+            product_bugs[f"SUSE Manager {version}"] = bugzilla_client.bscs_from_release_notes(release_notes_paths, reporter = args.reporter, status = args.status, resolution = args.resolution)
     else:
         bugzilla_products: list[str] = get_suma_bugzilla_products(args.all, args.product_version, args.cloud)
-        product_bugs = bugzilla_client.find_suma_bscs(bugzilla_products, status = args.status, resolution = args.resolution)
+        product_bugs = bugzilla_client.find_suma_bscs(bugzilla_products, reporter = args.reporter, status = args.status, resolution = args.resolution)
 
     output_format: str = args.output_format
     output_file: str = args.output_file if args.output_file else _FORMATS_DEFAULT_FILE_NAMES[output_format]
