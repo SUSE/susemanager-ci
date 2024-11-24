@@ -110,7 +110,7 @@ module "cucumber_testsuite" {
   images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
-  name_prefix  = "suma-50-"
+  name_prefix  = "suma-ci-50-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -159,37 +159,29 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       main_disk_size = 200
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
       container_tag = "latest"
     }
-    suse-minion = {
+    suse_minion = {
       image = "sles15sp4o"
-      name = "min-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:f6"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = "sles15sp4o"
-      name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:93:01:00:f8"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
+      additional_packages = [ "iptables" ]
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = "rocky8o"
-      name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:93:01:00:f9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -197,35 +189,27 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
+    deblike_minion = {
       image = "ubuntu2204o"
-      name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:93:01:00:fb"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:fd"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    pxeboot-minion = {
+    pxeboot_minion = {
       image = "sles15sp4o"
     }
-    dhcp-dns = {
+    dhcp_dns = {
       name = "dhcp-dns"
       image = "opensuse155o"
       hypervisor = {
@@ -234,16 +218,13 @@ module "cucumber_testsuite" {
         private_key = file("~/.ssh/id_rsa")
       }
     }
-    kvm-host = {
+    kvm_host = {
       image = "sles15sp4o"
-      name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:93:01:00:fe"
         vcpu = 4
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
   }
 
