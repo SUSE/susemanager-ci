@@ -99,21 +99,21 @@ module "cucumber_testsuite" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
+  cc_username  = var.SCC_USER
+  cc_password  = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
+  images       = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ci-master-"
   domain       = "mgr.prv.suse.net"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.prv.suse.net"
-  auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
-  auth_registry_username = "cucutest"
-  auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+  no_auth_registry         = "registry.mgr.prv.suse.net"
+  auth_registry            = "registry.mgr.prv.suse.net:5000/cucutest"
+  auth_registry_username   = "cucutest"
+  auth_registry_password   = "cucusecret"
+  git_profiles_repo        = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 
   mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images        = true
@@ -129,23 +129,30 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    server = {
-      provider_settings = {
-        mac = "aa:b2:92:03:00:d1"
-        vcpu = 4
-        memory = 16384
+    server_containerized = {
+      provider_settings     = {
+        mac     = "aa:b2:92:03:00:d1"
+        vcpu    = 4
+        memory  = 16384
       }
-      main_disk_size       = 20
-      repository_disk_size = 300
-      database_disk_size   = 50
-      login_timeout        = 28800
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag         = "latest"
+      helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      main_disk_size        = 80
+      repository_disk_size  = 200
+      database_disk_size    = 30
+      login_timeout         = 28800
     }
-    proxy = {
+    proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:92:03:00:d2"
-        vcpu = 2
-        memory = 2048
+        vcpu    = 2
+        memory  = 2048
       }
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag         = "latest"
     }
     suse_minion = {
       image = "opensuse155o"
@@ -195,8 +202,6 @@ module "cucumber_testsuite" {
     }
     kvm_host = {
       image = "opensuse155o"
-      name = "min-kvm"
-      
       provider_settings = {
         mac = "aa:b2:92:03:00:de"
         vcpu = 4
