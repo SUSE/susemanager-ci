@@ -39,6 +39,8 @@ pipeline {
                     changeset ".github/workflows/rubocop.yml"
                     changeset "testsuite/.rubocop.yml"
                     changeset "testsuite/.rubocop_todo.yml"
+                    changeset "testsuite/Gemfile"
+                    changeset "testsuite/Rakefile"
                 }
             }
             steps {
@@ -65,6 +67,8 @@ pipeline {
                     changeset ".github/workflows/rubocop.yml"
                     changeset "testsuite/.rubocop.yml"
                     changeset "testsuite/.rubocop_todo.yml"
+                    changeset "testsuite/Gemfile"
+                    changeset "testsuite/Rakefile"
                 }
             }
             steps {
