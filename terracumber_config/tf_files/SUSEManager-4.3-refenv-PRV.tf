@@ -88,12 +88,13 @@ module "base" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  name_prefix       = "suma-ref43-"
+  name_prefix       = "suma-ref-43-"
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
   images            = ["centos7o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
   mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
+  product_version         = "4.3-nightly"
 
   provider_settings = {
     pool         = "ssd"
@@ -104,9 +105,8 @@ module "base" {
 
 module "server" {
   source                  = "./modules/server"
+  name                    = "server"
   base_configuration      = module.base.configuration
-  product_version         = "4.3-nightly"
-  name                    = "srv"
   monitored               = true
   use_os_released_updates = true
   disable_download_tokens = false
@@ -119,82 +119,67 @@ module "server" {
   }
 }
 
-module "suse-client" {
-  source             = "./modules/client"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-nightly"
-  name               = "cli-sles15"
-  image              = "sles15sp4o"
-
+module "suse_client" {
+  source                  = "./modules/client"
+  base_configuration      = module.base.configuration
+  image                   = "sles15sp4o"
+  name                    = "suse-client"
   server_configuration    = module.server.configuration
   use_os_released_updates = true
 
   provider_settings = {
     mac = "aa:b2:92:03:00:96"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
-module "suse-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-nightly"
-  name               = "min-sles15"
-  image              = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
-
+module "suse_minion" {
+  source                  = "./modules/minion"
+  base_configuration      = module.base.configuration
+  image                   = "sles15sp3o" // left with SP3 since we update it to SP4 in the testsuite
+  name                    = "suse-minion"
   server_configuration    = module.server.configuration
   use_os_released_updates = true
 
   provider_settings = {
     mac = "aa:b2:92:03:00:98"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
-module "redhat-minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-nightly"
-  name               = "min-centos7"
-  image              = "centos7o"
+module "rhlike_minion" {
+  source                = "./modules/minion"
+  base_configuration    = module.base.configuration
+  image                 = "centos7o"
+  name                  = "rhlike-minion"
 
   server_configuration   = module.server.configuration
   auto_connect_to_master = false
 
   provider_settings = {
-    mac = "aa:b2:92:03:00:99"
+    mac = "aa:b2:92:03:00:9a"
     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
     // Also, openscap cannot run with less than 1.25 GB of RAM
     memory = 2048
     vcpu = 2
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
-module "debian-minion" {
-  source               = "./modules/minion"
-  base_configuration   = module.base.configuration
-  product_version      = "4.3-nightly"
-  name                 = "min-ubuntu2204"
-  image                = "ubuntu2204o"
-  server_configuration = module.server.configuration
+module "deblike_minion" {
+  source                = "./modules/minion"
+  base_configuration    = module.base.configuration
+  image                 = "ubuntu2204o"
+  name                  = "deblike-minion"
+  server_configuration  = module.server.configuration
 
   provider_settings = {
     mac = "aa:b2:92:03:00:9b"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
-module "build-host" {
+module "build_host" {
   source                  = "./modules/build_host"
   base_configuration      = module.base.configuration
-  product_version         = "4.3-nightly"
-  name                    = "min-build"
   image                   = "sles15sp4o"
+  name                    = "build-host"
   server_configuration    = module.server.configuration
 
   provider_settings = {
@@ -208,21 +193,16 @@ module "build-host" {
         devel_pool_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/",
         devel_updates_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Development-Tools/15-SP4/x86_64/update/"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
-module "kvm-minion" {
+module "kvm_host" {
   source               = "./modules/virthost"
   base_configuration   = module.base.configuration
-  product_version      = "head"
-  name                 = "min-kvm"
   image                = "sles15sp4o"
+  name                 = "kvm-host"
   server_configuration = module.server.configuration
 
   provider_settings = {
     mac = "aa:b2:92:03:00:9e"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
