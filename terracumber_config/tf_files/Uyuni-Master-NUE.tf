@@ -74,6 +74,11 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+variable "PROMETHEUS_PUSH_GATEWAY_URL" {
+  type = string
+  default = null
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -99,138 +104,155 @@ module "cucumber_testsuite" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
+  cc_username   = var.SCC_USER
+  cc_password   = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
+  images        = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
 
-  use_avahi    = false
-  name_prefix  = "uyuni-master-"
-  domain       = "mgr.suse.de"
-  from_email   = "root@suse.de"
+  use_avahi     = false
+  name_prefix   = "uyuni-ci-master-"
+  domain        = "mgr.suse.de"
+  from_email    = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry      = "registry.mgr.suse.de:5000/cucutest"
-  auth_registry_username = "cucutest"
-  auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  no_auth_registry          = "registry.mgr.suse.de"
+  auth_registry             = "registry.mgr.suse.de:5000/cucutest"
+  auth_registry_username    = "cucutest"
+  auth_registry_password    = "cucusecret"
+  git_profiles_repo         = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images        = true
-  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
+  container_server          = true
+  container_proxy           = true
+
+  mirror                    = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images         = true
+  server_http_proxy         = "http-proxy.mgr.suse.de:3128"
+  custom_download_endpoint  = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:d0"
-        vcpu = 2
-        memory = 2048
+        mac     = "aa:b2:93:01:00:d0"
+        vcpu    = 2
+        memory  = 2048
       }
     }
-    server = {
-      provider_settings = {
-        mac = "aa:b2:93:01:00:d1"
-        vcpu = 4
-        memory = 16384
+    server_containerized = {
+      provider_settings     = {
+        mac     = "aa:b2:93:01:00:d1"
+        vcpu    = 4
+        memory  = 16384
       }
-      main_disk_size       = 20
-      repository_disk_size = 300
-      database_disk_size   = 50
-      login_timeout        = 28800
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag = "latest"
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      main_disk_size        = 80
+      repository_disk_size  = 200
+      database_disk_size    = 30
+      login_timeout         = 28800
     }
-    proxy = {
+    proxy_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:d2"
-        vcpu = 2
-        memory = 2048
+        mac     = "aa:b2:93:01:00:d2"
+        vcpu    = 2
+        memory  = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
+      runtime = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag = "latest"
     }
-    suse-minion = {
-      image = "opensuse155o"
-      name = "min-suse"
+    suse_minion = {
+      image             = "opensuse155o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:d6"
-        vcpu = 2
-        memory = 2048
+        mac     = "aa:b2:93:01:00:d6"
+        vcpu    = 2
+        memory  = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
-      image = "opensuse155o"
-      name = "minssh-suse"
+    suse_sshminion = {
+      image             = "opensuse155o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:d8"
-        vcpu = 2
-        memory = 2048
+        mac     = "aa:b2:93:01:00:d8"
+        vcpu    = 2
+        memory  = 2048
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
     }
-    redhat-minion = {
-      image = "rocky8o"
-      name = "min-rocky8"
+    rhlike_minion = {
+      image             = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:d9"
+        mac     = "aa:b2:93:01:00:d9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
-        vcpu = 2
-        memory = 2048
+        vcpu    = 2
+        memory  = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
-      name = "min-ubuntu2204"
-      image = "ubuntu2204o"
+    deblike_minion = {
+      image             = "ubuntu2204o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:db"
-        vcpu = 2
-        memory = 2048
+        mac     = "aa:b2:93:01:00:db"
+        vcpu    = 2
+        memory  = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
-      image = "sles15sp4o"
-      name = "min-build"
+    build_host = {
+      image             = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:dd"
-        vcpu = 2
-        memory = 2048
+        mac     = "aa:b2:93:01:00:dd"
+        vcpu    = 2
+        memory  = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    pxeboot-minion = {
-      image = "sles15sp4o"
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
+    pxeboot_minion = {
+      image  = "sles15sp4o"
     }
-    kvm-host = {
+    dhcp_dns = {
+      name = "dhcp-dns"
       image = "opensuse155o"
-      name = "min-kvm"
-      
-      provider_settings = {
-        mac = "aa:b2:93:01:00:de"
-        vcpu = 4
-        memory = 4096
+      hypervisor = {
+        host        = "suma-01.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_rsa")
       }
-      additional_packages = [ "venv-salt-minion", "mkisofs" ]
-      install_salt_bundle = true
+    }
+    kvm_host = {
+      image = "opensuse155o"
+      provider_settings = {
+        mac     = "aa:b2:93:01:00:de"
+        vcpu    = 4
+        memory  = 4096
+      }
     }
   }
-  
   provider_settings = {
     pool               = "ssd"
     network_name       = null
     bridge             = "br0"
     additional_network = "192.168.100.0/24"
   }
+}
+
+
+resource "null_resource" "configure_quality_intelligence" {
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [ "echo export QUALITY_INTELLIGENCE=true >> ~/.bashrc",
+      "echo export PROMETHEUS_PUSH_GATEWAY_URL=${var.PROMETHEUS_PUSH_GATEWAY_URL} >> ~/.bashrc",
+      "source ~/.bashrc"
+    ]
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "linux"
+      host     = "${module.cucumber_testsuite.configuration.controller.hostname}"
+    }
+  }
+
 }
 
 output "configuration" {

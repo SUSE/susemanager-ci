@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-released"
+  product_version = "5.0-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -118,19 +118,22 @@ module "cucumber_testsuite" {
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
+  container_server = true
+  container_proxy = true
+
   host_settings = {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:40"
       }
     }
-    server = {
+    server_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:41"
         memory = 12288
       }
     }
-    proxy = {
+    proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:42"
       }
