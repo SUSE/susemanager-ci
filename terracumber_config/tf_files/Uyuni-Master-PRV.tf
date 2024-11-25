@@ -99,21 +99,21 @@ module "cucumber_testsuite" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
+  cc_username  = var.SCC_USER
+  cc_password  = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o"]
+  images       = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2204o", "sles15sp4o"]
 
   use_avahi    = false
-  name_prefix  = "uyuni-master-"
+  name_prefix  = "uyuni-ci-master-"
   domain       = "mgr.prv.suse.net"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.prv.suse.net"
-  auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
-  auth_registry_username = "cucutest"
-  auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+  no_auth_registry         = "registry.mgr.prv.suse.net"
+  auth_registry            = "registry.mgr.prv.suse.net:5000/cucutest"
+  auth_registry_username   = "cucutest"
+  auth_registry_password   = "cucusecret"
+  git_profiles_repo        = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 
   mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images        = true
@@ -129,51 +129,50 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    server = {
-      provider_settings = {
-        mac = "aa:b2:92:03:00:d1"
-        vcpu = 4
-        memory = 16384
+    server_containerized = {
+      provider_settings     = {
+        mac     = "aa:b2:92:03:00:d1"
+        vcpu    = 4
+        memory  = 16384
       }
-      main_disk_size       = 20
-      repository_disk_size = 300
-      database_disk_size   = 50
-      login_timeout        = 28800
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag         = "latest"
+      helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      main_disk_size        = 80
+      repository_disk_size  = 200
+      database_disk_size    = 30
+      login_timeout         = 28800
     }
-    proxy = {
+    proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:92:03:00:d2"
-        vcpu = 2
-        memory = 2048
+        vcpu    = 2
+        memory  = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_tag         = "latest"
     }
-    suse-minion = {
+    suse_minion = {
       image = "opensuse155o"
-      name = "min-suse"
       provider_settings = {
         mac = "aa:b2:92:03:00:d6"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = "opensuse155o"
-      name = "minssh-suse"
       provider_settings = {
         mac = "aa:b2:92:03:00:d8"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
+      additional_packages = [ "iptables" ]
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = "rocky8o"
-      name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:92:03:00:d9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -181,47 +180,33 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
-      name = "min-ubuntu2204"
+    deblike_minion = {
       image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:92:03:00:db"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:03:00:dd"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    pxeboot-minion = {
+    pxeboot_minion = {
       image = "sles15sp4o"
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    kvm-host = {
+    kvm_host = {
       image = "opensuse155o"
-      name = "min-kvm"
-      
       provider_settings = {
         mac = "aa:b2:92:03:00:de"
         vcpu = 4
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion", "mkisofs" ]
-      install_salt_bundle = true
     }
   }
   
