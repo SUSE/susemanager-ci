@@ -109,7 +109,7 @@ module "cucumber_testsuite" {
   images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
-  name_prefix  = "suma-refhead-"
+  name_prefix  = "suma-ref-head-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -156,37 +156,28 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       main_disk_size = 200
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
     }
-    suse-minion = {
+    suse_minion = {
       image = "sles15sp4o"
-      name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:c6"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = "sles15sp4o"
-      name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:c8"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = "rocky8o"
-      name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:93:01:00:c9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
@@ -194,41 +185,30 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
+    deblike_minion = {
       image = "ubuntu2204o"
-      name = "min-ubuntu2204"
       provider_settings = {
         mac = "aa:b2:93:01:00:cb"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:cd"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    kvm-host = {
+    kvm_host = {
       image = "sles15sp4o"
-      name = "min-kvm"
       provider_settings = {
         mac = "aa:b2:93:01:00:ce"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
   }
   provider_settings = {
