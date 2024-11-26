@@ -94,7 +94,7 @@ module "base" {
   images            = ["centos7o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
   mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
-  product_version         = "4.3-nightly"
+  product_version   = "4.3-nightly"
 
   provider_settings = {
     pool         = "ssd"
