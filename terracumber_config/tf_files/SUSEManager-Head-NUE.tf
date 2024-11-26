@@ -203,17 +203,17 @@ module "cucumber_testsuite" {
     pxeboot_minion = {
       image = "sles15sp4o"
     }
-    dhcp-dns = {
-      name = "dhcp-dns"
-      image = "opensuse155o"
-      hypervisor = {
+    dhcp_dns = {
+      name        = "dhcp-dns"
+      image       = "opensuse155o"
+      hypervisor  = {
         host        = "suma-01.mgr.suse.de"
         user        = "root"
         private_key = file("~/.ssh/id_rsa")
       }
     }
     kvm_host = {
-      image = "sles15sp4o"
+      image             = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:be"
         vcpu = 4
