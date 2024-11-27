@@ -55,7 +55,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    dhcp-dns = {
+    dhcp_dns = {
       name = "dhcp-dns"
       image = "opensuse155o"
       hypervisor = {
@@ -88,37 +88,29 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
       runtime = "podman"
     }
-    suse-minion = {
+    suse_minion = {
       image = var.SUSE_MINION_IMAGE
-      name = "min-suse"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
         vcpu = 2
         memory = 2048
       }
       additional_repos = local.additional_repos["suse-minion"]
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = var.SUSE_MINION_IMAGE
-      name = "minssh-suse"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
         vcpu = 2
         memory = 2048
       }
       additional_repos = local.additional_repos["suse-minion"]
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
+      additional_packages = [ "iptables" ]
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = var.RHLIKE_MINION_IMAGE
-      name = "min-rhlike"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
         memory = 2048
@@ -127,12 +119,9 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.RHLIKE_CLIENT_REPO,
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
+    deblike_minion = {
       image = var.DEBLIKE_MINION_IMAGE
-      name = "min-deblike"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["deblike-minion"]
         vcpu = 2
@@ -141,14 +130,9 @@ module "cucumber_testsuite" {
       additional_repos = {
         client_repo = var.DEBLIKE_CLIENT_REPO,
       }
-      additional_packages = [ "venv-salt-minion" ]
-      // FIXME: cloudl-init fails if venv-salt-minion is not avaiable
-      // We can set "install_salt_bundle = true" as soon as venv-salt-minion is available Uyuni:Stable
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
         memory = 2048
@@ -156,28 +140,22 @@ module "cucumber_testsuite" {
       additional_repos = {
         tools_update_pr = var.SLE_CLIENT_REPO
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    pxeboot-minion = {
+    pxeboot_minion = {
       image = "sles15sp4o"
       additional_repos = {
         tools_update_pr = var.SLE_CLIENT_REPO
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    kvm-host = {
+    kvm_host = {
       image = var.IMAGE
-      name = "min-kvm"
-      
+
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
       }
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = local.additional_repos["kvm-host"]
-      additional_packages = [ "venv-salt-minion", "mkisofs" ]
-      install_salt_bundle = true
+      additional_packages = [ "mkisofs" ]
     }
   }
   
