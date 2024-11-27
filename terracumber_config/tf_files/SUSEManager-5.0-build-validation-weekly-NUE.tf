@@ -129,7 +129,7 @@ module "base_core" {
 
   provider_settings = {
     pool        = "ssd"
-    bridge      = "br0"
+    bridge      = "br1"
     additional_network = "192.168.100.0/24"
   }
 }
@@ -156,7 +156,7 @@ module "base_arm" {
 
   provider_settings = {
     pool        = "ssd"
-    bridge      = "br0"
+    bridge      = "br1"
   }
 }
 
@@ -534,7 +534,7 @@ module "sles15sp5s390_minion" {
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
-    userid             = "S50WMINUE"
+    userid             = "W50MINUE"
     mac                = "02:3a:fc:42:00:2e"
     ssh_user           = "sles"
     vswitch            = "VSUMA"
@@ -956,7 +956,7 @@ module "sles15sp5s390_sshminion" {
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
-    userid             = "S50WSSNUE"
+    userid             = "W50SSNUE"
     mac                = "02:3a:fc:42:00:2f"
     ssh_user           = "sles"
     vswitch            = "VSUMA"
