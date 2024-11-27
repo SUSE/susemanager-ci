@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'terracumber_config/tf_files/**'
+      - '!terracumber_config/tf_files/PR-testing-template.tf'
 
 jobs:
   validate_sumaform:
