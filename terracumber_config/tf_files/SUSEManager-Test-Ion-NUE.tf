@@ -102,18 +102,18 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-ion-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "registry.mgr.suse.de:5000/cucutest"
+  no_auth_registry       = "registry.mgr.suse.de"
+  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
@@ -130,21 +130,22 @@ module "cucumber_testsuite" {
     server_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:41"
-        memory = 12288
+        vcpu = 8
+        memory = 32768
       }
+      main_disk_size = 500
+      login_timeout = 28800
+      runtime = "podman"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/ion/containerfile"
+      container_tag = "latest"
+      beta_enabled = true
     }
     proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:42"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
-    }
-    slemicro-minion = {
-      provider_settings = {
-        mac = "aa:b2:93:01:00:44"
-      }
-      additional_packages = [ "venv-salt-minion" ]
+        vcpu = 2
+        memory = 2048
     }
     suse-minion = {
       image = "sles15sp4o"
@@ -152,8 +153,8 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:46"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
+        vcpu = 2
+        memory = 2048
     }
     suse-sshminion = {
       image = "sles15sp4o"
@@ -161,50 +162,38 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:48"
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
+        vcpu = 2
+        memory = 2048
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = "rocky8o"
       name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:93:01:00:49"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
         vcpu = 2
+        memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    ubuntu-minion = {
+    deblike_minion = {
       image = "ubuntu2204o"
-      name = "min-ubuntu2204o"
       provider_settings = {
-//        mac = "aa:b2:93:01:00:50"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
+        //mac = "aa:b2:93:01:00:50"
         memory = 2048
         vcpu = 2
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:4d"
-        memory = 2048
         vcpu = 2
+        memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    pxeboot-minion = {
+    pxeboot_minion = {
       image = "sles15sp4o"
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     kvm-host = {
       image = "sles15sp4o"
@@ -212,8 +201,6 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:4e"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
   }
   provider_settings = {
