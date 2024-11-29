@@ -134,38 +134,27 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:32"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
     */
-    suse-client = {
+    suse_client = {
       image = "sles15sp4o"
-      name = "cli-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:34"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-minion = {
+    suse_minion = {
       image = "sles15sp4o"
-      name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:36"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = "sles15sp4o"
-      name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:93:01:00:38"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = "centos7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:39"
@@ -174,27 +163,19 @@ module "cucumber_testsuite" {
         memory = 2048
         vcpu = 2
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
-      name = "min-ubuntu2204"
+    deblike_minion = {
       image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:93:01:00:3b"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
         mac = "aa:b2:93:01:00:3d"
         memory = 2048
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
   }
   provider_settings = {
