@@ -106,7 +106,7 @@ module "cucumber_testsuite" {
   images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
-  name_prefix  = "suma-testhexagon-"
+  name_prefix  = "suma-test-hexagon-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
