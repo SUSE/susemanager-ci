@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-master"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-vega-"
@@ -115,6 +115,12 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
+  container_server = true
+  container_proxy = true
+
+  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images        = true
+
   server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
@@ -124,18 +130,31 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:30"
       }
     }
-    server = {
+    server_containerized = {
+      image = "slemicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:31"
+        vcpu = 8
+        memory = 32768
       }
+      main_disk_size = 500
+      login_timeout = 28800
+      runtime = "podman"
+      container_repository = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
+      container_tag = "latest"
     }
-    /*
-    proxy = {
+    proxy_containerized = {
+      image = "slemicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:32"
+        vcpu = 2
+        memory = 2048
       }
+      main_disk_size = 200
+      runtime = "podman"
+      container_repository = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
+      container_tag = "latest"
     }
-    */
     suse_client = {
       image = "sles15sp4o"
       provider_settings = {
@@ -155,7 +174,7 @@ module "cucumber_testsuite" {
       }
     }
     rhlike_minion = {
-      image = "centos7o"
+      image = "rocky8o"
       provider_settings = {
         mac = "aa:b2:93:01:00:39"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
