@@ -162,7 +162,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = [ "iptables" ]
     }
-    rhlike-minion = {
+    rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
         mac = "aa:b2:93:01:00:5a"
