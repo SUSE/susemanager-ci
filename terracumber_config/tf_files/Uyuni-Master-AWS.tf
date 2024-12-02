@@ -169,13 +169,11 @@ module "cucumber_testsuite" {
         private_ip = "172.16.3.7"
         overwrite_fqdn = "uyuni-master-pxy.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
       container_tag = "latest"
     }
-    suse-minion = {
+    suse_minion = {
       image = "opensuse155o"
       name = "min-suse"
       provider_settings = {
@@ -183,10 +181,8 @@ module "cucumber_testsuite" {
         private_ip = "172.16.3.8"
         overwrite_fqdn = "uyuni-master-min-sles15.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = "opensuse155o"
       name = "minssh-suse"
       provider_settings = {
@@ -194,10 +190,8 @@ module "cucumber_testsuite" {
         private_ip = "172.16.3.9"
         overwrite_fqdn = "uyuni-master-minssh-sles15.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = "rocky8"
       provider_settings = {
         // openscap cannot run with less than 1.25 GB of RAM
@@ -206,29 +200,22 @@ module "cucumber_testsuite" {
         private_ip = "172.16.3.10"
         overwrite_fqdn = "uyuni-master-min-rocky8.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
-      name = "min-ubuntu2204"
+    deblike_minion = {
       image = "ubuntu2204"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.11"
         overwrite_fqdn = "uyuni-master-min-ubuntu2204.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
       provider_settings = {
         instance_type = "t3a.large"
         private_ip = "172.16.3.12"
         overwrite_fqdn = "uyuni-master-min-build.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
 // No PXE support for AWS yet
 // No nested virtualization in AWS
