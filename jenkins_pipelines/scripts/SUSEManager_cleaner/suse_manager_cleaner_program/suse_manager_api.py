@@ -12,7 +12,7 @@ password = "admin"
 class ResourceManager:
     def __init__(self, manager_url, resources_to_delete, product_version):
         self.manager_url = manager_url
-        self.resources_to_delete = {"proxy", "monitoring", "build"} - set(resources_to_delete)
+        self.resources_to_keep = {"proxy", "monitoring", "build"} - set(resources_to_delete)
         self.product_version = product_version
         self.client = None
         self.session_key = None
@@ -36,7 +36,7 @@ class ResourceManager:
     def delete_activation_keys(self):
         activation_keys = self.client.activationkey.listActivationKeys(self.session_key)
         for activation_key in activation_keys:
-            if not any(protected in activation_key['key'] for protected in self.resources_to_delete):
+            if not any(protected in activation_key['key'] for protected in self.resources_to_keep):
                 logger.info(f"Delete activation key: {activation_key['key']}")
                 self.client.activationkey.delete(self.session_key, activation_key['key'])
 
@@ -50,9 +50,8 @@ class ResourceManager:
         channels = self.client.channel.listMyChannels(self.session_key)
 
         if self.product_version == "uyuni":
-            channels = self.client.channel.listMyChannels(self.session_key)
             for channel in channels:
-                if "custom" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_delete):
+                if "custom" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_keep):
                     logger.info(f"Delete custom channel: {channel['label']}")
                     self.client.channel.software.delete(self.session_key, channel['label'])
             logging.warning("Delete only custom channels for uyuni")
@@ -61,26 +60,26 @@ class ResourceManager:
         for channel in channels:
             details = self.client.channel.software.getDetails(self.session_key, channel['label'])
             if "appstream" in channel['label'] and details['parent_channel_label']:
-                if not any(protected in channel['label'] for protected in self.resources_to_delete):
+                if not any(protected in channel['label'] for protected in self.resources_to_keep):
                     logger.info(f"Delete sub channel appstream: {channel['label']}")
                     self.client.channel.software.delete(self.session_key, channel['label'])
 
         channels = self.client.channel.listMyChannels(self.session_key)
         for channel in channels:
-            if "appstream" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_delete):
+            if "appstream" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_keep):
                 logger.info(f"Delete parent channel appstream: {channel['label']}")
                 self.client.channel.software.delete(self.session_key, channel['label'])
 
         channels = self.client.channel.listMyChannels(self.session_key)
         for channel in channels:
-            if not any(protected in channel['label'] for protected in self.resources_to_delete):
+            if not any(protected in channel['label'] for protected in self.resources_to_keep):
                 logger.info(f"Delete common channel: {channel['label']}")
                 self.client.channel.software.delete(self.session_key, channel['label'])
 
     def delete_systems(self):
         systems = self.client.system.listSystems(self.session_key)
         for system in systems:
-            if not any(protected in system['name'] for protected in self.resources_to_delete):
+            if not any(protected in system['name'] for protected in self.resources_to_keep):
                 logger.info(f"Delete system : {system['name']} | id : {system['id']}")
                 self.client.system.deleteSystem(self.session_key, system['id'])
 
@@ -93,7 +92,7 @@ class ResourceManager:
     def delete_salt_keys(self):
         accepted_salt_keys = self.client.saltkey.acceptedList(self.session_key)
         for accepted_salt_key in accepted_salt_keys:
-            if not any(protected in accepted_salt_key for protected in self.resources_to_delete):
+            if not any(protected in accepted_salt_key for protected in self.resources_to_keep):
                 logger.info(f"Delete remaining accepted key : {accepted_salt_key}")
                 self.client.saltkey.delete(self.session_key, accepted_salt_key)
 
