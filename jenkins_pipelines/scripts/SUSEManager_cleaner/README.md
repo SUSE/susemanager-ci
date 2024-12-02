@@ -5,7 +5,7 @@ The script enables testers to perform resource cleanup, SSH-based file managemen
 
 ## Prerequisites
 
-- **Python 3**: Ensure Python 3 is installed.
+- **Python 3.11**: Ensure Python 3.11 is installed.
 - **Dependencies**: Install the required packages using:
 
 ```bash
