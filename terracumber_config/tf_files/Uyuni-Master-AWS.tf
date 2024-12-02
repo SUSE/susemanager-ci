@@ -145,7 +145,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "c6i.xlarge"
         private_ip = "172.16.3.5"
-        overwrite_fqdn = "uyuni-master-ctl.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-controller.sumaci.aws"
       }
     }
     server_containerized = {
@@ -154,7 +154,7 @@ module "cucumber_testsuite" {
         instance_type = "m6a.xlarge"
         volume_size = "100"
         private_ip = "172.16.3.6"
-        overwrite_fqdn = "uyuni-master-srv.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-server.sumaci.aws"
       }
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
@@ -167,68 +167,53 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "c6i.large"
         private_ip = "172.16.3.7"
-        overwrite_fqdn = "uyuni-master-pxy.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-proxy.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
       container_tag = "latest"
     }
-    suse-minion = {
+    suse_minion = {
       image = "opensuse155o"
-      name = "min-suse"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.8"
-        overwrite_fqdn = "uyuni-master-min-sles15.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-suse-minion.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = "opensuse155o"
-      name = "minssh-suse"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.9"
-        overwrite_fqdn = "uyuni-master-minssh-sles15.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-suse-sshminion.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = "rocky8"
       provider_settings = {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
         instance_type = "t3a.medium"
         private_ip = "172.16.3.10"
-        overwrite_fqdn = "uyuni-master-min-rocky8.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-rhlike-minion.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
-      name = "min-ubuntu2204"
+    deblike_minion = {
       image = "ubuntu2204"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.11"
-        overwrite_fqdn = "uyuni-master-min-ubuntu2204.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-deblike-minion.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
       provider_settings = {
         instance_type = "t3a.large"
         private_ip = "172.16.3.12"
-        overwrite_fqdn = "uyuni-master-min-build.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-build-host.sumaci.aws"
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
 // No PXE support for AWS yet
 // No nested virtualization in AWS

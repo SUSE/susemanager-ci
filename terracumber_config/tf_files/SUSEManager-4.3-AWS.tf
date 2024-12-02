@@ -194,7 +194,6 @@ module "server" {
   provider_settings = {
     instance_type = "m6a.xlarge"
   }
-  //server_additional_repos
 
 }
 
@@ -219,71 +218,62 @@ module "proxy" {
   ssh_key_path              = "./salt/controller/id_rsa.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
-  //proxy_additional_repos
 
 }
 
-module "suse-client" {
+module "suse_client" {
 
-  source             = "./modules/client"
-  base_configuration = module.base.configuration
-  name                 = "cli-sles15"
-  image                = "sles15sp4o"
-  product_version    = "4.3-released"
-  server_configuration = module.server.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
+  source                  = "./modules/client"
+  base_configuration      = module.base.configuration
+  image                   = "sles15sp4o"
+  product_version         = "4.3-released"
+  name                 = "suse-client"
+  server_configuration    = module.server.configuration
+  sles_registration_code  = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
   provider_settings = {
     instance_type = "t3a.medium"
   }
-  //sle15sp4-client_additional_repos
 }
 
-module "suse-minion" {
+module "suse_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
-  name               = "min-sles15"
   image              = "sles15sp4o"
+  name               = "suse-minion"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
   provider_settings = {
     instance_type = "t3a.medium"
   }
-  //sle15sp4-minion_additional_repos
 
 }
 
-module "suse-sshminion" {
+module "suse_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
-  name               = "minssh-sles15"
   image              = "sles15sp4o"
+  name               = "suse-minion"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
-  additional_packages = [ "venv-salt-minion" , "iptables"]
-  install_salt_bundle = true
   provider_settings = {
     instance_type = "t3a.medium"
   }
 
 }
 
-module "redhat-minion"  {
+module "rhlike_minion"  {
   image = "rocky8"
-  name = "min-rocky8"
+  name = "rhlike-minion"
   provider_settings = {
     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
     // Also, openscap cannot run with less than 1.25 GB of RAM
@@ -297,43 +287,21 @@ module "redhat-minion"  {
   server_configuration = module.server.configuration
   auto_connect_to_master = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
 }
 
-module "debian-minion" {
-  name = "min-ubuntu2204"
+module "deblike_minion" {
   image = "ubuntu2204"
+  name = "deblike-minion"
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
   provider_settings = {
     instance_type = "t3a.medium"
   }
 }
-//
-//module "build-host"  {
-//  image = "sles15sp4o"
-//  name = "build-host"
-//  source             = "./modules/build_host"
-//  base_configuration = module.base.configuration
-//  sles_registration_code = var.SLES_REGISTRATION_CODE
-//  product_version    = "4.3-released"
-//  server_configuration = module.server.configuration
-//  auto_connect_to_master  = false
-//  use_os_released_updates = true
-//  ssh_key_path            = "./salt/controller/id_rsa.pub"
-//  additional_packages = [ "venv-salt-minion" ]
-//  install_salt_bundle = true
-//  provider_settings = {
-//    instance_type = "t3a.large"
-//  }
-//}
 
 module "controller" {
   source             = "./modules/controller"
@@ -355,12 +323,12 @@ module "controller" {
 
   server_configuration    = module.server.configuration
   proxy_configuration     = module.proxy.configuration
-  client_configuration    = module.suse-client.configuration
-  minion_configuration    = module.suse-minion.configuration
+  client_configuration    = module.suse_client.configuration
+  minion_configuration    = module.suse_minion.configuration
 //  buildhost_configuration = module.build-host.configuration
-  sshminion_configuration = module.suse-sshminion.configuration
-  redhat_configuration    = module.redhat-minion.configuration
-  debian_configuration    = module.debian-minion.configuration
+  sshminion_configuration = module.suse_sshminion.configuration
+  redhat_configuration    = module.rhlike_minion.configuration
+  debian_configuration    = module.deblike_minion.configuration
 
 }
 
