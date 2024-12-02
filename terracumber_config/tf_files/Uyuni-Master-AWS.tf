@@ -145,7 +145,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "c6i.xlarge"
         private_ip = "172.16.3.5"
-        overwrite_fqdn = "uyuni-master-ctl.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-controller.sumaci.aws"
       }
     }
     server_containerized = {
@@ -154,7 +154,7 @@ module "cucumber_testsuite" {
         instance_type = "m6a.xlarge"
         volume_size = "100"
         private_ip = "172.16.3.6"
-        overwrite_fqdn = "uyuni-master-srv.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-server.sumaci.aws"
       }
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
@@ -167,7 +167,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "c6i.large"
         private_ip = "172.16.3.7"
-        overwrite_fqdn = "uyuni-master-pxy.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-proxy.sumaci.aws"
       }
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
@@ -178,7 +178,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.8"
-        overwrite_fqdn = "uyuni-master-min-sles15.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-suse-minion.sumaci.aws"
       }
     }
     suse_sshminion = {
@@ -186,7 +186,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.9"
-        overwrite_fqdn = "uyuni-master-minssh-sles15.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-suse-sshminion.sumaci.aws"
       }
     }
     rhlike_minion = {
@@ -196,7 +196,7 @@ module "cucumber_testsuite" {
         // use small instead of micro
         instance_type = "t3a.medium"
         private_ip = "172.16.3.10"
-        overwrite_fqdn = "uyuni-master-min-rocky8.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-rhlike-minion.sumaci.aws"
       }
     }
     deblike_minion = {
@@ -204,7 +204,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.11"
-        overwrite_fqdn = "uyuni-master-min-ubuntu2204.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-deblike-minion.sumaci.aws"
       }
     }
     build_host = {
@@ -212,7 +212,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         instance_type = "t3a.large"
         private_ip = "172.16.3.12"
-        overwrite_fqdn = "uyuni-master-min-build.sumaci.aws"
+        overwrite_fqdn = "uyuni-master-build-host.sumaci.aws"
       }
     }
 // No PXE support for AWS yet
