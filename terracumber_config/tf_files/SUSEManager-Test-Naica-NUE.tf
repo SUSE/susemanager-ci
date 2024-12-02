@@ -196,6 +196,15 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
+    dhcp_dns = {
+      name        = "dhcp-dns"
+      image       = "opensuse155o"
+      hypervisor  = {
+        host        = "suma-01.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_rsa")
+      }
+    }
   }
   provider_settings = {
     pool               = "ssd"
