@@ -165,69 +165,50 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:04:00:f2"
         memory = 16384
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
       container_tag = "latest"
     }
-    suse-minion = {
+    suse_minion = {
       image = "opensuse155o"
-      name = "min-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f4"
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    suse-sshminion = {
+    suse_sshminion = {
       image = "opensuse155o"
-      name = "minssh-sles15"
       provider_settings = {
         mac = "aa:b2:92:04:00:f5"
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion", "iptables" ]
-      install_salt_bundle = true
     }
-    redhat-minion = {
+    rhlike_minion = {
       image = "rocky8o"
-      name = "min-rocky8"
       provider_settings = {
         mac = "aa:b2:92:04:00:f6"
         memory = 4096
         vcpu = 2
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    debian-minion = {
-      name = "min-ubuntu2204"
+    deblike_minion = {
       image = "ubuntu2204o"
       provider_settings = {
         mac = "aa:b2:92:04:00:f7"
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    build-host = {
+    build_host = {
       image = "sles15sp4o"
-      name = "min-build"
       provider_settings = {
         mac = "aa:b2:92:04:00:f9"
         memory = 4096
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    pxeboot-minion = {
+    pxeboot_minion = {
       image = "sles15sp4o"
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
-    dhcp-dns = {
+    dhcp_dns = {
       name = "dhcp-dns"
       image = "opensuse155o"
       hypervisor = {
@@ -236,17 +217,13 @@ module "cucumber_testsuite" {
         private_key = file("~/.ssh/id_rsa")
       }
     }
-    kvm-host = {
+    kvm_host = {
       image = "opensuse155o"
-      name = "min-kvm"
-      
       provider_settings = {
         mac = "aa:b2:92:04:00:fa"
         vcpu = 4
         memory = 8192
       }
-      additional_packages = [ "venv-salt-minion" ]
-      install_salt_bundle = true
     }
   }
   
