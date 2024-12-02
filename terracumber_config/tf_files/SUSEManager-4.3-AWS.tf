@@ -227,6 +227,7 @@ module "suse_client" {
   base_configuration      = module.base.configuration
   image                   = "sles15sp4o"
   product_version         = "4.3-released"
+  name                 = "suse-client"
   server_configuration    = module.server.configuration
   sles_registration_code  = var.SLES_REGISTRATION_CODE
   auto_register           = false
@@ -242,6 +243,7 @@ module "suse_minion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   image              = "sles15sp4o"
+  name               = "suse-minion"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
@@ -258,6 +260,7 @@ module "suse_sshminion" {
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
   image              = "sles15sp4o"
+  name               = "suse-minion"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -270,6 +273,7 @@ module "suse_sshminion" {
 
 module "rhlike_minion"  {
   image = "rocky8"
+  name = "rhlike-minion"
   provider_settings = {
     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
     // Also, openscap cannot run with less than 1.25 GB of RAM
@@ -287,6 +291,7 @@ module "rhlike_minion"  {
 
 module "deblike_minion" {
   image = "ubuntu2204"
+  name = "deblike-minion"
   source             = "./modules/minion"
   base_configuration = module.base.configuration
   product_version    = "4.3-released"
