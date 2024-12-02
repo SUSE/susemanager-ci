@@ -175,7 +175,6 @@ module "cucumber_testsuite" {
     }
     suse_minion = {
       image = "opensuse155o"
-      name = "min-suse"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.8"
@@ -184,7 +183,6 @@ module "cucumber_testsuite" {
     }
     suse_sshminion = {
       image = "opensuse155o"
-      name = "minssh-suse"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.9"
