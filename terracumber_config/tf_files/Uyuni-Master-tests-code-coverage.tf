@@ -278,7 +278,7 @@ resource "null_resource" "configure_jacoco" {
   provisioner "remote-exec" {
     inline = [ "echo export CODE_COVERAGE=true >> ~/.bashrc",
                "echo export REDIS_HOST=${var.REDIS_HOST} >> ~/.bashrc",
-               "echo export REDIS_PORT=19269 >> ~/.bashrc",
+               "echo export REDIS_PORT=6379 >> ~/.bashrc",
                "echo export REDIS_USERNAME=${var.REDIS_USERNAME} >> ~/.bashrc",
                "echo export REDIS_PASSWORD=${var.REDIS_PASSWORD} >> ~/.bashrc",
                "source ~/.bashrc"
