@@ -200,7 +200,7 @@ module "cucumber_testsuite" {
       name        = "dhcp-dns"
       image       = "opensuse155o"
       hypervisor  = {
-        host        = "suma-01.mgr.suse.de"
+        host        = "cthulhu.mgr.suse.de"
         user        = "root"
         private_key = file("~/.ssh/id_rsa")
       }
