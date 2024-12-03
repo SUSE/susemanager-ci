@@ -21,6 +21,7 @@ node {
                                 'default',
                                 'manager-4.3-qe-build-validation-NUE',
                                 'manager-5.0-qe-build-validation-NUE',
+                                'manager-5.0-qe-build-validation-weekly-NUE',
                                 'uyuni-master-qe-build-validation-NUE',
                                 'manager-4.3-qe-build-validation-PRV',
                                 'manager-5.0-qe-build-validation-PRV',
