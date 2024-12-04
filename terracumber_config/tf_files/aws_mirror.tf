@@ -126,7 +126,7 @@ provider "aws" {
 
 module "base" {
   source = "./modules/base"
-
+  product_version           = "5.0-released"
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
   name_prefix = var.NAME_PREFIX
