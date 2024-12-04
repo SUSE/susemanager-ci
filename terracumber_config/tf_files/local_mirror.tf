@@ -92,11 +92,11 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
 }
 
 locals {
-  pool = "ssd"
+  pool = "mnoel_disks"
 }
 
 module "base" {
@@ -112,7 +112,7 @@ module "base" {
     pool = local.pool
     network_name = null
     bridge = "br0"
-    additional_network = "192.168.80.0/24"
+    additional_network = "192.168.8.0/24"
   }
 }
 
