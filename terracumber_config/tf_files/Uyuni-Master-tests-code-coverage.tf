@@ -198,16 +198,16 @@ module "cucumber_testsuite" {
         memory = 4096
       }
     }
-    build_host = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:92:04:00:f9"
-        memory = 4096
-      }
-    }
-    pxeboot_minion = {
-      image = "sles15sp4o"
-    }
+    //build_host = {
+    //  image = "sles15sp4o"
+    //  provider_settings = {
+    //    mac = "aa:b2:92:04:00:f9"
+    //    memory = 4096
+    //  }
+    //}
+    //pxeboot_minion = {
+    //  image = "sles15sp4o"
+    //}
     dhcp_dns = {
       name = "dhcp-dns"
       image = "opensuse155o"
@@ -217,14 +217,14 @@ module "cucumber_testsuite" {
         private_key = file("~/.ssh/id_rsa")
       }
     }
-    kvm_host = {
-      image = "opensuse155o"
-      provider_settings = {
-        mac = "aa:b2:92:04:00:fa"
-        vcpu = 4
-        memory = 8192
-      }
-    }
+    //kvm_host = {
+    //  image = "opensuse155o"
+    //  provider_settings = {
+    //    mac = "aa:b2:92:04:00:fa"
+    //    vcpu = 4
+    //    memory = 8192
+    //  }
+    //}
   }
   
   provider_settings = {
