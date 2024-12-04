@@ -49,7 +49,7 @@ node('pull-request-test-nue') {
         additional_repo_url = params.additional_repo_url;
         terraform_parallelism = params.terraform_parallelism;
         sumaform_gitrepo = "https://github.com/uyuni-project/sumaform.git";
-        sumaform_ref = "rename_cucumber_testsuite_module";
+        sumaform_ref = "master";
         secondary_exports = ""
         cucumber_gitrepo = params.cucumber_gitrepo;
         cucumber_ref = params.cucumber_ref;
