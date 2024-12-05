@@ -168,7 +168,7 @@ module "server" {
     })
   name               = "server"
   product_version            = "paygo"
-  image                      = "suma-server-43-ltd-paygo"
+  image                      = "suma-server-50-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
@@ -202,7 +202,7 @@ module "proxy" {
   server_configuration      = module.server.configuration
   name               = "proxy"
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
-  image = "suma-proxy-43-byos"
+  image = "suma-proxy-50-byos"
 
 
   auto_register             = false
