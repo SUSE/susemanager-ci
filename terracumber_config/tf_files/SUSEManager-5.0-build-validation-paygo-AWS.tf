@@ -231,6 +231,7 @@ module "proxy" {
     instance_type = "c6i.large"
   }
 
+  //proxy_additional_repos
 }
 
 module "sles12sp5_paygo_minion" {
