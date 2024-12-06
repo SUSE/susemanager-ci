@@ -14,8 +14,8 @@ def run(params) {
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true;"
 
         ssh_option = '-o StrictHostKeyChecking=no -o ConnectTimeout=7200 -o ServerAliveInterval=60'
-        String server_ami = params.server_ami ?: null
-        String proxy_ami  = params.proxy_ami ?: null
+        server_ami = params.server_ami ?: ""
+        proxy_ami  = params.proxy_ami ?: ""
 
         //Deployment variables
         deployed_local = false
