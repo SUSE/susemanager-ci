@@ -128,9 +128,15 @@ variable "NAME_PREFIX" {
   default = null
 }
 
-variable "AMI_IMAGE" {
-  description = "Custom AMI ID to use. Leave empty to use the default SUSE Manager image."
+variable "SERVER_AMI" {
+  description = "Custom AMI ID to use for server. Leave empty to use the default SUSE Manager image."
   type = string
+  default     = ""  # Default to empty string if not set
+}
+
+variable "PROXY_AMI" {
+  description = "Custom AMI ID to use for proxy. Leave empty to use the default SUSE Manager image."
+  type        = string
   default     = ""  # Default to empty string if not set
 }
 
@@ -174,7 +180,7 @@ module "server" {
     })
   name                       = "server"
   product_version            = "5.0-paygo"
-  image                      = var.AMI_IMAGE != "" ? var.AMI_IMAGE : "suma-server-50-ltd-paygo"
+  image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "suma-server-50-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
@@ -208,7 +214,7 @@ module "proxy" {
   server_configuration      = module.server.configuration
   name                      = "proxy"
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
-  image                     = "suma-proxy-50-byos"
+  image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "suma-proxy-50-byos"
 
 
   auto_register             = false
