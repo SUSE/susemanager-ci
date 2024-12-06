@@ -83,7 +83,7 @@ terraform {
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.6.3"
     }
     feilong = {
       source = "bischoff/feilong"
