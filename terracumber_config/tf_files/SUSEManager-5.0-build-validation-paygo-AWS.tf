@@ -128,20 +128,26 @@ variable "NAME_PREFIX" {
   default = null
 }
 
+variable "AMI_IMAGE" {
+  description = "Custom AMI ID to use. Leave empty to use the default SUSE Manager image."
+  type = string
+  default     = ""  # Default to empty string if not set
+}
+
 provider "aws" {
   region     = var.REGION
 }
 
 module "base" {
-  source = "./modules/base"
-  product_version           = "5.0-released"
+  source                   = "./modules/base"
+  product_version          = "5.0-released"
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
   use_avahi                = false
   use_eip_bastion          = false
   is_server_paygo_instance = true
-  provider_settings = {
+  provider_settings        = {
     availability_zone = var.AVAILABILITY_ZONE
     region            = var.REGION
     ssh_allowed_ips   = var.ALLOWED_IPS
@@ -166,9 +172,9 @@ module "server" {
     {
       mirror = null
     })
-  name               = "server"
-  product_version            = "paygo"
-  image                      = "suma-server-50-ltd-paygo"
+  name                       = "server"
+  product_version            = "5.0-paygo"
+  image                      = var.AMI_IMAGE != "" ? var.AMI_IMAGE : "suma-server-50-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
@@ -200,9 +206,9 @@ module "proxy" {
   source                    = "./modules/proxy"
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
-  name               = "proxy"
+  name                      = "proxy"
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
-  image = "suma-proxy-50-byos"
+  image                     = "suma-proxy-50-byos"
 
 
   auto_register             = false
