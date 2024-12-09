@@ -210,7 +210,7 @@ module "server" {
 }
 
 module "proxy" {
-  source                    = "./modules/proxy"
+  source                    = "./modules/proxy_containerized"
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
   name                      = "proxy"
