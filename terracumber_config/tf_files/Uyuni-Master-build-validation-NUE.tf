@@ -206,7 +206,6 @@ module "server_containerized" {
   runtime               = "podman"
   container_repository  = var.CONTAINER_REPOSITORY
   container_tag         = "latest"
-  helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
 
   //server_additional_repos
 
@@ -1248,6 +1247,7 @@ module "controller" {
 
 output "configuration" {
   value = {
-    controller = module.controller.configuration
+    controller  = module.controller.configuration
+    server      = module.server_containerized.configuration
   }
 }
