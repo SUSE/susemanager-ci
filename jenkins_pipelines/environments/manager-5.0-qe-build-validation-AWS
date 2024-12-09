@@ -67,7 +67,6 @@ node('sumaform-cucumber') {
             text(name: 'allowed_IPS', defaultValue: '195.135.223.0/24', description: 'Add the public IPs to add to AWS ingress security group ( keep default Jenkins address ) separated by new line' ),
             text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma and whitespaces (Option A)'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format (Option B)'),
-            booleanParam(name: 'use_latest_ami_image', defaultValue: false, description: 'Use latest ami image')
             ])
     ])
 
