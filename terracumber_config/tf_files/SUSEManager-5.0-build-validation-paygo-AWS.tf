@@ -216,19 +216,13 @@ module "proxy" {
   name                      = "proxy"
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
   image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "suma-proxy-50-byos"
+  provision                 = false
 
 
-  auto_register             = false
-  auto_connect_to_master    = false
-  download_private_ssl_key  = false
-  install_proxy_pattern     = false
   auto_configure            = false
-  generate_bootstrap_script = false
-  publish_private_ssl_key   = false
   use_os_released_updates   = true
-  proxy_containerized       = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
-  provider_settings = {
+  provider_settings         = {
     instance_type = "c6i.large"
   }
 
