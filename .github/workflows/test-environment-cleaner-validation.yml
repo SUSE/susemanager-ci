@@ -1,9 +1,9 @@
-name: Run Api Program Tests
+name: Validate test environment cleaner
 
 on:
   pull_request:
     paths:
-      - 'jenkins_pipelines/scripts/SUSEManager_cleaner/**'
+      - 'jenkins_pipelines/scripts/test_environment_cleaner/**'
 
 jobs:
   test:
@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python3.11 -m pip install --upgrade pip
-          pip3.11 install -r jenkins_pipelines/scripts/SUSEManager_cleaner/requirements.txt
+          pip3.11 install -r jenkins_pipelines/scripts/test_environment_cleaner/requirements.txt
 
       - name: Run tests
-        run: cd jenkins_pipelines/scripts/SUSEManager_cleaner; ./run_tests.sh
+        run: cd jenkins_pipelines/scripts/test_environment_cleaner; ./run_tests.sh
