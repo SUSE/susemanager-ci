@@ -1,7 +1,7 @@
 def run(params) {
     timestamps {
         // Define paths and environment variables for reusability
-        String TestEnvironmentCleanerProgram = "./susemanager-ci/jenkins_pipelines/scripts/SUSEManager_cleaner/test_environemnt_cleaner_program/TestEnvironmentCleaner.py"
+        GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/SUSEManager_cleaner/test_environemnt_cleaner_program/TestEnvironmentCleaner.py"
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
@@ -9,9 +9,9 @@ def run(params) {
         String product_version = null
         String controllerHostname = null
         String serverHostname = null
-        GString targetedTfFile = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/main.tf"
-        GString targetedTfStateFile = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/terraform.tfstate"
-        GString targetedTerraformDirPath = "/home/jenkins/workspace/${params.targeted_project}/results/sumaform/"
+        GString targetedTfFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/main.tf"
+        GString targetedTfStateFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/terraform.tfstate"
+        GString targetedTerraformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
         GString localSumaformDirPath = "${resultdir}/sumaform/"
         GString localTfStateFile = "${localSumaformDirPath}/terraform.tfstate"
         GString logFile = "${resultdirbuild}/sumaform.log"
@@ -33,9 +33,14 @@ def run(params) {
         GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform"
         GString programCall = "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode"
 
-        if (params.terraform_parallelism) {
-            commonParams = "${commonParams} --parallelism ${params.terraform_parallelism}"
-        }
+        // Define shared environment variables for terraform calls
+        GString environmentVars = """
+                set -x
+                source /home/jenkins/.credentials
+                export TF_VAR_CONTAINER_REPOSITORY=${container_repository}
+                export TERRAFORM=${terraform_bin}
+                export TERRAFORM_PLUGINS=${terraform_bin_plugins}
+            """
 
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
@@ -53,12 +58,7 @@ def run(params) {
                 }
 
                 // Clone sumaform
-                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${commonParams} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-
-                // Restore Terraform states from artifacts
-                if (params.use_previous_terraform_state) {
-                    copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
-                }
+                sh "set +x; source /home/jenkins/.credentials set -x; ${WORKSPACE}/terracumber-cli ${commonParams} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
 
                 // Set product version
                 if (params.targeted_project.contains("5.0")) {
@@ -67,10 +67,14 @@ def run(params) {
                     product_version = '4.3'
                 } else if (params.targeted_project.contains("uyuni")) {
                     product_version = 'uyuni'
+                } else if (params.targeted_project.contains("5.1")) {
+                    product_version = '5.1'
+                } else if (params.targeted_project.contains("head")) {
+                    product_version = 'head'
                 }
                 else {
                     // Use the `error` step instead of `throw`
-                    error("Error: targeted_project must contain either '5.0', '4.3' or uyuni.")
+                    error("Error: targeted_project must contain either 'head', '5.1', '5.0', '4.3' or uyuni.")
                 }
             }
 
@@ -157,15 +161,6 @@ def run(params) {
                 sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_distributions")
             }
 
-            // Define shared environment variables for terraform calls
-            GString environmentVars = """
-                set -x
-                source /home/jenkins/.credentials
-                export TF_VAR_CONTAINER_REPOSITORY=${container_repository}
-                export TERRAFORM=${terraform_bin}
-                export TERRAFORM_PLUGINS=${terraform_bin_plugins}
-            """
-
             stage('Delete client VMs') {
 
                 // Construct the --tf-resources-to-delete argument dynamically
@@ -187,7 +182,7 @@ def run(params) {
                 sh """
                     ${environmentVars}
                     set +x
-                    ./terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
+                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
                 """
             }
 
@@ -197,7 +192,7 @@ def run(params) {
                 sh """
                     ${environmentVars}
                     set +x
-                    ./terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
+                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
                 """
             }
 
@@ -224,7 +219,7 @@ def run(params) {
             }
 
             stage('Sanity check') {
-                sh "./terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
+                sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
             }
 
         }
