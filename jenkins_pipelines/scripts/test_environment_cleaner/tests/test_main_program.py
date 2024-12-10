@@ -6,15 +6,15 @@ import os
 
 # Add the root directory of the project to the sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-from suse_manager_cleaner_program.SUSEManagerCleaner import main  # Ensure the import is correct
+from test_environemnt_cleaner_program.TestEnvironmentCleaner.py import main  # Ensure the import is correct
 
 class TestMainProgram(unittest.TestCase):
 
-    @patch("suse_manager_cleaner_program.SUSEManagerCleaner.ResourceManager")
-    @patch("suse_manager_cleaner_program.SUSEManagerCleaner.SSHClientManager")
+    @patch("test_environemnt_cleaner_program.TestEnvironmentCleaner.py.ResourceManager")
+    @patch("test_environemnt_cleaner_program.TestEnvironmentCleaner.py.SSHClientManager")
     def test_delete_users_mode(self, MockSSHClientManager, MockResourceManager):
         # Mock the arguments
-        test_args = ["suse_manager_cleaner_program.SUSEManagerCleaner", "--url", "http://test-url.com", "--mode", "delete_users", "--product_version", "5.0"]
+        test_args = ["test_environemnt_cleaner_program.TestEnvironmentCleaner.py", "--url", "http://test-url.com", "--mode", "delete_users", "--product_version", "5.0"]
         with patch.object(sys, 'argv', test_args):
             # Mock ResourceManager and its methods
             mock_resource_manager = MockResourceManager.return_value
@@ -29,10 +29,10 @@ class TestMainProgram(unittest.TestCase):
             mock_resource_manager.delete_users.assert_called_once()
             mock_resource_manager.logout_session.assert_called_once()
 
-    @patch("suse_manager_cleaner_program.SUSEManagerCleaner.ResourceManager")
-    @patch("suse_manager_cleaner_program.SUSEManagerCleaner.SSHClientManager")
+    @patch("test_environemnt_cleaner_program.TestEnvironmentCleaner.py.ResourceManager")
+    @patch("test_environemnt_cleaner_program.TestEnvironmentCleaner.py.SSHClientManager")
     def test_delete_known_hosts_mode(self, MockSSHClientManager, MockResourceManager):
-        test_args = ["suse_manager_cleaner_program.SUSEManagerCleaner", "--url", "http://test-url.com", "--mode", "delete_known_hosts", "--product_version", "5.0"]
+        test_args = ["test_environemnt_cleaner_program.TestEnvironmentCleaner.py", "--url", "http://test-url.com", "--mode", "delete_known_hosts", "--product_version", "5.0"]
         with patch.object(sys, 'argv', test_args):
             # Mock SSHClientManager and its methods
             mock_ssh_manager = MockSSHClientManager.return_value
@@ -47,11 +47,11 @@ class TestMainProgram(unittest.TestCase):
             mock_ssh_manager.run_command.assert_any_call("rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
             mock_ssh_manager.close.assert_called_once()
 
-    @patch("suse_manager_cleaner_program.SUSEManagerCleaner.ResourceManager")
-    @patch("suse_manager_cleaner_program.SUSEManagerCleaner.SSHClientManager")
+    @patch("test_environemnt_cleaner_program.TestEnvironmentCleaner.py.ResourceManager")
+    @patch("test_environemnt_cleaner_program.TestEnvironmentCleaner.py.SSHClientManager")
     def test_invalid_mode(self, MockSSHClientManager, MockResourceManager):
         # Define the test argument with an invalid mode
-        test_args = ["SUSEManagerCleaner.py", "--url", "http://test-url.com", "--mode", "false", "--product_version", "5.0"]
+        test_args = ["TestEnvironmentCleaner.py", "--url", "http://test-url.com", "--mode", "false", "--product_version", "5.0"]
 
         # Patch sys.argv with the test arguments
         with patch.object(sys, 'argv', test_args):
@@ -62,17 +62,17 @@ class TestMainProgram(unittest.TestCase):
 
                 # Assert the error message is in the captured stderr
                 expected_error_message = (
-                    "SUSEManagerCleaner.py: error: argument --mode: invalid choice: 'false' "
+                    "TestEnvironmentCleaner.py: error: argument --mode: invalid choice: 'false' "
                     "(choose from 'delete_users', 'delete_activation_keys', 'delete_config_projects', "
                     "'delete_software_channels', 'delete_systems', 'delete_repositories', 'full_cleanup', "
                     "'delete_salt_keys', 'delete_known_hosts', 'update_custom_repositories', 'delete_distributions')"
                 )
                 self.assertIn(expected_error_message, fake_err.getvalue())
 
-    @patch("suse_manager_cleaner_program.SUSEManagerCleaner.ResourceManager")
-    @patch("suse_manager_cleaner_program.SUSEManagerCleaner.SSHClientManager")
+    @patch("test_environemnt_cleaner_program.TestEnvironmentCleaner.py.ResourceManager")
+    @patch("test_environemnt_cleaner_program.TestEnvironmentCleaner.py.SSHClientManager")
     def test_update_custom_repositories_mode(self, MockSSHClientManager, MockResourceManager):
-        test_args = ["suse_manager_cleaner_program.SUSEManagerCleaner", "--url", "http://test-url.com", "--mode", "update_custom_repositories", "--product_version", "5.0"]
+        test_args = ["test_environemnt_cleaner_program.TestEnvironmentCleaner.py", "--url", "http://test-url.com", "--mode", "update_custom_repositories", "--product_version", "5.0"]
         with patch.object(sys, 'argv', test_args):
             # Mock SSHClientManager and its methods
             mock_ssh_manager = MockSSHClientManager.return_value

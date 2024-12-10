@@ -1,7 +1,7 @@
 def run(params) {
     timestamps {
         // Define paths and environment variables for reusability
-        String SUSEManagerCleanerProgram = "./susemanager-ci/jenkins_pipelines/scripts/SUSEManager_cleaner/suse_manager_cleaner_program/SUSEManagerCleaner.py"
+        String TestEnvironmentCleanerProgram = "./susemanager-ci/jenkins_pipelines/scripts/SUSEManager_cleaner/test_environemnt_cleaner_program/TestEnvironmentCleaner.py"
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
@@ -31,6 +31,7 @@ def run(params) {
         String defaultResourcesToDeleteArgs = defaultResourcesToDelete.isEmpty() ? '' : "--default-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
 
         GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform"
+        GString programCall = "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode"
 
         if (params.terraform_parallelism) {
             commonParams = "${commonParams} --parallelism ${params.terraform_parallelism}"
@@ -127,35 +128,33 @@ def run(params) {
             }
 
             stage('Delete the systems') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_systems")
+                sh(script: "${programCall} delete_systems")
             }
             stage('Delete config projects') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_config_projects")
+                sh(script: "${programCall} delete_config_projects")
             }
-
             stage('Delete software channels') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_software_channels")
+                sh(script: "${programCall} delete_software_channels")
             }
-
             stage('Delete activation keys') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_activation_keys")
+                sh(script: "${programCall} delete_activation_keys")
             }
             stage('Delete minion users') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_users")
+                sh(script: "${programCall} delete_users")
             }
             stage('Delete channel repositories') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_repositories")
+                sh(script: "${programCall} delete_repositories")
             }
             stage('Delete salt keys') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode delete_salt_keys")
+                sh(script: "${programCall} delete_salt_keys")
             }
 
             stage('Delete ssh know hosts') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_known_hosts")
+                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_known_hosts")
             }
 
             stage('Delete distributions folders') {
-                sh(script: "${SUSEManagerCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_distributions")
+                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_distributions")
             }
 
             // Define shared environment variables for terraform calls
@@ -220,7 +219,7 @@ def run(params) {
                             }
                         }
                     }
-                    sh(script: "${SUSEManagerCleanerProgram} --url ${controllerHostname} --product_version ${product_version} --mode update_custom_repositories")
+                    sh(script: "${TestEnvironmentCleanerProgram} --url ${controllerHostname} --product_version ${product_version} --mode update_custom_repositories")
                 }
             }
 
