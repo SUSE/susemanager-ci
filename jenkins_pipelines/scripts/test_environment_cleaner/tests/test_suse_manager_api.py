@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from test_environemnt_cleaner_program.suse_manager_api import ResourceManager
+from test_environment_cleaner_program.suse_manager_api import ResourceManager
 
 class TestResourceManager(unittest.TestCase):
     def setUp(self):
