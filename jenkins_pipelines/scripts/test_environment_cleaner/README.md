@@ -9,13 +9,13 @@ The script enables testers to perform resource cleanup, SSH-based file managemen
 - **Dependencies**: Install the required packages using:
 
 ```bash
-pip install argparse logging paramiko
+pip3.11 install -r test_environment_cleaner/requirements.txt
 ```
 
 ## Usage
 
 ```commandline
-python3 main.py --url <SUSE_Manager_URL> --mode <operation_mode> [options]
+python3.11 TestEnvironmentCleaner.py --url <SUSE_Manager_URL> --mode <operation_mode> [options]
 ```
 
 ### Command-Line Arguments
@@ -34,4 +34,4 @@ python3 main.py --url <SUSE_Manager_URL> --mode <operation_mode> [options]
     `delete_known_hosts`: Deletes known SSH hosts in server.
     `update_custom_repositories`: Updates custom repositories in controller.
  - `--default-resources-to-delete`: Optional list of resources (proxy, monitoring-server, retail) to enforce deletion during API cleanup operations.
- - `--product_version`: SUSE Manager version (5.0 or 4.3). Used for handling different paths in specific operations.
+ - `--product_version`: SUSE Manager version (head, 5.1, 5.0, 4.3 or uyuni). Used for handling different paths in specific operations.

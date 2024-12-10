@@ -1,7 +1,6 @@
 #!/usr/bin/python3.11
 import argparse
 import logging
-import sys
 from suse_manager_api import ResourceManager
 from suse_manager_ssh import SSHClientManager
 
