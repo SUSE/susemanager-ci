@@ -139,13 +139,9 @@ module "cucumber_testsuite" {
       runtime = "k3s"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
       container_tag = "latest"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server-helm"
       #cannot use immutable OS, since K3s installation requires a reboot
       #also 15.6 had issue on container startup
       image = "opensuse155o"
-      additional_repos = {
-          containerUtils = "https://download.opensuse.org/repositories/home:/cbosdonnat:/branches:/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
-      }
 
       login_timeout = 28800
       main_disk_size = 300
