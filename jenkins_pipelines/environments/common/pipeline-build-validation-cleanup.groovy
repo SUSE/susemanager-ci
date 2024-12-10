@@ -50,7 +50,7 @@ def run(params) {
                     error "Rebuild is blocked for this job."
                 }
 
-                // Create a directory for  to place the directory with the build results (if it does not exist)
+                // Create a directory to store the build results (if it does not exist). Needed for first run
                 sh "mkdir -p ${resultdir}"
                 git url: params.terracumber_gitrepo, branch: params.terracumber_ref
                 dir("susemanager-ci") {
