@@ -31,7 +31,6 @@ def run(params) {
         String defaultResourcesToDeleteArgs = defaultResourcesToDelete.isEmpty() ? '' : "--default-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
 
         GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform"
-        GString programCall = "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode"
 
         // Define shared environment variables for terraform calls
         GString environmentVars = """
@@ -129,7 +128,10 @@ def run(params) {
                 } catch (Exception e) {
                     error("Failed to extract hostnames: ${e.message}")
                 }
+
             }
+
+            GString programCall = "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode"
 
             stage('Delete the systems') {
                 sh(script: "${programCall} delete_systems")
