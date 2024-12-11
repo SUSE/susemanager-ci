@@ -1,7 +1,7 @@
 def run(params) {
     timestamps {
         // Define paths and environment variables for reusability
-        GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/SUSEManager_cleaner/test_environemnt_cleaner_program/TestEnvironmentCleaner.py"
+        GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
