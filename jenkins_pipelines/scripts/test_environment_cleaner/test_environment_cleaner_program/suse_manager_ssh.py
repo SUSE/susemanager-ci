@@ -96,3 +96,28 @@ class SSHClientManager:
                 return "Invalid IP address format"
         else:
             return "No hostname found in URL"
+
+    def delete_known_hosts(self, version):
+        if version == "4.3":
+            self.run_command("rm /var/lib/salt/.ssh/known_hosts")
+        elif version in ["5.0", "head", "5.1", "uyuni"]:
+            result = self.run_command("ls -la /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
+            logger.info(f"Files in salt ssh before cleanup : {result}")
+            self.run_command("rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
+            logger.info(f"Files in salt ssh after cleanup : {result}")
+        logger.info("Deleted known_hosts file on server")
+
+    def delete_distributions(self, version):
+        if version == "4.3":
+            logger.warning("Distribution delete to do 4.3")
+        elif version in ["5.0", "head", "5.1"]:
+            self.run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
+            self.run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/htdocs/pub/*iso")
+        logger.info("Deleted distributions directory on server")
+
+    def update_custom_repositories(self):
+        self.copy_file(
+            "./custom_repositories.json",
+            "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json"
+        )
+        logger.info("Custom repositories updated.")
