@@ -53,7 +53,7 @@ class TestMainProgram(unittest.TestCase):
                     "{delete_users,delete_activation_keys,delete_config_projects,delete_software_channels,"
                     "delete_systems,delete_repositories,full_cleanup,delete_salt_keys,delete_known_hosts,update_custom_repositories,delete_distributions}"
                     " [--default-resources-to-delete [{proxy,monitoring-server,retail} ...]] --product_version {head,5.1,5.0,4.3,uyuni} "
-                    "test_environment_cleaner_program.TestEnvironmentCleaner: error: argument --mode: invalid choice: 'false' (choose from 'delete_users',"
+                    "test_environment_cleaner_program.TestEnvironmentCleaner: error: argument --mode: invalid choice: 'invalid' (choose from 'delete_users',"
                     " 'delete_activation_keys', 'delete_config_projects', 'delete_software_channels', 'delete_systems',"
                     " 'delete_repositories', 'full_cleanup', 'delete_salt_keys', 'delete_known_hosts', 'update_custom_repositories',"
                     " 'delete_distributions')"
