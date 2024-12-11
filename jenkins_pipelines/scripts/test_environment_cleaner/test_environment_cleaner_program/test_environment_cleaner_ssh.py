@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class SSHClientManager:
     def __init__(self, url, username="root", password="linux", port=22):
-        self.url = self.extract_ip_from_url(url)
+        self.url = url
         self.username = username
         self.password = password
         self.port = port
