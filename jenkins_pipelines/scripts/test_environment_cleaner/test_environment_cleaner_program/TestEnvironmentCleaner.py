@@ -57,8 +57,8 @@ def main():
     else:
         ssh_manager = SSHClientManager(url=manager_url)
         ssh_actions = {
-            "delete_known_hosts": ssh_manager.delete_known_hosts,
-            "delete_distributions": ssh_manager.delete_distributions,
+            "delete_known_hosts": ssh_manager.delete_known_hosts(args.product_version),
+            "delete_distributions": ssh_manager.delete_distributions(args.product_version),
             "update_custom_repositories": ssh_manager.update_custom_repositories,
         }
         action = ssh_actions.get(args.mode)
