@@ -27,12 +27,15 @@ def main():
 
     args = parser.parse_args()
     manager_url = args.url
-
+    default_resources_to_delete = [
+        item.replace("monitoring-server", "monitoring") if item == "monitoring-server" else item
+        for item in args.default_resources_to_delete
+    ]
     # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
                      "full_cleanup", "delete_salt_keys"]:
-        resource_manager = ResourceManager(manager_url, args.default_resources_to_delete, args.product_version)
+        resource_manager = ResourceManager(manager_url, default_resources_to_delete, args.product_version)
         resource_manager.get_session_key()
         mode_actions = {
             "delete_users": resource_manager.delete_users,
