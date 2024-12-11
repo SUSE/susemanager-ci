@@ -1,0 +1,27 @@
+name: Validate test environment cleaner
+
+on:
+  pull_request:
+    paths:
+      - 'jenkins_pipelines/scripts/test_environment_cleaner/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate api manager script
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python3.11 -m pip install --upgrade pip
+          pip3.11 install -r jenkins_pipelines/scripts/test_environment_cleaner/requirements.txt
+
+      - name: Run tests
+        run: cd jenkins_pipelines/scripts/test_environment_cleaner; ./run_tests.sh

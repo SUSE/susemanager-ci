@@ -1,0 +1,57 @@
+#!/usr/bin/env groovy
+
+node {
+    // Default node
+    String nodeName = 'sumaform-cucumber'
+
+    // Check the value of targeted_project and adjust the nodeName accordingly
+    if (params.targeted_project.contains('PRV')) {
+        nodeName = 'sumaform-cucumber-provo'  // Use this for PRV projects
+    } else if (params.targeted_project.contains('NUE')) {
+        nodeName = 'sumaform-cucumber'  // Use this for NUE projects
+    }
+
+    // Run on the selected node
+    node(nodeName) {
+        properties([
+                buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
+                disableConcurrentBuilds(),
+                parameters([
+                        choice(name: 'targeted_project', choices: [
+                                'default',
+                                'manager-4.3-qe-build-validation-NUE',
+                                'manager-5.0-qe-build-validation-NUE',
+                                'manager-5.0-qe-build-validation-weekly-NUE',
+                                'uyuni-master-qe-build-validation-NUE',
+                                'manager-4.3-qe-build-validation-PRV',
+                                'manager-5.0-qe-build-validation-PRV',
+                                'uyuni-master-qe-build-validation-PRV'
+                        ], description: 'Path to the tf file to be used'),
+                        string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+                        string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+                        string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+                        string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+                        string(name: 'container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy and server container registry'),
+                        booleanParam(name: 'clean_proxy', defaultValue: false, description: 'Clean Proxy, will remove all the artefacts related to Proxy and redeploy Proxy'),
+                        booleanParam(name: 'clean_monitoring_server', defaultValue: false, description: 'Clean Monitoring Server, will remove all the artefacts related to Monitoring Server and redeploy Monitoring Server'),
+                        booleanParam(name: 'clean_retail', defaultValue: false, description: 'Clean Retails artefacts, and redeploy terminal and dhcp if applicable'),
+                        booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Push the new custom_repositories.json to controller'),
+                        text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
+                        text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
+                ])
+        ])
+
+        stage('Checkout pipeline') {
+            checkout scm
+        }
+
+        // Define environment variables
+        env.sumaform_backend = 'libvirt'
+        env.terraform_bin = '/usr/bin/terraform'
+        env.terraform_bin_plugins = '/usr/bin'
+
+        // Load and run the pipeline
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation-cleanup.groovy"
+        pipeline.run(params)
+    }
+}
