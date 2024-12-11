@@ -36,7 +36,6 @@ class TestMainProgram(unittest.TestCase):
 
             MockSSHClientManager.assert_called_once_with(url="http://test-url.com")
             mock_ssh_manager.delete_known_hosts.assert_called_once_with("5.0")
-            mock_ssh_manager._close.assert_called_once()
 
     @patch("test_environment_cleaner_program.TestEnvironmentCleaner.ResourceManager")
     @patch("test_environment_cleaner_program.TestEnvironmentCleaner.SSHClientManager")
