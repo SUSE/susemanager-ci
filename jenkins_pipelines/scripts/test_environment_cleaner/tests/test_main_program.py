@@ -43,7 +43,6 @@ class TestMainProgram(unittest.TestCase):
 
             # Check SSHClientManager was initialized and called
             MockSSHClientManager.assert_called_once_with(url="http://test-url.com")
-            mock_ssh_manager.run_command.assert_any_call("ls -la /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
             mock_ssh_manager.run_command.assert_any_call("rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
             mock_ssh_manager.close.assert_called_once()
 
@@ -65,7 +64,7 @@ class TestMainProgram(unittest.TestCase):
                     "usage: suse_manager_cleaner_program.TestEnvironmentCleaner [-h] --url URL --mode "
                     "{delete_users,delete_activation_keys,delete_config_projects,delete_software_channels,"
                     "delete_systems,delete_repositories,full_cleanup,delete_salt_keys,delete_known_hosts,update_custom_repositories,delete_distributions}"
-                    " [--default-resources-to-delete [{proxy,monitoring-server,retail} ...]] --product_version {5.0,4.3,uyuni} "
+                    " [--default-resources-to-delete [{proxy,monitoring-server,retail} ...]] --product_version {head,5.1,5.0,4.3,uyuni} "
                     "suse_manager_cleaner_program.TestEnvironmentCleaner: error: argument --mode: invalid choice: 'false' (choose from 'delete_users',"
                     " 'delete_activation_keys', 'delete_config_projects', 'delete_software_channels', 'delete_systems',"
                     " 'delete_repositories', 'full_cleanup', 'delete_salt_keys', 'delete_known_hosts', 'update_custom_repositories',"

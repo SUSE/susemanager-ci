@@ -66,6 +66,26 @@ class SSHClientManager:
         finally:
             stdin.close()
 
+    def _copy_file(self, local_path, remote_path):
+        """
+        Copies a file to the remote server.
+
+        :param local_path: Path of the local file to copy.
+        :param remote_path: Destination path on the remote server.
+        :return: Success message or error details.
+        """
+        try:
+            self._connect()
+            sftp = self._client.open_sftp()
+            sftp.put(local_path, remote_path)
+            sftp.close()
+            logger.info(f"File {local_path} copied to {remote_path} on server {self.url}")
+        except Exception as e:
+            logger.error(f"Exception during file copy: {str(e)}")
+            raise
+        finally:
+            self._close()
+
     def delete_known_hosts(self, version):
         """
         Deletes the known_hosts file based on the product version.
@@ -108,19 +128,11 @@ class SSHClientManager:
         """
         Updates custom repositories by copying a configuration file to the server.
         """
-        try:
-            self._connect()
-            with self._client.open_sftp() as sftp:
-                local_path = "./custom_repositories.json"
-                remote_path = "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json"
-                logger.info(f"Copying file from {local_path} to {remote_path}")
-                sftp.put(local_path, remote_path)
-                logger.info("Custom repositories updated successfully.")
-        except Exception as e:
-            logger.error(f"Error updating custom repositories: {e}")
-            raise
-        finally:
-            self._close()
+        local_path = "./custom_repositories.json"
+        remote_path = "/root/spacewalk/testsuite/features/upload_files/custom_repositories.json"
+        logger.info(f"Copying file from {local_path} to {remote_path}")
+        self._copy_file(local_path, remote_path)
+        logger.info("Custom repositories updated successfully.")
 
     @staticmethod
     def extract_ip_from_url(url):
