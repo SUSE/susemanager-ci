@@ -140,6 +140,12 @@ variable "PROXY_AMI" {
   default     = ""  # Default to empty string if not set
 }
 
+variable "ARCHITECTURE" {
+  description = "Select Server architecture"
+  type        = string
+  default     = "x86_64"
+}
+
 provider "aws" {
   region     = var.REGION
 }
@@ -180,7 +186,7 @@ module "server" {
     })
   name                       = "server"
   product_version            = "5.0-paygo"
-  image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "suma-server-50-ltd-paygo"
+  image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "suma-server-50-${ARCHITECTURE}-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
@@ -202,7 +208,7 @@ module "server" {
   provision                      = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
-    instance_type = "m6a.xlarge"
+    instance_type = var.ARCHITECTURE == "x86_64" ? "m6a.xlarge" : "m6g.xlarge"
   }
 
   //server_additional_repos
