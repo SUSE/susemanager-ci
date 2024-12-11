@@ -1,8 +1,8 @@
 #!/usr/bin/python3.11
 import argparse
 import logging
-from suse_manager_api import ResourceManager
-from suse_manager_ssh import SSHClientManager
+from test_environment_cleaner_api import ResourceManager
+from test_environment_cleaner_ssh import SSHClientManager
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

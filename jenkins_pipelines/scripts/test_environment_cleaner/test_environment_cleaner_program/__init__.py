@@ -1,4 +1,4 @@
 # __init__.py
-from .suse_manager_api import ResourceManager
+from .test_environment_cleaner_api import ResourceManager
 
 __all__ = ['ResourceManager']
