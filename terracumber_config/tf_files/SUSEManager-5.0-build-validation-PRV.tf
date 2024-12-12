@@ -1598,6 +1598,7 @@ module "controller" {
 
 output "configuration" {
   value = {
-    controller = module.controller.configuration
+    controller  = module.controller.configuration
+    server      = module.server_containerized.configuration
   }
 }
