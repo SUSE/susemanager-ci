@@ -445,6 +445,7 @@ module "sles15sp6_sshminion" {
 module "controller" {
   source             = "./modules/controller"
   name               = "controller"
+  product_version    = ""
   provider_settings = {
     instance_type = "c6i.xlarge"
   }

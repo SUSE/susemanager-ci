@@ -125,20 +125,21 @@ provider "aws" {
 }
 
 module "base" {
-  source = "./modules/base"
-  product_version           = "uyuni-master"
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = var.NAME_PREFIX
-  testsuite                = true
-  use_avahi                = false
-  use_eip_bastion          = false
+  source            = "./modules/base"
+  // Set product_version to null to get the public tools repositories
+  product_version   = ""
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  name_prefix       = var.NAME_PREFIX
+  testsuite         = true
+  use_avahi         = false
+  use_eip_bastion   = false
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
-    region = var.REGION
-    ssh_allowed_ips = var.ALLOWED_IPS
-    key_name = var.KEY_NAME
-    key_file = var.KEY_FILE
+    region            = var.REGION
+    ssh_allowed_ips   = var.ALLOWED_IPS
+    key_name          = var.KEY_NAME
+    key_file          = var.KEY_FILE
 #     route53_domain    = local.domain
     bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
   }
