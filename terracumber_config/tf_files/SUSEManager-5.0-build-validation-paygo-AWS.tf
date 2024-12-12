@@ -318,23 +318,6 @@ module "sles12sp5_minion" {
 
 }
 
-module "sles15sp4_byos_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "sles15sp4-byos-minion"
-  image              = "sles15sp4o"
-  server_configuration = module.server.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-
-}
-
 module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -472,7 +455,6 @@ module "controller" {
   proxy_configuration     = module.proxy.configuration
 
   sle12sp5_paygo_minion_configuration       = module.sles12sp5_paygo_minion.configuration
-  sle15sp4_byos_minion_configuration       = module.sles15sp4_byos_minion.configuration
   sle15sp5_paygo_minion_configuration       = module.sles15sp5_paygo_minion.configuration
   sle15sp6_paygo_minion_configuration       = module.sles15sp6_paygo_minion.configuration
   sleforsap15sp5_paygo_minion_configuration = module.slesforsap15sp5_paygo_minion.configuration
