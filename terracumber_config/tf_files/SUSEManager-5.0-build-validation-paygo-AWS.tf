@@ -263,6 +263,7 @@ module "sles15sp5_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
@@ -279,6 +280,7 @@ module "sles15sp6_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
