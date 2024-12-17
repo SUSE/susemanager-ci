@@ -103,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro55o", "leapmicro55o"]
+  images = ["rocky8o", "opensuse155o", "sles15sp4o", "ubuntu2204o", "slemicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-orion-"
@@ -131,7 +131,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slemicro55o"
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
         vcpu = 4
@@ -142,11 +142,11 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
       container_tag = "latest"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP5/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
       }
     }
     proxy_containerized = {
-      image = "slemicro55o"
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
         vcpu = 2
@@ -157,7 +157,7 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
       container_tag = "latest"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SLE_15_SP5/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
       }
     }
     suse_minion = {
