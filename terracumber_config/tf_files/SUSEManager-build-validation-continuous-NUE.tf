@@ -1,23 +1,17 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.0-qe-build-validation-NUE"
-}
-
-// Not really used as this is for --runall parameter, and we run cucumber step by step
-variable "CUCUMBER_COMMAND" {
-  type = string
-  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
+  default = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-qe-build-validation-continuous-NUE"
 }
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-5.0"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -25,9 +19,14 @@ variable "CUCUMBER_RESULTS" {
   default = "/root/spacewalk/testsuite"
 }
 
+variable "PRODUCT_VERSION" {
+  type = string
+  default = "head"
+}
+
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results 5.0 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Continuous Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +36,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results HEAD Build Validation: Environment setup failed"
+  default = "Results Continuous Build Validation: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -116,8 +115,8 @@ module "base_core" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = "5.0-released"
-  name_prefix       = "suma-bv-weekly-50-"
+  product_version   = var.PRODUCT_VERSION
+  name_prefix       = "suma-bv-continuous-"
   use_avahi         = false
   domain            = "mgr.suse.de"
   images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
@@ -143,8 +142,8 @@ module "base_arm" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = "5.0-released"
-  name_prefix       = "suma-bv-weekly-50-"
+  product_version   = var.PRODUCT_VERSION
+  name_prefix       = "suma-bv-continuous-"
   use_avahi         = false
   domain            = "mgr.suse.de"
   images            = [ "opensuse155armo", "opensuse156armo" ]
@@ -163,9 +162,9 @@ module "base_arm" {
 module "base_s390" {
   source            = "./backend_modules/feilong/base"
 
-  name_prefix       = "suma-bv-weekly-50-"
+  name_prefix       = "suma-bv-continuous-"
   domain            = "mgr.suse.de"
-  product_version   = "5.0-released"
+  product_version   = var.PRODUCT_VERSION
 
   testsuite         = true
 }

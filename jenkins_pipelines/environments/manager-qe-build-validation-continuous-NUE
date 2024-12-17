@@ -23,9 +23,9 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         parameters([
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'Manager-5.0', description: 'Branch prepared for the MU tested'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-5.0-build-validation-weekly-NUE.tf', description: 'Path to the tf file to be used'),
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'manager', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-build-validation-continuous-NUE.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
@@ -35,6 +35,7 @@ node('sumaform-cucumber') {
             // Temporary: should move to uyuni-project
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            string(name: 'product_version', defaultValue: 'head', description: 'Server product version'),
             extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
                     value: minionList,
                     defaultValue: minionList,
