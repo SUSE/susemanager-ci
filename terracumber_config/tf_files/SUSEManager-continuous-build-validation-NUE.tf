@@ -116,7 +116,7 @@ module "base_core" {
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
   product_version   = var.PRODUCT_VERSION
-  name_prefix       = "suma-bv-continuous-"
+  name_prefix       = "suma-continuous-bv-"
   use_avahi         = false
   domain            = "mgr.suse.de"
   images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
@@ -143,7 +143,7 @@ module "base_arm" {
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
   product_version   = var.PRODUCT_VERSION
-  name_prefix       = "suma-bv-continuous-"
+  name_prefix       = "suma-continuous-bv-"
   use_avahi         = false
   domain            = "mgr.suse.de"
   images            = [ "opensuse155armo", "opensuse156armo" ]
@@ -162,7 +162,7 @@ module "base_arm" {
 module "base_s390" {
   source            = "./backend_modules/feilong/base"
 
-  name_prefix       = "suma-bv-continuous-"
+  name_prefix       = "suma-continuous-bv-"
   domain            = "mgr.suse.de"
   product_version   = var.PRODUCT_VERSION
 
@@ -217,7 +217,7 @@ module "proxy_containerized" {
     memory             = 4096
   }
   runtime                   = "podman"
-  container_repository = "${var.CONTAINER_REPOSITORY}"
+  container_repository      = "${var.CONTAINER_REPOSITORY}"
   container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
@@ -495,7 +495,7 @@ module "opensuse155arm_minion" {
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:93:01:02:97"
-    overwrite_fqdn     = "suma-bv-weekly-50-opensuse156arm-minion.mgr.suse.de"
+    overwrite_fqdn     = "suma-continuous-bv-50-opensuse156arm-minion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -515,7 +515,7 @@ module "opensuse156arm_minion" {
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:93:01:02:98"
-    overwrite_fqdn     = "suma-bv-weekly-50-opensuse156arm-minion.mgr.suse.de"
+    overwrite_fqdn     = "suma-continuous-bv-50-opensuse156arm-minion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -556,7 +556,7 @@ module "salt_migration_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-bv-weekly-50-proxy.mgr.suse.de"
+    hostname = "suma-continuous-bv-50-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = true
   use_os_released_updates = false
@@ -919,7 +919,7 @@ module "opensuse155arm_sshminion" {
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:93:01:02:c7"
-    overwrite_fqdn     = "suma-bv-weekly-50-opensuse155arm-sshminion.mgr.suse.de"
+    overwrite_fqdn     = "suma-continuous-bv-50-opensuse155arm-sshminion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -938,7 +938,7 @@ module "opensuse156arm_sshminion" {
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:93:01:02:c8"
-    overwrite_fqdn     = "suma-bv-weekly-50-opensuse156arm-sshminion.mgr.suse.de"
+    overwrite_fqdn     = "suma-continuous-bv-50-opensuse156arm-sshminion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
