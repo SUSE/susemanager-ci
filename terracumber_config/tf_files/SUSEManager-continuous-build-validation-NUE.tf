@@ -9,6 +9,12 @@ variable "CUCUMBER_GITREPO" {
   default = "https://github.com/uyuni-project/uyuni.git"
 }
 
+// Not really used as this is for --runall parameter, and we run cucumber step by step
+variable "CUCUMBER_COMMAND" {
+  type = string
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
+}
+
 variable "CUCUMBER_BRANCH" {
   type = string
   default = "master"
