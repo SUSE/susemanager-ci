@@ -2,7 +2,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-43/job/SUSEManager-432-AWS"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-qe-build-validation-paygo-aws/"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -13,12 +13,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-5.0"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -28,7 +28,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Manager4.3-WS-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Manager5.0-AWS-BV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -38,7 +38,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Manager4.3-AWS-MU: Environment setup failed"
+  default = "Results Manager5.0-AWS-BV: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -468,7 +468,10 @@ module "controller" {
   sle15sp4_sshminion_configuration = module.sles15sp4_sshminion.configuration
 
   sle15sp5_minion_configuration    = module.sles15sp5_minion.configuration
+  sle15sp5_sshminion_configuration = module.sles15sp5_sshminion.configuration
+
   sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
+  sle15sp6_sshminion_configuration = module.sles15sp6_sshminion.configuration
 }
 
 output "bastion_public_name" {

@@ -3,8 +3,8 @@
 node('sumaform-cucumber') {
     def minionList = 'sles12sp5_minion, sles12sp5_sshminion, sles12sp5_paygo_minion, ' +
             'sles15sp4_minion, sles15sp4_sshminion, ' +
-            'sles15sp5_minion, sles15sp5_paygo_minion, ' +
-            'sles15sp6_minion, sles15sp6_paygo_minion'
+            'sles15sp5_minion, sles15sp5_sshminion, sles15sp5_paygo_minion, ' +
+            'sles15sp6_minion, sles15sp6_sshminion, sles15sp6_paygo_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),

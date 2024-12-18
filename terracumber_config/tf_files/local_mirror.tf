@@ -97,7 +97,7 @@ provider "libvirt" {
 }
 
 locals {
-  pool = "mnoel_disks"
+  pool = "ssd"
 }
 
 module "base" {
@@ -126,8 +126,6 @@ module "mirror" {
   image = "opensuse155o"
   volume_provider_settings = {
     pool = local.pool
-    // uncomment next line to use existing snapshot as starting point
-    //    volume_snapshot_id = data.aws_ebs_snapshot.data_disk_snapshot.id
   }
   provider_settings = {
     mac                = "52:54:00:ba:b7:98"
