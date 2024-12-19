@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/SUSEManager-4.3-AWS"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/SUSEManager-5.0-AWS"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-4.3"
+  default = "Manager-5.0"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Manager4.3-Master-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Manager5.0-Master-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -125,21 +125,22 @@ provider "aws" {
 }
 
 module "base" {
-  source = "./modules/base"
-
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  name_prefix = var.NAME_PREFIX
-  testsuite                = true
-  use_avahi                = false
-  use_eip_bastion          = false
+  source            = "./modules/base"
+  // Set product_version to null to get the public tools repositories
+  product_version   = ""
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  name_prefix       = var.NAME_PREFIX
+  testsuite         = true
+  use_avahi         = false
+  use_eip_bastion   = false
   provider_settings = {
     availability_zone = var.AVAILABILITY_ZONE
-    region = var.REGION
-    ssh_allowed_ips = var.ALLOWED_IPS
-    key_name = var.KEY_NAME
-    key_file = var.KEY_FILE
-    route53_domain    = local.domain
+    region            = var.REGION
+    ssh_allowed_ips   = var.ALLOWED_IPS
+    key_name          = var.KEY_NAME
+    key_file          = var.KEY_FILE
+#     route53_domain    = local.domain
     bastion_host      = "${var.NAME_PREFIX}-bastion.${local.domain}"
   }
 }
