@@ -202,7 +202,7 @@ module "server" {
   create_sample_activation_key   = false
   create_sample_bootstrap_script = false
   publish_private_ssl_key        = false
-  use_os_released_updates        = true
+  use_os_released_updates        = false
   disable_download_tokens        = false
   large_deployment               = true
   provision                      = false
@@ -226,7 +226,7 @@ module "proxy" {
 
 
   auto_configure            = false
-  use_os_released_updates   = true
+  use_os_released_updates   = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
   provider_settings         = {
     instance_type = "c6i.large"
@@ -238,7 +238,7 @@ module "proxy" {
 module "sles12sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "paygo"
+  product_version    = "5.0-paygo"
   name               = "sles12sp5-paygo-minion"
   image              = "sles12sp5-paygo"
   provider_settings = {
@@ -254,7 +254,7 @@ module "sles12sp5_paygo_minion" {
 module "sles15sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "paygo"
+  product_version    = "5.0-paygo"
   name               = "sles15sp5-paygo-minion"
   image              = "sles15sp5-paygo"
   provider_settings = {
@@ -271,7 +271,7 @@ module "sles15sp5_paygo_minion" {
 module "sles15sp6_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "paygo"
+  product_version    = "5.0-paygo"
   name               = "sles15sp6-paygo-minion"
   image              = "sles15sp6-paygo"
   provider_settings = {
@@ -288,7 +288,7 @@ module "sles15sp6_paygo_minion" {
 module "slesforsap15sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "paygo"
+  product_version    = "5.0-paygo"
   name               = "slesforsap15sp5-paygo-minion"
   image              = "slesforsap15sp5-paygo"
   provider_settings = {
@@ -305,7 +305,6 @@ module "slesforsap15sp5_paygo_minion" {
 module "sles12sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "4.3-released"
   name               = "sles12sp5-minion"
   image              = "sles12sp5"
   server_configuration = module.server.configuration
@@ -323,7 +322,6 @@ module "sles12sp5_minion" {
 module "sles15sp4_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "4.3-released"
   name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   server_configuration = module.server.configuration
@@ -340,7 +338,6 @@ module "sles15sp4_minion" {
 module "sles15sp5_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "4.3-released"
   name               = "sles15sp5-minion"
   image              = "sles15sp5o"
   server_configuration = module.server.configuration
