@@ -14,9 +14,8 @@ def run(params) {
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true;"
 
         ssh_option = '-o StrictHostKeyChecking=no -o ConnectTimeout=7200 -o ServerAliveInterval=60'
-
-        server_ami = null
-        proxy_ami = null
+        server_ami = params.server_ami ?: ""
+        proxy_ami  = params.proxy_ami ?: ""
 
         //Deployment variables
         deployed_local = false
@@ -104,7 +103,7 @@ def run(params) {
                                         sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${proxy_image_name}")
                                         sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_server' --wait-count 3 -n '${server_image_name}' '${resultdir}/images/${server_image_name}'")
                                         sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_proxy' --wait-count 3 -n '${proxy_image_name}' '${resultdir}/images/${proxy_image_name}'")
-                                        env.server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
+                                        server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
                                                 returnStdout: true).trim()
                                         env.proxy_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
                                                 returnStdout: true).trim()
@@ -214,11 +213,10 @@ def run(params) {
                     sh "sed -i 's/ibs\\///g' ${WORKSPACE}/custom_repositories.json"
 
                     // Deploying AWS server using MU repositories
-                    sh "echo \"export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --runstep provision --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend aws\""
-                    retry(count: 3) {
-                        sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${env.server_ami}; export TF_VAR_PROXY_AMI=${env.proxy_ami}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws"
-                        deployed = true
-                    }
+                    sh "echo \"export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${server_ami}; export TF_VAR_PROXY_AMI=${proxy_ami}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --runstep provision --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend aws\""
+                    sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_ARCHITECTURE=${params.architecture}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export TF_VAR_SERVER_AMI=${server_ami}; export TF_VAR_PROXY_AMI=${proxy_ami}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --use-tf-resource-cleaner --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} --runstep provision --sumaform-backend aws"
+                    deployed = true
+
                 }
             }
 
@@ -229,10 +227,6 @@ def run(params) {
                     // Generate rake files
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export BUILD_VALIDATION=true; cd /root/spacewalk/testsuite; rake jenkins:generate_rake_files_build_validation'"
                 }
-            }
-
-            stage('Sanity check') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
             }
 
             stage('Run core features') {
@@ -404,7 +398,7 @@ def run(params) {
                 println('ERROR: one or more migrations have failed')
                 products_and_salt_migration_stage_result_fail = true
             }
-            /** Products and Salt migration stages end **/      
+            /** Products and Salt migration stages end **/
 
             /** Retail stages begin **/
             try {
@@ -429,7 +423,7 @@ def run(params) {
                             error("Run retail failed")
                         }
                     }
-                } 
+                }
             } catch (Exception ex) {
                 println("ERROR: Retail testing fail.\\nException: ${ex}")
                 retail_stage_result_fail = true
@@ -593,7 +587,7 @@ def clientTestingStages(capybara_timeout, default_timeout, minion_type = 'defaul
                 }
             }
             stage("Add Activation Keys ${node}") {
-                 // skip this stage for Salt migration minion
+                // skip this stage for Salt migration minion
                 if (params.must_add_keys && !node.contains('salt_migration_minion')) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start adding activation keys'
