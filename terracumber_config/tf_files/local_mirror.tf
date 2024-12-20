@@ -91,8 +91,9 @@ terraform {
   }
 }
 
+
 provider "libvirt" {
-  uri = "qemu+tcp://grog.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
 }
 
 locals {
@@ -112,7 +113,6 @@ module "base" {
     pool = local.pool
     network_name = null
     bridge = "br0"
-    additional_network = "192.168.80.0/24"
   }
 }
 
@@ -126,8 +126,6 @@ module "mirror" {
   image = "opensuse155o"
   volume_provider_settings = {
     pool = local.pool
-    // uncomment next line to use existing snapshot as starting point
-    //    volume_snapshot_id = data.aws_ebs_snapshot.data_disk_snapshot.id
   }
   provider_settings = {
     mac                = "52:54:00:ba:b7:98"
