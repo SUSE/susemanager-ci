@@ -106,7 +106,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-ref-head-"
@@ -136,7 +136,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slemicro55o"
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:c1"
         vcpu = 4

@@ -146,7 +146,6 @@ module "cucumber_testsuite" {
       }
     }
     proxy_containerized = {
-      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
         vcpu = 2
