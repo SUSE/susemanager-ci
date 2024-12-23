@@ -205,7 +205,7 @@ module "server" {
   use_os_released_updates        = false
   disable_download_tokens        = false
   large_deployment               = true
-  provision                      = false
+  provision                      = true
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = var.ARCHITECTURE == "x86_64" ? "m6a.xlarge" : "m6g.xlarge"
