@@ -93,7 +93,7 @@ terraform {
 
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
+  uri = "qemu+ssh://root@suma-05.mgr.suse.de/system"
 }
 
 locals {
