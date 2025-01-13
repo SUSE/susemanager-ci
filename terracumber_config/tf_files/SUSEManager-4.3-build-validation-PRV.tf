@@ -122,7 +122,7 @@ provider "libvirt" {
 }
 
 provider "feilong" {
-  connector   = "https://10.144.68.9"
+  connector   = "https://feilong.mgr.suse.de"
   admin_token = var.ZVM_ADMIN_TOKEN
   local_user  = "jenkins@jenkins-worker.mgr.prv.suse.net"
 }
