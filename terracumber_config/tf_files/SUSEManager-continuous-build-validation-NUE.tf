@@ -179,7 +179,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name               = "server"
-  image              = "slemicro55o"
+  beta_enabled       = var.PRODUCT_VERSION == "head" ? true : false
   provider_settings = {
     mac                = "aa:b2:93:01:02:81"
     memory             = 40960
@@ -218,6 +218,7 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_core.configuration
   name               = "proxy"
+  beta_enabled       = var.PRODUCT_VERSION == "head" ? true : false
   provider_settings = {
     mac                = "aa:b2:93:01:02:82"
     memory             = 4096
