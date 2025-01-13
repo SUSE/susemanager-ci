@@ -218,7 +218,6 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_core.configuration
   name               = "proxy"
-  beta_enabled       = var.PRODUCT_VERSION == "head" ? true : false
   provider_settings = {
     mac                = "aa:b2:93:01:02:82"
     memory             = 4096
