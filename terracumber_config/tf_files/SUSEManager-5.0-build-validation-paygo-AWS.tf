@@ -179,7 +179,7 @@ module "mirror" {
 }
 
 module "server" {
-  source                     = "./modules/server"
+  source                     = "./modules/server_containerized"
   base_configuration = merge(module.base.configuration,
     {
       mirror = null
@@ -196,7 +196,6 @@ module "server" {
   disable_firewall               = false
   allow_postgres_connections     = false
   skip_changelog_import          = false
-  create_first_user              = false
   mgr_sync_autologin             = false
   create_sample_channel          = false
   create_sample_activation_key   = false
@@ -205,7 +204,8 @@ module "server" {
   use_os_released_updates        = false
   disable_download_tokens        = false
   large_deployment               = true
-  provision                      = false
+  provision                      = true
+  install_salt_bundle            = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   provider_settings = {
     instance_type = var.ARCHITECTURE == "x86_64" ? "m6a.xlarge" : "m6g.xlarge"
