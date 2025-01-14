@@ -125,7 +125,7 @@ module "base_core" {
   name_prefix       = "suma-continuous-bv-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
+  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -179,7 +179,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name               = "server"
-  image              = "slemicro55o"
+  beta_enabled       = var.PRODUCT_VERSION == "head" ? true : false
   provider_settings = {
     mac                = "aa:b2:93:01:02:81"
     memory             = 40960
@@ -501,7 +501,7 @@ module "opensuse155arm_minion" {
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:93:01:02:97"
-    overwrite_fqdn     = "suma-continuous-bv-50-opensuse156arm-minion.mgr.suse.de"
+    overwrite_fqdn     = "suma-continuous-bv-opensuse156arm-minion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -521,7 +521,7 @@ module "opensuse156arm_minion" {
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:93:01:02:98"
-    overwrite_fqdn     = "suma-continuous-bv-50-opensuse156arm-minion.mgr.suse.de"
+    overwrite_fqdn     = "suma-continuous-bv-opensuse156arm-minion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -925,7 +925,7 @@ module "opensuse155arm_sshminion" {
   image              = "opensuse155armo"
   provider_settings = {
     mac                = "aa:b2:93:01:02:c7"
-    overwrite_fqdn     = "suma-continuous-bv-50-opensuse155arm-sshminion.mgr.suse.de"
+    overwrite_fqdn     = "suma-continuous-bv-opensuse155arm-sshminion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -944,7 +944,7 @@ module "opensuse156arm_sshminion" {
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:93:01:02:c8"
-    overwrite_fqdn     = "suma-continuous-bv-50-opensuse156arm-sshminion.mgr.suse.de"
+    overwrite_fqdn     = "suma-continuous-bv-opensuse156arm-sshminion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
