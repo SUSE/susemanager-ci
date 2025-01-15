@@ -10,10 +10,9 @@ username = "admin"
 password = "admin"
 
 class ResourceManager:
-    def __init__(self, manager_url, resources_to_delete, product_version):
+    def __init__(self, manager_url, resources_to_delete):
         self.manager_url = manager_url
         self.resources_to_keep = {"proxy", "monitoring", "build"} - set(resources_to_delete)
-        self.product_version = product_version
         self.client = None
         self.session_key = None
 
@@ -48,8 +47,9 @@ class ResourceManager:
 
     def delete_software_channels(self):
         channels = self.client.channel.listMyChannels(self.session_key)
+        product_version = self.get_product_version()
 
-        if self.product_version == "uyuni":
+        if product_version == "uyuni":
             for channel in channels:
                 if "custom" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_keep):
                     logger.info(f"Delete custom channel: {channel['label']}")
@@ -95,6 +95,10 @@ class ResourceManager:
             if not any(protected in accepted_salt_key for protected in self.resources_to_keep):
                 logger.info(f"Delete remaining accepted key : {accepted_salt_key}")
                 self.client.saltkey.delete(self.session_key, accepted_salt_key)
+
+    def get_product_version(self):
+        product_version = self.client.api.systemVersion()
+        return product_version
 
     def run(self):
             self.delete_users()
