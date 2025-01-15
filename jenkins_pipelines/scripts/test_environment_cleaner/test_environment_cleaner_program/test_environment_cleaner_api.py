@@ -11,13 +11,11 @@ password = "admin"
 
 class ResourceManager:
     def __init__(self, manager_url, resources_to_delete):
-        self.manager_url = manager_url
         self.resources_to_keep = {"proxy", "monitoring", "build"} - set(resources_to_delete)
-        self.client = None
         self.session_key = None
+        self.client = xmlrpc.client.ServerProxy(f"http://{manager_url}/rpc/api")
 
     def get_session_key(self):
-        self.client = xmlrpc.client.ServerProxy(f"http://{self.manager_url}/rpc/api")
         self.session_key = self.client.auth.login(username, password)
         logger.info("Session key obtained.")
 
@@ -99,6 +97,7 @@ class ResourceManager:
 
     def get_product_version(self):
         product_version = self.client.api.systemVersion()
+        logger.info(f"Product version is {product_version}")
         return product_version
 
     def run(self):

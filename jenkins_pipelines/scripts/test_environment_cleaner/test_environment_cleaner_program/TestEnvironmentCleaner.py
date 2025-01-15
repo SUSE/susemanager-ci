@@ -32,45 +32,45 @@ def main():
     ]
 
     resource_manager = ResourceManager(manager_url, default_resources_to_delete)
-    try:
-        # API part
-        if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
-                         "delete_software_channels", "delete_systems", "delete_repositories",
-                         "full_cleanup", "delete_salt_keys"]:
-            resource_manager.get_session_key()
-            mode_actions = {
-                "delete_users": resource_manager.delete_users,
-                "delete_activation_keys": resource_manager.delete_activation_keys,
-                "delete_config_projects": resource_manager.delete_config_projects,
-                "delete_software_channels": resource_manager.delete_software_channels,
-                "delete_systems": resource_manager.delete_systems,
-                "delete_repositories": resource_manager.delete_channel_repos,
-                "delete_salt_keys": resource_manager.delete_salt_keys,
-                "full_cleanup": resource_manager.run,
-            }
-            action = mode_actions.get(args.mode)
+    # API part
+    if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
+                     "delete_software_channels", "delete_systems", "delete_repositories",
+                     "full_cleanup", "delete_salt_keys"]:
+        resource_manager.get_session_key()
+        mode_actions = {
+            "delete_users": resource_manager.delete_users,
+            "delete_activation_keys": resource_manager.delete_activation_keys,
+            "delete_config_projects": resource_manager.delete_config_projects,
+            "delete_software_channels": resource_manager.delete_software_channels,
+            "delete_systems": resource_manager.delete_systems,
+            "delete_repositories": resource_manager.delete_channel_repos,
+            "delete_salt_keys": resource_manager.delete_salt_keys,
+            "full_cleanup": resource_manager.run,
+        }
+        action = mode_actions.get(args.mode)
+        try:
             if action:
                 action()
             else:
                 logger.error(f"Mode '{args.mode}' is not recognized.")
+        finally:
+            resource_manager.logout_session()
 
 
-        # Server commands part
+    # Server commands part
+    else:
+        product_version = resource_manager.get_product_version()
+        ssh_manager = SSHClientManager(url=manager_url, product_version=product_version)
+        ssh_actions = {
+            "delete_known_hosts": ssh_manager.delete_known_hosts,
+            "delete_distributions": ssh_manager.delete_distributions,
+            "update_custom_repositories": ssh_manager.update_custom_repositories,
+        }
+        action = ssh_actions.get(args.mode)
+        if action:
+            action()
         else:
-            product_version = resource_manager.get_product_version
-            ssh_manager = SSHClientManager(url=manager_url, product_version=product_version)
-            ssh_actions = {
-                "delete_known_hosts": ssh_manager.delete_known_hosts,
-                "delete_distributions": ssh_manager.delete_distributions,
-                "update_custom_repositories": ssh_manager.update_custom_repositories,
-            }
-            action = ssh_actions.get(args.mode)
-            if action:
-                action()
-            else:
-                logger.error(f"Mode '{args.mode}' is not recognized.")
-    finally:
-        resource_manager.logout_session()
+            logger.error(f"Mode '{args.mode}' is not recognized.")
 
 if __name__ == "__main__":
     main()
