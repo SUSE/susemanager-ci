@@ -49,7 +49,8 @@ class ResourceManager:
         channels = self.client.channel.listMyChannels(self.session_key)
         product_version = self.get_product_version()
 
-        if product_version == "uyuni":
+
+        if all(version not in product_version for version in ["5.0", "4.3", "5.1"]):
             for channel in channels:
                 if "custom" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_keep):
                     logger.info(f"Delete custom channel: {channel['label']}")
