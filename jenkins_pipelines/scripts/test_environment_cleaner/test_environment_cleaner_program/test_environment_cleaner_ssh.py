@@ -8,10 +8,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class SSHClientManager:
-    def __init__(self, url, username="root", password="linux", port=22):
+    def __init__(self, url, username="root", password="linux", port=22, product_version="5.0"):
         self.url = url
         self.username = username
         self.password = password
+        self.product_version = product_version
         self.port = port
         self._client = None
 
@@ -86,41 +87,38 @@ class SSHClientManager:
         finally:
             self._close()
 
-    def delete_known_hosts(self, version):
+    def delete_known_hosts(self):
         """
         Deletes the known_hosts file based on the product version.
-
-        :param version: Product version to determine file path.
         """
         try:
             self._connect()
-            if version == "4.3":
+            if self.product_version.startswith("4.3"):
                 self._run_command("rm /var/lib/salt/.ssh/known_hosts")
-            elif version in ["5.0", "head", "5.1", "uyuni"]:
+            elif any(self.product_version.startswith(version) for version in ["5.0", "5.1"]):
                 logger.info("Checking files before cleanup...")
                 self._run_command("rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
                 logger.info("Known_hosts file cleaned up.")
             else:
-                logger.warning(f"Unsupported version for known_hosts deletion: {version}")
+                logger.warning(f"Unsupported product version for known_hosts deletion: {self.product_version}")
         finally:
             self._close()
 
-    def delete_distributions(self, version):
+
+    def delete_distributions(self):
         """
         Deletes distributions directories based on the product version.
-
-        :param version: Product version to determine file paths.
         """
         try:
             self._connect()
-            if version == "4.3":
-                logger.warning("Distribution deletion for version 4.3 is not implemented.")
-            elif version in ["5.0", "head", "5.1"]:
+            if self.product_version.startswith("4.3"):
+                logger.warning("Distribution deletion for product version 4.3 is not implemented.")
+            elif any(self.product_version.startswith(version) for version in ["5.0", "5.1"]):
                 self._run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
                 self._run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/htdocs/pub/*iso")
                 logger.info("Distributions directories deleted.")
             else:
-                logger.error(f"Unsupported product version: {version}")
+                logger.error(f"Unsupported product product version: {self.product_version}")
         finally:
             self._close()
 

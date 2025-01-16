@@ -7,8 +7,7 @@ class TestResourceManager(unittest.TestCase):
         self.manager_url = "localhost"
         self.resources_to_delete = {"monitoring"}
         self.product_version = "5.0"
-        self.resource_manager = ResourceManager(self.manager_url, self.resources_to_delete, self.product_version)
-
+        self.resource_manager = ResourceManager(self.manager_url, self.resources_to_delete)
 
         # Mock the ServerProxy and session key to avoid actual API calls
         self.mock_server_proxy = patch('xmlrpc.client.ServerProxy').start()
@@ -51,16 +50,35 @@ class TestResourceManager(unittest.TestCase):
         self.assertFalse(proxy_deleted, "delete() should not have been called with 'test-key-proxy'")
         self.assertEqual(len(delete_calls), 2)
 
-    def test_delete_software_channels(self):
-        self.mock_client.channel.listMyChannels.return_value = [
-            {"label": "appstream-channel"},
-            {"label": "common-channel"},
-        ]
-        self.mock_client.channel.software.getDetails.return_value = {
-            "parent_channel_label": "parent-channel"
-        }
-        self.resource_manager.delete_software_channels()
-        self.mock_client.channel.software.delete.assert_any_call("mock_session_key", "common-channel")
+@patch("test_environment_cleaner_program.test_environment_cleaner_api.ResourceManager.get_product_version")
+def test_delete_software_channels(self, mock_get_product_version):
+    # Mock the product version to bypass the first conditional
+    mock_get_product_version.return_value = "5.0.2"
+
+    # Mock the channels returned by listMyChannels
+    self.mock_client.channel.software.listMyChannels.return_value = [
+        {"label": "appstream-channel"},
+        {"label": "common-channel"},
+    ]
+
+    # Mock the details for each channel
+    self.mock_client.channel.software.getDetails.side_effect = lambda session_key, label: {
+        "parent_channel_label": "parent-channel" if "appstream" in label else None
+    }
+
+    # Mock the delete method
+    self.mock_client.channel.software.delete = MagicMock()
+
+    # Call the method being tested
+    self.resource_manager.delete_software_channels()
+
+    # Assertions for delete calls
+    self.mock_client.channel.software.delete.assert_any_call("mock_session_key", "appstream-channel")
+    self.mock_client.channel.software.delete.assert_any_call("mock_session_key", "common-channel")
+
+    # Ensure the delete method was called twice
+    self.assertEqual(self.mock_client.channel.software.delete.call_count, 2)
+
 
     def test_delete_systems(self):
         self.mock_client.system.listSystems.return_value = [
