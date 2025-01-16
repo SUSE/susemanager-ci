@@ -47,15 +47,14 @@ def main():
             "delete_salt_keys": resource_manager.delete_salt_keys,
             "full_cleanup": resource_manager.run,
         }
-        action = mode_actions.get(args.mode)
         try:
+            action = mode_actions.get(args.mode)
             if action:
                 action()
             else:
                 logger.error(f"Mode '{args.mode}' is not recognized.")
         finally:
             resource_manager.logout_session()
-
 
     # Server commands part
     else:
@@ -71,6 +70,7 @@ def main():
             action()
         else:
             logger.error(f"Mode '{args.mode}' is not recognized.")
+
 
 if __name__ == "__main__":
     main()
