@@ -236,6 +236,26 @@ module "cucumber_testsuite" {
   }
 }
 
+resource "null_resource" "cucumber_report" {
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [ "echo export CUCUMBER_PUBLISH_TOKEN=3689c47a-f683-4962-97ab-2999345534be >> ~/.bashrc",
+               "source ~/.bashrc"
+             ]
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "linux"
+      host     = "${module.cucumber_testsuite.configuration.controller.hostname}"
+    }
+  }
+
+}
+
 output "configuration" {
   value = module.cucumber_testsuite.configuration
 }
