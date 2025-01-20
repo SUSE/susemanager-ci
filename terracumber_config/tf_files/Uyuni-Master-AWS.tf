@@ -250,7 +250,7 @@ resource "null_resource" "cucumber_report" {
       type     = "ssh"
       user     = "root"
       password = "linux"
-      host     = "${module.cucumber_testsuite.configuration.controller.private_ip}"
+      host     = "172.16.3.5"
     }
   }
 
