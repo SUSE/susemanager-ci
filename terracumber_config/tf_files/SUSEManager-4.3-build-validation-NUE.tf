@@ -909,7 +909,7 @@ module "slmicro61_minion" {
   name               = "slmicro61-minion"
   image              = "slmicro61o"
   provider_settings = {
-    mac                = "..."
+    mac                = "aa:b2:92:42:00:cc"
     memory             = 2048
   }
 
@@ -1332,7 +1332,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slmicro61-sshminion"
 //   image              = "slmicro61o"
 //   provider_settings = {
-//     mac                = "..."
+//     mac                = "aa:b2:92:42:00:ec"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
