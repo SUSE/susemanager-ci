@@ -6,7 +6,6 @@ def run(params) {
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
         String container_repository = params.container_repository ?: null
-        String product_version = null
         String controllerHostname = null
         String serverHostname = null
         GString targetedTfFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/main.tf"
@@ -59,22 +58,6 @@ def run(params) {
                 // Clone sumaform
                 sh "set +x; source /home/jenkins/.credentials set -x; ${WORKSPACE}/terracumber-cli ${commonParams} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
 
-                // Set product version
-                if (params.targeted_project.contains("5.0")) {
-                    product_version = '5.0'
-                } else if (params.targeted_project.contains("4.3")) {
-                    product_version = '4.3'
-                } else if (params.targeted_project.contains("uyuni")) {
-                    product_version = 'uyuni'
-                } else if (params.targeted_project.contains("5.1")) {
-                    product_version = '5.1'
-                } else if (params.targeted_project.contains("head")) {
-                    product_version = 'head'
-                }
-                else {
-                    // Use the `error` step instead of `throw`
-                    error("Error: targeted_project must contain either 'head', '5.1', '5.0', '4.3' or uyuni.")
-                }
             }
 
             stage('Confirm Environment Cleanup') {
@@ -131,7 +114,7 @@ def run(params) {
 
             }
 
-            GString programCall = "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} ${defaultResourcesToDeleteArgs} --mode"
+            GString programCall = "${TestEnvironmentCleanerProgram} --url ${serverHostname} ${defaultResourcesToDeleteArgs} --mode"
 
             stage('Delete the systems') {
                 sh(script: "${programCall} delete_systems")
@@ -156,11 +139,11 @@ def run(params) {
             }
 
             stage('Delete ssh know hosts') {
-                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_known_hosts")
+                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_known_hosts")
             }
 
             stage('Delete distributions folders') {
-                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --product_version ${product_version} --mode delete_distributions")
+                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_distributions")
             }
 
             stage('Delete client VMs') {
@@ -216,7 +199,7 @@ def run(params) {
                             }
                         }
                     }
-                    sh(script: "${TestEnvironmentCleanerProgram} --url ${controllerHostname} --product_version ${product_version} --mode update_custom_repositories")
+                    sh(script: "${TestEnvironmentCleanerProgram} --url ${controllerHostname} --mode update_custom_repositories")
                 }
             }
 
