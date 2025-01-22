@@ -93,6 +93,9 @@ v43_client_tools: dict[str, set[str]] = {
     "slmicro60_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_6_x86_64/",
                           "/SUSE_Updates_SUSE-MicroOS_6.0_x86_64/",
                           "/SUSE_Updates_SLE-Micro_6.0_x86_64/"},
+    "slmicro61_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_6_x86_64/",
+                          "/SUSE_Updates_SUSE-MicroOS_6.1_x86_64/",
+                          "/SUSE_Updates_SLE-Micro_6.1_x86_64/"},
     "salt_migration_minion": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
                               "/SUSE_Updates_SLE-Module-Basesystem_15-SP5_x86_64/",
                               "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_x86_64/"},
@@ -144,6 +147,8 @@ v50_client_tools_beta: dict[str, set[str]] = {
     "slemicro55_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
     "slmicro60_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_6_x86_64/",
+                          "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
+    "slmicro61_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_6_x86_64/",
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
     "salt_migration_minion": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64-BETA/"}
 }

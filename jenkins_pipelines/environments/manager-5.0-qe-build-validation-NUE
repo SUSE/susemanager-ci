@@ -18,7 +18,7 @@ node('sumaform-cucumber') {
             'opensuse155arm_minion, opensuse155arm_sshminion, ' +
             'opensuse156arm_minion, opensuse156arm_sshminion, ' +
             'sles15sp5s390_minion, sles15sp5s390_sshminion, ' +
-            'slemicro51_minion, slemicro52_minion, slemicro53_minion, slemicro54_minion, slemicro55_minion, slmicro60_minion'
+            'slemicro51_minion, slemicro52_minion, slemicro53_minion, slemicro54_minion, slemicro55_minion, slmicro60_minion, slmicro61_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),

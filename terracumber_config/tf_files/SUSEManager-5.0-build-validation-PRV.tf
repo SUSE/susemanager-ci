@@ -219,7 +219,7 @@ module "base_new_sle" {
   name_prefix       = "suma-bv-50-"
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
-  images            = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o"  ]
+  images            = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -904,6 +904,27 @@ module "slmicro60_minion" {
   install_salt_bundle = false
 }
 
+module "slmicro61_minion" {
+  providers = {
+    libvirt = libvirt.florina
+  }
+  source             = "./modules/minion"
+  base_configuration = module.base_new_sle.configuration
+  name               = "slmicro61-minion"
+  image              = "slmicro61o"
+  provider_settings = {
+    mac                = "aa:b2:92:05:00:2c"
+    memory             = 2048
+  }
+
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+
+// WORKAROUND: Does not work in sumaform, yet
+  install_salt_bundle = false
+}
+
 module "sles12sp5_sshminion" {
   providers = {
     libvirt = libvirt.tatooine
@@ -1370,6 +1391,26 @@ module "sles15sp5s390_sshminion" {
 //  install_salt_bundle = true
 // }
 
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
+// module "slmicro61_sshminion" {
+//   providers = {
+//     libvirt = libvirt.florina
+//   }
+//   source             = "./modules/sshminion"
+//   base_configuration = module.base_new_sle.configuration
+//   name               = "slmicro61-sshminion"
+//   image              = "slmicro61o"
+//   provider_settings = {
+//     mac                = "aa:b2:92:05:00:4c"
+//     memory             = 2048
+//   }
+//   use_os_released_updates = false
+//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//
+//  additional_packages = [ "venv-salt-minion" ]
+//  install_salt_bundle = true
+// }
+
 module "sles12sp5_buildhost" {
   providers = {
     libvirt = libvirt.terminus
@@ -1586,6 +1627,10 @@ module "controller" {
   slmicro60_minion_configuration    = module.slmicro60_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slmicro60_sshminion_configuration = module.slmicro60_sshminion.configuration
+
+  slmicro61_minion_configuration    = module.slmicro61_minion.configuration
+//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
+//  slmicro61_sshminion_configuration = module.slmicro61_sshminion.configuration
 
   sle12sp5_buildhost_configuration = module.sles12sp5_buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4_buildhost.configuration
