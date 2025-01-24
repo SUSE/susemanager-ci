@@ -275,6 +275,7 @@ def get_version_nodes(version: str) -> dict[str, list[str]]:
 def init_custom_repositories(version: str) -> dict[str, dict[str, str]]:
     custom_repositories = {}
     custom_repositories['slmicro60_minion'] = { 'slmicro60_staging' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/standard/" }
+    custom_repositories['slmicro61_minion'] = { 'slmicro61_staging' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/standard/" }
     return custom_repositories
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
