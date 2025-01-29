@@ -148,6 +148,10 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
       beta_enabled = true
+      additional_repos = {
+         // remove when iptables fix is released
+         staging_s = "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Staging:/S/images/repo/SL-Micro-6.1-x86_64/"
+      }
     }
     proxy_containerized = {
       provider_settings = {
@@ -159,6 +163,10 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
+      additional_repos = {
+         // remove when iptables fix is released
+         staging_s = "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Staging:/S/images/repo/SL-Micro-6.1-x86_64/"
+      }
     }
     suse_minion = {
       image = "sles15sp4o"
