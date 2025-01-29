@@ -146,10 +146,9 @@ module "cucumber_testsuite" {
       container_tag = "latest"
       beta_enabled = true
       additional_repos = {
-         // remove when iptables fix is released
-         slfo11 = "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Build/standard/"
+         // remove when mirroring of iptables fix is finished
+         leap_online = "http://download.opensuse.org/distribution/leap/16.0/repo/oss/"
       }
-      additional_packages = [ "iptables-1.8.9-slfo.1.1_2.1", "xtables-plugins-1.8.9-slfo.1.1_2.1" ]
     }
     proxy_containerized = {
       provider_settings = {
@@ -162,10 +161,9 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
       additional_repos = {
-         // remove when iptables fix is released
-         slfo11 = "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Build/standard/"
+         // remove when mirroring of iptables fix is finished
+         leap_online = "http://download.opensuse.org/distribution/leap/16.0/repo/oss/"
       }
-      additional_packages = [ "iptables-1.8.9-slfo.1.1_2.1", "xtables-plugins-1.8.9-slfo.1.1_2.1" ]
     }
     suse_minion = {
       image = "sles15sp4o"
