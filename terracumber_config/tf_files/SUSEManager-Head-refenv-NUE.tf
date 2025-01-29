@@ -152,6 +152,7 @@ module "cucumber_testsuite" {
          // remove when iptables fix is released
          slfo11 = "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Build/standard/"
       }
+      additional_packages = [ "iptables-1.8.9-slfo.1.1_2.1.x86_64.rpm" ]
     }
     proxy_containerized = {
       provider_settings = {
@@ -167,6 +168,7 @@ module "cucumber_testsuite" {
          // remove when iptables fix is released
          slfo11 = "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Build/standard/"
       }
+      additional_packages = [ "iptables-1.8.9-slfo.1.1_2.1.x86_64.rpm" ]
     }
     suse_minion = {
       image = "sles15sp4o"
