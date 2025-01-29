@@ -148,10 +148,6 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
       beta_enabled = true
-      additional_repos = {
-         // remove when mirroring of iptables fix is finished
-         leap_online = "http://download.opensuse.org/distribution/leap/16.0/repo/oss/"
-      }
     }
     proxy_containerized = {
       provider_settings = {
@@ -163,10 +159,6 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
-      additional_repos = {
-         // remove when mirroring of iptables fix is finished
-         leap_online = "http://download.opensuse.org/distribution/leap/16.0/repo/oss/"
-      }
     }
     suse_minion = {
       image = "sles15sp4o"
