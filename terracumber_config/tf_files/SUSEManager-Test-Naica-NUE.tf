@@ -7,7 +7,7 @@ variable "URL_PREFIX" {
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='Uyuni' && run-testsuite"
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slemicro55o"]
+  images = ["opensuse155o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-naica-"
@@ -118,99 +118,95 @@ module "cucumber_testsuite" {
   container_server = true
   container_proxy = true
 
-  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images        = true
-
-  server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  #server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   host_settings = {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:60"
+        vcpu = 2
+        memory = 2048
       }
     }
     server_containerized = {
-      image = "slemicro55o"
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:61"
-        vcpu = 8
-        memory = 32768
+        vcpu = 4
+        memory = 16384
       }
-      main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
-    }
-    proxy_containerized = {
-      image = "slemicro55o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:62"
-        vcpu = 2
-        memory = 2048
-      }
-      main_disk_size = 200
-      runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
-      container_tag = "latest"
-    }
-    suse_client = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:64"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
       }
     }
+#   proxy_containerized = {
+#     provider_settings = {
+#       mac = "aa:b2:93:01:00:62"
+#       vcpu = 2
+#       memory = 2048
+#     }
+#     main_disk_size = 200
+#     runtime = "podman"
+#     container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+#     container_tag = "latest"
+#     additional_repos = {
+#       Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
+#     }
+#   }
     suse_minion = {
       image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:66"
-      }
-    }
-    suse_sshminion = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:68"
-      }
-    }
-    rhlike_minion = {
-      image = "rocky8o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:69"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
         vcpu = 2
-      }
-    }
-    deblike_minion = {
-      image = "ubuntu2204o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:6b"
-      }
-    }
-    build_host = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:6d"
         memory = 2048
       }
     }
-    dhcp_dns = {
-      name        = "dhcp-dns"
-      image       = "opensuse155o"
-      hypervisor  = {
-        host        = "cthulhu.mgr.suse.de"
-        user        = "root"
-        private_key = file("~/.ssh/id_rsa")
-      }
-    }
+#   suse_sshminion = {
+#     image = "sles15sp4o"
+#     provider_settings = {
+#       mac = "aa:b2:93:01:00:68"
+#       vcpu = 2
+#       memory = 2048
+#     }
+#     additional_packages = [ "iptables" ]
+#   }
+#   rhlike_minion = {
+#     image = "rocky8o"
+#     provider_settings = {
+#       mac = "aa:b2:93:01:00:69"
+#       // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+#       // Also, openscap cannot run with less than 1.25 GB of RAM
+#       vcpu = 2
+#       memory = 2048
+#     }
+#   }
+#   deblike_minion = {
+#     image = "ubuntu2204o"
+#     provider_settings = {
+#       mac = "aa:b2:93:01:00:6b"
+#       vcpu = 2
+#       memory = 2048
+#     }
+#   }
+#   build_host = {
+#     image = "sles15sp4o"
+#     provider_settings = {
+#       mac = "aa:b2:93:01:00:6d"
+#       vcpu = 2
+#       memory = 2048
+#     }
+#   }
   }
+
   provider_settings = {
-    pool               = "ssd"
-    network_name       = null
-    bridge             = "br0"
-    additional_network = "192.168.142.0/24"
+    pool = "ssd"
+    network_name = null
+    bridge = "br0"
   }
 }
 
