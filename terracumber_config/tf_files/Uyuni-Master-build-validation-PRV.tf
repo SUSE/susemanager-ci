@@ -755,7 +755,7 @@ module "sles15sp5s390_minion" {
 
   provider_settings = {
     userid             = "UYMMIPRV"
-    mac                = "02:3a:fc:02:01:34"
+    mac                = "02:00:00:02:01:34"
     ssh_user           = "sles"
     vswitch            = "VSUMA"
   }
@@ -1277,7 +1277,7 @@ module "sles15sp5s390_sshminion" {
 
   provider_settings = {
     userid             = "UYMSSPRV"
-    mac                = "02:3a:fc:02:01:35"
+    mac                = "02:00:00:02:01:35"
     ssh_user           = "sles"
     vswitch            = "VSUMA"
   }
