@@ -35,5 +35,12 @@ class BugzillaClientTestCase(unittest.TestCase):
         mock_api_call.side_effect = mock_requests_get_fail
         self.assertRaises(HTTPError, self.bugzilla_client._get_bugs)
 
+    def test_parse_release_notes(self):
+        bug_ids: str = self.bugzilla_client._parse_release_notes('./tests/testdata/test_release_notes.changes')
+        self.assertListEqual(bug_ids, ['1', '2', '3', '4', '5', '6', '7'])
+
+        # first line is not ---------------- 
+        self.assertRaises(ValueError, self.bugzilla_client._parse_release_notes, './tests/testdata/test_invalid_release_notes.changes')
+
 if __name__ == '__main__':
     unittest.main()
