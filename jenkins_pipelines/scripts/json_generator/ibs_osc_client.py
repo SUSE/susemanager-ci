@@ -14,10 +14,15 @@ class IbsOscClient():
     # TODO: verify if this covers all possible formats for MIs under embargo
     _EMBARGO_END_DATE_FORMATS: set[str] = {'%Y-%m-%d %H:%M %Z', '%Y-%m-%d'}
     
-    def __init__(self) -> None:
+    def __init__(self, smash_api_token: str = '') -> None:
         self._api_url: str = IBS_API_URL
         self._current_date: date = date.today()
-        self._smash_client = SmashClient()
+        self._smash_client = SmashClient(smash_api_token)
+
+    def get_bsc_links_list(self, **kwargs) -> list[str]:
+        issues: list[dict] = self._smash_client.get_issues(**kwargs)
+
+        return [ self._issue_to_bsc_link(issue) for issue in issues ]
 
     def find_maintenance_incidents(self, status: str = 'open', group: str = 'qam-manager') -> set[str]:
         cmd: str = f"qam {status}"
@@ -115,3 +120,10 @@ class IbsOscClient():
         issue_id: str = issue_xml.attrib['id']
         tracker: str = issue_xml.attrib['tracker']
         return f"{tracker}#{issue_id}" if tracker == 'bnc' else f"{tracker.upper()}-{issue_id}"
+    
+    def _issue_to_bsc_link(self, issue: dict[str, any]) -> str:
+        for ref in issue['references']:
+            if ref['source'] == 'SUSE Bugzilla':
+                bsc_num: str = ref['name'].split("#")[1]
+                return f"- [ ] [Bug {bsc_num}]({ref['url']}) - {issue['summary']}\n"
+        raise ValueError(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}")
