@@ -3,7 +3,7 @@ from os import path, remove
 import sys
 import unittest
 
-from bsc_list_generator.bsc_finder import parse_cli_args, get_bugzilla_product, bugs_to_links_list, store_results
+from bsc_list_generator.bsc_finder import parse_cli_args, get_suma_product_name, get_suma_bugzilla_products, bugs_to_links_list, store_results
 from bsc_list_generator.bugzilla_client import BugzillaClient
 
 class BscFinderTestCase(unittest.TestCase):
@@ -130,11 +130,28 @@ class BscFinderTestCase(unittest.TestCase):
         self.assertEqual(args.output_file, "test.json")
         self.assertEqual(args.output_format, "json")
     
-    def test_get_bugzilla_product(self):
-        result: str = get_bugzilla_product("5.0", False)
+    def test_get_suma_product_name(self):
+        result: str = get_suma_product_name("5.0", False)
         self.assertEqual(result, "SUSE Manager 5.0")
-        result: str = get_bugzilla_product("5.0", True)
+        result: str = get_suma_product_name("5.0", True)
         self.assertEqual(result, "SUSE Manager 5.0 in Public Clouds")
+
+    def test_get_suma_bugzilla_products(self):
+        # only version, no cloud
+        product_names: list[str] = get_suma_bugzilla_products(False, "4.3", False)
+        self.assertListEqual(product_names, ["SUSE Manager 4.3"])
+        # version and cloud
+        product_names: list[str] = get_suma_bugzilla_products(False, "5.0", True)
+        self.assertListEqual(product_names, ["SUSE Manager 5.0 in Public Clouds"])
+        # all
+        product_names: list[str] = get_suma_bugzilla_products(True, "whatever", True)
+        self.assertListEqual(product_names, [
+                "SUSE Manager 4.3",
+                "SUSE Manager 4.3 in Public Clouds",
+                "SUSE Manager 5.0",
+                "SUSE Manager 5.0 in Public Clouds"
+            ]
+        )
 
     def test_bugs_to_link_list(self):
         expected_output: list[str] = [
