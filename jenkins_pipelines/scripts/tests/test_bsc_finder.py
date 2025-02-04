@@ -94,6 +94,7 @@ class BscFinderTestCase(unittest.TestCase):
         self.assertEqual(args.api_key, "test_key")
         self.assertFalse(args.all)
         self.assertEqual(args.product_version, "4.3")
+        self.assertFalse(args.use_release)
         self.assertFalse(args.cloud)
         self.assertIsNone(args.status)
         self.assertIsNone(args.resolution)
@@ -102,12 +103,13 @@ class BscFinderTestCase(unittest.TestCase):
 
     def test_parse_cli_args_success(self):
         # shorthand flags
-        sys.argv = ['bsc_finder.py', "-k", "test_key", "-a", "-p", "5.0", "-c", "-s", "CONFIRMED", "-r", "", "-o", "test.json", "-f", "json"]
+        sys.argv = ['bsc_finder.py', "-k", "test_key", "-a", "-p", "5.0", "-n", "-c", "-s", "CONFIRMED", "-r", "", "-o", "test.json", "-f", "json"]
         args = parse_cli_args()
 
         self.assertEqual(args.api_key, "test_key")
         self.assertTrue(args.all)
         self.assertEqual(args.product_version, "5.0")
+        self.assertTrue(args.use_release)
         self.assertTrue(args.cloud)
         self.assertEqual(args.status, "CONFIRMED")
         self.assertEqual(args.resolution, '')
@@ -116,7 +118,7 @@ class BscFinderTestCase(unittest.TestCase):
 
         # long flags
         sys.argv = [
-            "bsc_finder.py", "--api-key", "test_key", "--all", "--product-version", "5.0", "--cloud", "-s", "CONFIRMED",
+            "bsc_finder.py", "--api-key", "test_key", "--all", "--product-version", "5.0", "--release-notes", "--cloud", "-s", "CONFIRMED",
             "--resolution", "", "--output", "test.json", "--format", "json"
         ]
         args = parse_cli_args()
@@ -124,6 +126,7 @@ class BscFinderTestCase(unittest.TestCase):
         self.assertEqual(args.api_key, "test_key")
         self.assertTrue(args.all)
         self.assertEqual(args.product_version, "5.0")
+        self.assertTrue(args.use_release)
         self.assertTrue(args.cloud)
         self.assertEqual(args.status, "CONFIRMED")
         self.assertEqual(args.resolution, '')

@@ -27,10 +27,12 @@ The script allows users to filter bug reports for SUMA 4.3 and 5.0 products.
 ## Features
 
 - Fetches and stores bug reports from Bugzilla REST API through a CLI
+- Can retrieve the bugs mentioned in SUMA 4.3 and 5.0 release notes
 
 ## Requirements
 
 - A valid Bugzilla API key
+- osc CLI if you intend to retrieve bug reports from release notes
 - Python 3.6 or higher
 - `requests` library
 - `bugzilla_client` library: Ensure you have the `bugzilla_client` module available in
@@ -68,6 +70,9 @@ Options:
     - Product Version (-p or --product-version):
         Description: Specify the product version of SUMA to run the script for. Options: 4.3 or 5.0. Default is 4.3.
         Usage: -p 5.0 or --product-version 5.0
+    - Release notes (-n or --release-notes):
+        Description: Retrieves the bug reports mentioned in the latest release notes for the selected SUMA version(s)
+        Usage: -n or --release-notes
     - Cloud (-c or --cloud):
         Description: Returns BSCs for SUMA in Public Clouds.
         Usage: -c or --cloud (flag)
