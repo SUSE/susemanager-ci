@@ -179,7 +179,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name               = "server"
-  beta_enabled       = var.PRODUCT_VERSION == "head" ? true : false
+  beta_enabled       = false
   provider_settings = {
     mac                = "aa:b2:93:01:02:81"
     memory             = 40960
