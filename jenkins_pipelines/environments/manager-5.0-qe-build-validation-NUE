@@ -56,6 +56,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_products_and_salt_migration_tests', defaultValue: false, description: 'Run products and Salt migration Tests'),
             booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
+            booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
             text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
             ])
