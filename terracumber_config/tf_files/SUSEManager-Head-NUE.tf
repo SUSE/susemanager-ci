@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2204o", "sles15sp4o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-ci-head-"
@@ -184,7 +184,7 @@ module "cucumber_testsuite" {
       }
     }
     deblike_minion = {
-      image = "ubuntu2204o"
+      image = "ubuntu2404o"
       provider_settings = {
         mac = "aa:b2:93:01:00:bb"
         vcpu = 2

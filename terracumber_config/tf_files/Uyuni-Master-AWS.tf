@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse155o", "sles15sp4o", "ubuntu2204"]
+  images = ["rocky8", "opensuse155o", "sles15sp4o", "ubuntu2404"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -200,7 +200,7 @@ module "cucumber_testsuite" {
       }
     }
     deblike_minion = {
-      image = "ubuntu2204"
+      image = "ubuntu2404"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.11"
