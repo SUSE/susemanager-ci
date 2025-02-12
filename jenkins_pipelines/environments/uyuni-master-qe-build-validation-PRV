@@ -57,6 +57,7 @@ node('sumaform-cucumber-provo') {
             booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
             booleanParam(name: 'must_run_containerization_tests', defaultValue: true, description: 'Run Containerization Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
+            booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format')
             ])
     ])

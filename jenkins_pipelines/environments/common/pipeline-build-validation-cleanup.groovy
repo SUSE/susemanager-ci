@@ -6,7 +6,6 @@ def run(params) {
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
         String container_repository = params.container_repository ?: null
-        String controllerHostname = null
         String serverHostname = null
         GString targetedTfFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/main.tf"
         GString targetedTfStateFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/terraform.tfstate"
@@ -84,16 +83,8 @@ def run(params) {
 
             }
 
-            stage("Extract the controller and server hostname") {
+            stage("Extract server hostname") {
                 try {
-                    controllerHostname = sh(
-                            script: """
-                            set -e
-                            cd ${localSumaformDirPath}
-                            terraform output -json configuration | jq -r '.controller.hostname'
-                        """,
-                            returnStdout: true
-                    ).trim()
 
                     serverHostname = sh(
                             script: """
@@ -104,8 +95,7 @@ def run(params) {
                             returnStdout: true
                     ).trim()
 
-                    // Print the values for confirmation
-                    echo "Extracted controller hostname: ${controllerHostname}"
+                    // Print the value for confirmation
                     echo "Extracted server hostname: ${serverHostname}"
 
                 } catch (Exception e) {
@@ -179,28 +169,6 @@ def run(params) {
                     set +x
                     ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
                 """
-            }
-
-            stage('Copy the new custom repository json file to controller') {
-                if (params.push_new_custom_repositories) {
-                    // Generate custom_repositories.json file in the workspace from the value passed by parameter
-                    if (params.custom_repositories?.trim()) {
-                        writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
-                    }
-
-                    // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
-                    if (params.mi_ids?.trim()) {
-                        node('manager-jenkins-node') {
-                            checkout scm
-                            res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
-                            echo "Build Validation JSON script return code:\n ${json_content}"
-                            if (res_python_script != 0) {
-                                error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
-                            }
-                        }
-                    }
-                    sh(script: "${TestEnvironmentCleanerProgram} --url ${controllerHostname} --mode update_custom_repositories")
-                }
             }
 
             stage('Sanity check') {
