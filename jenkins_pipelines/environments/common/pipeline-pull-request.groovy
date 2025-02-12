@@ -181,11 +181,11 @@ def run(params) {
                           // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                           sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${openSUSE_client_repo}\" -r openSUSE_Leap_15.0 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${openSUSE_client_repo} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${openSUSE_client_repo}.error"
 
-                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}"
+                          echo "Publishing packages into http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_24.04/${arch}"
                           // We do not clean up the previous packages. This speeds up the checkout. We are assuming this project won't ever get deleted, so new builds should always have new release numbers.
                           // Clean up previous Packages.gz
-                          sh "rm -f ${environment_workspace}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}/Packages.gz"
-                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${ubuntu_client_repo}\" -r xUbuntu_22.04 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${ubuntu_client_repo} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${ubuntu_client_repo}.error"
+                          sh "rm -f ${environment_workspace}/repos/${ubuntu_client_repo}/xUbuntu_24.04/${arch}/Packages.gz"
+                          sh "bash susemanager-utils/testing/automation/publish-rpms.sh -A ${builder_api} -p \"${ubuntu_client_repo}\" -r xUbuntu_24.04 -a ${arch} -d \"${environment_workspace}/repos\" > ${environment_workspace}/repos/publish_logs/${ubuntu_client_repo} 2>&1 || touch ${environment_workspace}/repos/publish_logs/${ubuntu_client_repo}.error"
 
                           echo "Wait for all publishers to finish...This could take a while ..."
                           sh "bash -c \"while ( ps -C publish-rpms.sh > /dev/null 2>/dev/null );do sleep 1; done\" "
@@ -263,7 +263,7 @@ def run(params) {
 
                         sh "echo SLE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${sles_client_repo}/SLE_15/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "echo RHLIKE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${el_client_repo}/${EL}/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
-                        sh "echo DEBLIKE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_22.04/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
+                        sh "echo DEBLIKE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${ubuntu_client_repo}/xUbuntu_24.04/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
                         sh "echo OPENSUSE_CLIENT_REPO = \\\"http://${fqdn_jenkins_node}/workspace/${short_product_name}-pr${env_number}/repos/${openSUSE_client_repo}/openSUSE_Leap_15.0/${arch}\\\" >> ${env.resultdir}/sumaform/terraform.tfvars"
 
                         // Provision the environment

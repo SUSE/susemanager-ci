@@ -21,7 +21,7 @@ el_client_repo = "${source_project}:EL9-Uyuni-Client-Tools"
 EL = 'EL_9'
 sles_client_repo = "${source_project}:SLE15-Uyuni-Client-Tools"
 openSUSE_client_repo = "${source_project}:openSUSE_Leap_15-Uyuni-Client-Tools"
-ubuntu_client_repo = "${source_project}:Ubuntu2204-Uyuni-Client-Tools"
+ubuntu_client_repo = "${source_project}:Ubuntu2404-Uyuni-Client-Tools"
 sumaform_tools_project = 'systemsmanagement:sumaform:tools'
 test_packages_project = 'systemsmanagement:Uyuni:Test-Packages:Pool'
 build_repo = 'openSUSE_Leap_Micro_5.5'
@@ -62,7 +62,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests") {
     EL = 'SUSE_EL-9_Update_standard'
     sles_client_repo = "${source_project}:SLE15-SUSE-Manager-Tools"
     openSUSE_client_repo = "openSUSE.org:systemsmanagement:Uyuni:Master:openSUSE_Leap_15-Uyuni-Client-Tools"
-    ubuntu_client_repo = "${source_project}:Ubuntu22.04-SUSE-Manager-Tools"
+    ubuntu_client_repo = "${source_project}:Ubuntu24.04-SUSE-Manager-Tools"
     build_repo = 'SLE_15_SP4'
     other_build_repo = 'openSUSE_Leap_15.4'
     url_prefix="https://ci.suse.de/view/Manager/view/Manager-4.3/job/${env.JOB_NAME}"
@@ -96,7 +96,7 @@ if (env.JOB_NAME == "uyuni-prs-ci-tests") {
     EL = 'SUSE_EL-9_Update_standard'
     sles_client_repo = "${source_project}:SLE15-SUSE-Manager-Tools"
     openSUSE_client_repo = "openSUSE.org:systemsmanagement:Uyuni:Master:openSUSE_Leap_15-Uyuni-Client-Tools"
-    ubuntu_client_repo = "${source_project}:Ubuntu22.04-SUSE-Manager-Tools"
+    ubuntu_client_repo = "${source_project}:Ubuntu24.04-SUSE-Manager-Tools"
     build_repo = 'SLE_15_SP4'
     other_build_repo = 'openSUSE_Leap_15.4'
     url_prefix="https://ci.suse.de/view/Manager/view/Manager-4.3/job/${env.JOB_NAME}"
