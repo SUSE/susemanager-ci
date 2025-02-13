@@ -137,21 +137,8 @@ def run(params) {
             }
 
             stage('Delete client VMs') {
-
-                // Construct the --tf-resources-to-delete argument dynamically
-                ArrayList tfResourcesToDelete = []
-                if (params.clean_proxy) {
-                    tfResourcesToDelete.add('proxy')
-                }
-                if (params.clean_monitoring_server) {
-                    tfResourcesToDelete.add('monitoring-server')
-                }
-                if (params.clean_retail) {
-                    tfResourcesToDelete.add('retail')
-                }
-
                 // Join the resources into a comma-separated string if there are any to delete
-                String tfResourcesToDeleteArg = defaultResourcesToDelete.isEmpty() ? '' : "--tf-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
+                String tfResourcesToDeleteArg = params.tfResourcesToDelete ? '' : "--tf-resources-delete-all"
 
                 // Execute Terracumber CLI to deploy the environment without clients
                 sh """
