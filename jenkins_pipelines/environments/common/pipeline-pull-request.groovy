@@ -31,11 +31,11 @@ def run(params) {
                   }
                   if(params.remove_previous_environment) {
                     if(email_to!='' && pull_request_number!='') {
-                        sh "bash jenkins_pipelines/scripts/cleanup-lock.sh -u ${email_to} -p ${pull_request_number} -x ${short_product_name}"
+                        sh "pwd && bash jenkins_pipelines/scripts/cleanup-lock.sh -u ${email_to} -p ${pull_request_number} -x ${short_product_name}"
                     }
                   }
-                  running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
-                  if(running_same_pr == "yes") {
+                  env.running_same_pr = sh(script: "lockfile -001 -r1 -! ${env.suma_pr_lockfile} 2>/dev/null && echo 'yes' || echo 'no'", returnStdout: true).trim()
+                  if(env.running_same_pr == "yes") {
                       error("Aborting the build. Already running a test for Pull Request ${pull_request_number}")
                   }
                   if(pull_request_number == '') {
@@ -316,7 +316,7 @@ def run(params) {
         }
         finally {
             stage('Clean up lockfiles') {
-                if(running_same_pr == "no"){
+                if(env.running_same_pr == "no"){
                       sh(script: "rm -f ${env.suma_pr_lockfile}")
                 }
                 if(environment_workspace){
