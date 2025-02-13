@@ -14,7 +14,7 @@ def run(params) {
         terraform_init = true
         rake_namespace = 'cucumber'
         rake_parallel_namespace = 'parallel'
-        jenkins_workspace = '/home/jenkins/jenkins-build/workspace/'
+        jenkins_workspace = '/home/jenkins/workspace'
         environment_workspace = null
         env.common_params = ''
         tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-testing-variables.tf'
