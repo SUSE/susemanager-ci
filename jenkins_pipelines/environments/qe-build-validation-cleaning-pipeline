@@ -32,9 +32,7 @@ node {
                         string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
                         string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
                         string(name: 'container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy and server container registry'),
-                        booleanParam(name: 'clean_proxy', defaultValue: false, description: 'Clean Proxy, will remove all the artefacts related to Proxy and redeploy Proxy'),
-                        booleanParam(name: 'clean_monitoring_server', defaultValue: false, description: 'Clean Monitoring Server, will remove all the artefacts related to Monitoring Server and redeploy Monitoring Server'),
-                        booleanParam(name: 'clean_retail', defaultValue: false, description: 'Clean Retails artefacts, and redeploy terminal and dhcp if applicable')
+                        booleanParam(name: 'delete_all_resources', defaultValue: false, description: 'Proxy, Monitoring and Retail will be redeployed')
                 ])
         ])
 
