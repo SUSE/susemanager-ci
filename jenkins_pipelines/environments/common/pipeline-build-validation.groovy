@@ -9,8 +9,8 @@ def run(params) {
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
 
         deployed = false
-        GString resultdir = "${WORKSPACE}/results"
-        GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+        env.resultdir = "${WORKSPACE}/results"
+        env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString localSumaformDirPath = "${resultdir}/sumaform/"
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
