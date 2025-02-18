@@ -296,6 +296,13 @@ def run(params) {
                     }
                 }
             }
+            stage('Core - Proxy') {
+                ws(environment_workspace){
+                    if(must_test) {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${namespace}:proxy'"
+                    }
+                }
+            }
             stage('Core - Initialize clients') {
                 ws(environment_workspace){
                     if(must_test) {
