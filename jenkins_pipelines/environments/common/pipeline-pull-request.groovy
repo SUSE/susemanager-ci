@@ -299,15 +299,14 @@ def run(params) {
             stage('Core - Proxy') {
                 ws(environment_workspace){
                     if(must_test) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${namespace}:proxy'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:proxy'"
                     }
                 }
             }
             stage('Core - Initialize clients') {
                 ws(environment_workspace){
                     if(must_test) {
-                        namespace = rake_namespace
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${namespace}:init_clients'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${rake_namespace}:init_clients'"
                     }
                 }
             }
