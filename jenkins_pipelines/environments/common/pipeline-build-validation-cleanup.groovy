@@ -59,108 +59,113 @@ def run(params) {
 
             }
 
-            stage('Confirm Environment Cleanup') {
-                // Ask the user what environment they are cleaning, ensuring the answer matches params.targeted_project
-                def environmentChoice = input(
-                        message: 'What environment are you cleaning?',
-                        parameters: [
-                                string(name: 'Environment_Name', description: 'Enter the name of the environment you are cleaning.')
-                        ]
-                )
-
-                // Validate that the user entered the correct environment
-                if (environmentChoice != params.targeted_project) {
-                    error("The environment name entered does not match the targeted project. Aborting pipeline.")
-                }
-            }
+//            stage('Confirm Environment Cleanup') {
+//                // Ask the user what environment they are cleaning, ensuring the answer matches params.targeted_project
+//                def environmentChoice = input(
+//                        message: 'What environment are you cleaning?',
+//                        parameters: [
+//                                string(name: 'Environment_Name', description: 'Enter the name of the environment you are cleaning.')
+//                        ]
+//                )
+//
+//                // Validate that the user entered the correct environment
+//                if (environmentChoice != params.targeted_project) {
+//                    error("The environment name entered does not match the targeted project. Aborting pipeline.")
+//                }
+//            }
 
             stage("Copy terraform files from ${params.targeted_project}"){
                 // Copy tfstate and terraform directory to the result directory
-                sh """
-                    cp ${targetedTfStateFile} ${localTfStateFile}
-                    cp -r ${targetedTerraformDirPath}.terraform ${localSumaformDirPath}
-                """
-
+//                sh """
+//                    cp ${targetedTfStateFile} ${localTfStateFile}
+//                    cp -r ${targetedTerraformDirPath}.terraform ${localSumaformDirPath}
+//                """
+                copyArtifacts(
+                        projectName: params.targeted_project,
+                        selector: lastCompleted(),
+                        filter: 'results/sumaform/*terraform*', // Copies all files and subdirectories
+                        target: 'results/sumaform/'   // Places files in the local results/sumaform directory
+                )
             }
-
-            stage("Extract server hostname") {
-                try {
-
-                    serverHostname = sh(
-                            script: """
-                            set -e
-                            cd ${localSumaformDirPath}
-                            terraform output -json configuration | jq -r '.server.hostname'
-                        """,
-                            returnStdout: true
-                    ).trim()
-
-                    // Print the value for confirmation
-                    echo "Extracted server hostname: ${serverHostname}"
-
-                } catch (Exception e) {
-                    error("Failed to extract hostnames: ${e.message}")
-                }
-
-            }
-
-            GString programCall = "${TestEnvironmentCleanerProgram} --url ${serverHostname} ${defaultResourcesToDeleteArgs} --mode"
-
-            stage('Delete the systems') {
-                sh(script: "${programCall} delete_systems")
-            }
-            stage('Delete config projects') {
-                sh(script: "${programCall} delete_config_projects")
-            }
-            stage('Delete software channels') {
-                sh(script: "${programCall} delete_software_channels")
-            }
-            stage('Delete activation keys') {
-                sh(script: "${programCall} delete_activation_keys")
-            }
-            stage('Delete minion users') {
-                sh(script: "${programCall} delete_users")
-            }
-            stage('Delete channel repositories') {
-                sh(script: "${programCall} delete_repositories")
-            }
-            stage('Delete salt keys') {
-                sh(script: "${programCall} delete_salt_keys")
-            }
-
-            stage('Delete ssh know hosts') {
-                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_known_hosts")
-            }
-
-            stage('Delete distributions folders') {
-                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_distributions")
-            }
-
-            stage('Delete client VMs') {
-                // Join the resources into a comma-separated string if there are any to delete
-                String tfResourcesToDeleteArg = params.tfResourcesToDelete ? '' : "--tf-resources-delete-all"
-
-                // Execute Terracumber CLI to deploy the environment without clients
-                sh """
-                    ${environmentVars}
-                    set +x
-                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
-                """
-            }
-
-            stage('Redeploy the environment with new client VMs') {
-
-                // Run Terracumber to deploy the environment
-                sh """
-                    ${environmentVars}
-                    set +x
-                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
-                """
-            }
-
-            stage('Sanity check') {
-                sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
-            }
+//
+//            stage("Extract server hostname") {
+//                try {
+//
+//                    serverHostname = sh(
+//                            script: """
+//                            set -e
+//                            cd ${localSumaformDirPath}
+//                            terraform output -json configuration | jq -r '.server.hostname'
+//                        """,
+//                            returnStdout: true
+//                    ).trim()
+//
+//                    // Print the value for confirmation
+//                    echo "Extracted server hostname: ${serverHostname}"
+//
+//                } catch (Exception e) {
+//                    error("Failed to extract hostnames: ${e.message}")
+//                }
+//
+//            }
+//
+//            GString programCall = "${TestEnvironmentCleanerProgram} --url ${serverHostname} ${defaultResourcesToDeleteArgs} --mode"
+//
+//            stage('Delete the systems') {
+//                sh(script: "${programCall} delete_systems")
+//            }
+//            stage('Delete config projects') {
+//                sh(script: "${programCall} delete_config_projects")
+//            }
+//            stage('Delete software channels') {
+//                sh(script: "${programCall} delete_software_channels")
+//            }
+//            stage('Delete activation keys') {
+//                sh(script: "${programCall} delete_activation_keys")
+//            }
+//            stage('Delete minion users') {
+//                sh(script: "${programCall} delete_users")
+//            }
+//            stage('Delete channel repositories') {
+//                sh(script: "${programCall} delete_repositories")
+//            }
+//            stage('Delete salt keys') {
+//                sh(script: "${programCall} delete_salt_keys")
+//            }
+//
+//            stage('Delete ssh know hosts') {
+//                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_known_hosts")
+//            }
+//
+//            stage('Delete distributions folders') {
+//                sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_distributions")
+//            }
+//
+//            stage('Delete client VMs') {
+//                // Join the resources into a comma-separated string if there are any to delete
+//                String tfResourcesToDeleteArg = params.tfResourcesToDelete ? '' : "--tf-resources-delete-all"
+//
+//                // Execute Terracumber CLI to deploy the environment without clients
+//                sh """
+//                    ${environmentVars}
+//                    set +x
+//                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
+//                """
+//            }
+//
+//            stage('Redeploy the environment with new client VMs') {
+//
+//                // Run Terracumber to deploy the environment
+//                sh """
+//                    ${environmentVars}
+//                    set +x
+//                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
+//                """
+//            }
+//
+//            stage('Sanity check') {
+//                sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
+//            }
 
         }
         finally {
@@ -172,8 +177,12 @@ def run(params) {
 
             stage('Rename tfstate to avoid copying it between runs') {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "mv ${localTfStateFile} ${localTfStateFile}.old"
-                    sh "cp ${localTfStateFile}.old ${resultdirbuild}"
+//                    sh "mv ${localTfStateFile} ${localTfStateFile}.old"
+//                    sh "cp ${localTfStateFile}.old ${resultdirbuild}"
+                    archiveArtifacts artifacts: "${resultdirbuild}/terraform.tfstate", allowEmptyArchive: true
+
+                    // Delete the old tfstate file after archiving
+                    sh "rm -f ${resultdirbuild}/terraform.tfstate"
                 }
             }
         }
