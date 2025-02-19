@@ -142,6 +142,9 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
       container_tag = "latest"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
+      }
     }
     proxy_containerized = {
       image = "slmicro61o"
@@ -154,6 +157,9 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
       container_tag = "latest"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
+      }
     }
     suse_client = {
       image = "sles15sp4o"
