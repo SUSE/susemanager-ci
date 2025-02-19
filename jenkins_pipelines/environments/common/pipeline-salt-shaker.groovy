@@ -63,9 +63,9 @@ def run(params) {
                 }
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     if (!params.testsuite_dir) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --tb=native'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --color=yes --tb=native'"
                     } else {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --tb=native'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --color=yes --tb=native'"
                     }
                 }
             }
@@ -77,9 +77,9 @@ def run(params) {
                 }
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     if (!params.testsuite_dir) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --tb=native'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --color=yes --tb=native'"
                     } else {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --tb=native'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --color=yes --tb=native'"
                     }
                 }
             }
@@ -91,9 +91,9 @@ def run(params) {
                 }
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     if (!params.testsuite_dir) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --color=yes --tb=native'"
                     } else {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --tb=native'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --directory ${params.testsuite_dir} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --color=yes --tb=native'"
                     }
                 }
             }
