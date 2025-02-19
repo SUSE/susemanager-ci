@@ -20,7 +20,7 @@ node('sumaform-cucumber-provo') {
             'sles15sp5s390_minion, sles15sp5s390_sshminion, ' +
             'slemicro51_minion, slemicro52_minion, slemicro53_minion, slemicro54_minion, slemicro55_minion, slmicro60_minion, slmicro61_minion'
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
+        buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
