@@ -17,14 +17,12 @@ fi
 
 # Extract user IDs from the main.tf file
 USERIDS=$(grep -A 1 "userid" "$MAIN_TF_FILE" | awk -F'"' '/userid/ {print $2}')
-
+echo "Extracted userid: $USERIDS"
 # Iterate through each userid and delete the s390 clients
 for USERID in $USERIDS; do
   echo "Deleting client with userid: $USERID"
-  delete_s390_guest "$USERID"
-
+  /usr/local/bin/delete_s390_guest "$USERID"
 done
-
 
 ##### Remove s390 clients from the terraform state file #####
 
