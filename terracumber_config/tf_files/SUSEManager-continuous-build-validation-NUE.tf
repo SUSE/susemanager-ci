@@ -238,7 +238,7 @@ module "sles12sp5_minion" {
   name               = "sles12sp5-minion"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:90"
+    mac                = "aa:b2:93:01:02:91"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -252,7 +252,7 @@ module "sles15sp2_minion" {
   name               = "sles15sp2-minion"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:91"
+    mac                = "aa:b2:93:01:02:94"
     memory             = 4096
   }
 
@@ -267,7 +267,7 @@ module "sles15sp3_minion" {
   name               = "sles15sp3-minion"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:92"
+    mac                = "aa:b2:93:01:02:95"
     memory             = 4096
   }
 
@@ -282,7 +282,7 @@ module "sles15sp4_minion" {
   name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:93"
+    mac                = "aa:b2:93:01:02:96"
     memory             = 4096
   }
 
@@ -297,7 +297,7 @@ module "sles15sp5_minion" {
   name               = "sles15sp5-minion"
   image              = "sles15sp5o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:94"
+    mac                = "aa:b2:93:01:02:92"
     memory             = 4096
   }
 
@@ -312,7 +312,7 @@ module "sles15sp6_minion" {
   name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:95"
+    mac                = "aa:b2:93:01:02:90"
     memory             = 4096
   }
 
@@ -327,7 +327,7 @@ module "alma8_minion" {
   name               = "alma8-minion"
   image              = "almalinux8o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b3"
+    mac                = "aa:b2:93:01:02:99"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -341,7 +341,7 @@ module "alma9_minion" {
   name               = "alma9-minion"
   image              = "almalinux9o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b4"
+    mac                = "aa:b2:93:01:02:a2"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -355,7 +355,7 @@ module "centos7_minion" {
   name               = "centos7-minion"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b0"
+    mac                = "aa:b2:93:01:02:97"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -369,7 +369,7 @@ module "liberty9_minion" {
   name               = "liberty9-minion"
   image              = "libertylinux9o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b6"
+    mac                = "aa:b2:93:01:02:a5"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -383,7 +383,7 @@ module "oracle9_minion" {
   name               = "oracle9-minion"
   image              = "oraclelinux9o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b5"
+    mac                = "aa:b2:93:01:02:a3"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -397,7 +397,7 @@ module "rocky8_minion" {
   name               = "rocky8-minion"
   image              = "rocky8o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b1"
+    mac                = "aa:b2:93:01:02:98"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -411,7 +411,7 @@ module "rocky9_minion" {
   name               = "rocky9-minion"
   image              = "rocky9o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b2"
+    mac                = "aa:b2:93:01:02:a1"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -425,7 +425,7 @@ module "ubuntu2004_minion" {
   name               = "ubuntu2004-minion"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b9"
+    mac                = "aa:b2:93:01:02:9a"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -439,7 +439,7 @@ module "ubuntu2204_minion" {
   name               = "ubuntu2204-minion"
   image              = "ubuntu2204o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:ba"
+    mac                = "aa:b2:93:01:02:9b"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -453,7 +453,7 @@ module "ubuntu2404_minion" {
   name               = "ubuntu2404-minion"
   image              = "ubuntu2404o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:bb"
+    mac                = "aa:b2:93:01:02:9d"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -467,7 +467,7 @@ module "debian11_minion" {
   name               = "debian11-minion"
   image              = "debian11o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b7"
+    mac                = "aa:b2:93:01:02:9e"
     memory             = 4096
   }
 
@@ -482,7 +482,7 @@ module "debian12_minion" {
   name               = "debian12-minion"
   image              = "debian12o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b8"
+    mac                = "aa:b2:93:01:02:9c"
     memory             = 4096
   }
 
@@ -500,7 +500,7 @@ module "opensuse155arm_minion" {
   name               = "opensuse155arm-minion-nue"
   image              = "opensuse155armo"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:97"
+    mac                = "aa:b2:93:01:02:a0"
     overwrite_fqdn     = "suma-continuous-bv-opensuse156arm-minion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
@@ -520,7 +520,7 @@ module "opensuse156arm_minion" {
   name               = "opensuse156arm-minion-nue"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:98"
+    mac                = "aa:b2:93:01:02:ae"
     overwrite_fqdn     = "suma-continuous-bv-opensuse156arm-minion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
@@ -557,7 +557,7 @@ module "salt_migration_minion" {
   name               = "salt-migration-minion"
   image              = "sles15sp5o"
   provider_settings  = {
-    mac                = "aa:b2:93:01:02:9b"
+    mac                = "aa:b2:93:01:02:af"
     memory             = 4096
   }
 
@@ -576,7 +576,7 @@ module "slemicro51_minion" {
   name               = "slemicro51-minion"
   image              = "slemicro51-ign"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:9c"
+    mac                = "aa:b2:93:01:02:a6"
     memory             = 2048
   }
 
@@ -594,7 +594,7 @@ module "slemicro52_minion" {
   name               = "slemicro52-minion"
   image              = "slemicro52-ign"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:9d"
+    mac                = "aa:b2:93:01:02:a7"
     memory             = 2048
   }
 
@@ -612,7 +612,7 @@ module "slemicro53_minion" {
   name               = "slemicro53-minion"
   image              = "slemicro53-ign"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:9e"
+    mac                = "aa:b2:93:01:02:a8"
     memory             = 2048
   }
 
@@ -630,7 +630,7 @@ module "slemicro54_minion" {
   name               = "slemicro54-minion"
   image              = "slemicro54-ign"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:9f"
+    mac                = "aa:b2:93:01:02:a9"
     memory             = 2048
   }
 
@@ -648,7 +648,7 @@ module "slemicro55_minion" {
   name               = "slemicro55-minion"
   image              = "slemicro55o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:a0"
+    mac                = "aa:b2:93:01:02:aa"
     memory             = 2048
   }
 
@@ -666,7 +666,7 @@ module "slmicro60_minion" {
   name               = "slmicro60-minion"
   image              = "slmicro60o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:a1"
+    mac                = "aa:b2:93:01:02:ab"
     memory             = 2048
   }
 
@@ -684,7 +684,7 @@ module "slmicro61_minion" {
   name               = "slmicro61-minion"
   image              = "slmicro61o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:a2"
+    mac                = "aa:b2:93:01:02:ac"
     memory             = 2048
   }
 
@@ -702,7 +702,7 @@ module "sles12sp5_sshminion" {
   name               = "sles12sp5-sshminion"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:c0"
+    mac                = "aa:b2:93:01:02:b1"
     memory             = 4096
   }
 
@@ -717,7 +717,7 @@ module "sles15sp2_sshminion" {
   name               = "sles15sp2-sshminion"
   image              = "sles15sp2o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:c1"
+    mac                = "aa:b2:93:01:02:b4"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -730,7 +730,7 @@ module "sles15sp3_sshminion" {
   name               = "sles15sp3-sshminion"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:c2"
+    mac                = "aa:b2:93:01:02:b5"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -743,7 +743,7 @@ module "sles15sp4_sshminion" {
   name               = "sles15sp4-sshminion"
   image              = "sles15sp4o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:c3"
+    mac                = "aa:b2:93:01:02:b6"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -756,7 +756,7 @@ module "sles15sp5_sshminion" {
   name               = "sles15sp5-sshminion"
   image              = "sles15sp5o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:c4"
+    mac                = "aa:b2:93:01:02:b2"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -769,7 +769,7 @@ module "sles15sp6_sshminion" {
   name               = "sles15sp6-sshminion"
   image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:c5"
+    mac                = "aa:b2:93:01:02:b0"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -782,7 +782,7 @@ module "alma8_sshminion" {
   name               = "alma8-sshminion"
   image              = "almalinux8o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e3"
+    mac                = "aa:b2:93:01:02:b9"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -795,7 +795,7 @@ module "alma9_sshminion" {
   name               = "alma9-sshminion"
   image              = "almalinux9o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e4"
+    mac                = "aa:b2:93:01:02:c2"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -808,7 +808,7 @@ module "centos7_sshminion" {
   name               = "centos7-sshminion"
   image              = "centos7o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e0"
+    mac                = "aa:b2:93:01:02:b7"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -822,7 +822,7 @@ module "liberty9_sshminion" {
   name               = "liberty9-sshminion"
   image              = "libertylinux9o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e6"
+    mac                = "aa:b2:93:01:02:c5"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -835,7 +835,7 @@ module "oracle9_sshminion" {
   name               = "oracle9-sshminion"
   image              = "oraclelinux9o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e5"
+    mac                = "aa:b2:93:01:02:c3"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -848,7 +848,7 @@ module "rocky8_sshminion" {
   name               = "rocky8-sshminion"
   image              = "rocky8o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e1"
+    mac                = "aa:b2:93:01:02:b8"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -861,7 +861,7 @@ module "rocky9_sshminion" {
   name               = "rocky9-sshminion"
   image              = "rocky9o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e2"
+    mac                = "aa:b2:93:01:02:c1"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -874,7 +874,7 @@ module "ubuntu2004_sshminion" {
   name               = "ubuntu2004-sshminion"
   image              = "ubuntu2004o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e9"
+    mac                = "aa:b2:93:01:02:ba"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -887,7 +887,7 @@ module "ubuntu2204_sshminion" {
   name               = "ubuntu2204-sshminion"
   image              = "ubuntu2204o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:ea"
+    mac                = "aa:b2:93:01:02:bb"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -900,7 +900,7 @@ module "ubuntu2404_sshminion" {
   name               = "ubuntu2404-sshminion"
   image              = "ubuntu2404o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:eb"
+    mac                = "aa:b2:93:01:02:bd"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -913,7 +913,7 @@ module "debian11_sshminion" {
   name               = "debian11-sshminion"
   image              = "debian11o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e7"
+    mac                = "aa:b2:93:01:02:be"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -926,7 +926,7 @@ module "debian12_sshminion" {
   name               = "debian12-sshminion"
   image              = "debian12o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:e8"
+    mac                = "aa:b2:93:01:02:bc"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -942,7 +942,7 @@ module "opensuse155arm_sshminion" {
   name               = "opensuse155arm-sshminion-nue"
   image              = "opensuse155armo"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:c7"
+    mac                = "aa:b2:93:01:02:c0"
     overwrite_fqdn     = "suma-continuous-bv-opensuse155arm-sshminion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
@@ -961,7 +961,7 @@ module "opensuse156arm_sshminion" {
   name               = "opensuse156arm-sshminion-nue"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:c8"
+    mac                = "aa:b2:93:01:02:ce"
     overwrite_fqdn     = "suma-continuous-bv-opensuse156arm-sshminion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
@@ -996,7 +996,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro51-sshminion"
 //   image              = "slemicro51-ign"
 //   provider_settings = {
-//     mac                = "aa:b2:92:42:00:96"
+//     mac                = "aa:b2:92:42:00:c6"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -1010,7 +1010,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro52-sshminion"
 //   image              = "slemicro52-ign"
 //   provider_settings = {
-//     mac                = "aa:b2:92:42:00:97"
+//     mac                = "aa:b2:92:42:00:c7"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -1024,7 +1024,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro53-sshminion"
 //   image              = "slemicro53-ign"
 //   provider_settings = {
-//     mac                = "aa:b2:92:42:00:98"
+//     mac                = "aa:b2:92:42:00:c8"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -1038,7 +1038,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro54-sshminion"
 //   image              = "slemicro54-ign"
 //   provider_settings = {
-//     mac                = "aa:b2:92:42:00:99"
+//     mac                = "aa:b2:92:42:00:c9"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -1055,7 +1055,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro55-sshminion"
 //   image              = "slemicro55o"
 //   provider_settings = {
-//     mac                = "aa:b2:92:42:00:9a"
+//     mac                = "aa:b2:92:42:00:ca"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -1071,7 +1071,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slmicro60-sshminion"
 //   image              = "slmicro60o"
 //   provider_settings = {
-//     mac                = "aa:b2:92:42:00:9b"
+//     mac                = "aa:b2:92:42:00:cb"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -1087,7 +1087,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slmicro61-sshminion"
 //   image              = "slmicro61o"
 //   provider_settings = {
-//     mac                = "aa:b2:92:42:00:9c"
+//     mac                = "aa:b2:92:42:00:cc"
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
