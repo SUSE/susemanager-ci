@@ -148,26 +148,26 @@ def run(params) {
                     sh ${remove_s390_bash} main.tf
                     terraform refresh
                 """
-//                // Execute Terracumber CLI to deploy the environment without clients
-//                sh """
-//                    ${environmentVars}
-//                    set +x
-//                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
-//                """
+                // Execute Terracumber CLI to deploy the environment without clients
+                sh """
+                    ${environmentVars}
+                    set +x
+                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
+                """
             }
 
-//            stage('Redeploy the environment with new client VMs') {
-//                // Run Terracumber to deploy the environment
-//                sh """
-//                    ${environmentVars}
-//                    set +x
-//                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
-//                """
-//            }
+            stage('Redeploy the environment with new client VMs') {
+                // Run Terracumber to deploy the environment
+                sh """
+                    ${environmentVars}
+                    set +x
+                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
+                """
+            }
 
-//            stage('Sanity check') {
-//                sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
-//            }
+            stage('Sanity check') {
+                sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
+            }
 
         }
         finally {
