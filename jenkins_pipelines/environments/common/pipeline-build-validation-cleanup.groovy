@@ -11,7 +11,7 @@ def run(params) {
         GString targetedTfStateFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/terraform.tfstate"
         GString targetedTerraformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
         GString localSumaformDirPath = "${resultdir}/sumaform/"
-        GString localTfStateFile = "${localSumaformDirPath}/terraform.tfstate"
+        GString localTfStateFile = "${localSumaformDirPath}terraform.tfstate"
         GString logFile = "${resultdirbuild}/sumaform.log"
 
         // Construct the --tf-resources-to-delete argument dynamically
@@ -80,7 +80,6 @@ def run(params) {
                     cp ${targetedTfStateFile} ${localTfStateFile}
                     cp -r ${targetedTerraformDirPath}.terraform ${localSumaformDirPath}
                 """
-
             }
 
             stage("Extract server hostname") {
@@ -172,8 +171,9 @@ def run(params) {
 
             stage('Rename tfstate to avoid copying it between runs') {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "mv ${localTfStateFile} ${localTfStateFile}.old"
-                    sh "cp ${localTfStateFile}.old ${resultdirbuild}"
+                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate"
+                    // Delete the old tfstate file after archiving
+                    sh "rm -f ${localTfStateFile}"
                 }
             }
         }
