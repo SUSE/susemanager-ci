@@ -141,9 +141,9 @@ def run(params) {
                 String tfResourcesToDeleteArg = params.tfResourcesToDelete ? '' : "--tf-resources-delete-all"
                 // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
                 sh """
-                    set +x
                     source ~/.credentials
                     export TF_VAR_CONTAINER_REPOSITORY='unused'
+                    set +x
                     cd ${localSumaformDirPath}
                     sh ${remove_s390_bash} main.tf
                     terraform refresh
