@@ -2,6 +2,7 @@ def run(params) {
     timestamps {
         // Define paths and environment variables for reusability
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
+        GString remove_s390_bash = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/delete_s390_clients.sh"
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
@@ -138,7 +139,15 @@ def run(params) {
             stage('Delete client VMs') {
                 // Join the resources into a comma-separated string if there are any to delete
                 String tfResourcesToDeleteArg = params.tfResourcesToDelete ? '' : "--tf-resources-delete-all"
-
+                // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
+                sh """
+                    source ~/.credentials
+                    export TF_VAR_CONTAINER_REPOSITORY='unused'
+                    set +x
+                    cd ${localSumaformDirPath}
+                    sh ${remove_s390_bash} main.tf
+                    terraform refresh
+                """
                 // Execute Terracumber CLI to deploy the environment without clients
                 sh """
                     ${environmentVars}
@@ -148,7 +157,6 @@ def run(params) {
             }
 
             stage('Redeploy the environment with new client VMs') {
-
                 // Run Terracumber to deploy the environment
                 sh """
                     ${environmentVars}
