@@ -85,8 +85,8 @@ class ResourceManager:
     def delete_system_groups(self):
         groups = self.client.systemgroup.listAllGroups(self.session_key)
         for group in groups:
-            logger.info(f"Delete system group : {group}")
-            self.client.systemgroup.delete(self.session_key, group)
+            logger.info(f"Delete system group : {group['name']}")
+            self.client.systemgroup.delete(self.session_key, group['name'])
 
     def delete_channel_repos(self):
         repositories = self.client.channel.software.listUserRepos(self.session_key)
