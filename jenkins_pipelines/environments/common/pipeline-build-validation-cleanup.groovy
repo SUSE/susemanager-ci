@@ -17,7 +17,7 @@ def run(params) {
 
         // Construct the --tf-resources-to-delete argument dynamically
         ArrayList defaultResourcesToDelete = []
-        if (params.tfResourcesToDelete) {
+        if (params.delete_all_resources) {
             defaultResourcesToDelete.add('proxy')
             defaultResourcesToDelete.add('monitoring-server')
             defaultResourcesToDelete.add('retail')
@@ -76,6 +76,7 @@ def run(params) {
                 sh """
                     cp ${targetedTfStateFile} ${localTfStateFile}
                     cp -r ${targetedTerraformDirPath}.terraform ${localSumaformDirPath}
+                    cp ${targetedTfFile} ${localSumaformDirPath}
                 """
             }
 
@@ -134,7 +135,7 @@ def run(params) {
 
             stage('Delete client VMs') {
                 // Join the resources into a comma-separated string if there are any to delete
-                String tfResourcesToDeleteArg = params.tfResourcesToDelete ? '' : "--tf-resources-delete-all"
+                String tfResourcesToDeleteArg = params.delete_all_resources ? '' : "--tf-resources-delete-all"
                 // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
                 sh """
                     source ~/.credentials
@@ -177,7 +178,8 @@ def run(params) {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     archiveArtifacts artifacts: "results/sumaform/terraform.tfstate"
                     // Delete the old tfstate file after archiving
-                    sh "rm -f ${localTfStateFile}"
+//                    sh "rm -f ${localTfStateFile}"
+//                    sh "rm -rf ${localSumaformDirPath}main.tf ${localSumaformDirPath}./terraform"
                 }
             }
         }
