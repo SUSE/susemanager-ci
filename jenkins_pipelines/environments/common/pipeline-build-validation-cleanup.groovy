@@ -124,7 +124,11 @@ def run(params) {
             stage('Delete salt keys') {
                 sh(script: "${programCall} delete_salt_keys")
             }
-
+            stage('Delete system groups') {
+                if (params.delete_all_resources) {
+                    sh(script: "${programCall} delete_system_groups")
+                }
+            }
             stage('Delete ssh know hosts') {
                 sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_known_hosts")
             }

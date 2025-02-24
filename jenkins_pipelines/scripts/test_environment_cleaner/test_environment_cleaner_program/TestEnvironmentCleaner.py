@@ -13,7 +13,7 @@ MODES = [
     'delete_users', 'delete_activation_keys', 'delete_config_projects',
     'delete_software_channels', 'delete_systems', 'delete_repositories',
     'full_cleanup', 'delete_salt_keys', 'delete_known_hosts',
-    'update_custom_repositories', 'delete_distributions'
+    'update_custom_repositories', 'delete_distributions', 'delete_system_groups'
 ]
 
 def main():
@@ -45,6 +45,7 @@ def main():
             "delete_systems": resource_manager.delete_systems,
             "delete_repositories": resource_manager.delete_channel_repos,
             "delete_salt_keys": resource_manager.delete_salt_keys,
+            "delete_system_groups": resource_manager.delete_system_groups,
             "full_cleanup": resource_manager.run,
         }
         try:
