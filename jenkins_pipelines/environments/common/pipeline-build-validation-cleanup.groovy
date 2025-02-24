@@ -20,7 +20,8 @@ def run(params) {
         if (params.delete_all_resources) {
             defaultResourcesToDelete.add('proxy')
             defaultResourcesToDelete.add('monitoring-server')
-            defaultResourcesToDelete.add('retail')
+            defaultResourcesToDelete.add('build')
+            defaultResourcesToDelete.add('terminal')
         }
 
         String defaultResourcesToDeleteArgs = defaultResourcesToDelete.isEmpty() ? '' : "--default-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
@@ -127,6 +128,11 @@ def run(params) {
             stage('Delete system groups') {
                 if (params.delete_all_resources) {
                     sh(script: "${programCall} delete_system_groups")
+                }
+            }
+            stage('Delete retail images') {
+                if (params.delete_all_resources) {
+                    sh(script: "${programCall} delete_images")
                 }
             }
 //            stage('Delete ssh know hosts') {

@@ -13,7 +13,8 @@ MODES = [
     'delete_users', 'delete_activation_keys', 'delete_config_projects',
     'delete_software_channels', 'delete_systems', 'delete_repositories',
     'full_cleanup', 'delete_salt_keys', 'delete_known_hosts',
-    'update_custom_repositories', 'delete_distributions', 'delete_system_groups'
+    'update_custom_repositories', 'delete_distributions', 'delete_system_groups',
+    'delete_images'
 ]
 
 def main():
@@ -21,7 +22,7 @@ def main():
     parser.add_argument("--url", required=True, help="The URL of the SUSE Manager XML-RPC API.")
     parser.add_argument("--mode", required=True, choices=MODES, help="The mode of operation.")
     parser.add_argument("--default-resources-to-delete", type=str, nargs='*',
-                        choices=['proxy', 'monitoring-server', 'retail'],
+                        choices=['proxy', 'monitoring-server', 'build', 'terminal'],
                         default=[], help='List of default modules to force deletion')
 
     args = parser.parse_args()
@@ -35,7 +36,7 @@ def main():
     # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
-                     "full_cleanup", "delete_salt_keys", "delete_system_groups"]:
+                     "full_cleanup", "delete_salt_keys", "delete_system_groups", "delete_images"]:
         resource_manager.get_session_key()
         mode_actions = {
             "delete_users": resource_manager.delete_users,
@@ -46,6 +47,7 @@ def main():
             "delete_repositories": resource_manager.delete_channel_repos,
             "delete_salt_keys": resource_manager.delete_salt_keys,
             "delete_system_groups": resource_manager.delete_system_groups,
+            "delete_images": resource_manager.delete_images,
             "full_cleanup": resource_manager.run,
         }
         try:
