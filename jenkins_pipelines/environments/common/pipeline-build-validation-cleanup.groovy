@@ -17,13 +17,9 @@ def run(params) {
 
         // Construct the --tf-resources-to-delete argument dynamically
         ArrayList defaultResourcesToDelete = []
-        if (params.clean_proxy) {
+        if (params.tfResourcesToDelete) {
             defaultResourcesToDelete.add('proxy')
-        }
-        if (params.clean_monitoring_server) {
             defaultResourcesToDelete.add('monitoring-server')
-        }
-        if (params.clean_retail) {
             defaultResourcesToDelete.add('retail')
         }
 
