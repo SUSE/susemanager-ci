@@ -136,15 +136,17 @@ def run(params) {
             stage('Delete client VMs') {
                 // Join the resources into a comma-separated string if there are any to delete
                 String tfResourcesToDeleteArg = params.delete_all_resources ? '' : "--tf-resources-delete-all"
-                // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
-                sh """
-                    source ~/.credentials
-                    export TF_VAR_CONTAINER_REPOSITORY='unused'
-                    set +x
-                    cd ${localSumaformDirPath}
-                    sh ${remove_s390_bash} main.tf
-                    terraform refresh
-                """
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
+                    sh """
+                        source ~/.credentials
+                        export TF_VAR_CONTAINER_REPOSITORY='unused'
+                        set +x
+                        cd ${localSumaformDirPath}
+                        sh ${remove_s390_bash} main.tf
+                        terraform refresh
+                    """
+                }
                 // Execute Terracumber CLI to deploy the environment without clients
                 sh """
                     ${environmentVars}
@@ -178,8 +180,8 @@ def run(params) {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     archiveArtifacts artifacts: "results/sumaform/terraform.tfstate"
                     // Delete the old tfstate file after archiving
-//                    sh "rm -f ${localTfStateFile}"
-//                    sh "rm -rf ${localSumaformDirPath}main.tf ${localSumaformDirPath}./terraform"
+                    sh "rm -f ${localTfStateFile}"
+                    sh "rm -rf ${localSumaformDirPath}main.tf ${localSumaformDirPath}./terraform"
                 }
             }
         }
