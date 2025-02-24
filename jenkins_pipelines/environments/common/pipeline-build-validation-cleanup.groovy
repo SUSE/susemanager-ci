@@ -17,13 +17,9 @@ def run(params) {
 
         // Construct the --tf-resources-to-delete argument dynamically
         ArrayList defaultResourcesToDelete = []
-        if (params.clean_proxy) {
+        if (params.delete_all_resources) {
             defaultResourcesToDelete.add('proxy')
-        }
-        if (params.clean_monitoring_server) {
             defaultResourcesToDelete.add('monitoring-server')
-        }
-        if (params.clean_retail) {
             defaultResourcesToDelete.add('retail')
         }
 
@@ -80,6 +76,7 @@ def run(params) {
                 sh """
                     cp ${targetedTfStateFile} ${localTfStateFile}
                     cp -r ${targetedTerraformDirPath}.terraform ${localSumaformDirPath}
+                    cp ${targetedTfFile} ${localSumaformDirPath}
                 """
             }
 
@@ -138,16 +135,18 @@ def run(params) {
 
             stage('Delete client VMs') {
                 // Join the resources into a comma-separated string if there are any to delete
-                String tfResourcesToDeleteArg = params.tfResourcesToDelete ? '' : "--tf-resources-delete-all"
-                // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
-                sh """
-                    source ~/.credentials
-                    export TF_VAR_CONTAINER_REPOSITORY='unused'
-                    set +x
-                    cd ${localSumaformDirPath}
-                    sh ${remove_s390_bash} main.tf
-                    terraform refresh
-                """
+                String tfResourcesToDeleteArg = params.delete_all_resources ? '' : "--tf-resources-delete-all"
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
+                    sh """
+                        source ~/.credentials
+                        export TF_VAR_CONTAINER_REPOSITORY='unused'
+                        set +x
+                        cd ${localSumaformDirPath}
+                        sh ${remove_s390_bash} main.tf
+                        terraform refresh
+                    """
+                }
                 // Execute Terracumber CLI to deploy the environment without clients
                 sh """
                     ${environmentVars}
@@ -182,6 +181,7 @@ def run(params) {
                     archiveArtifacts artifacts: "results/sumaform/terraform.tfstate"
                     // Delete the old tfstate file after archiving
                     sh "rm -f ${localTfStateFile}"
+                    sh "rm -rf ${localSumaformDirPath}main.tf ${localSumaformDirPath}./terraform"
                 }
             }
         }
