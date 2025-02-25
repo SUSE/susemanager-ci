@@ -102,10 +102,12 @@ class ResourceManager:
 
     def delete_salt_keys(self):
         accepted_salt_keys = self.client.saltkey.acceptedList(self.session_key)
-        for accepted_salt_key in accepted_salt_keys:
-            if not any(protected in accepted_salt_key for protected in self.resources_to_keep):
-                logger.info(f"Delete remaining accepted key : {accepted_salt_key}")
-                self.client.saltkey.delete(self.session_key, accepted_salt_key)
+        pending_salt_keys = self.client.saltkey.pendingList(self.session_key)
+        salt_keys = accepted_salt_keys + pending_salt_keys
+        for salt_key in salt_keys:
+            if not any(protected in salt_key for protected in self.resources_to_keep):
+                logger.info(f"Delete remaining accepted key : {salt_key}")
+                self.client.saltkey.delete(self.session_key, salt_key)
 
     def get_product_version(self):
         product_version = self.client.api.systemVersion()
