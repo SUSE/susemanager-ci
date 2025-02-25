@@ -36,7 +36,7 @@ def main():
     # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
-                     "full_cleanup", "delete_salt_keys", "delete_system_groups", "delete_images"
+                     "full_cleanup", "delete_salt_keys", "delete_system_groups", "delete_images",
                      "delete_image_profiles"]:
         resource_manager.get_session_key()
         mode_actions = {
