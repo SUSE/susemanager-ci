@@ -14,7 +14,7 @@ MODES = [
     'delete_software_channels', 'delete_systems', 'delete_repositories',
     'full_cleanup', 'delete_salt_keys', 'delete_known_hosts',
     'update_custom_repositories', 'delete_distributions', 'delete_system_groups',
-    'delete_images'
+    'delete_images', 'delete_image_profiles'
 ]
 
 def main():
@@ -36,7 +36,8 @@ def main():
     # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
-                     "full_cleanup", "delete_salt_keys", "delete_system_groups", "delete_images"]:
+                     "full_cleanup", "delete_salt_keys", "delete_system_groups", "delete_images"
+                     "delete_image_profiles"]:
         resource_manager.get_session_key()
         mode_actions = {
             "delete_users": resource_manager.delete_users,
@@ -48,6 +49,7 @@ def main():
             "delete_salt_keys": resource_manager.delete_salt_keys,
             "delete_system_groups": resource_manager.delete_system_groups,
             "delete_images": resource_manager.delete_images,
+            "delete_image_profiles": resource_manager.delete_image_profiles,
             "full_cleanup": resource_manager.run,
         }
         try:

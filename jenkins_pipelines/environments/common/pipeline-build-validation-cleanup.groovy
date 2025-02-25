@@ -125,14 +125,15 @@ def run(params) {
             stage('Delete salt keys') {
                 sh(script: "${programCall} delete_salt_keys")
             }
-            stage('Delete system groups') {
-                if (params.delete_all_resources) {
+            if (params.delete_all_resources) {
+                stage('Delete system groups') {
                     sh(script: "${programCall} delete_system_groups")
                 }
-            }
-            stage('Delete retail images') {
-                if (params.delete_all_resources) {
+                stage('Delete retail images') {
                     sh(script: "${programCall} delete_images")
+                }
+                stage('Delete retail image profiles') {
+                    sh(script: "${programCall} delete_image_profiles")
                 }
             }
             stage('Delete ssh know hosts') {

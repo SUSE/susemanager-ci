@@ -109,6 +109,10 @@ class ResourceManager:
                 logger.info(f"Delete remaining accepted key : {salt_key}")
                 self.client.saltkey.delete(self.session_key, salt_key)
 
+    def delete_image_profiles(self):
+        self.client.image.profile.delete(self.session_key, "suse_os_image_12")
+        self.client.image.profile.delete(self.session_key, "suse_os_image_15")
+
     def get_product_version(self):
         product_version = self.client.api.systemVersion()
         logger.info(f"Product version is {product_version}")
