@@ -697,8 +697,6 @@ module "controller" {
   ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204_sshminion.configuration
 
-//  debian11_minion_configuration    = module.debian11_minion.configuration
-//  debian11_sshminion_configuration = module.debian11_sshminion.configuration
 
 //  debian12_minion_configuration    = module.debian12_minion.configuration
 //  debian12_sshminion_configuration = module.debian12_sshminion.configuration
