@@ -125,7 +125,7 @@ module "base_core" {
   name_prefix       = "suma-continuous-bv-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian11o", "debian12o", "opensuse155o", "opensuse156armo" ]
+  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156armo" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -456,21 +456,6 @@ module "ubuntu2404_minion" {
     mac                = "aa:b2:93:01:02:9d"
     memory             = 4096
   }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "debian11_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  name               = "debian11-minion"
-  image              = "debian11o"
-  provider_settings = {
-    mac                = "aa:b2:93:01:02:9e"
-    memory             = 4096
-  }
-
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -907,19 +892,6 @@ module "ubuntu2404_sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "debian11_sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  name               = "debian11-sshminion"
-  image              = "debian11o"
-  provider_settings = {
-    mac                = "aa:b2:93:01:02:be"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "debian12_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -1258,9 +1230,6 @@ module "controller" {
 
   ubuntu2404_minion_configuration    = module.ubuntu2404_minion.configuration
   ubuntu2404_sshminion_configuration = module.ubuntu2404_sshminion.configuration
-
-  debian11_minion_configuration    = module.debian11_minion.configuration
-  debian11_sshminion_configuration = module.debian11_sshminion.configuration
 
   debian12_minion_configuration    = module.debian12_minion.configuration
   debian12_sshminion_configuration = module.debian12_sshminion.configuration
