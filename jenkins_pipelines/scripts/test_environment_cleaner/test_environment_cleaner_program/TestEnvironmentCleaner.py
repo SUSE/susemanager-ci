@@ -68,7 +68,8 @@ def main():
     if args.mode in ["update_terminal_mac_addresses"]:
         ssh_controller_session = SSHClientManager(url=args.controller_url, password= "linux")
         ssh_hypervisor_session = SSHClientManager(url=args.hypervisor_url,ssh_key_path="/home/jenkins/.ssh/id_rsa")
-        terminal_names = ssh_hypervisor_session.run_command(f"virsh list | grep terminal | grep {''.join(product_version.split('.')[:2])} | awk '{{print $2}}'")
+        virsh_output = ssh_hypervisor_session.run_command(f"virsh list | grep terminal | grep {''.join(product_version.split('.')[:2])} | awk '{{print $2}}'")
+        terminal_names = virsh_output.strip().split("\n") if virsh_output.strip() else []
         logger.debug(f"Terminal list: {terminal_names}")
         for terminal_name in terminal_names:
             logger.debug(f"Updating the mac address to controller for {terminal_name.replace('sles','sle').upper().split('-')}")
@@ -76,7 +77,6 @@ def main():
             ssh_controller_session.run_command(
                 f"sed -i 's|^export {terminal_name.replace('sles', 'sle').upper().split('-')[-2]}_TERMINAL_MAC=\".*\"|export {terminal_name.replace('sles', 'sle').upper().split('-')[-2]}_TERMINAL_MAC=\"{macaddress.upper()}\"|' /root/.bashrc"
             )
-
     else:
         ssh_manager = SSHClientManager(url=manager_url, password= "linux", product_version=product_version)
         ssh_actions = {
