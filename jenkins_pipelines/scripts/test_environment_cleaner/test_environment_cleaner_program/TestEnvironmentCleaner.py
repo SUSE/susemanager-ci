@@ -5,7 +5,7 @@ from test_environment_cleaner_api import ResourceManager
 from test_environment_cleaner_ssh import SSHClientManager
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Define the available modes
@@ -72,7 +72,7 @@ def main():
         terminal_names = virsh_output.strip().split("\n") if virsh_output.strip() else []
         logger.debug(f"Terminal list: {terminal_names}")
         for terminal_name in terminal_names:
-            logger.debug(f"Updating the mac address to controller for {terminal_name.replace('sles','sle').upper().split('-')}")
+            logger.debug(f"Updating the mac address to controller for {terminal_name.replace('sles','sle').upper().split('-')[-2]}")
             macaddress = ssh_hypervisor_session.run_command(f"virsh domiflist {terminal_name} | grep -v 'Interface' | awk '{{print $5}}'")
             ssh_controller_session.run_command(
                 f"sed -i 's|^export {terminal_name.replace('sles', 'sle').upper().split('-')[-2]}_TERMINAL_MAC=\".*\"|export {terminal_name.replace('sles', 'sle').upper().split('-')[-2]}_TERMINAL_MAC=\"{macaddress.upper()}\"|' /root/.bashrc"
