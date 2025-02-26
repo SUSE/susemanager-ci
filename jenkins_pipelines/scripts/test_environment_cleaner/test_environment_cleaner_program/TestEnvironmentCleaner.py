@@ -5,7 +5,7 @@ from test_environment_cleaner_api import ResourceManager
 from test_environment_cleaner_ssh import SSHClientManager
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Define the available modes
@@ -14,7 +14,7 @@ MODES = [
     'delete_software_channels', 'delete_systems', 'delete_repositories',
     'full_cleanup', 'delete_salt_keys', 'delete_known_hosts',
     'update_custom_repositories', 'delete_distributions', 'delete_system_groups',
-    'delete_images', 'delete_image_profiles'
+    'delete_images', 'delete_image_profiles', 'update_terminal_mac_addresses'
 ]
 
 def main():
@@ -24,6 +24,8 @@ def main():
     parser.add_argument("--default-resources-to-delete", type=str, nargs='*',
                         choices=['proxy', 'monitoring-server', 'build', 'terminal'],
                         default=[], help='List of default modules to force deletion')
+    parser.add_argument("--controller_url",required=False, help="The controller URL.")
+    parser.add_argument("--hypervisor_url",required=False, help="The terminal hypervisor URL.")
 
     args = parser.parse_args()
     manager_url = args.url
@@ -33,6 +35,7 @@ def main():
     ]
 
     resource_manager = ResourceManager(manager_url, default_resources_to_delete)
+    product_version = resource_manager.get_product_version()
     # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
@@ -62,9 +65,20 @@ def main():
             resource_manager.logout_session()
 
     # Server commands part
+    if args.mode in ["update_terminal_mac_addresses"]:
+        ssh_controller_session = SSHClientManager(url=args.controller_url, password= "linux")
+        ssh_hypervisor_session = SSHClientManager(url=args.hypervisor_url,ssh_key_path="/home/jenkins/.ssh/id_rsa")
+        terminal_names = ssh_hypervisor_session.run_command(f"virsh list | grep terminal | grep {''.join(product_version.split('.')[:2])} | awk '{{print $2}}'")
+        logger.debug(f"Terminal list: {terminal_names}")
+        for terminal_name in terminal_names:
+            logger.debug(f"Updating the mac address to controller for {terminal_name.replace('sles','sle').upper().split('-')}")
+            macaddress = ssh_hypervisor_session.run_command(f"virsh domiflist {terminal_name} | grep -v 'Interface' | awk '{{print $5}}'")
+            ssh_controller_session.run_command(
+                f"sed -i 's|^export {terminal_name.replace('sles', 'sle').upper().split('-')[-2]}_TERMINAL_MAC=\".*\"|export {terminal_name.replace('sles', 'sle').upper().split('-')[-2]}_TERMINAL_MAC=\"{macaddress.upper()}\"|' /root/.bashrc"
+            )
+
     else:
-        product_version = resource_manager.get_product_version()
-        ssh_manager = SSHClientManager(url=manager_url, product_version=product_version)
+        ssh_manager = SSHClientManager(url=manager_url, password= "linux", product_version=product_version)
         ssh_actions = {
             "delete_known_hosts": ssh_manager.delete_known_hosts,
             "delete_distributions": ssh_manager.delete_distributions,

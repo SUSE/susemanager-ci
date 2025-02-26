@@ -7,13 +7,15 @@ from urllib.parse import urlparse
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class SSHClientManager:
-    def __init__(self, url, username="root", password="linux", port=22, product_version="5.0"):
+    def __init__(self, url, username="root", password=None, ssh_key_path=None, port=22, product_version="5.0"):
         self.url = url
         self.username = username
         self.password = password
-        self.product_version = product_version
+        self.ssh_key_path = ssh_key_path
         self.port = port
+        self.product_version = product_version
         self._client = None
 
     def _connect(self):
@@ -23,8 +25,17 @@ class SSHClientManager:
             self._client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             try:
                 logger.info(f"Connecting to server at: {self.url}:{self.port}")
-                self._client.connect(self.url, port=self.port, username=self.username, password=self.password)
-                logger.info("Connection successful.")
+                if self.ssh_key_path:
+                    # Connect using the private key file
+                    self._client.connect(self.url, port=self.port, username=self.username, key_filename=self.ssh_key_path)
+                    logger.info("SSH connection using SSH key successful.")
+                elif self.password:
+                    # Connect using a password
+                    self._client.connect(self.url, port=self.port, username=self.username, password=self.password)
+                    logger.info("SSH connection using password successful.")
+                else:
+                    logger.error("No SSH key or password provided for connection.")
+                    raise ValueError("You must provide either an SSH key path or a password to connect.")
             except paramiko.AuthenticationException:
                 logger.error("Authentication failed while connecting to the server.")
                 raise
@@ -42,7 +53,7 @@ class SSHClientManager:
             self._client = None
             logger.info("SSH connection closed.")
 
-    def _run_command(self, command):
+    def run_command(self, command):
         """
         Runs a command on the remote server.
 
@@ -94,10 +105,10 @@ class SSHClientManager:
         try:
             self._connect()
             if self.product_version.startswith("4.3"):
-                self._run_command("rm /var/lib/salt/.ssh/known_hosts")
+                self.run_command("rm /var/lib/salt/.ssh/known_hosts")
             elif any(self.product_version.startswith(version) for version in ["5.0", "5.1"]):
                 logger.info("Checking files before cleanup...")
-                self._run_command("rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
+                self.run_command("rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
                 logger.info("Known_hosts file cleaned up.")
             else:
                 logger.warning(f"Unsupported product version for known_hosts deletion: {self.product_version}")
@@ -114,8 +125,8 @@ class SSHClientManager:
             if self.product_version.startswith("4.3"):
                 logger.warning("Distribution deletion for product version 4.3 is not implemented.")
             elif any(self.product_version.startswith(version) for version in ["5.0", "5.1"]):
-                self._run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
-                self._run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/htdocs/pub/*iso")
+                self.run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
+                self.run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/htdocs/pub/*iso")
                 logger.info("Distributions directories deleted.")
             else:
                 logger.error(f"Unsupported product product version: {self.product_version}")

@@ -8,6 +8,8 @@ def run(params) {
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
         String container_repository = params.container_repository ?: null
         String serverHostname = null
+        String controllerHostname = null
+        String hypervisorUrl = null
         GString targetedTfFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/main.tf"
         GString targetedTfStateFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/terraform.tfstate"
         GString targetedTerraformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
@@ -92,9 +94,18 @@ def run(params) {
                         """,
                             returnStdout: true
                     ).trim()
+                    controllerHostname = sh(
+                            script: """
+                            set -e
+                            cd ${localSumaformDirPath}
+                            terraform output -json configuration | jq -r '.controller.hostname'
+                        """,
+                            returnStdout: true
+                    ).trim()
 
                     // Print the value for confirmation
                     echo "Extracted server hostname: ${serverHostname}"
+                    echo "Extracted controller hostname: ${controllerHostname}"
 
                 } catch (Exception e) {
                     error("Failed to extract hostnames: ${e.message}")
@@ -181,12 +192,15 @@ def run(params) {
 
             if (params.delete_all_resources) {
                 stage("Update terminal mac addresses to controller") {
-                    hypervisor_uri = sh(script: """
-                                            cd ${localSumaformDirPath}
-                                            grep -oP 'uri = "qemu\\+tcp://([^"]+mgr[^"]+/system)"' "main.tf" | grep -v 'arm' | sed -n 's|qemu+tcp://\\([^"]*\\)/system|\\1|p'
-                                        """, returnStdout: true).trim()
+                    hypervisorUrl = sh(
+                            script: """
+                                    cd ${localSumaformDirPath}
+                                    grep -oP '"qemu\\+tcp://([^"]+mgr[^"]+/system)"' "main.tf" | grep -v 'arm' | sed -n 's|qemu+tcp://\\([^"]*\\)/system|\\1|p'
+                            """,
+                            returnStdout: true).trim()
 
-                    echo "Hypervisor URI: ${hypervisor_uri}"
+                    echo "Hypervisor URL: ${hypervisorUrl}"
+                    sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname}  --controller_url ${controllerHostname} --hypervisor_url ${hypervisorUrl} --mode update_terminal_mac_addresses")
                 }
             }
 
