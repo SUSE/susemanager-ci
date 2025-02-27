@@ -8,6 +8,8 @@ def run(params) {
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
         String container_repository = params.container_repository ?: null
         String serverHostname = null
+        String controllerHostname = null
+        String hypervisorUrl = null
         GString targetedTfFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/main.tf"
         GString targetedTfStateFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/terraform.tfstate"
         GString targetedTerraformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
@@ -20,7 +22,8 @@ def run(params) {
         if (params.delete_all_resources) {
             defaultResourcesToDelete.add('proxy')
             defaultResourcesToDelete.add('monitoring-server')
-            defaultResourcesToDelete.add('retail')
+            defaultResourcesToDelete.add('build')
+            defaultResourcesToDelete.add('terminal')
         }
 
         String defaultResourcesToDeleteArgs = defaultResourcesToDelete.isEmpty() ? '' : "--default-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
@@ -91,9 +94,18 @@ def run(params) {
                         """,
                             returnStdout: true
                     ).trim()
+                    controllerHostname = sh(
+                            script: """
+                            set -e
+                            cd ${localSumaformDirPath}
+                            terraform output -json configuration | jq -r '.controller.hostname'
+                        """,
+                            returnStdout: true
+                    ).trim()
 
                     // Print the value for confirmation
                     echo "Extracted server hostname: ${serverHostname}"
+                    echo "Extracted controller hostname: ${controllerHostname}"
 
                 } catch (Exception e) {
                     error("Failed to extract hostnames: ${e.message}")
@@ -124,7 +136,19 @@ def run(params) {
             stage('Delete salt keys') {
                 sh(script: "${programCall} delete_salt_keys")
             }
-
+            if (params.delete_all_resources) {
+                stage('Delete system groups') {
+                    sh(script: "${programCall} delete_system_groups")
+                }
+                stage('Delete retail images') {
+                    sh(script: "${programCall} delete_images")
+                }
+                stage('Delete retail image profiles') {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh(script: "${programCall} delete_image_profiles")
+                    }
+                }
+            }
             stage('Delete ssh know hosts') {
                 sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_known_hosts")
             }
@@ -167,6 +191,21 @@ def run(params) {
             stage('Sanity check') {
                 sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
             }
+
+            if (params.delete_all_resources) {
+                stage("Update terminal mac addresses to controller") {
+                    hypervisorUrl = sh(
+                            script: """
+                                    cd ${localSumaformDirPath}
+                                    grep -oP '"qemu\\+tcp://([^"]+mgr[^"]+/system)"' "main.tf" | grep -v 'arm' | sed -n 's|qemu+tcp://\\([^"]*\\)/system|\\1|p'
+                            """,
+                            returnStdout: true).trim()
+
+                    echo "Hypervisor URL: ${hypervisorUrl}"
+                    sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname}  --controller_url ${controllerHostname} --hypervisor_url ${hypervisorUrl} --mode update_terminal_mac_addresses")
+                }
+            }
+
 
         }
         finally {

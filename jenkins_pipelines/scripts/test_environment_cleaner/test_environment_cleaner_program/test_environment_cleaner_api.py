@@ -11,7 +11,7 @@ password = "admin"
 
 class ResourceManager:
     def __init__(self, manager_url, resources_to_delete):
-        self.resources_to_keep = {"proxy", "monitoring", "build"} - set(resources_to_delete)
+        self.resources_to_keep = {"proxy", "monitoring", "build", "terminal"} - set(resources_to_delete)
         self.session_key = None
         self.client = xmlrpc.client.ServerProxy(f"http://{manager_url}/rpc/api")
 
@@ -82,6 +82,18 @@ class ResourceManager:
                 logger.info(f"Delete system : {system['name']} | id : {system['id']}")
                 self.client.system.deleteSystem(self.session_key, system['id'])
 
+    def delete_system_groups(self):
+        groups = self.client.systemgroup.listAllGroups(self.session_key)
+        for group in groups:
+            logger.info(f"Delete system group : {group['name']}")
+            self.client.systemgroup.delete(self.session_key, group['name'])
+
+    def delete_images(self):
+        images = self.client.image.listImages(self.session_key)
+        for image in images:
+            logger.info(f"Delete image : {image['name']}")
+            self.client.image.delete(self.session_key, image['id'])
+
     def delete_channel_repos(self):
         repositories = self.client.channel.software.listUserRepos(self.session_key)
         for repository in repositories:
@@ -90,10 +102,16 @@ class ResourceManager:
 
     def delete_salt_keys(self):
         accepted_salt_keys = self.client.saltkey.acceptedList(self.session_key)
-        for accepted_salt_key in accepted_salt_keys:
-            if not any(protected in accepted_salt_key for protected in self.resources_to_keep):
-                logger.info(f"Delete remaining accepted key : {accepted_salt_key}")
-                self.client.saltkey.delete(self.session_key, accepted_salt_key)
+        pending_salt_keys = self.client.saltkey.pendingList(self.session_key)
+        salt_keys = accepted_salt_keys + pending_salt_keys
+        for salt_key in salt_keys:
+            if not any(protected in salt_key for protected in self.resources_to_keep):
+                logger.info(f"Delete remaining accepted key : {salt_key}")
+                self.client.saltkey.delete(self.session_key, salt_key)
+
+    def delete_image_profiles(self):
+        self.client.image.profile.delete(self.session_key, "suse_os_image_12")
+        self.client.image.profile.delete(self.session_key, "suse_os_image_15")
 
     def get_product_version(self):
         product_version = self.client.api.systemVersion()

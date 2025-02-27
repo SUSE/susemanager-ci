@@ -40,7 +40,7 @@ class TestMainProgram(unittest.TestCase):
 
             main()
 
-            MockSSHClientManager.assert_called_once_with(url="http://test-url.com", product_version="5.0")
+            MockSSHClientManager.assert_called_once_with(url="http://test-url.com", password='linux', product_version="5.0")
             mock_ssh_manager.delete_known_hosts.assert_called_once()
 
     @patch("test_environment_cleaner_program.TestEnvironmentCleaner.ResourceManager")
@@ -56,12 +56,12 @@ class TestMainProgram(unittest.TestCase):
                 expected_error_message = (
                     "usage: test_environment_cleaner_program.TestEnvironmentCleaner [-h] --url URL --mode "
                     "{delete_users,delete_activation_keys,delete_config_projects,delete_software_channels,"
-                    "delete_systems,delete_repositories,full_cleanup,delete_salt_keys,delete_known_hosts,update_custom_repositories,delete_distributions}"
-                    " [--default-resources-to-delete [{proxy,monitoring-server,retail} ...]] "
+                    "delete_systems,delete_repositories,full_cleanup,delete_salt_keys,delete_known_hosts,update_custom_repositories,delete_distributions,delete_system_groups,delete_images,delete_image_profiles,update_terminal_mac_addresses}"
+                    " [--default-resources-to-delete [{proxy,monitoring-server,build,terminal} ...]] [--controller_url CONTROLLER_URL] [--hypervisor_url HYPERVISOR_URL] "
                     "test_environment_cleaner_program.TestEnvironmentCleaner: error: argument --mode: invalid choice: 'invalid' (choose from 'delete_users',"
                     " 'delete_activation_keys', 'delete_config_projects', 'delete_software_channels', 'delete_systems',"
                     " 'delete_repositories', 'full_cleanup', 'delete_salt_keys', 'delete_known_hosts', 'update_custom_repositories',"
-                    " 'delete_distributions')"
+                    " 'delete_distributions', 'delete_system_groups', 'delete_images', 'delete_image_profiles', 'update_terminal_mac_addresses')"
                 )
                 cleaned_error = " ".join(fake_err.getvalue().split())
                 self.assertIn(expected_error_message, cleaned_error)
