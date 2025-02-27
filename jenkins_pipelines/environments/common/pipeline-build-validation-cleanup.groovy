@@ -144,7 +144,9 @@ def run(params) {
                     sh(script: "${programCall} delete_images")
                 }
                 stage('Delete retail image profiles') {
-                    sh(script: "${programCall} delete_image_profiles")
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh(script: "${programCall} delete_image_profiles")
+                    }
                 }
             }
             stage('Delete ssh know hosts') {
