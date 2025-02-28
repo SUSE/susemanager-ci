@@ -1068,7 +1068,7 @@ module "dhcp_dns" {
     module.sles15sp4_terminal.configuration
   ]
   hypervisor = {
-    host        = "suma-06.mgr.suse.de"
+    host        = "suma-07.mgr.suse.de"
     user        = "root"
     private_key = file("~/.ssh/id_rsa")
   }
