@@ -4,6 +4,7 @@
 
 - [Overview](#overview)
 - [Features](#features)
+- [Requirements](#requirements)
 - [Usage](#usage)
 - [Output](#output)
 - [Logging](#logging)
@@ -37,6 +38,12 @@ from a file.
 information for the SUSE Manager BV testsuite pipeline.
 - Embargo Checks: The script has an option to reject Maintenance Incidents (MIs)
 that are under embargo.
+
+## Requirements
+
+- Python 3.11
+- `ibs_osc_client` library: Ensure you have the `obs_osc_client` module available in
+  your environment.
 
 ## Usage
 
