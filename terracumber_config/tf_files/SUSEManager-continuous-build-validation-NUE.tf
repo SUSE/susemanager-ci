@@ -125,7 +125,7 @@ module "base_core" {
   name_prefix       = "suma-continuous-bv-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156armo" ]
+  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156armo" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -152,7 +152,7 @@ module "base_arm" {
   name_prefix       = "suma-continuous-bv-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "opensuse155armo", "opensuse156armo" ]
+  images            = [ "opensuse156armo" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -419,20 +419,6 @@ module "rocky9_minion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "ubuntu2004_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  name               = "ubuntu2004-minion"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:93:01:02:9a"
-    memory             = 4096
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "ubuntu2204_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -471,26 +457,6 @@ module "debian12_minion" {
     memory             = 4096
   }
 
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "opensuse155arm_minion" {
-  providers = {
-    libvirt = libvirt.suma-arm
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_arm.configuration
-  name               = "opensuse155arm-minion-nue"
-  image              = "opensuse155armo"
-  provider_settings = {
-    mac                = "aa:b2:93:01:02:a0"
-    overwrite_fqdn     = "suma-continuous-bv-opensuse156arm-minion.mgr.suse.de"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
-  }
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -853,19 +819,6 @@ module "rocky9_sshminion" {
   ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
-module "ubuntu2004_sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  name               = "ubuntu2004-sshminion"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:93:01:02:ba"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
 module "ubuntu2204_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -900,25 +853,6 @@ module "debian12_sshminion" {
   provider_settings = {
     mac                = "aa:b2:93:01:02:bc"
     memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "opensuse155arm_sshminion" {
-  providers = {
-    libvirt = libvirt.suma-arm
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_arm.configuration
-  name               = "opensuse155arm-sshminion-nue"
-  image              = "opensuse155armo"
-  provider_settings = {
-    mac                = "aa:b2:93:01:02:c0"
-    overwrite_fqdn     = "suma-continuous-bv-opensuse155arm-sshminion.mgr.suse.de"
-    memory             = 2048
-    vcpu               = 2
-    xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -1222,9 +1156,6 @@ module "controller" {
   rocky9_minion_configuration    = module.rocky9_minion.configuration
   rocky9_sshminion_configuration = module.rocky9_sshminion.configuration
 
-  ubuntu2004_minion_configuration    = module.ubuntu2004_minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004_sshminion.configuration
-
   ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204_sshminion.configuration
 
@@ -1233,9 +1164,6 @@ module "controller" {
 
   debian12_minion_configuration    = module.debian12_minion.configuration
   debian12_sshminion_configuration = module.debian12_sshminion.configuration
-
-  opensuse155arm_minion_configuration    = module.opensuse155arm_minion.configuration
-  opensuse155arm_sshminion_configuration = module.opensuse155arm_sshminion.configuration
 
   opensuse156arm_minion_configuration    = module.opensuse156arm_minion.configuration
   opensuse156arm_sshminion_configuration = module.opensuse156arm_sshminion.configuration
