@@ -85,15 +85,15 @@ node('sumaform-cucumber-provo') {
                 deployed = true
             }
 
-            stage('Enable JaCoCo Agent') {
+            stage('Prepare JaCoCo tools') {
                 def jacocoagent_url = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar"
                 def jacococli_url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.12/org.jacoco.cli-0.8.12-nodeps.jar"
                 def uyuni_master = "https://github.com/uyuni-project/uyuni/archive/refs/heads/master.tar.gz"
                 def server_data_volume = "/var/lib/containers/storage/volumes/var-cache/_data"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O ${server_data_volume}/jacocoagent.jar ${jacocoagent_url}; wget ${jacococli_url} -O ${server_data_volume}/jacococli.jar\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"ln -s /var/cache/jacocoagent.jar /tmp;ln -s /var/cache/jacococli.jar /tmp ; ln -s /usr/share/susemanager/www/tomcat/webapps/rhn /srv/tomcat/webapps/rhn \\\"\"'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"systemctl restart tomcat.service\\\"\"'"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget --directory-prefix ${server_data_volume} ${uyuni_master}; tar --extract --file ${server_data_volume}/master.tar.gz --directory ${server_data_volume}\"'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"systemctl restart tomcat.service\\\"\"'"
             }
 
 
