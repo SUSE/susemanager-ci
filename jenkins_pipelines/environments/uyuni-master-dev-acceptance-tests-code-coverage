@@ -33,7 +33,7 @@ node('sumaform-cucumber-provo') {
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
-
+        env.cucumber_cmd = "--logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd"
         if (params.terraform_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
         }
@@ -90,33 +90,33 @@ node('sumaform-cucumber-provo') {
                 def jacococli_url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.12/org.jacoco.cli-0.8.12-nodeps.jar"
                 def uyuni_master = "https://github.com/uyuni-project/uyuni/archive/refs/heads/master.tar.gz"
                 def server_data_volume = "/var/lib/containers/storage/volumes/var-cache/_data"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O ${server_data_volume}/jacocoagent.jar ${jacocoagent_url}; wget ${jacococli_url} -O ${server_data_volume}/jacococli.jar\"'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"ln -s /var/cache/jacocoagent.jar /tmp;ln -s /var/cache/jacococli.jar /tmp ; ln -s /usr/share/susemanager/www/tomcat/webapps/rhn /srv/tomcat/webapps/rhn \\\"\"'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget --directory-prefix ${server_data_volume} ${uyuni_master}; tar --extract --file ${server_data_volume}/master.tar.gz --directory ${server_data_volume}\"'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"systemctl restart tomcat.service\\\"\"'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O ${server_data_volume}/jacocoagent.jar ${jacocoagent_url}; wget ${jacococli_url} -O ${server_data_volume}/jacococli.jar\"'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"ln -s /var/cache/jacocoagent.jar /tmp; ln -s /var/cache/jacococli.jar /tmp; ln -s /usr/share/susemanager/www/tomcat/webapps/rhn /srv/tomcat/webapps/rhn \\\"\"'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget --directory-prefix ${server_data_volume} ${uyuni_master}; tar --extract --file ${server_data_volume}/master.tar.gz --directory ${server_data_volume}\"'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"systemctl restart tomcat.service\\\"\"'"
             }
 
 
             stage('Sanity Check') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
             }
             stage('Core - Setup') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'cd /root/spacewalk/testsuite; rake cucumber:core'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
             }
             stage('Core - Proxy') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:proxy'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'cd /root/spacewalk/testsuite; rake cucumber:proxy'"
             }
             stage('Core - Initialize clients') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:init_clients'"
             }
             stage('Secondary features') {
                 def exports = ""
                 if (params.functional_scopes){
                   exports += "export TAGS=${params.functional_scopes}; "
                 }
-                def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
+                def statusCode1 = sh script:"./terracumber-cli ${common_params} ${cucumber_cmd} '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
+                def statusCode2 = sh script:"./terracumber-cli ${common_params} ${cucumber_cmd} '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
                 sh "exit \$(( ${statusCode1}|${statusCode2} ))"
             }
         }
@@ -126,9 +126,9 @@ node('sumaform-cucumber-provo') {
                 archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
             }
             stage('Dump Test Coverage results') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar dump --address localhost --destfile /var/cache/jacoco-last.exec --port 6300 --reset\\\"\"'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar merge \\\\\\\$(ls /var/cache/*.exec) --destfile /var/cache/jacoco-all.exec\\\"\"'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar report /var/cache/jacoco-all.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --sourcefiles /var/cache/uyuni-master/java/code/src --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib/rhn.jar\\\"\"'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar dump --address localhost --destfile /var/cache/jacoco-last.exec --port 6300 --reset\\\"\"'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar merge \\\\\\\$(ls /var/cache/*.exec) --destfile /var/cache/jacoco-all.exec\\\"\"'"
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar report /var/cache/jacoco-all.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --sourcefiles /var/cache/uyuni-master/java/code/src --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib/rhn.jar\\\"\"'"
             }
             stage('Get results') {
                 def error = 0
