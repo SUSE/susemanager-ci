@@ -86,16 +86,23 @@ node('sumaform-cucumber-provo') {
             }
 
             stage('Prepare JaCoCo tools') {
-                def jacocoagent_url = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar"
-                def jacococli_url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.12/org.jacoco.cli-0.8.12-nodeps.jar"
-                def uyuni_master = "https://github.com/uyuni-project/uyuni/archive/refs/heads/master.tar.gz"
-                def server_data_volume = "/var/lib/containers/storage/volumes/var-cache/_data"
-                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O ${server_data_volume}/jacocoagent.jar ${jacocoagent_url}; wget ${jacococli_url} -O ${server_data_volume}/jacococli.jar\"'"
+                def jacocoAgentUrl = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar"
+                def jacocoCliUrl = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.12/org.jacoco.cli-0.8.12-nodeps.jar"
+                def uyuniMasterUrl = "https://github.com/uyuni-project/uyuni/archive/refs/heads/master.tar.gz"
+                def serverDataVolume = "/var/lib/containers/storage/volumes/var-cache/_data"
+                
+                // Download JaCoCo tools to be accessible from the server container
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O ${serverDataVolume}/jacocoagent.jar ${jacocoAgentUrl}; wget ${jacocoCliUrl} -O ${serverDataVolume}/jacococli.jar\"'"
+            
+                // Create symbolic links to facilitate managing JaCoCo inside our server container
                 sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"ln -s /var/cache/jacocoagent.jar /tmp; ln -s /var/cache/jacococli.jar /tmp; ln -s /usr/share/susemanager/www/tomcat/webapps/rhn /srv/tomcat/webapps/rhn \\\"\"'"
-                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget --directory-prefix ${server_data_volume} ${uyuni_master}; tar --extract --file ${server_data_volume}/master.tar.gz --directory ${server_data_volume}\"'"
+            
+                // Download and extract Uyuni master source code to be accessible from the server container
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget --directory-prefix ${serverDataVolume} ${uyuniMasterUrl}; tar --extract --file ${serverDataVolume}/master.tar.gz --directory ${serverDataVolume}\"'"
+            
+                // Restart Tomcat service from the server container
                 sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"systemctl restart tomcat.service\\\"\"'"
             }
-
 
             stage('Sanity Check') {
                 sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
