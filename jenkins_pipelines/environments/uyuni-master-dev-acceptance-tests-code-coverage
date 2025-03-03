@@ -132,11 +132,26 @@ node('sumaform-cucumber-provo') {
             stage('Save TF state') {
                 archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
             }
-            stage('Dump Test Coverage results') {
-                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar dump --address localhost --destfile /var/cache/jacoco-last.exec --port 6300 --reset\\\"\"'"
-                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar merge \\\\\\\$(ls /var/cache/*.exec) --destfile /var/cache/jacoco-all.exec\\\"\"'"
-                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar /var/cache/jacococli.jar report /var/cache/jacoco-all.exec --html /srv/www/htdocs/pub/jacoco-cucumber-report --xml /srv/www/htdocs/pub/jacoco-cucumber-report.xml --sourcefiles /var/cache/uyuni-master/java/code/src --classfiles /srv/tomcat/webapps/rhn/WEB-INF/lib/rhn.jar\\\"\"'"
+
+            stage('Dump Code Coverage results') {
+                def jacocoCliPath = "/var/cache/jacococli.jar"
+                def jacocoExecFiles = "/var/cache/*.exec"
+                def jacocoAllExecPath = "/var/cache/jacoco-all.exec"
+                def jacocoHtmlReportPath = "/srv/www/htdocs/pub/jacoco-cucumber-report"
+                def jacocoXmlReportPath = "/srv/www/htdocs/pub/jacoco-cucumber-report.xml"
+                def sourceFilesPath = "/var/cache/uyuni-master/java/code/src"
+                def classFilesPath = "/srv/tomcat/webapps/rhn/WEB-INF/lib/rhn.jar"
+            
+                // Dump JaCoCo code coverage binary report and reset the JaCoCo recorded data
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar ${jacocoCliPath} dump --address localhost --destfile /var/cache/jacoco-last.exec --port 6300 --reset\\\"\"'"
+            
+                // Merge code coverage binary reports
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar ${jacocoCliPath} merge \\\\\\\$(ls ${jacocoExecFiles}) --destfile ${jacocoAllExecPath}\\\"\"'"
+            
+                // Generate JaCoCo HTML and XML complete reports
+                sh "./terracumber-cli ${common_params} ${cucumber_cmd} 'ssh -o StrictHostKeyChecking=no \$SERVER \"mgrctl exec \\\"java -jar ${jacocoCliPath} report ${jacocoAllExecPath} --html ${jacocoHtmlReportPath} --xml ${jacocoXmlReportPath} --sourcefiles ${sourceFilesPath} --classfiles ${classFilesPath}\\\"\"'"
             }
+
             stage('Get results') {
                 def error = 0
                 // Send email
