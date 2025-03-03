@@ -86,8 +86,8 @@ node('sumaform-cucumber-provo') {
             }
 
             stage('Enable JaCoCo Agent') {
-                def jacocoagent_url = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar"
-                def jacococli_url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.7/org.jacoco.cli-0.8.7-nodeps.jar"
+                def jacocoagent_url = "https://search.maven.org/remotecontent?filepath=org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar"
+                def jacococli_url = "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.12/org.jacoco.cli-0.8.12-nodeps.jar"
                 def uyuni_master = "https://github.com/uyuni-project/uyuni/archive/refs/heads/master.tar.gz"
                 def server_data_volume = "/var/lib/containers/storage/volumes/var-cache/_data"
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'ssh -o StrictHostKeyChecking=no \$SERVER \"wget -O ${server_data_volume}/jacocoagent.jar ${jacocoagent_url}; wget ${jacococli_url} -O ${server_data_volume}/jacococli.jar\"'"
