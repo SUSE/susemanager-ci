@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2404o", "sles15sp4o", "slemicro55o"]
+  images = ["rocky8o", "opensuse155o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-vega-"
@@ -131,7 +131,6 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slemicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:31"
         vcpu = 8
@@ -144,7 +143,6 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     proxy_containerized = {
-      image = "slemicro55o"
       provider_settings = {
         mac = "aa:b2:93:01:00:32"
         vcpu = 2
@@ -156,7 +154,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_client = {
-      image = "sles15sp4o"
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:34"
       }
