@@ -200,7 +200,7 @@ module "cucumber_testsuite" {
       hypervisor  = {
         host        = "cthulhu.mgr.suse.de"
         user        = "root"
-        private_key = file("~/.ssh/id_rsa")
+        private_key = file("~/.ssh/id_ed25519")
       }
     }
   }
