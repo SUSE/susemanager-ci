@@ -83,7 +83,7 @@ jobs:
 
           # Provide a fake private SSH key
           mkdir -p ~/.ssh
-          touch ~/.ssh/id_rsa
+          touch ~/.ssh/id_ed25519
 
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
             echo "::notice::Validating '`basename $tf_file`'..."

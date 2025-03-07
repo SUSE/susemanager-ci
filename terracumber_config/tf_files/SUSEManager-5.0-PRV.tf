@@ -209,7 +209,7 @@ module "cucumber_testsuite" {
       hypervisor = {
         host        = "selektah.mgr.prv.suse.net"
         user        = "root"
-        private_key = file("~/.ssh/id_rsa")
+        private_key = file("~/.ssh/id_ed25519")
       }
     }
     kvm_host = {
