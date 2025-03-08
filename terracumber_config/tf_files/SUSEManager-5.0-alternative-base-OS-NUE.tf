@@ -97,7 +97,7 @@ module "base" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = "5.0-nightly"
+  product_version   = "5.0-released"
 
   name_prefix       = "suma-alt-50-"
   use_avahi         = false

@@ -377,7 +377,7 @@ module "proxy_containerized" {
     password = "admin"
   }
   runtime                   = "podman"
-  container_repository = "${var.CONTAINER_REPOSITORY}"
+  container_repository      = var.CONTAINER_REPOSITORY
   container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
