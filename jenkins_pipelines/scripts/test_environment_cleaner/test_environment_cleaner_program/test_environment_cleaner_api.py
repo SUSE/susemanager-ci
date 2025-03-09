@@ -82,6 +82,13 @@ class ResourceManager:
                 logger.info(f"Delete system : {system['name']} | id : {system['id']}")
                 self.client.system.deleteSystem(self.session_key, system['id'])
 
+    def delete_system(self, system_name):
+        systems = self.client.system.listSystems(self.session_key)
+        for system in systems:
+            if system['name'] == system_name :
+                logger.info(f"Delete system : {system['name']} | id : {system['id']}")
+                self.client.system.deleteSystem(self.session_key, system['id'])
+
     def delete_system_groups(self):
         groups = self.client.systemgroup.listAllGroups(self.session_key)
         for group in groups:
