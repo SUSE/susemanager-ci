@@ -7,7 +7,7 @@ variable "URL_PREFIX" {
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='Uyuni' && run-testsuite"
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
@@ -74,11 +74,6 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
-variable "PROMETHEUS_PUSH_GATEWAY_URL" {
-  type = string
-  default = null
-}
-
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -96,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "uyuni-master"
+  product_version = "head"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -107,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username   = var.SCC_USER
   cc_password   = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi     = false
   name_prefix   = "suma-test-hexagon-"
@@ -137,16 +132,18 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
+      image = "slmicro61o"
       provider_settings     = {
         mac     = "aa:b2:93:01:00:51"
         vcpu    = 4
         memory  = 16384
       }
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"  
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/multi-linux-manager/5.1/x86_64/"
       container_tag = "latest"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61/"
+      }
       main_disk_size        = 80
       repository_disk_size  = 200
       database_disk_size    = 30
@@ -160,11 +157,14 @@ module "cucumber_testsuite" {
         memory  = 2048
       }
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile"
       container_tag = "latest"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61/"
+      }
     }
     suse_minion = {
-      image             = "opensuse155o"
+      image = "sles15sp4o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:56"
         vcpu    = 2
@@ -172,12 +172,13 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image             = "opensuse155o"
+      image = "sles15sp4o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:58"
         vcpu    = 2
         memory  = 2048
       }
+      additional_packages = [ "iptables" ]
     }
     rhlike_minion = {
       image             = "rocky8o"
