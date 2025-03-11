@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-5.0"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -72,6 +72,11 @@ variable "GIT_USER" {
 variable "GIT_PASSWORD" {
   type = string
   default = null // Not needed for master, as it is public
+}
+
+variable "PROMETHEUS_PUSH_GATEWAY_URL" {
+  type = string
+  default = null
 }
 
 terraform {
