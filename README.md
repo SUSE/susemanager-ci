@@ -1,6 +1,6 @@
 # susemanager-ci
 
-CI automation for [SUSE Manager](https://www.suse.com/products/suse-manager/) and [Uyuni](https://www.uyuni-project.org/).
+CI automation for [SUSE Multi-Linux Manager](https://www.suse.com/products/multi-linux-manager/) and [Uyuni](https://www.uyuni-project.org/).
 
 ## Contents
 
