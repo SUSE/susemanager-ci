@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/SUSE/spacewalk.git"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-5.0"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -137,7 +137,6 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slemicro55o"
       provider_settings     = {
         mac     = "aa:b2:93:01:00:51"
         vcpu    = 4
@@ -162,7 +161,7 @@ module "cucumber_testsuite" {
         memory  = 2048
       }
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/multi-linux-manager/5.1/x86_64/"
       container_tag = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61/"
@@ -220,7 +219,7 @@ module "cucumber_testsuite" {
       hypervisor = {
         host        = "suma-03.mgr.suse.de"
         user        = "root"
-        private_key = file("~/.ssh/id_rsa")
+        private_key = file("~/.ssh/id_ed25519")
       }
     }
   }
