@@ -194,14 +194,6 @@ module "cucumber_testsuite" {
         memory  = 2048
       }
     }
-//    deblike_minion = {
-//     image             = "ubuntu2404o"
-//      provider_settings = {
-//        mac     = "aa:b2:93:01:00:5b"
-//        vcpu    = 2
-//        memory  = 2048
-//      }
-//    }
     build_host = {
       image             = "sles15sp4o"
       provider_settings = {
