@@ -424,6 +424,24 @@ module "sles15sp6_sshminion" {
 
 }
 
+module "rhel9_paygo_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  name               = "rhel9-paygo-minion"
+  image              = "rhel9"
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  provider_settings = {
+    memory = 2048
+    vcpu = 2
+    instance_type = "t3a.medium"
+  }
+
+}
+
+
 module "controller" {
   source             = "./modules/controller"
   name               = "controller"
@@ -469,6 +487,8 @@ module "controller" {
 
   sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
   sle15sp6_sshminion_configuration = module.sles15sp6_sshminion.configuration
+
+  rhel9_minion_configuration       = module.rhel9_paygo_minion.configuration
 }
 
 output "bastion_public_name" {
