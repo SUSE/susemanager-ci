@@ -164,7 +164,7 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/multi-linux-manager/5.1/x86_64"
       container_tag = "latest"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP7
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP7"
       }
     }
     suse_minion = {
@@ -194,6 +194,14 @@ module "cucumber_testsuite" {
         memory  = 2048
       }
     }
+//    deblike_minion = {
+//     image             = "ubuntu2404o"
+//      provider_settings = {
+//        mac     = "aa:b2:93:01:00:5b"
+//        vcpu    = 2
+//        memory  = 2048
+//      }
+//    }
     build_host = {
       image             = "sles15sp4o"
       provider_settings = {
