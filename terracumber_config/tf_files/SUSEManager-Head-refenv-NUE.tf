@@ -121,7 +121,7 @@ module "cucumber_testsuite" {
 
   container_server = true
   container_proxy  = true
-
+  beta_enabled = true
 
   server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
@@ -147,7 +147,6 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
-      beta_enabled = false
     }
     proxy_containerized = {
       provider_settings = {

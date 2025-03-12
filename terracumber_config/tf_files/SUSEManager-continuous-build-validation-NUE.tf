@@ -179,7 +179,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name               = "server"
-  beta_enabled       = false
+  beta_enabled       = true
   provider_settings = {
     mac                = "aa:b2:93:01:02:81"
     memory             = 40960
@@ -1104,6 +1104,7 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
+  beta_enabled = true
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

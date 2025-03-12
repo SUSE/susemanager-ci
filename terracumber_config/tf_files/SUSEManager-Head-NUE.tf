@@ -117,6 +117,7 @@ module "cucumber_testsuite" {
 
   container_server = true
   container_proxy  = true
+  beta_enabled = true
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -144,7 +145,6 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
-      beta_enabled = false
     }
     proxy_containerized = {
       provider_settings = {
