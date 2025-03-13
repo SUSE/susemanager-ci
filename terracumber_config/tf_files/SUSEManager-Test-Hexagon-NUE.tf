@@ -154,7 +154,7 @@ module "cucumber_testsuite" {
       repository_disk_size  = 200
       database_disk_size    = 30
       login_timeout         = 28800
-      large_deployment      = true
+      large_deployment      = false
     }
     proxy_containerized = {
       provider_settings = {
