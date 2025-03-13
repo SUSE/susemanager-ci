@@ -174,6 +174,14 @@ def run(params) {
                     )
 
                     stage("Upload local mirror data to AWS mirror") {
+                        // refresh TF state to get updated network interfaces data
+                        dir("${local_mirror_dir}") {
+                            sh(script: 'terraform refresh')
+                        }
+
+                        dir("${aws_mirror_dir}") {
+                            sh(script: 'terraform refresh')
+                        }
 
                         // Get local and aws hostname
                         mirror_hostname_local = sh(script: "cat ${local_mirror_dir}/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
@@ -182,6 +190,7 @@ def run(params) {
                                 returnStdout: true).trim()
                         env.mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                                 returnStdout: true).trim()
+
                         if (params.prepare_aws_env) {
                             user = 'root'
                             sh "ssh-keygen -R ${mirror_hostname_local} -f /home/${node_user}/.ssh/known_hosts"
