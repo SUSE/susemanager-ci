@@ -174,17 +174,8 @@ def run(params) {
                     )
 
                     stage("Upload local mirror data to AWS mirror") {
-                        // refresh TF state to get updated network interfaces data
-                        dir("${local_mirror_dir}") {
-                            sh(script: 'terraform refresh')
-                        }
-
-                        dir("${aws_mirror_dir}") {
-                            sh(script: 'terraform refresh')
-                        }
-
                         // Get local and aws hostname
-                        mirror_hostname_local = sh(script: "cat ${local_mirror_dir}/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
+                        mirror_hostname_address = sh(script: "cat ${local_mirror_dir}/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
                                 returnStdout: true).trim()
                         mirror_hostname_aws_public = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
                                 returnStdout: true).trim()
@@ -193,11 +184,15 @@ def run(params) {
 
                         if (params.prepare_aws_env) {
                             user = 'root'
-                            sh "ssh-keygen -R ${mirror_hostname_local} -f /home/${node_user}/.ssh/known_hosts"
-                            sh "scp ${ssh_option} ${params.key_file} ${user}@${mirror_hostname_local}:/root/testing-suma.pem"
-                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
-                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_local} 'tar -czvf mirror.tar.gz -C /srv/mirror/ .'"
-                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_local} 'scp ${ssh_option} -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
+                            sh "ssh-keygen -R ${mirror_hostname_address} -f /home/${node_user}/.ssh/known_hosts"
+                            // IPv6 addresses need to be enclosed in [ ] to not be interpreted as hostnames
+                            if (mirror_hostname_address.contains(":")) {
+                                mirror_hostname_address = "[${mirror_hostname_address}]"
+                            }
+                            sh "scp ${ssh_option} ${params.key_file} ${user}@${mirror_hostname_address}:/root/testing-suma.pem"
+                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_address} 'chmod 0400 /root/testing-suma.pem'"
+                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_address} 'tar -czvf mirror.tar.gz -C /srv/mirror/ .'"
+                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_address} 'scp ${ssh_option} -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo tar -xvf /home/ec2-user/mirror.tar.gz -C /srv/mirror/' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rsync -a /srv/mirror/ibs/ /srv/mirror' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rsync -a /srv/mirror/download/ibs/ /srv/mirror' || true"
