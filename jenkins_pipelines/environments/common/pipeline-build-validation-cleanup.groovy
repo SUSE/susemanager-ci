@@ -159,7 +159,7 @@ def run(params) {
 
             stage('Delete client VMs') {
                 // Join the resources into a comma-separated string if there are any to delete
-                String tfResourcesToDeleteArg = params.delete_all_resources ? '' : "--tf-resources-delete-all"
+                String tfResourcesToDeleteArg = params.delete_all_resources ? "--tf-resources-delete-all" : ''
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                     // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
                     sh """
