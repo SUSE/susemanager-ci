@@ -177,6 +177,10 @@ def run(params) {
                     set +x
                     ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
                 """
+                sh """
+                    cd ${localSumaformDirPath}
+                    cp ${localSumaformDirPath}/main.tf ${localSumaformDirPath}/main-change.tf
+                """
             }
 
             stage('Redeploy the environment with new client VMs') {
