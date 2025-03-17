@@ -64,8 +64,17 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
-variable "CONTAINER_REPOSITORY" {
+variable "SERVER_CONTAINER_REPOSITORY" {
   type = string
+}
+
+variable "PROXY_CONTAINER_REPOSITORY" {
+  type = string
+}
+
+variable "SERVER_CONTAINER_IMAGE" {
+  type = string
+  default = ""
 }
 
 variable "GIT_USER" {
@@ -129,7 +138,8 @@ module "server_containerized" {
 
   main_disk_size        = 1500
   runtime               = "podman"
-  container_repository  = var.CONTAINER_REPOSITORY
+  container_repository  = var.SERVER_CONTAINER_REPOSITORY
+  container_image       = var.SERVER_CONTAINER_IMAGE
   container_tag         = "latest"
   server_mounted_mirror = "minima-mirror-ci-bv.mgr.suse.de"
 
@@ -168,7 +178,7 @@ module "proxy_containerized" {
   }
 
   runtime              = "podman"
-  container_repository  = var.CONTAINER_REPOSITORY
+  container_repository  = var.PROXY_CONTAINER_REPOSITORY
   container_tag        = "latest"
 
   auto_configure        = false
