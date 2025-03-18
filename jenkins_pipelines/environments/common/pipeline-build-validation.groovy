@@ -24,7 +24,9 @@ def run(params) {
         def products_and_salt_migration_stage_result_fail = false
         def retail_stage_result_fail = false
         def containerization_stage_result_fail = false
-        def container_repository = params.container_repository ?: null
+        def server_container_repository = params.server_container_repository ?: null
+        def proxy_container_repository = params.proxy_container_repository ?: null
+        def server_container_image = params.server_container_image ?: ''
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
@@ -66,7 +68,29 @@ def run(params) {
                         }
                     }
                     // Run Terracumber to deploy the environment
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CONTAINER_REPOSITORY=${container_repository}; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_PRODUCT_VERSION=${params.product_version}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log --init --taint '.*(domain|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} --runstep provision"
+                    sh """
+                        set +x
+                        source /home/jenkins/.credentials
+                        set -x
+                    
+                        export TF_VAR_SERVER_CONTAINER_REPOSITORY=${server_container_repository}
+                        export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
+                        export TF_VAR_SERVER_CONTAINER_IMAGE=${server_container_image}
+                        export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
+                        export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
+                        export TERRAFORM=${params.terraform_bin}
+                        export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}
+                    
+                        ./terracumber-cli ${common_params} \
+                            --logfile ${resultdirbuild}/sumaform.log \
+                            --init \
+                            --taint '.*(domain|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
+                            --custom-repositories ${WORKSPACE}/custom_repositories.json \
+                            --sumaform-backend ${params.sumaform_backend} \
+                            --use-tf-resource-cleaner \
+                            --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} \
+                            --runstep provision
+                    """
                     // Generate features
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake utils:generate_build_validation_features'"
                     // Generate rake files
