@@ -58,9 +58,7 @@ def main():
             "full_cleanup": resource_manager.run,
         }
         try:
-            logger.info("Test actions")
             action = mode_actions.get(args.mode)
-            logger.info(f"Test actions: {action}")
             if action:
                 action()
             else:
