@@ -26,7 +26,7 @@ def run(params) {
         def containerization_stage_result_fail = false
         def server_container_repository = params.server_container_repository ?: null
         def proxy_container_repository = params.proxy_container_repository ?: null
-        def server_container_image = params.server_container_image ?: null
+        def server_container_image = params.server_container_image ?: ''
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
@@ -78,7 +78,6 @@ def run(params) {
                         export TF_VAR_SERVER_CONTAINER_IMAGE=${server_container_image}
                         export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
                         export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
-                        export TF_VAR_PRODUCT_VERSION=${params.product_version}
                         export TERRAFORM=${params.terraform_bin}
                         export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}
                     
