@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "suma-codecov-"
@@ -170,14 +170,14 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_minion = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         mac = "aa:b2:92:04:00:f4"
         memory = 4096
       }
     }
     suse_sshminion = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         mac = "aa:b2:92:04:00:f5"
         memory = 4096
