@@ -214,7 +214,7 @@ module "server_containerized" {
   large_deployment               = true
   ssh_key_path                   = "./salt/controller/id_rsa.pub"
   from_email                     = "root@suse.de"
-  provision                      = false
+  provision                      = true
 
   //server_additional_repos
 
@@ -233,7 +233,7 @@ module "proxy_containerized" {
   container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
-  provision                      = false
+  provision                 = true
 
   //proxy_additional_repos
 
