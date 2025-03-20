@@ -117,13 +117,7 @@ class ResourceManager:
                 self.client.saltkey.delete(self.session_key, salt_key)
 
     def delete_salt_key(self, system_name):
-        accepted_salt_keys = self.client.saltkey.acceptedList(self.session_key)
-        pending_salt_keys = self.client.saltkey.pendingList(self.session_key)
-        salt_keys = accepted_salt_keys + pending_salt_keys
-        for salt_key in salt_keys:
-            if salt_key['name'] == system_name :
-                logger.info(f"Delete remaining accepted key : {salt_key}")
-                self.client.saltkey.delete(self.session_key, salt_key)
+        self.client.saltkey.delete(self.session_key, system_name)
 
     def delete_image_profiles(self):
         self.client.image.profile.delete(self.session_key, "suse_os_image_12")
