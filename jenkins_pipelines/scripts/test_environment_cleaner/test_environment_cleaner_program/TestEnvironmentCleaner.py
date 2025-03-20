@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 MODES = [
     'delete_users', 'delete_activation_keys', 'delete_config_projects',
     'delete_software_channels', 'delete_systems', 'delete_specific_system', 'delete_repositories',
-    'full_cleanup', 'delete_salt_keys', 'delete_known_hosts',
+    'full_cleanup', 'delete_salt_keys', 'delete_salt_key', 'delete_known_hosts',
     'update_custom_repositories', 'delete_distributions', 'delete_system_groups',
     'delete_images', 'delete_image_profiles', 'update_terminal_mac_addresses'
 ]
@@ -41,7 +41,7 @@ def main():
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
                      "full_cleanup", "delete_salt_keys", "delete_system_groups", "delete_images",
-                     "delete_image_profiles", "delete_specific_system"]:
+                     "delete_image_profiles", "delete_specific_system", "delete_salt_key"]:
         resource_manager.get_session_key()
         mode_actions = {
             "delete_users": resource_manager.delete_users,
@@ -52,6 +52,7 @@ def main():
             "delete_specific_system": lambda: resource_manager.delete_system(args.system_to_delete),
             "delete_repositories": resource_manager.delete_channel_repos,
             "delete_salt_keys": resource_manager.delete_salt_keys,
+            "delete_salt_key": lambda: resource_manager.delete_salt_key(args.system_to_delete),
             "delete_system_groups": resource_manager.delete_system_groups,
             "delete_images": resource_manager.delete_images,
             "delete_image_profiles": resource_manager.delete_image_profiles,
