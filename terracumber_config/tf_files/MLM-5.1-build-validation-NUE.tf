@@ -214,6 +214,7 @@ module "server_containerized" {
   large_deployment               = true
   ssh_key_path                   = "./salt/controller/id_rsa.pub"
   from_email                     = "root@suse.de"
+  provision                      = false
 
   //server_additional_repos
 
