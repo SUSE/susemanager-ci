@@ -165,7 +165,7 @@ module "base_arm" {
 
   provider_settings = {
     pool        = "ssd"
-    bridge      = "br0"
+    bridge      = "br1"
   }
 }
 
