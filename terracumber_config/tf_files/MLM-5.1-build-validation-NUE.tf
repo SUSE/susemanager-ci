@@ -233,6 +233,7 @@ module "proxy_containerized" {
   container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
+  provision                      = false
 
   //proxy_additional_repos
 
