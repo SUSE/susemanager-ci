@@ -15,7 +15,6 @@ node('sumaform-cucumber') {
             'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, ' +
             'ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
             'debian12_minion, debian12_sshminion, ' +
-            'opensuse155arm_minion, opensuse155arm_sshminion, ' +
             'opensuse156arm_minion, opensuse156arm_sshminion, ' +
             'sles15sp5s390_minion, sles15sp5s390_sshminion, ' +
             'slemicro51_minion, slemicro52_minion, slemicro53_minion, slemicro54_minion, slemicro55_minion, slmicro60_minion, slmicro61_minion'
@@ -39,7 +38,9 @@ node('sumaform-cucumber') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
-            string(name: 'container_repository', defaultValue: 'registry.opensuse.org/systemsmanagement/uyuni/master/containers', description: 'Proxy and server container registry'),
+            string(name: 'server_container_repository', defaultValue: 'registry.opensuse.org/systemsmanagement/uyuni/master/containers', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.opensuse.org/systemsmanagement/uyuni/master/containers', description: 'Proxy container registry'),
+            string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),

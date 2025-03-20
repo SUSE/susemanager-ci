@@ -64,8 +64,17 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
-variable "CONTAINER_REPOSITORY" {
+variable "SERVER_CONTAINER_REPOSITORY" {
   type = string
+}
+
+variable "PROXY_CONTAINER_REPOSITORY" {
+  type = string
+}
+
+variable "SERVER_CONTAINER_IMAGE" {
+  type = string
+  default = ""
 }
 
 variable "GIT_USER" {
@@ -120,7 +129,7 @@ module "base_core" {
   name_prefix       = "mlm-bv-51-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156armo" ]
+  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -156,7 +165,7 @@ module "base_arm" {
 
   provider_settings = {
     pool        = "ssd"
-    bridge      = "br0"
+    bridge      = "br1"
   }
 }
 
@@ -182,7 +191,8 @@ module "server_containerized" {
     data_pool          = "ssd"
   }
   runtime = "podman"
-  container_repository  = var.CONTAINER_REPOSITORY
+  container_repository  = var.SERVER_CONTAINER_REPOSITORY
+  container_image       = var.SERVER_CONTAINER_IMAGE
   main_disk_size        = 100
   repository_disk_size  = 3072
   database_disk_size    = 150
@@ -204,6 +214,7 @@ module "server_containerized" {
   large_deployment               = true
   ssh_key_path                   = "./salt/controller/id_rsa.pub"
   from_email                     = "root@suse.de"
+  provision                      = true
 
   //server_additional_repos
 
@@ -218,10 +229,11 @@ module "proxy_containerized" {
     memory             = 4096
   }
   runtime                   = "podman"
-  container_repository      = var.CONTAINER_REPOSITORY
+  container_repository      = var.PROXY_CONTAINER_REPOSITORY
   container_tag             = "latest"
   auto_configure            = false
   ssh_key_path              = "./salt/controller/id_rsa.pub"
+  provision                 = true
 
   //proxy_additional_repos
 
