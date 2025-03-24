@@ -243,22 +243,6 @@ module "sles12sp5_client" {
   additional_packages = [ "chrony" ]
 }
 
-module "sles15sp2_client" {
-  source             = "./modules/client"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "cli-sles15sp2"
-  image              = "sles15sp2o"
-  server_configuration = module.server.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-}
-
 module "sles15sp3_client" {
   source             = "./modules/client"
   base_configuration = module.base.configuration
@@ -388,22 +372,6 @@ module "sles12sp5_minion" {
     instance_type = "t3a.medium"
   }
   additional_packages = [ "chrony" ]
-}
-
-module "sles15sp2_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "min-sles15sp2"
-  image              = "sles15sp2o"
-  server_configuration = module.server.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
 }
 
 module "sles15sp3_minion" {
@@ -536,20 +504,6 @@ module "sles12sp5_sshminion" {
   additional_packages = [ "chrony" ]
 }
 
-module "sles15sp2_sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-sles15sp2"
-  image              = "sles15sp2o"
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
-}
-
 module "sles15sp3_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
@@ -663,10 +617,6 @@ module "controller" {
   sle12sp5_client_configuration    = module.sles12sp5_client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5_sshminion.configuration
-
-  sle15sp2_client_configuration    = module.sles15sp2_client.configuration
-  sle15sp2_minion_configuration    = module.sles15sp2_minion.configuration
-  sle15sp2_sshminion_configuration = module.sles15sp2_sshminion.configuration
 
   sle15sp3_client_configuration    = module.sles15sp3_client.configuration
   sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
