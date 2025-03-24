@@ -129,7 +129,7 @@ module "base_core" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -246,21 +246,6 @@ module "sles12sp5_minion" {
   image              = "sles12sp5o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:b1"
-    memory             = 4096
-  }
-
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "sles15sp2_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  name               = "sles15sp2-minion"
-  image              = "sles15sp2o"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:b4"
     memory             = 4096
   }
 
@@ -682,19 +667,6 @@ module "sles12sp5_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
-}
-
-module "sles15sp2_sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  name               = "sles15sp2-sshminion"
-  image              = "sles15sp2o"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:d4"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "sles15sp3_sshminion" {
@@ -1125,9 +1097,6 @@ module "controller" {
 
   sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5_sshminion.configuration
-
-  sle15sp2_minion_configuration    = module.sles15sp2_minion.configuration
-  sle15sp2_sshminion_configuration = module.sles15sp2_sshminion.configuration
 
   sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
   sle15sp3_sshminion_configuration = module.sles15sp3_sshminion.configuration

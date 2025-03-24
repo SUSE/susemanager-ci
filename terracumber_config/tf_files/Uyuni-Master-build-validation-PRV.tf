@@ -228,7 +228,7 @@ module "base_new_sle" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
-  images            = [ "sles15sp2o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o" ]
+  images            = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -404,24 +404,6 @@ module "sles12sp5_minion" {
     mac                = "aa:b2:93:04:05:7d"
     memory             = 4096
   }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-}
-
-module "sles15sp2_minion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_new_sle.configuration
-  name               = "sles15sp2-minion"
-  image              = "sles15sp2o"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:80"
-    memory             = 4096
-  }
-
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
@@ -919,22 +901,6 @@ module "sles12sp5_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_rsa.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
-}
-
-module "sles15sp2_sshminion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_new_sle.configuration
-  name               = "sles15sp2-sshminion"
-  image              = "sles15sp2o"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:a0"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
 }
 
 module "sles15sp3_sshminion" {
@@ -1454,9 +1420,6 @@ module "controller" {
 
   sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5_sshminion.configuration
-
-  sle15sp2_minion_configuration    = module.sles15sp2_minion.configuration
-  sle15sp2_sshminion_configuration = module.sles15sp2_sshminion.configuration
 
   sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
   sle15sp3_sshminion_configuration = module.sles15sp3_sshminion.configuration
