@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "PRODUCT_VERSION" {
   type = string
-  default = "5.1-released"
+  default = "head"
 }
 
 variable "MAIL_SUBJECT" {
