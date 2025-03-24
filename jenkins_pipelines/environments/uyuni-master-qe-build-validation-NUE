@@ -2,7 +2,6 @@
 
 node('sumaform-cucumber') {
     def minionList = 'sles12sp5_minion, sles12sp5_sshminion, ' +
-            'sles15sp2_minion, sles15sp2_sshminion, ' +
             'sles15sp3_minion, sles15sp3_sshminion, ' +
             'sles15sp4_minion, sles15sp4_sshminion, ' +
             'sles15sp5_minion, sles15sp5_sshminion, ' +
