@@ -145,6 +145,7 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
+      large_deployment      = true
     }
     proxy_containerized = {
       provider_settings = {
