@@ -187,7 +187,7 @@ module "server" {
   use_os_released_updates        = true
   disable_download_tokens        = false
   large_deployment               = true
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "m6a.xlarge"
   }
@@ -215,7 +215,7 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = true
   proxy_containerized       = false
-  ssh_key_path              = "./salt/controller/id_rsa.pub"
+  ssh_key_path              = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "c6i.large"
   }
@@ -234,7 +234,7 @@ module "sles12sp5_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
@@ -250,7 +250,7 @@ module "sles15sp5_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
@@ -266,7 +266,7 @@ module "sles15sp6_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
@@ -282,7 +282,7 @@ module "slesforsap15sp5_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
@@ -297,7 +297,7 @@ module "sles12sp5_client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -316,7 +316,7 @@ module "sles15sp4_client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -333,7 +333,7 @@ module "sles12sp5_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -351,7 +351,7 @@ module "sles15sp4_byos_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -368,7 +368,7 @@ module "sles15sp4_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -385,7 +385,7 @@ module "sles15sp5_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -402,7 +402,7 @@ module "sles15sp6_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -417,7 +417,7 @@ module "sles12sp5_sshminion" {
   image              = "sles12sp5"
   use_os_released_updates = false
   sles_registration_code = var.SLES_REGISTRATION_CODE
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   provider_settings = {
     instance_type = "t3a.medium"
@@ -433,7 +433,7 @@ module "sles15sp4_sshminion" {
   image              = "sles15sp4o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -448,7 +448,7 @@ module "sles15sp5_sshminion" {
   image              = "sles15sp5o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -463,7 +463,7 @@ module "sles15sp6_sshminion" {
   image              = "sles15sp6o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }

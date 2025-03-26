@@ -360,7 +360,7 @@ module "server_containerized" {
   use_os_released_updates        = true
   disable_download_tokens        = false
   large_deployment               = true
-  ssh_key_path                   = "./salt/controller/id_rsa.pub"
+  ssh_key_path                   = "./salt/controller/id_ed25519.pub"
   from_email                     = "root@suse.de"
   runtime               = "podman"
   container_repository  = var.SERVER_CONTAINER_REPOSITORY
@@ -387,7 +387,7 @@ module "proxy_containerized" {
   container_repository  = var.PROXY_CONTAINER_REPOSITORY
   container_tag         = "latest"
   auto_configure        = false
-  ssh_key_path          = "./salt/controller/id_rsa.pub"
+  ssh_key_path          = "./salt/controller/id_ed25519.pub"
 }
 
 // No traditional clients in Uyuni
@@ -406,7 +406,7 @@ module "sles12sp5_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp3_minion" {
@@ -424,7 +424,7 @@ module "sles15sp3_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp4_minion" {
@@ -442,7 +442,7 @@ module "sles15sp4_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp5_minion" {
@@ -460,7 +460,7 @@ module "sles15sp5_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp6_minion" {
@@ -478,7 +478,7 @@ module "sles15sp6_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "alma8_minion" {
@@ -495,7 +495,7 @@ module "alma8_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -513,7 +513,7 @@ module "alma9_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -531,7 +531,7 @@ module "centos7_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -550,7 +550,7 @@ module "liberty9_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -568,7 +568,7 @@ module "oracle9_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -587,7 +587,7 @@ module "rocky8_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -605,7 +605,7 @@ module "rocky9_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -623,7 +623,7 @@ module "ubuntu2004_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -641,7 +641,7 @@ module "ubuntu2204_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "ubuntu2404_minion" {
@@ -658,7 +658,7 @@ module "ubuntu2404_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "debian12_minion" {
@@ -676,7 +676,7 @@ module "debian12_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -697,7 +697,7 @@ module "opensuse156arm_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp5s390_minion" {
@@ -715,7 +715,7 @@ module "sles15sp5s390_minion" {
   }
 
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "salt_migration_minion" {
@@ -733,7 +733,7 @@ module "salt_migration_minion" {
   }
   auto_connect_to_master  = true
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   install_salt_bundle = false
 }
 
@@ -753,7 +753,7 @@ module "slemicro51_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
@@ -774,7 +774,7 @@ module "slemicro52_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
@@ -795,7 +795,7 @@ module "slemicro53_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
@@ -816,7 +816,7 @@ module "slemicro54_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
@@ -837,7 +837,7 @@ module "slemicro55_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
@@ -858,7 +858,7 @@ module "slmicro60_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
@@ -879,7 +879,7 @@ module "slmicro61_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // WORKAROUND: Does not work in sumaform, yet
 //  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = false
@@ -899,7 +899,7 @@ module "sles12sp5_sshminion" {
   }
 
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
 }
 
@@ -916,7 +916,7 @@ module "sles15sp3_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp4_sshminion" {
@@ -932,7 +932,7 @@ module "sles15sp4_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp5_sshminion" {
@@ -948,7 +948,7 @@ module "sles15sp5_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp6_sshminion" {
@@ -964,7 +964,7 @@ module "sles15sp6_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "alma8_sshminion" {
@@ -980,7 +980,7 @@ module "alma8_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -997,7 +997,7 @@ module "alma9_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -1014,7 +1014,7 @@ module "centos7_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -1031,7 +1031,7 @@ module "liberty9_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -1048,7 +1048,7 @@ module "oracle9_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -1065,7 +1065,7 @@ module "rocky8_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -1082,7 +1082,7 @@ module "rocky9_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -1099,7 +1099,7 @@ module "ubuntu2004_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -1116,7 +1116,7 @@ module "ubuntu2204_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "ubuntu2404_sshminion" {
@@ -1132,7 +1132,7 @@ module "ubuntu2404_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "debian12_sshminion" {
@@ -1148,7 +1148,7 @@ module "debian12_sshminion" {
     memory             = 4096
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -1168,7 +1168,7 @@ module "opensuse156arm_sshminion" {
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
   }
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp5s390_sshminion" {
@@ -1186,7 +1186,7 @@ module "sles15sp5s390_sshminion" {
   }
 
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
@@ -1203,7 +1203,7 @@ module "sles15sp5s390_sshminion" {
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
@@ -1220,7 +1220,7 @@ module "sles15sp5s390_sshminion" {
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
@@ -1237,7 +1237,7 @@ module "sles15sp5s390_sshminion" {
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
@@ -1254,7 +1254,7 @@ module "sles15sp5s390_sshminion" {
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
@@ -1271,7 +1271,7 @@ module "sles15sp5s390_sshminion" {
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
@@ -1288,7 +1288,7 @@ module "sles15sp5s390_sshminion" {
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
@@ -1305,7 +1305,7 @@ module "sles15sp5s390_sshminion" {
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_rsa.pub"
+//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 // }
 
 module "sles12sp5_buildhost" {
@@ -1323,7 +1323,7 @@ module "sles12sp5_buildhost" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles12sp5_terminal" {
@@ -1359,7 +1359,7 @@ module "sles15sp4_buildhost" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp4_terminal" {
@@ -1395,7 +1395,7 @@ module "monitoring_server" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "controller" {

@@ -190,7 +190,7 @@ module "server" {
   publish_private_ssl_key        = false
   use_os_released_updates        = false
   disable_download_tokens        = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "m6a.xlarge"
   }
@@ -215,7 +215,7 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = false
   proxy_containerized       = false
-  ssh_key_path              = "./salt/controller/id_rsa.pub"
+  ssh_key_path              = "./salt/controller/id_ed25519.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
 
@@ -232,7 +232,7 @@ module "suse_client" {
   sles_registration_code  = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -248,7 +248,7 @@ module "suse_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = true
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -263,7 +263,7 @@ module "suse_sshminion" {
   name               = "suse-minion"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = true
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   provider_settings = {
     instance_type = "t3a.medium"
@@ -286,7 +286,7 @@ module "rhlike_minion"  {
   product_version    = "4.3-released"
   server_configuration = module.server.configuration
   auto_connect_to_master = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "deblike_minion" {
@@ -297,7 +297,7 @@ module "deblike_minion" {
   product_version    = "4.3-released"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
