@@ -86,12 +86,12 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/jenkins/.ssh/id_rsa"
+  default = "/home/jenkins/.ssh/testing-suma.pem"
 }
 
 variable "KEY_NAME" {
   type = string
-  default = "internal-jenkins-worker"
+  default = "testing-suma"
 }
 
 variable "MY_IP" {

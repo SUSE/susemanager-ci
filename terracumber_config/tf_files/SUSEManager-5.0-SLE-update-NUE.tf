@@ -155,7 +155,7 @@ module "server_containerized" {
   publish_private_ssl_key        = false
   use_os_released_updates        = true
   disable_download_tokens        = false
-  ssh_key_path                   = "./salt/controller/id_rsa.pub"
+  ssh_key_path                   = "./salt/controller/id_ed25519.pub"
   from_email                     = "root@suse.de"
 
   //server_additional_repos
@@ -182,7 +182,7 @@ module "proxy_containerized" {
   container_tag        = "latest"
 
   auto_configure        = false
-  ssh_key_path          = "./salt/controller/id_rsa.pub"
+  ssh_key_path          = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -199,7 +199,7 @@ module "sles15sp6_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 
