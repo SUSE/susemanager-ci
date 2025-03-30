@@ -97,7 +97,7 @@ module "base" {
   name_prefix       = "suma-su-43-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles15sp4o", "opensuse155o" ]
+  images            = [ "sles15sp4o", "opensuse155o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true

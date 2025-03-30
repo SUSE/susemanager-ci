@@ -111,7 +111,7 @@ module "base" {
   name_prefix       = "suma-alt-50-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles15sp6o", "opensuse155o" ]
+  images            = [ "sles15sp6o", "opensuse155o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true

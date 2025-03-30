@@ -149,7 +149,7 @@ module "base_core" {
   name_prefix       = "suma-bv-50-"
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
-  images            = [ "sles15sp4o", "opensuse155o", "slemicro55o", "sles15sp5o" ]
+  images            = [ "sles15sp4o", "opensuse155o", "opensuse156o", "slemicro55o", "sles15sp5o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
