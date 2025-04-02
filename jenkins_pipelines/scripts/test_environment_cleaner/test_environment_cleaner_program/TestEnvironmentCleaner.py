@@ -36,7 +36,8 @@ def main():
     ]
 
     resource_manager = ResourceManager(manager_url, default_resources_to_delete)
-    product_version = resource_manager.get_product_version()
+    if args.mode != "update_custom_repositories":
+        product_version = resource_manager.get_product_version()
     # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
