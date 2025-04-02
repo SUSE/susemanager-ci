@@ -78,7 +78,7 @@ variable "GIT_PASSWORD" {
 
 variable "SSH_KEY" {
   type = string
-  default = "/home/jenkins/.ssh/id_25519.pub"
+  default = "/home/jenkins/.ssh/id_ed25519.pub"
 }
 
 terraform {

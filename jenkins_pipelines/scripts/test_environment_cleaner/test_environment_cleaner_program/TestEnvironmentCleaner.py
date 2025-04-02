@@ -70,7 +70,7 @@ def main():
     # Server commands part
     elif args.mode in ["update_terminal_mac_addresses"]:
         ssh_controller_session = SSHClientManager(url=args.controller_url, password= "linux")
-        ssh_hypervisor_session = SSHClientManager(url=args.hypervisor_url,ssh_key_path="/home/jenkins/.ssh/id_25519")
+        ssh_hypervisor_session = SSHClientManager(url=args.hypervisor_url,ssh_key_path="/home/jenkins/.ssh/id_ed25519")
         virsh_output = ssh_hypervisor_session.run_command(f"virsh list | grep terminal | grep {''.join(product_version.split('.')[:2])} | awk '{{print $2}}'")
         terminal_names = virsh_output.strip().split("\n") if virsh_output.strip() else []
         logger.debug(f"Terminal list: {terminal_names}")
