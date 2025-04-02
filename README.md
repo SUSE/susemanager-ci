@@ -55,10 +55,17 @@ image for testing Pull Requests built with the open build service. This needs to
 
 ## Used image versions in the CI test suite
 
-| Version       | Minion      | SSH minion  | Client      | RH-like  | Deb-like     | Virthost    | Buildhost   | Terminal    | DHCP-DNS  | Contr-oller | Server         | Proxy          |
-| ------------- | ----------- | ----------- | ----------- | -------- | ------------ | ----------- | ----------- | ----------- | --------- | ----------- | -------------- | -------------- |
-|  PR test      | Leap 15.6   | Leap 15.6   | -           | Rocky 8  | Ubuntu 24.04 | -           | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5 | Leap 15.6   | Leap 15.6      | Leap 15.6      |
-|  Uyuni        | Leap 15.6   | Leap 15.6   | -           | Rocky 8  | Ubuntu 24.04 | -           | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5 | Leap 15.5   | Leap Micro 5.5 | Leap Micro 5.5 |
-|  HEAD         | SLES 15 SP4 | SLES 15 SP4 | -           | Rocky 8  | Ubuntu 24.04 | -           | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5 | Leap 15.5   | SL Micro 6.1   | SL Micro 6.1   |
-|  5.0          | SLES 15 SP4 | SLES 15 SP4 | -           | Rocky 8  | Ubuntu 24.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Leap 15.5 | Leap 15.5   | SLE Micro 5.5  | SLE Micro 5.5  |
-|  4.3          | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | Rocky 8  | Ubuntu 22.04 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | -         | Leap 15.5   | SLES 15 SP4    | SLES 15 SP4    |
+|          | PR test     | Uyuni       | HEAD        | 5.0         | 4.3         |
+|----------|-------------|-------------|-------------|-------------|-------------|
+| Minion   | Leap 15.6   | Leap 15.6   | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
+| SSH minion | Leap 15.6   | Leap 15.6   | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
+| Client   | -           | -           | -           | -           | SLES 15 SP4 |
+| RH-like  | Rocky 8     | Rocky 8     | Rocky 8     | Rocky 8     | Rocky 8     |
+| Deb-like | Ubuntu 24.04| Ubuntu 24.04| Ubuntu 24.04| Ubuntu 24.04| Ubuntu 22.04|
+| Virthost | -           | -           | -           | SLES 15 SP4 | SLES 15 SP4 |
+| Buildhost| SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
+| Terminal | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 | SLES 15 SP4 |
+| DHCP-DNS | Leap 15.5   | Leap 15.5   | Leap 15.5   | Leap 15.5   | -           |
+| Contr-oller| Leap 15.6   | Leap 15.5   | Leap 15.5   | Leap 15.5   | Leap 15.5   |
+| Server   | Leap 15.6    | Leap Micro 5.5| SL Micro 6.1  | SLE Micro 5.5 | SLES 15 SP4  |
+| Proxy    | Leap 15.6    | Leap Micro 5.5| SL Micro 6.1  | SLE Micro 5.5 | SLES 15 SP4  |
