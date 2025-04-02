@@ -141,7 +141,7 @@ module "cucumber_testsuite" {
 
   host_settings = {
     controller = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         instance_type = "c6i.xlarge"
         private_ip = "172.16.3.5"
