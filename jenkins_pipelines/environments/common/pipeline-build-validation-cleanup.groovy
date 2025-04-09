@@ -53,10 +53,8 @@ def run(params) {
                 dir("susemanager-ci") {
                     checkout scm
                 }
-
-                // Clone sumaform
-                sh "set +x; source /home/jenkins/.credentials set -x; ${WORKSPACE}/terracumber-cli ${commonParams} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-
+//                // Clone sumaform
+//                sh "set +x; source /home/jenkins/.credentials set -x; ${WORKSPACE}/terracumber-cli ${commonParams} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
             }
 
             stage('Confirm Environment Cleanup') {
@@ -77,9 +75,9 @@ def run(params) {
             stage("Copy terraform files from ${params.targeted_project}"){
                 // Copy tfstate and terraform directory to the result directory
                 sh """
-                    cp ${targetedTfStateFile} ${localTfStateFile}
-                    cp -r ${targetedTerraformDirPath}.terraform ${localSumaformDirPath}
-                    cp ${targetedTfFile} ${localSumaformDirPath}
+                    rm -rf ${localSumaformDirPath} 
+                    cp -r ${targetedTerraformDirPath} ${localSumaformDirPath}
+                    rm ${localSumaformDirPath}main.tf
                 """
             }
 
