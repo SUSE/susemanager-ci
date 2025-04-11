@@ -53,8 +53,6 @@ def run(params) {
                 dir("susemanager-ci") {
                     checkout scm
                 }
-//                // Clone sumaform
-//                sh "set +x; source /home/jenkins/.credentials set -x; ${WORKSPACE}/terracumber-cli ${commonParams} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
             }
 
             stage('Confirm Environment Cleanup') {
