@@ -129,7 +129,7 @@ module "base_core" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -218,7 +218,6 @@ module "server_containerized" {
   container_tag         = "latest"
 
   //server_additional_repos
-
 }
 
 module "proxy_containerized" {
@@ -342,6 +341,20 @@ module "alma9_minion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
+module "amazon2023_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  name               = "amazon2023-minion"
+  image              = "amazonlinux2023o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:c4"
+    memory             = 4096
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
 module "centos7_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -425,7 +438,6 @@ module "ubuntu2004_minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
 }
 
 module "ubuntu2204_minion" {
@@ -732,7 +744,6 @@ module "alma8_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
 }
 
 module "alma9_sshminion" {
@@ -742,6 +753,19 @@ module "alma9_sshminion" {
   image              = "almalinux9o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:e2"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "amazon2023_sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  name               = "amazon2023-sshminion"
+  image              = "amazonlinux2023o"
+  provider_settings = {
+    mac                = "aa:b2:93:02:01:e4"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -824,7 +848,6 @@ module "ubuntu2004_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
 }
 
 module "ubuntu2204_sshminion" {
@@ -1115,6 +1138,9 @@ module "controller" {
 
   alma9_minion_configuration    = module.alma9_minion.configuration
   alma9_sshminion_configuration = module.alma9_sshminion.configuration
+
+  amazon2023_minion_configuration    = module.amazon2023_minion.configuration
+  amazon2023_sshminion_configuration = module.amazon2023_sshminion.configuration
 
   centos7_minion_configuration    = module.centos7_minion.configuration
   centos7_sshminion_configuration = module.centos7_sshminion.configuration

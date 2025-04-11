@@ -129,7 +129,7 @@ module "base_core" {
   name_prefix       = "mlm-bv-51-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -334,6 +334,20 @@ module "alma9_minion" {
   image              = "almalinux9o"
   provider_settings = {
     mac                = "aa:b2:92:42:01:22"
+    memory             = 4096
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "amazon2023_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  name               = "amazon2023-minion"
+  image              = "amazonlinux2023o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:01:24"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -732,6 +746,19 @@ module "alma9_sshminion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
+module "amazon2023_sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  name               = "amazon2023-sshminion"
+  image              = "amazonlinux2023o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:01:44"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
 module "centos7_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -1115,6 +1142,9 @@ module "controller" {
 
   alma9_minion_configuration    = module.alma9_minion.configuration
   alma9_sshminion_configuration = module.alma9_sshminion.configuration
+
+  amazon2023_minion_configuration    = module.amazon2023_minion.configuration
+  amazon2023_sshminion_configuration = module.amazon2023_sshminion.configuration
 
   centos7_minion_configuration    = module.centos7_minion.configuration
   centos7_sshminion_configuration = module.centos7_sshminion.configuration
