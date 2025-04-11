@@ -12,7 +12,7 @@ def run(params) {
         String hypervisorUrl = null
         GString targetedTfFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/main.tf"
         GString targetedTfStateFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/terraform.tfstate"
-        GString targetedTerraformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
+        GString targetedSumaformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
         GString localSumaformDirPath = "${resultdir}/sumaform/"
         GString localTfStateFile = "${localSumaformDirPath}terraform.tfstate"
         GString logFile = "${resultdirbuild}/sumaform.log"
@@ -74,7 +74,7 @@ def run(params) {
                 // Copy tfstate and terraform directory to the result directory
                 sh """
                     rm -rf ${localSumaformDirPath} 
-                    cp -r ${targetedTerraformDirPath} ${localSumaformDirPath}
+                    cp -r ${targetedSumaformDirPath} ${localSumaformDirPath}
                     rm ${localSumaformDirPath}main.tf
                 """
             }
