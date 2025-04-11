@@ -157,7 +157,7 @@ module "cucumber_testsuite" {
         overwrite_fqdn = "uyuni-master-server.sumaci.aws"
       }
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       login_timeout = 28800
@@ -170,7 +170,7 @@ module "cucumber_testsuite" {
         overwrite_fqdn = "uyuni-master-proxy.sumaci.aws"
       }
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
     }
     suse_minion = {

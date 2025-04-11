@@ -89,12 +89,14 @@ jobs:
           touch ~/.ssh/id_ed25519
 
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
-            echo "::notice::Validating '`basename $tf_file`'..."
-            cp ../$tf_file main.tf
-            # Uncomment for Terraform detailed logging
-            # export TF_LOG=trace
-            terraform init -input=false
-            terraform validate
-            terraform plan -input=false
-            echo
+            if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
+              echo "::notice::Validating '`basename $tf_file`'..."
+              cp ../$tf_file main.tf
+              # Uncomment for Terraform detailed logging
+              # export TF_LOG=trace
+              terraform init -input=false
+              terraform validate
+              terraform plan -input=false
+              echo
+            fi
           done
