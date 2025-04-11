@@ -8,6 +8,7 @@ node('sumaform-cucumber') {
             'sles15sp6_minion, sles15sp6_sshminion, ' +
             'salt_migration_minion, ' +
             'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, ' +
+            'amazon2023_minion, amazon2023_sshminion, ' +
             'centos7_minion, centos7_sshminion, ' +
             'liberty9_minion, liberty9_sshminion, ' +
             'oracle9_minion, oracle9_sshminion, ' +
