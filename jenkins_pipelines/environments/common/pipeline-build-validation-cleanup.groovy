@@ -75,7 +75,6 @@ def run(params) {
                 sh """
                     rm -rf ${localSumaformDirPath} 
                     cp -r ${targetedSumaformDirPath} ${localSumaformDirPath}
-                    rm ${localSumaformDirPath}main.tf
                 """
             }
 
