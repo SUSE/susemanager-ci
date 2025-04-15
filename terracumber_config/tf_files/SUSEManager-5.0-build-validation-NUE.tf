@@ -1049,7 +1049,7 @@ module "opensuse156arm_sshminion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
   additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_aarch64/"
   }
 }
 
