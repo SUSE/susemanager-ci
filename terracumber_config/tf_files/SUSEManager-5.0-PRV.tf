@@ -165,6 +165,9 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_repos = {
+        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+      }
     }
     suse_sshminion = {
       image = "sles15sp4o"
@@ -183,6 +186,9 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_repos = {
+        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+      }
     }
     deblike_minion = {
       image = "ubuntu2404o"
@@ -191,6 +197,9 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_repos = {
+        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+      }
     }
     build_host = {
       image = "sles15sp4o"
@@ -198,6 +207,9 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:03:00:ad"
         vcpu = 2
         memory = 2048
+      }
+      additional_repos = {
+        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
     pxeboot_minion = {
@@ -218,6 +230,9 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:03:00:ae"
         vcpu = 4
         memory = 4096
+      }
+      additional_repos = {
+        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
   }
