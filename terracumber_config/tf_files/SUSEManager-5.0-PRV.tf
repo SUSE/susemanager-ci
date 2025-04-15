@@ -174,7 +174,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    redlike_minion = {
+    rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
         mac = "aa:b2:92:03:00:a9"
