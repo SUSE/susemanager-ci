@@ -176,6 +176,9 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_repos = {
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+      }
     }
     rhlike_minion = {
       image = "rocky8o"
@@ -186,9 +189,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_repos = {
-        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-      }
     }
     deblike_minion = {
       image = "ubuntu2404o"
@@ -196,9 +196,6 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:03:00:ab"
         vcpu = 2
         memory = 2048
-      }
-      additional_repos = {
-        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
     build_host = {
