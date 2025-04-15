@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro55o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-naica-"
@@ -131,7 +131,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slemicro55o"
+      image = "slemicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:61"
         vcpu = 8
@@ -140,11 +140,14 @@ module "cucumber_testsuite" {
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
       container_tag = "latest"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
+      }
     }
     proxy_containerized = {
-      image = "slemicro55o"
+      image = "slemicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:62"
         vcpu = 2
@@ -152,8 +155,11 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
       container_tag = "latest"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
+      }
     }
     suse_client = {
       image = "sles15sp4o"
