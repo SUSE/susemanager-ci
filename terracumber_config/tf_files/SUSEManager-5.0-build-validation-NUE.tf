@@ -1213,10 +1213,6 @@ module "sles12sp5_terminal" {
   }
   private_ip         = 5
   private_name       = "sle12sp5terminal"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "sles15sp4_buildhost" {
