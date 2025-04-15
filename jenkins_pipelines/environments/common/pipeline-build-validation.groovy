@@ -596,7 +596,7 @@ def getNodesHandler() {
     Set<String> nodesToRun = params.minions_to_run.split(', ')
     // Create a variable with declared nodes on Jenkins side but not deploy and print it
     def notDeployedNode = nodesToRun.findAll { !nodeList.contains(it) }
-    println "This minions are declared in jenkins but not deployed ! ${notDeployedNode}"
+    println "These minions are declared in jenkins but not deployed! ${notDeployedNode}"
     // Check the difference between the nodes deployed and the nodes declared in Jenkins side
     // This difference will be the nodes to disable
     def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }
