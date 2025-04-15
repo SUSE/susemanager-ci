@@ -166,7 +166,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos = {
-        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
     suse_sshminion = {
@@ -187,7 +187,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos = {
-        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
     deblike_minion = {
@@ -198,7 +198,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos = {
-        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
     build_host = {
@@ -209,7 +209,7 @@ module "cucumber_testsuite" {
         memory = 2048
       }
       additional_repos = {
-        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
     pxeboot_minion = {
@@ -232,7 +232,7 @@ module "cucumber_testsuite" {
         memory = 4096
       }
       additional_repos = {
-        workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
   }
