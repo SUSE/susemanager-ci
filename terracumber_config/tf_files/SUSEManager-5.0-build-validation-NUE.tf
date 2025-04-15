@@ -250,9 +250,6 @@ module "sles12sp5_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "sles15sp3_minion" {
@@ -344,9 +341,6 @@ module "alma8_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "alma9_minion" {
@@ -362,9 +356,6 @@ module "alma9_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "centos7_minion" {
@@ -380,9 +371,6 @@ module "centos7_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "liberty9_minion" {
@@ -398,9 +386,6 @@ module "liberty9_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "oracle9_minion" {
@@ -416,9 +401,6 @@ module "oracle9_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "rocky8_minion" {
@@ -434,9 +416,6 @@ module "rocky8_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "rocky9_minion" {
@@ -452,9 +431,6 @@ module "rocky9_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "ubuntu2004_minion" {
@@ -470,9 +446,6 @@ module "ubuntu2004_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "ubuntu2204_minion" {
@@ -488,9 +461,6 @@ module "ubuntu2204_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "ubuntu2404_minion" {
@@ -505,10 +475,6 @@ module "ubuntu2404_minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "debian12_minion" {
@@ -525,9 +491,6 @@ module "debian12_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "opensuse156arm_minion" {
@@ -595,10 +558,6 @@ module "salt_migration_minion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   install_salt_bundle = false
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "slemicro51_minion" {
@@ -728,9 +687,6 @@ module "slmicro60_minion" {
 // WORKAROUND: Does not work in sumaform, yet
   install_salt_bundle = false
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "slmicro61_minion" {
@@ -750,9 +706,6 @@ module "slmicro61_minion" {
 // WORKAROUND: Does not work in sumaform, yet
   install_salt_bundle = false
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "sles12sp5_sshminion" {
@@ -768,10 +721,6 @@ module "sles12sp5_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "sles15sp3_sshminion" {
@@ -853,10 +802,6 @@ module "alma8_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "alma9_sshminion" {
@@ -871,9 +816,6 @@ module "alma9_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "centos7_sshminion" {
@@ -887,10 +829,6 @@ module "centos7_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 
@@ -906,9 +844,6 @@ module "liberty9_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "oracle9_sshminion" {
@@ -923,9 +858,6 @@ module "oracle9_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "rocky8_sshminion" {
@@ -939,10 +871,6 @@ module "rocky8_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "rocky9_sshminion" {
@@ -957,9 +885,6 @@ module "rocky9_sshminion" {
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "ubuntu2004_sshminion" {
@@ -973,10 +898,6 @@ module "ubuntu2004_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "ubuntu2204_sshminion" {
@@ -990,10 +911,6 @@ module "ubuntu2204_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "ubuntu2404_sshminion" {
@@ -1007,10 +924,6 @@ module "ubuntu2404_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "debian12_sshminion" {
@@ -1024,10 +937,6 @@ module "debian12_sshminion" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "opensuse156arm_sshminion" {
@@ -1194,10 +1103,6 @@ module "sles12sp5_buildhost" {
   }
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  additional_repos = {
-    workaround = "http://download.suse.de/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
-  }
 }
 
 module "sles12sp5_terminal" {
