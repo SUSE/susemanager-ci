@@ -133,8 +133,6 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac     = "aa:b2:93:01:00:d0"
-        vcpu    = 2
-        memory  = 2048
       }
     }
     server_containerized = {
@@ -149,15 +147,13 @@ module "cucumber_testsuite" {
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       main_disk_size        = 80
       repository_disk_size  = 200
-      database_disk_size    = 30
+      database_disk_size    = 50
       login_timeout         = 28800
       large_deployment      = true
     }
     proxy_containerized = {
       provider_settings = {
         mac     = "aa:b2:93:01:00:d2"
-        vcpu    = 2
-        memory  = 2048
       }
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
@@ -167,16 +163,12 @@ module "cucumber_testsuite" {
       image             = "opensuse156o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:d6"
-        vcpu    = 2
-        memory  = 2048
       }
     }
     suse_sshminion = {
       image             = "opensuse156o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:d8"
-        vcpu    = 2
-        memory  = 2048
       }
     }
     rhlike_minion = {
@@ -193,8 +185,6 @@ module "cucumber_testsuite" {
       image             = "ubuntu2404o"
       provider_settings = {
         mac     = "aa:b2:93:01:00:db"
-        vcpu    = 2
-        memory  = 2048
       }
     }
     build_host = {
