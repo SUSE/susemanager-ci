@@ -843,7 +843,6 @@ module "slmicro61_minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-  install_salt_bundle = false
 }
 
 module "sles12sp5_sshminion" {
