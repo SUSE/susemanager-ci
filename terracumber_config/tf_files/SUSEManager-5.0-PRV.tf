@@ -183,7 +183,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:a9"
+        mac = "aa:b2:92:03:00:aa"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
