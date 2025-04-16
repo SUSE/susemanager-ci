@@ -630,9 +630,6 @@ module "slmicro60_minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-// WORKAROUND: Does not work in sumaform, yet
-  install_salt_bundle = false
 }
 
 module "slmicro61_minion" {
@@ -648,9 +645,6 @@ module "slmicro61_minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-// WORKAROUND: Does not work in sumaform, yet
-  install_salt_bundle = false
 }
 
 module "sles12sp5_sshminion" {
