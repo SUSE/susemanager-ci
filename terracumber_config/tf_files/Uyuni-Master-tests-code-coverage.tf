@@ -153,21 +153,24 @@ module "cucumber_testsuite" {
         memory = 65536
         vcpu = 6
       }
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_tag         = "latest"
+      helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      repository_disk_size  = 150
+      database_disk_size    = 50
       main_disk_size       = 400
       login_timeout        = 28800
-      runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
-      container_tag = "latest"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      large_deployment      = true
     }
     proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:92:04:00:f2"
         memory = 16384
       }
-      runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
-      container_tag = "latest"
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_tag         = "latest"
     }
     suse_minion = {
       image = "opensuse156o"
