@@ -86,12 +86,12 @@ variable "AVAILABILITY_ZONE" {
 
 variable "KEY_FILE" {
   type = string
-  default = "/home/jenkins/.ssh/id_rsa"
+  default = "/home/jenkins/.ssh/testing-suma.pem"
 }
 
 variable "KEY_NAME" {
   type = string
-  default = "internal-jenkins-worker"
+  default = "testing-suma"
 }
 
 variable "MY_IP" {
@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse155o", "sles15sp4o", "ubuntu2404"]
+  images = ["rocky8", "opensuse155o", "opensuse156o", "sles15sp4o", "ubuntu2404"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -141,7 +141,7 @@ module "cucumber_testsuite" {
 
   host_settings = {
     controller = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         instance_type = "c6i.xlarge"
         private_ip = "172.16.3.5"
@@ -149,7 +149,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         instance_type = "m6a.xlarge"
         volume_size = "100"
@@ -157,24 +157,24 @@ module "cucumber_testsuite" {
         overwrite_fqdn = "uyuni-master-server.sumaci.aws"
       }
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       login_timeout = 28800
     }
     proxy_containerized = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         instance_type = "c6i.large"
         private_ip = "172.16.3.7"
         overwrite_fqdn = "uyuni-master-proxy.sumaci.aws"
       }
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
     }
     suse_minion = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.8"
@@ -182,7 +182,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.9"

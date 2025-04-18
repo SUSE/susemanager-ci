@@ -194,7 +194,7 @@ module "server" {
   disable_download_tokens        = false
   disable_auto_bootstrap         = true
   large_deployment               = true
-  ssh_key_path                   = "./salt/controller/id_rsa.pub"
+  ssh_key_path                   = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "m6a.xlarge"
   }
@@ -220,7 +220,7 @@ module "proxy" {
   publish_private_ssl_key   = false
   use_os_released_updates   = true
   proxy_containerized       = false
-  ssh_key_path              = "./salt/controller/id_rsa.pub"
+  ssh_key_path              = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "c6i.large"
   }
@@ -236,27 +236,11 @@ module "sles12sp5_client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
   additional_packages = [ "chrony" ]
-}
-
-module "sles15sp2_client" {
-  source             = "./modules/client"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "cli-sles15sp2"
-  image              = "sles15sp2o"
-  server_configuration = module.server.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  auto_register           = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
 }
 
 module "sles15sp3_client" {
@@ -269,7 +253,7 @@ module "sles15sp3_client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -286,7 +270,7 @@ module "sles15sp4_client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -303,7 +287,7 @@ module "sles15sp5_client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -319,7 +303,7 @@ module "sles15sp6_client" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_register           = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -334,7 +318,7 @@ module "ubuntu2004_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -349,7 +333,7 @@ module "rhel9_minion" {
   image              = "rhel9"
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   install_salt_bundle = true
   provider_settings = {
     instance_type = "t3a.medium"
@@ -365,7 +349,7 @@ module "rocky8_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
   provider_settings = {
@@ -383,27 +367,11 @@ module "sles12sp5_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
   additional_packages = [ "chrony" ]
-}
-
-module "sles15sp2_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "min-sles15sp2"
-  image              = "sles15sp2o"
-  server_configuration = module.server.configuration
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
 }
 
 module "sles15sp3_minion" {
@@ -416,7 +384,7 @@ module "sles15sp3_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -432,7 +400,7 @@ module "sles15sp4_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -453,7 +421,7 @@ module "salt_migration_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = true
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
 module "sles15sp5_minion" {
@@ -466,7 +434,7 @@ module "sles15sp5_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -482,7 +450,7 @@ module "sles15sp6_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -495,7 +463,7 @@ module "ubuntu2004_sshminion" {
   name               = "minssh-ubuntu2004"
   image              = "ubuntu2004"
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
   provider_settings = {
     instance_type = "t3a.medium"
@@ -509,7 +477,7 @@ module "rocky8_sshminion" {
   name               = "minssh-rocky8"
   image              = "rocky8"
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -528,26 +496,12 @@ module "sles12sp5_sshminion" {
   image              = "sles12sp5"
   use_os_released_updates = false
   sles_registration_code = var.SLES_REGISTRATION_CODE
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
   provider_settings = {
     instance_type = "t3a.medium"
   }
   additional_packages = [ "chrony" ]
-}
-
-module "sles15sp2_sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base.configuration
-  product_version    = "4.3-released"
-  name               = "minssh-sles15sp2"
-  image              = "sles15sp2o"
-  sles_registration_code = var.SLES_REGISTRATION_CODE
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
-  provider_settings = {
-    instance_type = "t3a.medium"
-  }
 }
 
 module "sles15sp3_sshminion" {
@@ -558,7 +512,7 @@ module "sles15sp3_sshminion" {
   image              = "sles15sp3o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -572,7 +526,7 @@ module "sles15sp4_sshminion" {
   image              = "sles15sp4o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -586,7 +540,7 @@ module "sles15sp5_sshminion" {
   image              = "sles15sp5o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -600,7 +554,7 @@ module "sles15sp6_sshminion" {
   image              = "sles15sp6o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -613,7 +567,7 @@ module "ubuntu2204_sshminion" {
   name               = "minssh-ubuntu2204"
   image              = "ubuntu2204"
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -629,7 +583,7 @@ module "ubuntu2204_minion" {
   image              = "ubuntu2204"
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -663,10 +617,6 @@ module "controller" {
   sle12sp5_client_configuration    = module.sles12sp5_client.configuration
   sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
   sle12sp5_sshminion_configuration = module.sles12sp5_sshminion.configuration
-
-  sle15sp2_client_configuration    = module.sles15sp2_client.configuration
-  sle15sp2_minion_configuration    = module.sles15sp2_minion.configuration
-  sle15sp2_sshminion_configuration = module.sles15sp2_sshminion.configuration
 
   sle15sp3_client_configuration    = module.sles15sp3_client.configuration
   sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration

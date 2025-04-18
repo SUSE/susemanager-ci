@@ -12,7 +12,7 @@ def run(params) {
         String hypervisorUrl = null
         GString targetedTfFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/main.tf"
         GString targetedTfStateFile = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/terraform.tfstate"
-        GString targetedTerraformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
+        GString targetedSumaformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
         GString localSumaformDirPath = "${resultdir}/sumaform/"
         GString localTfStateFile = "${localSumaformDirPath}terraform.tfstate"
         GString logFile = "${resultdirbuild}/sumaform.log"
@@ -53,10 +53,6 @@ def run(params) {
                 dir("susemanager-ci") {
                     checkout scm
                 }
-
-                // Clone sumaform
-                sh "set +x; source /home/jenkins/.credentials set -x; ${WORKSPACE}/terracumber-cli ${commonParams} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-
             }
 
             stage('Confirm Environment Cleanup') {
@@ -77,9 +73,8 @@ def run(params) {
             stage("Copy terraform files from ${params.targeted_project}"){
                 // Copy tfstate and terraform directory to the result directory
                 sh """
-                    cp ${targetedTfStateFile} ${localTfStateFile}
-                    cp -r ${targetedTerraformDirPath}.terraform ${localSumaformDirPath}
-                    cp ${targetedTfFile} ${localSumaformDirPath}
+                    rm -rf ${localSumaformDirPath} 
+                    cp -r ${targetedSumaformDirPath} ${localSumaformDirPath}
                 """
             }
 
@@ -159,7 +154,7 @@ def run(params) {
 
             stage('Delete client VMs') {
                 // Join the resources into a comma-separated string if there are any to delete
-                String tfResourcesToDeleteArg = params.delete_all_resources ? '' : "--tf-resources-delete-all"
+                String tfResourcesToDeleteArg = params.delete_all_resources ? "--tf-resources-delete-all" : ''
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                     // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
                     sh """

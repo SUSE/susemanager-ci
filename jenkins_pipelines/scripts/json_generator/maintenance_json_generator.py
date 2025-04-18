@@ -44,10 +44,12 @@ v43_client_tools: dict[str, set[str]] = {
                         "/SUSE_Updates_SLE-Product-SLES_15-SP4-LTSS_x86_64/"},
     "sle15sp5_client": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
                         "/SUSE_Updates_SLE-Module-Basesystem_15-SP5_x86_64/",
-                        "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_x86_64/"},
+                        "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_x86_64/",
+                        "/SUSE_Updates_SLE-Product-SLES_15-SP5-LTSS_x86_64/"},
     "sle15sp5_minion": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
                         "/SUSE_Updates_SLE-Module-Basesystem_15-SP5_x86_64/",
-                        "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_x86_64/"},
+                        "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_x86_64/",
+                        "/SUSE_Updates_SLE-Product-SLES_15-SP5-LTSS_x86_64/"},
     "sle15sp6_client": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
                         "/SUSE_Updates_SLE-Module-Basesystem_15-SP6_x86_64/",
                         "/SUSE_Updates_SLE-Module-Server-Applications_15-SP6_x86_64/"},
@@ -65,10 +67,6 @@ v43_client_tools: dict[str, set[str]] = {
     "ubuntu2204_minion": {"/SUSE_Updates_Ubuntu_22.04-CLIENT-TOOLS_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS_x86_64/"},
     "debian12_minion": {"/SUSE_Updates_Debian_12-CLIENT-TOOLS_x86_64/"},
-    "opensuse154arm_minion": {"/SUSE_Updates_openSUSE-SLE_15.4/",
-                              "/SUSE_Updates_SLE-Manager-Tools_15_aarch64/"},
-    "opensuse155arm_minion": {"/SUSE_Updates_openSUSE-SLE_15.5/",
-                              "/SUSE_Updates_SLE-Manager-Tools_15_aarch64/"},
     "opensuse156arm_minion": {"/SUSE_Updates_openSUSE-SLE_15.6/",
                               "/SUSE_Updates_SLE-Manager-Tools_15_aarch64/"},
     "rhel9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
@@ -76,6 +74,7 @@ v43_client_tools: dict[str, set[str]] = {
     "alma9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "liberty9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "oracle9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
+    "amazon2023_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "slemicro51_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SUSE-MicroOS_5.1_x86_64/"},
     "slemicro52_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
@@ -127,13 +126,13 @@ v50_client_tools_beta: dict[str, set[str]] = {
     "ubuntu2204_minion": {"/SUSE_Updates_Ubuntu_22.04-CLIENT-TOOLS-BETA_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS-BETA_x86_64/"},
     "debian12_minion": {"/SUSE_Updates_Debian_12-CLIENT-TOOLS-BETA_x86_64/"},
-    "opensuse154arm_minion": {"/SUSE_Updates_SLE-Manager-Tools_15-BETA_aarch64/"},
-    "opensuse155arm_minion": {"/SUSE_Updates_SLE-Manager-Tools_15-BETA_aarch64/"},
+    "opensuse156arm_minion": {"/SUSE_Updates_SLE-Manager-Tools_15-BETA_aarch64/"},
     "rhel9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
     "rocky9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
     "alma9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
     "oracle9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
     "liberty9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
+    "amazon2023_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS-BETA_x86_64/"},
     "slemicro51_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SLE-Manager-Tools_15-BETA_x86_64/"},
     "slemicro52_minion": {"/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/",
@@ -272,8 +271,8 @@ def get_version_nodes(version: str) -> dict[str, list[str]]:
 
 def init_custom_repositories(version: str) -> dict[str, dict[str, str]]:
     custom_repositories = {}
-    custom_repositories['slmicro60_minion'] = { 'slmicro60_staging' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/standard/" }
-    custom_repositories['slmicro61_minion'] = { 'slmicro61_staging' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/standard/" }
+    custom_repositories['slmicro60_minion'] = { 'alp_staging' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SL-Micro-6.0-x86_64/", 'alp_slfo_common_tools' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SUSE-Manager-Tools-For-SL-Micro-6-x86_64/" }
+    custom_repositories['slmicro61_minion'] = { 'slfo_staging' : "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Staging:/I/images/repo/SL-Micro-6.1-x86_64/", 'alp_slfo_common_tools' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SUSE-Manager-Tools-For-SL-Micro-6-x86_64/" }
     return custom_repositories
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):

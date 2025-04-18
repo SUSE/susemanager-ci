@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-ci-head-"
@@ -117,6 +117,7 @@ module "cucumber_testsuite" {
 
   container_server = true
   container_proxy  = true
+  beta_enabled = true
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -144,7 +145,6 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
-      beta_enabled = false
     }
     proxy_containerized = {
       provider_settings = {

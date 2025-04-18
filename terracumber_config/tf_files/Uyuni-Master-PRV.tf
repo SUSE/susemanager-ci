@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username  = var.SCC_USER
   cc_password  = var.SCC_PASSWORD
 
-  images       = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
+  images       = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ci-master-"
@@ -136,7 +136,7 @@ module "cucumber_testsuite" {
         memory  = 16384
       }
       runtime               = "podman"
-      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag         = "latest"
       helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       main_disk_size        = 80
@@ -151,11 +151,11 @@ module "cucumber_testsuite" {
         memory  = 2048
       }
       runtime               = "podman"
-      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag         = "latest"
     }
     suse_minion = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         mac = "aa:b2:92:03:00:d6"
         vcpu = 2
@@ -163,7 +163,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         mac = "aa:b2:92:03:00:d8"
         vcpu = 2
@@ -174,7 +174,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:d9"
+        mac = "aa:b2:92:03:00:da"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2

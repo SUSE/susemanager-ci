@@ -97,7 +97,7 @@ module "base" {
   name_prefix       = "suma-su-43-"
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
-  images            = [ "sles15sp4o", "opensuse155o" ]
+  images            = [ "sles15sp4o", "opensuse155o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -137,7 +137,7 @@ module "server" {
   publish_private_ssl_key        = false
   use_os_released_updates        = true
   disable_download_tokens        = false
-  ssh_key_path                   = "./salt/controller/id_rsa.pub"
+  ssh_key_path                   = "./salt/controller/id_ed25519.pub"
   from_email                     = "root@suse.de"
   accept_all_ssl_protocols       = true
 
@@ -166,7 +166,7 @@ module "proxy" {
   generate_bootstrap_script = false
   publish_private_ssl_key   = false
   use_os_released_updates   = true
-  ssh_key_path              = "./salt/controller/id_rsa.pub"
+  ssh_key_path              = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -185,7 +185,7 @@ module "sles15sp4_minion" {
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 

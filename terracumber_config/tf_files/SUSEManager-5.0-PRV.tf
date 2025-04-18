@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "ubuntu2404o", "sles15sp4o", "slemicro55o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-ci-50-"
@@ -165,6 +165,9 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_repos = {
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+      }
     }
     suse_sshminion = {
       image = "sles15sp4o"
@@ -173,11 +176,14 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_repos = {
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+      }
     }
-    redlike_minion = {
+    rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:a9"
+        mac = "aa:b2:92:03:00:aa"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -199,6 +205,9 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_repos = {
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
+      }
     }
     pxeboot_minion = {
       image = "sles15sp4o"
@@ -218,6 +227,9 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:03:00:ae"
         vcpu = 4
         memory = 4096
+      }
+      additional_repos = {
+        workaround = "http://download.nue.suse.com/ibs/SUSE:/Maintenance:/37989/SUSE_Updates_SLE-Manager-Tools_15_x86_64/"
       }
     }
   }

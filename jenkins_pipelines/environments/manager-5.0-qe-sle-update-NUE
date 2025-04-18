@@ -22,7 +22,9 @@ node('sumaform-cucumber') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
-            string(name: 'container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy and server container registry'),
+            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             // This is different than other pipelines to make it work with the simple proxy_traditional without refactoring all feature files
             booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),

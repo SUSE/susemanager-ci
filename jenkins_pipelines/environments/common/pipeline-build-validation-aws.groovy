@@ -174,21 +174,26 @@ def run(params) {
                     )
 
                     stage("Upload local mirror data to AWS mirror") {
-
                         // Get local and aws hostname
-                        mirror_hostname_local = sh(script: "cat ${local_mirror_dir}/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
+                        mirror_address_local = sh(script: "cat ${local_mirror_dir}/terraform.tfstate | jq -r '.outputs.local_mirrors_public_ip.value[0][0]' ",
                                 returnStdout: true).trim()
                         mirror_hostname_aws_public = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
                                 returnStdout: true).trim()
                         env.mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                                 returnStdout: true).trim()
+
                         if (params.prepare_aws_env) {
                             user = 'root'
-                            sh "ssh-keygen -R ${mirror_hostname_local} -f /home/${node_user}/.ssh/known_hosts"
-                            sh "scp ${ssh_option} ${params.key_file} ${user}@${mirror_hostname_local}:/root/testing-suma.pem"
-                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_local} 'chmod 0400 /root/testing-suma.pem'"
-                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_local} 'tar -czvf mirror.tar.gz -C /srv/mirror/ .'"
-                            sh "ssh ${ssh_option} ${user}@${mirror_hostname_local} 'scp ${ssh_option} -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
+                            sh "ssh-keygen -R ${mirror_address_local} -f /home/${node_user}/.ssh/known_hosts"
+                            mirror_address_scp = mirror_address_local
+                            // IPv6 addresses need to be enclosed in [ ] to not be interpreted as hostnames by scp
+                            if (mirror_address_scp.contains(":")) {
+                                mirror_address_scp = "[${mirror_address_scp}]"
+                            }
+                            sh "scp ${ssh_option} ${params.key_file} ${user}@${mirror_address_scp}:/root/testing-suma.pem"
+                            sh "ssh ${ssh_option} ${user}@${mirror_address_local} 'chmod 0400 /root/testing-suma.pem'"
+                            sh "ssh ${ssh_option} ${user}@${mirror_address_local} 'tar -czvf mirror.tar.gz -C /srv/mirror/ .'"
+                            sh "ssh ${ssh_option} ${user}@${mirror_address_local} 'scp ${ssh_option} -i /root/testing-suma.pem /root/mirror.tar.gz ec2-user@${mirror_hostname_aws_public}:/home/ec2-user/' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo tar -xvf /home/ec2-user/mirror.tar.gz -C /srv/mirror/' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rsync -a /srv/mirror/ibs/ /srv/mirror' "
                             sh "ssh ${ssh_option} -i ${params.key_file} ec2-user@${mirror_hostname_aws_public} 'sudo rsync -a /srv/mirror/download/ibs/ /srv/mirror' || true"
@@ -681,7 +686,7 @@ def getNodesHandler(minionType = 'default') {
     Set<String> nodesToRun = params.minions_to_run.split(', ')
     // Create a variable with declared nodes on Jenkins side but not deploy and print it
     def notDeployedNode = nodesToRun.findAll { !nodeList.contains(it) }
-    println "This minions are declared in jenkins but not deployed ! ${notDeployedNode}"
+    println "These minions are declared in jenkins but not deployed! ${notDeployedNode}"
     // Check the difference between the nodes deployed and the nodes declared in Jenkins side
     // This difference will be the nodes to disable
     def disabledNodes = nodeList.findAll { !nodesToRun.contains(it) }

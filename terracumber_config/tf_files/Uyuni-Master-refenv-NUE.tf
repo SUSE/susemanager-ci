@@ -106,7 +106,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ref-master-"
@@ -143,7 +143,7 @@ module "cucumber_testsuite" {
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
     }
@@ -155,7 +155,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
     }
     suse_minion = {

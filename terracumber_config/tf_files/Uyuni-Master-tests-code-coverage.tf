@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
 
   use_avahi    = false
   name_prefix  = "suma-codecov-"
@@ -127,8 +127,8 @@ module "cucumber_testsuite" {
   container_server = true
   container_proxy  = true
 
-  mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
-  use_mirror_images        = true
+  // mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  // use_mirror_images        = true
   
   no_auth_registry = "registry.mgr.prv.suse.net"
   auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
@@ -153,31 +153,34 @@ module "cucumber_testsuite" {
         memory = 65536
         vcpu = 6
       }
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_tag         = "latest"
+      helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      repository_disk_size  = 150
+      database_disk_size    = 50
       main_disk_size       = 400
       login_timeout        = 28800
-      runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
-      container_tag = "latest"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      large_deployment      = true
     }
     proxy_containerized = {
       provider_settings = {
         mac = "aa:b2:92:04:00:f2"
         memory = 16384
       }
-      runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containers"
-      container_tag = "latest"
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_tag         = "latest"
     }
     suse_minion = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         mac = "aa:b2:92:04:00:f4"
         memory = 4096
       }
     }
     suse_sshminion = {
-      image = "opensuse155o"
+      image = "opensuse156o"
       provider_settings = {
         mac = "aa:b2:92:04:00:f5"
         memory = 4096
@@ -191,13 +194,13 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
     }
-    deblike_minion = {
-      image = "ubuntu2404o"
-      provider_settings = {
-        mac = "aa:b2:92:04:00:f7"
-        memory = 4096
-      }
-    }
+    // deblike_minion = {
+    //   image = "ubuntu2404o"
+    //   provider_settings = {
+    //     mac = "aa:b2:92:04:00:f7"
+    //     memory = 4096
+    //   }
+    // }
     build_host = {
      image = "sles15sp4o"
      provider_settings = {

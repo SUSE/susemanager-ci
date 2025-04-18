@@ -82,6 +82,13 @@ class ResourceManager:
                 logger.info(f"Delete system : {system['name']} | id : {system['id']}")
                 self.client.system.deleteSystem(self.session_key, system['id'])
 
+    def delete_system(self, system_name):
+        systems = self.client.system.listSystems(self.session_key)
+        for system in systems:
+            if system['name'] == system_name :
+                logger.info(f"Delete system : {system['name']} | id : {system['id']}")
+                self.client.system.deleteSystem(self.session_key, system['id'])
+
     def delete_system_groups(self):
         groups = self.client.systemgroup.listAllGroups(self.session_key)
         for group in groups:
@@ -108,6 +115,9 @@ class ResourceManager:
             if not any(protected in salt_key for protected in self.resources_to_keep):
                 logger.info(f"Delete remaining accepted key : {salt_key}")
                 self.client.saltkey.delete(self.session_key, salt_key)
+
+    def delete_salt_key(self, system_name):
+        self.client.saltkey.delete(self.session_key, system_name)
 
     def delete_image_profiles(self):
         self.client.image.profile.delete(self.session_key, "suse_os_image_12")

@@ -64,8 +64,17 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
-variable "CONTAINER_REPOSITORY" {
+variable "SERVER_CONTAINER_REPOSITORY" {
   type = string
+}
+
+variable "PROXY_CONTAINER_REPOSITORY" {
+  type = string
+}
+
+variable "SERVER_CONTAINER_IMAGE" {
+  type = string
+  default = ""
 }
 
 variable "GIT_USER" {
@@ -89,7 +98,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-08.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-11.mgr.suse.de/system"
 }
 
 module "base" {
@@ -101,7 +110,7 @@ module "base" {
   name_prefix       = "suma-su-50-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles15sp6o", "opensuse155o", "slemicro55o" ]
+  images            = [ "sles15sp6o", "opensuse155o", "opensuse156o", "slemicro55o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -129,7 +138,8 @@ module "server_containerized" {
   main_disk_size        = 1500
   runtime               = "podman"
   // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
-  container_repository  = var.CONTAINER_REPOSITORY
+  container_repository  = var.SERVER_CONTAINER_REPOSITORY
+  container_image       = var.SERVER_CONTAINER_IMAGE
   container_tag         = "latest"
   server_mounted_mirror = "minima-mirror-ci-bv.mgr.suse.de"
 
@@ -145,7 +155,7 @@ module "server_containerized" {
   publish_private_ssl_key        = false
   use_os_released_updates        = true
   disable_download_tokens        = false
-  ssh_key_path                   = "./salt/controller/id_rsa.pub"
+  ssh_key_path                   = "./salt/controller/id_ed25519.pub"
   from_email                     = "root@suse.de"
 
   //server_additional_repos
@@ -168,11 +178,11 @@ module "proxy_containerized" {
   }
 
   runtime              = "podman"
-  container_repository = var.CONTAINER_REPOSITORY
+  container_repository = var.PROXY_CONTAINER_REPOSITORY
   container_tag        = "latest"
 
   auto_configure        = false
-  ssh_key_path          = "./salt/controller/id_rsa.pub"
+  ssh_key_path          = "./salt/controller/id_ed25519.pub"
 
 }
 
@@ -189,7 +199,7 @@ module "sles15sp6_minion" {
 
   auto_connect_to_master  = false
   use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_rsa.pub"
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
 
 }
 

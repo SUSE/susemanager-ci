@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Naica-acceptance-tests"
+  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Vega-acceptance-tests"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/witekest/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-5.0"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results TEST-NAICA $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results TEST-VEGA $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results TEST-NAICA: Environment setup failed"
+  default = "Results TEST-VEGA: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -91,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "5.0-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -102,10 +102,10 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
-  name_prefix  = "suma-test-naica-"
+  name_prefix  = "suma-test-vega-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -127,78 +127,42 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:60"
+        mac = "aa:b2:93:01:00:30"
       }
     }
     server_containerized = {
-      image = "slemicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:61"
+        mac = "aa:b2:93:01:00:31"
         vcpu = 8
         memory = 32768
       }
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
       container_tag = "latest"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
-      }
     }
     proxy_containerized = {
-      image = "slemicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:62"
+        mac = "aa:b2:93:01:00:32"
         vcpu = 2
         memory = 2048
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
       container_tag = "latest"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
-      }
-    }
-    suse_client = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:64"
-      }
     }
     suse_minion = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:66"
-      }
-    }
-    suse_sshminion = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:68"
-      }
-    }
-    rhlike_minion = {
-      image = "rocky8o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:69"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
-        vcpu = 2
-      }
-    }
-    deblike_minion = {
-      image = "ubuntu2404o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:6b"
+        mac = "aa:b2:93:01:00:36"
       }
     }
     build_host = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:6d"
+        mac = "aa:b2:93:01:00:3d"
         memory = 2048
       }
     }
@@ -216,7 +180,7 @@ module "cucumber_testsuite" {
     pool               = "ssd"
     network_name       = null
     bridge             = "br0"
-    additional_network = "192.168.142.0/24"
+    additional_network = "192.168.77.0/24"
   }
 }
 

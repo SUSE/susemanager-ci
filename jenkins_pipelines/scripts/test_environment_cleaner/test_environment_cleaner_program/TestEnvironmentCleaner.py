@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 # Define the available modes
 MODES = [
     'delete_users', 'delete_activation_keys', 'delete_config_projects',
-    'delete_software_channels', 'delete_systems', 'delete_repositories',
-    'full_cleanup', 'delete_salt_keys', 'delete_known_hosts',
+    'delete_software_channels', 'delete_systems', 'delete_specific_system', 'delete_repositories',
+    'full_cleanup', 'delete_salt_keys', 'delete_salt_key', 'delete_known_hosts',
     'update_custom_repositories', 'delete_distributions', 'delete_system_groups',
     'delete_images', 'delete_image_profiles', 'update_terminal_mac_addresses'
 ]
@@ -26,6 +26,7 @@ def main():
                         default=[], help='List of default modules to force deletion')
     parser.add_argument("--controller_url",required=False, help="The controller URL.")
     parser.add_argument("--hypervisor_url",required=False, help="The terminal hypervisor URL.")
+    parser.add_argument("--system-to-delete",required=False, help="System name to delete")
 
     args = parser.parse_args()
     manager_url = args.url
@@ -35,12 +36,15 @@ def main():
     ]
 
     resource_manager = ResourceManager(manager_url, default_resources_to_delete)
-    product_version = resource_manager.get_product_version()
+    if args.mode != "update_custom_repositories":
+        product_version = resource_manager.get_product_version()
+    else:
+        product_version = 5.0
     # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",
                      "full_cleanup", "delete_salt_keys", "delete_system_groups", "delete_images",
-                     "delete_image_profiles"]:
+                     "delete_image_profiles", "delete_specific_system", "delete_salt_key"]:
         resource_manager.get_session_key()
         mode_actions = {
             "delete_users": resource_manager.delete_users,
@@ -48,8 +52,10 @@ def main():
             "delete_config_projects": resource_manager.delete_config_projects,
             "delete_software_channels": resource_manager.delete_software_channels,
             "delete_systems": resource_manager.delete_systems,
+            "delete_specific_system": lambda: resource_manager.delete_system(args.system_to_delete),
             "delete_repositories": resource_manager.delete_channel_repos,
             "delete_salt_keys": resource_manager.delete_salt_keys,
+            "delete_salt_key": lambda: resource_manager.delete_salt_key(args.system_to_delete),
             "delete_system_groups": resource_manager.delete_system_groups,
             "delete_images": resource_manager.delete_images,
             "delete_image_profiles": resource_manager.delete_image_profiles,
@@ -65,9 +71,9 @@ def main():
             resource_manager.logout_session()
 
     # Server commands part
-    if args.mode in ["update_terminal_mac_addresses"]:
+    elif args.mode in ["update_terminal_mac_addresses"]:
         ssh_controller_session = SSHClientManager(url=args.controller_url, password= "linux")
-        ssh_hypervisor_session = SSHClientManager(url=args.hypervisor_url,ssh_key_path="/home/jenkins/.ssh/id_rsa")
+        ssh_hypervisor_session = SSHClientManager(url=args.hypervisor_url,ssh_key_path="/home/jenkins/.ssh/id_ed25519")
         virsh_output = ssh_hypervisor_session.run_command(f"virsh list | grep terminal | grep {''.join(product_version.split('.')[:2])} | awk '{{print $2}}'")
         terminal_names = virsh_output.strip().split("\n") if virsh_output.strip() else []
         logger.debug(f"Terminal list: {terminal_names}")

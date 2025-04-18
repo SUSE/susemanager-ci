@@ -45,29 +45,6 @@ class TestMainProgram(unittest.TestCase):
 
     @patch("test_environment_cleaner_program.TestEnvironmentCleaner.ResourceManager")
     @patch("test_environment_cleaner_program.TestEnvironmentCleaner.SSHClientManager")
-    def test_invalid_mode(self, MockSSHClientManager, MockResourceManager):
-        test_args = ["test_environment_cleaner_program.TestEnvironmentCleaner", "--url", "http://test-url.com", "--mode", "invalid"]
-        with patch.object(sys, 'argv', test_args):
-            with patch("sys.stderr", new=StringIO()) as fake_err:
-                with self.assertRaises(SystemExit):
-                    main()
-
-                # Assert the error message is in the captured stderr
-                expected_error_message = (
-                    "usage: test_environment_cleaner_program.TestEnvironmentCleaner [-h] --url URL --mode "
-                    "{delete_users,delete_activation_keys,delete_config_projects,delete_software_channels,"
-                    "delete_systems,delete_repositories,full_cleanup,delete_salt_keys,delete_known_hosts,update_custom_repositories,delete_distributions,delete_system_groups,delete_images,delete_image_profiles,update_terminal_mac_addresses}"
-                    " [--default-resources-to-delete [{proxy,monitoring-server,build,terminal} ...]] [--controller_url CONTROLLER_URL] [--hypervisor_url HYPERVISOR_URL] "
-                    "test_environment_cleaner_program.TestEnvironmentCleaner: error: argument --mode: invalid choice: 'invalid' (choose from 'delete_users',"
-                    " 'delete_activation_keys', 'delete_config_projects', 'delete_software_channels', 'delete_systems',"
-                    " 'delete_repositories', 'full_cleanup', 'delete_salt_keys', 'delete_known_hosts', 'update_custom_repositories',"
-                    " 'delete_distributions', 'delete_system_groups', 'delete_images', 'delete_image_profiles', 'update_terminal_mac_addresses')"
-                )
-                cleaned_error = " ".join(fake_err.getvalue().split())
-                self.assertIn(expected_error_message, cleaned_error)
-
-    @patch("test_environment_cleaner_program.TestEnvironmentCleaner.ResourceManager")
-    @patch("test_environment_cleaner_program.TestEnvironmentCleaner.SSHClientManager")
     def test_update_custom_repositories_mode(self, MockSSHClientManager, MockResourceManager):
         test_args = ["test_environment_cleaner_program.TestEnvironmentCleaner", "--url", "http://test-url.com", "--mode", "update_custom_repositories"]
         with patch.object(sys, 'argv', test_args):

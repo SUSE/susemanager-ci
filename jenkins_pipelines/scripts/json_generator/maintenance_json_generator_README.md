@@ -45,7 +45,7 @@ Command-Line Arguments
 The script accepts several command-line arguments to control its behavior.
 
 ```bash
-python script.py [options]
+python3.11 maintenance_json_generator.py [options]
 ```
 
 Options:
@@ -59,7 +59,7 @@ Manager 4.3 and `50` for SUSE Manager 5.0. Default is 43.
 Example:
 
 ```bash
-python script.py --version 50 --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
+python3.11 maintenance_json_generator.py --version 50 --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
 ```
 
 This command will:
