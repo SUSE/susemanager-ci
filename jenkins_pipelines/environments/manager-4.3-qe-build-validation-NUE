@@ -6,6 +6,7 @@ node('sumaform-cucumber') {
             'sles15sp4_client, sles15sp4_minion, sles15sp4_sshminion, ' +
             'sles15sp5_client, sles15sp5_minion, sles15sp5_sshminion, ' +
             'sles15sp6_client, sles15sp6_minion, sles15sp6_sshminion, ' +
+            'sles15sp7_client, sles15sp7_minion, sles15sp7_sshminion, ' +
             'salt_migration_minion, ' +
             'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, ' +
             'centos7_client, centos7_minion, centos7_sshminion, ' +
