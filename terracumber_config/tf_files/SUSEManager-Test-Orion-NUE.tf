@@ -103,7 +103,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "sles15sp4o", "ubuntu2404o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-orion-"
@@ -118,6 +118,7 @@ module "cucumber_testsuite" {
 
   container_server = true
   container_proxy  = true
+  beta_enabled = true
 
   server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
@@ -131,12 +132,12 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
         vcpu = 4
         memory = 16384
       }
+      main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
@@ -174,7 +175,6 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "iptables" ]
     }
     rhlike_minion = {
       image = "rocky8o"
@@ -204,14 +204,6 @@ module "cucumber_testsuite" {
     }
     pxeboot_minion = {
       image = "sles15sp4o"
-    }
-    kvm_host = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:7c"
-        vcpu = 4
-        memory = 4096
-      }
     }
   }
 
