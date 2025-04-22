@@ -134,7 +134,7 @@ module "base_core" {
   name_prefix       = "suma-continuous-bv-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -248,7 +248,7 @@ module "sles12sp5_minion" {
   name               = "sles12sp5-minion"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:91"
+    mac                = "aa:b2:93:01:02:90"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -262,7 +262,7 @@ module "sles15sp3_minion" {
   name               = "sles15sp3-minion"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:95"
+    mac                = "aa:b2:93:01:02:91"
     memory             = 4096
   }
 
@@ -277,7 +277,7 @@ module "sles15sp4_minion" {
   name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:96"
+    mac                = "aa:b2:93:01:02:92"
     memory             = 4096
   }
 
@@ -292,7 +292,7 @@ module "sles15sp5_minion" {
   name               = "sles15sp5-minion"
   image              = "sles15sp5o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:92"
+    mac                = "aa:b2:93:01:02:93"
     memory             = 4096
   }
 
@@ -307,7 +307,22 @@ module "sles15sp6_minion" {
   name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:90"
+    mac                = "aa:b2:93:01:02:94"
+    memory             = 4096
+  }
+
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp7_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  name               = "sles15sp7-minion"
+  image              = "sles15sp7o"
+  provider_settings = {
+    mac                = "aa:b2:93:01:02:95"
     memory             = 4096
   }
 
@@ -662,7 +677,7 @@ module "sles12sp5_sshminion" {
   name               = "sles12sp5-sshminion"
   image              = "sles12sp5o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b1"
+    mac                = "aa:b2:93:01:02:b0"
     memory             = 4096
   }
 
@@ -677,7 +692,7 @@ module "sles15sp3_sshminion" {
   name               = "sles15sp3-sshminion"
   image              = "sles15sp3o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b5"
+    mac                = "aa:b2:93:01:02:b1"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -690,7 +705,7 @@ module "sles15sp4_sshminion" {
   name               = "sles15sp4-sshminion"
   image              = "sles15sp4o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b6"
+    mac                = "aa:b2:93:01:02:b2"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -703,7 +718,7 @@ module "sles15sp5_sshminion" {
   name               = "sles15sp5-sshminion"
   image              = "sles15sp5o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b2"
+    mac                = "aa:b2:93:01:02:b3"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -716,7 +731,20 @@ module "sles15sp6_sshminion" {
   name               = "sles15sp6-sshminion"
   image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:b0"
+    mac                = "aa:b2:93:01:02:b4"
+    memory             = 4096
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp7_sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base_core.configuration
+  name               = "sles15sp7-sshminion"
+  image              = "sles15sp7o"
+  provider_settings = {
+    mac                = "aa:b2:93:01:02:b5"
     memory             = 4096
   }
   use_os_released_updates = false
@@ -1139,6 +1167,9 @@ module "controller" {
 
   sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
   sle15sp6_sshminion_configuration = module.sles15sp6_sshminion.configuration
+
+  sle15sp7_minion_configuration    = module.sles15sp7_minion.configuration
+  sle15sp7_sshminion_configuration = module.sles15sp7_sshminion.configuration
 
   alma8_minion_configuration    = module.alma8_minion.configuration
   alma8_sshminion_configuration = module.alma8_sshminion.configuration
