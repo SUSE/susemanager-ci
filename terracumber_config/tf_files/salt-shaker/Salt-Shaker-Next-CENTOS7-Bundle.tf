@@ -41,7 +41,7 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
 
 variable "MAIL_FROM" {
   type = string
-  default = "salt-ci@suse.de"
+  default = "salt-shaker@suse.de"
 }
 
 variable "MAIL_TO" {
