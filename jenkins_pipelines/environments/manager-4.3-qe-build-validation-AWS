@@ -6,6 +6,7 @@ node('sumaform-cucumber-provo') {
             'sle15sp4_client, sle15sp4_minion, sle15sp4_sshminion, sle15sp4_byos_minion, ' +
             'sle15sp5_client, sle15sp5_minion, sle15sp5_sshminion, sle15sp5_paygo_minion, ' +
             'sle15sp6_client, sle15sp6_minion, sle15sp6_sshminion, sle15sp6_paygo_minion, ' +
+            'sle15sp7_client, sle15sp7_minion, sle15sp7_sshminion, ' +
             'salt_migration_minion, ' +
             'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, ' +
             'centos7_client, centos7_minion, centos7_sshminion, ' +
