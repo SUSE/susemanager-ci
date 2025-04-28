@@ -309,6 +309,22 @@ module "sles15sp6_client" {
   }
 }
 
+module "sles15sp7_client" {
+  source             = "./modules/client"
+  base_configuration = module.base.configuration
+  name                 = "cli-sles15sp7"
+  image                = "sles15sp7o"
+  product_version    = "4.3-released"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
 module "ubuntu2004_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
@@ -456,6 +472,22 @@ module "sles15sp6_minion" {
   }
 }
 
+module "sles15sp7_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "min-sles15sp7"
+  image              = "sles15sp7o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
 module "ubuntu2004_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base.configuration
@@ -552,6 +584,20 @@ module "sles15sp6_sshminion" {
   product_version    = "4.3-released"
   name               = "minssh-sles15sp6"
   image              = "sles15sp6o"
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
+module "sles15sp7_sshminion" {
+  source             = "./modules/sshminion"
+  base_configuration = module.base.configuration
+  product_version    = "4.3-released"
+  name               = "minssh-sles15sp7"
+  image              = "sles15sp7o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
