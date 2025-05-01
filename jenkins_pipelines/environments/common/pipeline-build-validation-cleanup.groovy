@@ -161,7 +161,7 @@ def run(params) {
                     sh """
                         source ~/.credentials
                         export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
-                        export TF_VAR_CPROXY_CONTAINER_REPOSITORY='unused'
+                        export TF_VAR_PROXY_CONTAINER_REPOSITORY='unused'
                         set +x
                         cd ${localSumaformDirPath}
                         sh ${remove_s390_bash} main.tf
