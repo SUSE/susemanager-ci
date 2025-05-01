@@ -21,10 +21,12 @@ node {
                                 'default',
                                 'manager-4.3-qe-build-validation-NUE',
                                 'manager-5.0-qe-build-validation-NUE',
+                                'manager-5.1-qe-build-validation-NUE',
                                 'manager-qe-continuous-build-validation-NUE',
                                 'uyuni-master-qe-build-validation-NUE',
                                 'manager-4.3-qe-build-validation-PRV',
                                 'manager-5.0-qe-build-validation-PRV',
+                                'manager-5.1-qe-build-validation-PRV',
                                 'uyuni-master-qe-build-validation-PRV'
                         ], description: 'Path to the tf file to be used'),
                         string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
