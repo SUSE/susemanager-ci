@@ -6,7 +6,7 @@ def run(params) {
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
-        String container_repository = params.container_repository ?: null
+        String proxy_container_repository = params.proxy_container_repository ?: null
         String serverHostname = null
         String controllerHostname = null
         String hypervisorUrl = null
@@ -34,7 +34,8 @@ def run(params) {
         GString environmentVars = """
                 set -x
                 source /home/jenkins/.credentials
-                export TF_VAR_CONTAINER_REPOSITORY=${container_repository}
+                export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
+                export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
                 export TERRAFORM=${terraform_bin}
                 export TERRAFORM_PLUGINS=${terraform_bin_plugins}
             """
@@ -159,7 +160,8 @@ def run(params) {
                     // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
                     sh """
                         source ~/.credentials
-                        export TF_VAR_CONTAINER_REPOSITORY='unused'
+                        export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
+                        export TF_VAR_CPROXY_CONTAINER_REPOSITORY='unused'
                         set +x
                         cd ${localSumaformDirPath}
                         sh ${remove_s390_bash} main.tf
