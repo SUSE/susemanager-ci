@@ -6,9 +6,8 @@ import logging
 
 from ibs_osc_client import IbsOscClient
 
-
 IBS_MAINTENANCE_URL_PREFIX: str = 'http://download.suse.de/ibs/SUSE:/Maintenance:/'
-JSON_OUTPUT_FILE_NAME: str = 'custom_repositories.json'
+_JSON_OUTPUT_FILE_NAME: str = 'custom_repositories.json'
 
 # dictionary for 4.3 client tools
 v43_client_tools: dict[str, set[str]] = {
@@ -249,7 +248,7 @@ def create_url(mi_id:str, suffix: str) -> str:
         return url
     return ""
 
-def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
+def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = _JSON_OUTPUT_FILE_NAME):
     if not custom_repositories:
         raise SystemExit("Empty custom_repositories dictionary, something went wrong")
 
@@ -269,7 +268,7 @@ def get_version_nodes(version: str) -> dict[str, list[str]]:
         raise ValueError(f"No nodes for version {version} - supported versions: {supported_versions}")
     return version_nodes
 
-def init_custom_repositories(version: str) -> dict[str, dict[str, str]]:
+def init_custom_repositories() -> dict[str, dict[str, str]]:
     custom_repositories = {}
     custom_repositories['slmicro60_minion'] = { 'alp_staging' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SL-Micro-6.0-x86_64/", 'alp_slfo_common_tools' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SUSE-Manager-Tools-For-SL-Micro-6-x86_64/" }
     custom_repositories['slmicro61_minion'] = { 'slfo_staging' : "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Staging:/I/images/repo/SL-Micro-6.1-x86_64/", 'alp_slfo_common_tools' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SUSE-Manager-Tools-For-SL-Micro-6-x86_64/" }
@@ -292,7 +291,7 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
 
 def find_valid_repos(mi_ids: set[str], version: str):
     version_nodes: dict[str, list[str]] = get_version_nodes(version)
-    custom_repositories: dict[str, dict[str, str]] = init_custom_repositories(version)
+    custom_repositories: dict[str, dict[str, str]] = init_custom_repositories()
 
     for node, repositories in version_nodes.items():
         for mi_id in mi_ids:
