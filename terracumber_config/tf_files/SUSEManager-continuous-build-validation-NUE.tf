@@ -537,7 +537,7 @@ module "salt_migration_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-continuous-bv-50-proxy.mgr.suse.de"
+    hostname = "suma-continuous-bv-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = true
   use_os_released_updates = false
