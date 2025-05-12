@@ -107,7 +107,7 @@ module "base" {
   cc_password = var.SCC_PASSWORD
   name_prefix = "mirror-mu-aws-"
   images = [
-    "opensuse155o"]
+    "opensuse156o"]
 
   provider_settings = {
     pool = local.pool
@@ -123,7 +123,7 @@ module "mirror" {
   customize_minima_file = "mirror/etc/minima-customize.yaml"
   synchronize_immediately = true
   disable_cron = true
-  image = "opensuse155o"
+  image = "opensuse156o"
   volume_provider_settings = {
     pool = local.pool
   }
