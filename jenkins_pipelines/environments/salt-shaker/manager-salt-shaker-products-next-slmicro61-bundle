@@ -12,7 +12,7 @@ node('salt-shaker-tests') {
                 entries: [URLTriggerEntry(
                     url: 'https://download.opensuse.org/repositories/systemsmanagement:/saltstack:/bundle:/next:/testsuite/SLMicro61/repodata/repomd.xml',
                     contentTypes: [MD5Sum()]
-                )]aa:b2:93:01:01:b8
+                )]
             ),
             cron('H 0 * * *')],
         ),
