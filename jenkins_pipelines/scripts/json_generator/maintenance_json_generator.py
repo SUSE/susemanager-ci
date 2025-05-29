@@ -18,14 +18,12 @@ def parse_cli_args() -> argparse.Namespace:
         description="This script reads the open qam-manager requests and creates a json file that can be fed to the BV testsuite pipeline"
     )
     parser.add_argument("-v", "--version", dest="version",
-        help="Version of SUMA you want to run this script for, the options are 43 for 4.3 and 50 for 5.0. The default is 43 for now",
-        choices=["43", "50", "51"], default="43", action='store',
-    )
+                        help="Version of SUMA you want to run this script for, the options are 43 for 4.3, 50 for 5.0, and 51 for 5.1",
+                        choices=["43", "50", "51"], default="43", action='store')
     parser.add_argument("-i", "--mi_ids", required=False, dest="mi_ids", help="Space separated list of MI IDs", nargs='*', action='store')
     parser.add_argument("-f", "--file", required=False, dest="file", help="Path to a file containing MI IDs separated by newline character", action='store')
     parser.add_argument("-e", "--no_embargo", dest="embargo_check", help="Reject MIs under embargo",  action='store_true')
-    args: argparse.Namespace = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 def read_mi_ids_from_file(file_path: str) -> list[str]:
     with open(file_path, 'r') as file:
@@ -47,13 +45,11 @@ def clean_mi_ids(mi_ids: list[str]) -> set[str]:
     return { id.replace(',', '') for id in mi_ids }
 
 @cache
-def create_url(mi_id:str, suffix: str) -> str:
+def create_url(mi_id: str, suffix: str) -> str:
     url = f"{IBS_MAINTENANCE_URL_PREFIX}{mi_id}{suffix}"
 
     res: requests.Response = requests.get(url)
-    if res.ok:
-        return url
-    return ""
+    return url if res.ok else ""
 
 def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
     if not custom_repositories:
@@ -68,38 +64,40 @@ def validate_and_store_results(expected_ids: set [str], custom_repositories: dic
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(custom_repositories, f, indent=2, sort_keys=True)
 
-def get_version_nodes(version: str) -> dict[str, list[str]]:
-    version_nodes: dict[str, list[str]] = nodes_by_version.get(version)
+def get_version_nodes(version: str):
+    version_nodes = nodes_by_version.get(version)
     if not version_nodes:
         supported_versions = ', '.join(nodes_by_version.keys())
         raise ValueError(f"No nodes for version {version} - supported versions: {supported_versions}")
     return version_nodes
 
-def init_custom_repositories(version: str) -> dict[str, dict[str, str]]:
-    custom_repositories = {}
-    custom_repositories['slmicro60_minion'] = { 'alp_staging' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SL-Micro-6.0-x86_64/", 'alp_slfo_common_tools' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SUSE-Manager-Tools-For-SL-Micro-6-x86_64/" }
-    custom_repositories['slmicro61_minion'] = { 'slfo_staging' : "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Staging:/I/images/repo/SL-Micro-6.1-x86_64/", 'alp_slfo_common_tools' : "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SUSE-Manager-Tools-For-SL-Micro-6-x86_64/" }
+def init_custom_repositories(version: str, static_repos: dict[str, list[str]] = None) -> dict[str, dict[str, str]]:
+    custom_repositories: dict[str, dict[str, str]] = {}
+    if version == "51" and static_repos:
+        for node, urls in static_repos.items():
+            custom_repositories[node] = {f"static_{i}": url for i, url in enumerate(urls)}
     return custom_repositories
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
-    node_ids: dict[str, str] = custom_repositories.get(node, None)
-    if node_ids:
-        # This is needed for mi_ids that have multiple repos for each node
-        # e.g. basesystem and server apps for server
-        final_id: str = mi_id
-        i: int = 1
-        while(final_id in node_ids):
-            final_id = f"{mi_id}-{i}"
-            i += 1
-        # for each mi_id we have multiple repos sometimes for each node
-        node_ids[final_id] = url
-    else:
-        custom_repositories[node] = {mi_id: url}
+    node_ids: dict[str, str] = custom_repositories.get(node, {})
+    final_id: str = mi_id
+    i: int = 1
+    while final_id in node_ids:
+        final_id = f"{mi_id}-{i}"
+        i += 1
+    node_ids[final_id] = url
+    custom_repositories[node] = node_ids
+
 
 def find_valid_repos(mi_ids: set[str], version: str):
-    version_nodes: dict[str, list[str]] = get_version_nodes(version)
-    custom_repositories: dict[str, dict[str, str]] = init_custom_repositories(version)
-
+    version_data = get_version_nodes(version)
+    if version == "51":
+        static_repos, dynamic_nodes = version_data
+        custom_repositories = init_custom_repositories(version, static_repos)
+        version_nodes = dynamic_nodes
+    else:
+        custom_repositories = init_custom_repositories(version)
+        version_nodes = version_data
     for node, repositories in version_nodes.items():
         for mi_id in mi_ids:
             for repo in repositories:
