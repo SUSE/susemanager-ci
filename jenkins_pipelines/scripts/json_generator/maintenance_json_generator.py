@@ -78,6 +78,16 @@ def init_custom_repositories(version: str, static_repos: dict[str, list[str]] = 
             custom_repositories[node] = {f"static_{i}": url for i, url in enumerate(urls)}
     return custom_repositories
 
+def init_custom_repositories(version: str, static_repos: dict[str, dict[str, str]] = None) -> dict[str, dict[str, str]]:
+    custom_repositories: dict[str, dict[str, str]] = {}
+    if version == "51" and static_repos:
+        for node, named_urls in static_repos.items():
+            custom_repositories[node] = {
+                name: f"{IBS_MAINTENANCE_URL_PREFIX}{url}" if not url.startswith("http") else url
+                for name, url in named_urls.items()
+            }
+    return custom_repositories
+
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
     node_ids: dict[str, str] = custom_repositories.get(node, {})
     final_id: str = mi_id
@@ -91,14 +101,13 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
 
 def find_valid_repos(mi_ids: set[str], version: str):
     version_data = get_version_nodes(version)
-    if version == "51":
-        static_repos, dynamic_nodes = version_data
-        custom_repositories = init_custom_repositories(version, static_repos)
-        version_nodes = dynamic_nodes
-    else:
-        custom_repositories = init_custom_repositories(version)
-        version_nodes = version_data
-    for node, repositories in version_nodes.items():
+
+    static_repos = version_data.get("static", {})
+    dynamic_nodes = version_data.get("dynamic", {})
+
+    custom_repositories = init_custom_repositories(version, static_repos)
+
+    for node, repositories in dynamic_nodes.items():
         for mi_id in mi_ids:
             for repo in repositories:
                 repo_url: str = create_url(mi_id, repo)
