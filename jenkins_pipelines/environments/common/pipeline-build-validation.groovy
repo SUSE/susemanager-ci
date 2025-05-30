@@ -34,13 +34,17 @@ def run(params) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
         }
         try {
-            stage('Clone terracumber, susemanager-ci and sumaform') {
+            stage('Clone terracumber, susemanager-ci') {
                 // Create a directory for  to place the directory with the build results (if it does not exist)
                 sh "mkdir -p ${resultdir}"
                 git url: params.terracumber_gitrepo, branch: params.terracumber_ref
                 dir("susemanager-ci") {
                     checkout scm
                 }
+            }
+
+            stage('Deploy') {
+
                 // Clone sumaform
                 sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
 
@@ -48,9 +52,7 @@ def run(params) {
                 if (params.use_previous_terraform_state) {
                     copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                 }
-            }
 
-            stage('Deploy') {
                 if (params.must_deploy) {
                     // Generate custom_repositories.json file in the workspace from the value passed by parameter
                     if (params.custom_repositories?.trim()) {
