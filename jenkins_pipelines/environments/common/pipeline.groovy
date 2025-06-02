@@ -52,7 +52,7 @@ def run(params) {
                     // Rename build using product commit hash
                     currentBuild.description =  "[${product_commit}]"
                 }
-                
+
                 // Create a directory for  to place the directory with the build results (if it does not exist)
                 sh "mkdir -p ${resultdir}"
                 git url: params.terracumber_gitrepo, branch: params.terracumber_ref
@@ -61,7 +61,7 @@ def run(params) {
                 }
                 // Clone sumaform
                 sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-            
+
                 // Restore Terraform states from artifacts
                 if (params.use_previous_terraform_state) {
                     copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
@@ -126,7 +126,7 @@ def run(params) {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:proxy'"
             }
             stage('Core - Initialize clients') {
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake parallel:init_clients'"
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:init_clients'"
             }
             stage('Secondary features') {
                 def exports = ""
