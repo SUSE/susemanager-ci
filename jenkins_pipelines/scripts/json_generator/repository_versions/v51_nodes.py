@@ -1,7 +1,7 @@
 
 from typing import Dict, Set, List
 
-IBS_URL_PREFIX="http://download.suse.de/ibs"
+IBS_URL_PREFIX="http://download.suse.de/ibs/SUSE:"
 # Dictionary for SUMA 510 minion tools and repositories
 v51_nodes_static_repository: Dict[str, Set[str]] = {
     "server": {
