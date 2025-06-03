@@ -44,16 +44,15 @@ def run(params) {
             }
 
             stage('Deploy') {
-
-                // Clone sumaform
-                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-
                 // Restore Terraform states from artifacts
                 if (params.use_previous_terraform_state) {
                     copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                 }
 
                 if (params.must_deploy) {
+                    // Clone sumaform
+                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+
                     // Generate custom_repositories.json file in the workspace from the value passed by parameter
                     if (params.custom_repositories?.trim()) {
                         writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
