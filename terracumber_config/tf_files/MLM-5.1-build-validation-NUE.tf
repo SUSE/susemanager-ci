@@ -197,7 +197,7 @@ module "server_containerized" {
   repository_disk_size  = 3072
   database_disk_size    = 150
   container_tag         = "latest"
-  beta_enabled          = true
+  beta_enabled          = false
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
   java_debugging                 = false
   auto_accept                    = false
@@ -1132,7 +1132,7 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
-  beta_enabled   = true
+  beta_enabled   = false
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
