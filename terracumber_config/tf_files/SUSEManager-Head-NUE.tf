@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
 
   container_server = true
   container_proxy  = true
-  beta_enabled = true
+  beta_enabled = false
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
