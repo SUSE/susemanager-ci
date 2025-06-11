@@ -629,17 +629,17 @@ def clientMigrationStages() {
     def migration_tests = [:]
 
     features_list = sh(script: "./terracumber-cli ${common_params} --runstep cucumber --cucumber-cmd 'ls -1 /root/spacewalk/testsuite/features/build_validation/migration/'", returnStdout: true)
-    String[] migration_features = features_list.split("\n").findAll { it.contains("_migration.feature") }
+    String[] migration_features = features_list.split("\n").findAll { it.contains("migration_") }
     // create a stage for each migration feature
     migration_features.each{ feature ->
-        def minion = feature.replace("_migration.feature", "")
+        def minion = cleanMigrationFeatureName(feature)
 
         migration_tests["${minion}"] = {
             if (params.confirm_before_continue) {
                 input "Press any key to start testing the migration of ${minion}"
             }
             stage("${minion} migration") {
-                res_minion_migration = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_${minion}_migration'", returnStatus: true)
+                res_minion_migration = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_migration_${minion}'", returnStatus: true)
                 echo "${minion} migration status code: ${res_minion_migration}"
                 if (res_minion_migration != 0) {
                     error("Migration test for ${minion} failed with status code: ${res_minion_migration}")
@@ -717,6 +717,17 @@ def buildComponentLabel(component, params, conditionsMap, isEnabled) {
         }
     }
     return options ? "${component}[${options.join(' ')}]" : null
+}
+
+// Function to extract the minion name from the migration feature
+def cleanMigrationFeatureName(String feature) {
+    if (feature.startsWith("migration_")) {
+        feature = feature.substring("migration_".length())
+    }
+    if (feature.endsWith(".feature")) {
+        feature = feature.substring(0, feature.length() - ".feature".length())
+    }
+    return feature
 }
 
 return this
