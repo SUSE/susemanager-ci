@@ -43,7 +43,7 @@ module "cucumber_testsuite" {
   container_server = true
   container_proxy  = true
 
-  server_http_proxy = "http-proxy.${var.DOMAIN}:3128"
+  # server_http_proxy = "http-proxy.${var.DOMAIN}:3128"
   custom_download_endpoint = "ftp://${var.DOWNLOAD_ENDPOINT}:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
