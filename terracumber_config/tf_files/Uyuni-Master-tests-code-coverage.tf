@@ -136,7 +136,7 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
 
-  server_http_proxy = "http-proxy.mgr.prv.suse.net:3128"
+  # server_http_proxy = "http-proxy.mgr.prv.suse.net:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.prv.suse.net:445"
 
   host_settings = {
