@@ -131,8 +131,6 @@ module "server_containerized" {
   image              = "sles15sp6o"
   provider_settings = {
     mac                = "aa:b2:93:01:02:69"
-    memory             = 16384
-    vcpu               = 4
     data_pool          = "ssd"
   }
 
