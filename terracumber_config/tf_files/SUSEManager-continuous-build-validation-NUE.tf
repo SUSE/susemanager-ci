@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "PRODUCT_VERSION" {
   type = string
-  default = "head"
+  default = "5.1-released"
 }
 
 variable "MAIL_SUBJECT" {
@@ -781,7 +781,7 @@ module "amazon2023_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
   name               = "amazon2023-sshminion"
-  image              = "amazolinux2023o"
+  image              = "amazonlinux2023o"
   provider_settings = {
     mac                = "aa:b2:93:01:02:c4"
     memory             = 4096
