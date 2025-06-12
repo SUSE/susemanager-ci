@@ -134,7 +134,6 @@ module "cucumber_testsuite" {
     server_containerized = {
       provider_settings = {
         mac = "aa:b2:93:01:00:11"
-        memory = 16384
       }
       runtime = "k3s"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
