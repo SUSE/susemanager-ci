@@ -130,12 +130,12 @@ module "server_containerized" {
   image              = "slemicro55o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:fd"
-    memory             = 16384
-    vcpu               = 4
     data_pool          = "ssd"
   }
 
-  main_disk_size        = 1500
+  main_disk_size        = 100
+  repository_disk_size  = 1000
+  database_disk_size    = 150
   runtime               = "podman"
   // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
   container_repository  = var.SERVER_CONTAINER_REPOSITORY
