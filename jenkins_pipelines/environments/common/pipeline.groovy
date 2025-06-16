@@ -7,7 +7,7 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
-        env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; "
+        env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export PUBLISH_CUCUMBER_REPORT=true;"
 
         if (params.terraform_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
@@ -87,8 +87,6 @@ def run(params) {
                             break;
                         case "aws":
                             env.TERRAFORM_TAINT = " --taint '.*(host).*'";
-                            // Cucumber report collection https://reports.cucumber.io/report-collections/12371450-2212-43dc-a514-90677777824a
-                            env.exports = "${env.exports} export CUCUMBER_PUBLISH_TOKEN=3689c47a-f683-4962-97ab-2999345534be;"
                             break;
                         default:
                             println("ERROR: Unknown backend ${params.sumaform_backend}");
@@ -149,13 +147,13 @@ def run(params) {
                 if (deployed) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:finishing'"
-                    } catch(Exception ex) {
+                    } catch(err) {
                         println("ERROR: rake cucumber:finishing failed")
                         error = 1
                     }
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake utils:generate_test_report'"
-                    } catch(Exception ex) {
+                    } catch(err) {
                         println("ERROR: rake utils:generate_test_repor failed")
                         error = 1
                     }
