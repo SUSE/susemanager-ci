@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse155o", "opensuse156o", "sles15sp4o", "ubuntu2404"]
+  images = ["rocky8", "opensuse156o", "sles15sp4o", "ubuntu2404"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
