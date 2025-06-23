@@ -72,6 +72,7 @@ v43_client_tools: dict[str, set[str]] = {
     "liberty9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "oracle9_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "amazon2023_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
+    "openeuler2403_minion": {"/SUSE_Updates_EL_9-CLIENT-TOOLS_x86_64/"},
     "slemicro51_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",
                           "/SUSE_Updates_SUSE-MicroOS_5.1_x86_64/"},
     "slemicro52_minion": {"/SUSE_Updates_SLE-Manager-Tools-For-Micro_5_x86_64/",

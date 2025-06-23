@@ -21,6 +21,8 @@ v51_nodes_static_repository: Dict[str, Set[str]] = {
         "RES_7_client_tools": "/RES-7:/Update:/Products:/MultiLinuxManagerTools/images/repo/ManagerTools-EL7-POOL-x86_64-Media/"},
     "liberty9_minion": {
         "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
+    "openeuler2403_minion": {
+        "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
     "opensuse156arm_minion": {
         "sle15_arm_client_tools": "/SLE-15:/Update:/Products:/MultiLinuxManagerTools/images/repo/ManagerTools-SLE15-Pool-aarch64-Media1/"},
     "oracle9_minion": {
