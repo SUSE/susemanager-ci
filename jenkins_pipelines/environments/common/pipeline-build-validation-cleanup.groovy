@@ -2,7 +2,6 @@ def run(params) {
     timestamps {
         // Define paths and environment variables for reusability
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
-        GString remove_s390_bash = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/delete_s390_clients.sh"
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
@@ -164,7 +163,6 @@ def run(params) {
                         export TF_VAR_PROXY_CONTAINER_REPOSITORY='unused'
                         set +x
                         cd ${localSumaformDirPath}
-                        sh ${remove_s390_bash} main.tf
                         terraform refresh
                     """
                 }
