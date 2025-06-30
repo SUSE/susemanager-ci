@@ -139,6 +139,8 @@ module "cucumber_testsuite" {
   // server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://mirror.sumaci.aws:445"
 
+  web_server_hostname = "http.sumaci.aws"
+
   host_settings = {
     controller = {
       image = "opensuse156o"

@@ -148,16 +148,34 @@ def run(params) {
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:finishing'"
                     } catch(err) {
-                        println("ERROR: rake cucumber:finishing failed")
+                        println("ERROR: rake cucumber:finishing failed: ${err}")
                         error = 1
                     }
                     try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake utils:generate_test_report'"
                     } catch(err) {
-                        println("ERROR: rake utils:generate_test_repor failed")
+                        println("ERROR: rake utils:generate_test_repor failed: ${err}")
                         error = 1
                     }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                    // In the case of an AWS environment, we want to export the reports to a publicly accessible web server.
+                    if (params.sumaform_backend == "aws") {
+                        try {
+                            sh """
+                              ./terracumber-cli ${common_params} \
+                                --logfile ${resultdirbuild}/webserver.log \
+                                --runstep cucumber \
+                                --cucumber-cmd 'mkdir -p /mnt/www/${BUILD_NUMBER} && \
+                                                rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/results/${BUILD_NUMBER}/ /mnt/www/${BUILD_NUMBER}/ && \
+                                                rsync -av --no-owner --no-group  /root/spacewalk/testsuite/spacewalk-debug.tar.bz2 /mnt/www/${BUILD_NUMBER}/ && \
+                                                rsync -av --no-owner --no-group  /root/spacewalk/testsuite/logs/ /mnt/www/${BUILD_NUMBER}/ && \
+                                                rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/cucumber_report/ /mnt/www/${BUILD_NUMBER}/'
+                            """
+                        } catch(err) {
+                            println("ERROR: Exporting reports to external AWS Web Server: ${err}")
+                            error = 1
+                        }
+                    }
                     publishHTML( target: [
                                 allowMissing: true,
                                 alwaysLinkToLastBuild: false,
