@@ -30,6 +30,11 @@ variable "PRODUCT_VERSION" {
   default = "5.1-nightly"
 }
 
+variable "BASE_OS" {
+  type = string
+  default = "slmicro61o"
+}
+
 variable "MAIL_SUBJECT" {
   type = string
   default = "Results Continuous Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
@@ -188,6 +193,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name               = "server"
+  image              = var.BASE_OS
   beta_enabled       = false
   provider_settings = {
     mac                = "aa:b2:93:01:02:81"
@@ -228,6 +234,7 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_core.configuration
   name               = "proxy"
+  image              = var.BASE_OS
   provider_settings = {
     mac                = "aa:b2:93:01:02:82"
     memory             = 4096
