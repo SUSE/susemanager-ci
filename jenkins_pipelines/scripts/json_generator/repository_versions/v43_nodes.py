@@ -2,7 +2,7 @@
 from typing import Dict, Set, List
 
 # dictionary for 4.3 client tools
-v43_client_tools: dict[str, set[str]] = {
+v43_client_tools: dict[str, Dict[str, str]] = {
     "sle12sp5_client": {"/SUSE_Updates_SLE-Manager-Tools_12_x86_64/"},
     "sle12sp5_minion": {"/SUSE_Updates_SLE-Manager-Tools_12_x86_64/"},
     "sle15_client": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
@@ -98,7 +98,7 @@ v43_client_tools: dict[str, set[str]] = {
 }
 
 # Dictionary for SUMA 4.3 Server and Proxy
-v43_nodes: Dict[str, Set[str]] = {
+v43_nodes: Dict[str, Dict[str, str]] = {
     "server": {"/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.3_x86_64/",
                "/SUSE_Updates_SLE-Product-SUSE-Manager-Server_4.3_x86_64/",
                "/SUSE_Updates_SLE-Module-Basesystem_15-SP4_x86_64/",

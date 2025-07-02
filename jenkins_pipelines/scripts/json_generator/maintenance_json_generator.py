@@ -19,7 +19,7 @@ def parse_cli_args() -> argparse.Namespace:
     )
     parser.add_argument("-v", "--version", dest="version",
                         help="Version of SUMA you want to run this script for, the options are 43 for 4.3, 50 for 5.0, and 51 for 5.1",
-                        choices=["43", "50", "51"], default="43", action='store')
+                        choices=["43", "50", "51-micro","51-sles"], default="43", action='store')
     parser.add_argument("-i", "--mi_ids", required=False, dest="mi_ids", help="Space separated list of MI IDs", nargs='*', action='store')
     parser.add_argument("-f", "--file", required=False, dest="file", help="Path to a file containing MI IDs separated by newline character", action='store')
     parser.add_argument("-e", "--no_embargo", dest="embargo_check", help="Reject MIs under embargo",  action='store_true')
@@ -71,16 +71,9 @@ def get_version_nodes(version: str):
         raise ValueError(f"No nodes for version {version} - supported versions: {supported_versions}")
     return version_nodes
 
-def init_custom_repositories(version: str, static_repos: dict[str, list[str]] = None) -> dict[str, dict[str, str]]:
-    custom_repositories: dict[str, dict[str, str]] = {}
-    if version == "51" and static_repos:
-        for node, urls in static_repos.items():
-            custom_repositories[node] = {f"static_{i}": url for i, url in enumerate(urls)}
-    return custom_repositories
-
 def init_custom_repositories(version: str, static_repos: dict[str, dict[str, str]] = None) -> dict[str, dict[str, str]]:
     custom_repositories: dict[str, dict[str, str]] = {}
-    if version == "51" and static_repos:
+    if version.startswith("51") and static_repos:
         for node, named_urls in static_repos.items():
             custom_repositories[node] = {
                 name: f"{IBS_MAINTENANCE_URL_PREFIX}{url}" if not url.startswith("http") else url
