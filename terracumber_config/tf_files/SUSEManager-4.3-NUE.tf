@@ -138,6 +138,7 @@ module "cucumber_testsuite" {
       main_disk_size       = 20
       repository_disk_size = 150
       database_disk_size   = 50
+      large_deployment     = true
     }
     proxy = {
       provider_settings = {
