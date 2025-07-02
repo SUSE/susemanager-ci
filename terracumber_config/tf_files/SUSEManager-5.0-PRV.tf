@@ -140,11 +140,12 @@ module "cucumber_testsuite" {
         vcpu = 8
         memory = 32768
       }
-      main_disk_size = 500
-      login_timeout = 28800
-      runtime = "podman"
+      main_disk_size       = 500
+      login_timeout        = 28800
+      large_deployment     = true
+      runtime              = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
-      container_tag = "latest"
+      container_tag        = "latest"
     }
     proxy_containerized = {
       image = "slemicro55o"
