@@ -202,7 +202,8 @@ module "base_res" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
-  images            = [ "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "openeuler2403o", "oraclelinux9o", "rocky8o", "rocky9o" ]
+  images            = [ "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
+                    # disabled: "openeuler2403o"
 
   mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -584,23 +585,23 @@ module "liberty9_minion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
-module "openeuler2403_minion" {
-  providers = {
-    libvirt = libvirt.cosmopolitan
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_res.configuration
-  name               = "openeuler2403-minion"
-  image              = "openeuler2403o"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:8c"
-    memory             = 4096
-  }
-
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-}
+# module "openeuler2403_minion" {
+#   providers = {
+#     libvirt = libvirt.cosmopolitan
+#   }
+#   source             = "./modules/minion"
+#   base_configuration = module.base_res.configuration
+#   name               = "openeuler2403-minion"
+#   image              = "openeuler2403o"
+#   provider_settings = {
+#     mac                = "aa:b2:93:04:05:8c"
+#     memory             = 4096
+#   }
+#
+#   auto_connect_to_master  = false
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_ed25519.pub"
+# }
 
 module "oracle9_minion" {
   providers = {
@@ -1100,21 +1101,21 @@ module "liberty9_sshminion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
-module "openeuler2403_sshminion" {
-  providers = {
-    libvirt = libvirt.cosmopolitan
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_res.configuration
-  name               = "openeuler2403-sshminion"
-  image              = "openeuler2403o"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:ac"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-}
+# module "openeuler2403_sshminion" {
+#   providers = {
+#     libvirt = libvirt.cosmopolitan
+#   }
+#   source             = "./modules/sshminion"
+#   base_configuration = module.base_res.configuration
+#   name               = "openeuler2403-sshminion"
+#   image              = "openeuler2403o"
+#   provider_settings = {
+#     mac                = "aa:b2:93:04:05:ac"
+#     memory             = 4096
+#   }
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_ed25519.pub"
+# }
 
 module "oracle9_sshminion" {
   providers = {
@@ -1527,8 +1528,8 @@ module "controller" {
   liberty9_minion_configuration    = module.liberty9_minion.configuration
   liberty9_sshminion_configuration = module.liberty9_sshminion.configuration
 
-  openeuler2403_minion_configuration    = module.openeuler2403_minion.configuration
-  openeuler2403_sshminion_configuration = module.openeuler2403_sshminion.configuration
+  # openeuler2403_minion_configuration    = module.openeuler2403_minion.configuration
+  # openeuler2403_sshminion_configuration = module.openeuler2403_sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9_minion.configuration
   oracle9_sshminion_configuration = module.oracle9_sshminion.configuration
