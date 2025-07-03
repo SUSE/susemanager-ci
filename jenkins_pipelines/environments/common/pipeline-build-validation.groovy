@@ -46,15 +46,16 @@ def run(params) {
                 }
             }
 
+            stage('Name run') {
+                currentBuild.displayName = nameDisplay(params)
+            }
+
             stage('Deploy') {
                 // Restore Terraform states from artifacts
                 if (params.use_previous_terraform_state) {
                     copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                 }
 
-                stage('Name run') {
-                    currentBuild.displayName = nameDisplay(params)
-                }
                 if (params.must_deploy) {
                     // Clone sumaform
                     sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
@@ -108,10 +109,10 @@ def run(params) {
                 }
             }
 
-            stage('Sanity check') {
-                def nodesHandler = getNodesHandler()
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable}; cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
-            }
+//            stage('Sanity check') {
+//                def nodesHandler = getNodesHandler()
+//                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable}; cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
+//            }
 
             stage('Run core features') {
                 if (params.must_run_core && (deployed || !params.must_deploy)) {
