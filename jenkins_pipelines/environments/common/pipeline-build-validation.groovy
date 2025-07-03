@@ -699,10 +699,10 @@ def nameDisplay(params) {
     }
 
     def baseOs = params.base_os ?: ''
-    def fullLabel = "${product_version_display}${baseOs ? "_${baseOs}" : ""} - ${filteredLabel.join(' ')}"
+    def fullLabel = "${params.product_version}${baseOs ? "_${baseOs}" : ""} - ${filteredLabel.join(' ')}"
 
     if (fullLabel.length() > 160) {
-        return "#${env.BUILD_NUMBER} - ${product_version_display}${baseOs ? "_${baseOs}" : ""}"
+        return "#${env.BUILD_NUMBER} - ${params.product_version}${baseOs ? "_${baseOs}" : ""}"
     }
     return fullLabel
 }
