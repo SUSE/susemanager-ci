@@ -109,10 +109,10 @@ def run(params) {
                 }
             }
 
-//            stage('Sanity check') {
-//                def nodesHandler = getNodesHandler()
-//                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable}; cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
-//            }
+            stage('Sanity check') {
+                def nodesHandler = getNodesHandler()
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable}; cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
+            }
 
             stage('Run core features') {
                 if (params.must_run_core && (deployed || !params.must_deploy)) {
@@ -355,58 +355,58 @@ def run(params) {
                 archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
             }
 
-//            stage('Get results') {
-//                def result_error = 0
-//                if (deployed || !params.must_deploy) {
-//                    try {
-//                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
-//                    } catch(Exception ex) {
-//                        println("ERROR: rake cucumber:build_validation_finishing failed")
-//                        result_error = 1
-//                    }
-//                    try {
-//                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
-//                    } catch(Exception ex) {
-//                        println("ERROR: rake utils:generate_test_report failed")
-//                        result_error = 1
-//                    }
-//                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-//                    publishHTML( target: [
-//                            allowMissing: true,
-//                            alwaysLinkToLastBuild: false,
-//                            keepAll: true,
-//                            reportDir: "${resultdirbuild}/cucumber_report/",
-//                            reportFiles: 'cucumber_report.html',
-//                            reportName: "Build Validation report"]
-//                    )
-////                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
-//                }
-//                // Send email
-//                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
-//                // Clean up old results
-//                sh "./clean-old-results -r ${resultdir}"
-//                // Fail pipeline if client stages failed
-//                if (client_stage_result_fail) {
-//                    error("Client stage failed")
-//                }
-//                // Fail pipeline if monitoring stages failed
-//                if (monitoring_stage_result_fail) {
-//                    error("Monitoring stage failed")
-//                }
-//                // Fail pipeline if products or Salt migration stages failed
-//                if (products_and_salt_migration_stage_result_fail) {
-//                    error("Product or Salt migration stage failed")
-//                }
-//                // Fail pipeline if retail stages failed
-//                if (retail_stage_result_fail) {
-//                    error("Retail stage failed")
-//                }
-//                // Fail pipeline if containerization stage failed
-//                if (containerization_stage_result_fail) {
-//                    error("Containerization stage failed")
-//                }
-//                sh "exit ${result_error}"
-//            }
+            stage('Get results') {
+                def result_error = 0
+                if (deployed || !params.must_deploy) {
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_finishing'"
+                    } catch(Exception ex) {
+                        println("ERROR: rake cucumber:build_validation_finishing failed")
+                        result_error = 1
+                    }
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake utils:generate_test_report'"
+                    } catch(Exception ex) {
+                        println("ERROR: rake utils:generate_test_report failed")
+                        result_error = 1
+                    }
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                    publishHTML( target: [
+                            allowMissing: true,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: true,
+                            reportDir: "${resultdirbuild}/cucumber_report/",
+                            reportFiles: 'cucumber_report.html',
+                            reportName: "Build Validation report"]
+                    )
+//                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                }
+                // Send email
+                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                // Clean up old results
+                sh "./clean-old-results -r ${resultdir}"
+                // Fail pipeline if client stages failed
+                if (client_stage_result_fail) {
+                    error("Client stage failed")
+                }
+                // Fail pipeline if monitoring stages failed
+                if (monitoring_stage_result_fail) {
+                    error("Monitoring stage failed")
+                }
+                // Fail pipeline if products or Salt migration stages failed
+                if (products_and_salt_migration_stage_result_fail) {
+                    error("Product or Salt migration stage failed")
+                }
+                // Fail pipeline if retail stages failed
+                if (retail_stage_result_fail) {
+                    error("Retail stage failed")
+                }
+                // Fail pipeline if containerization stage failed
+                if (containerization_stage_result_fail) {
+                    error("Containerization stage failed")
+                }
+                sh "exit ${result_error}"
+            }
         }
     }
 }
