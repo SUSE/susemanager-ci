@@ -658,50 +658,42 @@ def randomWait() {
 
 def nameDisplay(params) {
     def buildLabel = []
-    def proxyOptions = []
-    def monitoringOptions = []
-    def clientOptions = []
-
 
     if (params.must_deploy) buildLabel << 'deploy'
     if (params.must_run_core) buildLabel << 'core'
     if (params.must_sync) buildLabel << 'reposync'
 
-    if (params.enable_proxy_stages) {
-        if (params.must_add_MU_repositories) proxyOptions << 'AddMU'
-        if (params.must_add_keys) proxyOptions << 'ActKeys'
-        if (params.must_create_bootstrap_repos) proxyOptions << 'CrBoot'
-        if (params.must_boot_node) proxyOptions << 'Boot'
-        buildLabel << "proxy[${proxyOptions.join(' ')}]"
-    }
+    buildLabel << buildComponentLabel("proxy", params, ['must_add_MU_repositories': 'AddMU', 'must_add_keys': 'ActKeys', 'must_create_bootstrap_repos': 'CrBoot', 'must_boot_node': 'Boot'], params.enable_proxy_stages)
+    buildLabel << buildComponentLabel("monitoring", params, ['must_add_MU_repositories': 'AddMU', 'must_add_keys': 'ActKeys', 'must_create_bootstrap_repos': 'CrBoot', 'must_boot_node': 'Boot'], params.enable_monitoring_stages)
+    buildLabel << buildComponentLabel("client", params, [
+            'must_add_MU_repositories': 'AddMU',
+            'must_add_non_MU_repositories': 'AddNonMU',
+            'must_add_keys': 'ActKeys',
+            'must_create_bootstrap_repos': 'CrBoot',
+            'must_boot_node': 'Boot',
+            'must_run_tests': 'Smoke'
+    ], params.enable_client_stages)
 
-    if (params.enable_monitoring_stages) {
-        if (params.must_add_MU_repositories) monitoringOptions << 'AddMU'
-        if (params.must_add_keys) monitoringOptions << 'ActKeys'
-        if (params.must_create_bootstrap_repos) monitoringOptions << 'CrBoot'
-        if (params.must_boot_node) monitoringOptions << 'Boot'
-        buildLabel << "monitoring[${monitoringOptions.join(' ')}]"
-    }
-
-    if (params.enable_client_stages) {
-        if (params.must_add_MU_repositories) clientOptions << 'AddMU'
-        if (params.must_add_non_MU_repositories) clientOptions << 'AddNonMU'
-        if (params.must_add_keys) clientOptions << 'ActKeys'
-        if (params.must_create_bootstrap_repos) clientOptions << 'CrBoot'
-        if (params.must_boot_node) clientOptions << 'Boot'
-        if (params.must_run_tests) clientOptions << 'Smoke'
-        buildLabel << "client[${clientOptions.join(' ')}]"
-    }
     if (params.must_run_products_and_salt_migration_tests) buildLabel << 'migration'
     if (params.must_prepare_retail) buildLabel << 'retail'
 
-    def fullLabel = "${params.product_version}_${params.base_os} - ${buildLabel.join(' ')}"
+    def baseOs = params.base_os ?: ''
+    def fullLabel = "${params.product_version}${baseOs ? "_${baseOs}" : ""} - ${buildLabel.findAll().join(' ')}"
 
     if (fullLabel.length() > 160) {
-        return "#${env.BUILD_NUMBER} - ${params.product_version}_${params.base_os}"
-    } else {
-        return "${fullLabel}"
+        return "#${env.BUILD_NUMBER} - ${params.product_version}${baseOs ? "_${baseOs}" : ""}"
     }
+    return fullLabel
+}
+
+def buildComponentLabel(component, params, conditionsMap, isEnabled) {
+    if (!isEnabled) return null
+
+    def options = []
+    conditionsMap.each { key, label ->
+        if (params.get(key)) options << label
+    }
+    return options ? "${component}[${options.join(' ')}]" : null
 }
 
 return this
