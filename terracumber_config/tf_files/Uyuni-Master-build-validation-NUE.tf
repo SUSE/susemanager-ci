@@ -129,7 +129,8 @@ module "base_core" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "openeuler2403o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
+                    # disabled: "openeuler2403o"
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -398,19 +399,19 @@ module "liberty9_minion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
-module "openeuler2403_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  name               = "openeuler2403-minion"
-  image              = "openeuler2403o"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:c0"
-    memory             = 4096
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-}
+# module "openeuler2403_minion" {
+#   source             = "./modules/minion"
+#   base_configuration = module.base_core.configuration
+#   name               = "openeuler2403-minion"
+#   image              = "openeuler2403o"
+#   provider_settings = {
+#     mac                = "aa:b2:93:02:01:c0"
+#     memory             = 4096
+#   }
+#   auto_connect_to_master  = false
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_ed25519.pub"
+# }
 
 module "oracle9_minion" {
   source             = "./modules/minion"
@@ -834,18 +835,18 @@ module "liberty9_sshminion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
-module "openeuler2403_sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  name               = "openeuler2403-sshminion"
-  image              = "openeuler2403o"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:e0"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-}
+# module "openeuler2403_sshminion" {
+#   source             = "./modules/sshminion"
+#   base_configuration = module.base_core.configuration
+#   name               = "openeuler2403-sshminion"
+#   image              = "openeuler2403o"
+#   provider_settings = {
+#     mac                = "aa:b2:93:02:01:e0"
+#     memory             = 4096
+#   }
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_ed25519.pub"
+# }
 
 module "oracle9_sshminion" {
   source             = "./modules/sshminion"
@@ -1200,8 +1201,8 @@ module "controller" {
   liberty9_minion_configuration    = module.liberty9_minion.configuration
   liberty9_sshminion_configuration = module.liberty9_sshminion.configuration
 
-  openeuler2403_minion_configuration    = module.openeuler2403_minion.configuration
-  openeuler2403_sshminion_configuration = module.openeuler2403_sshminion.configuration
+  # openeuler2403_minion_configuration    = module.openeuler2403_minion.configuration
+  # openeuler2403_sshminion_configuration = module.openeuler2403_sshminion.configuration
 
   oracle9_minion_configuration    = module.oracle9_minion.configuration
   oracle9_sshminion_configuration = module.oracle9_sshminion.configuration
