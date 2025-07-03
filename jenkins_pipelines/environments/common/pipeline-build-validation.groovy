@@ -277,7 +277,7 @@ def run(params) {
                 // Call the minion testing.
                 try {
                     stage('Clients stages') {
-                        clientTestingStages()
+                        clientTestingStages(params)
                     }
                 } catch (Exception ex) {
                     println('ERROR: one or more clients have failed')
@@ -413,13 +413,13 @@ def run(params) {
 
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
-def clientTestingStages() {
+def clientTestingStages(params) {
 
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
 
     // Load JSON matching non MU repositories data (non_MU_channels_tasks_file variable declared at the pipeline description level)
-    def json_matching_non_MU_data = readJSON(file: non_MU_channels_tasks_file)
+    def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
     //Get minion list from terraform state list command
     def nodesHandler = getNodesHandler()
