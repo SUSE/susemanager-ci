@@ -2,15 +2,30 @@
 from typing import Dict, Set, List
 
 IBS_URL_PREFIX="http://download.suse.de/ibs/SUSE:"
-# Dictionary for SUMA 510 minion tools and repositories
-v51_nodes_static_repository: Dict[str, Set[str]] = {
+# Dictionary for SUMA 5.10 minion tools and repositories
+
+v51_uyuni_tools_sles_repos: Dict[str, Dict[str, str]] = {
+    "server": {
+        "server_uyuni_tools": "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager51:/ToTest/images-SP7/repo/SUSE-Multi-Linux-Manager-Server-SLE-5.1-POOL-x86_64-Media1/"},
+    "proxy": {
+        "proxy_uyuni_tools": "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager51:/ToTest/images-SP7/repo/SUSE-Multi-Linux-Manager-Proxy-SLE-5.1-POOL-x86_64-Media1/",
+        "retail_uyuni_tools": "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager51:/ToTest/images-SP7/repo/SUSE-Multi-Linux-Manager-Retail-Branch-Server-SLE-5.1-POOL-x86_64-Media1/",
+        "sle15_client_tools": "/SLE-15:/Update:/Products:/MultiLinuxManagerTools/images/repo/ManagerTools-SLE15-Pool-x86_64-Media1/",
+        "sle15_saltbundle": "/SLE-15:/Update:/Products:/MultiLinuxManagerTools:/SaltBundle/standard/"
+    }
+}
+
+v51_uyuni_tools_micro_repos: Dict[str, Dict[str, str]] = {
     "server": {
         "server_uyuni_tools": "/SLFO:/Products:/Multi-Linux-Manager:/5.1:/ToTest/product/repo/Multi-Linux-Manager-Server-5.1-x86_64/"},
     "proxy": {
         "proxy_uyuni_tools": "/SLFO:/Products:/Multi-Linux-Manager:/5.1:/ToTest/product/repo/Multi-Linux-Manager-Proxy-5.1-x86_64/",
         "retail_uyuni_tools": "/SLFO:/Products:/Multi-Linux-Manager:/5.1:/ToTest/product/repo/Multi-Linux-Manager-Retail-Branch-Server-5.1-x86_64/",
         "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/"
-    },
+    }
+}
+
+v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     "alma8_minion": {
         "RES_8_client_tools": "/RES-8:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-8-x86_64-Media1/"},
     "amazon2023_minion": {
@@ -105,21 +120,37 @@ v51_nodes_static_repository: Dict[str, Set[str]] = {
     }
 }
 
-v51_nodes_client_tools: Dict[str, Set[str]] = {
+v51_nodes_dynamic_client_tools_repos: Dict[str, Dict[str, str]] = {
     "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-12_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-22.04_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-24.04_x86_64/"}
 }
 
-def get_v51_static_and_client_tools() -> (Dict[str, Dict[str, str]], Dict[str, List[str]]):
-    # No change in structure, just keep the original dicts for static
+def get_v51_static_and_client_tools(variant: str = "micro") -> (Dict[str, Dict[str, str]], Dict[str, List[str]]):
     static_repos: Dict[str, Dict[str, str]] = {
         key: {name: f"{IBS_URL_PREFIX}{path}" for name, path in subdict.items()}
-        for key, subdict in v51_nodes_static_repository.items()
+        for key, subdict in v51_nodes_static_client_tools_repositories.items()
     }
 
-    client_tools: Dict[str, List[str]] = {
-        key: sorted(paths) for key, paths in v51_nodes_client_tools.items()
+    # Select uyuni tool dictionary based on variant
+    uyuni_dicts = {
+        "micro": v51_uyuni_tools_micro_repos,
+        "sles": v51_uyuni_tools_sles_repos,
     }
 
-    return static_repos, client_tools
+    uyuni_tools = uyuni_dicts.get(variant)
+    if not uyuni_tools:
+        raise ValueError(f"Invalid variant '{variant}'. Choose from: {list(uyuni_dicts.keys())}")
+
+    # Merge uyuni server/proxy into static_repos
+    for key in ("server", "proxy"):
+        if key not in static_repos:
+            static_repos[key] = {}
+        for name, path in uyuni_tools.get(key, {}).items():
+            static_repos[key][name] = f"{IBS_URL_PREFIX}{path}"
+
+    dynamic_client_tools_repos: Dict[str, List[str]] = {
+        key: sorted(paths) for key, paths in v51_nodes_dynamic_client_tools_repos.items()
+    }
+
+    return static_repos, dynamic_client_tools_repos
