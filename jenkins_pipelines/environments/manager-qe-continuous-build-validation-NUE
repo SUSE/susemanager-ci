@@ -37,7 +37,7 @@ node('sumaform-cucumber') {
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             string(name: 'product_version', defaultValue: '5.1-nightly', description: 'Server product version'),
-            choice(name: 'base_os', choices: ['slmicro61o', 'sles15sp7o'], description: 'Server and Proxy base OS'),
+//            choice(name: 'base_os', choices: ['slmicro61o', 'sles15sp7o'], description: 'Server and Proxy base OS'),
             extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
                     value: minionList,
                     defaultValue: minionList,
@@ -70,8 +70,7 @@ node('sumaform-cucumber') {
     stage('Checkout pipeline') {
         checkout scm
     }
-//    product_version_display = params.product_version
     non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_50.json'
-    params.pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(params)
 }
