@@ -52,6 +52,9 @@ def run(params) {
                     copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                 }
 
+                stage('Name run') {
+                    currentBuild.displayName = nameDisplay(params)
+                }
                 if (params.must_deploy) {
                     // Clone sumaform
                     sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
@@ -651,6 +654,54 @@ def randomWait() {
     def randomWait = new Random().nextInt(180)
     println "Waiting for ${randomWait} seconds"
     sleep randomWait
+}
+
+def nameDisplay(params) {
+    def buildLabel = []
+    def proxyOptions = []
+    def monitoringOptions = []
+    def clientOptions = []
+
+
+    if (params.must_deploy) buildLabel << 'deploy'
+    if (params.must_run_core) buildLabel << 'core'
+    if (params.must_sync) buildLabel << 'reposync'
+
+    if (params.enable_proxy_stages) {
+        if (params.must_add_MU_repositories) proxyOptions << 'AddMU'
+        if (params.must_add_keys) proxyOptions << 'ActKeys'
+        if (params.must_create_bootstrap_repos) proxyOptions << 'CrBoot'
+        if (params.must_boot_node) proxyOptions << 'Boot'
+        buildLabel << "proxy[${proxyOptions.join(' ')}]"
+    }
+
+    if (params.enable_monitoring_stages) {
+        if (params.must_add_MU_repositories) monitoringOptions << 'AddMU'
+        if (params.must_add_keys) monitoringOptions << 'ActKeys'
+        if (params.must_create_bootstrap_repos) monitoringOptions << 'CrBoot'
+        if (params.must_boot_node) monitoringOptions << 'Boot'
+        buildLabel << "monitoring[${monitoringOptions.join(' ')}]"
+    }
+
+    if (params.enable_client_stages) {
+        if (params.must_add_MU_repositories) clientOptions << 'AddMU'
+        if (params.must_add_non_MU_repositories) clientOptions << 'AddNonMU'
+        if (params.must_add_keys) clientOptions << 'ActKeys'
+        if (params.must_create_bootstrap_repos) clientOptions << 'CrBoot'
+        if (params.must_boot_node) clientOptions << 'Boot'
+        if (params.must_run_tests) clientOptions << 'Smoke'
+        buildLabel << "client[${clientOptions.join(' ')}]"
+    }
+    if (params.must_run_products_and_salt_migration_tests) buildLabel << 'migration'
+    if (params.must_prepare_retail) buildLabel << 'retail'
+
+    def fullLabel = "${params.product_version}_${params.base_os} - ${buildLabel.join(' ')}"
+
+    if (fullLabel.length() > 160) {
+        return "#${env.BUILD_NUMBER} - ${params.product_version}_${params.base_os}"
+    } else {
+        return "${fullLabel}"
+    }
 }
 
 return this
