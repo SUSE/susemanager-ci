@@ -87,6 +87,7 @@ def run(params) {
                             break;
                         case "aws":
                             env.TERRAFORM_TAINT = " --taint '.*(host).*'";
+                            env.exports = "${env.exports} export PUBLISH_CUCUMBER_REPORT=true;"; 
                             break;
                         default:
                             println("ERROR: Unknown backend ${params.sumaform_backend}");
