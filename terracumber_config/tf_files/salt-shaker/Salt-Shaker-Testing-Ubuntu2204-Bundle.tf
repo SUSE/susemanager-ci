@@ -109,7 +109,7 @@ module "salt-shaker-products-testing" {
   image              = "ubuntu2204o"
   salt_obs_flavor    = "saltstack:products:testing"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:ea"
+    mac = "aa:b2:93:02:02:3a"
   }
 }
 

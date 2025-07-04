@@ -109,7 +109,7 @@ module "salt-shaker-saltstack" {
   image              = "opensuse155o"
   salt_obs_flavor    = "saltstack"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:eb"
+    mac = "aa:b2:93:02:02:3b"
   }
 }
 
