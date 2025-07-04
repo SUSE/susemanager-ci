@@ -109,7 +109,7 @@ module "salt-shaker-products-testing" {
   image              = "opensuse155o"
   salt_obs_flavor    = "saltstack:products:testing"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:d9"
+    mac = "aa:b2:93:02:02:29"
   }
   install_salt_bundle = false
 }

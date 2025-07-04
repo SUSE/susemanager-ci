@@ -109,7 +109,7 @@ module "salt-shaker-products-testing" {
   image              = "sles15sp4o"
   salt_obs_flavor    = "saltstack:products:testing"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:e3"
+    mac = "aa:b2:93:02:02:33"
   }
 }
 

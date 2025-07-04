@@ -109,7 +109,7 @@ module "salt-shaker-saltstack-tumbleweed" {
   image              = "tumbleweedo"
   salt_obs_flavor    = "saltstack"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:ec"
+    mac = "aa:b2:93:02:02:3c"
   }
   install_salt_bundle = false
 }

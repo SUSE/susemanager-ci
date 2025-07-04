@@ -109,7 +109,7 @@ module "salt-shaker-products-next" {
   image              = "sles15sp5o"
   salt_obs_flavor    = "saltstack:products:next"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:c8"
+    mac = "aa:b2:93:02:02:18"
   }
 }
 

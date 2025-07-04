@@ -109,7 +109,7 @@ module "salt-shaker-products-testing" {
   image              = "centos7o"
   salt_obs_flavor    = "saltstack:products:testing"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:d4"
+    mac = "aa:b2:93:02:02:24"
   }
 }
 

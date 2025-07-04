@@ -109,7 +109,7 @@ module "salt-shaker-products-testing" {
   image              = "almalinux9o"
   salt_obs_flavor    = "saltstack:products:testing"
   provider_settings  = {
-    mac = "aa:b2:93:01:01:d3"
+    mac = "aa:b2:93:02:02:23"
   }
 }
 
