@@ -47,7 +47,7 @@ def run(params) {
             }
 
             stage('Name run') {
-                currentBuild.displayName = nameDisplay(params)
+                currentBuild.description = nameDisplay(params)
             }
 
             stage('Deploy') {
