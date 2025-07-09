@@ -208,7 +208,7 @@ module "server" {
   install_salt_bundle            = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
-    instance_type = var.ARCHITECTURE == "x86_64" ? "m6a.xlarge" : "m6g.xlarge"
+    instance_type = var.ARCHITECTURE == "x86_64" ? "m6a.2xlarge" : "m6g.2xlarge"
   }
 
   //server_additional_repos
