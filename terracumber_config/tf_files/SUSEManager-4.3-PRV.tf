@@ -127,7 +127,7 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:92:03:00:80"
-        vcpu = 2
+        vcpu = 4
         memory = 2048
       }
     }

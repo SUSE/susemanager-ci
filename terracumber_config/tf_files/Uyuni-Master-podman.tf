@@ -134,6 +134,8 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:20"
+        vcpu = 4
+        memory = 2048
       }
     }
     server_containerized = {
