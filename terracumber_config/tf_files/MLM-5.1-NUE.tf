@@ -141,7 +141,7 @@ module "cucumber_testsuite" {
     server_containerized = {
       image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:11"
+        mac = "aa:b2:93:01:01:11"
         vcpu = 8
         memory = 32768
       }
