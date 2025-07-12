@@ -137,7 +137,7 @@ module "cucumber_testsuite" {
     server_containerized = {
       image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:21"
+        mac = "aa:b2:93:01:01:21"
         vcpu = 4
         memory = 16384
       }
@@ -150,7 +150,7 @@ module "cucumber_testsuite" {
     proxy_containerized = {
       image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:22"
+        mac = "aa:b2:93:01:01:22"
         vcpu = 2
         memory = 2048
       }
@@ -162,7 +162,7 @@ module "cucumber_testsuite" {
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:26"
+        mac = "aa:b2:93:01:01:26"
         vcpu = 2
         memory = 2048
       }
@@ -170,7 +170,7 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:28"
+        mac = "aa:b2:93:01:01:28"
         vcpu = 2
         memory = 2048
       }
@@ -178,7 +178,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:29"
+        mac = "aa:b2:93:01:01:29"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -188,7 +188,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:2b"
+        mac = "aa:b2:93:01:01:2b"
         vcpu = 2
         memory = 2048
       }
@@ -196,7 +196,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:2d"
+        mac = "aa:b2:93:01:01:2d"
         vcpu = 2
         memory = 2048
       }
