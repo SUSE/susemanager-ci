@@ -106,7 +106,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ref-51-"
@@ -160,7 +160,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_minion = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:01:26"
         vcpu = 2
@@ -168,7 +168,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:01:28"
         vcpu = 2
@@ -194,7 +194,7 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:01:2d"
         vcpu = 2
