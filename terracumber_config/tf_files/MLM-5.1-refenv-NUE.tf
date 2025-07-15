@@ -41,7 +41,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results REF1.0-NUE: Environment setup failed"
+  default = "Results REF5.1-NUE: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
