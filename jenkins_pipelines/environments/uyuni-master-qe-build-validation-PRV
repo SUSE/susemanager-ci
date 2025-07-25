@@ -12,7 +12,6 @@ node('sumaform-cucumber-provo') {
             'amazon2023_minion, amazon2023_sshminion, ' +
             'centos7_minion, centos7_sshminion, ' +
             'liberty9_minion, liberty9_sshminion, ' +
-            'openeuler2403_minion, openeuler2403_sshminion, ' +
             'oracle9_minion, oracle9_sshminion, ' +
             'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, ' +
             'ubuntu2004_minion, ubuntu2004_sshminion, ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
