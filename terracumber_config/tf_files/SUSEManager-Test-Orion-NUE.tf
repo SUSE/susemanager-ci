@@ -92,7 +92,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "5.1-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -127,26 +127,30 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:70"
-        vcpu = 2
+        vcpu = 4
         memory = 4096
       }
     }
     server_containerized = {
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
         vcpu = 4
         memory = 16384
       }
-      main_disk_size = 500
-      login_timeout = 28800
-      runtime = "podman"
+      main_disk_size       = 500
+      login_timeout        = 28800
+      large_deployment     = true
+      runtime              = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
-      container_tag = "latest"
+      container_tag        = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
       }
+
     }
     proxy_containerized = {
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
         vcpu = 2
