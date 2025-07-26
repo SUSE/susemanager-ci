@@ -135,8 +135,8 @@ module "cucumber_testsuite" {
       image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
-        vcpu = 4
-        memory = 16384
+        vcpu = 8
+        memory = 32768
       }
       main_disk_size       = 500
       login_timeout        = 28800
