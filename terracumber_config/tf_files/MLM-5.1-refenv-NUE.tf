@@ -144,7 +144,8 @@ module "cucumber_testsuite" {
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/5.1/containerfile"
+      #container_repository = "registry.suse.de/devel/galaxy/manager/5.1/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
       container_tag = "latest"
     }
     proxy_containerized = {
@@ -156,7 +157,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/5.1/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
       container_tag = "latest"
     }
     suse_minion = {
