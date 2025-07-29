@@ -48,7 +48,7 @@ def clean_mi_ids(mi_ids: list[str]) -> set[str]:
 def create_url(mi_id: str, suffix: str) -> str:
     url = f"{IBS_MAINTENANCE_URL_PREFIX}{mi_id}{suffix}"
 
-    res: requests.Response = requests.get(url)
+    res: requests.Response = requests.get(url, timeout=6)
     return url if res.ok else ""
 
 def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
