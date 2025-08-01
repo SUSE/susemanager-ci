@@ -109,7 +109,7 @@ module "cucumber_testsuite" {
   images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
-  name_prefix  = "suma-ref-head-"
+  name_prefix  = "mlm-ref-head-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
