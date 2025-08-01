@@ -145,11 +145,12 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
+      //container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag        = "latest"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
-      }
+      //additional_repos = {
+        //Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
+      //}
 
     }
     proxy_containerized = {
@@ -161,11 +162,12 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
+      //container_repository = "registry.suse.de/devel/galaxy/manager/test/orion/containerfile"
+      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
-      }
+      //additional_repos = {
+        //Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
+      //}
     }
     suse_minion = {
       image = "sles15sp4o"
