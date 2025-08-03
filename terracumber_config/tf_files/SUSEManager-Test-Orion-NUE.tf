@@ -149,7 +149,7 @@ module "cucumber_testsuite" {
       //container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag        = "latest"
       additional_repos = {
-        /Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
       }
 
     }
