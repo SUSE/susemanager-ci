@@ -5,10 +5,10 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         // UTC Timezone
-        pipelineTriggers([cron('H */4 * * *')]),
+        pipelineTriggers([cron('H 20 * * *')]),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'cucumber_ref', defaultValue: 'test-orion-setup', description: 'Testsuite Git reference (branch, tag...)'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-Test-Orion-NUE.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
