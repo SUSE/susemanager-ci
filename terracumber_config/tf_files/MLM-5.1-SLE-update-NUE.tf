@@ -110,7 +110,7 @@ module "base" {
   name_prefix       = "mlm-su-51-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles15sp6o", "opensuse155o", "opensuse156o", "slmicro61o" ]
+  images            = [ "sles15sp6o", "opensuse156o", "slmicro61o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
