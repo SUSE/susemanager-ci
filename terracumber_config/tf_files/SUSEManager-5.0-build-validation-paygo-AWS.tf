@@ -221,7 +221,7 @@ module "proxy" {
   server_configuration      = module.server.configuration
   name                      = "proxy"
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
-  image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "suma-proxy-50-byos"
+  image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "suma-proxy-50-${var.ARCHITECTURE}-byos"
   provision                 = false
 
 
