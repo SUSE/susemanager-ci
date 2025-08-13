@@ -141,7 +141,7 @@ variable "PROXY_AMI" {
 }
 
 variable "ARCHITECTURE" {
-  description = "Select Server architecture"
+  description = "Select Server and Proxy architecture"
   type        = string
   default     = "x86_64"
 }

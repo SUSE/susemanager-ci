@@ -8,7 +8,6 @@ def run(params) {
         local_mirror_dir = "${resultdir}/sumaform-local"
         aws_mirror_dir = "${resultdir}/sumaform-aws"
         awscli = '/usr/local/bin/aws'
-        suma43_build_url = "https://dist.suse.de/ibs/SUSE:/SLE-15-SP4:/Update:/Products:/Manager43/images/"
         node_user = 'jenkins'
         build_validation = true
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; export CUCUMBER_PUBLISH_QUIET=true;"
@@ -29,7 +28,6 @@ def run(params) {
         def client_paygo_stage_result_fail = false
         def products_and_salt_migration_stage_result_fail = false
         def retail_stage_result_fail = false
-        def containerization_stage_result_fail = false
 
         local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir}"
         aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir}"
@@ -64,52 +62,6 @@ def run(params) {
             if (params.prepare_aws_env) {
                 stage("Prepare AWS environment") {
                     parallel(
-                            "upload_latest_image": {
-                                if (params.use_latest_ami_image) {
-                                    stage('Clean old images') {
-                                        // Get all image ami ids
-                                        image_amis = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].ImageId'",
-                                                returnStdout: true)
-                                        // Get all snapshot ids
-                                        image_snapshots = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=SUSE-Manager-*-BYOS*' --region ${params.aws_region} | jq -r '.Images[].BlockDeviceMappings[0].Ebs.SnapshotId'",
-                                                returnStdout: true)
-
-                                        String[] ami_list = image_amis.split("\n")
-                                        String[] snapshot_list = image_snapshots.split("\n")
-
-                                        // Deregister all BYOS images
-                                        ami_list.each { ami ->
-                                            if (ami) {
-                                                sh(script: "${awscli} ec2 deregister-image --image-id ${ami} --region ${params.aws_region}")
-                                            }
-                                        }
-                                        // Delete all BYOS snapshot
-                                        snapshot_list.each { snapshot ->
-                                            if (snapshot) {
-                                                sh(script: "${awscli} ec2 delete-snapshot --snapshot-id ${snapshot} --region ${params.aws_region}")
-                                            }
-                                        }
-                                    }
-
-                                    stage('Download last ami image') {
-                                        sh "rm -rf ${resultdir}/images"
-                                        sh "mkdir -p ${resultdir}/images"
-
-                                        sh(script: "curl ${suma43_build_url} > images.html")
-                                        server_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Server-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
-                                        proxy_image_name = sh(script: "grep -oP '(?<=href=\")SUSE-Manager-Proxy-BYOS.*EC2-Build.*raw.xz(?=\")' images.html", returnStdout: true).trim()
-
-                                        sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${server_image_name}")
-                                        sh(script: "cd ${resultdir}/images; wget ${suma_43_build_url}${proxy_image_name}")
-                                        sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_server' --wait-count 3 -n '${server_image_name}' '${resultdir}/images/${server_image_name}'")
-                                        sh(script: "ec2uploadimg -f /home/jenkins/.ec2utils.conf -a test --backing-store ssd --machine 'x86_64' --virt-type hvm --sriov-support --ena-support --verbose --regions '${params.aws_region}' -d 'build_suma_proxy' --wait-count 3 -n '${proxy_image_name}' '${resultdir}/images/${proxy_image_name}'")
-                                        server_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${server_image_name}' --region ${params.aws_region}| jq -r '.Images[0].ImageId'",
-                                                returnStdout: true).trim()
-                                        env.proxy_ami = sh(script: "${awscli} ec2 describe-images --filters 'Name=name,Values=${proxy_image_name}' --region ${params.aws_region} | jq -r '.Images[0].ImageId'",
-                                                returnStdout: true).trim()
-                                    }
-                                }
-                            },
                             "create_local_mirror_with_mu": {
                                 stage("Create local mirror with MU") {
                                     // Generate custom_repositories.json file in the workspace from the value passed by parameter
@@ -168,7 +120,6 @@ def run(params) {
                                     writeFile file: "${aws_mirror_dir}/terraform.tfvars", text: aws_configuration, encoding: "UTF-8"
                                     // Deploy empty AWS mirror
                                     sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${aws_mirror_params} --logfile ${resultdirbuild}/sumaform-mirror-aws.log --init --taint '.*(domain|main_disk).*' --runstep provision --sumaform-backend aws"
-
                                 }
                             }
                     )
@@ -434,27 +385,6 @@ def run(params) {
                 retail_stage_result_fail = true
             }
             /** Retail stages end **/
-
-            /** Containerization stages start **/
-            try {
-                stage('Containerization') {
-                    if (params.must_run_containerization_tests ?: false) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start running the containerization tests'
-                        }
-                        echo 'Prepare Proxy as Pod and run basic tests'
-                        res_container_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_containerization'", returnStatus: true)
-                        echo "Container proxy status code: ${res_container_proxy}"
-                        if (res_container_proxy != 0) {
-                            error("Containerization test failed with status code: ${res_non_MU_repositories}")
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                println("ERROR: Containerization failed\\nException: ${ex}")
-                containerization_stage_result_fail = true
-            }
-            /** Containerization stages end **/
         }
         finally {
             stage('Save TF state') {
@@ -511,10 +441,7 @@ def run(params) {
                 if (retail_stage_result_fail) {
                     error("Retail stage failed")
                 }
-                // Fail pipeline if containerization stage failed
-                if (containerization_stage_result_fail) {
-                    error("Containerization stage failed")
-                }
+                
                 sh "exit ${result_error}"
             }
         }
