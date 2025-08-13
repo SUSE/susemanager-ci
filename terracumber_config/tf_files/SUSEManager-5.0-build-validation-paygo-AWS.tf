@@ -229,7 +229,7 @@ module "proxy" {
   use_os_released_updates   = false
   ssh_key_path              = "./salt/controller/id_ed25519.pub"
   provider_settings         = {
-    instance_type = "c6i.large"
+    instance_type = var.ARCHITECTURE == "x86_64" ?  "c6i.large" : "c6g.large"
   }
 
   //proxy_additional_repos
