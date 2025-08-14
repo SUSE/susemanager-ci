@@ -45,11 +45,10 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             booleanParam(name: 'must_run_products_and_salt_migration_tests', defaultValue: false, description: 'Run products and Salt migration Tests'),
             booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
-            booleanParam(name: 'must_run_containerization_tests', defaultValue: true, description: 'Run Containerization Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             string(name: 'server_ami', defaultValue: '', description: 'Specify the server ami image if not using the default search'),
             string(name: 'proxy_ami', defaultValue: '', description: 'Specify the proxy ami image if not using the default search'),
-            choice(name: 'architecture', choices: ['x86_64', 'arm64'], description: 'Paygo server architecture'),
+            choice(name: 'architecture', choices: ['x86_64', 'arm64'], description: 'Server and Proxy architecture'),
             string(name: 'aws_region', defaultValue: 'eu-central-1', description: 'Describe the AWS region where to deploy the server'),
             string(name: 'aws_availability_zone', defaultValue: 'eu-central-1a', description: 'Describe the AWS availability zone to deploy the server'),
             string(name: 'key_file', defaultValue: '/home/jenkins/.ssh/testing-suma.pem', description: 'Path to SSH private key to access instance in AWS'),
@@ -58,7 +57,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
             text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma and whitespaces (Option A)'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format (Option B)'),
-            ])
+        ])
     ])
 
     stage('Checkout pipeline') {
