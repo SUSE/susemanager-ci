@@ -110,6 +110,7 @@ module "cucumber_testsuite" {
 
   use_avahi    = false
   name_prefix  = "suma-ref-50-"
+  use_shared_resources = true
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
