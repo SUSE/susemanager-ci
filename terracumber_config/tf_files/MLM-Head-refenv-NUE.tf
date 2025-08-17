@@ -110,6 +110,7 @@ module "cucumber_testsuite" {
 
   use_avahi    = false
   name_prefix  = "mlm-ref-head-"
+  use_shared_resources = true
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
