@@ -1,0 +1,69 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    def minionList = 'sles12sp5_minion, sles12sp5_sshminion, sles12sp5_paygo_minion, ' +
+            'sles15sp4_minion, sles15sp4_sshminion, ' +
+            'sles15sp5_minion, sles15sp5_sshminion, sles15sp5_paygo_minion, ' +
+            'sles15sp6_minion, sles15sp6_sshminion, sles15sp6_paygo_minion, ' +
+            'sles15sp7_minion, sles15sp7_sshminion, ' +
+            'rhel9_paygo_minion'
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'MLM-5.1-build-validation-paygo-AWS.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
+            choice(name: 'terraform_bin', choices: ['/usr/bin/terraform'], description: 'Terraform binary path'),
+            choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
+            string(name: 'terraform_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for terraform'),
+            // Temporary: should move to uyuni-project
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
+                    value: minionList,
+                    defaultValue: minionList,
+                    description: 'Node list to run during BV'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
+            booleanParam(name: 'prepare_aws_env', defaultValue: true, description: 'Create local and AWS mirror and upload data to AWS mirror'),
+            booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
+            booleanParam(name: 'generate_feature', defaultValue: true, description: 'Generate Rakefile for features'),
+            booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
+            booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
+            booleanParam(name: 'enable_proxy_stages', defaultValue: true, description: 'Run Proxy stages'),
+            booleanParam(name: 'enable_monitoring_stages', defaultValue: true, description: 'Run Monitoring stages'),
+            booleanParam(name: 'enable_client_stages', defaultValue: true, description: 'Run Client stages'),
+            booleanParam(name: 'enable_paygo_stages', defaultValue: false, description: 'Run Client stages'),
+            booleanParam(name: 'must_add_MU_repositories', defaultValue: true, description: 'Add MU channels'),
+            booleanParam(name: 'must_add_non_MU_repositories', defaultValue: true, description: 'Add non MU channels'),
+            booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
+            booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
+            booleanParam(name: 'must_boot_node', defaultValue: true, description: 'Bootstrap Node'),
+            booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
+            booleanParam(name: 'must_run_products_and_salt_migration_tests', defaultValue: false, description: 'Run products and Salt migration Tests'),
+            booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
+            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
+            string(name: 'server_ami', defaultValue: '', description: 'Specify the server ami image if not using the default search'),
+            string(name: 'proxy_ami', defaultValue: '', description: 'Specify the proxy ami image if not using the default search'),
+            choice(name: 'architecture', choices: ['x86_64', 'arm64'], description: 'Paygo server and proxy architecture'),
+            string(name: 'aws_region', defaultValue: 'eu-central-1', description: 'Describe the AWS region where to deploy the server'),
+            string(name: 'aws_availability_zone', defaultValue: 'eu-central-1a', description: 'Describe the AWS availability zone to deploy the server'),
+            string(name: 'key_file', defaultValue: '/home/jenkins/.ssh/testing-suma.pem', description: 'Path to SSH private key to access instance in AWS'),
+            string(name: 'key_name', defaultValue: 'testing-suma', description: 'SSH key name in AWS'),
+            text(name: 'allowed_IPS', defaultValue: '195.135.223.0/24', description: 'Add the public IPs to add to AWS ingress security group ( keep default Jenkins address ) separated by new line' ),
+            booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
+            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma and whitespaces (Option A)'),
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format (Option B)'),
+            ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation-aws.groovy"
+    pipeline.run(params)
+}

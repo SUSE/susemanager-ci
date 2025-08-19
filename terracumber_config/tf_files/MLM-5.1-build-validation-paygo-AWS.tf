@@ -2,7 +2,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-qe-build-validation-paygo-aws/"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-qe-build-validation-paygo-aws/"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -18,7 +18,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-5.0"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -28,7 +28,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Manager-5.0-AWS-BV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Manager-5.1-AWS-BV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -38,7 +38,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Manager5.0-AWS-BV: Environment setup failed"
+  default = "Results Manager-5.1-AWS-BV: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -152,7 +152,7 @@ provider "aws" {
 
 module "base" {
   source                   = "./modules/base"
-  product_version          = "5.0-released"
+  product_version          = "5.1-paygo"
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
@@ -185,8 +185,7 @@ module "server" {
       mirror = null
     })
   name                       = "server"
-  product_version            = "5.0-paygo"
-  image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "suma-server-50-${var.ARCHITECTURE}-ltd-paygo"
+  image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "smlm-server-51-${var.ARCHITECTURE}-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
@@ -208,7 +207,7 @@ module "server" {
   install_salt_bundle            = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
-    instance_type = var.ARCHITECTURE == "x86_64" ? "m6a.2xlarge" : "m6g.2xlarge"
+    instance_type = var.ARCHITECTURE == "x86_64" ? "m6a.xlarge" : "m6g.xlarge"
   }
 
   //server_additional_repos
@@ -221,7 +220,7 @@ module "proxy" {
   server_configuration      = module.server.configuration
   name                      = "proxy"
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
-  image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "suma-proxy-50-${var.ARCHITECTURE}-byos"
+  image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "smlm-proxy-51-${var.ARCHITECTURE}-byos"
   provision                 = false
 
 
@@ -238,7 +237,6 @@ module "proxy" {
 module "sles12sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-paygo"
   name               = "sles12sp5-paygo-minion"
   image              = "sles12sp5-paygo"
   provider_settings = {
@@ -254,7 +252,6 @@ module "sles12sp5_paygo_minion" {
 module "sles15sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-paygo"
   name               = "sles15sp5-paygo-minion"
   image              = "sles15sp5-paygo"
   provider_settings = {
@@ -271,7 +268,6 @@ module "sles15sp5_paygo_minion" {
 module "sles15sp6_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-paygo"
   name               = "sles15sp6-paygo-minion"
   image              = "sles15sp6-paygo"
   provider_settings = {
@@ -288,7 +284,6 @@ module "sles15sp6_paygo_minion" {
 module "slesforsap15sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-paygo"
   name               = "slesforsap15sp5-paygo-minion"
   image              = "slesforsap15sp5-paygo"
   provider_settings = {
