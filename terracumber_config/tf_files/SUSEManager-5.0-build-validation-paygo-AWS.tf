@@ -152,7 +152,7 @@ provider "aws" {
 
 module "base" {
   source                   = "./modules/base"
-  product_version          = "5.0-released"
+  product_version          = "5.0-paygo"
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
@@ -185,7 +185,6 @@ module "server" {
       mirror = null
     })
   name                       = "server"
-  product_version            = "5.0-paygo"
   image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "suma-server-50-${var.ARCHITECTURE}-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
@@ -238,7 +237,6 @@ module "proxy" {
 module "sles12sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-paygo"
   name               = "sles12sp5-paygo-minion"
   image              = "sles12sp5-paygo"
   provider_settings = {
@@ -254,7 +252,6 @@ module "sles12sp5_paygo_minion" {
 module "sles15sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-paygo"
   name               = "sles15sp5-paygo-minion"
   image              = "sles15sp5-paygo"
   provider_settings = {
@@ -271,7 +268,6 @@ module "sles15sp5_paygo_minion" {
 module "sles15sp6_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-paygo"
   name               = "sles15sp6-paygo-minion"
   image              = "sles15sp6-paygo"
   provider_settings = {
@@ -288,7 +284,6 @@ module "sles15sp6_paygo_minion" {
 module "slesforsap15sp5_paygo_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  product_version    = "5.0-paygo"
   name               = "slesforsap15sp5-paygo-minion"
   image              = "slesforsap15sp5-paygo"
   provider_settings = {
@@ -445,7 +440,6 @@ module "rhel9_paygo_minion" {
 module "controller" {
   source             = "./modules/controller"
   name               = "controller"
-  product_version    = ""
   provider_settings = {
     instance_type = "c6i.xlarge"
   }
