@@ -5,6 +5,7 @@ v50_nodes: Dict[str, Set[str]] = {
     "server": {
         "/SUSE_Products_SUSE-Manager-Server_5.0_x86_64/",
         "/SUSE_Updates_SUSE-Manager-Server_5.0_x86_64/",
+        "/SUSE_Updates_SLE-Module-Web-Scripting_15-SP6_x86_64/",
     },
     "proxy": {
         "/SUSE_Products_SUSE-Manager-Proxy_5.0_x86_64/",
