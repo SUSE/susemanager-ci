@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.1-qe-build-validation-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.1-micro-qe-build-validation-NUE"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -126,7 +126,7 @@ module "base_core" {
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
   product_version   = "5.1-nightly"
-  name_prefix       = "mlm-bv-51-"
+  name_prefix       = "mlm-bv-51micro-"
   use_avahi         = false
   domain            = "mgr.suse.de"
   images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
@@ -154,7 +154,7 @@ module "base_arm" {
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
   product_version   = "5.1-nightly"
-  name_prefix       = "mlm-bv-51-"
+  name_prefix       = "mlm-bv-51micro-"
   use_avahi         = false
   domain            = "mgr.suse.de"
   images            = [ "opensuse156armo" ]
@@ -173,7 +173,7 @@ module "base_arm" {
 module "base_s390" {
   source            = "./backend_modules/feilong/base"
 
-  name_prefix       = "mlm-bv-51-"
+  name_prefix       = "mlm-bv-51micro-"
   domain            = "mgr.suse.de"
   product_version   = "5.1-nightly"
 
@@ -508,7 +508,7 @@ module "opensuse156arm_minion" {
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:92:42:01:2e"
-    overwrite_fqdn     = "mlm-bv-51-opensuse156arm-minion.mgr.suse.de"
+    overwrite_fqdn     = "mlm-bv-51micro-opensuse156arm-minion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -549,7 +549,7 @@ module "salt_migration_minion" {
   }
 
   server_configuration = {
-    hostname = "mlm-bv-51-proxy.mgr.suse.de"
+    hostname = "mlm-bv-51micro-proxy.mgr.suse.de"
   }
   auto_connect_to_master  = true
   use_os_released_updates = false
@@ -924,7 +924,7 @@ module "opensuse156arm_sshminion" {
   image              = "opensuse156armo"
   provider_settings = {
     mac                = "aa:b2:92:42:01:4e"
-    overwrite_fqdn     = "mlm-bv-51-opensuse156arm-sshminion.mgr.suse.de"
+    overwrite_fqdn     = "mlm-bv-51micro-opensuse156arm-sshminion.mgr.suse.de"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
