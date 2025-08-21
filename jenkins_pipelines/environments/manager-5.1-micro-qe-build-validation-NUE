@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('sumaform-cucumber-provo') {
+node('sumaform-cucumber') {
     def minionList = 'sles12sp5_minion, sles12sp5_sshminion, ' +
             'sles15sp3_minion, sles15sp3_sshminion, ' +
             'sles15sp4_minion, sles15sp4_sshminion, ' +
@@ -9,11 +9,12 @@ node('sumaform-cucumber-provo') {
             'sles15sp7_minion, sles15sp7_sshminion, ' +
             'salt_migration_minion, ' +
             'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, ' +
+            'amazon2023_minion, amazon2023_sshminion, ' +
             'centos7_minion, centos7_sshminion, ' +
             'liberty9_minion, liberty9_sshminion, ' +
             'oracle9_minion, oracle9_sshminion, ' +
             'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, ' +
-            'ubuntu2004_minion, ubuntu2004_sshminion, ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
+            'ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
             'debian12_minion, debian12_sshminion, ' +
             'opensuse156arm_minion, opensuse156arm_sshminion, ' +
             'sles15sp5s390_minion, sles15sp5s390_sshminion, ' +
@@ -23,23 +24,22 @@ node('sumaform-cucumber-provo') {
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'Manager-5.0', description: 'Branch prepared for the MU tested'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/SUSEManager-5.0-build-validation-PRV.tf', description: 'Path to the tf file to be used'),
+            string(name: 'cucumber_ref', defaultValue: 'Manager-5.1', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/MLM-5.1-micro-build-validation-NUE.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
             choice(name: 'terraform_bin', choices: ['/usr/bin/terraform'], description: 'Terraform binary path'),
             choice(name: 'terraform_bin_plugins', choices: ['/usr/bin'], description: 'Terraform plugins path'),
             string(name: 'terraform_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for terraform'),
-            // Temporary: should move to uyuni-project
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
-            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Server container registry'),
-            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
@@ -67,7 +67,7 @@ node('sumaform-cucumber-provo') {
         checkout scm
     }
     def mutableParams = [:] + params
-    mutableParams.product_version_display = "5.0-released"
+    mutableParams.product_version_display = "5.1-released"
     mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_50.json'
 
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"

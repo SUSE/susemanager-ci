@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-qe-sle-update-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-sles-qe-build-validation-NUE"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-5.1"
+  default = "Manager-5.0"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results 5.1 SLE Update $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 5.0 SLE Update $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results 5.1 SLE Update: Environment setup failed"
+  default = "Results 5.0 SLE Update: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -106,11 +106,12 @@ module "base" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = "5.1-released"
-  name_prefix       = "mlm-su-51-"
+  product_version   = "5.0-released"
+
+  name_prefix       = "suma-bv-50sles-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles15sp6o", "opensuse156o", "slmicro61o" ]
+  images            = [ "sles15sp6o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -127,17 +128,14 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base.configuration
   name               = "server"
-  image              = "slmicro61o"
+  image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:79"
+    mac                = "aa:b2:93:02:03:e9"
     data_pool          = "ssd"
   }
 
-  main_disk_size        = 100
-  repository_disk_size  = 1000
-  database_disk_size    = 150
+  main_disk_size        = 1500
   runtime               = "podman"
-  // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
   container_repository  = var.SERVER_CONTAINER_REPOSITORY
   container_image       = var.SERVER_CONTAINER_IMAGE
   container_tag         = "latest"
@@ -166,13 +164,13 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base.configuration
   name               = "proxy"
-  image              = "slmicro61o"
+  image              = "sles15sp6o"
   provider_settings  = {
-    mac                = "aa:b2:93:01:02:7a"
+    mac                = "aa:b2:93:02:03:ea"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "mlm-su-51-server.mgr.suse.de"
+    hostname = "suma-bv-50sles-server.mgr.suse.de"
     username = "admin"
     password = "admin"
   }
@@ -183,7 +181,6 @@ module "proxy_containerized" {
 
   auto_configure        = false
   ssh_key_path          = "./salt/controller/id_ed25519.pub"
-
 }
 
 module "sles15sp6_minion" {
@@ -192,7 +189,7 @@ module "sles15sp6_minion" {
   name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings  = {
-    mac    = "aa:b2:93:01:02:7b"
+    mac    = "aa:b2:93:02:03:eb"
     vcpu   = 2
     memory = 2048
   }
@@ -200,7 +197,6 @@ module "sles15sp6_minion" {
   auto_connect_to_master  = false
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
 }
 
 module "controller" {
@@ -208,7 +204,7 @@ module "controller" {
   base_configuration = module.base.configuration
   name               = "controller"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:78"
+    mac                = "aa:b2:93:02:03:e8"
     memory             = 16384
     vcpu               = 8
   }

@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-qe-alternative-base-OS-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-sles-qe-sle-update-NUE"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -108,10 +108,10 @@ module "base" {
   cc_password       = var.SCC_PASSWORD
   product_version   = "5.0-released"
 
-  name_prefix       = "suma-alt-50-"
+  name_prefix       = "suma-su-50sles-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles15sp6o", "opensuse155o", "opensuse156o" ]
+  images            = [ "sles15sp6o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -130,7 +130,7 @@ module "server_containerized" {
   name               = "server"
   image              = "sles15sp6o"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:69"
+    mac                = "aa:b2:93:02:03:e5"
     data_pool          = "ssd"
   }
 
@@ -166,17 +166,17 @@ module "proxy_containerized" {
   name               = "proxy"
   image              = "sles15sp6o"
   provider_settings  = {
-    mac                = "aa:b2:93:01:02:6a"
+    mac                = "aa:b2:93:02:03:e6"
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-alt-50-server.mgr.suse.de"
+    hostname = "suma-su-50sles-server.mgr.suse.de"
     username = "admin"
     password = "admin"
   }
 
   runtime              = "podman"
-  container_repository  = var.PROXY_CONTAINER_REPOSITORY
+  container_repository = var.PROXY_CONTAINER_REPOSITORY
   container_tag        = "latest"
 
   auto_configure        = false
@@ -189,7 +189,7 @@ module "sles15sp6_minion" {
   name               = "sles15sp6-minion"
   image              = "sles15sp6o"
   provider_settings  = {
-    mac    = "aa:b2:93:01:02:6b"
+    mac    = "aa:b2:93:02:03:e7"
     vcpu   = 2
     memory = 2048
   }
@@ -204,7 +204,7 @@ module "controller" {
   base_configuration = module.base.configuration
   name               = "controller"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:68"
+    mac                = "aa:b2:93:02:03:e4"
     memory             = 16384
     vcpu               = 8
   }

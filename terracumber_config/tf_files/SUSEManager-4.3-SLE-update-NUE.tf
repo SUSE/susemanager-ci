@@ -115,7 +115,7 @@ module "server" {
   base_configuration = module.base.configuration
   name               = "server"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:61"
+    mac                = "aa:b2:93:02:03:d1"
     memory             = 16384
     vcpu               = 4
     data_pool          = "ssd"
@@ -150,7 +150,7 @@ module "proxy" {
   base_configuration = module.base.configuration
   name               = "proxy"
   provider_settings  = {
-    mac      = "aa:b2:93:01:02:62"
+    mac      = "aa:b2:93:02:03:d2"
     memory   = 4096
   }
   server_configuration = {
@@ -177,7 +177,7 @@ module "sles15sp4_minion" {
   name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings  = {
-    mac    = "aa:b2:93:01:02:63"
+    mac    = "aa:b2:93:02:03:d3"
     vcpu   = 2
     memory = 2048
   }
@@ -192,7 +192,7 @@ module "controller" {
   base_configuration = module.base.configuration
   name               = "controller"
   provider_settings = {
-    mac                = "aa:b2:93:01:02:60"
+    mac                = "aa:b2:93:02:03:d0"
     memory             = 16384
     vcpu               = 8
   }
