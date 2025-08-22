@@ -99,13 +99,13 @@ module "cucumber_testsuite" {
   product_version = "uyuni-master"
 
   // Cucumber repository configuration for the controller
-  git_username = var.GIT_USER
-  git_password = var.GIT_PASSWORD
-  git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_BRANCH
+  git_username  = var.GIT_USER
+  git_password  = var.GIT_PASSWORD
+  git_repo      = var.CUCUMBER_GITREPO
+  branch        = var.CUCUMBER_BRANCH
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
+  cc_username   = var.SCC_USER
+  cc_password   = var.SCC_PASSWORD
 
   images        = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
 
@@ -114,28 +114,28 @@ module "cucumber_testsuite" {
   domain        = "mgr.suse.de"
   from_email    = "root@suse.de"
 
-  no_auth_registry         = "registry.mgr.suse.de"
-  auth_registry            = "registry.mgr.suse.de:5000/cucutest"
-  auth_registry_username   = "cucutest"
-  auth_registry_password   = "cucusecret"
-  git_profiles_repo        = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  no_auth_registry          = "registry.mgr.suse.de"
+  auth_registry             = "registry.mgr.suse.de:5000/cucutest"
+  auth_registry_username    = "cucutest"
+  auth_registry_password    = "cucusecret"
+  git_profiles_repo         = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  container_server         = true
-  container_proxy          = true
+  container_server          = true
+  container_proxy           = true
 
-  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images        = true
-
-  # server_http_proxy        = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
+  mirror                    = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images         = true
+  server_http_proxy         = "http-proxy.mgr.suse.de:3128"
+  custom_download_endpoint  = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:20"
-        vcpu = 4
-        memory = 4096
+        mac       = "aa:b2:93:01:00:20"
+        memory    = 4096
+        vcpu      = 4
+        cpu_model = "host-passthrough"
       }
     }
     server_containerized = {
@@ -156,9 +156,9 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:22"
       }
-      runtime               = "podman"
-      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
-      container_tag         = "latest"
+      runtime              = "podman"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_tag        = "latest"
     }
     suse_minion = {
       image             = "opensuse156o"
@@ -175,10 +175,10 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image             = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:2a"
+        mac    = "aa:b2:93:01:00:2a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
-        vcpu = 2
+        vcpu   = 2
         memory = 2048
       }
     }
@@ -191,7 +191,7 @@ module "cucumber_testsuite" {
     build_host = {
       image             = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:2d"
+        mac    = "aa:b2:93:01:00:2d"
         memory = 2048
       }
     }

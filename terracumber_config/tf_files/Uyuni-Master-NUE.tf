@@ -104,10 +104,10 @@ module "cucumber_testsuite" {
   product_version = "uyuni-master"
 
   // Cucumber repository configuration for the controller
-  git_username = var.GIT_USER
-  git_password = var.GIT_PASSWORD
-  git_repo     = var.CUCUMBER_GITREPO
-  branch       = var.CUCUMBER_BRANCH
+  git_username  = var.GIT_USER
+  git_password  = var.GIT_PASSWORD
+  git_repo      = var.CUCUMBER_GITREPO
+  branch        = var.CUCUMBER_BRANCH
 
   cc_username   = var.SCC_USER
   cc_password   = var.SCC_PASSWORD
@@ -137,20 +137,20 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac     = "aa:b2:93:01:00:d0"
-        memory = 10240
-        vcpu = 4
+        mac       = "aa:b2:93:01:00:d0"
+        memory    = 10240
+        vcpu      = 4
         cpu_model = "host-passthrough"
       }
     }
     server_containerized = {
-      provider_settings     = {
-        mac     = "aa:b2:93:01:00:d1"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:d1"
       }
-      runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
-      container_tag = "latest"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
+      runtime               = "podman"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_tag         = "latest"
+      helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       main_disk_size        = 80
       repository_disk_size  = 200
       database_disk_size    = 50
@@ -159,54 +159,54 @@ module "cucumber_testsuite" {
     }
     proxy_containerized = {
       provider_settings = {
-        mac     = "aa:b2:93:01:00:d2"
+        mac = "aa:b2:93:01:00:d2"
       }
-      runtime = "podman"
+      runtime              = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
-      container_tag = "latest"
+      container_tag        = "latest"
     }
     suse_minion = {
       image             = "opensuse156o"
       provider_settings = {
-        mac     = "aa:b2:93:01:00:d6"
+        mac = "aa:b2:93:01:00:d6"
       }
     }
     suse_sshminion = {
       image             = "opensuse156o"
       provider_settings = {
-        mac     = "aa:b2:93:01:00:d8"
+        mac = "aa:b2:93:01:00:d8"
       }
     }
     rhlike_minion = {
       image             = "rocky8o"
       provider_settings = {
-        mac     = "aa:b2:93:01:00:d9"
+        mac    = "aa:b2:93:01:00:d9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
-        vcpu    = 2
-        memory  = 2048
+        vcpu   = 2
+        memory = 2048
       }
     }
     deblike_minion = {
       image             = "ubuntu2404o"
       provider_settings = {
-        mac     = "aa:b2:93:01:00:db"
+        mac = "aa:b2:93:01:00:db"
       }
     }
     build_host = {
       image             = "sles15sp4o"
       provider_settings = {
-        mac     = "aa:b2:93:01:00:dd"
-        vcpu    = 2
-        memory  = 2048
+        mac    = "aa:b2:93:01:00:dd"
+        vcpu   = 2
+        memory = 2048
       }
     }
     pxeboot_minion = {
-      image  = "sles15sp4o"
+      image = "sles15sp4o"
     }
     dhcp_dns = {
-      name = "dhcp-dns"
-      image = "opensuse155o"
+      name       = "dhcp-dns"
+      image      = "opensuse155o"
       hypervisor = {
         host        = "suma-01.mgr.suse.de"
         user        = "root"
