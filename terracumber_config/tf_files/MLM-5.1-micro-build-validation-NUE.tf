@@ -125,7 +125,7 @@ module "base_core" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = "5.1-nightly"
+  product_version   = "5.1-released"
   name_prefix       = "mlm-bv-51micro-"
   use_avahi         = false
   domain            = "mgr.suse.de"
@@ -153,7 +153,7 @@ module "base_arm" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = "5.1-nightly"
+  product_version   = "5.1-released"
   name_prefix       = "mlm-bv-51micro-"
   use_avahi         = false
   domain            = "mgr.suse.de"
@@ -175,7 +175,7 @@ module "base_s390" {
 
   name_prefix       = "mlm-bv-51micro-"
   domain            = "mgr.suse.de"
-  product_version   = "5.1-nightly"
+  product_version   = "5.1-released"
 
   testsuite         = true
 }
