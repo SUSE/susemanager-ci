@@ -151,9 +151,9 @@ module "cucumber_testsuite" {
       container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag         = "latest"
       helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
-      main_disk_size        = 80
-      repository_disk_size  = 200
-      database_disk_size    = 50
+      main_disk_size        = 40
+      repository_disk_size  = 250
+      database_disk_size    = 60
       login_timeout         = 28800
       large_deployment      = true
     }
