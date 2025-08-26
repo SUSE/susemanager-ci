@@ -30,6 +30,8 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
         "RES_8_client_tools": "/RES-8:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-8-x86_64-Media1/"},
     "alma9_minion": {
         "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
+    "amazon2023_minion": {
+        "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
     "centos7_minion": {
         "RES_7_client_tools": "/RES-7:/Update:/Products:/MultiLinuxManagerTools/images/repo/ManagerTools-EL7-POOL-x86_64-Media/"},
     "liberty9_minion": {

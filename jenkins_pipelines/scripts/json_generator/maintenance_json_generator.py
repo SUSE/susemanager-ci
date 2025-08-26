@@ -83,9 +83,13 @@ def init_custom_repositories(version: str, static_repos: dict[str, dict[str, str
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
     node_ids: dict[str, str] = custom_repositories.get(node, {})
-    if mi_id not in node_ids:
-        node_ids[mi_id] = url
-        custom_repositories[node] = node_ids
+    final_id: str = mi_id
+    i: int = 1
+    while final_id in node_ids:
+        final_id = f"{mi_id}-{i}"
+        i += 1
+    node_ids[final_id] = url
+    custom_repositories[node] = node_ids
 
 def find_valid_repos(mi_ids: set[str], version: str):
     version_data = get_version_nodes(version)
@@ -96,8 +100,8 @@ def find_valid_repos(mi_ids: set[str], version: str):
     custom_repositories = init_custom_repositories(version, static_repos)
 
     for node, repositories in dynamic_nodes.items():
-        if node in ["amazon2023_minion", "openeuler2403_minion"]:
-            # amazon and openeuler minions are deployed but not used for SLE MU & BV MIs
+        if node in ["openeuler2403_minion"]:
+            # openeuler minion are deployed but not used for SLE MU & BV MIs
             continue
         for mi_id in mi_ids:
             for repo in repositories:
