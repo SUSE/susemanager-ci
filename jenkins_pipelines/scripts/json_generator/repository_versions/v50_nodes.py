@@ -20,6 +20,19 @@ def get_v50_nodes_sorted(v43_client_tools: Dict[str, Set[str]]) -> Dict[str, Lis
     """
     Combine v50_nodes (server/proxy) with v43_client_tools (clients),
     returning a dictionary with sorted lists of repository paths.
+
+    Notes:
+    - v50_nodes: Dict[str, Set[str]] (server/proxy paths)
+    - v43_client_tools: Dict[str, Set[str]] (client tool paths)
+    - Only adds client tool entries if they are not already defined in v50_nodes
+      (server/proxy keys are preserved).
+    - The sets are converted into sorted lists for deterministic ordering.
+
+    Args:
+        v43_client_tools (Dict[str, Set[str]]): Client tool repository paths to merge.
+
+    Returns:
+        Dict[str, List[str]]: Each node type maps to a sorted list of repository paths.
     """
     combined_nodes: Dict[str, Set[str]] = {k: set(v) for k, v in v50_nodes.items()}
 

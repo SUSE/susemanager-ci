@@ -120,13 +120,51 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     }
 }
 
-v51_nodes_dynamic_client_tools_repos: Dict[str, Dict[str, str]] = {
+v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-12_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-22.04_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-24.04_x86_64/"}
 }
 
 def get_v51_static_and_client_tools(variant: str = "micro") -> (Dict[str, Dict[str, str]], Dict[str, List[str]]):
+    """
+    Generate the full set of static and dynamic client tool repositories for SUMA 5.1.
+
+    The function merges static client repositories with Uyuni server/proxy repositories,
+    prepends the IBS URL prefix, and returns both static and dynamic sets in a
+    deterministic, sorted form.
+
+    Parameters:
+        variant (str): Either "micro" or "sles", determines which Uyuni tool set to use.
+                       "micro" → v51_uyuni_tools_micro_repos
+                       "sles"  → v51_uyuni_tools_sles_repos
+
+    Returns:
+        Tuple[
+            Dict[str, Dict[str, str]],  # static_repos
+                - Maps node IDs (e.g., "alma8_minion", "server", "proxy") to
+                  repo names → full IBS URLs.
+            Dict[str, List[str]]        # dynamic_client_tools_repos
+                - Maps dynamic client nodes (e.g., "debian12_minion") to
+                  a sorted list of full IBS URLs.
+        ]
+
+    Type and structure notes:
+    1. Static repositories:
+       - Input: v51_nodes_static_client_tools_repositories (Dict[str, Dict[str, str]])
+       - Merged with Uyuni server/proxy repos for the selected variant
+       - Output: Dict[str, Dict[str, str]] with full URLs
+
+    2. Dynamic client tool repositories:
+       - Input: v51_nodes_dynamic_client_tools_repos (Dict[str, Set[str]])
+       - Output: Dict[str, List[str]] with sorted full URLs
+       - Mirrors the pattern in v43/v50: sets of paths are converted to sorted lists.
+
+    Example:
+        static_repos, dynamic_repos = get_v51_static_and_client_tools("micro")
+        static_repos["server"]["server_uyuni_tools"]
+        dynamic_repos["debian12_minion"][0]
+    """
     static_repos: Dict[str, Dict[str, str]] = {
         key: {name: f"{IBS_URL_PREFIX}{path}" for name, path in subdict.items()}
         for key, subdict in v51_nodes_static_client_tools_repositories.items()
