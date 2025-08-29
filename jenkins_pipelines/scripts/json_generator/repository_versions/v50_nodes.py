@@ -37,7 +37,7 @@ def get_v50_nodes_sorted(v43_client_tools: Dict[str, Set[str]]) -> Dict[str, Lis
     combined_nodes: Dict[str, Set[str]] = {k: set(v) for k, v in v50_nodes.items()}
 
     for key, paths in v43_client_tools.items():
-        # only add if not already defined in v50 (avoid overwriting server/proxy)
+        # Only add if not already defined in v50 (avoid overwriting server/proxy)
         if key not in combined_nodes:
             combined_nodes[key] = set(paths)
 
