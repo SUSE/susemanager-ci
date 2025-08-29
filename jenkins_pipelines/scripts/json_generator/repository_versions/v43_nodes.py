@@ -2,7 +2,7 @@
 from typing import Dict, Set, List
 
 # dictionary for 4.3 client tools
-v43_client_tools: dict[str, Dict[str, str]] = {
+v43_client_tools: dict[str, Set[str]] = {
     "sle12sp5_client": {"/SUSE_Updates_SLE-Manager-Tools_12_x86_64/"},
     "sle12sp5_minion": {"/SUSE_Updates_SLE-Manager-Tools_12_x86_64/"},
     "sle15_client": {"/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
@@ -100,18 +100,33 @@ v43_client_tools: dict[str, Dict[str, str]] = {
 }
 
 # Dictionary for SUMA 4.3 Server and Proxy
-v43_nodes: Dict[str, Dict[str, str]] = {
-    "server": {"/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.3-LTS_x86_64/",
+v43_nodes: Dict[str, Set[str]] = {
+    "server": {"/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.3_x86_64/",
+               "/SUSE_Updates_SLE-Product-SUSE-Manager-Server_4.3_x86_64/",
                "/SUSE_Updates_SLE-Product-SUSE-Manager-Server_4.3-LTS_x86_64/",
                "/SUSE_Updates_SLE-Module-Basesystem_15-SP4_x86_64/",
                "/SUSE_Updates_SLE-Module-Web-Scripting_15-SP4_x86_64/",
                "/SUSE_Updates_SLE-Module-Server-Applications_15-SP4_x86_64/"},
-    "proxy": {"/SUSE_Updates_SLE-Module-SUSE-Manager-Proxy_4.3-LTS_x86_64/",
+    "proxy": {"/SUSE_Updates_SLE-Module-SUSE-Manager-Proxy_4.3_x86_64/",
+              "/SUSE_Updates_SLE-Product-SUSE-Manager-Proxy_4.3_x86_64/",
               "/SUSE_Updates_SLE-Product-SUSE-Manager-Proxy_4.3-LTS_x86_64/",
               "/SUSE_Updates_SLE-Module-Basesystem_15-SP4_x86_64/",
               "/SUSE_Updates_SLE-Module-Server-Applications_15-SP4_x86_64/"}
 }
 
 def get_v43_nodes_sorted() -> Dict[str, List[str]]:
+    """
+    Merge v43_nodes (server/proxy) with v43_client_tools (clients),
+    returning a dictionary with sorted lists of repository paths.
+
+    Notes:
+    - v43_nodes: Dict[str, Set[str]] (server/proxy paths)
+    - v43_client_tools: Dict[str, Set[str]] (client tool paths)
+    - No need to worry about duplicates; simply merge the dictionaries.
+    - The sets are converted into sorted lists for deterministic ordering.
+
+    Returns:
+        Dict[str, List[str]]: Each node type maps to a sorted list of repository paths.
+    """
     v43_nodes.update(v43_client_tools)
     return {k: sorted(v) for k, v in v43_nodes.items()}
