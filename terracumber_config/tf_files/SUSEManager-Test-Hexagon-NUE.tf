@@ -7,7 +7,7 @@ variable "URL_PREFIX" {
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='Uyuni' && run-testsuite"
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
@@ -103,55 +103,77 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o", "sles15sp6o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-hexagon-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry = "registry.mgr.suse.de:5000/cucutest"
+  no_auth_registry       = "registry.mgr.suse.de"
+  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
-  
-  container_server = true
-  container_proxy = true
-  
-  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images        = true
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
-  # server_http_proxy = "http-proxy.mgr.suse.de:3128"
+  container_server = true
+  container_proxy  = true
+  beta_enabled = false
+
+  //mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
+  //use_mirror_images        = true
+
+  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   host_settings = {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:50"
+        vcpu = 4
+        memory = 4096
       }
     }
     server_containerized = {
-      image = "sles15sp6o"
       provider_settings = {
         mac = "aa:b2:93:01:00:51"
         vcpu = 8
         memory = 32768
       }
-      main_disk_size = 500
-      login_timeout = 28800
+      main_disk_size       = 500
+      login_timeout        = 28800
+      large_deployment     = true
+      runtime              = "podman"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile"
+      //container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_tag        = "latest"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61/"
+      }
+
+    }
+    proxy_containerized = {
+      image = "slmicro61o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:52"
+        vcpu = 2
+        memory = 2048
+      }
+      main_disk_size = 200
       runtime = "podman"
       container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SLE_15_SP6/"
-      }
+      //container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
       container_tag = "latest"
+      additional_repos = {
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61/"
+      }
     }
-
     suse_minion = {
       image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:56"
+        vcpu = 2
+        memory = 2048
       }
     }
     suse_sshminion = {
@@ -161,14 +183,14 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "iptables" ]
     }
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:5a"
+        mac    = "aa:b2:93:01:00:5a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Still researching, but it will do it for now
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        vcpu = 2
         memory = 2048
       }
     }
@@ -184,45 +206,31 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
       provider_settings = {
         mac = "aa:b2:93:01:00:5d"
-        vcpu = 4
-        memory = 8192
-      }
-    }
-    pxeboot_minion = {
-      image = "sles15sp4o"
-      provider_settings = {
         vcpu = 2
         memory = 2048
       }
     }
-    kvm_host = {
+    pxeboot_minion = {
       image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:5e"
-        vcpu = 4
-        memory = 8192
+    }
+    dhcp_dns = {
+      name        = "dhcp-dns"
+      image       = "opensuse155o"
+      hypervisor  = {
+        host        = "suma-03.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_ed25519")
       }
     }
   }
-  
+
   provider_settings = {
-    pool         = "ssd"
+    pool = "ssd"
     network_name = null
-    bridge       = "br0"
+    bridge = "br0"
   }
 }
 
-resource "null_resource" "cdn_workaround" {
- provisioner "remote-exec" {
-    inline = [ "echo techpreview.ZYPP_MEDIANETWORK=1 >> /etc/zypp/zypp.conf" ]
-    connection {
-      type     = "ssh"
-      user     = "root"
-      password = "linux"
-      host     = "${module.cucumber_testsuite.configuration.server.hostname}"
-    }
-  }
-}
 output "configuration" {
   value = module.cucumber_testsuite.configuration
 }
