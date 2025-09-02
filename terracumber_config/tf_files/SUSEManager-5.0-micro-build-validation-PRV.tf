@@ -1415,7 +1415,7 @@ module "sles15sp4_terminal" {
 module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
   base_configuration = module.base_retail.configuration
-  name               = "dns-dhcp"
+  name               = "dhcp-dns"
   image              = "opensuse155o"
   private_hosts = [
     module.proxy_containerized.configuration,
