@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-products-testing-sles15sp2"
+  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-products-testing-leap156-bundle"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -21,7 +21,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Salt Shaker - saltstack:products:testing - SLES15SP2 $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Salt Shaker - saltstack:products:testing - Leap 15.6 Salt Bundle $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -31,7 +31,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Salt Shaker - saltstack:products:testing - SLES15SP2: Environment setup failed"
+  default = "Results Salt Shaker - saltstack:products:testing - Leap 15.6 Salt Bundle: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -98,18 +98,18 @@ module "base" {
     bridge             = "br1"
   }
 
-  images = [ "sles15sp2o" ]
+  images = [ "opensuse156o" ]
 }
 
 module "salt-shaker-products-testing" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-shaker-products-testing-sles15sp2"
-  image              = "sles15sp2o"
+  name               = "salt-shaker-products-testing-leap156-bundle"
+  image              = "opensuse156o"
   salt_obs_flavor    = "saltstack:products:testing"
   provider_settings  = {
-    mac = "aa:b2:93:02:02:2e"
+    mac = "aa:b2:93:02:02:2a"
   }
 }
 

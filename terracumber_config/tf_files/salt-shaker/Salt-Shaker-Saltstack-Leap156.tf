@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-products-next-sles15sp2-bundle"
+  default = "https://ci.suse.de/user/manager/my-views/view/Salt%20Shaker/job/manager-salt-shaker-saltstack-leap156"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -21,7 +21,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Salt Shaker - saltstack:products:next - SLES15SP2 Salt Bundle $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Salt Shaker - saltstack - openSUSE Leap 15.6 $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -31,7 +31,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Salt Shaker - saltstack:products:next - SLES15SP2 Salt Bundle: Environment setup failed"
+  default = "Results Salt Shaker - saltstack - openSUSE Leap 15.6: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -81,7 +81,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-04.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-03.mgr.suse.de/system"
 }
 
 module "base" {
@@ -98,21 +98,21 @@ module "base" {
     bridge             = "br1"
   }
 
-  images = [ "sles15sp2o" ]
+  images = [ "opensuse156o" ]
 }
 
-module "salt-shaker-products-next" {
+module "salt-shaker-saltstack" {
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
-  name               = "salt-shaker-products-next-sles15sp2-bundle"
-  image              = "sles15sp2o"
-  salt_obs_flavor    = "saltstack:products:next"
+  name               = "salt-shaker-saltstack-leap156"
+  image              = "opensuse156o"
+  salt_obs_flavor    = "saltstack"
   provider_settings  = {
-    mac = "aa:b2:93:02:02:12"
+    mac = "aa:b2:93:02:02:3b"
   }
 }
 
 output "configuration" {
-  value = module.salt-shaker-products-next.configuration
+  value = module.salt-shaker-saltstack.configuration
 }
