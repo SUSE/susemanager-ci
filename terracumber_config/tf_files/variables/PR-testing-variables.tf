@@ -68,6 +68,14 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+}
+
 variable "GIT_USER" {
   type = string
   default = null // Not needed for master, as it is public

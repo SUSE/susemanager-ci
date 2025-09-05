@@ -64,6 +64,14 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+}
+
 variable "SERVER_CONTAINER_REPOSITORY" {
   type = string
 }
@@ -125,6 +133,8 @@ module "base_core" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.1-released"
   name_prefix       = "mlm-bv-51micro-"
   use_avahi         = false
@@ -153,6 +163,8 @@ module "base_arm" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.1-released"
   name_prefix       = "mlm-bv-51micro-"
   use_avahi         = false

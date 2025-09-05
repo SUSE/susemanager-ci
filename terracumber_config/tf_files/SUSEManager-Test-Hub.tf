@@ -63,6 +63,14 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+}
+
 variable "GIT_USER" {
   type = string
   default = null // Not needed for master, as it is public
@@ -92,6 +100,8 @@ module "base_core" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
 
   images = ["centos7o", "opensuse155o", "opensuse156o", "sles15sp5o", "sles15sp4o"]
   use_avahi    = false
