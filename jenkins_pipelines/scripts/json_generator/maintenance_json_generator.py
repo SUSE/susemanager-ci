@@ -91,7 +91,6 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
     node_ids[final_id] = url
     custom_repositories[node] = node_ids
 
-
 def find_valid_repos(mi_ids: set[str], version: str):
     version_data = get_version_nodes(version)
 
@@ -101,6 +100,9 @@ def find_valid_repos(mi_ids: set[str], version: str):
     custom_repositories = init_custom_repositories(version, static_repos)
 
     for node, repositories in dynamic_nodes.items():
+        if node in ["openeuler2403_minion"]:
+            # openeuler minion are deployed but not used for SLE MU & BV MIs
+            continue
         for mi_id in mi_ids:
             for repo in repositories:
                 repo_url: str = create_url(mi_id, repo)

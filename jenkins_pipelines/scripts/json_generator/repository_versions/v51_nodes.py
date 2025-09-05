@@ -28,15 +28,13 @@ v51_uyuni_tools_micro_repos: Dict[str, Dict[str, str]] = {
 v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     "alma8_minion": {
         "RES_8_client_tools": "/RES-8:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-8-x86_64-Media1/"},
-    "amazon2023_minion": {
-        "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
     "alma9_minion": {
+        "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
+    "amazon2023_minion": {
         "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
     "centos7_minion": {
         "RES_7_client_tools": "/RES-7:/Update:/Products:/MultiLinuxManagerTools/images/repo/ManagerTools-EL7-POOL-x86_64-Media/"},
     "liberty9_minion": {
-        "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
-    "openeuler2403_minion": {
         "EL_9_client_tools": "/EL-9:/Update:/Products:/MultiLinuxManagerTools/images/repo/MultiLinuxManagerTools-EL-9-x86_64-Media1/"},
     "opensuse156arm_minion": {
         "sle15_arm_client_tools": "/SLE-15:/Update:/Products:/MultiLinuxManagerTools/images/repo/ManagerTools-SLE15-Pool-aarch64-Media1/"},
@@ -123,7 +121,10 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
 v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-12_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-22.04_x86_64/"},
-    "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-24.04_x86_64/"}
+    "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-24.04_x86_64/"},
+    "slmicro60_minion": {"/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/standard/"},
+    "slmicro61_minion": {"/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/standard/",
+                         "/SUSE:/SLFO:/1.1:/Staging:/Z/standard/"}
 }
 
 def get_v51_static_and_client_tools(variant: str = "micro") -> (Dict[str, Dict[str, str]], Dict[str, List[str]]):
