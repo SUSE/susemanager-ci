@@ -68,6 +68,18 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+  default = null
+  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+  default = null
+  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+}
+
 variable "GIT_USER" {
   type = string
   default = null // Not needed for master, as it is public
