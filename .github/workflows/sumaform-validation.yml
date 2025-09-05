@@ -41,6 +41,8 @@ jobs:
         env:
           TF_VAR_SCC_USER: "user"
           TF_VAR_SCC_PASSWORD: "password"
+          TF_VAR_SCC_PTF_USER: "user"
+          TF_VAR_SCC_PTF_PASSWORD: "password"
           TF_VAR_MIRROR: ""
           TF_VAR_PULL_REQUEST_REPO: ""
           TF_VAR_MASTER_REPO: ""

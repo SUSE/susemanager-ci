@@ -64,6 +64,14 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+}
+
 variable "SERVER_CONTAINER_REPOSITORY" {
   type = string
 }
@@ -145,6 +153,8 @@ module "base_core" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.0-released"
   name_prefix       = "suma-bv-50micro-"
   use_avahi         = false
@@ -172,6 +182,8 @@ module "base_old_sle" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.0-released"
   name_prefix       = "suma-bv-50micro-"
   use_avahi         = false
@@ -198,6 +210,8 @@ module "base_res" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.0-released"
   name_prefix       = "suma-bv-50micro-"
   use_avahi         = false
@@ -224,6 +238,8 @@ module "base_new_sle" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.0-released"
   name_prefix       = "suma-bv-50micro-"
   use_avahi         = false
@@ -250,6 +266,8 @@ module "base_retail" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.0-released"
   name_prefix       = "suma-bv-50micro-"
   use_avahi         = false
@@ -277,6 +295,8 @@ module "base_debian" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.0-released"
   name_prefix       = "suma-bv-50micro-"
   use_avahi         = false
@@ -303,6 +323,8 @@ module "base_arm" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
   product_version   = "5.0-released"
   name_prefix       = "suma-bv-50micro-"
   use_avahi         = false

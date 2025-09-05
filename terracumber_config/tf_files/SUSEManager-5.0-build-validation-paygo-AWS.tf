@@ -88,6 +88,14 @@ variable "SCC_PASSWORD" {
   default = null
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+}
+
 variable "AVAILABILITY_ZONE" {
   type = string
   default = null
@@ -445,8 +453,10 @@ module "controller" {
   }
   base_configuration = merge(module.base.configuration,
     {
-      cc_username = var.SCC_USER
-      cc_password = var.SCC_PASSWORD
+      cc_username       = var.SCC_USER
+      cc_password       = var.SCC_PASSWORD
+      cc_ptf_username   = var.SCC_PTF_USER
+      cc_ptf_password   = var.SCC_PTF_PASSWORD
     })
 
   swap_file_size = null

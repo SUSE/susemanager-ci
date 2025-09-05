@@ -64,6 +64,14 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+}
+
 variable "GIT_USER" {
   type = string
   default = null
@@ -105,6 +113,8 @@ module "base" {
   ssh_key_path = var.SSH_KEY
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
   name_prefix = "mirror-mu-aws-"
   images = [
     "opensuse156o"]
