@@ -159,7 +159,6 @@ module "base_core" {
   provider_settings = {
     pool        = "ssd"
     bridge      = "br1"
-    additional_network = "192.168.50.0/24"
   }
 }
 
@@ -1413,6 +1412,9 @@ module "sles15sp4_terminal" {
 }
 
 module "dhcp_dns" {
+  providers = {
+    libvirt = libvirt.terminus
+  }
   source             = "./modules/dhcp_dns"
   base_configuration = module.base_retail.configuration
   name               = "dhcp-dns"
