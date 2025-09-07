@@ -159,7 +159,6 @@ module "base_core" {
   provider_settings = {
     pool        = "ssd"
     bridge      = "br1"
-    additional_network = "192.168.100.0/24"
   }
 }
 
@@ -1455,6 +1454,26 @@ module "sles15sp4_terminal" {
   }
   private_ip         = 6
   private_name       = "sle15sp4terminal"
+}
+
+module "dhcp_dns" {
+  providers = {
+    libvirt = libvirt.margarita
+  }
+  source             = "./modules/dhcp_dns"
+  base_configuration = module.base_retail.configuration
+  name               = "dhcp-dns"
+  image              = "opensuse155o"
+  private_hosts = [
+    module.proxy_containerized.configuration,
+    module.sles12sp5_terminal.configuration,
+    module.sles15sp4_terminal.configuration
+  ]
+  hypervisor = {
+    host        = "margarita.mgr.prv.suse.net"
+    user        = "root"
+    private_key = file("~/.ssh/id_ed25519")
+  }
 }
 
 module "monitoring_server" {
