@@ -111,7 +111,6 @@ module "salt-shaker-products-testing" {
   provider_settings  = {
     mac = "aa:b2:93:02:02:29"
   }
-  install_salt_bundle = false
 }
 
 output "configuration" {
