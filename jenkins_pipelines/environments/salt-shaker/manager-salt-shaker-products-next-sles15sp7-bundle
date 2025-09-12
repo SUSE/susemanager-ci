@@ -6,7 +6,7 @@ node('salt-shaker-tests') {
         disableConcurrentBuilds(),
         pipelineTriggers([cron('H 0 * * *')]),
         parameters([
-            choice(name: 'salt_flavor', choices: ['bundle'], description: 'Run testsuite for classic Salt or Salt Bundle'),
+            choice(name: 'salt_flavor', choices: ['bundle'], description: 'Salt package flavor to test'),
             booleanParam(name: 'run_unit_tests', defaultValue: true, description: 'Run the Salt unit tests'),
             booleanParam(name: 'run_integration_tests', defaultValue: true, description: 'Run the Salt integration tests'),
             booleanParam(name: 'run_functional_tests', defaultValue: true, description: 'Run the Salt functional tests'),
