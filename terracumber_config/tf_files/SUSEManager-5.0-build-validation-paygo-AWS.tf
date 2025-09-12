@@ -245,6 +245,7 @@ module "sles12sp5_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
@@ -292,6 +293,7 @@ module "slesforsap15sp5_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   additional_packages = [ "python-instance-billing-flavor-check" ]
 }
@@ -306,6 +308,7 @@ module "sles12sp5_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -323,6 +326,7 @@ module "sles15sp4_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -339,6 +343,7 @@ module "sles15sp5_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -355,6 +360,7 @@ module "sles15sp6_minion" {
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -368,6 +374,7 @@ module "sles12sp5_sshminion" {
   name               = "sles12sp5-sshminion"
   image              = "sles12sp5"
   use_os_released_updates = false
+  install_salt_bundle     = false
   sles_registration_code = var.SLES_REGISTRATION_CODE
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   gpg_keys                = ["default/gpg_keys/galaxy.key"]
@@ -384,6 +391,7 @@ module "sles15sp4_sshminion" {
   image              = "sles15sp4o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -398,6 +406,7 @@ module "sles15sp5_sshminion" {
   image              = "sles15sp5o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -412,6 +421,7 @@ module "sles15sp6_sshminion" {
   image              = "sles15sp6o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     instance_type = "t3a.medium"
@@ -427,6 +437,7 @@ module "rhel9_paygo_minion" {
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
+  install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     memory = 2048
