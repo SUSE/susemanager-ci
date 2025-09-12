@@ -143,7 +143,9 @@ module "cucumber_testsuite" {
       image = "opensuse156o"
 
       login_timeout = 28800
-      main_disk_size = 300
+      main_disk_size = 40
+      repository_disk_size = 300
+      database_disk_size = 60
     }
     proxy_containerized = {
       provider_settings = {
