@@ -161,13 +161,13 @@ module "cucumber_testsuite" {
       container_tag        = "latest"
     }
     suse_minion = {
-      image             = "opensuse156o"
+      image             = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:26"
       }
     }
     suse_sshminion = {
-      image             = "opensuse156o"
+      image             = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:28"
       }
