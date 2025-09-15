@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username  = var.SCC_USER
   cc_password  = var.SCC_PASSWORD
 
-  images       = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
+  images       = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o", "tumbleweedo"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ci-master-"
@@ -153,7 +153,7 @@ module "cucumber_testsuite" {
       container_tag         = "latest"
     }
     suse_minion = {
-      image = "opensuse156o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:92:03:00:d6"
         vcpu = 2
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "opensuse156o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:92:03:00:d8"
         vcpu = 2
