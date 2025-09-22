@@ -54,14 +54,12 @@ def run(params) {
 
                 // Create a directory for  to place the directory with the build results (if it does not exist)
                 sh "mkdir -p ${resultdir}"
-//                git url: params.terracumber_gitrepo, branch: params.terracumber_ref
                 dir("susemanager-ci") {
                     checkout([
                             $class: 'GitSCM',
                             branches: [[name: params.terracumber_ref]],
                             userRemoteConfigs: [[url: params.terracumber_gitrepo]],
-                            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: "susemanager-ci"]],
-                            changelog: false,   // 🔑 disables 'git whatchanged'
+                            changelog: false,
                             poll: false
                     ])
                 }
