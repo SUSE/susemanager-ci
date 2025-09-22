@@ -8,8 +8,8 @@ def run(params) {
         GString junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
         GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
         GString exports = "export env.BUILD_NUMBER=${env.BUILD_NUMBER}; export params.capybara_timeout=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
-        String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/variables.tf'
-        String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/tfvars/terraform.tfvars"
+        String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/qe/variables.tf'
+        String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/qe/terraform.tfvars"
 
         if (params.terraform_parallelism) {
             common_params = "${common_params} --parallelism ${params.terraform_parallelism}"
