@@ -57,8 +57,6 @@ def run(params) {
                                 $class           : 'GitSCM',
                                 branches         : [[name: params.terracumber_ref]],
                                 userRemoteConfigs: [[url: params.terracumber_gitrepo]],
-                                changelog        : false,
-                                poll             : false
                         ])
                     }
                     // Clone sumaform
