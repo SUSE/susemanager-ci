@@ -6,11 +6,12 @@ def run(params) {
 
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
-        GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
         GString exports = "export env.BUILD_NUMBER=${env.BUILD_NUMBER}; export params.capybara_timeout=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
         String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/qe/variables.tf'
         String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/qe/environment.tfvars"
         String tfvars_version_description = "susemanager-ci/terracumber_config/tf_files/qe/mlm_51.tfvars"
+        GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --tf_variables_description_file ${tfvariables_file}  --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
+
 
         if (params.terraform_parallelism) {
             common_params = "${common_params} --parallelism ${params.terraform_parallelism}"
@@ -58,7 +59,7 @@ def run(params) {
                         checkout scm
                     }
                     // Clone sumaform
-                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --tf_variables_description_file ${tfvariables_file} --runstep gitsync"
+                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
 
                     // Restore Terraform states from artifacts
                     if (params.use_previous_terraform_state) {
