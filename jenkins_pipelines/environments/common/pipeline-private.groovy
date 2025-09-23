@@ -44,9 +44,9 @@ def run(params) {
         deployed = false
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
-                when {
-                    expression { return params.run_deployment }
-                }
+//                when {
+//                    expression { return params.run_deployment }
+//                }
                 if (params.show_product_changes) {
                     // Rename build using product commit hash
                     currentBuild.description =  "[${product_commit}]"
@@ -77,9 +77,9 @@ def run(params) {
                 }
             }
             stage('Deploy') {
-                when {
-                    expression { return params.run_deployment }
-                }
+//                when {
+//                    expression { return params.run_deployment }
+//                }
                 // Provision the environment
                 if (params.terraform_init) {
                     env.TERRAFORM_INIT = '--init'
