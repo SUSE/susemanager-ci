@@ -85,7 +85,7 @@ def run(params) {
                     }
                     sh "rm -f ${resultdir}/sumaform/terraform.tfvars"
                     sh "cat ${tfvars_infra_description} ${tfvars_version_description} >> ${resultdir}/sumaform/terraform.tfvars"
-                    sh "echo 'ENVIRONMENT = \'${params.environment}\'' >> ${resultdir}/sumaform/terraform.tfvars"
+                    sh "echo 'ENVIRONMENT = \"${params.environment}\"' >> ${resultdir}/sumaform/terraform.tfvars"
                     sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${TERRAFORM_INIT} ${TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
                     deployed = true
                     // Collect and tag Flaky tests from the GitHub Board
