@@ -13,6 +13,11 @@ variable "URL_PREFIX" {
   default = "This is defined in product tfvars"
 }
 
+variable "CUCUMBER_COMMAND" {
+  type = string
+  default = "This is defined in product tfvars"
+}
+
 variable "CUCUMBER_GITREPO" {
   type = string
   default = "This is defined in product tfvars"
