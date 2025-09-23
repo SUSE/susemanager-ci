@@ -1,74 +1,3 @@
-
-
-variable "CUCUMBER_GITREPO" {
-  type = string
-  default = "https://github.com/maximenoel8/spacewalk.git"
-}
-
-variable "CUCUMBER_BRANCH" {
-  type = string
-  default = "Manager-5.1"
-}
-
-variable "CUCUMBER_RESULTS" {
-  type = string
-  default = "/root/spacewalk/testsuite"
-}
-
-variable "MAIL_SUBJECT" {
-  type = string
-  default = "Results 5.1-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
-}
-
-variable "MAIL_TEMPLATE" {
-  type = string
-  default = "../mail_templates/mail-template-jenkins.txt"
-}
-
-variable "MAIL_SUBJECT_ENV_FAIL" {
-  type = string
-  default = "Results 5.1-NUE: Environment setup failed"
-}
-
-variable "MAIL_TEMPLATE_ENV_FAIL" {
-  type = string
-  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
-}
-
-variable "MAIL_FROM" {
-  type = string
-  default = "jenkins@suse.de"
-}
-
-variable "MAIL_TO" {
-  type = string
-  default = "galaxy-ci@suse.de"
-}
-
-// sumaform specific variables
-variable "SCC_USER" {
-  type = string
-}
-
-variable "SCC_PASSWORD" {
-  type = string
-}
-
-variable "GIT_USER" {
-  type = string
-  default = null // Not needed for master, as it is public
-}
-
-variable "GIT_PASSWORD" {
-  type = string
-  default = null // Not needed for master, as it is public
-}
-
-variable "PROMETHEUS_PUSH_GATEWAY_URL" {
-  type = string
-  default = null
-}
-
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -120,8 +49,7 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        # mac       = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
-        mac       = "0404"
+        mac       = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
         vcpu = 4
         memory = 4096
       }
