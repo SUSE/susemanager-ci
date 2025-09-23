@@ -153,7 +153,7 @@ module "cucumber_testsuite" {
       container_tag         = "latest"
     }
     suse_minion = {
-      image = "tumbleweedo"
+      image = "opensuse156o"
       provider_settings = {
         mac = "aa:b2:92:03:00:d6"
         vcpu = 2
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "tumbleweedo"
+      image = "opensuse156o"
       provider_settings = {
         mac = "aa:b2:92:03:00:d8"
         vcpu = 2
