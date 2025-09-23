@@ -43,57 +43,55 @@ def run(params) {
         // Start pipeline
         deployed = false
         try {
+
             stage('Clone terracumber, susemanager-ci and sumaform') {
-//                when {
-//                    expression { return params.run_deployment }
-//                }
                 if (params.show_product_changes) {
                     // Rename build using product commit hash
-                    currentBuild.description =  "[${product_commit}]"
+                    currentBuild.description = "[${product_commit}]"
                 }
+                if (params.run_deployment) {
+                    // Create a directory for  to place the directory with the build results (if it does not exist)
+                    sh "mkdir -p ${resultdir}"
+                    dir("susemanager-ci") {
+                        checkout([
+                                $class           : 'GitSCM',
+                                branches         : [[name: params.terracumber_ref]],
+                                userRemoteConfigs: [[url: params.terracumber_gitrepo]],
+                                changelog        : false,
+                                poll             : false
+                        ])
+                    }
+                    // Clone sumaform
+                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --tf_variables_description_file ${tfvariables_file} --tf_configuration_files ${tfvars_infra_description} --runstep gitsync"
 
-                // Create a directory for  to place the directory with the build results (if it does not exist)
-                sh "mkdir -p ${resultdir}"
-                dir("susemanager-ci") {
-                    checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: params.terracumber_ref]],
-                            userRemoteConfigs: [[url: params.terracumber_gitrepo]],
-                            changelog: false,
-                            poll: false
-                    ])
-                }
-                // Clone sumaform
-                sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --tf_variables_description_file ${tfvariables_file} --tf_configuration_files ${tfvars_infra_description} --runstep gitsync"
+                    // Restore Terraform states from artifacts
+                    if (params.use_previous_terraform_state) {
+                        copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                    }
 
-                // Restore Terraform states from artifacts
-                if (params.use_previous_terraform_state) {
-                    copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
-                }
-
-                // run minima sync on mirror
-                if (mirror_scope != null) {
-                    sh "ssh root@minima-mirror-ci-bv.`hostname -d` -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh || echo 'no mirror script for this scope'\""
+                    // run minima sync on mirror
+                    if (mirror_scope != null) {
+                        sh "ssh root@minima-mirror-ci-bv.`hostname -d` -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh || echo 'no mirror script for this scope'\""
+                    }
                 }
             }
             stage('Deploy') {
-//                when {
-//                    expression { return params.run_deployment }
-//                }
-                // Provision the environment
-                if (params.terraform_init) {
-                    env.TERRAFORM_INIT = '--init'
-                } else {
-                    env.TERRAFORM_INIT = ''
+                if (params.run_deployment) {
+                    // Provision the environment
+                    if (params.terraform_init) {
+                        env.TERRAFORM_INIT = '--init'
+                    } else {
+                        env.TERRAFORM_INIT = ''
+                    }
+                    env.TERRAFORM_TAINT = ''
+                    if (params.terraform_taint) {
+                        env.TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'"
+                    }
+                    sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
+                    deployed = true
+                    // Collect and tag Flaky tests from the GitHub Board
+                    def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:collect_and_tag_flaky_tests'", returnStatus: true
                 }
-                env.TERRAFORM_TAINT = ''
-                if (params.terraform_taint) {
-                    env.TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'"
-                }
-                sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
-                deployed = true
-                // Collect and tag Flaky tests from the GitHub Board
-                def statusCode = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:collect_and_tag_flaky_tests'", returnStatus:true
             }
             stage('Product changes') {
                 if (params.show_product_changes) {
@@ -112,42 +110,32 @@ def run(params) {
             stage('Sanity Check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:sanity_check'"
             }
-            stage('Core - Setup') {
-                when {
-                    expression { return params.run_test }
+            if (params.show_product_changes) {
+                stage('Core - Setup') {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
                 }
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
-            }
-            stage('Core - Proxy') {
-                when {
-                    expression { return params.run_test }
+                stage('Core - Proxy') {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:proxy'"
                 }
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:proxy'"
-            }
-            stage('Core - Initialize clients') {
-                when {
-                    expression { return params.run_test }
+                stage('Core - Initialize clients') {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake parallel:init_clients'"
                 }
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake parallel:init_clients'"
-            }
-            stage('Secondary features') {
-                when {
-                    expression { return params.run_test }
+                stage('Secondary features') {
+                    def tags = ""
+                    if (params.functional_scopes) {
+                        tags += "export TAGS=${params.functional_scopes}; "
+                    }
+                    def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags} cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true
+                    def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags} cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
+                    def statusCode3 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags} cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true
+                    sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
                 }
-                def tags = ""
-                if (params.functional_scopes){
-                    tags += "export TAGS=${params.functional_scopes}; "
-                }
-                def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags} cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus:true
-                def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags} cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
-                def statusCode3 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags} cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus:true
-                sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
             }
         }
         finally {
             stage('Save TF state') {
-                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+                archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
             }
 
             stage('Get results') {
@@ -185,12 +173,12 @@ def run(params) {
                         }
                     }
                     publishHTML( target: [
-                                allowMissing: true,
-                                alwaysLinkToLastBuild: false,
-                                keepAll: true,
-                                reportDir: "${resultdirbuild}/cucumber_report/",
-                                reportFiles: 'cucumber_report.html',
-                                reportName: "TestSuite Report"]
+                            allowMissing: true,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: true,
+                            reportDir: "${resultdirbuild}/cucumber_report/",
+                            reportFiles: 'cucumber_report.html',
+                            reportName: "TestSuite Report"]
                     )
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
