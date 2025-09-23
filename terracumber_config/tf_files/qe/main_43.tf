@@ -80,6 +80,10 @@ terraform {
   }
 }
 
+provider "libvirt" {
+  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
+}
+
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
