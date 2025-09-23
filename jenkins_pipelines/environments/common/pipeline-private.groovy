@@ -9,7 +9,8 @@ def run(params) {
         GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
         GString exports = "export env.BUILD_NUMBER=${env.BUILD_NUMBER}; export params.capybara_timeout=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
         String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/qe/variables.tf'
-        String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/qe/terraform.tfvars"
+        String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/qe/environment.tfvars"
+        String tfvars_version_description = "susemanager-ci/terracumber_config/tf_files/qe/mlm_51.tfvars"
 
         if (params.terraform_parallelism) {
             common_params = "${common_params} --parallelism ${params.terraform_parallelism}"
@@ -57,7 +58,7 @@ def run(params) {
                         checkout scm
                     }
                     // Clone sumaform
-                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --tf_variables_description_file ${tfvariables_file} --tf_configuration_files ${tfvars_infra_description} --runstep gitsync"
+                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --tf_variables_description_file ${tfvariables_file} --runstep gitsync"
 
                     // Restore Terraform states from artifacts
                     if (params.use_previous_terraform_state) {
@@ -82,6 +83,7 @@ def run(params) {
                     if (params.terraform_taint) {
                         env.TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'"
                     }
+                    sh "cat ${tfvars_infra_description} ${tfvars_version_description} >> ${resultdir}/sumaform/terraform.tfvars"
                     sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
                     deployed = true
                     // Collect and tag Flaky tests from the GitHub Board
