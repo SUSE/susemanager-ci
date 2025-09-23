@@ -8,3 +8,7 @@ variable "ENVIRONMENT_CONFIGURATION" {
   description = "Collection of  value containing : mac addresses, hypervisor and additional network"
 }
 
+variable "URL_PREFIX" {
+  type = string
+  default = "This is defined in product tfvars"
+}
