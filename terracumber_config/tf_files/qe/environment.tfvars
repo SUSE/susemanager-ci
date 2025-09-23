@@ -16,6 +16,6 @@ ENVIRONMENT_CONFIGURATION = {
     pool                = "mnoel_disks"
     bridge              = "br0"
     additional_network  = "192.168.10.0/24"
-    dhcp_user           = "mnoel"
+    dhcp_user           = "root"
   }
 }
