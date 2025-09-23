@@ -12,9 +12,3 @@ variable "URL_PREFIX" {
   type = string
   default = "This is defined in product tfvars"
 }
-
-// Not really used as this is for --runall parameter, and we run cucumber step by step
-variable "CUCUMBER_COMMAND" {
-  type = string
-  default = "This is defined in product tfvars"
-}
