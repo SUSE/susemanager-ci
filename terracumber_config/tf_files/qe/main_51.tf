@@ -120,7 +120,8 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac       = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
+        # mac       = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
+        mac       = "0404"
         vcpu = 4
         memory = 4096
       }
