@@ -19,29 +19,6 @@ def run(params) {
 
         def previous_commit = null
         def product_commit = null
-        def mirror_scope = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
-        mirror_scope = mirror_scope.replaceAll("-dev", "")
-        if (params.show_product_changes) {
-            // Retrieve the hash commit of the last product built in OBS/IBS and previous job
-            def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
-            if (prefix == "uyuni-master-dev") {
-                prefix = "manager-Head-dev"
-            }
-            // The 2obs jobs are releng, not dev
-            prefix = prefix.replaceAll("-dev", "-releng")
-            def request = httpRequest ignoreSslErrors: true, url: "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
-            def requestJson = readJSON text: request.getContent()
-            product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
-            product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
-            print "Current product commit: ${product_commit}"
-            previous_commit = currentBuild.getPreviousBuild().description
-            if (previous_commit == null) {
-                previous_commit = product_commit
-            } else {
-                previous_commit = previous_commit.substring(previous_commit.indexOf('[') + 1, previous_commit.indexOf(']'));
-            }
-            print "Previous product commit: ${previous_commit}"
-        }
         // Start pipeline
         deployed = false
         try {
@@ -66,10 +43,6 @@ def run(params) {
                         copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                     }
 
-                    // run minima sync on mirror
-                    if (mirror_scope != null) {
-                        sh "ssh root@minima-mirror-ci-bv.`hostname -d` -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh || echo 'no mirror script for this scope'\""
-                    }
                 }
             }
             stage('Deploy') {
