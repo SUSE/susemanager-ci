@@ -26,7 +26,7 @@ def run(params) {
             stage('Clone terracumber, susemanager-ci and sumaform') {
                 if (params.show_product_changes) {
                     // Rename build using product commit hash
-                    currentBuild.description = "[${product_commit}]"
+                    currentBuild.description = "[${params.tf_file}]"
                 }
                 if (params.run_deployment) {
                     // Create a directory for  to place the directory with the build results (if it does not exist)
