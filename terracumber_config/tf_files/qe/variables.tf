@@ -35,32 +35,32 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "This is defined in product tfvars"
+  default = "Not Used for QE pipeline"
 }
 
 variable "MAIL_TEMPLATE" {
   type = string
-  default = "This is defined in product tfvars"
+  default = "Not Used for QE pipeline"
 }
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "This is defined in product tfvars"
+  default = "Not Used for QE pipeline"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = string
-  default = "This is defined in product tfvars"
+  default = "Not Used for QE pipeline"
 }
 
 variable "MAIL_FROM" {
   type = string
-  default = "This is defined in product tfvars"
+  default = "Not Used for QE pipeline"
 }
 
 variable "MAIL_TO" {
   type = string
-  default = "This is defined in product tfvars"
+  default = "Not Used for QE pipeline"
 }
 
 // sumaform specific variables
