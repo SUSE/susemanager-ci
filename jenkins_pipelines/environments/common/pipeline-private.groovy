@@ -6,7 +6,7 @@ def run(params) {
 
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
-        GString exports = "export env.BUILD_NUMBER=${env.BUILD_NUMBER}; export params.capybara_timeout=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+        GString exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
         String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/qe/variables.tf'
         String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/qe/environment.tfvars"
         String tfvars_version_description = "susemanager-ci/terracumber_config/tf_files/qe/mlm_51.tfvars"
@@ -82,7 +82,7 @@ def run(params) {
             stage('Sanity Check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:sanity_check'"
             }
-            if (params.show_product_changes) {
+            if (params.run_tests) {
                 stage('Core - Setup') {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"

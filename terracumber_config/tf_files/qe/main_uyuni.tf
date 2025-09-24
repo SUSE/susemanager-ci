@@ -1,79 +1,4 @@
 
-// Not really used as this is for --runall parameter, and we run cucumber step by step
-variable "CUCUMBER_COMMAND" {
-  type = string
-  default = "export PRODUCT='Uyuni' && run-testsuite"
-}
-
-variable "CUCUMBER_GITREPO" {
-  type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
-}
-
-variable "CUCUMBER_BRANCH" {
-  type = string
-  default = "master"
-}
-
-variable "CUCUMBER_RESULTS" {
-  type = string
-  default = "/root/spacewalk/testsuite"
-}
-
-variable "MAIL_SUBJECT" {
-  type = string
-  default = "Results Uyuni-Master podman $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
-}
-
-variable "MAIL_TEMPLATE" {
-  type = string
-  default = "../mail_templates/mail-template-jenkins.txt"
-}
-
-variable "MAIL_SUBJECT_ENV_FAIL" {
-  type = string
-  default = "Results Uyuni-Master podman: Environment setup failed"
-}
-
-variable "MAIL_TEMPLATE_ENV_FAIL" {
-  type = string
-  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
-}
-
-variable "MAIL_FROM" {
-  type = string
-  default = "jenkins@suse.de"
-}
-
-variable "MAIL_TO" {
-  type = string
-  default = "galaxy-ci@suse.de"
-}
-
-// sumaform specific variables
-variable "SCC_USER" {
-  type = string
-}
-
-variable "SCC_PASSWORD" {
-  type = string
-}
-
-variable "GIT_USER" {
-  type = string
-  default = null // Not needed for master, as it is public
-}
-
-variable "GIT_PASSWORD" {
-  type = string
-  default = null // Not needed for master, as it is public
-}
-
-variable "PROMETHEUS_PUSH_GATEWAY_URL" {
-  type = string
-  default = null
-}
-
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -82,10 +7,6 @@ terraform {
       version = "0.8.1"
     }
   }
-}
-
-provider "libvirt" {
-  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
 }
 
 provider "libvirt" {

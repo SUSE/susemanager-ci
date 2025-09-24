@@ -8,11 +8,6 @@ variable "ENVIRONMENT_CONFIGURATION" {
   description = "Collection of  value containing : mac addresses, hypervisor and additional network"
 }
 
-variable "URL_PREFIX" {
-  type = string
-  default = "This is defined in product tfvars"
-}
-
 variable "CUCUMBER_COMMAND" {
   type = string
   default = "This is defined in product tfvars"
@@ -30,7 +25,17 @@ variable "CUCUMBER_BRANCH" {
 
 variable "CUCUMBER_RESULTS" {
   type = string
-  default = "This is defined in product tfvars"
+  default = "/root/spacewalk/testsuite"
+}
+
+#################################################
+## Mailer configuration not use in QE pipeline ##
+## Variables needed for terracumber validation ##
+#################################################
+
+variable "URL_PREFIX" {
+  type = string
+  default = "Not Used for QE pipeline"
 }
 
 variable "MAIL_SUBJECT" {
@@ -63,6 +68,10 @@ variable "MAIL_TO" {
   default = "Not Used for QE pipeline"
 }
 
+#################################################
+## End mailer configuration ##
+#################################################
+
 // sumaform specific variables
 variable "SCC_USER" {
   type = string
@@ -80,9 +89,4 @@ variable "GIT_USER" {
 variable "GIT_PASSWORD" {
   type = string
   default = null // Not needed for master, as it is public
-}
-
-variable "PROMETHEUS_PUSH_GATEWAY_URL" {
-  type = string
-  default = null
 }
