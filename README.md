@@ -57,8 +57,8 @@ image for testing Pull Requests built with the open build service. This needs to
 
 |             | PR test       | Uyuni         | HEAD         | 5.1          | 5.0           | 4.3          |
 |-------------|---------------|---------------|--------------|--------------|---------------|--------------|
-| Minion      | Leap 15.6     | Leap 15.6     | SLES 15 SP4  | SLES 15 SP4  | SLES 15 SP4   | SLES 15 SP4  |
-| SSH minion  | Leap 15.6     | Leap 15.6     | SLES 15 SP4  | SLES 15 SP4  | SLES 15 SP4   | SLES 15 SP4  |
+| Minion      | Leap 15.6     | Tumbleweed    | SLES 15 SP4  | SLES 15 SP4  | SLES 15 SP4   | SLES 15 SP4  |
+| SSH minion  | Leap 15.6     | Tumbleweed    | SLES 15 SP4  | SLES 15 SP4  | SLES 15 SP4   | SLES 15 SP4  |
 | Client      | -             | -             | -            | -            | -             | SLES 15 SP4  |
 | RH-like     | Rocky 8       | Rocky 8       | Rocky 8      | Rocky 8      | Rocky 8       | Rocky 8      |
 | Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04  | Ubuntu 22.04 |
