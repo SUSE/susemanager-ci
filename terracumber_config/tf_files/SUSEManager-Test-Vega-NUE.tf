@@ -194,6 +194,9 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
+    pxeboot_minion = {
+      image = "sles15sp4o"
+    }
     dhcp_dns = {
       name        = "dhcp-dns"
       image       = "opensuse155o"
