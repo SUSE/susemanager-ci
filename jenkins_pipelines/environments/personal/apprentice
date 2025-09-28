@@ -37,7 +37,7 @@ node('sumaform-cucumber') {
         newParams.capybara_timeout = 10
         newParams.default_timeout = 250
         newParams.environment = 'apprentice'
-        def pipeline = load "jenkins_pipelines/environments/qe/pipeline-private.groovy"
+        def pipeline = load "jenkins_pipelines/environments/qe/pipeline-personal.groovy"
         pipeline.run(newParams)
     }
 }
