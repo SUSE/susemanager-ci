@@ -7,7 +7,7 @@ node('sumaform-cucumber') {
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'Manager-5.1', description: 'Testsuite Git reference (branch, tag...)'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/qe/main_51.tf', description: 'Path to the tf file to be used'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/personal/main_51.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
@@ -37,7 +37,7 @@ node('sumaform-cucumber') {
         newParams.capybara_timeout = 10
         newParams.default_timeout = 250
         newParams.environment = 'oscar'
-        def pipeline = load "jenkins_pipelines/environments/qe/pipeline-personal.groovy"
+        def pipeline = load "jenkins_pipelines/environments/personal/pipeline-personal.groovy"
         pipeline.run(newParams)
     }
 }
