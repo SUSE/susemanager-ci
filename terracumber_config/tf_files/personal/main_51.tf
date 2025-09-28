@@ -1,3 +1,9 @@
+variable "CONTAINER_REPOSITORY" {
+  type = string
+  description = "Container repository for server and proxy"
+  default = "registry.suse.de/devel/galaxy/manager/5.1/containerfile"
+}
+
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -68,7 +74,7 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/5.1/containerfile"
+      container_repository = var.CONTAINER_REPOSITORY
       container_tag        = "latest"
 
     }
@@ -81,7 +87,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/5.1/containerfile"
+      container_repository = var.CONTAINER_REPOSITORY
       container_tag = "latest"
     }
     suse_minion = {

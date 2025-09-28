@@ -16,6 +16,7 @@ node('sumaform-cucumber') {
             string(name: 'terraform_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for terraform'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            string(name: 'container_repository', defaultValue: '', description: 'Overwrite the default container registry. Keep empty to use default product container registry'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
             booleanParam(name: 'terraform_taint', defaultValue: true, description: 'Call terraform taint (so the resources, except volumes, are recreated)'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
@@ -35,7 +36,7 @@ node('sumaform-cucumber') {
         def newParams = [:] + params
         newParams.capybara_timeout = 10
         newParams.default_timeout = 250
-        newParams.environment = 'ktsamis'
+        newParams.environment = 'ales'
         def pipeline = load "jenkins_pipelines/environments/qe/pipeline-private.groovy"
         pipeline.run(newParams)
     }

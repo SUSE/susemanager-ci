@@ -1,3 +1,8 @@
+variable "CONTAINER_REPOSITORY" {
+  type = string
+  description = "Container repository for server and proxy"
+  default = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
+}
 
 terraform {
   required_version = "1.0.10"
@@ -16,7 +21,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "5.0-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -27,10 +32,10 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
-  name_prefix  = "${var.ENVIRONMENT}-"
+  name_prefix   = "${var.ENVIRONMENT}-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -42,7 +47,6 @@ module "cucumber_testsuite" {
 
   container_server = true
   container_proxy  = true
-  beta_enabled = false
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -54,12 +58,13 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
+        mac       = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
         vcpu = 4
         memory = 4096
       }
     }
     server_containerized = {
+      image = "slemicro55o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
         vcpu = 8
@@ -69,10 +74,12 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = var.CONTAINER_REPOSITORY
       container_tag        = "latest"
+
     }
     proxy_containerized = {
+      image = "slemicro55o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
         vcpu = 2
@@ -80,7 +87,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = var.CONTAINER_REPOSITORY
       container_tag = "latest"
     }
     suse_minion = {
@@ -98,11 +105,12 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "iptables" ]
     }
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -120,7 +128,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
         vcpu = 2
         memory = 2048
       }
@@ -129,21 +137,29 @@ module "cucumber_testsuite" {
       image = "sles15sp4o"
     }
     dhcp_dns = {
-      name        = "dhcp-dns"
-      image       = "opensuse155o"
-      hypervisor  = {
+      name = "dhcp-dns"
+      image = "opensuse155o"
+      hypervisor = {
         host        = "suma-05.mgr.suse.de"
-        user        = "root"
+        user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
         private_key = file("~/.ssh/id_ed25519")
+      }
+    }
+    kvm_host = {
+      image = "sles15sp4o"
+      provider_settings = {
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
+        vcpu = 4
+        memory = 4096
       }
     }
   }
 
   provider_settings = {
-    pool = "ssd"
-    network_name = null
-    bridge = "br0"
-    additional_network = "192.168.99.0/24"
+    pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
+    network_name       = null
+    bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
+    additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
   }
 }
 

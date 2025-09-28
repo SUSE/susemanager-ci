@@ -1,11 +1,11 @@
 variable "ENVIRONMENT"{
   type = string
-  description = "Personnel environment"
+  description = "Personal environment"
 }
 
 variable "ENVIRONMENT_CONFIGURATION" {
   type = map
-  description = "Collection of  value containing : mac addresses, hypervisor and additional network"
+  description = "Collection of values containing: mac addresses, hypervisor and additional network"
 }
 
 variable "CUCUMBER_COMMAND" {

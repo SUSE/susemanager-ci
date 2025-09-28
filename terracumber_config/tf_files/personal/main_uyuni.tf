@@ -1,3 +1,8 @@
+variable "CONTAINER_REPOSITORY" {
+  type = string
+  description = "Container repository for server and proxy"
+  default = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+}
 
 terraform {
   required_version = "1.0.10"
@@ -63,7 +68,7 @@ module "cucumber_testsuite" {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
       }
       runtime               = "podman"
-      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_repository  = var.CONTAINER_REPOSITORY
       container_tag         = "latest"
       helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       main_disk_size        = 50
@@ -77,7 +82,7 @@ module "cucumber_testsuite" {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
       }
       runtime              = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_repository = var.CONTAINER_REPOSITORY
       container_tag        = "latest"
     }
     suse_minion = {

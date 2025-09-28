@@ -7,9 +7,8 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
         GString exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
-        String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/qe/variables.tf'
-        String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/qe/environment.tfvars"
-        String tfvars_version_description = "susemanager-ci/terracumber_config/tf_files/qe/mlm_51.tfvars"
+        String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/personal/variables.tf'
+        String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars"
         GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --tf_variables_description_file ${tfvariables_file}  --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
 
 
@@ -59,6 +58,9 @@ def run(params) {
                     sh "rm -f ${resultdir}/sumaform/terraform.tfvars"
                     sh "cat ${tfvars_infra_description} ${tfvars_version_description} >> ${resultdir}/sumaform/terraform.tfvars"
                     sh "echo 'ENVIRONMENT = \"${params.environment}\"' >> ${resultdir}/sumaform/terraform.tfvars"
+                    if (params.container_repository != '') {
+                        sh "export TF_VAR_CONTAINER_REPOSITORY=${params.container_repository}"
+                    }
                     sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${TERRAFORM_INIT} ${TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
                     deployed = true
                     // Collect and tag Flaky tests from the GitHub Board
