@@ -40,17 +40,26 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             booleanParam(name: 'must_run_containerization_tests', defaultValue: false, description: 'Run Containerization Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
-            ])
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format'),
+            string(name: 'prefer', defaultValue: '', description: 'he value for the \'Prefer\' rule in project config (e.g., container:suse-manager-5.0-init-5.0.5).'),
+            string(name: 'server_container_project', defaultValue: 'home:oscar-barrios:SLE_Testing', description: 'Server container project'),
+            string(name: 'server_mi_project', defaultValue: '', description: 'The project name of the MI to validate into the server container (e.g., SUSE:Maintenance:12345).'),
+            string(name: 'server_mi_repo_name', defaultValue: '', description: 'The server repository name including the packages to validate (e.g., SUSE_Updates_SLE-Module-Basesystem_15-SP6_x86_64).'),
+            /* TODO: Uncomment once we have a valid IBS project for this custom proxy container
+            // string(name: 'proxy_container_project', defaultValue: '', description: 'Proxy container project'),
+            // string(name: 'proxy_mi_project', defaultValue: '', description: 'The project name of the MI to validate into the proxy container (e.g., SUSE:Maintenance:12345).'),
+            // string(name: 'proxy_mi_repo_name', defaultValue: '', description: 'The proxy repository name including the packages to validate (e.g., SUSE_Updates_SLE-Module-Basesystem_15-SP6_x86_64).')
+            */
+        ])
     ])
 
-    stage('Checkout pipeline') {
-        checkout scm
-    }
-    def mutableParams = [:] + params
-    mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
+stage('Checkout pipeline') {
+checkout scm
+}
+def mutableParams = [:] + params
+mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
 
-    def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
-    pipeline.run(mutableParams)
+def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
+pipeline.run(mutableParams)
 
 }
