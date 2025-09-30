@@ -50,6 +50,28 @@ def run(params) {
                 currentBuild.description = nameDisplay(params)
             }
 
+            stage('Build containers'){
+                def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/edit_bci_project"
+                sh "python3 -m venv ${WORKSPACE}/venv"
+                sh "${WORKSPACE}/venv/bin/pip install -r ${SCRIPT_DIR}/requirements.txt"
+
+                if (params.server_container_project && params.prefer && params.server_mi_project && params.server_mi_repo_name) {
+                    server_container_repository = sh(
+                            script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.server_container_project} --prefer ${params.prefer} --mi-project ${params.server_mi_project} --mi-repo-name ${params.server_mi_repo_name}",
+                            returnStdout: true
+                    ).trim()
+                }
+
+                /* TODO: Uncomment once we have a valid IBS project for this custom proxy container
+                if (params.proxy_container_project && params.prefer && params.proxy_mi_project && params.proxy_mi_repo_name) {
+                    proxy_container_repository = sh(
+                        script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.proxy_container_project} --prefer ${params.prefer} --mi-project ${params.proxy_mi_project} --mi-repo-name ${params.proxy_mi_repo_name}",
+                        returnStdout: true
+                    ).trim()
+                }
+                */
+            }
+
             stage('Deploy') {
                 // Restore Terraform states from artifacts
                 if (params.use_previous_terraform_state) {
