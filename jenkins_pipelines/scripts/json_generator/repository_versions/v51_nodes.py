@@ -1,4 +1,3 @@
-
 from typing import Dict, Set, List
 
 IBS_URL_PREFIX="http://download.suse.de/ibs/SUSE:"
@@ -7,8 +6,8 @@ IBS_URL_PREFIX="http://download.suse.de/ibs/SUSE:"
 v51_uyuni_tools_sles_repos: Dict[str, Set[str]] = {
     "server" : { "/SUSE_Updates_Multi-Linux-Manager-Server-SLE_5.1_x86_64/" },
     "proxy" : { "/SUSE_Updates_Multi-Linux-Manager-Proxy-SLE_5.1_x86_64/",
-                     "/SUSE_Updates_Multi-Linux-Manager-Retail-Branch-Server-SLE_5.1_x86_64/",
-                     "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_x86_64/"}
+                "/SUSE_Updates_Multi-Linux-Manager-Retail-Branch-Server-SLE_5.1_x86_64/",
+                "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_x86_64/"}
 }
 
 v51_uyuni_tools_micro_repos: Dict[str, Dict[str, str]] = {
@@ -73,27 +72,28 @@ def get_v51_static_and_client_tools(variant: str = "micro") -> (Dict[str, Dict[s
 
     Parameters:
         variant (str): Either "micro" or "sles", determines which Uyuni tool set to use.
-                       "micro" → v51_uyuni_tools_micro_repos
-                       "sles"  → v51_uyuni_tools_sles_repos
+                       "micro" → v51_uyuni_tools_micro_repos (static)
+                       "sles"  → v51_uyuni_tools_sles_repos (dynamic)
 
     Returns:
         Tuple[
             Dict[str, Dict[str, str]],  # static_repos
-                - Maps node IDs (e.g., "alma8_minion", "server", "proxy") to
+                - Maps node IDs (e.g., "alma8_minion", "server", "proxy" for 'micro' variant) to
                   repo names → full IBS URLs.
             Dict[str, List[str]]        # dynamic_client_tools_repos
-                - Maps dynamic client nodes (e.g., "debian12_minion") to
+                - Maps dynamic client nodes (e.g., "debian12_minion", "server", "proxy" for 'sles' variant) to
                   a sorted list of full IBS URLs.
         ]
 
     Type and structure notes:
     1. Static repositories:
        - Input: v51_nodes_static_client_tools_repositories (Dict[str, Dict[str, str]])
-       - Merged with Uyuni server/proxy repos for the selected variant
+       - Merged with Uyuni server/proxy repos for the 'micro' variant
        - Output: Dict[str, Dict[str, str]] with full URLs
 
     2. Dynamic client tool repositories:
        - Input: v51_nodes_dynamic_client_tools_repos (Dict[str, Set[str]])
+       - Merged with Uyuni server/proxy repos for the 'sles' variant
        - Output: Dict[str, List[str]] with sorted full URLs
        - Mirrors the pattern in v43/v50: sets of paths are converted to sorted lists.
 
@@ -101,31 +101,45 @@ def get_v51_static_and_client_tools(variant: str = "micro") -> (Dict[str, Dict[s
         static_repos, dynamic_repos = get_v51_static_and_client_tools("micro")
         static_repos["server"]["server_uyuni_tools"]
         dynamic_repos["debian12_minion"][0]
+        # Example for the sles variant:
+        # static_repos, dynamic_repos = get_v51_static_and_client_tools("sles")
+        # dynamic_repos["server"][0]
     """
+    # 1. Initialize static repositories with IBS prefix
     static_repos: Dict[str, Dict[str, str]] = {
         key: {name: f"{IBS_URL_PREFIX}{path}" for name, path in subdict.items()}
         for key, subdict in v51_nodes_static_client_tools_repositories.items()
     }
 
-    # Select uyuni tool dictionary based on variant
-    uyuni_dicts = {
-        "micro": v51_uyuni_tools_micro_repos,
-        "sles": v51_uyuni_tools_sles_repos,
+    # 2. Initialize dynamic repositories with a *copy* to be able to modify the sets
+    # Note: The final conversion to List[str] with sorting is done later.
+    dynamic_maintenance_repos: Dict[str, Set[str]] = {
+        key: set(paths) for key, paths in v51_nodes_dynamic_client_tools_repos.items()
     }
 
-    uyuni_tools = uyuni_dicts.get(variant)
-    if not uyuni_tools:
-        raise ValueError(f"Invalid variant '{variant}'. Choose from: {list(uyuni_dicts.keys())}")
+    # 3. Select Uyuni tools based on variant and merge into the appropriate structure
+    if variant == "micro":
+        uyuni_tools = v51_uyuni_tools_micro_repos
+        # Merge uyuni server/proxy into static_repos for 'micro' variant
+        for key in ("server", "proxy"):
+            if key not in static_repos:
+                static_repos[key] = {}
+            # uyuni_tools is Dict[str, Dict[str, str]]
+            for name, path in uyuni_tools.get(key, {}).items():
+                static_repos[key][name] = f"{IBS_URL_PREFIX}{path}"
 
-    # Merge uyuni server/proxy into static_repos
-    for key in ("server", "proxy"):
-        if key not in static_repos:
-            static_repos[key] = {}
-        for name, path in uyuni_tools.get(key, {}).items():
-            static_repos[key][name] = f"{IBS_URL_PREFIX}{path}"
+    elif variant == "sles":
+        uyuni_tools = v51_uyuni_tools_sles_repos
+        # Merge uyuni server/proxy into dynamic_maintenance_repos for 'sles' variant
+        for key in ("server", "proxy"):
+            if key not in dynamic_maintenance_repos:
+                dynamic_maintenance_repos[key] = set()
+            # uyuni_tools is Dict[str, Set[str]]
+            # name is the path, which is added to the set of paths for the node
+            for path in uyuni_tools.get(key, set()):
+                dynamic_maintenance_repos[key].add(path)
 
-    dynamic_client_tools_repos: Dict[str, List[str]] = {
-        key: sorted(paths) for key, paths in v51_nodes_dynamic_client_tools_repos.items()
-    }
+    else:
+        raise ValueError(f"Invalid variant '{variant}'. Choose from: 'micro', 'sles'")
 
-    return static_repos, dynamic_client_tools_repos
+    return static_repos, dynamic_maintenance_repos
