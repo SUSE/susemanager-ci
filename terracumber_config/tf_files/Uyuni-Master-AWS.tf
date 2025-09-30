@@ -154,7 +154,7 @@ module "cucumber_testsuite" {
       image = "opensuse156o"
       provider_settings = {
         instance_type = "m6a.xlarge"
-        volume_size = "200"
+        volume_size = "300"
         private_ip = "172.16.3.6"
         overwrite_fqdn = "uyuni-master-server.sumaci.aws"
       }
