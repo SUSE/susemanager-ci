@@ -263,7 +263,6 @@ module "sles15sp5_paygo_minion" {
   use_os_released_updates = false
   install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-  additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
 module "sles15sp6_paygo_minion" {
@@ -295,7 +294,6 @@ module "slesforsap15sp5_paygo_minion" {
   use_os_released_updates = false
   install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-  additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
 
