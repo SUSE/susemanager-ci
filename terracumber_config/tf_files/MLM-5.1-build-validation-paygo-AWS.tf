@@ -188,7 +188,7 @@ module "server" {
   image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "smlm-server-51-${var.ARCHITECTURE}-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
-  database_disk_size         = 100
+  database_disk_size         = 0
   product_version            = "5.1-paygo"
 
   auto_accept                    = false
