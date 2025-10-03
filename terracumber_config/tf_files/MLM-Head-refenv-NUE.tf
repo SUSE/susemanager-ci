@@ -144,7 +144,7 @@ module "cucumber_testsuite" {
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = "registry.suse.de"
       container_tag = "latest"
       enable_oval_metadata = true
     }
@@ -156,7 +156,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = "registry.suse.de"
       container_tag = "latest"
     }
     suse_minion = {

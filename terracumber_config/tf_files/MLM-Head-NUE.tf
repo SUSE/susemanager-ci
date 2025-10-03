@@ -144,7 +144,7 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = "registry.suse.de"
       container_tag        = "latest"
     }
     proxy_containerized = {
@@ -155,7 +155,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = "registry.suse.de"
       container_tag = "latest"
     }
     suse_minion = {
