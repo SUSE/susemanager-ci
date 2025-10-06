@@ -5,7 +5,7 @@ def run(params) {
         def default_timeout = 500
         env.bootstrap_timeout = 800
 
-        String controller_hostname = null
+        env.controller_hostname = null
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
 
         deployed = false
@@ -112,18 +112,9 @@ def run(params) {
             stage('Sanity check') {
                 def nodesHandler = getNodesHandler()
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable}; cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:build_validation_sanity_check'"
-            }
-
-            stage('Run core features') {
-                if (params.must_run_core && (deployed || !params.must_deploy)) {
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_core'"
-                }
-            }
-
-            stage('Copy the new custom repository json file to controller') {
                 // Extract controller hostname
                 try {
-                    controller_hostname = sh(
+                    env.controller_hostname = sh(
                             script: """
                             set -e
                             cd ${localSumaformDirPath}
@@ -133,11 +124,21 @@ def run(params) {
                     ).trim()
 
                     // Print the values for confirmation
-                    echo "Extracted controller hostname: ${controller_hostname}"
+                    echo "Extracted controller hostname: ${env.controller_hostname}"
 
                 } catch (Exception e) {
                     error("Failed to extract hostnames: ${e.message}")
                 }
+            }
+
+            stage('Run core features') {
+                if (params.must_run_core && (deployed || !params.must_deploy)) {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_core'"
+                }
+            }
+
+            stage('Copy the new custom repository json file to controller') {
+
 
                 if (params.push_new_custom_repositories) {
                     // Generate custom_repositories.json file in the workspace from the value passed by parameter
@@ -156,7 +157,7 @@ def run(params) {
                             }
                         }
                     }
-                    sh(script: "${TestEnvironmentCleanerProgram} --url ${controller_hostname} --mode update_custom_repositories")
+                    sh(script: "${TestEnvironmentCleanerProgram} --url ${env.controller_hostname} --mode update_custom_repositories")
                 }
             }
 
@@ -443,11 +444,12 @@ def clientTestingStages(params) {
                         }
                         echo 'Add custom channels and MU repositories'
                         res_mu_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}'", returnStatus: true)
+                        echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
+                        echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                         if (res_mu_repos != 0) {
                             required_custom_channel_status[node] = 'FAIL'
                             error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
                         }
-                        echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                     }
                 }
                 // Don't update required_custom_channel_status for minion who needs non MU repositories
@@ -467,6 +469,7 @@ def clientTestingStages(params) {
                             echo 'Add non MU Repositories'
                             res_non_MU_repositories = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:${build_validation_non_MU_script}'", returnStatus: true)
                             echo "Non MU Repositories status code: ${res_non_MU_repositories}"
+                            echoHtmlReportPath(build_validation_non_MU_script)
                             if (res_non_MU_repositories != 0) {
                                 required_custom_channel_status[node] = 'FAIL'
                                 error("Add common channels failed with status code: ${res_non_MU_repositories}")
@@ -499,6 +502,7 @@ def clientTestingStages(params) {
                     }
                     echo 'Add Activation Keys'
                     res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_${nodeTag}'", returnStatus: true)
+                    echoHtmlReportPath("build_validation_add_activation_key_${nodeTag}")
                     echo "Add Activation Keys status code: ${res_add_keys}"
                     if (res_add_keys != 0) {
                         bootstrap_repository_status[node] = 'FAIL'
@@ -538,6 +542,7 @@ def clientTestingStages(params) {
                             try {
                                 echo 'Create bootstrap repository'
                                 res_create_bootstrap_repository = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_${nodeTag}'", returnStatus: true)
+                                echoHtmlReportPath("build_validation_create_bootstrap_repository_${nodeTag}" )
                                 echo "Create bootstrap repository status code: ${res_create_bootstrap_repository}"
                                 if (res_create_bootstrap_repository != 0) {
                                     bootstrap_repository_status[node] = 'FAIL'
@@ -559,6 +564,7 @@ def clientTestingStages(params) {
                     randomWait()
                     echo 'Bootstrap clients'
                     res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} export DEFAULT_TIMEOUT=${env.bootstrap_timeout}; cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
+                    echoHtmlReportPath( "build_validation_init_client_${nodeTag}")
                     echo "Init clients status code: ${res_init_clients}"
                     if (res_init_clients != 0) {
                         error("Bootstrap clients failed with status code: ${res_init_clients}")
@@ -573,6 +579,7 @@ def clientTestingStages(params) {
                     randomWait()
                     echo 'Run Smoke tests'
                     res_smoke_tests = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_smoke_tests_${nodeTag}'", returnStatus: true)
+                    echoHtmlReportPath("build_validation_smoke_tests_${nodeTag}")
                     echo "Smoke tests status code: ${res_smoke_tests}"
                     if (res_smoke_tests != 0) {
                         error("Run Smoke tests failed with status code: ${res_smoke_tests}")
@@ -728,6 +735,37 @@ def cleanMigrationFeatureName(String feature) {
         feature = feature.substring(0, feature.length() - ".feature".length())
     }
     return feature
+}
+
+/**
+ * Fetches the HTML report path from the file exposed via HTTP on the controller
+ * and logs the full HTTP link to the job steps.
+ * * @param rake_target The rake target (e.g., build_validation_smoke_tests_NODETAG).
+ */
+def echoHtmlReportPath(String rake_target) {
+    // Construct the full URL to the file containing the HTML path
+    def path_export_url = "http://${env.controller_hostname}/results/${env.BUILD_NUMBER}/${rake_target}_html_path.txt"
+
+    def html_report_path = ''
+    try {
+        // Use httpRequest to fetch the file content
+        def response = httpRequest(url: path_export_url, throwExceptionOnError: true, quiet: true)
+
+        if (response.status == 200) {
+            // The content is the full relative path to the HTML report
+            html_report_path = response.content.trim()
+
+            // Construct and log the full HTTP URL for the actual report
+            def full_html_url = "http://${env.controller_hostname}/${html_report_path}"
+            echo "HTML Report URL: ${full_html_url}"
+        } else {
+            echo "Warning: Failed to fetch HTML path file. HTTP Status: ${response.status}"
+        }
+    } catch (Exception e) {
+        // This catches network errors, DNS failures, or httpRequest throwing
+        // an exception if throwExceptionOnError is true (e.g., 404 response).
+        echo "Error fetching HTML path from ${path_export_url}: ${e.getMessage()}"
+    }
 }
 
 return this
