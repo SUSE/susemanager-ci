@@ -144,10 +144,7 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
-      //container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
-      container_image = "server"
-      db_container_image = "server-postgresql"      
+      container_repository = "registry.suse.de"   
       container_tag        = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61"
@@ -163,8 +160,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
-      //container_repository = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+      container_repository = "registry.suse.de"
       container_tag = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61/"
