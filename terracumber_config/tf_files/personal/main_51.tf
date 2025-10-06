@@ -1,82 +1,7 @@
-// Mandatory variables for terracumber
-variable "URL_PREFIX" {
+variable "CONTAINER_REPOSITORY" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-dev-acceptance-tests-NUE"
-}
-
-// Not really used as this is for --runall parameter, and we run cucumber step by step
-variable "CUCUMBER_COMMAND" {
-  type = string
-  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
-}
-
-variable "CUCUMBER_GITREPO" {
-  type = string
-  default = "https://github.com/SUSE/spacewalk.git"
-}
-
-variable "CUCUMBER_BRANCH" {
-  type = string
-  default = "Manager-5.1"
-}
-
-variable "CUCUMBER_RESULTS" {
-  type = string
-  default = "/root/spacewalk/testsuite"
-}
-
-variable "MAIL_SUBJECT" {
-  type = string
-  default = "Results 5.1-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
-}
-
-variable "MAIL_TEMPLATE" {
-  type = string
-  default = "../mail_templates/mail-template-jenkins.txt"
-}
-
-variable "MAIL_SUBJECT_ENV_FAIL" {
-  type = string
-  default = "Results 5.1-NUE: Environment setup failed"
-}
-
-variable "MAIL_TEMPLATE_ENV_FAIL" {
-  type = string
-  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
-}
-
-variable "MAIL_FROM" {
-  type = string
-  default = "jenkins@suse.de"
-}
-
-variable "MAIL_TO" {
-  type = string
-  default = "galaxy-ci@suse.de"
-}
-
-// sumaform specific variables
-variable "SCC_USER" {
-  type = string
-}
-
-variable "SCC_PASSWORD" {
-  type = string
-}
-
-variable "GIT_USER" {
-  type = string
-  default = null // Not needed for master, as it is public
-}
-
-variable "GIT_PASSWORD" {
-  type = string
-  default = null // Not needed for master, as it is public
-}
-
-variable "PROMETHEUS_PUSH_GATEWAY_URL" {
-  type = string
-  default = null
+  description = "Container repository for server and proxy"
+  default = "registry.suse.de/devel/galaxy/manager/5.1/containerfile"
 }
 
 terraform {
@@ -90,7 +15,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-01.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -110,7 +35,7 @@ module "cucumber_testsuite" {
   images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
-  name_prefix  = "mlm-ci-51-"
+  name_prefix   = "${var.ENVIRONMENT}-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -133,7 +58,7 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:01:10"
+        mac       = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
         vcpu = 4
         memory = 4096
       }
@@ -141,7 +66,7 @@ module "cucumber_testsuite" {
     server_containerized = {
       image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:11"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
         vcpu = 8
         memory = 32768
       }
@@ -149,26 +74,26 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
-      container_repository = "registry.suse.de"
+      container_repository = var.CONTAINER_REPOSITORY
       container_tag        = "latest"
 
     }
     proxy_containerized = {
       image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:12"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
         vcpu = 2
         memory = 2048
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de"
+      container_repository = var.CONTAINER_REPOSITORY
       container_tag = "latest"
     }
     suse_minion = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:16"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
         vcpu = 2
         memory = 2048
       }
@@ -176,7 +101,7 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:18"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
         vcpu = 2
         memory = 2048
       }
@@ -185,7 +110,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:1a"
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -195,7 +120,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:1b"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["deblike-minion"]
         vcpu = 2
         memory = 2048
       }
@@ -203,7 +128,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:1d"
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
         vcpu = 2
         memory = 2048
       }
@@ -215,40 +140,27 @@ module "cucumber_testsuite" {
       name = "dhcp-dns"
       image = "opensuse155o"
       hypervisor = {
-        host        = "suma-01.mgr.suse.de"
-        user        = "root"
+        host        = "suma-05.mgr.suse.de"
+        user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
         private_key = file("~/.ssh/id_ed25519")
+      }
+    }
+    kvm_host = {
+      image = "sles15sp4o"
+      provider_settings = {
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
+        vcpu = 4
+        memory = 4096
       }
     }
   }
 
   provider_settings = {
-    pool = "ssd"
-    network_name = null
-    bridge = "br0"
-    additional_network = "192.168.51.0/24"
+    pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
+    network_name       = null
+    bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
+    additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
   }
-}
-
-resource "null_resource" "configure_quality_intelligence" {
-
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-
-  provisioner "remote-exec" {
-    inline = [ "echo export QUALITY_INTELLIGENCE=true >> ~/.bashrc",
-      "echo export PROMETHEUS_PUSH_GATEWAY_URL=${var.PROMETHEUS_PUSH_GATEWAY_URL} >> ~/.bashrc",
-      "source ~/.bashrc"
-    ]
-    connection {
-      type     = "ssh"
-      user     = "root"
-      password = "linux"
-      host     = "${module.cucumber_testsuite.configuration.controller.hostname}"
-    }
-  }
-
 }
 
 output "configuration" {
