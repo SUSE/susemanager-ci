@@ -464,7 +464,7 @@ module "controller" {
   base_configuration = module.base.configuration
 
   swap_file_size = null
-  no_mirror = false
+  no_mirror = true
   is_using_build_image      = false
   is_using_scc_repositories = false
   is_using_paygo_server     = true
