@@ -118,7 +118,7 @@ module "base" {
   testsuite         = true
 
   provider_settings = {
-    pool        = "ssd"
+    pool        = "wmaj_disks"
     bridge      = "br0"
   }
 }
@@ -130,7 +130,7 @@ module "server_containerized" {
   image              = "slmicro61o"
   provider_settings = {
     mac                = "aa:b2:93:01:01:99"
-    data_pool          = "ssd"
+    data_pool          = "wmaj_disks"
   }
 
   main_disk_size        = 100
