@@ -131,13 +131,13 @@ variable "NAME_PREFIX" {
 variable "SERVER_AMI" {
   description = "Custom AMI ID to use for server. Leave empty to use the default SUSE Manager image."
   type = string
-  default     = ""  # Default to empty string if not set
+  default     = ""
 }
 
 variable "PROXY_AMI" {
   description = "Custom AMI ID to use for proxy. Leave empty to use the default SUSE Manager image."
   type        = string
-  default     = ""  # Default to empty string if not set
+  default     = ""
 }
 
 variable "ARCHITECTURE" {
@@ -432,13 +432,16 @@ module "sles15sp6_sshminion" {
 
 module "rhel9_paygo_minion" {
   source             = "./modules/minion"
-  base_configuration = module.base.configuration
+  base_configuration = merge(module.base.configuration,
+    {
+      testsuite = "false"
+    })
   name               = "rhel9-paygo-minion"
   image              = "rhel9"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
-  install_salt_bundle     = false
+  install_salt_bundle     = true
   product_version         = "5.1-paygo"
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
