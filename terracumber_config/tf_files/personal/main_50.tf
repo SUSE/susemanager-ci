@@ -75,6 +75,7 @@ module "cucumber_testsuite" {
       large_deployment     = true
       runtime              = "podman"
       container_repository = var.CONTAINER_REPOSITORY
+      container_image = "suse/manager/5.0/x86_64/server"
       container_tag        = "latest"
 
     }
