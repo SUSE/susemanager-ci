@@ -153,6 +153,8 @@ provider "aws" {
 module "base" {
   source                   = "./modules/base"
   product_version          = "5.1-released"
+  cc_username              = var.SCC_USER
+  cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
@@ -459,11 +461,7 @@ module "controller" {
   provider_settings = {
     instance_type = "c6i.xlarge"
   }
-  base_configuration = merge(module.base.configuration,
-    {
-      cc_username = var.SCC_USER
-      cc_password = var.SCC_PASSWORD
-    })
+  base_configuration = module.base.configuration
 
   swap_file_size = null
   no_mirror = true
