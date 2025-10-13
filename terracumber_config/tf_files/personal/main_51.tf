@@ -189,7 +189,7 @@ module "proxy_containerized" {
 module "sles15sp6_minion" {
   source             = "./modules/minion"
   base_configuration = module.base.configuration
-  name               = "sles15sp6-minion"
+  name               = "suse-minion"
   image              = "sles15sp6o"
   provider_settings  = {
     mac    = "aa:b2:93:01:01:9c"
