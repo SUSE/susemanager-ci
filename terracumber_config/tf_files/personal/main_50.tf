@@ -1,7 +1,90 @@
-variable "CONTAINER_REPOSITORY" {
+// Mandatory variables for terracumber
+variable "URL_PREFIX" {
   type = string
-  description = "Container repository for server and proxy"
-  default = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
+  default = "https://ci.suse.de/view/Manager/view/Manager-qe/job/wiktor-personal-pipeline"
+}
+
+// Not really used as this is for --runall parameter, and we run cucumber step by step
+variable "CUCUMBER_COMMAND" {
+  type = string
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
+}
+
+variable "CUCUMBER_GITREPO" {
+  type = string
+  default = "https://github.com/SUSE/spacewalk.git"
+}
+
+variable "CUCUMBER_BRANCH" {
+  type = string
+  default = "Manager-5.0"
+}
+
+variable "CUCUMBER_RESULTS" {
+  type = string
+  default = "/root/spacewalk/testsuite"
+}
+
+variable "MAIL_SUBJECT" {
+  type = string
+  default = "Results 5.0 SLE Update $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+}
+
+variable "MAIL_TEMPLATE" {
+  type = string
+  default = "../mail_templates/mail-template-jenkins.txt"
+}
+
+variable "MAIL_SUBJECT_ENV_FAIL" {
+  type = string
+  default = "Results 5.0 SLE Update: Environment setup failed"
+}
+
+variable "MAIL_TEMPLATE_ENV_FAIL" {
+  type = string
+  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
+}
+
+variable "MAIL_FROM" {
+  type = string
+  default = "galaxy-noise@suse.de"
+}
+
+variable "MAIL_TO" {
+  type = string
+  default = "galaxy-noise@suse.de"
+}
+
+// sumaform specific variables
+variable "SCC_USER" {
+  type = string
+}
+
+variable "SCC_PASSWORD" {
+  type = string
+}
+
+variable "SERVER_CONTAINER_REPOSITORY" {
+  type = string
+}
+
+variable "PROXY_CONTAINER_REPOSITORY" {
+  type = string
+}
+
+variable "SERVER_CONTAINER_IMAGE" {
+  type = string
+  default = ""
+}
+
+variable "GIT_USER" {
+  type = string
+  default = null
+}
+
+variable "GIT_PASSWORD" {
+  type = string
+  default = null
 }
 
 terraform {
@@ -18,10 +101,118 @@ provider "libvirt" {
   uri = "qemu+tcp://suma-05.mgr.suse.de/system"
 }
 
-module "cucumber_testsuite" {
-  source = "./modules/cucumber_testsuite"
+module "base" {
+  source            = "./modules/base"
 
-  product_version = "5.0-nightly"
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = "5.0-released"
+  name_prefix       = "wiktor-"
+  use_avahi         = false
+  domain            = "mgr.suse.de"
+  images            = [ "sles15sp6o", "opensuse156o", "slemicro55o" ]
+
+  mirror            = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images = true
+
+  testsuite         = true
+
+  provider_settings = {
+    pool        = "wmaj_disks"
+    bridge      = "br0"
+  }
+}
+
+module "server_containerized" {
+  source             = "./modules/server_containerized"
+  base_configuration = module.base.configuration
+  name               = "server"
+  image              = "slemicro55o"
+  provider_settings = {
+    mac                = "aa:b2:93:01:01:99"
+    data_pool          = "wmaj_disks"
+  }
+
+  main_disk_size        = 100
+  repository_disk_size  = 1000
+  database_disk_size    = 150
+  runtime               = "podman"
+  // Temporary workaround to see if we pass proxy stage. Also needs to be updated on next MU
+  container_repository  = var.SERVER_CONTAINER_REPOSITORY
+  container_image       = var.SERVER_CONTAINER_IMAGE
+  container_tag         = "latest"
+  server_mounted_mirror = "minima-mirror-ci-bv.mgr.suse.de"
+
+  auto_accept                    = false
+  monitored                      = true
+  disable_firewall               = false
+  allow_postgres_connections     = false
+  skip_changelog_import          = false
+  mgr_sync_autologin             = false
+  create_sample_channel          = false
+  create_sample_activation_key   = false
+  create_sample_bootstrap_script = false
+  publish_private_ssl_key        = false
+  use_os_released_updates        = true
+  disable_download_tokens        = false
+  ssh_key_path                   = "./salt/controller/id_ed25519.pub"
+  from_email                     = "root@suse.de"
+
+  //server_additional_repos
+
+}
+
+module "proxy_containerized" {
+  source             = "./modules/proxy_containerized"
+  base_configuration = module.base.configuration
+  name               = "proxy"
+  image              = "slemicro55o"
+  provider_settings  = {
+    mac                = "aa:b2:93:01:01:9a"
+    memory             = 4096
+  }
+  server_configuration = {
+    hostname = "wiktor-server.mgr.suse.de"
+    username = "admin"
+    password = "admin"
+  }
+
+  runtime              = "podman"
+  container_repository = var.PROXY_CONTAINER_REPOSITORY
+  container_tag        = "latest"
+
+  auto_configure        = false
+  ssh_key_path          = "./salt/controller/id_ed25519.pub"
+
+}
+
+module "sles15sp6_minion" {
+  source             = "./modules/minion"
+  base_configuration = module.base.configuration
+  name               = "suse-minion"
+  image              = "sles15sp6o"
+  provider_settings  = {
+    mac    = "aa:b2:93:01:01:9c"
+    vcpu   = 2
+    memory = 2048
+  }
+
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+
+}
+
+module "controller" {
+  source             = "./modules/controller"
+  base_configuration = module.base.configuration
+  name               = "controller"
+  provider_settings = {
+    mac                = "aa:b2:93:01:01:98"
+    memory             = 16384
+    vcpu               = 8
+  }
+  swap_file_size = null
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -29,141 +220,13 @@ module "cucumber_testsuite" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro55o"]
-
-  use_avahi    = false
-  name_prefix   = "${var.ENVIRONMENT}-"
-  domain       = "mgr.suse.de"
-  from_email   = "root@suse.de"
-
-  no_auth_registry       = "registry.mgr.suse.de"
-  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
-  auth_registry_username = "cucutest"
-  auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
-
-  container_server = true
-  container_proxy  = true
-
-  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images        = true
-
-  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
-
-  # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
-  host_settings = {
-    controller = {
-      provider_settings = {
-        mac       = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
-        vcpu = 4
-        memory = 4096
-      }
-    }
-    server_containerized = {
-      image = "slemicro55o"
-      provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
-        vcpu = 8
-        memory = 32768
-      }
-      main_disk_size       = 500
-      login_timeout        = 28800
-      large_deployment     = true
-      runtime              = "podman"
-      container_repository = var.CONTAINER_REPOSITORY
-      container_image = "suse/manager/5.0/x86_64/server"
-      container_tag        = "latest"
-
-    }
-    proxy_containerized = {
-      image = "slemicro55o"
-      provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
-        vcpu = 2
-        memory = 2048
-      }
-      main_disk_size = 200
-      runtime = "podman"
-      container_repository = var.CONTAINER_REPOSITORY
-      container_tag = "latest"
-    }
-    suse_minion = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    suse_sshminion = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
-        vcpu = 2
-        memory = 2048
-      }
-      additional_packages = [ "iptables" ]
-    }
-    rhlike_minion = {
-      image = "rocky8o"
-      provider_settings = {
-        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    deblike_minion = {
-      image = "ubuntu2404o"
-      provider_settings = {
-        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["deblike-minion"]
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    build_host = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    pxeboot_minion = {
-      image = "sles15sp4o"
-    }
-    dhcp_dns = {
-      name = "dhcp-dns"
-      image = "opensuse155o"
-      hypervisor = {
-        host        = "suma-05.mgr.suse.de"
-        user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
-        private_key = file("~/.ssh/id_ed25519")
-      }
-    }
-    kvm_host = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
-        vcpu = 4
-        memory = 4096
-      }
-    }
-  }
-
-  provider_settings = {
-    pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
-    network_name       = null
-    bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
-    additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
-  }
+  server_configuration          = module.server_containerized.configuration
+  proxy_configuration           = module.proxy_containerized.configuration
+  sle15sp6_minion_configuration = module.sles15sp6_minion.configuration
 }
 
 output "configuration" {
-  value = module.cucumber_testsuite.configuration
+  value = {
+    controller = module.controller.configuration
+  }
 }
