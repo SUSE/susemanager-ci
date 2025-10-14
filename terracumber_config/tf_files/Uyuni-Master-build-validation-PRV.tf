@@ -228,7 +228,7 @@ module "base_new_sle" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.prv.suse.net"
-  images            = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o" ]
+  images            = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "tumbleweedo" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
   use_mirror_images = true
@@ -334,7 +334,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name               = "server"
-  image              = "leapmicro55o"
+  image              = "tumbleweedo"
   provider_settings = {
     mac                = "aa:b2:93:04:05:6d"
     memory             = 40960
@@ -377,6 +377,7 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_retail.configuration
   name               = "proxy"
+  image              = "tumbleweedo"
   provider_settings  = {
     mac                = "aa:b2:93:04:05:6e"
     memory             = 4096
