@@ -131,13 +131,13 @@ variable "NAME_PREFIX" {
 variable "SERVER_AMI" {
   description = "Custom AMI ID to use for server. Leave empty to use the default SUSE Manager image."
   type = string
-  default     = ""  # Default to empty string if not set
+  default     = ""
 }
 
 variable "PROXY_AMI" {
   description = "Custom AMI ID to use for proxy. Leave empty to use the default SUSE Manager image."
   type        = string
-  default     = ""  # Default to empty string if not set
+  default     = ""
 }
 
 variable "ARCHITECTURE" {
@@ -152,7 +152,9 @@ provider "aws" {
 
 module "base" {
   source                   = "./modules/base"
-  product_version          = "5.1-paygo"
+  product_version          = "5.1-released"
+  cc_username              = var.SCC_USER
+  cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
   mirror                   = var.MIRROR
   testsuite                = true
@@ -189,6 +191,7 @@ module "server" {
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
+  product_version            = "5.1-paygo"
 
   auto_accept                    = false
   monitored                      = false
@@ -239,6 +242,7 @@ module "sles12sp5_paygo_minion" {
   base_configuration = module.base.configuration
   name               = "sles12sp5-paygo-minion"
   image              = "sles12sp5-paygo"
+  product_version    = "5.1-paygo"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -247,7 +251,6 @@ module "sles12sp5_paygo_minion" {
   use_os_released_updates = false
   install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-  additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
 module "sles15sp5_paygo_minion" {
@@ -255,6 +258,7 @@ module "sles15sp5_paygo_minion" {
   base_configuration = module.base.configuration
   name               = "sles15sp5-paygo-minion"
   image              = "sles15sp5-paygo"
+  product_version    = "5.1-paygo"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -263,7 +267,6 @@ module "sles15sp5_paygo_minion" {
   use_os_released_updates = false
   install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-  additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
 module "sles15sp6_paygo_minion" {
@@ -271,6 +274,7 @@ module "sles15sp6_paygo_minion" {
   base_configuration = module.base.configuration
   name               = "sles15sp6-paygo-minion"
   image              = "sles15sp6-paygo"
+  product_version    = "5.1-paygo"
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -279,7 +283,6 @@ module "sles15sp6_paygo_minion" {
   use_os_released_updates = false
   install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-  additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
 module "slesforsap15sp5_paygo_minion" {
@@ -287,6 +290,7 @@ module "slesforsap15sp5_paygo_minion" {
   base_configuration = module.base.configuration
   name               = "slesforsap15sp5-paygo-minion"
   image              = "slesforsap15sp5-paygo"
+  product_version    = "5.1-paygo"
   provider_settings = {
     instance_type = "t3.large"
   }
@@ -295,7 +299,6 @@ module "slesforsap15sp5_paygo_minion" {
   use_os_released_updates = false
   install_salt_bundle     = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-  additional_packages = [ "python-instance-billing-flavor-check" ]
 }
 
 
@@ -431,13 +434,17 @@ module "sles15sp6_sshminion" {
 
 module "rhel9_paygo_minion" {
   source             = "./modules/minion"
-  base_configuration = module.base.configuration
+  base_configuration = merge(module.base.configuration,
+    {
+      testsuite = "false"
+    })
   name               = "rhel9-paygo-minion"
   image              = "rhel9"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
-  install_salt_bundle     = false
+  install_salt_bundle     = true
+  product_version         = "5.1-paygo"
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     memory = 2048
@@ -454,11 +461,7 @@ module "controller" {
   provider_settings = {
     instance_type = "c6i.xlarge"
   }
-  base_configuration = merge(module.base.configuration,
-    {
-      cc_username = var.SCC_USER
-      cc_password = var.SCC_PASSWORD
-    })
+  base_configuration = module.base.configuration
 
   swap_file_size = null
   no_mirror = true
