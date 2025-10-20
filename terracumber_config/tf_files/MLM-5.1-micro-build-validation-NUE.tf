@@ -1103,6 +1103,21 @@ module "sles15sp4_buildhost" {
 
 }
 
+module "sles15sp6_buildhost" {
+  source             = "./modules/build_host"
+  base_configuration = module.base_core.configuration
+  name               = "sles15sp6-build"
+  image              = "sles15sp6o"
+  provider_settings = {
+    mac                = "aa:b2:92:42:01:06"
+    memory             = 2048
+    vcpu               = 2
+  }
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+
+}
+
 module "sles15sp4_terminal" {
   source             = "./modules/pxe_boot"
   base_configuration = module.base_core.configuration
@@ -1118,6 +1133,21 @@ module "sles15sp4_terminal" {
   private_name       = "sle15sp4terminal"
 }
 
+module "sles15sp6_terminal" {
+  source             = "./modules/pxe_boot"
+  base_configuration = module.base_core.configuration
+  name               = "sles15sp6-terminal"
+  image              = "sles15sp6o"
+  provider_settings = {
+    memory             = 2048
+    vcpu               = 2
+    manufacturer       = "HP"
+    product            = "ProLiant DL360 Gen9"
+  }
+  private_ip         = 7
+  private_name       = "sle15sp6terminal"
+}
+
 module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
   base_configuration = module.base_core.configuration
@@ -1126,7 +1156,8 @@ module "dhcp_dns" {
   private_hosts = [
     module.proxy_containerized.configuration,
     module.sles12sp5_terminal.configuration,
-    module.sles15sp4_terminal.configuration
+    module.sles15sp4_terminal.configuration,
+    module.sles15sp6_terminal.configuration,
   ]
   hypervisor = {
     host        = "suma-10.mgr.suse.de"
@@ -1266,9 +1297,11 @@ module "controller" {
 
   sle12sp5_buildhost_configuration = module.sles12sp5_buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4_buildhost.configuration
+  sle15sp6_buildhost_configuration = module.sles15sp6_buildhost.configuration
 
   sle12sp5_terminal_configuration = module.sles12sp5_terminal.configuration
   sle15sp4_terminal_configuration = module.sles15sp4_terminal.configuration
+  sle15sp6_terminal_configuration = module.sles15sp6_terminal.configuration
 
   monitoringserver_configuration = module.monitoring_server.configuration
 }
