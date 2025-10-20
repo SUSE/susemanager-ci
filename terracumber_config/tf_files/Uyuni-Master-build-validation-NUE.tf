@@ -1136,6 +1136,7 @@ module "controller" {
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
   server_configuration = module.server_containerized.configuration
   proxy_configuration  = module.proxy_containerized.configuration
