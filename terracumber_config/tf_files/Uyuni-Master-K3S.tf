@@ -102,7 +102,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o", "tumbleweedo"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ci-master-k3s-"
@@ -138,9 +138,6 @@ module "cucumber_testsuite" {
       runtime = "k3s"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
-      #cannot use immutable OS, since K3s installation requires a reboot
-      #also 15.6 had issue on container startup
-      image = "opensuse156o"
 
       login_timeout = 28800
       main_disk_size = 40
@@ -157,21 +154,18 @@ module "cucumber_testsuite" {
       additional_repos = {
           containerUtils = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
       }
-      #cannot use immutable OS, since K3s installation requires a reboot
-      #also 15.6 had issue on container startup
-      image = "opensuse156o"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/proxy-helm"
     }
     suse_minion = {
-      image = "opensuse156o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:16"
       }
     }
     suse_sshminion = {
-      image = "opensuse156o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:18"
       }
