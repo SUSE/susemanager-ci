@@ -19,10 +19,10 @@ pipeline {
     environment {
         gitarro_cmd = 'gitarro.ruby2.5'
         gitarro_local = 'ruby gitarro.rb'
-        jslint_test = "-r SUSE/spacewalk" +
-                " -c javascript_lint -d \"javascript-lint\" " +
+        frontend_checks = "-r SUSE/spacewalk" +
+                " -c frontend_checks -d \"frontend-checks\" " +
                 " -f \"web/\" " +
-                " -t susemanager-utils/testing/automation/javascript-lint.sh" +
+                " -t susemanager-utils/testing/automation/frontend-checks.sh" +
                 " -u ${env.BUILD_URL} " +
                 " -g ${env.WORKSPACE} "
     }
@@ -46,20 +46,20 @@ pipeline {
                 }
             }
         }
-        stage('Run Javascript lint test') {
+        stage('Run all frontend checks') {
             steps {
-                echo 'Run JavaScript lint tests'
+                echo 'Run all frontend checks'
                 script {
-                    jslint_test_cmd = "${gitarro_cmd} ${jslint_test}"
+                    frontend_checks_cmd = "${gitarro_cmd} ${frontend_checks}"
                     if (params.GITARRO_PR_NUMBER != "") {
-                        jslint_test_cmd = "${gitarro_local} ${jslint_test}"
+                        frontend_checks_cmd = "${gitarro_local} ${frontend_checks}"
                     }
                     if (params.PR_NUMBER != '') {
-                        jslint_test_cmd = "${jslint_test_cmd} -P ${params.PR_NUMBER}"
+                        frontend_checks_cmd = "${frontend_checks_cmd} -P ${params.PR_NUMBER}"
                         currentBuild.displayName = "PR: ${params.PR_NUMBER}"
                     }
                 }
-                sh "export PRODUCT=SUSE-Manager && ${jslint_test_cmd}"
+                sh "export PRODUCT=SUSE-Manager && ${frontend_checks_cmd}"
             }
         }
     }
