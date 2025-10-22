@@ -56,7 +56,7 @@ pipeline {
                             'spacecmd_unittests': 'spacecmd/',
                             'ruby_rubocop' : 'testsuite/',
                             'backend_unittests_pgsql' : 'python/',
-                            'javascript_lint' : 'web/',
+                            'frontend_checks' : 'web/',
                             'schema_migration_test_pgsql' : 'schema/spacewalk',
                             'susemanager_unittests' : 'susemanager/'
                     ]
