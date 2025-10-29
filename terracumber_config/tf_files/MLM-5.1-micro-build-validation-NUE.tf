@@ -1103,11 +1103,11 @@ module "sles15sp4_buildhost" {
 
 }
 
-module "sles15sp6_buildhost" {
+module "sles15sp7_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_core.configuration
-  name               = "sles15sp6-build"
-  image              = "sles15sp6o"
+  name               = "sles15sp7-build"
+  image              = "sles15sp7o"
   provider_settings = {
     mac                = "aa:b2:92:42:01:06"
     memory             = 2048
@@ -1144,8 +1144,23 @@ module "sles15sp6_terminal" {
     manufacturer       = "HP"
     product            = "ProLiant DL360 Gen9"
   }
-  private_ip         = 7
+  private_ip         = 5
   private_name       = "sle15sp6terminal"
+}
+
+module "sles15sp7_terminal" {
+  source             = "./modules/pxe_boot"
+  base_configuration = module.base_core.configuration
+  name               = "sles15sp7-terminal"
+  image              = "sles15sp7o"
+  provider_settings = {
+    memory             = 2048
+    vcpu               = 2
+    manufacturer       = "HP"
+    product            = "ProLiant DL580 Gen9"
+  }
+  private_ip         = 6
+  private_name       = "sle15sp7terminal"
 }
 
 module "dhcp_dns" {
@@ -1295,13 +1310,10 @@ module "controller" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slmicro61_sshminion_configuration = module.slmicro61_sshminion.configuration
 
-  sle12sp5_buildhost_configuration = module.sles12sp5_buildhost.configuration
-  sle15sp4_buildhost_configuration = module.sles15sp4_buildhost.configuration
-  sle15sp6_buildhost_configuration = module.sles15sp6_buildhost.configuration
+  sle15sp7_buildhost_configuration = module.sles15sp7_buildhost.configuration
 
-  sle12sp5_terminal_configuration = module.sles12sp5_terminal.configuration
-  sle15sp4_terminal_configuration = module.sles15sp4_terminal.configuration
   sle15sp6_terminal_configuration = module.sles15sp6_terminal.configuration
+  sle15sp7_terminal_configuration = module.sles15sp7_terminal.configuration
 
   monitoringserver_configuration = module.monitoring_server.configuration
 }

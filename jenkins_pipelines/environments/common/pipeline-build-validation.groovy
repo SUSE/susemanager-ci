@@ -307,21 +307,37 @@ def run(params) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start running the retail tests'
                         }
-                        echo 'Prepare Proxy for Retail'
-                        res_retail_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_proxy'", returnStatus: true)
-                        echo "Retail proxy status code: ${res_retail_proxy}"
-                        if (res_retail_proxy != 0) {
-                            error("Retail proxy failed")
+                        parallel (
+                                stage('Configure retail proxy') {
+                                    res_configure_retail_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_configure_proxy'", returnStatus: true)
+                                    echo "Retail proxy status code: ${res_configure_retail_proxy}"
+                                    sh "exit ${res_configure_retail_proxy}"
+                                },
+                                stage('Init build host') {
+                                    res_init_buildhost = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_init_sles15sp7_buildhost'", returnStatus: true)
+                                    echo "Retail proxy status code: ${res_init_buildhost}"
+                                    sh "exit ${res_init_buildhost}"
+                                }
+                        )
+                        def terminal_version = ['sles15sp6', 'sles15sp7']
+                        def terminal_deployment_testing = [:]
+                        terminal_version.each { terminal ->
+                            terminal_deployment_testing["${terminal}"] = {
+                                stage("Build image for ${terminal}") {
+                                    def res_build_image = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_build_image_${terminal}'", returnStatus: true)
+                                    sh "exit ${res_build_image}"
+                                }
+                                stage("Prepare group and saltboot for ${terminal}") {
+                                    def res_prepare_group_saltboot = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_prepare_group_saltboot_${terminal}'", returnStatus: true)
+                                    sh "exit ${res_prepare_group_saltboot}"
+                                }
+                                stage("Deploy terminal ${terminal}") {
+                                    def res_deploy_terminal = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_deploy_terminal_${terminal}'", returnStatus: true)
+                                    sh "exit ${res_deploy_terminal}"
+                                }
+                            }
                         }
-                        echo 'SLE 12 Retail'
-                        res_retail_sle12 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_sle12'", returnStatus: true)
-                        echo "SLE 12 Retail status code: ${res_retail_sle12}"
-                        echo 'SLE 15 Retail'
-                        res_retail_sle15 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_retail_sle15'", returnStatus: true)
-                        echo "SLE 15 Retail status code: ${res_retail_sle15}"
-                        if (res_retail_sle15 != 0 || res_retail_sle12 != 0) {
-                            error("Run retail failed")
-                        }
+                        parallel terminal_deployment_testing
                     }
                 }
             } catch (Exception ex) {
