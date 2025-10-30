@@ -427,6 +427,41 @@ def run(params) {
     }
 }
 
+/**
+ * Executes a rake command inside the terracumber cucumber step.
+ * @param rake_target The full rake target string (e.g., 'cucumber:build_validation_core').
+ * @param temporaryList Optional list of environment variables to unset (for parallel client stages).
+ * @param return_status Boolean to decide if the command should return the exit status.
+ */
+def runCucumberRakeTarget(String rake_target, boolean return_status = false, temporaryList = null) {
+    // Note: The temporaryList is often provided as a space-separated string in the original code (e.g., in getNodesHandler()),
+    // but the helper function is designed to take a List/Set for cleaner logic.
+    // For compatibility with the original structure where getNodesHandler().envVariableListToDisable is a string,
+    // we'll handle the unsetting here, assuming the input might be a space-separated string or a List/Set.
+    def unset_vars = ""
+    if (temporaryList) {
+        // If it's a list/set, join it to a string. If it's already a string, use it.
+        def list_to_join = temporaryList instanceof String ? temporaryList.split(' ') : temporaryList
+        unset_vars = list_to_join ? "unset ${list_to_join.join(' ')}; " : ""
+    }
+
+    def script = """
+        ./terracumber-cli ${common_params} \\
+            --logfile ${resultdirbuild}/testsuite.log \\
+            --runstep cucumber \\
+            --cucumber-cmd '${unset_vars}${env.exports} cd /root/spacewalk/testsuite; rake ${rake_target}'
+    """
+
+    // Remove leading/trailing whitespace and execute
+    def final_script = script.stripIndent().trim()
+
+    if (return_status) {
+        return sh(script: final_script, returnStatus: true)
+    } else {
+        sh final_script
+    }
+}
+
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
 def clientTestingStages(params) {
@@ -785,41 +820,6 @@ def echoHtmlReportPath(String rake_target) {
         // This catches network errors, DNS failures, or httpRequest throwing
         // an exception if throwExceptionOnError is true (e.g., 404 response).
         echo "Error fetching HTML path from ${path_export_url}: ${e.getMessage()}"
-    }
-}
-
-/**
- * Executes a rake command inside the terracumber cucumber step.
- * @param rake_target The full rake target string (e.g., 'cucumber:build_validation_core').
- * @param temporaryList Optional list of environment variables to unset (for parallel client stages).
- * @param return_status Boolean to decide if the command should return the exit status.
- */
-def runCucumberRakeTarget(String rake_target, boolean return_status = false, temporaryList = null) {
-    // Note: The temporaryList is often provided as a space-separated string in the original code (e.g., in getNodesHandler()),
-    // but the helper function is designed to take a List/Set for cleaner logic.
-    // For compatibility with the original structure where getNodesHandler().envVariableListToDisable is a string,
-    // we'll handle the unsetting here, assuming the input might be a space-separated string or a List/Set.
-    def unset_vars = ""
-    if (temporaryList) {
-        // If it's a list/set, join it to a string. If it's already a string, use it.
-        def list_to_join = temporaryList instanceof String ? temporaryList.split(' ') : temporaryList
-        unset_vars = list_to_join ? "unset ${list_to_join.join(' ')}; " : ""
-    }
-
-    def script = """
-        ./terracumber-cli ${common_params} \\
-            --logfile ${resultdirbuild}/testsuite.log \\
-            --runstep cucumber \\
-            --cucumber-cmd '${unset_vars}${env.exports} cd /root/spacewalk/testsuite; rake ${rake_target}'
-    """
-
-    // Remove leading/trailing whitespace and execute
-    def final_script = script.stripIndent().trim()
-
-    if (return_status) {
-        return sh(script: final_script, returnStatus: true)
-    } else {
-        sh final_script
     }
 }
 
