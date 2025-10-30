@@ -301,48 +301,47 @@ def run(params) {
             /** Products and Salt migration stages stages end **/
 
             /** Retail stages begin **/
-            try {
-                stage('Prepare and run Retail') {
-                    if (params.must_prepare_retail) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start running the retail tests'
-                        }
-                        parallel (
+            stage('Prepare and run Retail') {
+                if (params.must_prepare_retail) {
+                    if (params.confirm_before_continue) {
+                        input 'Press any key to start running the retail tests'
+                    }
+                    parallel (
+                            'Configure retail proxy branch': {
                                 stage('Configure retail proxy') {
                                     def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', true)
                                     echo "Retail proxy status code: ${res_configure_retail_proxy}"
                                     sh "exit ${res_configure_retail_proxy}"
-                                },
+                                }
+                            },
+                            'Init build host branch': {
                                 stage('Init build host') {
                                     def res_init_buildhost = runCucumberRakeTarget('cucumber:build_validation_retail_init_sles15sp7_buildhost', true)
                                     echo "Retail proxy status code: ${res_init_buildhost}"
                                     sh "exit ${res_init_buildhost}"
                                 }
-                        )
-                        def terminal_version = ['sles15sp6', 'sles15sp7']
-                        def terminal_deployment_testing = [:]
-                        terminal_version.each { terminal ->
-                            terminal_deployment_testing["${terminal}"] = {
-                                stage("Build image for ${terminal}") {
-                                    def res_build_image = runCucumberRakeTarget("cucumber:build_validation_retail_build_image_${terminal}", true)
-                                    sh "exit ${res_build_image}"
-                                }
-                                stage("Prepare group and saltboot for ${terminal}") {
-                                    def res_prepare_group_saltboot = runCucumberRakeTarget("cucumber:build_validation_retail_prepare_group_saltboot_${terminal}", true)
-                                    sh "exit ${res_prepare_group_saltboot}"
-                                }
-                                stage("Deploy terminal ${terminal}") {
-                                    def res_deploy_terminal = runCucumberRakeTarget("cucumber:build_validation_retail_deploy_terminal_${terminal}", true)
-                                    sh "exit ${res_deploy_terminal}"
-                                }
+                            }
+                    )
+                    def terminal_version = ['sles15sp6', 'sles15sp7']
+                    def terminal_deployment_testing = [:]
+                    terminal_version.each { terminal ->
+                        terminal_deployment_testing["${terminal}"] = {
+                            stage("Build image for ${terminal}") {
+                                def res_build_image = runCucumberRakeTarget("cucumber:build_validation_retail_build_image_${terminal}", true)
+                                sh "exit ${res_build_image}"
+                            }
+                            stage("Prepare group and saltboot for ${terminal}") {
+                                def res_prepare_group_saltboot = runCucumberRakeTarget("cucumber:build_validation_retail_prepare_group_saltboot_${terminal}", true)
+                                sh "exit ${res_prepare_group_saltboot}"
+                            }
+                            stage("Deploy terminal ${terminal}") {
+                                def res_deploy_terminal = runCucumberRakeTarget("cucumber:build_validation_retail_deploy_terminal_${terminal}", true)
+                                sh "exit ${res_deploy_terminal}"
                             }
                         }
-                        parallel terminal_deployment_testing
                     }
+                    parallel terminal_deployment_testing
                 }
-            } catch (Exception ex) {
-                println('ERROR: Retail testing fail')
-                retail_stage_result_fail = true
             }
             /** Retail stages end **/
 
