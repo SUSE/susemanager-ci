@@ -1,7 +1,7 @@
 variable "CONTAINER_REPOSITORY" {
   type = string
   description = "Container repository for server and proxy"
-  default = "registry.suse.de/devel/galaxy/manager/5.0/containerfile"
+  default = "registry.suse.de"
 }
 
 terraform {
