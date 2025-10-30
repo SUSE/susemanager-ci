@@ -111,7 +111,7 @@ def run(params) {
 
             stage('Sanity check') {
                 def nodesHandler = getNodesHandler()
-                runCucumberRakeTarget('cucumber:build_validation_sanity_check', nodesHandler.envVariableListToDisable)
+                runCucumberRakeTarget('cucumber:build_validation_sanity_check', false, nodesHandler.envVariableListToDisable)
                 // Extract controller hostname
                 try {
                     env.controller_hostname = sh(
@@ -165,7 +165,7 @@ def run(params) {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
                     // Get minion list from terraform state list command
                     def nodesHandler = getNodesHandler()
-                    res_products = runCucumberRakeTarget('cucumber:build_validation_reposync', nodesHandler.envVariableListToDisable, true)
+                    res_products = runCucumberRakeTarget('cucumber:build_validation_reposync', true, nodesHandler.envVariableListToDisable)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     sh "exit ${res_products}"
                 }
@@ -179,7 +179,7 @@ def run(params) {
                         input 'Press any key to start adding Maintenance Update repositories'
                     }
                     echo 'Add custom channels and MU repositories'
-                    res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_proxy', null, true)
+                    res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_proxy', true)
                     echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                     sh "exit ${res_mu_repos}"
                 }
@@ -190,7 +190,7 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start adding activation keys'
                     }
-                    res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_proxy', null, true)
+                    res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_proxy',true)
                     echo "Add Proxy Activation Key status code: ${res_add_keys}"
                     sh "exit ${res_add_keys}"
                 }
@@ -201,7 +201,7 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start creating the proxy bootstrap repository'
                     }
-                    res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_proxy', null, true)
+                    res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_proxy',true)
                     echo "Create Proxy bootstrap repository status code: ${res_create_bootstrap_repos}"
                     sh "exit ${res_create_bootstrap_repos}"
                 }
@@ -211,7 +211,7 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start bootstraping the Proxy'
                     }
-                    res_init_proxy = runCucumberRakeTarget('cucumber:build_validation_init_proxy', null, true)
+                    res_init_proxy = runCucumberRakeTarget('cucumber:build_validation_init_proxy', true)
                     echo "Init Proxy status code: ${res_init_proxy}"
                     sh "exit ${res_init_proxy}"
                 }
@@ -228,7 +228,7 @@ def run(params) {
                                 input 'Press any key to start adding Maintenance Update repositories'
                             }
                             echo 'Add custom channels and MU repositories'
-                            res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_monitoring_server', null, true)
+                            res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_monitoring_server', true)
                             echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                             sh "exit ${res_mu_repos}"
                         }
@@ -239,7 +239,7 @@ def run(params) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start adding activation keys'
                             }
-                            res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_monitoring_server', null, true)
+                            res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_monitoring_server', true)
                             echo "Add Server Monitoring Activation Key status code: ${res_add_keys}"
                             sh "exit ${res_add_keys}"
                         }
@@ -250,7 +250,7 @@ def run(params) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start creating the Server Monitoring bootstrap repository'
                             }
-                            res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_monitoring_server', null, true)
+                            res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_monitoring_server', true)
                             echo "Create Server Monitoring bootstrap repository status code: ${res_create_bootstrap_repos}"
                             sh "exit ${res_create_bootstrap_repos}"
                         }
@@ -261,7 +261,7 @@ def run(params) {
                                 input 'Press any key to start bootstraping the Monitoring Server'
                             }
                             echo 'Register monitoring server as minion with gui'
-                            res_init_monitoring = runCucumberRakeTarget('cucumber:build_validation_init_monitoring', null, true)
+                            res_init_monitoring = runCucumberRakeTarget('cucumber:build_validation_init_monitoring', true)
                             echo "Init Monitoring Server status code: ${res_init_monitoring}"
                             sh "exit ${res_init_monitoring}"
                         }
@@ -309,12 +309,12 @@ def run(params) {
                         }
                         parallel (
                                 stage('Configure retail proxy') {
-                                    def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', null, true)
+                                    def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', true)
                                     echo "Retail proxy status code: ${res_configure_retail_proxy}"
                                     sh "exit ${res_configure_retail_proxy}"
                                 },
                                 stage('Init build host') {
-                                    def res_init_buildhost = runCucumberRakeTarget('cucumber:build_validation_retail_init_sles15sp7_buildhost', null, true)
+                                    def res_init_buildhost = runCucumberRakeTarget('cucumber:build_validation_retail_init_sles15sp7_buildhost', true)
                                     echo "Retail proxy status code: ${res_init_buildhost}"
                                     sh "exit ${res_init_buildhost}"
                                 }
@@ -324,15 +324,15 @@ def run(params) {
                         terminal_version.each { terminal ->
                             terminal_deployment_testing["${terminal}"] = {
                                 stage("Build image for ${terminal}") {
-                                    def res_build_image = runCucumberRakeTarget("cucumber:build_validation_retail_build_image_${terminal}", null, true)
+                                    def res_build_image = runCucumberRakeTarget("cucumber:build_validation_retail_build_image_${terminal}", true)
                                     sh "exit ${res_build_image}"
                                 }
                                 stage("Prepare group and saltboot for ${terminal}") {
-                                    def res_prepare_group_saltboot = runCucumberRakeTarget("cucumber:build_validation_retail_prepare_group_saltboot_${terminal}", null, true)
+                                    def res_prepare_group_saltboot = runCucumberRakeTarget("cucumber:build_validation_retail_prepare_group_saltboot_${terminal}", true)
                                     sh "exit ${res_prepare_group_saltboot}"
                                 }
                                 stage("Deploy terminal ${terminal}") {
-                                    def res_deploy_terminal = runCucumberRakeTarget("cucumber:build_validation_retail_deploy_terminal_${terminal}", null, true)
+                                    def res_deploy_terminal = runCucumberRakeTarget("cucumber:build_validation_retail_deploy_terminal_${terminal}", true)
                                     sh "exit ${res_deploy_terminal}"
                                 }
                             }
@@ -354,7 +354,7 @@ def run(params) {
                             input 'Press any key to start running the containerization tests'
                         }
                         echo 'Prepare Proxy as Pod and run basic tests'
-                        def res_container_proxy = runCucumberRakeTarget('cucumber:build_validation_containerization', null, true)
+                        def res_container_proxy = runCucumberRakeTarget('cucumber:build_validation_containerization', true)
                         echo "Container proxy status code: ${res_container_proxy}"
                         if (res_container_proxy != 0) {
                             error("Containerization test failed with status code: ${res_container_proxy}")
@@ -667,7 +667,7 @@ def clientMigrationStages() {
                 input "Press any key to start testing the migration of ${minion}"
             }
             stage("${minion} migration") {
-                res_minion_migration = runCucumberRakeTarget("cucumber:build_validation_migration_${minion}", null, true)
+                res_minion_migration = runCucumberRakeTarget("cucumber:build_validation_migration_${minion}", true)
                 echo "${minion} migration status code: ${res_minion_migration}"
                 if (res_minion_migration != 0) {
                     error("Migration test for ${minion} failed with status code: ${res_minion_migration}")
@@ -795,7 +795,7 @@ def echoHtmlReportPath(String rake_target) {
  * @param temporaryList Optional list of environment variables to unset (for parallel client stages).
  * @param return_status Boolean to decide if the command should return the exit status.
  */
-def runCucumberRakeTarget(String rake_target, temporaryList = null, boolean return_status = false) {
+def runCucumberRakeTarget(String rake_target, boolean return_status = false, temporaryList = null) {
     // Note: The temporaryList is often provided as a space-separated string in the original code (e.g., in getNodesHandler()),
     // but the helper function is designed to take a List/Set for cleaner logic.
     // For compatibility with the original structure where getNodesHandler().envVariableListToDisable is a string,
