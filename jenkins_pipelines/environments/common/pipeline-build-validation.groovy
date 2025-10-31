@@ -278,7 +278,9 @@ def run(params) {
                 // Call the minion testing.
                 try {
                     stage('Clients stages') {
-                        clientTestingStages(params)
+                        script {
+                            clientTestingStages(params)
+                        }
                     }
                 } catch (Exception ex) {
                     println('ERROR: one or more clients have failed')
@@ -493,8 +495,10 @@ def clientTestingStages(params) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
                         echo 'Add custom channels and MU repositories'
-                        res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", temporaryList, true)
-                        echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
+                        script {
+                            res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", temporaryList, true)
+                            echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
+                        }
                         echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                         if (res_mu_repos != 0) {
                             required_custom_channel_status[node] = 'FAIL'
@@ -517,9 +521,11 @@ def clientTestingStages(params) {
                                 input 'Press any key to start adding common channels'
                             }
                             echo 'Add non MU Repositories'
-                            res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", temporaryList, true)
-                            echo "Non MU Repositories status code: ${res_non_MU_repositories}"
-                            echoHtmlReportPath(build_validation_non_MU_script)
+                            script {
+                                res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", temporaryList, true)
+                                echo "Non MU Repositories status code: ${res_non_MU_repositories}"
+                                echoHtmlReportPath(build_validation_non_MU_script)
+                            }
                             if (res_non_MU_repositories != 0) {
                                 required_custom_channel_status[node] = 'FAIL'
                                 error("Add common channels failed with status code: ${res_non_MU_repositories}")
@@ -551,8 +557,10 @@ def clientTestingStages(params) {
                         input 'Press any key to start adding activation keys'
                     }
                     echo 'Add Activation Keys'
-                    res_add_keys = runCucumberRakeTarget("cucumber:build_validation_add_activation_key_${nodeTag}", temporaryList, true)
-                    echoHtmlReportPath("build_validation_add_activation_key_${nodeTag}")
+                    script {
+                        res_add_keys = runCucumberRakeTarget("cucumber:build_validation_add_activation_key_${nodeTag}", temporaryList, true)
+                        echoHtmlReportPath("build_validation_add_activation_key_${nodeTag}")
+                    }
                     echo "Add Activation Keys status code: ${res_add_keys}"
                     if (res_add_keys != 0) {
                         bootstrap_repository_status[node] = 'FAIL'
@@ -591,8 +599,10 @@ def clientTestingStages(params) {
                         lock(resource: mgrCreateBootstrapRepo, timeout: 320) {
                             try {
                                 echo 'Create bootstrap repository'
-                                res_create_bootstrap_repository = runCucumberRakeTarget("cucumber:build_validation_create_bootstrap_repository_${nodeTag}", temporaryList, true)
-                                echoHtmlReportPath("build_validation_create_bootstrap_repository_${nodeTag}" )
+                                script {
+                                    res_create_bootstrap_repository = runCucumberRakeTarget("cucumber:build_validation_create_bootstrap_repository_${nodeTag}", temporaryList, true)
+                                    echoHtmlReportPath("build_validation_create_bootstrap_repository_${nodeTag}")
+                                }
                                 echo "Create bootstrap repository status code: ${res_create_bootstrap_repository}"
                                 if (res_create_bootstrap_repository != 0) {
                                     bootstrap_repository_status[node] = 'FAIL'
@@ -617,7 +627,6 @@ def clientTestingStages(params) {
                     def custom_exports = "${env.exports} export DEFAULT_TIMEOUT=${env.bootstrap_timeout};"
                     // The helper doesn't easily allow overriding env.exports. For this unique case, we'll keep the logic inline to modify the environment variable within the script block for the special DEFAULT_TIMEOUT.
                     res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${custom_exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
-
                     echoHtmlReportPath( "build_validation_init_client_${nodeTag}")
                     echo "Init clients status code: ${res_init_clients}"
                     if (res_init_clients != 0) {
@@ -632,8 +641,10 @@ def clientTestingStages(params) {
                     }
                     randomWait()
                     echo 'Run Smoke tests'
-                    res_smoke_tests = runCucumberRakeTarget("cucumber:build_validation_smoke_tests_${nodeTag}", temporaryList, true)
-                    echoHtmlReportPath("build_validation_smoke_tests_${nodeTag}")
+                    script {
+                        res_smoke_tests = runCucumberRakeTarget("cucumber:build_validation_smoke_tests_${nodeTag}", temporaryList, true)
+                        echoHtmlReportPath("build_validation_smoke_tests_${nodeTag}")
+                    }
                     echo "Smoke tests status code: ${res_smoke_tests}"
                     if (res_smoke_tests != 0) {
                         error("Run Smoke tests failed with status code: ${res_smoke_tests}")
