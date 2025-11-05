@@ -141,7 +141,7 @@ module "cucumber_testsuite" {
         memory = 16384
       }
       main_disk_size = 40
-      repository_disk_size = 250
+      repository_disk_size = 500
       database_disk_size = 60
       login_timeout = 28800
       runtime = "podman"
