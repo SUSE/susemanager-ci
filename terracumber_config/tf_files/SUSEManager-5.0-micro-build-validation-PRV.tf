@@ -1438,7 +1438,7 @@ module "monitoring_server" {
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   name               = "monitoring"
-  image              = "sles15sp4o"
+  image              = "sles15sp7o"
   provider_settings = {
     mac                = "aa:b2:92:05:00:03"
     memory             = 2048
