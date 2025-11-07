@@ -110,7 +110,7 @@ def run(params) {
                       } else {
                           currentBuild.description = "${currentBuild.description}${params.functional_scopes}<br>"
                       }
-                      currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-server.mgr.prv.suse.net\">suma-pr${env_number}-server.mgr.prv.suse.net</a>"
+                      currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-server.mgr.slc1.suse.org\">suma-pr${env_number}-server.mgr.slc1.suse.org</a>"
                       dir("product") {
                           if(must_build) {
                               sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${product_name}/${env_number}/ ${environment_workspace}/repos"
@@ -337,9 +337,9 @@ def run(params) {
                                 sh "echo \"rm -f ${env_file}*\" | at now +24 hour"
                                 sh "echo keep:24h >> ${env_file}.info"
                                 if (short_product_name.contains("43")) {
-                                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-server.mgr.prv.suse.net"
+                                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-server.mgr.slc1.suse.org"
                                 }else{
-                                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"mgrctl cp /tmp/set_custom_header.sh server:/tmp/ ; mgrctl exec 'chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-server.mgr.prv.suse.net'"
+                                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"mgrctl cp /tmp/set_custom_header.sh server:/tmp/ ; mgrctl exec 'chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-server.mgr.slc1.suse.org'"
                                 }
                             }
                         }

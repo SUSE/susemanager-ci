@@ -100,7 +100,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://screwdriver.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://screwdriver.mgr.slc1.suse.org/system"
 }
 
 module "cucumber_testsuite" {
@@ -121,23 +121,23 @@ module "cucumber_testsuite" {
 
   use_avahi    = false
   name_prefix  = "suma-codecov-"
-  domain       = "mgr.prv.suse.net"
+  domain       = "mgr.slc1.suse.org"
   from_email   = "root@suse.com"
 
   container_server = true
   container_proxy  = true
 
-  // mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  // mirror                   = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   // use_mirror_images        = true
   
-  no_auth_registry = "registry.mgr.prv.suse.net"
-  auth_registry      = "registry.mgr.prv.suse.net:5000/cucutest"
+  no_auth_registry = "registry.mgr.slc1.suse.org"
+  auth_registry      = "registry.mgr.slc1.suse.org:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_slc"
 
-  # server_http_proxy = "http-proxy.mgr.prv.suse.net:3128"
-  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.prv.suse.net:445"
+  # server_http_proxy = "http-proxy.mgr.slc1.suse.org:3128"
+  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.slc1.suse.org:445"
 
   host_settings = {
     controller = {
@@ -215,7 +215,7 @@ module "cucumber_testsuite" {
       name = "dhcp-dns"
       image = "opensuse155o"
       hypervisor = {
-        host        = "screwdriver.mgr.prv.suse.net"
+        host        = "screwdriver.mgr.slc1.suse.org"
         user        = "root"
         private_key = file("~/.ssh/id_ed25519")
       }
