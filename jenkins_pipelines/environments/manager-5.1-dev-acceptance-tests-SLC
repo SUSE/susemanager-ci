@@ -6,9 +6,9 @@ node('sumaform-cucumber-provo') {
         disableConcurrentBuilds(),
         pipelineTriggers([cron('H H/4 * * *')]),
         parameters([
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Testsuite Git reference (branch, tag...)'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/Uyuni-Master-PRV.tf', description: 'Path to the tf file to be used'),
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'Manager-5.1', description: 'Testsuite Git reference (branch, tag...)'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/MLM-5.1-SLC.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
@@ -29,10 +29,10 @@ node('sumaform-cucumber-provo') {
     stage('Checkout pipeline') {
         checkout scm
     }
-    timeout(activity: false, time: 18, unit: 'HOURS') {
+    timeout(activity: false, time: 14, unit: 'HOURS') {
         //Capybara configuration
-        capybara_timeout = 20
-        default_timeout = 400
+        capybara_timeout = 10
+        default_timeout = 250
         def pipeline = load "jenkins_pipelines/environments/common/pipeline.groovy"
         pipeline.run(params)
     }

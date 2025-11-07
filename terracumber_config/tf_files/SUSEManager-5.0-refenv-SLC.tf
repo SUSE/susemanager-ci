@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-dev-acceptance-tests-PRV"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-infra-reference-SLC"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -10,24 +10,28 @@ variable "CUCUMBER_COMMAND" {
   default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
+// Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_GITREPO" {
   type = string
   default = "https://github.com/SUSE/spacewalk.git"
 }
 
+// Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-5.1"
+  default = "Manager-5.0"
 }
 
+// Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_RESULTS" {
   type = string
   default = "/root/spacewalk/testsuite"
 }
 
+// Not really used in this pipeline, as we do not send emails on success (no cucumber results)
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results 5.1-PRV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results REF5.0-SLC $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,12 +41,12 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results 5.1-PRV: Environment setup failed"
+  default = "Results REF5.0-SLC: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = string
-  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
+  default = "../mail_templates/mail-template-jenkins-refenv-fail.txt"
 }
 
 variable "MAIL_FROM" {
@@ -74,11 +78,6 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
-variable "PROMETHEUS_PUSH_GATEWAY_URL" {
-  type = string
-  default = null
-}
-
 terraform {
   required_version = "1.0.10"
   required_providers {
@@ -90,13 +89,13 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://selektah.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://selektah.mgr.slc1.suse.org/system"
 }
 
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "5.1-nightly"
+  product_version = "5.0-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -107,56 +106,51 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro55o"]
 
   use_avahi    = false
-  name_prefix  = "mlm-ci-51-"
-  domain       = "mgr.prv.suse.net"
+  name_prefix  = "suma-ref-50-"
+  domain       = "mgr.slc1.suse.org"
   from_email   = "root@suse.de"
 
-  no_auth_registry       = "registry.mgr.prv.suse.net"
-  auth_registry          = "registry.mgr.prv.suse.net:5000/cucutest"
+  no_auth_registry       = "registry.mgr.slc1.suse.org"
+  auth_registry          = "registry.mgr.slc1.suse.org:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_slc"
 
   container_server = true
   container_proxy  = true
 
-  mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
-  use_mirror_images        = true
-
-  server_http_proxy        = "http-proxy.mgr.prv.suse.net:3128"
-  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.prv.suse.net:445"
+  # server_http_proxy        = "http-proxy.mgr.slc1.suse.org:3128"
+  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.slc1.suse.org:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:03:00:c0"
-        vcpu = 4
-        memory = 4096
+        mac = "aa:b2:92:03:00:b0"
+        vcpu = 2
+        memory = 2048
       }
     }
     server_containerized = {
-      image = "slmicro61o"
+      image = "slemicro55o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:c1"
+        mac = "aa:b2:92:03:00:b1"
         vcpu = 8
         memory = 32768
       }
-      main_disk_size       = 500
-      login_timeout        = 28800
-      large_deployment     = true
-      runtime              = "podman"
+      main_disk_size = 500
+      login_timeout = 28800
+      runtime = "podman"
       container_repository = "registry.suse.de"
-      container_tag        = "latest"
-
+      container_tag = "latest"
     }
     proxy_containerized = {
-      image = "slmicro61o"
+      image = "slemicro55o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:c2"
+        mac = "aa:b2:92:03:00:b2"
         vcpu = 2
         memory = 2048
       }
@@ -168,7 +162,7 @@ module "cucumber_testsuite" {
     suse_minion = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:c6"
+        mac = "aa:b2:92:03:00:b6"
         vcpu = 2
         memory = 2048
       }
@@ -176,16 +170,17 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:c8"
+        mac = "aa:b2:92:03:00:b8"
         vcpu = 2
         memory = 2048
       }
-      additional_packages = [ "iptables" ]
     }
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:ca"
+        mac = "aa:b2:92:03:00:b9"
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
         memory = 2048
       }
@@ -193,7 +188,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:cb"
+        mac = "aa:b2:92:03:00:bb"
         vcpu = 2
         memory = 2048
       }
@@ -201,21 +196,17 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp4o"
       provider_settings = {
-        mac = "aa:b2:92:03:00:cd"
+        mac = "aa:b2:92:03:00:bd"
         vcpu = 2
         memory = 2048
       }
     }
-    pxeboot_minion = {
+    kvm_host = {
       image = "sles15sp4o"
-    }
-    dhcp_dns = {
-      name = "dhcp-dns"
-      image = "opensuse155o"
-      hypervisor = {
-        host        = "selektah.mgr.prv.suse.net"
-        user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
+      provider_settings = {
+        mac = "aa:b2:92:03:00:be"
+        vcpu = 4
+        memory = 4096
       }
     }
   }
@@ -224,7 +215,6 @@ module "cucumber_testsuite" {
     pool = "ssd"
     network_name = null
     bridge = "br1"
-    additional_network = "192.168.51.0/24"
   }
 }
 

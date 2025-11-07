@@ -43,15 +43,15 @@ For all that, we had to skip all the openSUSE mirror infrastructure and provide 
 
 For Pull Requests we have these alternative URLs:
 
-- http://jenkins-worker-prs.mgr.prv.suse.net/workspace/suma-prX/repos/: For every environment, there is a list of repos
+- http://jenkins-worker-prs.mgr.slc1.suse.org/workspace/suma-prX/repos/: For every environment, there is a list of repos
 that are needed for testing a particular Pull Request. This includes the master repo, the pull request repo, the client
 repos and some other repos that are also needed. All those repos are synced using the Build Service API, instead of from
 download.opensuse.org.
-- http://minima-mirror-ci-bv.mgr.prv.suse.net/pull-request-repositories/dummy/ : This is an empty repo used instead of the update repos. This way,
+- http://minima-mirror-ci-bv.mgr.slc1.suse.org/pull-request-repositories/dummy/ : This is an empty repo used instead of the update repos. This way,
 the build is reproducible.
-- http://minima-mirror-ci-bv.mgr.prv.suse.net/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/. openSUSE
+- http://minima-mirror-ci-bv.mgr.slc1.suse.org/repositories/systemsmanagement:/sumaform:/images:/libvirt/images/. openSUSE
 image for testing Pull Requests built with the open build service. This needs to be copied manually.
-- http://minima-mirror-ci-bv.mgr.prv.suse.net/distribution/leap/: oss and non-oss repositories.
+- http://minima-mirror-ci-bv.mgr.slc1.suse.org/distribution/leap/: oss and non-oss repositories.
 
 ## Used image versions in the CI test suite
 
