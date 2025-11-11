@@ -33,8 +33,8 @@ def run(params) {
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
-        if (params.terraform_parallelism) {
-            env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
+        if (params.parallelism) {
+            env.common_params = "${env.common_params} --parallelism ${params.parallelism}"
         }
         try {
             stage('Clone terracumber, susemanager-ci') {
@@ -88,8 +88,8 @@ def run(params) {
                         export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
                         export TF_VAR_PRODUCT_VERSION=${product_version}
                         export TF_VAR_BASE_OS=${base_os}
-                        export TERRAFORM=${params.terraform_bin}
-                        export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}
+                        export TERRAFORM=${params.bin_path}
+                        export TERRAFORM_PLUGINS=${params.bin_plugins_path}
                     
                         ./terracumber-cli ${common_params} \
                             --logfile ${resultdirbuild}/sumaform.log \
