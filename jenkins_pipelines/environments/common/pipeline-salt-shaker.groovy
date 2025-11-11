@@ -6,7 +6,7 @@ def run(params) {
 
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
         // Start pipeline
         deployed = false
@@ -48,7 +48,7 @@ def run(params) {
                     }
                 }
                 retry(count: 3) {
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                    sh "set +x; source /home/jenkins/.credentials set -x; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
                     deployed = true
                     if (params.wait_after_deploy) {
                         echo "Waiting ${params.wait_after_deploy} seconds after sumaform deployment (usually to allow transactional system to reboot)"

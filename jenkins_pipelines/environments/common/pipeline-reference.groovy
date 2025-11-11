@@ -3,10 +3,10 @@ def run(params) {
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
-        if (params.terraform_parallelism) {
-            env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
+        if (params.parallelism) {
+            env.common_params = "${env.common_params} --parallelism ${params.parallelism}"
         }
 
         try {
@@ -47,7 +47,7 @@ def run(params) {
                             break;
                     }
                 }
-                sh "set +x; source /home/jenkins/.credentials set -x; TERRAFORM=${params.terraform_bin} TERRAFORM_PLUGINS=${params.terraform_bin_plugins} ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                sh "set +x; source /home/jenkins/.credentials set -x; TERRAFORM=${params.bin_path} TERRAFORM_PLUGINS=${params.bin_plugins_path} ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
                 deployed = true
             }
         }

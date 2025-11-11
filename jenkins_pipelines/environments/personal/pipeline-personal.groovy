@@ -9,11 +9,11 @@ def run(params) {
         GString exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
         String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/personal/variables.tf'
         String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars"
-        GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --tf_variables_description_file ${tfvariables_file}  --gitfolder ${resultdir}/sumaform --terraform-bin ${params.terraform_bin}"
+        GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --tf_variables_description_file ${tfvariables_file}  --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
 
-        if (params.terraform_parallelism) {
-            common_params = "${common_params} --parallelism ${params.terraform_parallelism}"
+        if (params.parallelism) {
+            common_params = "${common_params} --parallelism ${params.parallelism}"
         }
 
         def previous_commit = null
@@ -61,7 +61,7 @@ def run(params) {
                     if (params.container_repository != '') {
                         sh "echo 'CONTAINER_REPOSITORY=\"${params.container_repository}\"' >> ${resultdir}/sumaform/terraform.tfvars"
                     }
-                    sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.terraform_bin}; export TERRAFORM_PLUGINS=${params.terraform_bin_plugins}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${TERRAFORM_INIT} ${TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
+                    sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${TERRAFORM_INIT} ${TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
                     deployed = true
                     // Collect and tag Flaky tests from the GitHub Board
                     def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:collect_and_tag_flaky_tests'", returnStatus: true
