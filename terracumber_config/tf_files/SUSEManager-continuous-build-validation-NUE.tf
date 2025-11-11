@@ -102,11 +102,11 @@ variable "ZVM_ADMIN_TOKEN" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
     feilong = {
       source = "bischoff/feilong"
