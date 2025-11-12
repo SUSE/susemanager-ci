@@ -9,8 +9,8 @@ def run(params) {
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
 
-        if (params.parallelism) {
-            env.common_params = "${env.common_params} --parallelism ${params.parallelism}"
+        if (params.deploy_parallelism) {
+            env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
         }
         if (params.bastion_ssh_key_file) {
             env.common_params = "${env.common_params} --bastion_ssh_key ${params.bastion_ssh_key_file} --bastion_user ${params.bastion_username}"

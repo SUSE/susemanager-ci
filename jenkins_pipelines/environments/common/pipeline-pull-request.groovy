@@ -213,8 +213,8 @@ def run(params) {
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-testing-template.tf"
                         env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file}"
 
-                        if (params.parallelism) {
-                            env.common_params = "${env.common_params} --parallelism ${params.parallelism}"
+                        if (params.deploy_parallelism) {
+                            env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
                         }
 
                         // Clean up old results

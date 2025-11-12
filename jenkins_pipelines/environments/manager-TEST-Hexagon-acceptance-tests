@@ -15,7 +15,7 @@ node('sumaform-cucumber') {
             choice(name: 'sumaform_backend', choices: ['libvirt', 'aws'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
             choice(name: 'bin_path', choices: ['/usr/bin/tofu', '/usr/bin/terraform'], description: 'Binary path'),
             choice(name: 'bin_plugins_path', choices: ['/usr/bin'], description: 'Plugins path'),
-            string(name: 'parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for terraform'),
+            string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),

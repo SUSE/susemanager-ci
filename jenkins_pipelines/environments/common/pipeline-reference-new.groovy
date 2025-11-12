@@ -5,8 +5,8 @@ def run(params) {
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
-        if (params.parallelism) {
-            env.common_params = "${env.common_params} --parallelism ${params.parallelism}"
+        if (params.deploy_parallelism) {
+            env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
         }
 
         try {
