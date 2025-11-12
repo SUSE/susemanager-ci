@@ -12,8 +12,8 @@ def run(params) {
         GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --tf_variables_description_file ${tfvariables_file}  --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
 
-        if (params.parallelism) {
-            common_params = "${common_params} --parallelism ${params.parallelism}"
+        if (params.deploy_parallelism) {
+            common_params = "${common_params} --parallelism ${params.deploy_parallelism}"
         }
 
         def previous_commit = null

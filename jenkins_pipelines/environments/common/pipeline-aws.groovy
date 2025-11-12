@@ -32,10 +32,10 @@ def run(params) {
         def capybara_timeout =30
         def default_timeout = 300
 
-        if (params.parallelism) {
-            local_mirror_params = "${local_mirror_params} --parallelism ${params.parallelism}"
-            aws_mirror_params = "${aws_mirror_params} --parallelism ${params.parallelism}"
-            env.common_params = "${common_params} --parallelism ${params.parallelism}"
+        if (params.deploy_parallelism) {
+            local_mirror_params = "${local_mirror_params} --parallelism ${params.deploy_parallelism}"
+            aws_mirror_params = "${aws_mirror_params} --parallelism ${params.deploy_parallelism}"
+            env.common_params = "${common_params} --parallelism ${params.deploy_parallelism}"
         }
         // Public IP for AWS ingress
         String[] ALLOWED_IPS = params.allowed_IPS.split("\n")

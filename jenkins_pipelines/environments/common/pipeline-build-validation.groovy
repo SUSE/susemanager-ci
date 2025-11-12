@@ -33,8 +33,8 @@ def run(params) {
 
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
 
-        if (params.parallelism) {
-            env.common_params = "${env.common_params} --parallelism ${params.parallelism}"
+        if (params.deploy_parallelism) {
+            env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
         }
         try {
             stage('Clone terracumber, susemanager-ci') {
