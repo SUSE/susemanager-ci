@@ -44,8 +44,8 @@ node {
 
         // Define environment variables
         env.sumaform_backend = 'libvirt'
-        env.terraform_bin = '/usr/bin/terraform'
-        env.terraform_bin_plugins = '/usr/bin'
+        env.bin_path = '/usr/bin/tofu'
+        env.bin_plugins_path = '/usr/bin'
 
         // Load and run the pipeline
         def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation-cleanup.groovy"

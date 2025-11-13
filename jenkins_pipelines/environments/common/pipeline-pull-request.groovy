@@ -6,8 +6,8 @@ def run(params) {
         deployed = false
         tests_passed = false
         sumaform_backend = 'libvirt'
-        terraform_bin = '/usr/bin/terraform'
-        terraform_bin_plugins = '/usr/bin'
+        bin_path = '/usr/bin/terraform'
+        bin_plugins_path = '/usr/bin'
         service_pack_migration = false
         terracumber_gitrepo = 'https://github.com/uyuni-project/terracumber.git'
         terracumber_ref = 'master'
@@ -211,10 +211,10 @@ def run(params) {
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-testing-template.tf"
-                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file}"
+                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file} --terraform-bin ${params.bin_path}"
 
-                        if (params.terraform_parallelism) {
-                            env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
+                        if (params.deploy_parallelism) {
+                            env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
                         }
 
                         // Clean up old results
@@ -272,7 +272,7 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${bin_path}; export TERRAFORM_PLUGINS=${bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*' --runstep provision"
                         deployed = true
   
                         // Collect and tag Flaky tests from the GitHub Board
