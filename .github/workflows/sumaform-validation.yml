@@ -22,7 +22,12 @@ jobs:
         if: steps.tf_files.outputs.added_modified
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.0.10
+          terraform_version: 1.6.0
+      - name: Install opentofu
+        if: steps.tf_files.outputs.added_modified
+        uses: opentofu/setup-opentofu@v1.0.6
+        with:
+          tofu_version: 1.10.7
       - name: Checkout sumaform
         if: steps.tf_files.outputs.added_modified
         uses: actions/checkout@v4
@@ -62,9 +67,12 @@ jobs:
         run: |
           # Install feilong provider
           srcdir=/home/runner/work/susemanager-ci/susemanager-ci/
-          dstdir=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.4/linux_amd64/
-          sudo mkdir -p $dstdir
-          sudo ln -s $srcdir/terraform-provider-feilong $dstdir
+          dstdir_terraform=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.4/linux_amd64/
+          dstdir_opentofu=/usr/share/terraform/plugins/registry.opentofu.org/bischoff/feilong/0.0.4/linux_amd64/
+          sudo mkdir -p $dstdir_terraform
+          sudo mkdir -p $dstdir_opentofu
+          sudo ln -s $srcdir/terraform-provider-feilong $dstdir_terraform
+          sudo ln -s $srcdir/terraform-provider-feilong $dstdir_opentofu
 
           # Remove libvirt and feilong provider settings
           sed -i \
@@ -88,6 +96,19 @@ jobs:
           # Provide a fake private SSH key
           mkdir -p ~/.ssh
           touch ~/.ssh/id_ed25519
+
+          for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
+            if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
+              echo "::notice::Validating '`basename $tf_file`'..."
+              cp ../$tf_file main.tf
+              # Uncomment for OpenTofu detailed logging
+              # export TOFU_LOG=trace
+              tofu init -input=false
+              tofu validate
+              tofu plan -input=false
+              echo
+            fi
+          done
 
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
             if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
