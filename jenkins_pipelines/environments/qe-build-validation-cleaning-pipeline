@@ -6,7 +6,7 @@ node {
 
     // Check the value of targeted_project and adjust the nodeName accordingly
     if (params.targeted_project.contains('SLC')) {
-        nodeName = 'sumaform-cucumber-provo'  // Use this for SLC projects
+        nodeName = 'sumaform-cucumber-slc1'  // Use this for SLC projects
     } else if (params.targeted_project.contains('NUE')) {
         nodeName = 'sumaform-cucumber'  // Use this for NUE projects
     }

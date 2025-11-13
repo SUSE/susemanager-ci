@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('sumaform-cucumber-provo') {
+node('sumaform-cucumber-slc1') {
     def minionList = 'sles12sp5_client, sles12sp5_minion, sles12sp5_sshminion, ' +
             'sles15sp3_client, sles15sp3_minion, sles15sp3_sshminion, ' +
             'sles15sp4_client, sles15sp4_minion, sles15sp4_sshminion, ' +
