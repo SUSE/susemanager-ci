@@ -27,7 +27,7 @@ def run(params) {
 
         String defaultResourcesToDeleteArgs = defaultResourcesToDelete.isEmpty() ? '' : "--default-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
 
-        GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform"
+        GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
         // Define shared environment variables for terraform calls
         GString environmentVars = """
