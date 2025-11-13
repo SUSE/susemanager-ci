@@ -1,0 +1,76 @@
+#!/usr/bin/env groovy
+// Configure the build properties
+properties([
+        buildDiscarder(logRotator(numToKeepStr: '500'))
+])
+
+pipeline {
+
+    options {
+        timeout(time: 30, unit: 'MINUTES') 
+    }
+
+    parameters {
+        string(defaultValue: '', description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
+        string(defaultValue: '', description: 'SUSE Manager PR', name: 'PR_NUMBER')
+        booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
+    }
+
+    environment {
+        gitarro_cmd = 'gitarro.ruby2.5'
+        gitarro_local = 'ruby gitarro.rb'
+        frontend_checks = "-r SUSE/spacewalk" +
+                " -c frontend_checks -d \"frontend-checks\" " +
+                " -f \"web/\" " +
+                " -t susemanager-utils/testing/automation/frontend-checks.sh" +
+                " -u ${env.BUILD_URL} " +
+                " -g ${env.WORKSPACE} "
+    }
+    // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+
+    stages {
+        stage('Clean Up Workspace') {
+            steps {
+                echo 'Clean up previous workspace'
+                cleanWs()
+                echo 'Check out SCM'
+                checkout scm
+                script {
+                    if (params.GITARRO_PR_NUMBER != '') {
+                        echo 'Check out Gitarro PR'
+                        checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
+                                  extensions       : [[$class: 'LocalBranch']],
+                                  userRemoteConfigs: [[refspec: "+refs/pull/${params.GITARRO_PR_NUMBER}/head:refs/remotes/origin/PR-${params.GITARRO_PR_NUMBER}", url: "https://git@github.com/openSUSE/gitarro"]]])
+                    }
+                }
+            }
+        }
+        stage('Run all frontend checks') {
+            steps {
+                echo 'Run all frontend checks'
+                script {
+                    frontend_checks_cmd = "${gitarro_cmd} ${frontend_checks}"
+                    if (params.GITARRO_PR_NUMBER != "") {
+                        frontend_checks_cmd = "${gitarro_local} ${frontend_checks}"
+                    }
+                    if (params.PR_NUMBER != '') {
+                        frontend_checks_cmd = "${frontend_checks_cmd} -P ${params.PR_NUMBER}"
+                        currentBuild.displayName = "PR: ${params.PR_NUMBER}"
+                    }
+                }
+                sh "export PRODUCT=SUSE-Manager && ${frontend_checks_cmd}"
+            }
+        }
+    }
+    post {
+        success {
+            script {
+                if (params.cleanWorkspace == true) {
+                    echo 'Clean up current workspace, when job success.'
+                    cleanWs()
+                }
+            }
+        }
+    }
+}

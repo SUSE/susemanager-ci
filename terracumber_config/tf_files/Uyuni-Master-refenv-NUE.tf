@@ -106,7 +106,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o", "tumbleweedo"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ref-master-"
@@ -140,7 +140,9 @@ module "cucumber_testsuite" {
         vcpu = 4
         memory = 16384
       }
-      main_disk_size = 500
+      main_disk_size = 40
+      repository_disk_size = 500
+      database_disk_size = 60
       login_timeout = 28800
       runtime = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
@@ -159,7 +161,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_minion = {
-      image = "opensuse155o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:e6"
         vcpu = 2
@@ -167,7 +169,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "opensuse155o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:e8"
         vcpu = 2

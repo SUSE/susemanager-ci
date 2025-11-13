@@ -3,8 +3,8 @@
 domain = ""
 if (params.platform_localisation == "NUE") {
   domain = "mgr.suse.de"
-} else if (params.platform_localisation == "PRV") {
-  domain = "mgr.prv.suse.net"
+} else if (params.platform_localisation == "SLC") {
+  domain = "mgr.slc1.suse.org"
 } else {
   print("Platform not supporeted");
   sh "exit 1"

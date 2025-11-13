@@ -1,10 +1,10 @@
 ############ Provo unique variables ############
 
-DOMAIN            = "mgr.prv.suse.net"
-MIRROR            = "minima-mirror-ci-bv.mgr.prv.suse.net"
-DOWNLOAD_ENDPOINT = "minima-mirror-ci-bv.mgr.prv.suse.net"
+DOMAIN            = "mgr.slc1.suse.org"
+MIRROR            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
+DOWNLOAD_ENDPOINT = "minima-mirror-ci-bv.mgr.slc1.suse.org"
 USE_MIRROR_IMAGES = true
-GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+GIT_PROFILES_REPO = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_slc"
 ENVIRONMENT_CONFIGURATION = {
   1 = {
     mac = {
@@ -17,7 +17,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:07"
       build-host     = "aa:b2:92:04:00:09"
     }
-    hypervisor = "romulus.mgr.prv.suse.net"
+    hypervisor = "romulus.mgr.slc1.suse.org"
     additional_network = "192.168.101.0/24"
     pool = "ssd"
     bridge = "br1"
@@ -33,7 +33,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:17"
       build-host     = "aa:b2:92:04:00:19"
     }
-    hypervisor = "romulus.mgr.prv.suse.net"
+    hypervisor = "romulus.mgr.slc1.suse.org"
     additional_network = "192.168.102.0/24"
     pool = "ssd"
     bridge = "br1"
@@ -49,7 +49,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:27"
       build-host     = "aa:b2:92:04:00:29"
     }
-    hypervisor = "vulcan.mgr.prv.suse.net"
+    hypervisor = "vulcan.mgr.slc1.suse.org"
     additional_network = "192.168.103.0/24"
     pool = "ssd"
     bridge = "br1"
@@ -65,7 +65,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:37"
       build-host     = "aa:b2:92:04:00:39"
     }
-    hypervisor = "vulcan.mgr.prv.suse.net"
+    hypervisor = "vulcan.mgr.slc1.suse.org"
     additional_network = "192.168.104.0/24"
     pool = "ssd"
     bridge = "br1"
@@ -81,7 +81,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:47"
       build-host     = "aa:b2:92:04:00:49"
     }
-    hypervisor = "hyperion.mgr.prv.suse.net"
+    hypervisor = "hyperion.mgr.slc1.suse.org"
     additional_network = "192.168.105.0/24"
     pool = "ssd"
     bridge = "br1"
@@ -97,7 +97,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:57"
       build-host     = "aa:b2:92:04:00:59"
     }
-    hypervisor = "hyperion.mgr.prv.suse.net"
+    hypervisor = "hyperion.mgr.slc1.suse.org"
     additional_network = "192.168.106.0/24"
     pool = "ssd"
     bridge = "br1"
@@ -113,7 +113,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:67"
       build-host     = "aa:b2:92:04:00:69"
     }
-    hypervisor = "daiquiri.mgr.prv.suse.net"
+    hypervisor = "daiquiri.mgr.slc1.suse.org"
     additional_network = "192.168.107.0/24"
     pool = "default"
     bridge = "br1"
@@ -129,7 +129,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:77"
       build-host     = "aa:b2:92:04:00:79"
     }
-    hypervisor = "daiquiri.mgr.prv.suse.net"
+    hypervisor = "daiquiri.mgr.slc1.suse.org"
     additional_network = "192.168.108.0/24"
     pool = "default"
     bridge = "br1"
@@ -145,7 +145,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:87"
       build-host     = "aa:b2:92:04:00:89"
     }
-    hypervisor = "mojito.mgr.prv.suse.net"
+    hypervisor = "mojito.mgr.slc1.suse.org"
     additional_network = "192.168.109.0/24"
     pool = "default"
     bridge = "br0"
@@ -161,7 +161,7 @@ ENVIRONMENT_CONFIGURATION = {
       deblike-minion = "aa:b2:92:04:00:97"
       build-host     = "aa:b2:92:04:00:99"
     }
-    hypervisor = "mojito.mgr.prv.suse.net"
+    hypervisor = "mojito.mgr.slc1.suse.org"
     additional_network = "192.168.110.0/24"
     pool = "default"
     bridge = "br0"

@@ -1070,36 +1070,6 @@ module "sles15sp5s390_sshminion" {
 //
 //}
 
-module "sles12sp5_buildhost" {
-  source             = "./modules/build_host"
-  base_configuration = module.base_core.configuration
-  name               = "sles12sp5-build"
-  image              = "sles12sp5o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:01:04"
-    memory             = 2048
-    vcpu               = 2
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-}
-
-module "sles12sp5_terminal" {
-  source             = "./modules/pxe_boot"
-  base_configuration = module.base_core.configuration
-  name               = "sles12sp5-terminal"
-  image              = "sles12sp5o"
-  provider_settings = {
-    memory             = 2048
-    vcpu               = 1
-    manufacturer       = "Supermicro"
-    product            = "X9DR3-F"
-  }
-  private_ip         = 5
-  private_name       = "sle12sp5terminal"
-}
-
 module "sles15sp4_buildhost" {
   source             = "./modules/build_host"
   base_configuration = module.base_core.configuration
@@ -1137,7 +1107,6 @@ module "dhcp_dns" {
   image              = "opensuse155o"
   private_hosts = [
     module.proxy_containerized.configuration,
-    module.sles12sp5_terminal.configuration,
     module.sles15sp4_terminal.configuration
   ]
   hypervisor = {
@@ -1151,7 +1120,7 @@ module "monitoring_server" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
   name               = "monitoring"
-  image              = "sles15sp4o"
+  image              = "sles15sp7o"
   provider_settings = {
     mac                = "aa:b2:92:42:01:03"
     memory             = 2048
@@ -1279,10 +1248,8 @@ module "controller" {
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 //  slmicro61_sshminion_configuration = module.slmicro61_sshminion.configuration
 
-  sle12sp5_buildhost_configuration = module.sles12sp5_buildhost.configuration
   sle15sp4_buildhost_configuration = module.sles15sp4_buildhost.configuration
 
-  sle12sp5_terminal_configuration = module.sles12sp5_terminal.configuration
   sle15sp4_terminal_configuration = module.sles15sp4_terminal.configuration
 
   monitoringserver_configuration = module.monitoring_server.configuration
