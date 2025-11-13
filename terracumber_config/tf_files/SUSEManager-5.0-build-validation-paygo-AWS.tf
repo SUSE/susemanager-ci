@@ -88,6 +88,18 @@ variable "SCC_PASSWORD" {
   default = null
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+  default = null
+  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+  default = null
+  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+}
+
 variable "AVAILABILITY_ZONE" {
   type = string
   default = null
@@ -465,6 +477,9 @@ module "controller" {
   is_using_build_image      = false
   is_using_scc_repositories = false
   is_using_paygo_server     = true
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
+
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
