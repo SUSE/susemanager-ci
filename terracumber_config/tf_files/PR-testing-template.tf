@@ -1,9 +1,9 @@
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
@@ -23,9 +23,11 @@ module "cucumber_testsuite" {
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
 
-  cc_username = var.SCC_USER
-  cc_password = var.SCC_PASSWORD
-  mirror      = var.MIRROR
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  cc_ptf_username   = var.SCC_PTF_USER
+  cc_ptf_password   = var.SCC_PTF_PASSWORD
+  mirror            = var.MIRROR
   use_mirror_images = var.USE_MIRROR_IMAGES
 
   images = var.IMAGES

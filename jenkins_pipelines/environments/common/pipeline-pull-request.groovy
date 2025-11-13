@@ -6,8 +6,8 @@ def run(params) {
         deployed = false
         tests_passed = false
         sumaform_backend = 'libvirt'
-        terraform_bin = '/usr/bin/terraform'
-        terraform_bin_plugins = '/usr/bin'
+        bin_path = '/usr/bin/terraform'
+        bin_plugins_path = '/usr/bin'
         service_pack_migration = false
         terracumber_gitrepo = 'https://github.com/uyuni-project/terracumber.git'
         terracumber_ref = 'master'
@@ -110,7 +110,7 @@ def run(params) {
                       } else {
                           currentBuild.description = "${currentBuild.description}${params.functional_scopes}<br>"
                       }
-                      currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-server.mgr.prv.suse.net\">suma-pr${env_number}-server.mgr.prv.suse.net</a>"
+                      currentBuild.description = "${currentBuild.description}<b>Server</b>:<a href=\"https://suma-pr${env_number}-server.mgr.slc1.suse.org\">suma-pr${env_number}-server.mgr.slc1.suse.org</a>"
                       dir("product") {
                           if(must_build) {
                               sh "[ -L ${environment_workspace}/repos ] || ln -s /storage/jenkins/repos/${product_name}/${env_number}/ ${environment_workspace}/repos"
@@ -211,10 +211,10 @@ def run(params) {
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
                         env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-testing-template.tf"
-                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file}"
+                        env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file} --terraform-bin ${params.bin_path}"
 
-                        if (params.terraform_parallelism) {
-                            env.common_params = "${env.common_params} --parallelism ${params.terraform_parallelism}"
+                        if (params.deploy_parallelism) {
+                            env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
                         }
 
                         // Clean up old results
@@ -272,7 +272,7 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${terraform_bin}; export TERRAFORM_PLUGINS=${terraform_bin_plugins}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${bin_path}; export TERRAFORM_PLUGINS=${bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*' --runstep provision"
                         deployed = true
   
                         // Collect and tag Flaky tests from the GitHub Board
@@ -337,9 +337,9 @@ def run(params) {
                                 sh "echo \"rm -f ${env_file}*\" | at now +24 hour"
                                 sh "echo keep:24h >> ${env_file}.info"
                                 if (short_product_name.contains("43")) {
-                                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-server.mgr.prv.suse.net"
+                                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-server.mgr.slc1.suse.org"
                                 }else{
-                                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"mgrctl cp /tmp/set_custom_header.sh server:/tmp/ ; mgrctl exec 'chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-server.mgr.prv.suse.net'"
+                                    sh "python3 ${WORKSPACE}/product/susemanager-utils/testing/automation/run-command-in-server.py --command=\"mgrctl cp /tmp/set_custom_header.sh server:/tmp/ ; mgrctl exec 'chmod 755 /tmp/set_custom_header.sh;/tmp/set_custom_header.sh -e ${env_number} -m ${email_to} -t 24\" --username=\"root\" --password=\"linux\" -v -i suma-pr${env_number}-server.mgr.slc1.suse.org'"
                                 }
                             }
                         }

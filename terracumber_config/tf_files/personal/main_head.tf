@@ -1,15 +1,15 @@
 variable "CONTAINER_REPOSITORY" {
   type = string
   description = "Container repository for server and proxy"
-  default = "registry.suse.de/devel/galaxy/manager/head/containerfile"
+  default = "registry.suse.de"
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }

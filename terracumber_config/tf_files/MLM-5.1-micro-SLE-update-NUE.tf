@@ -64,6 +64,16 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+  default = null
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+  default = null
+}
+
 variable "SERVER_CONTAINER_REPOSITORY" {
   type = string
 }
@@ -88,11 +98,11 @@ variable "GIT_PASSWORD" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
@@ -213,6 +223,9 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
+
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

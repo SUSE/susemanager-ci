@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-sle-update-PRV"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-sle-update-SLC"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -75,17 +75,17 @@ variable "GIT_PASSWORD" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://riverworld.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://riverworld.mgr.slc1.suse.org/system"
 }
 
 module "base" {
@@ -96,10 +96,10 @@ module "base" {
   product_version   = "4.3-released"
   name_prefix       = "suma-su-43-"
   use_avahi         = false
-  domain            = "mgr.prv.suse.net"
+  domain            = "mgr.slc1.suse.org"
   images            = [ "sles15sp4o", "opensuse156o" ]
 
-  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
 
   testsuite         = true
@@ -121,7 +121,7 @@ module "server" {
     data_pool          = "ssd"
   }
 
-  server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  server_mounted_mirror = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   repository_disk_size = 1500
 
   auto_accept                    = false
@@ -154,7 +154,7 @@ module "proxy" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-su-43-server.mgr.prv.suse.net"
+    hostname = "suma-su-43-server.mgr.slc1.suse.org"
     username = "admin"
     password = "admin"
   }
@@ -181,7 +181,7 @@ module "sles15sp4_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-su-43-proxy.mgr.prv.suse.net"
+    hostname = "suma-su-43-proxy.mgr.slc1.suse.org"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false

@@ -79,11 +79,11 @@ variable "GIT_PASSWORD" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
@@ -106,7 +106,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o", "tumbleweedo"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ref-master-"
@@ -141,7 +141,7 @@ module "cucumber_testsuite" {
         memory = 16384
       }
       main_disk_size = 40
-      repository_disk_size = 250
+      repository_disk_size = 500
       database_disk_size = 60
       login_timeout = 28800
       runtime = "podman"
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_minion = {
-      image = "opensuse155o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:e6"
         vcpu = 2
@@ -169,7 +169,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "opensuse155o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:e8"
         vcpu = 2

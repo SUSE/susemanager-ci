@@ -85,11 +85,11 @@ variable "GEMINI_API_KEY" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
@@ -166,13 +166,13 @@ module "cucumber_testsuite" {
       container_tag        = "latest"
     }
     suse_minion = {
-      image             = "opensuse156o"
+      image             = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:d6"
       }
     }
     suse_sshminion = {
-      image             = "opensuse156o"
+      image             = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:d8"
       }

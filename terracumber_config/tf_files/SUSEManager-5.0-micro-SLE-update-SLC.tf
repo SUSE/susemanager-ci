@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-micro-qe-sle-update-PRV"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-micro-qe-sle-update-SLC"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -60,6 +60,16 @@ variable "SCC_USER" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+  default = null
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+  default = null
+}
+
 variable "SCC_PASSWORD" {
   type = string
 }
@@ -88,17 +98,17 @@ variable "GIT_PASSWORD" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://riverworld.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://riverworld.mgr.slc1.suse.org/system"
 }
 
 module "base" {
@@ -109,10 +119,10 @@ module "base" {
   product_version   = "5.0-released"
   name_prefix       = "suma-su-50micro-"
   use_avahi         = false
-  domain            = "mgr.prv.suse.net"
+  domain            = "mgr.slc1.suse.org"
   images            = [ "sles15sp6o", "opensuse156o", "slemicro55o" ]
 
-  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
 
   testsuite         = true
@@ -141,7 +151,7 @@ module "server_containerized" {
   container_repository  = var.SERVER_CONTAINER_REPOSITORY
   container_image       = var.SERVER_CONTAINER_IMAGE
   container_tag         = "latest"
-  server_mounted_mirror = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  server_mounted_mirror = "minima-mirror-ci-bv.mgr.slc1.suse.org"
 
   auto_accept                    = false
   monitored                      = true
@@ -172,7 +182,7 @@ module "proxy_containerized" {
     memory             = 4096
   }
   server_configuration = {
-    hostname = "suma-su-50micro-server.mgr.prv.suse.net"
+    hostname = "suma-su-50micro-server.mgr.slc1.suse.org"
     username = "admin"
     password = "admin"
   }
@@ -197,7 +207,7 @@ module "sles15sp6_minion" {
   }
 
   server_configuration = {
-    hostname = "suma-su-50micro-proxy.mgr.prv.suse.net"
+    hostname = "suma-su-50micro-proxy.mgr.slc1.suse.org"
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -215,6 +225,9 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
+
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

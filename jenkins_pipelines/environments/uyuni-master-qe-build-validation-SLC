@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('sumaform-cucumber') {
+node('sumaform-cucumber-provo') {
     def minionList = 'sles12sp5_minion, sles12sp5_sshminion, ' +
             'sles15sp3_minion, sles15sp3_sshminion, ' +
             'sles15sp4_minion, sles15sp4_sshminion, ' +
@@ -14,7 +14,7 @@ node('sumaform-cucumber') {
             'liberty9_minion, liberty9_sshminion, ' +
             'oracle9_minion, oracle9_sshminion, ' +
             'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, ' +
-            'ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
+            'ubuntu2004_minion, ubuntu2004_sshminion, ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
             'debian12_minion, debian12_sshminion, ' +
             'opensuse156arm_minion, opensuse156arm_sshminion, ' +
             'sles15sp5s390_minion, sles15sp5s390_sshminion, ' +
@@ -23,9 +23,9 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
         disableConcurrentBuilds(),
         parameters([
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'Manager-5.1', description: 'Branch prepared for the MU tested'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/MLM-5.1-micro-build-validation-NUE.tf', description: 'Path to the tf file to be used'),
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/Uyuni-Master-build-validation-SLC.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
@@ -38,8 +38,8 @@ node('sumaform-cucumber') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
-            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Server container registry'),
-            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_repository', defaultValue: 'registry.opensuse.org/systemsmanagement/uyuni/master/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.opensuse.org/systemsmanagement/uyuni/master/containerfile', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
@@ -56,10 +56,10 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             booleanParam(name: 'must_run_products_and_salt_migration_tests', defaultValue: false, description: 'Run products and Salt migration Tests'),
             booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
+            booleanParam(name: 'must_run_containerization_tests', defaultValue: true, description: 'Run Containerization Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
-            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools MU Repositories for each client, in json format')
             ])
     ])
 
@@ -67,8 +67,8 @@ node('sumaform-cucumber') {
         checkout scm
     }
     def mutableParams = [:] + params
-    mutableParams.product_version_display = "5.1-released"
-    mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
+    mutableParams.product_version_display = "uyuni-master"
+    mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_50.json'
 
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(mutableParams)

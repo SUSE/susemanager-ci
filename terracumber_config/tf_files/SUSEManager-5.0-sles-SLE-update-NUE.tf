@@ -64,6 +64,18 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+  default = null
+  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+  default = null
+  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+}
+
 variable "SERVER_CONTAINER_REPOSITORY" {
   type = string
 }
@@ -88,11 +100,11 @@ variable "GIT_PASSWORD" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
@@ -106,6 +118,7 @@ module "base" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
+
   product_version   = "5.0-released"
 
   name_prefix       = "suma-su-50sles-"
@@ -209,6 +222,9 @@ module "controller" {
     vcpu               = 8
   }
   swap_file_size = null
+
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

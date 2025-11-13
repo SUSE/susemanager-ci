@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-infra-reference-PRV"
+  default = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-infra-reference-SLC"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -31,7 +31,7 @@ variable "CUCUMBER_RESULTS" {
 // Not really used in this pipeline, as we do not send emails on success (no cucumber results)
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results REF4.3-PRV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results REF4.3-SLC $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -41,7 +41,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results REF4.3-PRV: Environment setup failed"
+  default = "Results REF4.3-SLC: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -69,17 +69,17 @@ variable "SCC_PASSWORD" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://metropolis.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://metropolis.mgr.slc1.suse.org/system"
 }
 
 module "base" {
@@ -90,9 +90,9 @@ module "base" {
 
   name_prefix       = "suma-ref-43-"
   use_avahi         = false
-  domain            = "mgr.prv.suse.net"
+  domain            = "mgr.slc1.suse.org"
   images            = ["centos7o", "sles15sp3o", "sles15sp4o", "ubuntu2204o"]
-  mirror            = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
   product_version   = "4.3-nightly"
 
@@ -186,12 +186,12 @@ module "build_host" {
     mac = "aa:b2:92:03:00:9d"
   }
   additional_repos = {
-        cloud_pool_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Products/SLE-Module-Public-Cloud/15-SP4/x86_64/product/",
-        cloud_updates_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Public-Cloud/15-SP4/x86_64/update/",
-        desktop_pool_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Products/SLE-Module-Desktop-Applications/15-SP4/x86_64/product/",
-        desktop_updates_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Desktop-Applications/15-SP4/x86_64/update/",
-        devel_pool_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/",
-        devel_updates_repo = "http://minima-mirror-ci-bv.mgr.prv.suse.net/SUSE/Updates/SLE-Module-Development-Tools/15-SP4/x86_64/update/"
+        cloud_pool_repo = "http://minima-mirror-ci-bv.mgr.slc1.suse.org/SUSE/Products/SLE-Module-Public-Cloud/15-SP4/x86_64/product/",
+        cloud_updates_repo = "http://minima-mirror-ci-bv.mgr.slc1.suse.org/SUSE/Updates/SLE-Module-Public-Cloud/15-SP4/x86_64/update/",
+        desktop_pool_repo = "http://minima-mirror-ci-bv.mgr.slc1.suse.org/SUSE/Products/SLE-Module-Desktop-Applications/15-SP4/x86_64/product/",
+        desktop_updates_repo = "http://minima-mirror-ci-bv.mgr.slc1.suse.org/SUSE/Updates/SLE-Module-Desktop-Applications/15-SP4/x86_64/update/",
+        devel_pool_repo = "http://minima-mirror-ci-bv.mgr.slc1.suse.org/SUSE/Products/SLE-Module-Development-Tools/15-SP4/x86_64/product/",
+        devel_updates_repo = "http://minima-mirror-ci-bv.mgr.slc1.suse.org/SUSE/Updates/SLE-Module-Development-Tools/15-SP4/x86_64/update/"
   }
 }
 

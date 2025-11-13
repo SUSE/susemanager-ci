@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-dev-acceptance-tests-PRV"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-dev-acceptance-tests-SLC"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results 5.1-PRV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 5.1-SLC $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results 5.1-PRV: Environment setup failed"
+  default = "Results 5.1-SLC: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -64,6 +64,18 @@ variable "SCC_PASSWORD" {
   type = string
 }
 
+variable "SCC_PTF_USER" {
+  type = string
+  default = null
+  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+}
+
+variable "SCC_PTF_PASSWORD" {
+  type = string
+  default = null
+  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+}
+
 variable "GIT_USER" {
   type = string
   default = null // Not needed for master, as it is public
@@ -80,17 +92,17 @@ variable "PROMETHEUS_PUSH_GATEWAY_URL" {
 }
 
 terraform {
-  required_version = "1.0.10"
+  required_version = ">= 1.6.0"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.8.1"
+      version = "0.8.3"
     }
   }
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://selektah.mgr.prv.suse.net/system"
+  uri = "qemu+tcp://selektah.mgr.slc1.suse.org/system"
 }
 
 module "cucumber_testsuite" {
@@ -107,27 +119,30 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
+
   images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-51-"
-  domain       = "mgr.prv.suse.net"
+  domain       = "mgr.slc1.suse.org"
   from_email   = "root@suse.de"
 
-  no_auth_registry       = "registry.mgr.prv.suse.net"
-  auth_registry          = "registry.mgr.prv.suse.net:5000/cucutest"
+  no_auth_registry       = "registry.mgr.slc1.suse.org"
+  auth_registry          = "registry.mgr.slc1.suse.org:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_prv"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_slc"
 
   container_server = true
   container_proxy  = true
 
-  mirror                   = "minima-mirror-ci-bv.mgr.prv.suse.net"
+  mirror                   = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images        = true
 
-  server_http_proxy        = "http-proxy.mgr.prv.suse.net:3128"
-  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.prv.suse.net:445"
+  server_http_proxy        = "http-proxy.mgr.slc1.suse.org:3128"
+  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.slc1.suse.org:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
@@ -213,7 +228,7 @@ module "cucumber_testsuite" {
       name = "dhcp-dns"
       image = "opensuse155o"
       hypervisor = {
-        host        = "selektah.mgr.prv.suse.net"
+        host        = "selektah.mgr.slc1.suse.org"
         user        = "root"
         private_key = file("~/.ssh/id_ed25519")
       }
