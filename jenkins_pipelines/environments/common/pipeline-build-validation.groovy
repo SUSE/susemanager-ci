@@ -31,7 +31,7 @@ def run(params) {
         def product_version = params.product_version ?: ''
         def base_os = params.base_os ?: ''
 
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
         if (params.deploy_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
