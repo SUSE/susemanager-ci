@@ -44,7 +44,7 @@ node {
 
         // Define environment variables
         env.sumaform_backend = 'libvirt'
-        env.bin_path = '/usr/bin/terraform'
+        env.bin_path = '/usr/bin/tofu'
         env.bin_plugins_path = '/usr/bin'
 
         // Load and run the pipeline
