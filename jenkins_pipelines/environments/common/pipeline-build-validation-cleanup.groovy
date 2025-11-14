@@ -85,7 +85,7 @@ def run(params) {
                             script: """
                             set -e
                             cd ${localSumaformDirPath}
-                            terraform output -json configuration | jq -r '.server.hostname'
+                            tofu output -json configuration | jq -r '.server.hostname'
                         """,
                             returnStdout: true
                     ).trim()
@@ -93,7 +93,7 @@ def run(params) {
                             script: """
                             set -e
                             cd ${localSumaformDirPath}
-                            terraform output -json configuration | jq -r '.controller.hostname'
+                            tofu output -json configuration | jq -r '.controller.hostname'
                         """,
                             returnStdout: true
                     ).trim()
@@ -163,7 +163,7 @@ def run(params) {
                         export TF_VAR_PROXY_CONTAINER_REPOSITORY='unused'
                         set +x
                         cd ${localSumaformDirPath}
-                        terraform refresh
+                        tofu refresh
                     """
                 }
                 // Execute Terracumber CLI to deploy the environment without clients
