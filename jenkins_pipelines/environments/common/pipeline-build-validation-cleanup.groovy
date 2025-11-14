@@ -35,8 +35,8 @@ def run(params) {
                 source /home/jenkins/.credentials
                 export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
                 export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
-                export TERRAFORM=${bin_path}
-                export TERRAFORM_PLUGINS=${bin_plugins_path}
+                export TERRAFORM=${params.bin_path}
+                export TERRAFORM_PLUGINS=${params.bin_plugins_path}
             """
 
         try {
@@ -85,7 +85,7 @@ def run(params) {
                             script: """
                             set -e
                             cd ${localSumaformDirPath}
-                            terraform output -json configuration | jq -r '.server.hostname'
+                            tofu output -json configuration | jq -r '.server.hostname'
                         """,
                             returnStdout: true
                     ).trim()
@@ -93,7 +93,7 @@ def run(params) {
                             script: """
                             set -e
                             cd ${localSumaformDirPath}
-                            terraform output -json configuration | jq -r '.controller.hostname'
+                            tofu output -json configuration | jq -r '.controller.hostname'
                         """,
                             returnStdout: true
                     ).trim()
@@ -158,19 +158,20 @@ def run(params) {
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                     // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
                     sh """
+                        set -x
                         source ~/.credentials
                         export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
                         export TF_VAR_PROXY_CONTAINER_REPOSITORY='unused'
                         set +x
                         cd ${localSumaformDirPath}
-                        terraform refresh
+                        tofu refresh
                     """
                 }
                 // Execute Terracumber CLI to deploy the environment without clients
                 sh """
                     ${environmentVars}
                     set +x
-                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
+                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
                 """
             }
 
@@ -179,7 +180,7 @@ def run(params) {
                 sh """
                     ${environmentVars}
                     set +x
-                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${sumaform_backend} --runstep provision
+                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --runstep provision
                 """
             }
 

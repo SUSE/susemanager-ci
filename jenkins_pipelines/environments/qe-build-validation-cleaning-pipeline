@@ -42,13 +42,12 @@ node {
             checkout scm
         }
 
-        // Define environment variables
-        env.sumaform_backend = 'libvirt'
-        env.bin_path = '/usr/bin/tofu'
-        env.bin_plugins_path = '/usr/bin'
-
+        def mutableParams = [:] + params
+        mutableParams.sumaform_backend = 'libvirt'
+        mutableParams.bin_path = '/usr/bin/tofu'
+        mutableParams.bin_plugins_path = '/usr/bin'
         // Load and run the pipeline
         def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation-cleanup.groovy"
-        pipeline.run(params)
+        pipeline.run(mutableParams)
     }
 }
