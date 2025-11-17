@@ -84,18 +84,24 @@ def run(params) {
             stage('Sanity Check') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:sanity_check'"
             }
-            if (params.run_tests) {
-                stage('Core - Setup') {
+            stage('Core - Setup') {
+                if (params.run_core) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
                 }
-                stage('Core - Proxy') {
+            }
+            stage('Core - Proxy') {
+                if (params.run_core) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:proxy'"
                 }
-                stage('Core - Initialize clients') {
+            }
+            stage('Core - Initialize clients') {
+                if (params.run_core) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake parallel:init_clients'"
                 }
-                stage('Secondary features') {
+            }
+            stage('Secondary features') {
+                if (params.run_secondary) {
                     def tags_list = ""
                     if (params.functional_scopes) {
                         def transformed_scopes = params.functional_scopes.replaceAll(',', ' or ')
