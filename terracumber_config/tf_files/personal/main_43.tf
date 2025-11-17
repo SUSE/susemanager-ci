@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
+  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor}/system"
 }
 
 module "cucumber_testsuite" {

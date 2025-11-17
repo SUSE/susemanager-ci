@@ -208,4 +208,22 @@ ENVIRONMENT_CONFIGURATION = {
     additional_network  = "192.168.20.0/24"
     dhcp_user           = "root"
   }
+  suma-test-ai = {
+    mac = {
+      controller     = "aa:b2:93:01:00:80"
+      server         = "aa:b2:93:01:00:81"
+      proxy          = "aa:b2:93:01:00:82"
+      suse-client    = "aa:b2:93:01:00:84"
+      suse-minion    = "aa:b2:93:01:00:86"
+      suse-sshminion = "aa:b2:93:01:00:88"
+      rhlike-minion  = "aa:b2:93:01:00:8a"
+      deblike-minion = "aa:b2:93:01:00:8b"
+      build-host     = "aa:b2:93:01:00:8d"
+    }
+    hypervisor          = "suma-09.mgr.suse.de"
+    pool                = "ygutierrez_disks"
+    bridge              = "br0"
+    additional_network  = "192.168.30.0/24"
+    dhcp_user           = "root"
+  }
 }

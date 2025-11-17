@@ -15,7 +15,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
+  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor}/system"
 }
 
 module "cucumber_testsuite" {
@@ -127,7 +127,7 @@ module "cucumber_testsuite" {
       name       = "dhcp-dns"
       image      = "opensuse155o"
       hypervisor = {
-        host        = "suma-05.mgr.suse.de"
+        host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
         user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
         private_key = file("~/.ssh/id_ed25519")
       }
