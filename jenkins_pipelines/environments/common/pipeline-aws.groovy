@@ -203,12 +203,13 @@ def run(params) {
             }
             stage('Secondary features') {
                 if (params.must_secondary) {
-                    def exports = ""
+                    def tags_list = ""
                     if (params.functional_scopes) {
-                        exports += "export TAGS=${params.functional_scopes}; "
+                        def transformed_scopes = params.functional_scopes.replaceAll(',', ' or ')
+                        tags_list += "export TAGS=${transformed_scopes}; "
                     }
-                    def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus: true
-                    def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${exports} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
+                    def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus: true
+                    def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
                     sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                 }
             }

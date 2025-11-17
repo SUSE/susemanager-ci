@@ -2,24 +2,24 @@
 
 node('pull-request-test-nue') {
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '30')),
-        parameters([
-            string(name: 'platform_localisation', defaultValue: 'NUE', description: 'Decide if it will be run in \'SLC\' or \'NUE\''),
-            string(name: 'product_version', defaultValue: 'uyuni', description: 'Select if we are using \'uyuni\' or \'manager43\' project'),
-            string(name: 'pull_request_number', defaultValue: '', description: 'Required: Uyuni Pull Request Number'),
-            string(name: 'email_to', defaultValue: '', description: 'Recommended: Receive a report to your e-mail when it finishes with links to the results, artifacts and logs'),
-            booleanParam(name: 'run_all_scopes', defaultValue: false, description: 'Secondary tests: Check to run all functional scopes. List of secondary tests: https://github.com/uyuni-project/uyuni/blob/master/testsuite/features/secondary/ '),
-            extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ' or ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_action_chains,@scope_ansible,@scope_api,@scope_building_container_images,@scope_changing_software_channels,@scope_cobbler,@scope_configuration_channels,@scope_containerized_proxy,@scope_content_lifecycle_management,@scope_content_staging,@scope_cve_audit,@scope_deblike,@scope_formulas,@scope_hub,@scope_kubernetes_integration,@scope_maintenance_windows,@scope_monitoring,@scope_notification_message,@scope_onboarding,@scope_openscap,@scope_power_management,@scope_proxy,@scope_recurring_actions,@scope_reportdb,@scope_res,@scope_retail,@scope_retracted_patches,@scope_salt,@scope_salt_ssh,@scope_smdba,@scope_sp_migration,@scope_spacecmd,@scope_spacewalk_utils,@scope_subscription_matching,@scope_sumatoolbox,@scope_tomcat,@scope_traditional_client,@scope_virtual_host_manager,@scope_virtualization,@scope_visualization', description: 'Secondary tests: choose the functional scopes that you want to test.'),
-            booleanParam(name: 'must_build', defaultValue: true, description: 'Advanced: Uncheck this if you want to reuse a previous build packages from the build service'),
-            //booleanParam(name: 'must_test', defaultValue: true, description: 'Advanced: Uncheck this if you do not want to run any tests'),
-            booleanParam(name: 'remove_previous_environment', defaultValue: true, description: 'Advanced: Uncheck this if you do not want to remove your previous environment for this same PR'),
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Advanced: Change this by your repo, only if you changed the tests in your PR'),
-            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Advanced: Change this by your branch, only if you changed the tests in your PR'),
-            string(name: 'additional_repo_url', defaultValue: '', description: 'Advanced: Add the URL of an additional repo to test new packages or package updates (only for server, proxy, kvm host).'),
-            string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
-            booleanParam(name: 'force_pr_lock_cleanup', defaultValue: false, description: 'Advanced: Check this parameter to force a cleanup of the locks associated with this PR. Be careful, only do this if you are certain no one else is running a test for the same PR. More at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting'),
-            booleanParam(name: 'skip_package_build_check', defaultValue: false, description: 'Advanced: Check this parameter to skip checking if packages build correctly in systemsmanagement:Uyuni:Master. Do this when you are fixing a package build with your PR.'), 
-        ])
+            buildDiscarder(logRotator(numToKeepStr: '30')),
+            parameters([
+                    string(name: 'platform_localisation', defaultValue: 'NUE', description: 'Decide if it will be run in \'SLC\' or \'NUE\''),
+                    string(name: 'product_version', defaultValue: 'uyuni', description: 'Select if we are using \'uyuni\' or \'manager43\' project'),
+                    string(name: 'pull_request_number', defaultValue: '', description: 'Required: Uyuni Pull Request Number'),
+                    string(name: 'email_to', defaultValue: '', description: 'Recommended: Receive a report to your e-mail when it finishes with links to the results, artifacts and logs'),
+                    booleanParam(name: 'run_all_scopes', defaultValue: false, description: 'Secondary tests: Check to run all functional scopes. List of secondary tests: https://github.com/uyuni-project/uyuni/blob/master/testsuite/features/secondary/ '),
+                    extendedChoice(name: 'functional_scopes',  multiSelectDelimiter: ' or ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 30, value: '@scope_action_chains,@scope_ansible,@scope_api,@scope_building_container_images,@scope_changing_software_channels,@scope_cobbler,@scope_configuration_channels,@scope_containerized_proxy,@scope_content_lifecycle_management,@scope_content_staging,@scope_cve_audit,@scope_deblike,@scope_formulas,@scope_hub,@scope_kubernetes_integration,@scope_maintenance_windows,@scope_monitoring,@scope_notification_message,@scope_onboarding,@scope_openscap,@scope_power_management,@scope_proxy,@scope_recurring_actions,@scope_reportdb,@scope_res,@scope_retail,@scope_retracted_patches,@scope_salt,@scope_salt_ssh,@scope_smdba,@scope_sp_migration,@scope_spacecmd,@scope_spacewalk_utils,@scope_subscription_matching,@scope_sumatoolbox,@scope_tomcat,@scope_traditional_client,@scope_virtual_host_manager,@scope_virtualization,@scope_visualization', description: 'Secondary tests: choose the functional scopes that you want to test.'),
+                    booleanParam(name: 'must_build', defaultValue: true, description: 'Advanced: Uncheck this if you want to reuse a previous build packages from the build service'),
+                    //booleanParam(name: 'must_test', defaultValue: true, description: 'Advanced: Uncheck this if you do not want to run any tests'),
+                    booleanParam(name: 'remove_previous_environment', defaultValue: true, description: 'Advanced: Uncheck this if you do not want to remove your previous environment for this same PR'),
+                    string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Advanced: Change this by your repo, only if you changed the tests in your PR'),
+                    string(name: 'cucumber_ref', defaultValue: 'master', description: 'Advanced: Change this by your branch, only if you changed the tests in your PR'),
+                    string(name: 'additional_repo_url', defaultValue: '', description: 'Advanced: Add the URL of an additional repo to test new packages or package updates (only for server, proxy, kvm host).'),
+                    string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
+                    booleanParam(name: 'force_pr_lock_cleanup', defaultValue: false, description: 'Advanced: Check this parameter to force a cleanup of the locks associated with this PR. Be careful, only do this if you are certain no one else is running a test for the same PR. More at https://github.com/SUSE/spacewalk/wiki/How-to-run-the-test-suite-on-a-given-Pull-Request#troubleshooting'),
+                    booleanParam(name: 'skip_package_build_check', defaultValue: false, description: 'Advanced: Check this parameter to skip checking if packages build correctly in systemsmanagement:Uyuni:Master. Do this when you are fixing a package build with your PR.'),
+            ])
     ])
 
     stage('Record activity') {
@@ -37,12 +37,12 @@ node('pull-request-test-nue') {
         email_to = params.email_to;
         pipeline_node = ""
         if (platform_localisation == "NUE") {
-          pipeline_node = "pull-request-test-nue"
-	} else if (platform_localisation == "SLC") {
-          pipeline_node = "pull-request-test"
+            pipeline_node = "pull-request-test-nue"
+        } else if (platform_localisation == "SLC") {
+            pipeline_node = "pull-request-test"
         } else {
-          print("Platform not supporeted");
-          sh "exit 1"
+            print("Platform not supporeted");
+            sh "exit 1"
         }
         run_all_scopes = params.run_all_scopes;
         pull_request_number = params.pull_request_number.trim();
@@ -61,16 +61,17 @@ node('pull-request-test-nue') {
             load pr_env_filename
         }
         if(must_test && ( params.functional_scopes || run_all_scopes) ) {
-          if (params.functional_scopes){
-            secondary_exports += "export TAGS=\"\\\"(${params.functional_scopes}) and not @flaky\\\"\"; "
-          } else {
-            secondary_exports += "export TAGS=\"\\\"not @flaky\\\"\"; "
-          }
+            if (params.functional_scopes){
+                def transformed_scopes = params.functional_scopes.replaceAll(',', ' or ')
+                secondary_exports += "export TAGS=\"\\\"(${transformed_scopes}) and not @flaky\\\"\"; "
+            } else {
+                secondary_exports += "export TAGS=\"\\\"not @flaky\\\"\"; "
+            }
         }
         echo "DEBUG: Secondary test tags: ${secondary_exports}"
         def pipeline = load "jenkins_pipelines/environments/common/pipeline-pull-request.groovy"
         node(pipeline_node) {
-          pipeline.run(params)
+            pipeline.run(params)
         }
     }
 }
