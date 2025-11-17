@@ -41,7 +41,6 @@ def run(params) {
                     if (params.use_previous_terraform_state) {
                         copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                     }
-
                 }
             }
             stage('Deploy') {
