@@ -27,20 +27,19 @@ def run(params) {
                     // Rename build using product commit hash
                     currentBuild.description = "[${params.tf_file}]"
                 }
+                // Create a directory for  to place the directory with the build results (if it does not exist)
+                sh "mkdir -p ${resultdir}"
+                git url: params.terracumber_gitrepo, branch: params.terracumber_ref
+                dir("susemanager-ci") {
+                    checkout scm
+                }
                 if (params.run_deployment) {
-                    // Create a directory for  to place the directory with the build results (if it does not exist)
-                    sh "mkdir -p ${resultdir}"
-                    git url: params.terracumber_gitrepo, branch: params.terracumber_ref
-                    dir("susemanager-ci") {
-                        checkout scm
-                    }
                     // Clone sumaform
                     sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-
-                    // Restore Terraform states from artifacts
-                    if (params.use_previous_terraform_state) {
-                        copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
-                    }
+                }
+                // Restore Terraform states from artifacts
+                if (params.use_previous_terraform_state) {
+                    copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                 }
             }
             stage('Deploy') {
