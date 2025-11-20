@@ -214,6 +214,7 @@ def run(params) {
             stage('Rename tfstate to avoid copying it between runs') {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     archiveArtifacts artifacts: "results/sumaform/terraform.tfstate"
+                    archiveArtifacts artifacts: "${localSumaformDirPath}main.tf"
                     // Delete the old tfstate file after archiving
                     sh "rm -f ${localTfStateFile}"
                     sh "rm -rf ${localSumaformDirPath}main.tf ${localSumaformDirPath}./terraform"
