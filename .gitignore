@@ -3,3 +3,4 @@ susemanager-ci.iml
 __pycache__
 # vim undo files
 *.un~
+.DS_Store

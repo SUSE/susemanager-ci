@@ -39,8 +39,11 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             booleanParam(name: 'must_run_containerization_tests', defaultValue: false, description: 'Run Containerization Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
-            ])
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format'),
+            string(name: 'container_project', defaultValue: 'Devel:Galaxy:Manager:MUTesting:5.1', description: 'Containers project'),
+            string(name: 'mi_project', defaultValue: '', description: 'The project name of the MI to validate into the containers (e.g., SUSE:Maintenance:12345).'),
+            string(name: 'mi_repo_name', defaultValue: '', description: 'The repository name including the packages to validate (e.g., SUSE_Updates_SLE-Module-Basesystem_15-SP7_x86_64).')
+        ])
     ])
 
     stage('Checkout pipeline') {
