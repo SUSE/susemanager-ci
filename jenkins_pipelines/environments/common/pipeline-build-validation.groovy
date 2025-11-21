@@ -130,7 +130,7 @@ def run(params) {
                             script: """
                             set -e
                             cd ${localSumaformDirPath}
-                            terraform output -json configuration | jq -r '.controller.hostname'
+                            tofu output -json configuration | jq -r '.controller.hostname'
                         """,
                             returnStdout: true
                     ).trim()
@@ -175,7 +175,7 @@ def run(params) {
 
             stage('Sync. products and channels') {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
-                    // Get minion list from terraform state list command
+                    // Get minion list from tofu state list command
                     def nodesHandler = getNodesHandler()
                     res_products = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${nodesHandler.envVariableListToDisable}; ${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_reposync'", returnStatus: true)
                     echo "Custom channels and MU repositories status code: ${res_products}"
@@ -434,7 +434,7 @@ def clientTestingStages(params) {
     // Load JSON matching non MU repositories data (non_MU_channels_tasks_file variable declared at the pipeline description level)
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
-    //Get minion list from terraform state list command
+    //Get minion list from tofu state list command
     def nodesHandler = getNodesHandler()
     def bootstrap_repository_status = nodesHandler.BootstrapRepositoryStatus
     def required_custom_channel_status = nodesHandler.CustomChannelStatus
@@ -611,7 +611,7 @@ def getNodesHandler() {
     Set<String> envVar = new HashSet<String>()
     def BootstrapRepositoryStatus = [:]
     def CustomChannelStatus       = [:]
-    modules = sh(script: "cd ${resultdir}/sumaform; terraform state list",
+    modules = sh(script: "cd ${resultdir}/sumaform; tofu state list",
             returnStdout: true)
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
