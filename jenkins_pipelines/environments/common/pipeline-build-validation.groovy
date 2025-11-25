@@ -1,5 +1,3 @@
-import java.io.Serializable
-
 def run(params) {
     timestamps {
         //Capybara configuration
@@ -344,46 +342,54 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start running the retail tests'
                     }
-                    def proxyHandler = new RetailProxyHandler()
+                    // ----- Start: Get Terminal List -----
                     // Dynamically create the terminal list to test depending on the state list
-                    def terminal_version = []
-                    def tf_state_list = sh(script: "cd ${resultdir}/sumaform; tofu state list",
-                            returnStdout: true).trim()
-                    def matcher = tf_state_list =~ /module\.([a-zA-Z0-9_]+)_terminal\./
-                    matcher.each { match ->
-                        // match[1] is the capture group (e.g., "sles15sp6")
-                        terminal_version.add(match[1])
+                    Set<String> terminalsList = new HashSet<String>()
+                    def tfState = sh(script: "cd ${resultdir}/sumaform; tofu state list", returnStdout: true)
+                    String[] moduleList = tfState.split("\n")
+                    moduleList.each { lane ->
+                        def instanceList = lane.tokenize(".")
+                        if (instanceList[1].contains('terminal')) {
+                            terminalsList.add(instanceList[1].replace('_terminal', ''))
+                        }
                     }
-                    terminal_version = terminal_version.unique().sort()
-                    echo "Dynamic Terminal List detected from State: ${terminal_version}"
-                    if (terminal_version.isEmpty()) {
+                    echo "Dynamic Terminal List detected from State: ${terminalsList}"
+                    if (terminalsList.isEmpty()) {
                         error "No terminal modules found in Terraform state! Expected format: module.<name>_terminal..."
                     }
-                    // End create terminal list block
+                    // ----- End: Get Terminal List -----
+
                     def terminal_deployment_testing = [:]
-                    def proxy_configured = false
-                    terminal_version.each { terminal ->
+                    // PENDING = Not run yet
+                    // SUCCESS = Configured successfully
+                    // FAILURE = Configured failed, do not retry
+                    def retailProxyStatus = [status: 'PENDING']
+                    terminalsList.each { terminal ->
                         terminal_deployment_testing["${terminal}"] = {
                             stage("Build image for ${terminal}") {
                                 def res_build_image = runCucumberRakeTarget("cucumber:build_validation_retail_build_image_${terminal}", true)
-                                sh "exit ${res_build_image}"
+                                sh "exit ${res_build_image}"situations
                             }
                             // TODO: Move back configure retail proxy to Retail: Bootstrap build hosts stage once 4.3 and 5.0 are EOL
                             // Need to be executed after building images for 5.0
                             // Using lock and proxyHandler to make sure to run it only once, first to start.
-                            stage('Configure retail proxy') {
+                            stage("Configure retail proxy (${terminal})") {
                                 lock(resource: retailProxyConfigurationLock) {
-                                    if (!proxyHandler.isConfigured()) {
-                                        echo "Running shared Configure retail proxy for the first time..."
-
-                                        def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', true)
-                                        echo "Retail proxy status code: ${res_configure_retail_proxy}"
-                                        sh "exit ${res_configure_retail_proxy}"
-
-                                        // Set flag to true so other branches skip this block
-                                        proxyHandler.setConfigured()
+                                    if (retailProxyStatus['status'] == 'FAILURE') {
+                                        error "Aborting ${terminal}: Retail proxy configuration failed by another branch."
+                                    } else if (retailProxyStatus['status'] == 'SUCCESS') {
+                                        echo "Configure retail proxy already completed (skipped for ${terminal})"
                                     } else {
-                                        echo "Configure retail proxy already completed by another terminal branch."
+                                        def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', true)
+                                        if (res_configure_retail_proxy != 0) {
+                                            // CRITICAL: Mark as FAILURE before throwing error so other waiting threads see it
+                                            retailProxyStatus['status'] = 'FAILURE'
+                                            error "Retail proxy configuration failed with exit code: ${res_configure_retail_proxy}"
+                                        } else {
+                                            // Mark as SUCCESS
+                                            retailProxyStatus['status'] = 'SUCCESS'
+                                            echo "Proxy successfully configured by ${terminal}"
+                                        }
                                     }
                                 }
                             }
@@ -875,18 +881,6 @@ def echoHtmlReportPath(String rake_target) {
         // This catches network errors, DNS failures, or httpRequest throwing
         // an exception if throwExceptionOnError is true (e.g., 404 response).
         echo "Error fetching HTML path from ${path_export_url}: ${e.getMessage()}"
-    }
-}
-
-class RetailProxyHandler implements Serializable {
-    private boolean configured = false
-
-    boolean isConfigured() {
-        return this.configured
-    }
-
-    void setConfigured() {
-        this.configured = true
     }
 }
 
