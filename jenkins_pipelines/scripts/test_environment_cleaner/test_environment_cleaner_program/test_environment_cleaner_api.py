@@ -120,8 +120,8 @@ class ResourceManager:
         self.client.saltkey.delete(self.session_key, system_name)
 
     def delete_image_profiles(self):
-        self.client.image.profile.delete(self.session_key, "suse_os_image_12")
-        self.client.image.profile.delete(self.session_key, "suse_os_image_15")
+        self.client.image.profile.delete(self.session_key, "suse_os_image_15_sp6")
+        self.client.image.profile.delete(self.session_key, "suse_os_image_15_sp7")
 
     def get_product_version(self):
         product_version = self.client.api.systemVersion()
