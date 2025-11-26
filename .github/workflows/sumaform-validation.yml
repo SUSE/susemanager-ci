@@ -3,9 +3,10 @@ name: Sumaform validation
 on:
   pull_request:
     paths:
-      - 'terracumber_config/tf_files/*.tf'
+      - 'terracumber_config/tf_files/**/*.tf'
       - '!terracumber_config/tf_files/*build-validation*.tf'
       - '!terracumber_config/tf_files/PR-testing-template.tf'
+      - '!terracumber_config/tf_files/**/main*.tf'
 
 jobs:
   validate_sumaform:
