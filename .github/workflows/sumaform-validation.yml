@@ -3,7 +3,7 @@ name: Sumaform validation
 on:
   pull_request:
     paths:
-      - 'terracumber_config/tf_files/*.tf'
+      - 'terracumber_config/tf_files/**/*.tf'
       - '!terracumber_config/tf_files/*build-validation*.tf'
       - '!terracumber_config/tf_files/PR-testing-template.tf'
 
@@ -18,11 +18,16 @@ jobs:
         uses: Ana06/get-changed-files@v2.3.0
         with:
           filter: '*.tf'
+
+      # --- MISSING STEP RE-ADDED ---
       - name: Install terraform
         if: steps.tf_files.outputs.added_modified
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
+          terraform_wrapper: false # Required for script loops to work
+      # -----------------------------
+
       - name: Install opentofu
         if: steps.tf_files.outputs.added_modified
         uses: opentofu/setup-opentofu@v1.0.6
@@ -64,6 +69,7 @@ jobs:
           TF_VAR_SERVER_CONTAINER_REPOSITORY: ""
           TF_VAR_PROXY_CONTAINER_REPOSITORY: ""
           TF_VAR_SERVER_CONTAINER_IMAGE: ""
+          TF_VAR_ENVIRONMENT: "apprentice"
         run: |
           # Install feilong provider
           srcdir=/home/runner/work/susemanager-ci/susemanager-ci/
@@ -97,28 +103,52 @@ jobs:
           mkdir -p ~/.ssh
           touch ~/.ssh/id_ed25519
 
+          # --- OpenTofu Validation Loop ---
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
             if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
-              echo "::notice::Validating '`basename $tf_file`'..."
+              echo "::notice::[TOFU] Validating '`basename $tf_file`'..."
+              rm -f main.tf variables.tf environment.tfvars
               cp ../$tf_file main.tf
-              # Uncomment for OpenTofu detailed logging
+              PLAN_ARGS=""
+              SOURCE_DIR=$(dirname "../$tf_file")
+              if [ -f "$SOURCE_DIR/variables.tf" ]; then
+                cp "$SOURCE_DIR/variables.tf" variables.tf
+                echo "::notice::Included variables.tf from $SOURCE_DIR"
+              fi
+              if [ -f "$SOURCE_DIR/environment.tfvars" ]; then
+                cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
+                PLAN_ARGS="-var-file=environment.tfvars"
+                echo "::notice::Included environment.tfvars from $SOURCE_DIR"
+              fi
               # export TOFU_LOG=trace
               tofu init -input=false
               tofu validate
-              tofu plan -input=false
+              tofu plan -input=false $PLAN_ARGS
               echo
             fi
           done
-
+          
+          # --- OpenTofu Validation Loop ---
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
             if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
-              echo "::notice::Validating '`basename $tf_file`'..."
+              echo "::notice::[TERRAFORM] Validating '`basename $tf_file`'..."
+              rm -f main.tf variables.tf environment.tfvars
               cp ../$tf_file main.tf
-              # Uncomment for Terraform detailed logging
+              SOURCE_DIR=$(dirname "../$tf_file")
+              PLAN_ARGS=""
+              if [ -f "$SOURCE_DIR/variables.tf" ]; then
+                cp "$SOURCE_DIR/variables.tf" variables.tf
+                echo "::notice::Included variables.tf from $SOURCE_DIR"
+              fi
+              if [ -f "$SOURCE_DIR/environment.tfvars" ]; then
+                cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
+                PLAN_ARGS="-var-file=environment.tfvars"
+                echo "::notice::Included environment.tfvars from $SOURCE_DIR"
+              fi
               # export TF_LOG=trace
               terraform init -input=false
               terraform validate
-              terraform plan -input=false
+              terraform plan -input=false $PLAN_ARGS
               echo
             fi
           done
