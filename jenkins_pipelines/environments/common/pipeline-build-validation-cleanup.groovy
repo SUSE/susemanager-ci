@@ -35,6 +35,7 @@ def run(params) {
                 source /home/jenkins/.credentials
                 export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
                 export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
+                export TF_LOG=${params.extra_logs_level}
                 export TERRAFORM=${params.bin_path}
                 export TERRAFORM_PLUGINS=${params.bin_plugins_path}
             """
