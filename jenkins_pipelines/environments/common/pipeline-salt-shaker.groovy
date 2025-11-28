@@ -48,7 +48,7 @@ def run(params) {
                     }
                 }
                 retry(count: 3) {
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                    sh "set +x; source /home/jenkins/.credentials set -x; export TF_LOG=${params.extra_logs_level}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
                     deployed = true
                     if (params.wait_after_deploy) {
                         echo "Waiting ${params.wait_after_deploy} seconds after sumaform deployment (usually to allow transactional system to reboot)"

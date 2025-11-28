@@ -272,9 +272,9 @@ def run(params) {
                         } else {
                             env.TERRAFORM_INIT = ''
                         }
-                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${bin_path}; export TERRAFORM_PLUGINS=${bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*' --runstep provision"
+                        sh "set +x; source /home/jenkins/.credentials set -x; export TF_VAR_CUCUMBER_GITREPO=${cucumber_gitrepo}; export TF_LOG=${params.extra_logs_level}; export TF_VAR_CUCUMBER_BRANCH=${cucumber_ref}; export TERRAFORM=${bin_path}; export TERRAFORM_PLUGINS=${bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*' --runstep provision"
                         deployed = true
-  
+
                         // Collect and tag Flaky tests from the GitHub Board
                         def statusCode = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; export BUILD_NUMBER=${BUILD_NUMBER}; rake utils:collect_and_tag_flaky_tests'", returnStatus:true
                         sh "exit 0"

@@ -101,6 +101,7 @@ def run(params) {
                         export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
                         export TF_VAR_PRODUCT_VERSION=${product_version}
                         export TF_VAR_BASE_OS=${base_os}
+                        export TF_LOG=${params.extra_logs_level}
                         export TERRAFORM=${params.bin_path}
                         export TERRAFORM_PLUGINS=${params.bin_plugins_path}
                     

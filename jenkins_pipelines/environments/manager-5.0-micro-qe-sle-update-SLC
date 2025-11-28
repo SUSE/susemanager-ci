@@ -17,6 +17,7 @@ node('sumaform-cucumber-slc1') {
             string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            choice(name: 'extra_logs_level', choices: ['OFF', 'INFO', 'DEBUG', 'TRACE', 'WARN', 'ERROR'], description: 'Terraform/OpenTofu additional logs level'),
             extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
                     value: minionList,
                     defaultValue: minionList,
