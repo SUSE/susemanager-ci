@@ -138,17 +138,17 @@ module "cucumber_testsuite" {
       image       = "opensuse155o"
       hypervisor  = {
         host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
-        user        = "root"
+        user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
         private_key = file("~/.ssh/id_ed25519")
       }
     }
   }
 
   provider_settings = {
-    pool = "ssd"
-    network_name = null
-    bridge = "br0"
-    additional_network = "192.168.99.0/24"
+    pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
+    network_name       = null
+    bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
+    additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
   }
 }
 
