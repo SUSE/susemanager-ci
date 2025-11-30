@@ -268,8 +268,7 @@ module "alma9_minion" {
 
 module "amazon2023_minion" {
   source             = "./modules/minion"
-  base_configuration
-                     = module.base_core.configuration
+  base_configuration = module.base_core.configuration
   name               = "amazon2023-minion"
   image              = "amazonlinux2023o"
   provider_settings  = {
