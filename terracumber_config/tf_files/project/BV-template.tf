@@ -92,7 +92,7 @@ module "server_containerized" {
   source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name               = "server"
-  image              = "slmicro61o"
+  image              = var.ENVIRONMENT_CONFIGURATION.server_base_os
   provider_settings  = {
     mac                = var.ENVIRONMENT_CONFIGURATION.mac["server_containerized"]
     memory             = 40960
@@ -132,6 +132,7 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_core.configuration
   name               = "proxy"
+  image              = var.ENVIRONMENT_CONFIGURATION.proxy_base_os
   provider_settings  = {
     mac     = var.ENVIRONMENT_CONFIGURATION.mac["proxy_containerized"]
     memory  = 4096

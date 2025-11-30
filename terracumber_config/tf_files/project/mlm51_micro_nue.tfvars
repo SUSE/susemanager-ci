@@ -64,6 +64,8 @@ ENVIRONMENT_CONFIGURATION = {
     minion_userid     = "S51MINUE"
     shh_minion_userid = "S51SSNUE"
   }
+  server_base_os        = "slmicro61"
+  proxy_base_os         = "slmicro61"
   product_version       = "5.1-released"
   name_prefix           = "mlm-bv-51micro-"
   url_prefix            = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.1-micro-qe-build-validation-NUE"
