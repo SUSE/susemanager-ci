@@ -479,7 +479,7 @@ module "salt_migration_minion" {
     mac     = var.ENVIRONMENT_CONFIGURATION.mac["salt_migration_minion"]
     memory  = 4096
   }
-  server_configuration = module.server_containerized.configuration
+  server_configuration = module.server_containerized[0].configuration
   auto_connect_to_master  = true
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
