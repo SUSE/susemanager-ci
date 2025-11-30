@@ -64,5 +64,7 @@ ENVIRONMENT_CONFIGURATION = {
       }
     }
     url_prefix = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.1-micro-qe-build-validation-NUE"
+    MAIL_SUBJECT = "Results 5.1 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+    MAIL_SUBJECT_ENV_FAIL = "Results 5.1 Build Validation: Environment setup failed"
   }
 }
