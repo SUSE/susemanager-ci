@@ -1,11 +1,16 @@
-variable "ENVIRONMENT"{
-  type = string
-  description = "Personal environment"
-}
-
 variable "ENVIRONMENT_CONFIGURATION" {
   type = map
   description = "Collection of values containing: mac addresses, hypervisor and additional network"
+}
+
+variable "PLATFORM_LOCATION_CONFIGURATION" {
+  type = map
+  description = "Collection of values containing location specific information"
+}
+
+variable LOCATION {
+  type = string
+  description = "Platform location"
 }
 
 variable "CUCUMBER_COMMAND" {
