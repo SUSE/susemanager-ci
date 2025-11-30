@@ -14,7 +14,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-10.mgr.suse.de/system"
+  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION.base_core["hypervisor"]}/system"
 }
 
 provider "libvirt" {
@@ -33,22 +33,22 @@ module "base_core" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = "5.1-released"
-  name_prefix       = "mlm-bv-51micro-"
+  product_version   = var.ENVIRONMENT_CONFIGURATION.product_version
+  name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
   use_avahi         = false
-  domain            = "mgr.suse.de"
+  domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
   images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o",
     "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
 
-  mirror            = "minima-mirror-ci-bv.mgr.suse.de"
+  mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
 
   testsuite         = true
 
   provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
-    additional_network = "192.168.51.0/24"
+    pool               = var.ENVIRONMENT_CONFIGURATION.base_core["pool"]
+    bridge             = var.ENVIRONMENT_CONFIGURATION.base_core["bridge"]
+    additional_network = var.ENVIRONMENT_CONFIGURATION.base_core["additional_network"]
   }
 }
 
@@ -61,13 +61,13 @@ module "base_arm" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = "5.1-released"
-  name_prefix       = "mlm-bv-51micro-"
+  product_version   = var.ENVIRONMENT_CONFIGURATION.product_version
+  name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
   use_avahi         = false
-  domain            = "mgr.suse.de"
+  domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
   images            = [ "opensuse156armo" ]
 
-  mirror            = "minima-mirror-ci-bv.mgr.suse.de"
+  mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
 
   testsuite         = true
@@ -81,9 +81,9 @@ module "base_arm" {
 module "base_s390" {
   source            = "./backend_modules/feilong/base"
 
-  name_prefix       = "mlm-bv-51micro-"
-  domain            = "mgr.suse.de"
-  product_version   = "5.1-released"
+  name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
+  domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
+  product_version   = var.ENVIRONMENT_CONFIGURATION.product_version
 
   testsuite         = true
 }
@@ -93,11 +93,10 @@ module "server_containerized" {
   base_configuration = module.base_core.configuration
   name               = "server"
   image              = "slmicro61o"
-  provider_settings = {
-    mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server_containerized"]
+  provider_settings  = {
+    mac                = var.ENVIRONMENT_CONFIGURATION.mac["server_containerized"]
     memory             = 40960
     vcpu               = 10
-    data_pool          = "ssd"
   }
   runtime = "podman"
   container_repository  = var.SERVER_CONTAINER_REPOSITORY
@@ -107,7 +106,7 @@ module "server_containerized" {
   database_disk_size    = 150
   container_tag         = "latest"
   beta_enabled          = false
-  server_mounted_mirror          = "minima-mirror-ci-bv.mgr.suse.de"
+  server_mounted_mirror          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   java_debugging                 = false
   auto_accept                    = false
   disable_firewall               = false
@@ -133,9 +132,9 @@ module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
   base_configuration = module.base_core.configuration
   name               = "proxy"
-  provider_settings = {
-    mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy_containerized"]
-    memory             = 4096
+  provider_settings  = {
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["proxy_containerized"]
+    memory  = 4096
   }
   runtime                   = "podman"
   container_repository      = var.PROXY_CONTAINER_REPOSITORY
@@ -153,9 +152,9 @@ module "sles12sp5_minion" {
   base_configuration = module.base_core.configuration
   name               = "sles12sp5-minion"
   image              = "sles12sp5o"
-  provider_settings = {
-    mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles12sp5_minion"]
-    memory             = 4096
+  provider_settings  = {
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles12sp5_minion"]
+    memory  = 4096
   }
   auto_connect_to_master  = false
   use_os_released_updates = false
@@ -168,7 +167,7 @@ module "sles15sp3_minion" {
   name               = "sles15sp3-minion"
   image              = "sles15sp3o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp3_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp3_minion"]
     memory  = 4096
   }
 
@@ -184,7 +183,7 @@ module "sles15sp4_minion" {
   name               = "sles15sp4-minion"
   image              = "sles15sp4o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp4_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp4_minion"]
     memory  = 4096
   }
 
@@ -199,7 +198,7 @@ module "sles15sp5_minion" {
   name               = "sles15sp5-minion"
   image              = "sles15sp5o"
   provider_settings  = {
-    mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp5_minion"]
+    mac    = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp5_minion"]
     memory = 4096
   }
 
@@ -213,8 +212,8 @@ module "sles15sp6_minion" {
   base_configuration = module.base_core.configuration
   name               = "sles15sp6-minion"
   image              = "sles15sp6o"
-  provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp6_minion"]
+  provider_settings  = {
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp6_minion"]
     memory  = 4096
   }
 
@@ -229,7 +228,7 @@ module "sles15sp7_minion" {
   name               = "sles15sp7-minion"
   image              = "sles15sp7o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp7_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp7_minion"]
     memory  = 4096
   }
 
@@ -244,7 +243,7 @@ module "alma8_minion" {
   name               = "alma8-minion"
   image              = "almalinux8o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["alma8_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["alma8_minion"]
     memory  = 4096
   }
   auto_connect_to_master  = false
@@ -258,7 +257,7 @@ module "alma9_minion" {
   name               = "alma9-minion"
   image              = "almalinux9o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["alma9_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["alma9_minion"]
     memory  = 4096
   }
   auto_connect_to_master  = false
@@ -273,7 +272,7 @@ module "amazon2023_minion" {
   name               = "amazon2023-minion"
   image              = "amazonlinux2023o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["amazon2023_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["amazon2023_minion"]
     memory  = 4096
   }
   auto_connect_to_master  = false
@@ -287,7 +286,7 @@ module "centos7_minion" {
   name               = "centos7-minion"
   image              = "centos7o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["centos7_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["centos7_minion"]
     memory  = 4096
   }
   auto_connect_to_master  = false
@@ -301,7 +300,7 @@ module "liberty9_minion" {
   name               = "liberty9-minion"
   image              = "libertylinux9o"
   provider_settings  = {
-    mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["liberty9_minion"]
+    mac    = var.ENVIRONMENT_CONFIGURATION.mac["liberty9_minion"]
     memory = 4096
   }
   auto_connect_to_master  = false
@@ -315,7 +314,7 @@ module "liberty9_minion" {
 //   name               = "openeuler2403-minion"
 //   image              = "openeuler2403o"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["openeuler2403_minion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["openeuler2403_minion"]
 //     memory             = 4096
 //   }
 //   auto_connect_to_master  = false
@@ -329,7 +328,7 @@ module "oracle9_minion" {
   name               = "oracle9-minion"
   image              = "oraclelinux9o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["oracle9_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["oracle9_minion"]
     memory  = 4096
   }
   auto_connect_to_master  = false
@@ -343,7 +342,7 @@ module "rocky8_minion" {
   name               = "rocky8-minion"
   image              = "rocky8o"
   provider_settings  = {
-    mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rocky8_minion"]
+    mac    = var.ENVIRONMENT_CONFIGURATION.mac["rocky8_minion"]
     memory = 4096
   }
   auto_connect_to_master  = false
@@ -357,7 +356,7 @@ module "rocky9_minion" {
   name               = "rocky9-minion"
   image              = "rocky9o"
   provider_settings  = {
-    mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rocky9_minion"]
+    mac    = var.ENVIRONMENT_CONFIGURATION.mac["rocky9_minion"]
     memory = 4096
   }
   auto_connect_to_master  = false
@@ -371,7 +370,7 @@ module "ubuntu2204_minion" {
   name               = "ubuntu2204-minion"
   image              = "ubuntu2204o"
   provider_settings  = {
-    mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["ubuntu2204_minion"]
+    mac    = var.ENVIRONMENT_CONFIGURATION.mac["ubuntu2204_minion"]
     memory = 4096
   }
   auto_connect_to_master  = false
@@ -385,7 +384,7 @@ module "ubuntu2404_minion" {
   name               = "ubuntu2404-minion"
   image              = "ubuntu2404o"
   provider_settings  = {
-    mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["ubuntu2404_minion"]
+    mac    = var.ENVIRONMENT_CONFIGURATION.mac["ubuntu2404_minion"]
     memory = 4096
   }
   auto_connect_to_master  = false
@@ -399,7 +398,7 @@ module "debian12_minion" {
   name               = "debian12-minion"
   image              = "debian12o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["debian12_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["debian12_minion"]
     memory  = 4096
   }
 
@@ -414,11 +413,11 @@ module "opensuse156arm_minion" {
   }
   source             = "./modules/minion"
   base_configuration = module.base_arm.configuration
-  name               = "opensuse156arm-minion-nue"
+  name               = "opensuse156arm-minion${var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].extension}"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["opensuse156arm_minion"]
-    overwrite_fqdn     = "mlm-bv-51micro-opensuse156arm-minion.mgr.suse.de"
+    mac                = var.ENVIRONMENT_CONFIGURATION.mac["opensuse156arm_minion"]
+    overwrite_fqdn     = "${var.ENVIRONMENT_CONFIGURATION.name_prefix}opensuse156arm-minion.${var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain}"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -436,8 +435,8 @@ module "sles15sp5s390_minion" {
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
-    userid             = "S51MINUE"
-    mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp5s390_minion"]
+    userid             = var.ENVIRONMENT_CONFIGURATION.s390["minion_userid"]
+    mac                = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp5s390_minion"]
     ssh_user           = "sles"
     vswitch            = "VSUMA"
   }
@@ -454,7 +453,7 @@ module "salt_migration_minion" {
   name               = "salt-migration-minion"
   image              = "sles15sp5o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["salt_migration_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["salt_migration_minion"]
     memory  = 4096
   }
   server_configuration = module.server_containerized.configuration
@@ -470,7 +469,7 @@ module "slemicro51_minion" {
   name               = "slemicro51-minion"
   image              = "slemicro51-ign"
   provider_settings  = {
-    mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro51_minion"]
+    mac    = var.ENVIRONMENT_CONFIGURATION.mac["slemicro51_minion"]
     memory = 2048
   }
 
@@ -488,7 +487,7 @@ module "slemicro52_minion" {
   name               = "slemicro52-minion"
   image              = "slemicro52-ign"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro52_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["slemicro52_minion"]
     memory  = 2048
   }
 
@@ -506,7 +505,7 @@ module "slemicro53_minion" {
   name               = "slemicro53-minion"
   image              = "slemicro53-ign"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro53_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["slemicro53_minion"]
     memory  = 2048
   }
 
@@ -524,7 +523,7 @@ module "slemicro54_minion" {
   name               = "slemicro54-minion"
   image              = "slemicro54-ign"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro54_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["slemicro54_minion"]
     memory  = 2048
   }
 
@@ -542,7 +541,7 @@ module "slemicro55_minion" {
   name               = "slemicro55-minion"
   image              = "slemicro55o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro55_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["slemicro55_minion"]
     memory  = 2048
   }
 
@@ -560,7 +559,7 @@ module "slmicro60_minion" {
   name               = "slmicro60-minion"
   image              = "slmicro60o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slmicro60_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["slmicro60_minion"]
     memory  = 2048
   }
 
@@ -575,7 +574,7 @@ module "slmicro61_minion" {
   name               = "slmicro61-minion"
   image              = "slmicro61o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slmicro61_minion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["slmicro61_minion"]
     memory  = 2048
   }
 
@@ -590,7 +589,7 @@ module "sles12sp5_sshminion" {
   name               = "sles12sp5-sshminion"
   image              = "sles12sp5o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles12sp5_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles12sp5_sshminion"]
     memory  = 4096
   }
 
@@ -605,7 +604,7 @@ module "sles15sp3_sshminion" {
   name               = "sles15sp3-sshminion"
   image              = "sles15sp3o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp3_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp3_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -618,7 +617,7 @@ module "sles15sp4_sshminion" {
   name               = "sles15sp4-sshminion"
   image              = "sles15sp4o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp4_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp4_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -631,7 +630,7 @@ module "sles15sp5_sshminion" {
   name               = "sles15sp5-sshminion"
   image              = "sles15sp5o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp5_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp5_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -645,7 +644,7 @@ module "sles15sp6_sshminion" {
   name               = "sles15sp6-sshminion"
   image              = "sles15sp6o"
   provider_settings  = {
-    mac      = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp6_sshminion"]
+    mac      = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp6_sshminion"]
     memory   = 4096
   }
 
@@ -659,7 +658,7 @@ module "sles15sp7_sshminion" {
   name               = "sles15sp7-sshminion"
   image              = "sles15sp7o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp7_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp7_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -672,7 +671,7 @@ module "alma8_sshminion" {
   name               = "alma8-sshminion"
   image              = "almalinux8o"
   provider_settings  = {
-    mac      = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["alma8_sshminion"]
+    mac      = var.ENVIRONMENT_CONFIGURATION.mac["alma8_sshminion"]
     memory   = 4096
   }
   use_os_released_updates = false
@@ -685,7 +684,7 @@ module "alma9_sshminion" {
   name               = "alma9-sshminion"
   image              = "almalinux9o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["alma9_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["alma9_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -698,7 +697,7 @@ module "amazon2023_sshminion" {
   name               = "amazon2023-sshminion"
   image              = "amazonlinux2023o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["amazon2023_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["amazon2023_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -711,7 +710,7 @@ module "centos7_sshminion" {
   name               = "centos7-sshminion"
   image              = "centos7o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["centos7_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["centos7_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -725,7 +724,7 @@ module "liberty9_sshminion" {
   name               = "liberty9-sshminion"
   image              = "libertylinux9o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["liberty9_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["liberty9_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -738,7 +737,7 @@ module "liberty9_sshminion" {
 //   name               = "openeuler2403-sshminion"
 //   image              = "openeuler2403o"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["openeuler2403_sshminion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["openeuler2403_sshminion"]
 //     memory             = 4096
 //   }
 //   use_os_released_updates = false
@@ -751,7 +750,7 @@ module "oracle9_sshminion" {
   name               = "oracle9-sshminion"
   image              = "oraclelinux9o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["oracle9_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["oracle9_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -764,7 +763,7 @@ module "rocky8_sshminion" {
   name               = "rocky8-sshminion"
   image              = "rocky8o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rocky8_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["rocky8_sshminion"]
     memory  = 4096
 
   }
@@ -778,7 +777,7 @@ module "rocky9_sshminion" {
   name               = "rocky9-sshminion"
   image              = "rocky9o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rocky9_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["rocky9_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -791,7 +790,7 @@ module "ubuntu2204_sshminion" {
   name               = "ubuntu2204-sshminion"
   image              = "ubuntu2204o"
   provider_settings  = {
-    mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["ubuntu2204_sshminion"]
+    mac    = var.ENVIRONMENT_CONFIGURATION.mac["ubuntu2204_sshminion"]
     memory = 4096
   }
   use_os_released_updates = false
@@ -804,7 +803,7 @@ module "ubuntu2404_sshminion" {
   name               = "ubuntu2404-sshminion"
   image              = "ubuntu2404o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["ubuntu2404_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["ubuntu2404_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -817,7 +816,7 @@ module "debian12_sshminion" {
   name               = "debian12-sshminion"
   image              = "debian12o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["debian12_sshminion"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["debian12_sshminion"]
     memory  = 4096
   }
   use_os_released_updates = false
@@ -830,11 +829,11 @@ module "opensuse156arm_sshminion" {
   }
   source             = "./modules/sshminion"
   base_configuration = module.base_arm.configuration
-  name               = "opensuse156arm-sshminion-nue"
+  name               = "opensuse156arm-sshminion${var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].extension}"
   image              = "opensuse156armo"
   provider_settings = {
-    mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["opensuse156arm_sshminion"]
-    overwrite_fqdn     = "mlm-bv-51micro-opensuse156arm-sshminion.mgr.suse.de"
+    mac                = var.ENVIRONMENT_CONFIGURATION.mac["opensuse156arm_sshminion"]
+    overwrite_fqdn     = "${var.ENVIRONMENT_CONFIGURATION.name_prefix}opensuse156arm-sshminion.${var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain}"
     memory             = 2048
     vcpu               = 2
     xslt               = file("../../susemanager-ci/terracumber_config/tf_files/common/tune-aarch64.xslt")
@@ -851,8 +850,8 @@ module "sles15sp5s390_sshminion" {
   image              = "s15s5-minimal-2part-xfs"
 
   provider_settings = {
-    userid             = "S51SSNUE"
-    mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp5s390_sshminion"]
+    userid             = var.ENVIRONMENT_CONFIGURATION.s390["shh_minion_userid"]
+    mac                = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp5s390_sshminion"]
     ssh_user           = "sles"
     vswitch            = "VSUMA"
   }
@@ -868,7 +867,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro51-sshminion"
 //   image              = "slemicro51-ign"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro51_sshminion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["slemicro51_sshminion"]
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -882,7 +881,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro52-sshminion"
 //   image              = "slemicro52-ign"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro52_sshminion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["slemicro52_sshminion"]
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -896,7 +895,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro53-sshminion"
 //   image              = "slemicro53-ign"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro53_sshminion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["slemicro53_sshminion"]
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -910,7 +909,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro54-sshminion"
 //   image              = "slemicro54-ign"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro54_sshminion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["slemicro54_sshminion"]
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -927,7 +926,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slemicro55-sshminion"
 //   image              = "slemicro55o"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slemicro55_sshminion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["slemicro55_sshminion"]
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -943,7 +942,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slmicro60-sshminion"
 //   image              = "slmicro60o"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slmicro60_sshminion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["slmicro60_sshminion"]
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -959,7 +958,7 @@ module "sles15sp5s390_sshminion" {
 //   name               = "slmicro61-sshminion"
 //   image              = "slmicro61o"
 //   provider_settings = {
-//     mac                = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["slmicro61_sshminion"]
+//     mac                = var.ENVIRONMENT_CONFIGURATION.mac["slmicro61_sshminion"]
 //     memory             = 2048
 //   }
 //   use_os_released_updates = false
@@ -974,7 +973,7 @@ module "sles15sp6_buildhost" {
   name               = "sles15sp6-build"
   image              = "sles15sp6o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp6_buildhost"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp6_buildhost"]
     memory  = 2048
     vcpu    = 2
   }
@@ -989,7 +988,7 @@ module "sles15sp7_buildhost" {
   name               = "sles15sp7-build"
   image              = "sles15sp7o"
   provider_settings = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["sles15sp7_buildhost"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp7_buildhost"]
     memory  = 2048
     vcpu    = 2
   }
@@ -1051,7 +1050,7 @@ module "monitoring_server" {
   name               = "monitoring"
   image              = "sles15sp7o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["monitoring_server"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["monitoring_server"]
     memory  = 2048
   }
 
@@ -1065,7 +1064,7 @@ module "controller" {
   base_configuration = module.base_core.configuration
   name               = "controller"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["controller"]
     memory  = 16384
     vcpu    = 8
   }
