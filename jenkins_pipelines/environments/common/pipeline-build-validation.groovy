@@ -94,7 +94,7 @@ def run(params) {
                         set +x
                         source /home/jenkins/.credentials
                         set -x
-                        cat susemanager-ci/terracumber_config/project/mlm51_micro_nue.tfvars > ${localSumaformDirPath}/terraform.tfvars
+                        cat susemanager-ci/terracumber_config/project/${params.deployment_tfvars} > ${localSumaformDirPath}/terraform.tfvars
                         cat susemanager-ci/terracumber_config/project/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
                         export TF_VAR_SERVER_CONTAINER_REPOSITORY=${server_container_repository}
                         export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
