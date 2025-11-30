@@ -70,7 +70,7 @@ node('sumaform-cucumber') {
     def mutableParams = [:] + params
     mutableParams.product_version_display = '5.1-released'
     mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
-    mutableParams.deployment_tfvars = 'mlm51_micro_nue.tfvars'
+    mutableParams.deployment_tfvars = 'mlm50_micro_nue.tfvars'
 
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(mutableParams)
