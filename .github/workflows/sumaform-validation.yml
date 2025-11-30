@@ -4,9 +4,8 @@ on:
   pull_request:
     paths:
       - 'terracumber_config/tf_files/**/*.tf'
-      - '.github/workflows/sumaform-validation.yml'
-      - '!terracumber_config/tf_files/*build-validation*.tf'
-      - '!terracumber_config/tf_files/PR-testing-template.tf'
+      - 'terracumber_config/tf_files/tfvars/**/*.tfvars'
+      - 'jenkins_pipelines/scripts/tf_vars_generator/**'
 
 jobs:
   validate_sumaform:
@@ -14,32 +13,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - id: tf_files
         name: Get modified .tf files
         uses: Ana06/get-changed-files@v2.3.0
         with:
           filter: '*.tf'
 
-      # --- MISSING STEP RE-ADDED ---
       - name: Install terraform
-        if: steps.tf_files.outputs.added_modified
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
-          terraform_wrapper: false # Required for script loops to work
-      # -----------------------------
+          terraform_wrapper: false
 
       - name: Install opentofu
-        if: steps.tf_files.outputs.added_modified
         uses: opentofu/setup-opentofu@v1.0.6
         with:
           tofu_version: 1.10.7
       - name: Checkout sumaform
-        if: steps.tf_files.outputs.added_modified
         uses: actions/checkout@v4
         with:
-          repository: uyuni-project/sumaform
+          repository: maximenoel8/sumaform
           path: sumaform
+          ref: module_bv
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r jenkins_pipelines/scripts/tf_vars_generator/requirements.txt
+
       - name: Download Feilong terraform provider asset
         if: steps.tf_files.outputs.added_modified
         uses: robinraju/release-downloader@v1.12
@@ -48,110 +49,136 @@ jobs:
           tag: 'v0.0.9'
           fileName: 'terraform-provider-feilong_0.0.9_linux_amd64.tar.gz'
           extract: true
-      - name: Validate files
-        if: steps.tf_files.outputs.added_modified
-        env:
-          TF_VAR_SCC_USER: "user"
-          TF_VAR_SCC_PASSWORD: "password"
-          TF_VAR_MIRROR: ""
-          TF_VAR_PULL_REQUEST_REPO: ""
-          TF_VAR_MASTER_REPO: ""
-          TF_VAR_MASTER_OTHER_REPO: ""
-          TF_VAR_MASTER_SUMAFORM_TOOLS_REPO: ""
-          TF_VAR_UPDATE_REPO: ""
-          TF_VAR_ADDITIONAL_REPO_URL: ""
-          TF_VAR_TEST_PACKAGES_REPO: ""
-          TF_VAR_SLE_CLIENT_REPO: ""
-          TF_VAR_RHLIKE_CLIENT_REPO: ""
-          TF_VAR_DEBLIKE_CLIENT_REPO: ""
-          TF_VAR_OPENSUSE_CLIENT_REPO: ""
-          TF_VAR_ZVM_ADMIN_TOKEN: ""
-          TF_VAR_CONTAINER_REPOSITORY: ""
-          TF_VAR_SERVER_CONTAINER_REPOSITORY: ""
-          TF_VAR_PROXY_CONTAINER_REPOSITORY: ""
-          TF_VAR_SERVER_CONTAINER_IMAGE: ""
-          TF_VAR_ENVIRONMENT: "apprentice"
+
+      - name: Setup Providers
         run: |
           # Install feilong provider
           srcdir=/home/runner/work/susemanager-ci/susemanager-ci/
-          dstdir_terraform=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.4/linux_amd64/
-          dstdir_opentofu=/usr/share/terraform/plugins/registry.opentofu.org/bischoff/feilong/0.0.4/linux_amd64/
+          dstdir_terraform=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.9/linux_amd64/
+          dstdir_opentofu=/usr/share/terraform/plugins/registry.opentofu.org/bischoff/feilong/0.0.9/linux_amd64/
           sudo mkdir -p $dstdir_terraform
           sudo mkdir -p $dstdir_opentofu
           sudo ln -s $srcdir/terraform-provider-feilong $dstdir_terraform
           sudo ln -s $srcdir/terraform-provider-feilong $dstdir_opentofu
 
-          # Remove libvirt and feilong provider settings
-          sed -i \
-            -e '/provider *"/,/^[ \/#]*\}\s*$/d' \
-            -e '/libvirt = {/,/^[ \/#]*\}\s*$/d' \
-            -e '/libvirt =/d' \
-            -e '/feilong = {/,/^[ \/#]*\}\s*$/d' \
-            -e '/feilong =/d' \
-            ${{steps.tf_files.outputs.added_modified}}
-
-          # Also exclude s390 minions from terraform plan
-          sed -i \
-            -e '/^module ".*s390.*" {$/,/^}$/d' \
-            -e '/.*s390.*_configuration *= module.*s390.*\.configuration/d' \
-            ${{steps.tf_files.outputs.added_modified}}
-
           # Setup sumaform with the 'null' backend
           cd sumaform
           ln -sfn ../backend_modules/null modules/backend
+          mkdir -p ~/.ssh && touch ~/.ssh/id_ed25519
 
-          # Provide a fake private SSH key
-          mkdir -p ~/.ssh
-          touch ~/.ssh/id_ed25519
-
-          # --- OpenTofu Validation Loop ---
-          for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
-            if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
-              echo "::notice::[TOFU] Validating '`basename $tf_file`'..."
-              rm -f main.tf variables.tf environment.tfvars
-              cp ../$tf_file main.tf
-              PLAN_ARGS=""
-              SOURCE_DIR=$(dirname "../$tf_file")
-              if [ -f "$SOURCE_DIR/variables.tf" ]; then
-                cp "$SOURCE_DIR/variables.tf" variables.tf
-                echo "::notice::Included variables.tf from $SOURCE_DIR"
-              fi
-              if [ -f "$SOURCE_DIR/environment.tfvars" ]; then
-                cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
-                # echo SCC_PTF_USER="nothing" >> environment.tfvars
-                # echo SCC_PTF_PASSWORD="nothing" >> environment.tfvars
-                PLAN_ARGS="-var-file=environment.tfvars"
-                echo "::notice::Included environment.tfvars from $SOURCE_DIR"
-              fi
-              # export TOFU_LOG=trace
-              tofu init -input=false
-              tofu validate
-              tofu plan -input=false $PLAN_ARGS
-              echo
-            fi
-          done
+      - name: Test TFVars Generation & Validation
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$PWD/jenkins_pipelines/scripts
+          SCRIPT_PATH="jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
+          TEMPLATE_TF="terracumber_config/tf_files/templates/template-build-validation-single-provider.tf"
           
-          # --- OpenTofu Validation Loop ---
-          for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
-            if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
-              echo "::notice::[TERRAFORM] Validating '`basename $tf_file`'..."
-              rm -f main.tf variables.tf environment.tfvars
-              cp ../$tf_file main.tf
-              SOURCE_DIR=$(dirname "../$tf_file")
-              PLAN_ARGS=""
-              if [ -f "$SOURCE_DIR/variables.tf" ]; then
-                cp "$SOURCE_DIR/variables.tf" variables.tf
-                echo "::notice::Included variables.tf from $SOURCE_DIR"
-              fi
-              if [ -f "$SOURCE_DIR/environment.tfvars" ]; then
-                cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
-                PLAN_ARGS="-var-file=environment.tfvars"
-                echo "::notice::Included environment.tfvars from $SOURCE_DIR"
-              fi
-              # export TF_LOG=trace
-              terraform init -input=false
-              terraform validate
-              terraform plan -input=false $PLAN_ARGS
-              echo
-            fi
-          done
+          # --- DEBUG: Verify Sumaform Checkout ---
+          echo "::group::Debug: Verify Sumaform Directory"
+          ls -F sumaform/
+          if [ ! -d "sumaform/modules" ]; then
+            echo "::error::sumaform/modules directory missing! Checkout failed?"
+            exit 1
+          fi
+          echo "::endgroup::"
+          
+          # --- Personal BV ---
+          echo "::group::Test 1: Generate Personal BV Configuration"
+          
+          # Generate the tfvars file in the current directory
+          python3 $SCRIPT_PATH \
+            --env-file "terracumber_config/tf_files/personal/environment.tfvars" \
+            --inject "CUCUMBER_GITREPO=test" \
+            --inject "CUCUMBER_BRANCH=test" \
+            --user "maxime" \
+            --output "personal_generated.tfvars" \
+            --minion1 "sles15sp4_minion" \
+            --product-version "5.1-released" \
+            --base-os "slmicro61o" \
+            --merge-files "terracumber_config/tf_files/tfvars/location.tfvars"
+          
+          # Prepare the execution environment inside 'sumaform' directory
+          #    This is required because the modules (source = "./modules/base") exist there.
+          cp $TEMPLATE_TF sumaform/main.tf
+          
+          mv personal_generated.tfvars sumaform/
+          
+          # Create dummy variables to satisfy TF requirements
+          cat <<EOF > sumaform/variables.tf
+          variable "ENVIRONMENT_CONFIGURATION" {}
+          variable "BASE_CONFIGURATIONS" {}
+          variable "PLATFORM_LOCATION_CONFIGURATION" {}
+          variable "LOCATION" {}
+          variable "SCC_USER" { default="u" }
+          variable "SCC_PASSWORD" { default="p" }
+          variable "SCC_PTF_USER" { default="" }
+          variable "SCC_PTF_PASSWORD" { default="" }
+          variable "ZVM_ADMIN_TOKEN" { default="" }
+          variable "GIT_USER" { default="" }
+          variable "GIT_PASSWORD" { default="" }
+          variable "SERVER_CONTAINER_REPOSITORY" { default="" }
+          variable "PROXY_CONTAINER_REPOSITORY" { default="" }
+          variable "SERVER_CONTAINER_IMAGE" { default="" }
+          variable "BASE_OS" { default="" }
+          variable "PRODUCT_VERSION" { default="" }
+          variable "CUCUMBER_GITREPO" {}
+          variable "CUCUMBER_BRANCH" {}
+          EOF
+        
+          # Run Tofu inside the sumaform directory
+          cd sumaform
+          
+          tofu init -input=false
+          tofu validate
+          tofu plan -var-file="personal_generated.tfvars" -no-color > /dev/null && echo "Personal BV Plan: OK" || echo "Personal BV Plan: FAILED"
+          
+          # Clean up for next test
+          rm main.tf variables.tf personal_generated.tfvars
+          cd ..
+          echo "::endgroup::"
+          
+          # --- TEST 2: Static BV ---
+          echo "::group::Test 2: Validate Static TFVars (MLM 5.1 Micro)"
+          STATIC_VARS="terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm51_micro_build_validation_nue.tfvars"
+          LOCATION_VARS="terracumber_config/tf_files/tfvars/location.tfvars"
+          
+          # Generate/Clean
+          python3 $SCRIPT_PATH \
+            --output "static_merged.tfvars" \
+            --merge-files "$STATIC_VARS" "$LOCATION_VARS" \
+            --inject "CUCUMBER_GITREPO=test" \
+            --inject "CUCUMBER_BRANCH=test" \
+            --clean \
+            --keep-resources "sles15sp4_minion"
+          
+          # Move to sumaform dir
+          mv static_merged.tfvars sumaform/
+          # (Note: main.tf template must be copied again if it was cleaned up, or reused)
+          cp $TEMPLATE_TF sumaform/main.tf
+          # (Re-create variables.tf if deleted, or assume it persists if not cleaned. Re-creating is safer)
+          cat <<EOF > sumaform/variables.tf
+          variable "ENVIRONMENT_CONFIGURATION" {}
+          variable "BASE_CONFIGURATIONS" {}
+          variable "PLATFORM_LOCATION_CONFIGURATION" {}
+          variable "LOCATION" {}
+          variable "SCC_USER" { default="u" }
+          variable "SCC_PASSWORD" { default="p" }
+          variable "SCC_PTF_USER" { default="" }
+          variable "SCC_PTF_PASSWORD" { default="" }
+          variable "ZVM_ADMIN_TOKEN" { default="" }
+          variable "GIT_USER" { default="" }
+          variable "GIT_PASSWORD" { default="" }
+          variable "SERVER_CONTAINER_REPOSITORY" { default="" }
+          variable "PROXY_CONTAINER_REPOSITORY" { default="" }
+          variable "SERVER_CONTAINER_IMAGE" { default="" }
+          variable "BASE_OS" { default="" }
+          variable "PRODUCT_VERSION" { default="" }
+          variable "CUCUMBER_GITREPO" {}
+          variable "CUCUMBER_BRANCH" {}
+          EOF
+          
+          # Run Tofu
+          cd sumaform
+
+          tofu plan -var-file="static_merged.tfvars" -no-color > /dev/null && echo "Static BV Plan: OK" || echo "Static BV Plan: FAILED"
+          cd ..
+          echo "::endgroup::"

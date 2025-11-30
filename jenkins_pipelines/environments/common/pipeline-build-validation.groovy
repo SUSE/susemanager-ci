@@ -7,6 +7,7 @@ def run(params) {
 
         env.controller_hostname = null
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
+        GString tfvarsPrepareScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
 
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
@@ -15,6 +16,8 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+        String tfVariablesFile = 'susemanager-ci/terracumber_config/tf_files/variables/build-validation-variables.tf'
+        String tfRefEnvironmentFile  = 'susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars'
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
@@ -32,7 +35,7 @@ def run(params) {
         def product_version = params.product_version ?: ''
         def base_os = params.base_os ?: ''
 
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfVariablesFile} --terraform-bin ${params.bin_path}"
 
         if (params.deploy_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
@@ -88,42 +91,77 @@ def run(params) {
                             }
                         }
                     }
-                    // Run Terracumber to deploy the environment
+
+                    def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
+                    def outputFile = "${localSumaformDirPath}terraform.tfvars"
+
+                    // Build Common Arguments
+                    def commonArgs = " --output \"${outputFile}\""
+                    commonArgs += " --inject SERVER_CONTAINER_REPOSITORY=${server_container_repository}"
+                    commonArgs += " --inject PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}"
+                    commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
+                    commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
+                    commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
+                    if (product_version) { commonArgs += " --inject PRODUCT_VERSION=${product_version}" }
+                    if (base_os) { commonArgs += " --inject BASE_OS=${base_os}" }
+
+                    // Personal scenario specific arguments
+                    def scenarioArgs = ""
+
+                    //  -- Personal BV Arguments --
+                    if (params.environment) {
+                        // We construct from env reference. No cleaning needed as we only add selected minions.
+                        scenarioArgs += " --env-file \"${tfRefEnvironmentFile}\" --user \"${params.environment}\""
+                        scenarioArgs += " --minion1 \"${params.minion1}\""
+                        scenarioArgs += " --minion2 \"${params.minion2}\""
+                        scenarioArgs += " --minion3 \"${params.minion3}\""
+                        scenarioArgs += " --minion4 \"${params.minion4}\""
+                        scenarioArgs += " --minion5 \"${params.minion5}\""
+                        scenarioArgs += " --minion6 \"${params.minion6}\""
+                        scenarioArgs += " --minion7 \"${params.minion7}\""
+                        if (params.deploy_retail) { scenarioArgs += " --deploy-retail" }
+                        scenarioArgs += " --merge-files \"${locationFile}\"" // Merge location only
+
+                    } else if (params.get('deployment_tfvars')) {
+                        // -- Common BV arguments --
+                        // We load a static file and clean it based on minions_to_run list.
+                        def minionsToKeep = params.minions_to_run.split(', ').join(' ')
+                        scenarioArgs += " --merge-files \"${params.deployment_tfvars}\" \"${locationFile}\""
+                        scenarioArgs += " --clean --keep-resources ${minionsToKeep}"
+                    } else {
+                        error "No environment or deployment_tfvars specified"
+                    }
+                    // Generate the tfvars
+                    sh "python3 ${tfvarsPrepareScript} ${commonArgs} ${scenarioArgs}"
+                    // Deploy the environment
                     sh """
                         set +x
                         source /home/jenkins/.credentials
                         set -x
-                    
-                        export TF_VAR_SERVER_CONTAINER_REPOSITORY=${server_container_repository}
-                        export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
-                        export TF_VAR_SERVER_CONTAINER_IMAGE=${server_container_image}
-                        export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
-                        export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
-                        export TF_VAR_PRODUCT_VERSION=${product_version}
-                        export TF_VAR_BASE_OS=${base_os}
+            
                         export TERRAFORM=${params.bin_path}
                         export TERRAFORM_PLUGINS=${params.bin_plugins_path}
-                    
+            
                         ./terracumber-cli ${common_params} \
                             --logfile ${resultdirbuild}/sumaform.log \
                             --init \
                             --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
                             --custom-repositories ${WORKSPACE}/custom_repositories.json \
                             --sumaform-backend ${params.sumaform_backend} \
-                            --use-tf-resource-cleaner \
-                            --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} \
+                            --skip-variables-check \
+                            --tf_configuration_files "${outputFile}" \
                             --runstep provision
                     """
-                    // Generate features
+
+                    // Generate features and rake files
                     runCucumberRakeTarget('utils:generate_build_validation_features')
-                    // Generate rake files
                     runCucumberRakeTarget('jenkins:generate_rake_files_build_validation')
                     deployed = true
                 }
             }
 
             stage('Sanity check') {
-                def nodesHandler = getNodesHandler()
+                def nodesHandler = getNodesHandler(params)
                 runCucumberRakeTarget('cucumber:build_validation_sanity_check', false, nodesHandler.envVariableListToDisable)
                 // Extract controller hostname
                 try {
@@ -177,7 +215,7 @@ def run(params) {
             stage('Sync. products and channels') {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
                     // Get minion list from tofu state list command
-                    def nodesHandler = getNodesHandler()
+                    def nodesHandler = getNodesHandler(params)
                     res_products = runCucumberRakeTarget('cucumber:build_validation_reposync', true, nodesHandler.envVariableListToDisable)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     sh "exit ${res_products}"
@@ -342,20 +380,14 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start running the retail tests'
                     }
-                    // ----- Start: Get Terminal List -----
-                    // Dynamically create the terminal list to test depending on the state list
-                    Set<String> terminalsList = new HashSet<String>()
-                    def tfState = sh(script: "cd ${resultdir}/sumaform; tofu state list", returnStdout: true)
-                    String[] moduleList = tfState.split("\n")
-                    moduleList.each { lane ->
-                        def instanceList = lane.tokenize(".")
-                        if (instanceList[1].contains('terminal')) {
-                            terminalsList.add(instanceList[1].replace('_terminal', ''))
-                        }
-                    }
-                    echo "Dynamic Terminal List detected from State: ${terminalsList}"
+                    def nodesHandler = getNodesHandler(params)
+                    // Filter the nodeList for items that are terminals
+                    // The handler already identifies 'terminal' strings in the state
+                    Set<String> terminalsList = nodesHandler.fullNodeList.findAll { it.contains('terminal') }
+                            .collect { it.replace('_terminal', '') }
+                    echo "Dynamic Terminal List detected from Handler: ${terminalsList}"
                     if (terminalsList.isEmpty()) {
-                        error "No terminal modules found in Terraform state! Expected format: module.<name>_terminal..."
+                        error "No terminal modules found in Terraform state!"
                     }
                     // ----- End: Get Terminal List -----
 
@@ -497,8 +529,8 @@ def run(params) {
  * @param return_status Boolean to decide if the command should return the exit status.
  */
 def runCucumberRakeTarget(String rake_target, boolean return_status = false, disableMinions = null) {
-    // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler()),
-    // For compatibility with the original structure where getNodesHandler().envVariableListToDisable is a string.
+    // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler(params)),
+    // For compatibility with the original structure where getNodesHandler(params).envVariableListToDisable is a string.
     def unset_vars = ""
     if (disableMinions) {
         // If it's a list/set, join it to a string. If it's already a string, use it.
@@ -534,7 +566,7 @@ def clientTestingStages(params) {
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
     //Get minion list from tofu state list command
-    def nodesHandler = getNodesHandler()
+    def nodesHandler = getNodesHandler(params)
     def bootstrap_repository_status = nodesHandler.BootstrapRepositoryStatus
     def required_custom_channel_status = nodesHandler.CustomChannelStatus
     // Construct a stage list for each node.
@@ -706,7 +738,7 @@ def clientTestingStages(params) {
     parallel tests
 }
 
-def getNodesHandler() {
+def getNodesHandler(params) {
     // Employ the terraform state list command to generate the list of nodes.
     // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
     Set<String> nodeList = new HashSet<String>()
@@ -716,13 +748,17 @@ def getNodesHandler() {
     modules = sh(script: "cd ${resultdir}/sumaform; tofu state list",
             returnStdout: true)
     String[] moduleList = modules.split("\n")
-    moduleList.each { lane ->
-        def instanceList = lane.tokenize(".")
-        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            nodeList.add(instanceList[1])
-            envVar.add(instanceList[1].replaceAll('sles', 'sle').toUpperCase())
+    moduleList.each { line ->
+        def parts = line.tokenize(".")
+        def nodePart = parts.find { it.contains('minion') || it.contains('client') || it.contains('buildhost') || it.contains('terminal') }
+        if (nodePart) {
+            // Remove the [0] or any other index suffix
+            def cleanNodeName = nodePart.replaceAll(/\[\d+\]/, "")
+            nodeList.add(cleanNodeName)
+            envVar.add(cleanNodeName.replaceAll('sles', 'sle').toUpperCase())
         }
     }
+    echo ("Check minion to run ${params.minions_to_run}")
     // Convert jenkins minions list parameter to list
     Set<String> nodesToRun = params.minions_to_run.split(', ')
     // Create a variable with declared nodes on Jenkins side but not deploy and print it
@@ -734,15 +770,15 @@ def getNodesHandler() {
     // Convert this list to cucumber compatible environment variable
     def envVarDisabledNodes = disabledNodes.collect { it.replaceAll('sles', 'sle').toUpperCase() }
     // Create a node list without the disabled nodes. ( use to configure the client stage )
-    def nodeListWithDisabledNodes = nodeList - disabledNodes
+    def nodeListWithoutDisabledNodes = nodeList - disabledNodes
     // Create a map storing mu synchronization state for each minion.
     // This map is to be sure ssh minions have the MU channel ready.
-    for (node in nodeListWithDisabledNodes ) {
+    for (node in nodeListWithoutDisabledNodes ) {
         BootstrapRepositoryStatus[node] = 'NOT_CREATED'
         CustomChannelStatus[node]       = 'NOT_CREATED'
     }
     // envVariableListToDisable is returned as a space-separated string, as it's used directly in the 'sh' script in 'Sanity check'
-    return [nodeList:nodeListWithDisabledNodes, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes.join(' '), CustomChannelStatus:CustomChannelStatus, BootstrapRepositoryStatus:BootstrapRepositoryStatus]
+    return [nodeList:nodeListWithoutDisabledNodes, fullNodeList: nodeList, envVariableList:envVar, envVariableListToDisable:envVarDisabledNodes.join(' '), CustomChannelStatus:CustomChannelStatus, BootstrapRepositoryStatus:BootstrapRepositoryStatus]
 }
 
 // Creates a stage for each product or client migration feature.

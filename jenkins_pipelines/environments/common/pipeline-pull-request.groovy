@@ -18,9 +18,9 @@ def run(params) {
         environment_workspace = null
         env.common_params = ''
         tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-testing-variables.tf'
-        tfvars_product_version = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-${product_version}.tfvars"
-        tfvars_platform_localisation = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-${platform_localisation}-environments.tfvars"
-        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-testing-additionnal-repos.tf'
+        tfvars_product_version = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-${product_version}.tfvars"
+        tfvars_platform_localisation = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-${platform_localisation}-environments.tfvars"
+        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-additionnal-repos.tf'
         try {
             stage('Get environment') {
                   checkout scm
@@ -210,7 +210,7 @@ def run(params) {
                         // Define test environment parameters
                         env.resultdir = "${WORKSPACE}/results"
                         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
-                        env.tf_file = "susemanager-ci/terracumber_config/tf_files/PR-testing-template.tf"
+                        env.tf_file = "susemanager-ci/terracumber_config/tf_files/templates/PR-testing-template.tf"
                         env.common_params = "--outputdir ${resultdir} --tf ${tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file} --terraform-bin ${params.bin_path}"
 
                         if (params.deploy_parallelism) {

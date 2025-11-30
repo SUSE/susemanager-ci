@@ -1,0 +1,77 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    def minionList = 'sles12sp5_minion, sles12sp5_sshminion, ' +
+            'sles15sp3_minion, sles15sp3_sshminion, ' +
+            'sles15sp4_minion, sles15sp4_sshminion, ' +
+            'sles15sp5_minion, sles15sp5_sshminion, ' +
+            'sles15sp6_minion, sles15sp6_sshminion, ' +
+            'sles15sp7_minion, sles15sp7_sshminion, ' +
+            'salt_migration_minion, ' +
+            'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, ' +
+            'amazon2023_minion, amazon2023_sshminion, ' +
+            'centos7_minion, centos7_sshminion, ' +
+            'liberty9_minion, liberty9_sshminion, ' +
+            'oracle9_minion, oracle9_sshminion, ' +
+            'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, ' +
+            'ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
+            'debian12_minion, debian12_sshminion, ' +
+            'opensuse156arm_minion, opensuse156arm_sshminion, ' +
+            'sles15sp5s390_minion, sles15sp5s390_sshminion, ' +
+            'slemicro52_minion, slemicro53_minion, slemicro54_minion, slemicro55_minion, slmicro60_minion, slmicro61_minion'
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'Manager-5.1', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/templates/template-build-validation-single-provider.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
+                    value: minionList,
+                    defaultValue: minionList,
+                    description: 'Node list to run during BV'),
+            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
+            booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
+            booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
+            booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
+            booleanParam(name: 'enable_proxy_stages', defaultValue: true, description: 'Run Proxy stages'),
+            booleanParam(name: 'enable_monitoring_stages', defaultValue: true, description: 'Run Monitoring stages'),
+            booleanParam(name: 'enable_client_stages', defaultValue: true, description: 'Run Client stages'),
+            booleanParam(name: 'must_add_MU_repositories', defaultValue: true, description: 'Add MU channels'),
+            booleanParam(name: 'must_add_non_MU_repositories', defaultValue: true, description: 'Add non MU channels'),
+            booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
+            booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
+            booleanParam(name: 'must_boot_node', defaultValue: true, description: 'Bootstrap Node'),
+            booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
+            booleanParam(name: 'must_run_products_and_salt_migration_tests', defaultValue: false, description: 'Run products and Salt migration Tests'),
+            booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Bootstrap build hosts'),
+            booleanParam(name: 'must_test_retail_terminal', defaultValue: false, description: 'Test retail terminal deployments'),
+            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
+            booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
+            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
+            ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    def mutableParams = [:] + params
+    mutableParams.sumaform_backend = "libvirt"
+    mutableParams.bin_path = "/usr/bin/tofu"
+    mutableParams.bin_plugins_path = "/usr/bin"
+    mutableParams.product_version_display = '5.1-released'
+    mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
+    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm51_micro_build_validation_nue.tfvars'
+
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
+    pipeline.run(mutableParams)
+}
