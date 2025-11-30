@@ -15,6 +15,7 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+        tfvariables_file  = 'susemanager-ci/terracumber_config/project/variables.tf'
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
@@ -32,7 +33,7 @@ def run(params) {
         def product_version = params.product_version ?: ''
         def base_os = params.base_os ?: ''
 
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file} --terraform-bin ${params.bin_path}"
 
         if (params.deploy_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
@@ -93,7 +94,8 @@ def run(params) {
                         set +x
                         source /home/jenkins/.credentials
                         set -x
-                    
+                        cat susemanager-ci/terracumber_config/project/mlm51_micro_nue.tfvars > ${localSumaformDirPath}/terraform.tfvars
+                        cat susemanager-ci/terracumber_config/project/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
                         export TF_VAR_SERVER_CONTAINER_REPOSITORY=${server_container_repository}
                         export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
                         export TF_VAR_SERVER_CONTAINER_IMAGE=${server_container_image}
