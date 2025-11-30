@@ -1,10 +1,10 @@
 variable "ENVIRONMENT_CONFIGURATION" {
-  type = map
+  type = any
   description = "Collection of values containing: mac addresses, hypervisor and additional network"
 }
 
 variable "PLATFORM_LOCATION_CONFIGURATION" {
-  type = map
+  type = any
   description = "Collection of values containing location specific information"
 }
 
