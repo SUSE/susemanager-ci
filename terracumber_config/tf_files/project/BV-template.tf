@@ -243,7 +243,8 @@ module "proxy_containerized" {
 
 module "sles12sp5_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
+  # count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
+  quantity            = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
   base_configuration = module.base_core.configuration
   name               = "sles12sp5-minion"
   image              = "sles12sp5o"
@@ -1240,7 +1241,7 @@ module "controller" {
   server_configuration = local.empty_server
   # proxy_configuration  = local.proxy_configuration
 
-  sle12sp5_minion_configuration    = module.sles12sp5_minion[0].configuration
+  sle12sp5_minion_configuration    = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
   sle12sp5_sshminion_configuration = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
 
   sle15sp3_minion_configuration    = length(module.sles15sp3_minion) > 0 ? module.sles15sp3_minion[0].configuration : local.empty_minion_config
