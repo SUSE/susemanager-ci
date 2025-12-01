@@ -14,8 +14,8 @@ terraform {
 }
 
 locals {
-  # server_configuration      = strcontains(local.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
-  # proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
+  server_configuration      = strcontains(local.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
+  proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
   product_version           = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
   empty_minion_config = {
     ids          = []
@@ -25,11 +25,6 @@ locals {
     private_name = null
     image = null
   }
-  empty_server = {
-    hostname = ""
-  }
-  # sles12sp5_minion_configuration = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
-  # sles12sp5_minion_configuration = module.sles12sp5_minion[0].configuration
 }
 
 provider "libvirt" {
@@ -108,8 +103,7 @@ module "base_s390" {
 }
 
 module "server" {
-  # count = strcontains(local.product_version, "4.3") ? 1 : 0
-  count = 0
+  count = strcontains(local.product_version, "4.3") ? 1 : 0
 
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
@@ -153,8 +147,7 @@ module "server" {
 
 module "server_containerized" {
   source             = "./modules/server_containerized"
-  # count              = strcontains(local.product_version, "4.3") ? 0 : 1
-  count              = 0
+  count              = strcontains(local.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "server"
   image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server_base_os
@@ -194,8 +187,7 @@ module "server_containerized" {
 }
 
 module "proxy" {
-  # count = strcontains(local.product_version, "4.3") ? 1 : 0
-  count = 0
+  count = strcontains(local.product_version, "4.3") ? 1 : 0
 
   source             = "./modules/proxy"
   base_configuration = module.base_core.configuration
@@ -222,8 +214,7 @@ module "proxy" {
 
 module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
-  # count              = strcontains(local.product_version, "4.3") ? 0 : 1
-  count              = 0
+  count              = strcontains(local.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "proxy"
   image = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.proxy_base_os
@@ -242,39 +233,37 @@ module "proxy_containerized" {
 
 }
 
-# module "sles12sp5_minion" {
-#   source             = "./modules/minion"
-#   # count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
-#   quantity            = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
-#   base_configuration = module.base_core.configuration
-#   name               = "sles12sp5-minion"
-#   image              = "sles12sp5o"
-#   provider_settings  = {
-#     mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles12sp5_minion"]
-#     memory  = 4096
-#   }
-#   auto_connect_to_master  = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-# }
-#
-# module "sles15sp3_minion" {
-#   source             = "./modules/minion"
-#   # count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
-#   quantity            = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
-#   base_configuration = module.base_core.configuration
-#   name               = "sles15sp3-minion"
-#   image              = "sles15sp3o"
-#   provider_settings  = {
-#     mac     = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "")
-#     memory  = 4096
-#   }
-#
-#
-#   auto_connect_to_master  = false
-#   use_os_released_updates = false
-#   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-# }
+module "sles12sp5_minion" {
+  source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = "sles12sp5-minion"
+  image              = "sles12sp5o"
+  provider_settings  = {
+    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles12sp5_minion"]
+    memory  = 4096
+  }
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp3_minion" {
+  source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = "sles15sp3-minion"
+  image              = "sles15sp3o"
+  provider_settings  = {
+    mac     = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "")
+    memory  = 4096
+  }
+
+
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
 
 module "sles15sp4_minion" {
   source             = "./modules/minion"
@@ -573,8 +562,7 @@ module "salt_migration_minion" {
     mac     = var.ENVIRONMENT_CONFIGURATION.mac["salt_migration_minion"]
     memory  = 4096
   }
-  # server_configuration = local.server_configuration
-  server_configuration = local.empty_minion_config
+  server_configuration = local.server_configuration
   auto_connect_to_master  = true
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
@@ -1239,18 +1227,16 @@ module "controller" {
   branch       = var.CUCUMBER_BRANCH
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
-  # server_configuration = local.server_configuration
-  server_configuration = local.empty_server
-  # proxy_configuration  = local.proxy_configuration
+  server_configuration = local.server_configuration
+  proxy_configuration  = local.proxy_configuration
 
-  # sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
+  sle12sp5_minion_configuration = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
   sle12sp5_sshminion_configuration = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
 
-  # sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
+  sle15sp3_minion_configuration = length(module.sles15sp3_minion) > 0 ? module.sles15sp3_minion[0].configuration : local.empty_minion_config
   sle15sp3_sshminion_configuration = length(module.sles15sp3_sshminion) > 0 ? module.sles15sp3_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp4_minion_configuration    =module.sles15sp4_minion[0].configuration
-  # sle15sp4_minion_configuration    = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
+  sle15sp4_minion_configuration    = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
   sle15sp4_sshminion_configuration = length(module.sles15sp4_sshminion) > 0 ? module.sles15sp4_sshminion[0].configuration : local.empty_minion_config
 
   sle15sp5_minion_configuration    = length(module.sles15sp5_minion) > 0 ? module.sles15sp5_minion[0].configuration : local.empty_minion_config
@@ -1323,12 +1309,6 @@ module "controller" {
 output "configuration" {
   value = {
     controller  = module.controller.configuration
-    # server_configuration = local.server_configuration
+    server_configuration = local.server_configuration
   }
 }
-
-# output "debug_sle12sp5_hostnames" {
-#   value = {
-#     minion = module.sles12sp5_minion.configuration
-#   }
-# }
