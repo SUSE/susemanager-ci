@@ -7,6 +7,7 @@ ENVIRONMENT_CONFIGURATION = {
 
     # Standard Minions
     sles12sp5_minion       = "aa:b2:92:42:01:10"
+    sles15sp4_minion       = "aa:b2:92:42:01:12"
   }
   s390 = {
     minion_userid     = "S51MINUE"
