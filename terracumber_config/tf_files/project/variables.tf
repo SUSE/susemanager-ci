@@ -126,3 +126,9 @@ variable "BASE_OS" {
   description = "Optional override for the server base OS image"
   default     = null
 }
+
+variable "PRODUCT_VERSION" {
+  type        = string
+  description = "Optional override for the product version"
+  default     = null
+}
