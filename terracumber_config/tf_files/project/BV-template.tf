@@ -16,7 +16,7 @@ terraform {
 locals {
   server_configuration      = strcontains(local.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
   proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
-  product_version           = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : local.product_version
+  product_version           = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
   empty_minion_config = {
     hostnames    = []
     ids          = []
