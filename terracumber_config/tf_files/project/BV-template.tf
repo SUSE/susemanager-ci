@@ -14,8 +14,9 @@ terraform {
 }
 
 locals {
-  server_configuration      = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
-  proxy_configuration       = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
+  server_configuration      = strcontains(local.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
+  proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
+  product_version           = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : local.product_version
   empty_minion_config = {
     hostnames    = []
     ids          = []
@@ -45,7 +46,7 @@ module "base_core" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = var.ENVIRONMENT_CONFIGURATION.product_version
+  product_version   = local.product_version
   name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
@@ -73,7 +74,7 @@ module "base_arm" {
 
   cc_username       = var.SCC_USER
   cc_password       = var.SCC_PASSWORD
-  product_version   = var.ENVIRONMENT_CONFIGURATION.product_version
+  product_version   = local.product_version
   name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
@@ -95,13 +96,13 @@ module "base_s390" {
 
   name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
-  product_version   = var.ENVIRONMENT_CONFIGURATION.product_version
+  product_version   = local.product_version
 
   testsuite         = true
 }
 
 module "server" {
-  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 1 : 0
+  count = strcontains(local.product_version, "4.3") ? 1 : 0
 
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
@@ -145,7 +146,7 @@ module "server" {
 
 module "server_containerized" {
   source             = "./modules/server_containerized"
-  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 0 : 1
+  count = strcontains(local.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "server"
   image = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server_base_os
@@ -185,7 +186,7 @@ module "server_containerized" {
 }
 
 module "proxy" {
-  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 1 : 0
+  count = strcontains(local.product_version, "4.3") ? 1 : 0
 
   source             = "./modules/proxy"
   base_configuration = module.base_core.configuration
@@ -212,7 +213,7 @@ module "proxy" {
 
 module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
-  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 0 : 1
+  count = strcontains(local.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "proxy"
   image = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.proxy_base_os
@@ -1171,7 +1172,7 @@ module "sles15sp7_terminal" {
 
 module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
-  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 0 : 1
+  count = strcontains(local.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "dhcp-dns"
   image              = "opensuse155o"
