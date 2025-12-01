@@ -1178,7 +1178,7 @@ module "sles15sp7_terminal" {
 
 module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
-  count = strcontains(local.product_version, "4.3") ? 0 : 1
+  count = length(module.proxy_containerized) > 0 ? 1 : 0
   base_configuration = module.base_core.configuration
   name               = "dhcp-dns"
   image              = "opensuse155o"
