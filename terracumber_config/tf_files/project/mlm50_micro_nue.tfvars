@@ -28,7 +28,7 @@ ENVIRONMENT_CONFIGURATION = {
     ubuntu2404_minion      = "aa:b2:92:42:01:1d"
     opensuse156arm_minion  = "aa:b2:92:42:01:2e"
     salt_migration_minion  = "aa:b2:92:42:01:2f"
-    sles15sp5s390_minion   = "02:00:00:42:00:2a"
+    # sles15sp5s390_minion   = "02:00:00:42:00:2a"
 
     # Micro Minions
     slemicro51_minion      = "aa:b2:92:42:01:26"
@@ -58,7 +58,7 @@ ENVIRONMENT_CONFIGURATION = {
     debian12_sshminion       = "aa:b2:92:42:01:3c"
     ubuntu2404_sshminion     = "aa:b2:92:42:01:3d"
     opensuse156arm_sshminion = "aa:b2:92:42:01:4e"
-    sles15sp5s390_sshminion  = "02:00:00:42:00:2b"
+    # sles15sp5s390_sshminion  = "02:00:00:42:00:2b"
   }
   s390 = {
     minion_userid     = "S51MINUE"
