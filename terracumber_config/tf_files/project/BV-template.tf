@@ -23,7 +23,6 @@ locals {
     private_mac = null
     private_ip = null
     private_name = null
-    image = null
   }
 }
 
