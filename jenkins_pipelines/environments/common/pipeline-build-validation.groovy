@@ -101,8 +101,10 @@ def run(params) {
                         echo SERVER_CONTAINER_IMAGE = \\\"${server_container_image}\\\" >> ${localSumaformDirPath}/terraform.tfvars
                         echo CUCUMBER_GITREPO = \\\"${params.cucumber_gitrepo}\\\" >> ${localSumaformDirPath}/terraform.tfvars
                         echo CUCUMBER_BRANCH = \\\"${params.cucumber_ref}\\\" >> ${localSumaformDirPath}/terraform.tfvars
-                        echo PRODUCT_VERSION = \\\"${product_version}\\\" >> ${localSumaformDirPath}/terraform.tfvars
-                        echo BASE_OS = \\\"${base_os}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+
+                        ${product_version ? "echo PRODUCT_VERSION = \\\"${product_version}\\\" >> ${localSumaformDirPath}/terraform.tfvars" : ""}
+                        ${base_os ? "echo BASE_OS = \\\"${base_os}\\\" >> ${localSumaformDirPath}/terraform.tfvars" : ""}
+
                         export TERRAFORM=${params.bin_path}
                         export TERRAFORM_PLUGINS=${params.bin_plugins_path}
                     
