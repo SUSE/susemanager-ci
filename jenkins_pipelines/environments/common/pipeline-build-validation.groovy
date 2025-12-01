@@ -96,13 +96,13 @@ def run(params) {
                         set -x
                         cat susemanager-ci/terracumber_config/tf_files/project/${params.deployment_tfvars} > ${localSumaformDirPath}/terraform.tfvars
                         cat susemanager-ci/terracumber_config/tf_files/project/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
-                        export TF_VAR_SERVER_CONTAINER_REPOSITORY=${server_container_repository}
-                        export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
-                        export TF_VAR_SERVER_CONTAINER_IMAGE=${server_container_image}
-                        export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
-                        export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
-                        export TF_VAR_PRODUCT_VERSION=${product_version}
-                        export TF_VAR_BASE_OS=${base_os}
+                        echo SERVER_CONTAINER_REPOSITORY=${server_container_repository} >> ${localSumaformDirPath}/terraform.tfvars
+                        echo PROXY_CONTAINER_REPOSITORY=${proxy_container_repository} >> ${localSumaformDirPath}/terraform.tfvars
+                        echo SERVER_CONTAINER_IMAGE=${server_container_image} >> ${localSumaformDirPath}/terraform.tfvars
+                        echo CUCUMBER_GITREPO=${params.cucumber_gitrepo} >> ${localSumaformDirPath}/terraform.tfvars
+                        echo CUCUMBER_BRANCH=${params.cucumber_ref} >> ${localSumaformDirPath}/terraform.tfvars
+                        echo PRODUCT_VERSION=${product_version} >> ${localSumaformDirPath}/terraform.tfvars
+                        echo BASE_OS=${base_os} >> ${localSumaformDirPath}/terraform.tfvars
                         export TERRAFORM=${params.bin_path}
                         export TERRAFORM_PLUGINS=${params.bin_plugins_path}
                     

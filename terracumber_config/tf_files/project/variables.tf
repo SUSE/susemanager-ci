@@ -120,3 +120,9 @@ variable "GIT_PASSWORD" {
   type = string
   default = null // Not needed for master, as it is public
 }
+
+variable "BASE_OS" {
+  type        = string
+  description = "Optional override for the server base OS image"
+  default     = null
+}

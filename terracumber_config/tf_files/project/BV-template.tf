@@ -13,6 +13,11 @@ terraform {
   }
 }
 
+locals {
+  server_configuration      = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
+  proxy_configuration       = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
+}
+
 provider "libvirt" {
   uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION.base_core["hypervisor"]}/system"
 }
@@ -88,12 +93,55 @@ module "base_s390" {
   testsuite         = true
 }
 
-module "server_containerized" {
-  source             = "./modules/server_containerized"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "server_containerized", "") != "" ? 1 : 0
+module "server" {
+  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 1 : 0
+
+  source             = "./modules/server"
   base_configuration = module.base_core.configuration
   name               = "server"
-  image              = var.ENVIRONMENT_CONFIGURATION.server_base_os
+  image              = "sles15sp4o"
+  beta_enabled       = false
+  provider_settings = {
+    mac                = var.ENVIRONMENT_CONFIGURATION.mac["server"]
+    memory             = 40960
+    vcpu               = 10
+    data_pool          = "ssd"
+  }
+  main_disk_size        = 100
+  repository_disk_size  = 3072
+  database_disk_size    = 150
+
+  server_mounted_mirror          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
+  java_debugging                 = false
+  auto_accept                    = false
+  monitored                      = true
+  disable_firewall               = false
+  allow_postgres_connections     = false
+  skip_changelog_import          = false
+  create_first_user              = false
+  mgr_sync_autologin             = false
+  create_sample_channel          = false
+  create_sample_activation_key   = false
+  create_sample_bootstrap_script = false
+  publish_private_ssl_key        = false
+  use_os_released_updates        = true
+  disable_download_tokens        = false
+  disable_auto_bootstrap         = true
+  large_deployment               = true
+  ssh_key_path                   = "./salt/controller/id_ed25519.pub"
+  from_email                     = "root@suse.de"
+  accept_all_ssl_protocols       = true
+
+  //server_additional_repos
+
+}
+
+module "server_containerized" {
+  source             = "./modules/server_containerized"
+  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 0 : 1
+  base_configuration = module.base_core.configuration
+  name               = "server"
+  image              = coalesce(var.BASE_OS, var.ENVIRONMENT_CONFIGURATION.server_base_os)
   provider_settings  = {
     mac                = var.ENVIRONMENT_CONFIGURATION.mac["server_containerized"]
     memory             = 40960
@@ -129,12 +177,38 @@ module "server_containerized" {
 
 }
 
+module "proxy" {
+  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 1 : 0
+
+  source             = "./modules/proxy"
+  base_configuration = module.base_core.configuration
+  server_configuration = module.server[0].configuration
+  name               = "proxy"
+  image              = "sles15sp4o"
+  provider_settings = {
+    mac                = var.ENVIRONMENT_CONFIGURATION.mac["proxy"]
+    memory             = 4096
+  }
+  auto_register             = false
+  auto_connect_to_master    = false
+  download_private_ssl_key  = false
+  install_proxy_pattern     = false
+  auto_configure            = false
+  generate_bootstrap_script = false
+  publish_private_ssl_key   = false
+  use_os_released_updates   = true
+  ssh_key_path              = "./salt/controller/id_ed25519.pub"
+
+  //proxy_additional_repos
+
+}
+
 module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "proxy_containerized", "") != "" ? 1 : 0
+  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "proxy"
-  image              = var.ENVIRONMENT_CONFIGURATION.proxy_base_os
+  image              = coalesce(var.BASE_OS, var.ENVIRONMENT_CONFIGURATION.proxy_base_os)
   provider_settings  = {
     mac     = var.ENVIRONMENT_CONFIGURATION.mac["proxy_containerized"]
     memory  = 4096
@@ -479,7 +553,7 @@ module "salt_migration_minion" {
     mac     = var.ENVIRONMENT_CONFIGURATION.mac["salt_migration_minion"]
     memory  = 4096
   }
-  server_configuration = module.server_containerized[0].configuration
+  server_configuration = local.server_configuration
   auto_connect_to_master  = true
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
@@ -1090,6 +1164,7 @@ module "sles15sp7_terminal" {
 
 module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
+  count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "dhcp-dns"
   image              = "opensuse155o"
@@ -1143,8 +1218,8 @@ module "controller" {
   branch       = var.CUCUMBER_BRANCH
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
-  server_configuration = try(module.server_containerized[0].configuration, null)
-  proxy_configuration  = try(module.proxy_containerized[0].configuration, null)
+  server_configuration = local.server_configuration
+  proxy_configuration  = local.proxy_configuration
 
   sle12sp5_minion_configuration    = try(module.sles12sp5_minion[0].configuration, null)
   sle12sp5_sshminion_configuration = try(module.sles12sp5_sshminion[0].configuration, null)
@@ -1225,6 +1300,6 @@ module "controller" {
 output "configuration" {
   value = {
     controller  = module.controller.configuration
-    server      = try(module.server_containerized[0].configuration, null)
+    server_configuration = local.server_configuration
   }
 }
