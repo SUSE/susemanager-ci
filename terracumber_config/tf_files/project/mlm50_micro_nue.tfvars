@@ -66,7 +66,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   server_base_os        = "slemicro55o"
   proxy_base_os         = "slemicro55o"
-  product_version       = "4.3-released"
+  product_version       = "5.0-released"
   name_prefix           = "mlm-bv-51micro-"
   url_prefix            = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.1-micro-qe-build-validation-NUE"
   base_core = {
