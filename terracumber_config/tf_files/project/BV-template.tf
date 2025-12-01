@@ -18,11 +18,13 @@ locals {
   proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
   product_version           = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
   empty_minion_config = {
-    ids          = []
     hostnames    = []
+  }
+  empty_terminal_config ={
     private_mac = null
     private_ip = null
     private_name = null
+    image = null
   }
 }
 
@@ -1299,8 +1301,8 @@ module "controller" {
   sle15sp6_buildhost_configuration = length(module.sles15sp6_buildhost) > 0 ? module.sles15sp6_buildhost[0].configuration : local.empty_minion_config
   sle15sp7_buildhost_configuration = length(module.sles15sp7_buildhost) > 0 ? module.sles15sp7_buildhost[0].configuration : local.empty_minion_config
 
-  sle15sp6_terminal_configuration = length(module.sles15sp6_terminal) > 0 ? module.sles15sp6_terminal[0].configuration : local.empty_minion_config
-  sle15sp7_terminal_configuration = length(module.sles15sp7_terminal) > 0 ? module.sles15sp7_terminal[0].configuration : local.empty_minion_config
+  sle15sp6_terminal_configuration = length(module.sles15sp6_terminal) > 0 ? module.sles15sp6_terminal[0].configuration : local.empty_terminal_config
+  sle15sp7_terminal_configuration = length(module.sles15sp7_terminal) > 0 ? module.sles15sp7_terminal[0].configuration : local.empty_terminal_config
 
   monitoringserver_configuration = length(module.monitoring_server) > 0 ? module.monitoring_server[0].configuration : local.empty_minion_config
 }
