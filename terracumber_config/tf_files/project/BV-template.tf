@@ -1322,3 +1322,7 @@ output "configuration" {
     # server_configuration = local.server_configuration
   }
 }
+
+output "debug_sle12sp5_hostnames" {
+  value = module.sles12sp5_minion[0].configuration
+}
