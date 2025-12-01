@@ -1232,6 +1232,7 @@ module "controller" {
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
   # server_configuration = local.server_configuration
+  server_configuration = local.empty_minion_config
   # proxy_configuration  = local.proxy_configuration
 
   sle12sp5_minion_configuration    = local.sles12sp5_minion_configuration
