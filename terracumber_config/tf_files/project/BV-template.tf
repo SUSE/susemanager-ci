@@ -141,7 +141,7 @@ module "server_containerized" {
   count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "server"
-  image              = coalesce(var.BASE_OS, var.ENVIRONMENT_CONFIGURATION.server_base_os)
+  image = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server_base_os
   provider_settings  = {
     mac                = var.ENVIRONMENT_CONFIGURATION.mac["server_containerized"]
     memory             = 40960
@@ -208,7 +208,7 @@ module "proxy_containerized" {
   count = strcontains(var.ENVIRONMENT_CONFIGURATION.product_version, "4.3") ? 0 : 1
   base_configuration = module.base_core.configuration
   name               = "proxy"
-  image              = coalesce(var.BASE_OS, var.ENVIRONMENT_CONFIGURATION.proxy_base_os)
+  image = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.proxy_base_os
   provider_settings  = {
     mac     = var.ENVIRONMENT_CONFIGURATION.mac["proxy_containerized"]
     memory  = 4096
