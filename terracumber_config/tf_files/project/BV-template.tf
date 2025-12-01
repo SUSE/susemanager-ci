@@ -18,8 +18,8 @@ locals {
   # proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
   product_version           = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
   empty_minion_config = {
-    hostnames    = ["empty"]
-    ids          = []
+    hostnames    = "empty"
+    ids          = "empty"
     ipaddrs      = []
     macaddrs     = []
     private_macs = []
@@ -241,39 +241,39 @@ module "proxy_containerized" {
 
 }
 
-module "sles12sp5_minion" {
-  source             = "./modules/minion"
-  # count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
-  quantity            = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
-  base_configuration = module.base_core.configuration
-  name               = "sles12sp5-minion"
-  image              = "sles12sp5o"
-  provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles12sp5_minion"]
-    memory  = 4096
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-}
-
-module "sles15sp3_minion" {
-  source             = "./modules/minion"
-  # count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
-  quantity            = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
-  base_configuration = module.base_core.configuration
-  name               = "sles15sp3-minion"
-  image              = "sles15sp3o"
-  provider_settings  = {
-    mac     = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "")
-    memory  = 4096
-  }
-
-
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-}
+# module "sles12sp5_minion" {
+#   source             = "./modules/minion"
+#   # count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
+#   quantity            = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? 1 : 0
+#   base_configuration = module.base_core.configuration
+#   name               = "sles12sp5-minion"
+#   image              = "sles12sp5o"
+#   provider_settings  = {
+#     mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles12sp5_minion"]
+#     memory  = 4096
+#   }
+#   auto_connect_to_master  = false
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_ed25519.pub"
+# }
+#
+# module "sles15sp3_minion" {
+#   source             = "./modules/minion"
+#   # count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
+#   quantity            = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
+#   base_configuration = module.base_core.configuration
+#   name               = "sles15sp3-minion"
+#   image              = "sles15sp3o"
+#   provider_settings  = {
+#     mac     = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "")
+#     memory  = 4096
+#   }
+#
+#
+#   auto_connect_to_master  = false
+#   use_os_released_updates = false
+#   ssh_key_path            = "./salt/controller/id_ed25519.pub"
+# }
 
 module "sles15sp4_minion" {
   source             = "./modules/minion"
@@ -1242,10 +1242,10 @@ module "controller" {
   server_configuration = local.empty_server
   # proxy_configuration  = local.proxy_configuration
 
-  sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
+  # sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
   sle12sp5_sshminion_configuration = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
+  # sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
   sle15sp3_sshminion_configuration = length(module.sles15sp3_sshminion) > 0 ? module.sles15sp3_sshminion[0].configuration : local.empty_minion_config
 
   sle15sp4_minion_configuration    = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
@@ -1325,8 +1325,8 @@ output "configuration" {
   }
 }
 
-output "debug_sle12sp5_hostnames" {
-  value = {
-    minion = module.sles12sp5_minion.configuration
-  }
-}
+# output "debug_sle12sp5_hostnames" {
+#   value = {
+#     minion = module.sles12sp5_minion.configuration
+#   }
+# }
