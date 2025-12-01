@@ -24,6 +24,7 @@ locals {
     macaddrs     = []
     private_macs = []
   }
+  sles12sp5_minion_configuration = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
 }
 
 provider "libvirt" {
@@ -1229,7 +1230,7 @@ module "controller" {
   server_configuration = local.server_configuration
   proxy_configuration  = local.proxy_configuration
 
-  sle12sp5_minion_configuration    = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
+  sle12sp5_minion_configuration    = local.sles12sp5_minion_configuration
   sle12sp5_sshminion_configuration = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
 
   sle15sp3_minion_configuration    = length(module.sles15sp3_minion) > 0 ? module.sles15sp3_minion[0].configuration : local.empty_minion_config
