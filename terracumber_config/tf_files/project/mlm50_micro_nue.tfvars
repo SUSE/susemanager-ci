@@ -11,8 +11,8 @@ ENVIRONMENT_CONFIGURATION = {
     # Standard Minions
     sles12sp5_minion       = "aa:b2:92:42:01:10"
     sles15sp3_minion       = "aa:b2:92:42:01:11"
-    sles15sp4_minion       = "aa:b2:92:42:01:12"
-    sles15sp5_minion       = "aa:b2:92:42:01:13"
+    sles15sp4_minion       = ""
+    # sles15sp5_minion       = "aa:b2:92:42:01:13"
     sles15sp6_minion       = "aa:b2:92:42:01:14"
     sles15sp7_minion       = "aa:b2:92:42:01:15"
     centos7_minion         = "aa:b2:92:42:01:17"
