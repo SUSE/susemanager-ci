@@ -25,7 +25,7 @@ locals {
     private_macs = []
   }
   empty_server = {
-    hostname = []
+    hostname = ""
   }
   sles12sp5_minion_configuration = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
 }
