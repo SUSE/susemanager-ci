@@ -28,7 +28,7 @@ locals {
     hostname = ""
   }
   # sles12sp5_minion_configuration = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
-  sles12sp5_minion_configuration = module.sles12sp5_minion[0].configuration
+  # sles12sp5_minion_configuration = module.sles12sp5_minion[0].configuration
 }
 
 provider "libvirt" {
@@ -265,7 +265,7 @@ module "sles15sp3_minion" {
   name               = "sles15sp3-minion"
   image              = "sles15sp3o"
   provider_settings  = {
-    mac     = var.ENVIRONMENT_CONFIGURATION.mac["sles15sp3_minion"]
+    mac     = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "")
     memory  = 4096
   }
 
