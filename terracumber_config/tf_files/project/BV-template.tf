@@ -259,7 +259,8 @@ module "sles12sp5_minion" {
 
 module "sles15sp3_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
+  # count              = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
+  quantity            = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles15sp3_minion", "") != "" ? 1 : 0
   base_configuration = module.base_core.configuration
   name               = "sles15sp3-minion"
   image              = "sles15sp3o"
@@ -1241,10 +1242,10 @@ module "controller" {
   server_configuration = local.empty_server
   # proxy_configuration  = local.proxy_configuration
 
-  sle12sp5_minion_configuration    = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
+  sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
   sle12sp5_sshminion_configuration = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp3_minion_configuration    = length(module.sles15sp3_minion) > 0 ? module.sles15sp3_minion[0].configuration : local.empty_minion_config
+  sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
   sle15sp3_sshminion_configuration = length(module.sles15sp3_sshminion) > 0 ? module.sles15sp3_sshminion[0].configuration : local.empty_minion_config
 
   sle15sp4_minion_configuration    = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
@@ -1326,6 +1327,6 @@ output "configuration" {
 
 output "debug_sle12sp5_hostnames" {
   value = {
-    minion = module.sles12sp5_minion[0].configuration
+    minion = module.sles12sp5_minion.configuration
   }
 }
