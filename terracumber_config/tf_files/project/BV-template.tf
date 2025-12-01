@@ -1250,7 +1250,8 @@ module "controller" {
   # sle15sp3_minion_configuration    = module.sles15sp3_minion.configuration
   sle15sp3_sshminion_configuration = length(module.sles15sp3_sshminion) > 0 ? module.sles15sp3_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp4_minion_configuration    = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
+  sle15sp4_minion_configuration    =module.sles15sp4_minion[0].configuration
+  # sle15sp4_minion_configuration    = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
   sle15sp4_sshminion_configuration = length(module.sles15sp4_sshminion) > 0 ? module.sles15sp4_sshminion[0].configuration : local.empty_minion_config
 
   sle15sp5_minion_configuration    = length(module.sles15sp5_minion) > 0 ? module.sles15sp5_minion[0].configuration : local.empty_minion_config
