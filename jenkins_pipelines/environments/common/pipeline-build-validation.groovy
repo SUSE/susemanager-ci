@@ -90,6 +90,34 @@ def run(params) {
                         }
                     }
                     // Run Terracumber to deploy the environment
+//                    sh """
+//                        set +x
+//                        source /home/jenkins/.credentials
+//                        set -x
+//                        cat susemanager-ci/terracumber_config/tf_files/project/${params.deployment_tfvars} > ${localSumaformDirPath}/terraform.tfvars
+//                        cat susemanager-ci/terracumber_config/tf_files/project/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
+//                        echo SERVER_CONTAINER_REPOSITORY = \\\"${server_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+//                        echo PROXY_CONTAINER_REPOSITORY = \\\"${proxy_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+//                        echo SERVER_CONTAINER_IMAGE = \\\"${server_container_image}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+//                        echo CUCUMBER_GITREPO = \\\"${params.cucumber_gitrepo}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+//                        echo CUCUMBER_BRANCH = \\\"${params.cucumber_ref}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+//
+//                        ${product_version ? "echo PRODUCT_VERSION = \\\"${product_version}\\\" >> ${localSumaformDirPath}/terraform.tfvars" : ""}
+//                        ${base_os ? "echo BASE_OS = \\\"${base_os}\\\" >> ${localSumaformDirPath}/terraform.tfvars" : ""}
+//
+//                        export TERRAFORM=${params.bin_path}
+//                        export TERRAFORM_PLUGINS=${params.bin_plugins_path}
+//
+//                        ./terracumber-cli ${common_params} \
+//                            --logfile ${resultdirbuild}/sumaform.log \
+//                            --init \
+//                            --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
+//                            --custom-repositories ${WORKSPACE}/custom_repositories.json \
+//                            --sumaform-backend ${params.sumaform_backend} \
+//                            --use-tf-resource-cleaner \
+//                            --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} \
+//                            --runstep provision
+//                    """
                     sh """
                         set +x
                         source /home/jenkins/.credentials
@@ -114,8 +142,6 @@ def run(params) {
                             --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
                             --custom-repositories ${WORKSPACE}/custom_repositories.json \
                             --sumaform-backend ${params.sumaform_backend} \
-                            --use-tf-resource-cleaner \
-                            --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} \
                             --runstep provision
                     """
                     // Generate features
