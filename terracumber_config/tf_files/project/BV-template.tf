@@ -18,13 +18,12 @@ locals {
   # proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
   product_version           = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
   empty_minion_config = {
-    id           = ""       # <--- Added
-    hostname     = ""       # <--- Added (Scalar)
     ids          = []
-    hostnames    = []         # <--- Kept for compatibility
-    ipaddrs      = []
-    macaddrs     = []
-    private_macs = []
+    hostnames    = []
+    private_mac = null
+    private_ip = null
+    private_name = null
+    image = null
   }
   empty_server = {
     hostname = ""
