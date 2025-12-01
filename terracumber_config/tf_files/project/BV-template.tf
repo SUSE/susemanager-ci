@@ -24,7 +24,7 @@ locals {
     macaddrs     = []
     private_macs = []
   }
-  sles12sp5_minion_configuration = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
+  sles12sp5_minion_configuration = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
 }
 
 provider "libvirt" {
@@ -103,7 +103,8 @@ module "base_s390" {
 }
 
 module "server" {
-  count = strcontains(local.product_version, "4.3") ? 1 : 0
+  # count = strcontains(local.product_version, "4.3") ? 1 : 0
+  count = 0
 
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
@@ -147,10 +148,11 @@ module "server" {
 
 module "server_containerized" {
   source             = "./modules/server_containerized"
-  count = strcontains(local.product_version, "4.3") ? 0 : 1
+  # count              = strcontains(local.product_version, "4.3") ? 0 : 1
+  count              = 0
   base_configuration = module.base_core.configuration
   name               = "server"
-  image = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server_base_os
+  image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server_base_os
   provider_settings  = {
     mac                = var.ENVIRONMENT_CONFIGURATION.mac["server_containerized"]
     memory             = 40960
@@ -187,7 +189,8 @@ module "server_containerized" {
 }
 
 module "proxy" {
-  count = strcontains(local.product_version, "4.3") ? 1 : 0
+  # count = strcontains(local.product_version, "4.3") ? 1 : 0
+  count = 0
 
   source             = "./modules/proxy"
   base_configuration = module.base_core.configuration
@@ -214,7 +217,8 @@ module "proxy" {
 
 module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
-  count = strcontains(local.product_version, "4.3") ? 0 : 1
+  # count              = strcontains(local.product_version, "4.3") ? 0 : 1
+  count              = 0
   base_configuration = module.base_core.configuration
   name               = "proxy"
   image = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.proxy_base_os
@@ -1227,8 +1231,8 @@ module "controller" {
   branch       = var.CUCUMBER_BRANCH
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
-  server_configuration = local.server_configuration
-  proxy_configuration  = local.proxy_configuration
+  # server_configuration = local.server_configuration
+  # proxy_configuration  = local.proxy_configuration
 
   sle12sp5_minion_configuration    = local.sles12sp5_minion_configuration
   sle12sp5_sshminion_configuration = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
