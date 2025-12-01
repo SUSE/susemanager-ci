@@ -14,8 +14,8 @@ terraform {
 }
 
 locals {
-  server_configuration      = strcontains(local.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
-  proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
+  # server_configuration      = strcontains(local.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
+  # proxy_configuration       = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
   product_version           = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
   empty_minion_config = {
     hostnames    = []
@@ -23,6 +23,9 @@ locals {
     ipaddrs      = []
     macaddrs     = []
     private_macs = []
+  }
+  empty_server = {
+    hostname = []
   }
   sles12sp5_minion_configuration = lookup(var.ENVIRONMENT_CONFIGURATION.mac, "sles12sp5_minion", "") != "" ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
 }
@@ -566,7 +569,8 @@ module "salt_migration_minion" {
     mac     = var.ENVIRONMENT_CONFIGURATION.mac["salt_migration_minion"]
     memory  = 4096
   }
-  server_configuration = local.server_configuration
+  # server_configuration = local.server_configuration
+  server_configuration = local.empty_minion_config
   auto_connect_to_master  = true
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
@@ -1232,7 +1236,7 @@ module "controller" {
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
   # server_configuration = local.server_configuration
-  server_configuration = local.empty_minion_config
+  server_configuration = local.empty_server
   # proxy_configuration  = local.proxy_configuration
 
   sle12sp5_minion_configuration    = local.sles12sp5_minion_configuration
@@ -1314,6 +1318,6 @@ module "controller" {
 output "configuration" {
   value = {
     controller  = module.controller.configuration
-    server_configuration = local.server_configuration
+    # server_configuration = local.server_configuration
   }
 }
