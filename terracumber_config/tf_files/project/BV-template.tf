@@ -1229,80 +1229,80 @@ module "controller" {
   server_configuration = local.server_configuration
   proxy_configuration  = local.proxy_configuration
 
-  sle12sp5_minion_configuration    = try(module.sles12sp5_minion[0].configuration, local.empty_minion_config)
-  sle12sp5_sshminion_configuration = try(module.sles12sp5_sshminion[0].configuration, local.empty_minion_config)
+  sle12sp5_minion_configuration    = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
+  sle12sp5_sshminion_configuration = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp3_minion_configuration    = try(module.sles15sp3_minion[0].configuration, local.empty_minion_config)
-  sle15sp3_sshminion_configuration = try(module.sles15sp3_sshminion[0].configuration, local.empty_minion_config)
+  sle15sp3_minion_configuration    = length(module.sles15sp3_minion) > 0 ? module.sles15sp3_minion[0].configuration : local.empty_minion_config
+  sle15sp3_sshminion_configuration = length(module.sles15sp3_sshminion) > 0 ? module.sles15sp3_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp4_minion_configuration    = try(module.sles15sp4_minion[0].configuration, local.empty_minion_config)
-  sle15sp4_sshminion_configuration = try(module.sles15sp4_sshminion[0].configuration, local.empty_minion_config)
+  sle15sp4_minion_configuration    = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
+  sle15sp4_sshminion_configuration = length(module.sles15sp4_sshminion) > 0 ? module.sles15sp4_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp5_minion_configuration    = try(module.sles15sp5_minion[0].configuration, local.empty_minion_config)
-  sle15sp5_sshminion_configuration = try(module.sles15sp5_sshminion[0].configuration, local.empty_minion_config)
+  sle15sp5_minion_configuration    = length(module.sles15sp5_minion) > 0 ? module.sles15sp5_minion[0].configuration : local.empty_minion_config
+  sle15sp5_sshminion_configuration = length(module.sles15sp5_sshminion) > 0 ? module.sles15sp5_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp6_minion_configuration    = try(module.sles15sp6_minion[0].configuration, local.empty_minion_config)
-  sle15sp6_sshminion_configuration = try(module.sles15sp6_sshminion[0].configuration, local.empty_minion_config)
+  sle15sp6_minion_configuration    = length(module.sles15sp6_minion) > 0 ? module.sles15sp6_minion[0].configuration : local.empty_minion_config
+  sle15sp6_sshminion_configuration = length(module.sles15sp6_sshminion) > 0 ? module.sles15sp6_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp7_minion_configuration    = try(module.sles15sp7_minion[0].configuration, local.empty_minion_config)
-  sle15sp7_sshminion_configuration = try(module.sles15sp7_sshminion[0].configuration, local.empty_minion_config)
+  sle15sp7_minion_configuration    = length(module.sles15sp7_minion) > 0 ? module.sles15sp7_minion[0].configuration : local.empty_minion_config
+  sle15sp7_sshminion_configuration = length(module.sles15sp7_sshminion) > 0 ? module.sles15sp7_sshminion[0].configuration : local.empty_minion_config
 
-  alma8_minion_configuration    = try(module.alma8_minion[0].configuration, local.empty_minion_config)
-  alma8_sshminion_configuration = try(module.alma8_sshminion[0].configuration, local.empty_minion_config)
+  alma8_minion_configuration    = length(module.alma8_minion) > 0 ? module.alma8_minion[0].configuration : local.empty_minion_config
+  alma8_sshminion_configuration = length(module.alma8_sshminion) > 0 ? module.alma8_sshminion[0].configuration : local.empty_minion_config
 
-  alma9_minion_configuration    = try(module.alma9_minion[0].configuration, local.empty_minion_config)
-  alma9_sshminion_configuration = try(module.alma9_sshminion[0].configuration, local.empty_minion_config)
+  alma9_minion_configuration    = length(module.alma9_minion) > 0 ? module.alma9_minion[0].configuration : local.empty_minion_config
+  alma9_sshminion_configuration = length(module.alma9_sshminion) > 0 ? module.alma9_sshminion[0].configuration : local.empty_minion_config
 
-  amazon2023_minion_configuration    = try(module.amazon2023_minion[0].configuration, local.empty_minion_config)
-  amazon2023_sshminion_configuration = try(module.amazon2023_sshminion[0].configuration, local.empty_minion_config)
+  amazon2023_minion_configuration    = length(module.amazon2023_minion) > 0 ? module.amazon2023_minion[0].configuration : local.empty_minion_config
+  amazon2023_sshminion_configuration = length(module.amazon2023_sshminion) > 0 ? module.amazon2023_sshminion[0].configuration : local.empty_minion_config
 
-  centos7_minion_configuration    = try(module.centos7_minion[0].configuration, local.empty_minion_config)
-  centos7_sshminion_configuration = try(module.centos7_sshminion[0].configuration, local.empty_minion_config)
+  centos7_minion_configuration    = length(module.centos7_minion) > 0 ? module.centos7_minion[0].configuration : local.empty_minion_config
+  centos7_sshminion_configuration = length(module.centos7_sshminion) > 0 ? module.centos7_sshminion[0].configuration : local.empty_minion_config
 
-  liberty9_minion_configuration    = try(module.liberty9_minion[0].configuration, local.empty_minion_config)
-  liberty9_sshminion_configuration = try(module.liberty9_sshminion[0].configuration, local.empty_minion_config)
+  liberty9_minion_configuration    = length(module.liberty9_minion) > 0 ? module.liberty9_minion[0].configuration : local.empty_minion_config
+  liberty9_sshminion_configuration = length(module.liberty9_sshminion) > 0 ? module.liberty9_sshminion[0].configuration : local.empty_minion_config
 
-  oracle9_minion_configuration    = try(module.oracle9_minion[0].configuration, local.empty_minion_config)
-  oracle9_sshminion_configuration = try(module.oracle9_sshminion[0].configuration, local.empty_minion_config)
+  oracle9_minion_configuration    = length(module.oracle9_minion) > 0 ? module.oracle9_minion[0].configuration : local.empty_minion_config
+  oracle9_sshminion_configuration = length(module.oracle9_sshminion) > 0 ? module.oracle9_sshminion[0].configuration : local.empty_minion_config
 
-  rocky8_minion_configuration    = try(module.rocky8_minion[0].configuration, local.empty_minion_config)
-  rocky8_sshminion_configuration = try(module.rocky8_sshminion[0].configuration, local.empty_minion_config)
+  rocky8_minion_configuration    = length(module.rocky8_minion) > 0 ? module.rocky8_minion[0].configuration : local.empty_minion_config
+  rocky8_sshminion_configuration = length(module.rocky8_sshminion) > 0 ? module.rocky8_sshminion[0].configuration : local.empty_minion_config
 
-  rocky9_minion_configuration    = try(module.rocky9_minion[0].configuration, local.empty_minion_config)
-  rocky9_sshminion_configuration = try(module.rocky9_sshminion[0].configuration, local.empty_minion_config)
+  rocky9_minion_configuration    = length(module.rocky9_minion) > 0 ? module.rocky9_minion[0].configuration : local.empty_minion_config
+  rocky9_sshminion_configuration = length(module.rocky9_sshminion) > 0 ? module.rocky9_sshminion[0].configuration : local.empty_minion_config
 
-  ubuntu2204_minion_configuration    = try(module.ubuntu2204_minion[0].configuration, local.empty_minion_config)
-  ubuntu2204_sshminion_configuration = try(module.ubuntu2204_sshminion[0].configuration, local.empty_minion_config)
+  ubuntu2204_minion_configuration    = length(module.ubuntu2204_minion) > 0 ? module.ubuntu2204_minion[0].configuration : local.empty_minion_config
+  ubuntu2204_sshminion_configuration = length(module.ubuntu2204_sshminion) > 0 ? module.ubuntu2204_sshminion[0].configuration : local.empty_minion_config
 
-  ubuntu2404_minion_configuration    = try(module.ubuntu2404_minion[0].configuration, local.empty_minion_config)
-  ubuntu2404_sshminion_configuration = try(module.ubuntu2404_sshminion[0].configuration, local.empty_minion_config)
+  ubuntu2404_minion_configuration    = length(module.ubuntu2404_minion) > 0 ? module.ubuntu2404_minion[0].configuration : local.empty_minion_config
+  ubuntu2404_sshminion_configuration = length(module.ubuntu2404_sshminion) > 0 ? module.ubuntu2404_sshminion[0].configuration : local.empty_minion_config
 
-  debian12_minion_configuration    = try(module.debian12_minion[0].configuration, local.empty_minion_config)
-  debian12_sshminion_configuration = try(module.debian12_sshminion[0].configuration, local.empty_minion_config)
+  debian12_minion_configuration    = length(module.debian12_minion) > 0 ? module.debian12_minion[0].configuration : local.empty_minion_config
+  debian12_sshminion_configuration = length(module.debian12_sshminion) > 0 ? module.debian12_sshminion[0].configuration : local.empty_minion_config
 
-  opensuse156arm_minion_configuration    = try(module.opensuse156arm_minion[0].configuration, local.empty_minion_config)
-  opensuse156arm_sshminion_configuration = try(module.opensuse156arm_sshminion[0].configuration, local.empty_minion_config)
+  opensuse156arm_minion_configuration    = length(module.opensuse156arm_minion) > 0 ? module.opensuse156arm_minion[0].configuration : local.empty_minion_config
+  opensuse156arm_sshminion_configuration = length(module.opensuse156arm_sshminion) > 0 ? module.opensuse156arm_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp5s390_minion_configuration    = try(module.sles15sp5s390_minion[0].configuration, local.empty_minion_config)
-  sle15sp5s390_sshminion_configuration = try(module.sles15sp5s390_sshminion[0].configuration, local.empty_minion_config)
+  sle15sp5s390_minion_configuration    = length(module.sles15sp5s390_minion) > 0 ? module.sles15sp5s390_minion[0].configuration : local.empty_minion_config
+  sle15sp5s390_sshminion_configuration = length(module.sles15sp5s390_sshminion) > 0 ? module.sles15sp5s390_sshminion[0].configuration : local.empty_minion_config
 
-  salt_migration_minion_configuration = try(module.salt_migration_minion[0].configuration, local.empty_minion_config)
+  salt_migration_minion_configuration = length(module.salt_migration_minion) > 0 ? module.salt_migration_minion[0].configuration : local.empty_minion_config
 
-  slemicro51_minion_configuration    = try(module.slemicro51_minion[0].configuration, local.empty_minion_config)
-  slemicro52_minion_configuration    = try(module.slemicro52_minion[0].configuration, local.empty_minion_config)
-  slemicro53_minion_configuration    = try(module.slemicro53_minion[0].configuration, local.empty_minion_config)
-  slemicro54_minion_configuration    = try(module.slemicro54_minion[0].configuration, local.empty_minion_config)
-  slemicro55_minion_configuration    = try(module.slemicro55_minion[0].configuration, local.empty_minion_config)
-  slmicro60_minion_configuration     = try(module.slmicro60_minion[0].configuration, local.empty_minion_config)
-  slmicro61_minion_configuration     = try(module.slmicro61_minion[0].configuration, local.empty_minion_config)
+  slemicro51_minion_configuration    = length(module.slemicro51_minion) > 0 ? module.slemicro51_minion[0].configuration : local.empty_minion_config
+  slemicro52_minion_configuration    = length(module.slemicro52_minion) > 0 ? module.slemicro52_minion[0].configuration : local.empty_minion_config
+  slemicro53_minion_configuration    = length(module.slemicro53_minion) > 0 ? module.slemicro53_minion[0].configuration : local.empty_minion_config
+  slemicro54_minion_configuration    = length(module.slemicro54_minion) > 0 ? module.slemicro54_minion[0].configuration : local.empty_minion_config
+  slemicro55_minion_configuration    = length(module.slemicro55_minion) > 0 ? module.slemicro55_minion[0].configuration : local.empty_minion_config
+  slmicro60_minion_configuration     = length(module.slmicro60_minion) > 0 ? module.slmicro60_minion[0].configuration : local.empty_minion_config
+  slmicro61_minion_configuration     = length(module.slmicro61_minion) > 0 ? module.slmicro61_minion[0].configuration : local.empty_minion_config
 
-  sle15sp6_buildhost_configuration = try(module.sles15sp6_buildhost[0].configuration, local.empty_minion_config)
-  sle15sp7_buildhost_configuration = try(module.sles15sp7_buildhost[0].configuration, local.empty_minion_config)
+  sle15sp6_buildhost_configuration = length(module.sles15sp6_buildhost) > 0 ? module.sles15sp6_buildhost[0].configuration : local.empty_minion_config
+  sle15sp7_buildhost_configuration = length(module.sles15sp7_buildhost) > 0 ? module.sles15sp7_buildhost[0].configuration : local.empty_minion_config
 
-  sle15sp6_terminal_configuration = try(module.sles15sp6_terminal[0].configuration, local.empty_minion_config)
-  sle15sp7_terminal_configuration = try(module.sles15sp7_terminal[0].configuration, local.empty_minion_config)
+  sle15sp6_terminal_configuration = length(module.sles15sp6_terminal) > 0 ? module.sles15sp6_terminal[0].configuration : local.empty_minion_config
+  sle15sp7_terminal_configuration = length(module.sles15sp7_terminal) > 0 ? module.sles15sp7_terminal[0].configuration : local.empty_minion_config
 
-  monitoringserver_configuration = try(module.monitoring_server[0].configuration, local.empty_minion_config)
+  monitoringserver_configuration = length(module.monitoring_server) > 0 ? module.monitoring_server[0].configuration : local.empty_minion_config
 }
 
 output "configuration" {
