@@ -1239,9 +1239,6 @@ module "controller" {
   # server_configuration = local.server_configuration
   server_configuration = local.empty_server
   # proxy_configuration  = local.proxy_configuration
-  depends_on = [
-    module.sles12sp5_minion
-  ]
 
   sle12sp5_minion_configuration    = module.sles12sp5_minion[0].configuration
   sle12sp5_sshminion_configuration = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
