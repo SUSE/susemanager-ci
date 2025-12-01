@@ -1324,5 +1324,7 @@ output "configuration" {
 }
 
 output "debug_sle12sp5_hostnames" {
-  value = module.sles12sp5_minion[0].configuration
+  value = {
+    minion = module.sles12sp5_minion[0].configuration
+  }
 }
