@@ -782,7 +782,6 @@ def getNodesHandler() {
             envVar.add(instanceList[1].replaceAll('sles', 'sle').toUpperCase())
         }
     }
-    echo ("Minion list ${params.minions_to_run}")
     // Convert jenkins minions list parameter to list
     Set<String> nodesToRun = params.minions_to_run.split(', ')
     // Create a variable with declared nodes on Jenkins side but not deploy and print it
