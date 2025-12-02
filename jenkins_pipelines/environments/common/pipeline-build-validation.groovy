@@ -774,6 +774,7 @@ def getNodesHandler() {
     def CustomChannelStatus       = [:]
     modules = sh(script: "cd ${resultdir}/sumaform; tofu state list",
             returnStdout: true)
+    echo ("Path: ${resultdir}/sumaform Modules ${modules}")
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
