@@ -765,7 +765,7 @@ def clientTestingStages(params) {
     parallel tests
 }
 
-def getNodesHandler() {
+def getNodesHandler(params) {
     // Employ the terraform state list command to generate the list of nodes.
     // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
     Set<String> nodeList = new HashSet<String>()
