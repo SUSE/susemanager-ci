@@ -33,10 +33,6 @@ ENVIRONMENT_CONFIGURATION = {
   }
 }
 
-# Cucumber Overrides
-CUCUMBER_GITREPO = "https://github.com/SUSE/spacewalk.git"
-CUCUMBER_BRANCH  = "Manager-5.1"
-
 MAIL_SUBJECT          = "Results 5.1 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results 5.1 Build Validation: Environment setup failed"
 LOCATION              = "nue"
