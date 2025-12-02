@@ -29,7 +29,7 @@ ENVIRONMENT_CONFIGURATION = {
     pool       = "ssd"
     bridge     = "br1"
     hypervisor = "suma-11.mgr.suse.de"
-    # additional_network is not defined
+    additional_network = null
   }
 }
 
