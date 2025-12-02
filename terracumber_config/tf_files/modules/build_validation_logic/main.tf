@@ -43,18 +43,18 @@ module "server" {
   base_configuration = local.base_default
   name               = "server"
   image              = "sles15sp4o"
-
+  beta_enabled       = false
   provider_settings = {
     mac       = var.ENVIRONMENT_CONFIGURATION.server.mac
     memory    = 40960
     vcpu      = 10
     data_pool = "ssd"
   }
+  main_disk_size       = 100
+  repository_disk_size = 3072
+  database_disk_size   = 150
 
-  main_disk_size                 = 100
-  repository_disk_size           = 3072
-  database_disk_size             = 150
-  server_mounted_mirror          = var.PLATFORM_LOCATION_CONFIGURATION.mirror
+  server_mounted_mirror          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   java_debugging                 = false
   auto_accept                    = false
   monitored                      = true
@@ -74,6 +74,8 @@ module "server" {
   ssh_key_path                   = "./salt/controller/id_ed25519.pub"
   from_email                     = "root@suse.de"
   accept_all_ssl_protocols       = true
+
+  //server_additional_repos
 }
 
 module "server_containerized" {
@@ -81,23 +83,22 @@ module "server_containerized" {
   count               = lookup(var.ENVIRONMENT_CONFIGURATION, "server_containerized", null) != null ? 1 : 0
   base_configuration = local.base_default
   name               = var.ENVIRONMENT_CONFIGURATION.server_containerized.name
-  image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server_base_os
-
+  image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server.image
   provider_settings = {
     mac    = var.ENVIRONMENT_CONFIGURATION.server_containerized.mac
     memory = 40960
     vcpu   = 10
   }
-
   runtime              = "podman"
   container_repository = var.SERVER_CONTAINER_REPOSITORY
   container_image      = var.SERVER_CONTAINER_IMAGE
-  container_tag        = "latest"
   main_disk_size       = 100
-  repository_disk_size = 3072
-  database_disk_size   = 150
 
-  server_mounted_mirror          = var.PLATFORM_LOCATION_CONFIGURATION.mirror
+  repository_disk_size           = 3072
+  database_disk_size             = 150
+  container_tag                  = "latest"
+  beta_enabled                   = false
+  server_mounted_mirror          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   java_debugging                 = false
   auto_accept                    = false
   disable_firewall               = false
@@ -114,68 +115,54 @@ module "server_containerized" {
   ssh_key_path                   = "./salt/controller/id_ed25519.pub"
   from_email                     = "root@suse.de"
   provision                      = true
+
+  //server_additional_repos
 }
 
-# -------------------------------------------------------------------
-# 2. PROXY (RETAIL)
-# -------------------------------------------------------------------
-
-# Option A: VM Proxy (Legacy 4.3)
 module "proxy" {
   providers = { libvirt = libvirt.host_retail }
   source             = "../proxy"
   count               = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy", null) != null ? 1 : 0
   base_configuration = local.base_retail
-  server_configuration = local.server_configuration
-  name               = "proxy"
-  image              = "sles15sp4o"
+  server_configuration = module.server[0].configuration
+  name                 = "proxy"
+  image                = "sles15sp4o"
   provider_settings = {
     mac    = var.ENVIRONMENT_CONFIGURATION.proxy.mac
     memory = 4096
   }
-  auto_register            = false
-  auto_connect_to_master   = false
-  download_private_ssl_key = false
-  install_proxy_pattern    = false
-  auto_configure           = false
-  generate_bootstrap_script= false
-  publish_private_ssl_key  = false
-  use_os_released_updates  = true
-  ssh_key_path             = "./salt/controller/id_ed25519.pub"
+  auto_register             = false
+  auto_connect_to_master    = false
+  download_private_ssl_key  = false
+  install_proxy_pattern     = false
+  auto_configure            = false
+  generate_bootstrap_script = false
+  publish_private_ssl_key   = false
+  use_os_released_updates   = true
+  ssh_key_path              = "./salt/controller/id_ed25519.pub"
+
+  //proxy_additional_repos
 }
 
-# Option B: Containerized Proxy (5.0+)
 module "proxy_containerized" {
   providers = { libvirt = libvirt.host_retail }
   source             = "../proxy_containerized"
   count               = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
   base_configuration = local.base_retail
   name               = var.ENVIRONMENT_CONFIGURATION.proxy_containerized.name
-  image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.proxy_base_os
-
+  image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.proxy_containerized.image
   provider_settings = {
     mac    = var.ENVIRONMENT_CONFIGURATION.proxy_containerized.mac
     memory = 4096
   }
-
-  # For Proxy, we manually specify server details if needed,
-  # or rely on the server module output if the proxy module supports it.
-  server_configuration = {
-    hostname = local.server_config.hostname
-    username = "admin"
-    password = "admin"
-  }
-
   runtime              = "podman"
   container_repository = var.PROXY_CONTAINER_REPOSITORY
   container_tag        = "latest"
   auto_configure       = false
   ssh_key_path         = "./salt/controller/id_ed25519.pub"
-}
+  provision            = true
 
-# Unified Proxy Config
-locals {
-  proxy_config = local.use_vm_server ? (length(module.proxy) > 0 ? module.proxy[0].configuration : null) : (length(module.proxy_containerized) > 0 ? module.proxy_containerized[0].configuration : null)
+  //proxy_additional_repos
 }
 
 # -------------------------------------------------------------------
