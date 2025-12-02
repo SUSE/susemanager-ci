@@ -98,7 +98,7 @@ def generate_bv_tfvars(user, env_data, jenkins_params, output_file):
         # 3. GLOBAL SETTINGS
         f.write(f'\n  # Global Settings\n')
         f.write(f'  product_version = "{jenkins_params.get("product_version", "5.1-released")}"\n')
-        f.write(f'  name_prefix     = "{user}-bv-"\n')
+        f.write(f'  name_prefix     = "{user}-"\n')
         f.write(f'  base_core = {{\n')
         f.write(f'    pool               = "{core.get("pool", "MISSING")}"\n')
         f.write(f'    bridge             = "{core.get("bridge", "MISSING")}"\n')
