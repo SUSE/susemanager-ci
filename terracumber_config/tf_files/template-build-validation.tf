@@ -1191,7 +1191,10 @@ module "sles15sp7_terminal" {
 
 module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
-  count              = length(module.proxy_containerized) > 0 ? 1 : 0
+  count = (
+  length(module.proxy_containerized) > 0 &&
+  try(var.ENVIRONMENT_CONFIGURATION.base_core["additional_network"], null) != null
+  ) ? 1 : 0
   base_configuration = module.base_core.configuration
   name               = "dhcp-dns"
   image              = "opensuse155o"
