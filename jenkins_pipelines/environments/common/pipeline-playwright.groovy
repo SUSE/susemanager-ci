@@ -62,21 +62,9 @@ def run(params) {
                         sh "echo 'CONTAINER_REPOSITORY=\"${params.container_repository}\"' >> ${resultdir}/sumaform/terraform.tfvars"
                     }
                     sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${TERRAFORM_INIT} ${TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
+                    // Temporary fix until we change sumaform to support the playwright test framework
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'wget -q -O- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash && . ~/.bashrc && nvm install node'"
                     deployed = true
-                }
-            }
-            stage('Product changes') {
-                if (params.show_product_changes) {
-                    sh """
-                        # Comparison between:
-                        #  - the previous git revision of spacewalk (or uyuni) repository pushed in IBS (or OBS)
-                        #  - the git revision of the current spacewalk (or uyuni) repository pushed in IBS (or OBS)
-                        # Note: This is a trade-off, we should be comparing the git revisions of all the packages composing our product
-                        #       For that extra mile, we need a new tag in the repo metadata of each built, with the git revision of the related repository.
-                    """
-                    sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\"%h %<(16,trunc)%cn  %s  %d\" ${previous_commit}..${product_commit}'", returnStatus:true
-                } else {
-                    println("Product changes disabled, checkbox 'show_product_changes' was not enabled'")
                 }
             }
             stage('Core - Setup') {
