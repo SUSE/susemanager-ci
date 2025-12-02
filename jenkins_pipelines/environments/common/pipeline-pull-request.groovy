@@ -18,9 +18,9 @@ def run(params) {
         environment_workspace = null
         env.common_params = ''
         tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/variables/PR-testing-variables.tf'
-        tfvars_product_version = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-pipelines/PR-testing-${product_version}.tfvars"
-        tfvars_platform_localisation = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-pipelines/PR-testing-${platform_localisation}-environments.tfvars"
-        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-pipelines/PR-testing-additionnal-repos.tf'
+        tfvars_product_version = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-${product_version}.tfvars"
+        tfvars_platform_localisation = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-${platform_localisation}-environments.tfvars"
+        tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-additionnal-repos.tf'
         try {
             stage('Get environment') {
                   checkout scm
