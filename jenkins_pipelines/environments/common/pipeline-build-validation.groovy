@@ -776,6 +776,7 @@ def getNodesHandler() {
             returnStdout: true)
     echo ("Path: ${resultdir}/sumaform Modules ${modules}")
     String[] moduleList = modules.split("\n")
+    echo ("Path: ${resultdir}/sumaform Modules ${modules}")
     moduleList.each { lane ->
         def instanceList = lane.tokenize(".")
         if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
