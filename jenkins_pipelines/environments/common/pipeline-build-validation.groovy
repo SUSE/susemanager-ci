@@ -126,7 +126,7 @@ def run(params) {
                             python3 ${tfvarsGeneratorScript} \
                             --env-file "${tfRefEnvironmentFile}" \
                                     --user "${params.environment}" \
-                                    --output "${params.environment}_bv.tfvars" \
+                                    --output "susemanager-ci/terracumber_config/tf_files/project/${params.environment}_bv.tfvars" \
                                     --minion1 "${params.minion1}" \
                                     --minion2 "${params.minion2}" \
                                     --minion3 "${params.minion3}" \
