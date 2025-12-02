@@ -151,8 +151,8 @@ def run(params) {
                         set +x
                         source /home/jenkins/.credentials
                         set -x
-                        cat susemanager-ci/terracumber_config/tf_files/project/${tfvarsDeploymentFile} > ${localSumaformDirPath}/terraform.tfvars
-                        cat susemanager-ci/terracumber_config/tf_files/project/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
+                        cat susemanager-ci/terracumber_config/tf_files/tfvars/${tfvarsDeploymentFile} > ${localSumaformDirPath}/terraform.tfvars
+                        cat susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
                         echo SERVER_CONTAINER_REPOSITORY = \\\"${server_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
                         echo PROXY_CONTAINER_REPOSITORY = \\\"${proxy_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
                         echo SERVER_CONTAINER_IMAGE = \\\"${server_container_image}\\\" >> ${localSumaformDirPath}/terraform.tfvars
