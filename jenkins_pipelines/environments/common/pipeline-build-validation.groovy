@@ -182,7 +182,7 @@ def run(params) {
             }
 
             stage('Sanity check') {
-                def nodesHandler = getNodesHandler()
+                def nodesHandler = getNodesHandler(params)
                 runCucumberRakeTarget('cucumber:build_validation_sanity_check', false, nodesHandler.envVariableListToDisable)
                 // Extract controller hostname
                 try {
@@ -236,7 +236,7 @@ def run(params) {
             stage('Sync. products and channels') {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
                     // Get minion list from tofu state list command
-                    def nodesHandler = getNodesHandler()
+                    def nodesHandler = getNodesHandler(params)
                     res_products = runCucumberRakeTarget('cucumber:build_validation_reposync', true, nodesHandler.envVariableListToDisable)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     sh "exit ${res_products}"
@@ -556,8 +556,8 @@ def run(params) {
  * @param return_status Boolean to decide if the command should return the exit status.
  */
 def runCucumberRakeTarget(String rake_target, boolean return_status = false, disableMinions = null) {
-    // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler()),
-    // For compatibility with the original structure where getNodesHandler().envVariableListToDisable is a string.
+    // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler(params)),
+    // For compatibility with the original structure where getNodesHandler(params).envVariableListToDisable is a string.
     def unset_vars = ""
     if (disableMinions) {
         // If it's a list/set, join it to a string. If it's already a string, use it.
@@ -593,7 +593,7 @@ def clientTestingStages(params) {
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
     //Get minion list from tofu state list command
-    def nodesHandler = getNodesHandler()
+    def nodesHandler = getNodesHandler(params)
     def bootstrap_repository_status = nodesHandler.BootstrapRepositoryStatus
     def required_custom_channel_status = nodesHandler.CustomChannelStatus
     // Construct a stage list for each node.
