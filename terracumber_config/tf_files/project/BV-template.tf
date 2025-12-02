@@ -13,8 +13,8 @@ terraform {
 }
 
 locals {
-  server_configuration = strcontains(local.product_version, "4.3") ? module.server[0].configuration : module.server_containerized[0].configuration
-  proxy_configuration  = strcontains(local.product_version, "4.3") ? module.proxy[0].configuration : module.proxy_containerized[0].configuration
+  server_configuration = length(module.server_containerized) > 0 ? module.server_containerized[0].configuration : module.server[0].configuration
+  proxy_configuration  = length(module.proxy_containerized) > 0 ? module.proxy_containerized[0].configuration : module.proxy[0].configuration
   product_version      = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
   empty_minion_config = {
     ids          = []
@@ -107,7 +107,7 @@ module "base_s390" {
 }
 
 module "server" {
-  count = strcontains(local.product_version, "4.3") ? 1 : 0
+  count               = lookup(var.ENVIRONMENT_CONFIGURATION, "server", null) != null ? 1 : 0
 
   source             = "./modules/server"
   base_configuration = module.base_core.configuration
@@ -151,7 +151,7 @@ module "server" {
 
 module "server_containerized" {
   source             = "./modules/server_containerized"
-  count              = strcontains(local.product_version, "4.3") ? 0 : 1
+  count               = lookup(var.ENVIRONMENT_CONFIGURATION, "server_containerized", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.server_containerized.name
   image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server.image
@@ -192,7 +192,7 @@ module "server_containerized" {
 }
 
 module "proxy" {
-  count = strcontains(local.product_version, "4.3") ? 1 : 0
+  count               = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy", null) != null ? 1 : 0
 
   source               = "./modules/proxy"
   base_configuration   = module.base_core.configuration
@@ -219,7 +219,7 @@ module "proxy" {
 
 module "proxy_containerized" {
   source             = "./modules/proxy_containerized"
-  count              = strcontains(local.product_version, "4.3") ? 0 : 1
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.proxy_containerized.name
   image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.proxy_containerized.image
