@@ -7,6 +7,7 @@ def run(params) {
 
         env.controller_hostname = null
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
+        GString tfvarsGeneratorScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/generate_tfvars.py"
 
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
@@ -15,7 +16,8 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
-        tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/project/variables.tf'
+        String tfVariablesFile = 'susemanager-ci/terracumber_config/tf_files/project/variables.tf'
+        String tfRefEnvironmentFile  = 'susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars'
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
@@ -33,7 +35,7 @@ def run(params) {
         def product_version = params.product_version ?: ''
         def base_os = params.base_os ?: ''
 
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfvariables_file} --terraform-bin ${params.bin_path}"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfVariablesFile} --terraform-bin ${params.bin_path}"
 
         if (params.deploy_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
@@ -118,11 +120,38 @@ def run(params) {
 //                            --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} \
 //                            --runstep provision
 //                    """
+                    def tfvarsDeploymentFile = null
+                    if (params.environment){
+                        sh """
+                            python3 ${tfvarsGeneratorScript} \
+                            --env-file "${tfRefEnvironmentFile}" \
+                                    --user "${params.environment}" \
+                                    --output "${params.environment}_bv.tfvars" \
+                                    --minion1 "${params.minion1}" \
+                                    --minion2 "${params.minion2}" \
+                                    --minion3 "${params.minion3}" \
+                                    --minion4 "${params.minion4}" \
+                                    --minion5 "${params.minion5}" \
+                                    --minion6 "${params.minion6}" \
+                                    --minion7 "${params.minion7}" \
+                                    --base-os "${params.base_os}" \
+                                    --product-version "${params.product_version}" \
+                                    ${params.deploy_retail ? '--deploy-retail' : ''}
+                            """
+                        tfvarsDeploymentFile = "${params.environment}_bv.tfvars"
+                    }
+                    else if (params.get('deployment_tfvars')) {
+                        echo "No environment user selected. Using provided tfvars file: ${params.deployment_tfvars}"
+                        tfvarsDeploymentFile = params.deployment_tfvars
+                    }
+                    else {
+                        error "BUILD FAILED: Configuration Error. You must provide either an 'environment' user OR a 'deployment_tfvars' file."
+                    }
                     sh """
                         set +x
                         source /home/jenkins/.credentials
                         set -x
-                        cat susemanager-ci/terracumber_config/tf_files/project/${params.deployment_tfvars} > ${localSumaformDirPath}/terraform.tfvars
+                        cat susemanager-ci/terracumber_config/tf_files/project/${tfvarsDeploymentFile} > ${localSumaformDirPath}/terraform.tfvars
                         cat susemanager-ci/terracumber_config/tf_files/project/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
                         echo SERVER_CONTAINER_REPOSITORY = \\\"${server_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
                         echo PROXY_CONTAINER_REPOSITORY = \\\"${proxy_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
