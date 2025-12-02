@@ -25,7 +25,7 @@ node('sumaform-cucumber') {
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'Manager-5.1', description: 'Branch prepared for the MU tested'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/MLM-5.1-micro-build-validation-NUE.tf', description: 'Path to the tf file to be used'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/templates/template-build-validation.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
