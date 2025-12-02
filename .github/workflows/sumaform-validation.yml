@@ -5,7 +5,7 @@ on:
     paths:
       - 'terracumber_config/tf_files/**/*.tf'
       - '!terracumber_config/tf_files/*build-validation*.tf'
-      - '!terracumber_config/tf_files/PR-testing-template.tf'
+      - '!terracumber_config/tf_files/templates/PR-testing-template.tf'
 
 jobs:
   validate_sumaform:
@@ -105,7 +105,7 @@ jobs:
 
           # --- OpenTofu Validation Loop ---
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
-            if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
+            if [[ "$tf_file" != "terracumber_config/tf_files/templates/PR-testing-template.tf" ]]; then
               echo "::notice::[TOFU] Validating '`basename $tf_file`'..."
               rm -f main.tf variables.tf environment.tfvars
               cp ../$tf_file main.tf
@@ -130,7 +130,7 @@ jobs:
           
           # --- OpenTofu Validation Loop ---
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
-            if [[ "$tf_file" != "terracumber_config/tf_files/PR-testing-template.tf" ]]; then
+            if [[ "$tf_file" != "terracumber_config/tf_files/templates/PR-testing-template.tf" ]]; then
               echo "::notice::[TERRAFORM] Validating '`basename $tf_file`'..."
               rm -f main.tf variables.tf environment.tfvars
               cp ../$tf_file main.tf
