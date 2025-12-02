@@ -78,7 +78,7 @@ node('sumaform-cucumber') {
     mutableParams.product_version_display = mutableParams.product_version
     mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
     mutableParams.environment = 'maxime'
-    mutableParams.minions_to_run = minionList
+    mutableParams.minions_to_run = minionListString
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(mutableParams)
 }
