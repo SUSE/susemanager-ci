@@ -26,7 +26,7 @@ module "base_core" {
   use_avahi       = false
   domain          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images = [
+  images = lookup(var.BASE_CONFIGURATIONS.base_core, "images", [
     "sles12sp5o",
     "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o",
     "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o",
@@ -40,7 +40,7 @@ module "base_core" {
     "ubuntu2204o", "ubuntu2404o",
     "debian12o",
     "opensuse155o", "opensuse156o"
-  ]
+  ])
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
