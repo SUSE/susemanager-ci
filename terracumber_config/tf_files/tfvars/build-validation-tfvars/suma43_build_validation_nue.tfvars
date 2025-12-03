@@ -27,7 +27,7 @@ ENVIRONMENT_CONFIGURATION = {
     name = "sles15sp7-build"
   }
 
-  # Traditional Clients (Specific to 4.3/4.x workflows)
+  # Traditional Clients (Specific to 4.3)
   sles12sp5_client = {
     mac  = "aa:b2:92:42:00:a8"
     name = "sles12sp5-client"
