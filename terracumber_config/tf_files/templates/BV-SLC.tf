@@ -33,16 +33,16 @@ provider "libvirt" {
   uri   = "qemu+tcp://florina.mgr.slc1.suse.org/system"
 }
 
-# Retail/Infrastructure Host (Terminus)
+# Retail/Infrastructure Host
 provider "libvirt" {
-  alias = "terminus"
+  alias = "retail"
   uri   = "qemu+tcp://terminus.mgr.slc1.suse.org/system"
 }
 
-# Debian/Ubuntu Host (Trantor)
+# Debian/Ubuntu Host
 provider "libvirt" {
-  alias = "trantor"
-  uri   = "qemu+tcp://trantor.mgr.slc1.suse.org/system"
+  alias = "debian"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATION.base_debian.hypervisor}/system"
 }
 
 
@@ -148,9 +148,8 @@ module "base_new_sle" {
   }
 }
 
-# Base Retail (Terminus): Infrastructure components
 module "base_retail" {
-  providers = { libvirt = libvirt.terminus }
+  providers = { libvirt = libvirt.retail }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -175,7 +174,7 @@ module "base_retail" {
 
 # Base Debian (Trantor)
 module "base_debian" {
-  providers = { libvirt = libvirt.trantor }
+  providers = { libvirt = libvirt.debian }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER

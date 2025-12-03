@@ -211,17 +211,54 @@ ENVIRONMENT_CONFIGURATION = {
     userid = "S50SSNUE"
   }
   # Note: Amazon Linux 2023 is not present in SUMA 5.0
-
-  core_images = ["sles15sp7o", "opensuse155o", "opensuse156o", "slemicro55o", "sles15sp5o"]
   product_version = "5.0-released"
   name_prefix     = "suma-bv-50micro-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.0-micro-qe-build-validation-NUE"
+}
+BASE_CONFIGURATION = {
   base_core = {
+    images             = [ "sles15sp7o", "opensuse156o", "slemicro55o" ]
     pool               = "ssd"
     bridge             = "br0"
     additional_network = "192.168.50.0/24"
     hypervisor         = "suma-06.mgr.suse.de"
   }
+  base_old_sle = {
+    images             =  [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign"]
+      pool               = "ssd"
+    bridge             = "br0"
+    additional_network = "192.168.50.0/24"
+    hypervisor         = "suma-06.mgr.suse.de"
+  }
+  base_res = {
+    images             = [ "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "libertylinux9o" ]
+    pool               = "ssd"
+    bridge             = "br0"
+    additional_network = "192.168.50.0/24"
+    hypervisor         = "suma-06.mgr.suse.de"
+  }
+  base_new_sle = {
+    images             = [ "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro55o", "slmicro60o", "slmicro61o" ]
+    pool               = "ssd"
+    bridge             = "br0"
+    additional_network = "192.168.50.0/24"
+    hypervisor         = "suma-06.mgr.suse.de"
+  }
+  base_retail = {
+    images             = ["sles15sp6o","sles15sp7o", "opensuse155o", "slemicro55o"]
+    pool               = "ssd"
+    bridge             = "br1"
+    additional_network = "192.168.50.0/24"
+    hypervisor         = "terminus.mgr.slc1.suse.org"
+  }
+  base_debian = {
+    images             = ["ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o"]
+    pool               = "ssd"
+    bridge             = "br1"
+    additional_network = null
+    hypervisor         = "trantor.mgr.slc1.suse.org"
+  }
+
 }
 
 MAIL_SUBJECT          = "Results 5.0 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
