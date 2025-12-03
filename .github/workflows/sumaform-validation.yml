@@ -42,6 +42,14 @@ jobs:
       # --- CHANGED: Use 'gh' CLI instead of 'dsaltares/fetch-gh-release-asset' ---
       - name: Download Feilong terraform provider asset
         if: steps.tf_files.outputs.added_modified
+        uses: robinraju/release-downloader@v1.9
+        with:
+          repository: Bischoff/terraform-provider-feilong
+          tag: v0.0.6
+          fileName: terraform-provider-feilong_0.0.6_linux_amd64.tar.gz
+          extract: true
+      - name: Validate files
+        if: steps.tf_files.outputs.added_modified
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
