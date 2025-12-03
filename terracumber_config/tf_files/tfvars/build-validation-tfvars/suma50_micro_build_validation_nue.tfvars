@@ -10,8 +10,8 @@ ENVIRONMENT_CONFIGURATION = {
     image = "slemicro55o"
   }
   proxy_containerized = {
-    mac  = "aa:b2:92:42:00:52"
-    name = "proxy"
+    mac   = "aa:b2:92:42:00:52"
+    name  = "proxy"
     image = "slemicro55o"
   }
   monitoring_server = {
@@ -211,18 +211,16 @@ ENVIRONMENT_CONFIGURATION = {
     userid = "S50SSNUE"
   }
   # Note: Amazon Linux 2023 is not present in SUMA 5.0
+  product_version = "5.0-released"
+  name_prefix     = "suma-bv-50micro-"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.0-micro-qe-build-validation-NUE"
+  base_core = {
+    pool               = "ssd"
+    bridge             = "br0"
+    additional_network = "192.168.50.0/24"
+    hypervisor         = "suma-06.mgr.suse.de"
+  }
 }
-
-product_version       = "5.0-released"
-name_prefix           = "suma-bv-50micro-"
-url_prefix            = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.0-micro-qe-build-validation-NUE"
-base_core = {
-  pool               = "ssd"
-  bridge             = "br0"
-  additional_network = "192.168.50.0/24"
-  hypervisor         = "suma-06.mgr.suse.de"
-}
-
 MAIL_SUBJECT          = "Results 5.0 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results HEAD Build Validation: Environment setup failed"
 LOCATION              = "nue"

@@ -30,7 +30,6 @@ ENVIRONMENT_CONFIGURATION = {
     additional_network = null
   }
 }
-
 MAIL_SUBJECT          = "Results 4.3 SLE Update $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results 4.3 SLE Update: Environment setup failed"
 LOCATION              = "nue"
