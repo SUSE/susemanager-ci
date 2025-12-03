@@ -7,11 +7,12 @@ ENVIRONMENT_CONFIGURATION = {
   server_containerized = {
     mac   = "aa:b2:92:42:00:51"
     name  = "server"
-    [cite_start]image = "slemicro55o" # [cite: 204]
+    image = "slemicro55o"
   }
   proxy_containerized = {
     mac  = "aa:b2:92:42:00:52"
     name = "proxy"
+    image = "slemicro55o"
   }
   monitoring_server = {
     mac  = "aa:b2:92:42:00:53"
@@ -74,11 +75,6 @@ ENVIRONMENT_CONFIGURATION = {
   oracle9_minion = {
     mac  = "aa:b2:92:42:00:73"
     name = "oracle9-minion"
-  }
-  # Ubuntu 20.04 exists in SUMA 5.0 but not MLM 5.1
-  ubuntu2004_minion = {
-    mac  = "aa:b2:92:42:00:6a"
-    name = "ubuntu2004-minion"
   }
   liberty9_minion = {
     mac  = "aa:b2:92:42:00:75"
@@ -192,10 +188,6 @@ ENVIRONMENT_CONFIGURATION = {
   liberty9_sshminion = {
     mac  = "aa:b2:92:42:00:95"
     name = "liberty9-sshminion"
-  }
-  ubuntu2004_sshminion = {
-    mac  = "aa:b2:92:42:00:8a"
-    name = "ubuntu2004-sshminion"
   }
   ubuntu2204_sshminion = {
     mac  = "aa:b2:92:42:00:8b"
