@@ -1004,6 +1004,121 @@ module "sles15sp5s390_sshminion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
+module "sles12sp5_client" {
+  source             = "./modules/client"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_client", null) != null ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles12sp5_client.name
+  image              = "sles12sp5o"
+  provider_settings = {
+    mac    = var.ENVIRONMENT_CONFIGURATION.sles12sp5_client.mac
+    memory = 4096
+  }
+  server_configuration    = local.proxy_configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp3_client" {
+  source             = "./modules/client"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp3_client", null) != null ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp3_client.name
+  image              = "sles15sp3o"
+  provider_settings = {
+    mac    = var.ENVIRONMENT_CONFIGURATION.sles15sp3_client.mac
+    memory = 4096
+  }
+  server_configuration    = local.proxy_configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp4_client" {
+  source             = "./modules/client"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp4_client", null) != null ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp4_client.name
+  image              = "sles15sp4o"
+  provider_settings = {
+    mac    = var.ENVIRONMENT_CONFIGURATION.sles15sp4_client.mac
+    memory = 4096
+  }
+  server_configuration    = local.proxy_configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp5_client" {
+  source             = "./modules/client"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_client", null) != null ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp5_client.name
+  image              = "sles15sp5o"
+  provider_settings = {
+    mac    = var.ENVIRONMENT_CONFIGURATION.sles15sp5_client.mac
+    memory = 4096
+  }
+  server_configuration    = local.proxy_configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp6_client" {
+  source             = "./modules/client"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_client", null) != null ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp6_client.name
+  image              = "sles15sp6o"
+  provider_settings = {
+    mac    = var.ENVIRONMENT_CONFIGURATION.sles15sp6_client.mac
+    memory = 4096
+  }
+  server_configuration    = local.proxy_configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp7_client" {
+  source             = "./modules/client"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_client", null) != null ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp7_client.name
+  image              = "sles15sp7o"
+  provider_settings = {
+    mac    = var.ENVIRONMENT_CONFIGURATION.sles15sp7_client.mac
+    memory = 4096
+  }
+  server_configuration    = local.proxy_configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "centos7_client" {
+  source             = "./modules/client"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "centos7_client", null) != null ? 1 : 0
+  base_configuration = module.base_core.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.centos7_client.name
+  image              = "centos7o"
+  provider_settings = {
+    mac    = var.ENVIRONMENT_CONFIGURATION.centos7_client.mac
+    memory = 4096
+  }
+  server_configuration    = local.proxy_configuration
+  auto_register           = false
+  use_os_released_updates = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+}
+
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro51_sshminion" {
 //   source             = "./modules/sshminion"
@@ -1269,6 +1384,14 @@ module "controller" {
 
   sle15sp7_minion_configuration    = length(module.sles15sp7_minion) > 0 ? module.sles15sp7_minion[0].configuration : local.empty_minion_config
   sle15sp7_sshminion_configuration = length(module.sles15sp7_sshminion) > 0 ? module.sles15sp7_sshminion[0].configuration : local.empty_minion_config
+
+  sle12sp5_client_configuration    = length(module.sles12sp5_client) > 0 ? module.sles12sp5_client[0].configuration : local.empty_minion_config
+  sle15sp3_client_configuration    = length(module.sles15sp3_client) > 0 ? module.sles15sp3_client[0].configuration : local.empty_minion_config
+  sle15sp4_client_configuration    = length(module.sles15sp4_client) > 0 ? module.sles15sp4_client[0].configuration : local.empty_minion_config
+  sle15sp5_client_configuration    = length(module.sles15sp5_client) > 0 ? module.sles15sp5_client[0].configuration : local.empty_minion_config
+  sle15sp6_client_configuration    = length(module.sles15sp6_client) > 0 ? module.sles15sp6_client[0].configuration : local.empty_minion_config
+  sle15sp7_client_configuration    = length(module.sles15sp7_client) > 0 ? module.sles15sp7_client[0].configuration : local.empty_minion_config
+  centos7_client_configuration     = length(module.centos7_client) > 0 ? module.centos7_client[0].configuration : local.empty_minion_config
 
   alma8_minion_configuration    = length(module.alma8_minion) > 0 ? module.alma8_minion[0].configuration : local.empty_minion_config
   alma8_sshminion_configuration = length(module.alma8_sshminion) > 0 ? module.alma8_sshminion[0].configuration : local.empty_minion_config
