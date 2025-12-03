@@ -12,11 +12,6 @@ terraform {
   }
 }
 
-# -------------------------------------------------------------------
-# 1. PROVIDERS
-# -------------------------------------------------------------------
-
-# Main Hypervisor (NUE Local)
 provider "libvirt" {
   uri = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_core["hypervisor"]}/system"
 }
@@ -31,7 +26,6 @@ module "base_core" {
   use_avahi       = false
   domain          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  # Images for all Intel/AMD minions
   images = [
     "sles12sp5o",
     "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o",
@@ -59,9 +53,6 @@ module "base_core" {
   }
 }
 
-# -------------------------------------------------------------------
-# 4. SHARED LOGIC INTEGRATION
-# -------------------------------------------------------------------
 module "build_validation_module" {
   source = "./modules/build_validation"
 
