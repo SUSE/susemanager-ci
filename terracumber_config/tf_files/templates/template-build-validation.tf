@@ -154,7 +154,7 @@ module "server_containerized" {
   count               = lookup(var.ENVIRONMENT_CONFIGURATION, "server_containerized", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.server_containerized.name
-  image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server.image
+  image              = var.BASE_OS != null ? var.BASE_OS : var.ENVIRONMENT_CONFIGURATION.server_containerized.image
   provider_settings = {
     mac    = var.ENVIRONMENT_CONFIGURATION.server_containerized.mac
     memory = 40960
