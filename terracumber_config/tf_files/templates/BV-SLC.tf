@@ -208,7 +208,7 @@ module "bv_logic" {
 
   # --- BASE MAPPING ---
   # Map roles to the specific distributed bases
-  base_configurations = {
+  module_base_configurations = {
     default = module.base_core.configuration
     old_sle = module.base_old_sle.configuration
     new_sle = module.base_new_sle.configuration
