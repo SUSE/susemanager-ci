@@ -18,7 +18,7 @@ terraform {
 
 # Main Hypervisor (NUE Local)
 provider "libvirt" {
-  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION.base_core["hypervisor"]}/system"
+  uri = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_core["hypervisor"]}/system"
 }
 
 module "base_core" {
