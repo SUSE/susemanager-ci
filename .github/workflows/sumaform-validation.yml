@@ -39,6 +39,7 @@ jobs:
           repository: uyuni-project/sumaform
           path: sumaform
 
+      # --- CHANGED: Use 'gh' CLI instead of 'dsaltares/fetch-gh-release-asset' ---
       - name: Download Feilong terraform provider asset
         if: steps.tf_files.outputs.added_modified
         uses: dsaltares/fetch-gh-release-asset@1.1.2
@@ -50,7 +51,7 @@ jobs:
       - name: Validate files
         if: steps.tf_files.outputs.added_modified
         run: |
-          # --- Legacy Terraform Validation Loop (Unchanged) ---
+          # --- Legacy Terraform Validation Loop ---
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
             if [[ "$tf_file" == *"build-validation"* ]]; then
               echo "::notice::[TERRAFORM] Validating legacy build-validation file '`basename $tf_file`'..."
@@ -74,7 +75,7 @@ jobs:
             fi
           done
           
-          # --- OpenTofu Validation Loop (Updated) ---
+          # --- OpenTofu Validation Loop ---
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
             if [[ "$tf_file" != "terracumber_config/tf_files/templates/PR-testing-template.tf" ]]; then
               echo "::notice::[TOFU] Validating '`basename $tf_file`'..."
@@ -87,7 +88,6 @@ jobs:
               if [ -f "$SOURCE_DIR/variables.tf" ]; then
                 cp "$SOURCE_DIR/variables.tf" variables.tf
                 echo "::notice::Included variables.tf from $SOURCE_DIR"
-              # Check for build-validation-variables.tf in sibling directory
               elif [ -f "$SOURCE_DIR/../variables/build-validation-variables.tf" ]; then
                 cp "$SOURCE_DIR/../variables/build-validation-variables.tf" variables.tf
                 echo "::notice::Included build-validation-variables.tf from $SOURCE_DIR/../variables/"
@@ -98,13 +98,11 @@ jobs:
                 cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
                 PLAN_ARGS="-var-file=environment.tfvars"
                 echo "::notice::Included environment.tfvars from $SOURCE_DIR"
-              # Check if this is the Build Validation Template
               elif [[ "$tf_file" == *"template-build-validation.tf" ]]; then
-                 # We need location.tfvars
                  if [ -f "$SOURCE_DIR/../tfvars/location.tfvars" ]; then
                     cp "$SOURCE_DIR/../tfvars/location.tfvars" location.tfvars
           
-                    # We need ONE sample tfvars file to verify the plan (use first one found)
+                    # Search recursively for a sample .tfvars file
                     SAMPLE_VAR_PATH=$(find "$SOURCE_DIR/../tfvars" -name "*nue.tfvars" | head -n 1)
                     if [ -n "$SAMPLE_VAR_PATH" ]; then
                        cp "$SAMPLE_VAR_PATH" sample.tfvars
