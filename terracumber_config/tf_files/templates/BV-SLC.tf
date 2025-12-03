@@ -41,11 +41,6 @@ provider "libvirt" {
   uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_debian.hypervisor}/system"
 }
 
-
-# -------------------------------------------------------------------
-# 2. DISTRIBUTED BASE CONFIGURATIONS
-# -------------------------------------------------------------------
-
 # Base Core : Core Infra + Main Testsuite images
 module "base_core" {
   source = "./modules/base"
@@ -190,9 +185,6 @@ module "base_debian" {
   }
 }
 
-# -------------------------------------------------------------------
-# 3. SHARED LOGIC INTEGRATION
-# -------------------------------------------------------------------
 module "bv_logic" {
   source = "./modules/build_validation_logic"
 
