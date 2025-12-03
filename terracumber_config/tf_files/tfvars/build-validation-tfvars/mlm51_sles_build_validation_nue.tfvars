@@ -20,11 +20,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:03:fb"
     name = "sles15sp6-minion"
   }
-
   product_version = "5.1-released"
   name_prefix     = "mlm-bv-51sles-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-sles-qe-build-validation-NUE"
-
   base_core = {
     pool               = "ssd"
     bridge             = "br1"
@@ -32,7 +30,6 @@ ENVIRONMENT_CONFIGURATION = {
     additional_network = null
   }
 }
-
 MAIL_SUBJECT          = "Results 5.1 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results 5.1 Build Validation: Environment setup failed"
 LOCATION              = "nue"

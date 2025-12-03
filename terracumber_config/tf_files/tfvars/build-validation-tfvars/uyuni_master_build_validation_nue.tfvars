@@ -222,18 +222,16 @@ ENVIRONMENT_CONFIGURATION = {
     name   = "sles15sp5s390-sshminion"
     userid = "UYMSSNUE"
   }
+  product_version       = "uyuni-master"
+  name_prefix           = "uyuni-bv-master-"
+  url_prefix            = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-qe-build-validation"
+  base_core = {
+    pool               = "ssd"
+    bridge             = "br0"
+    additional_network = "192.168.100.0/24"
+    hypervisor         = "suma-12.mgr.suse.de"
+  }
 }
-
-product_version       = "uyuni-master"
-name_prefix           = "uyuni-bv-master-"
-url_prefix            = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-qe-build-validation"
-base_core = {
-  pool               = "ssd"
-  bridge             = "br0"
-  additional_network = "192.168.100.0/24"
-  hypervisor         = "suma-12.mgr.suse.de"
-}
-
 MAIL_SUBJECT          = "Results Uyuni Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results Uyuni Build Validation: Environment setup failed"
 LOCATION              = "nue"

@@ -240,11 +240,9 @@ ENVIRONMENT_CONFIGURATION = {
     name   = "sles15sp5s390-sshminion"
     userid = "S43SSNUE"
   }
-
   product_version = "4.3-released"
   name_prefix     = "suma-bv-43-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-build-validation"
-
   base_core = {
     pool               = "ssd"
     bridge             = "br0"
