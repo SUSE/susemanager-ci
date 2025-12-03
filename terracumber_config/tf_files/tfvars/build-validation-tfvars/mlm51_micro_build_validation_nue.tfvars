@@ -104,11 +104,11 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:2f"
     name = "salt-migration-minion"
   }
-  sles15sp5s390_minion = {
-    mac  = "02:00:00:42:00:2a"
-    name = "sles15sp5s390-minion"
-    userid = "S51MINUE"
-  }
+  # sles15sp5s390_minion = {
+  #   mac  = "02:00:00:42:00:2a"
+  #   name = "sles15sp5s390-minion"
+  #   userid = "S51MINUE"
+  # }
 
   # Micro Minions
   slemicro51_minion = {
@@ -213,11 +213,11 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:4e"
     name = "opensuse156arm-sshminion"
   }
-  sles15sp5s390_sshminion = {
-    mac  = "02:00:00:42:00:2b"
-    name = "sles15sp5s390-sshminion"
-    userid = "S51SSNUE"
-  }
+  # sles15sp5s390_sshminion = {
+  #   mac  = "02:00:00:42:00:2b"
+  #   name = "sles15sp5s390-sshminion"
+  #   userid = "S51SSNUE"
+  # }
   product_version       = "5.1-released"
   name_prefix           = "mlm-bv-51micro-"
   url_prefix            = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.1-micro-qe-build-validation-NUE"
