@@ -219,16 +219,16 @@ BASE_CONFIGURATION = {
   base_core = {
     images             = [ "sles15sp7o", "opensuse156o", "slemicro55o" ]
     pool               = "ssd"
-    bridge             = "br0"
-    additional_network = "192.168.50.0/24"
-    hypervisor         = "suma-06.mgr.suse.de"
+    bridge             = "br1"
+    additional_network = null
+    hypervisor         = "caladan.mgr.slc1.suse.org"
   }
   base_old_sle = {
     images             =  [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign"]
-      pool               = "ssd"
+    pool               = "ssd"
     bridge             = "br0"
     additional_network = "192.168.50.0/24"
-    hypervisor         = "suma-06.mgr.suse.de"
+    hypervisor         = "tatooine.mgr.slc1.suse.org"
   }
   base_res = {
     images             = [ "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "libertylinux9o" ]
