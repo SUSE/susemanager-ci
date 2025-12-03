@@ -218,9 +218,9 @@ module "bv_logic" {
   }
 
   # --- VARIABLES ---
-  ENVIRONMENT_CONFIGURATION       = var.ENVIRONMENT_CONFIGURATION
-  PLATFORM_LOCATION_CONFIGURATION = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION]
-  LOCATION                        = var.LOCATION
+  environment_configuration       = var.ENVIRONMENT_CONFIGURATION
+  platform_location_configuration = var.PLATFORM_LOCATION_CONFIGURATION
+  location                        = var.LOCATION
   product_version                 = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
 
   SCC_USER         = var.SCC_USER
@@ -243,7 +243,7 @@ module "bv_logic" {
 
 output "configuration" {
   value = {
-    controller            = module.bv_logic.controller
-    server_configuration  = module.bv_logic.server_configuration
+    controller            = module.bv_logic.configuration.controller
+    server_configuration  = module.bv_logic.configuration.server_configuration
   }
 }
