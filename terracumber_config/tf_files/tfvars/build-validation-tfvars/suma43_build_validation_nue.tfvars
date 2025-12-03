@@ -243,6 +243,8 @@ ENVIRONMENT_CONFIGURATION = {
   product_version = "4.3-released"
   name_prefix     = "suma-bv-43-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-build-validation"
+}
+BASE_CONFIGURATIONS{
   base_core = {
     pool               = "ssd"
     bridge             = "br0"

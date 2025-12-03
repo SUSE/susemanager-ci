@@ -132,3 +132,8 @@ variable "PRODUCT_VERSION" {
   description = "Optional override for the product version"
   default     = null
 }
+
+variable "BASE_CONFIGURATIONS" {
+  type        = map
+  description = "Describe the base configuration (default core for NUE and all bases for SLC1)"
+}
