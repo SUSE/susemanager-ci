@@ -218,11 +218,9 @@ ENVIRONMENT_CONFIGURATION = {
     name   = "sles15sp5s390-sshminion"
     userid = "W51SSNUE"
   }
-
   product_version = "5.1-released"
   name_prefix     = "suma-continuous-bv-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-qe-build-validation-continuous-NUE"
-
   base_core = {
     pool               = "ssd"
     bridge             = "br1"
@@ -230,7 +228,6 @@ ENVIRONMENT_CONFIGURATION = {
     additional_network = "192.168.100.0/24"
   }
 }
-
 MAIL_SUBJECT          = "Results Continuous Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results Continuous Build Validation: Environment setup failed"
 LOCATION              = "nue"
