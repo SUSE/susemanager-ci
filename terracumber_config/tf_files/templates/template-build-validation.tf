@@ -4,6 +4,13 @@ terraform {
     libvirt = {
       source  = "dmacvicar/libvirt"
       version = "0.8.3"
+      configuration_aliases = [
+        libvirt.host_old_sle, # For SLES 12 (Tatooine/Default)
+        libvirt.host_new_sle, # For SLES 15/Micro (Florina/Default)
+        libvirt.host_res,     # For Alma/Rocky/CentOS/Oracle (Tatooine/Default)
+        libvirt.host_debian,  # For Ubuntu/Debian (Trantor/Default)
+        libvirt.host_retail   # For Proxy/BuildHosts/Terminals (Terminus/Default)
+      ]
     }
     feilong = {
       source  = "bischoff/feilong"
@@ -13,6 +20,13 @@ terraform {
 }
 
 locals {
+  base_default = var.base_configurations["default"]
+  base_old_sle = lookup(var.base_configurations, "old_sle", local.base_default)
+  base_new_sle = lookup(var.base_configurations, "new_sle", local.base_default)
+  base_res     = lookup(var.base_configurations, "res",     local.base_default)
+  base_debian  = lookup(var.base_configurations, "debian",  local.base_default)
+  base_retail  = lookup(var.base_configurations, "retail",  local.base_default)
+
   server_configuration = length(module.server_containerized) > 0 ? module.server_containerized[0].configuration : module.server[0].configuration
   proxy_configuration  = length(module.proxy_containerized) > 0 ? module.proxy_containerized[0].configuration : module.proxy[0].configuration
   product_version      = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
@@ -32,10 +46,6 @@ locals {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION.base_core["hypervisor"]}/system"
-}
-
-provider "libvirt" {
   alias = "suma-arm"
   uri   = "qemu+tcp://suma-arm.mgr.suse.de/system"
 }
@@ -44,30 +54,6 @@ provider "feilong" {
   connector   = "https://feilong.mgr.suse.de"
   admin_token = var.ZVM_ADMIN_TOKEN
   local_user  = "jenkins@jenkins-worker.mgr.suse.de"
-}
-
-module "base_core" {
-  source = "./modules/base"
-
-  cc_username     = var.SCC_USER
-  cc_password     = var.SCC_PASSWORD
-  product_version = local.product_version
-  name_prefix     = var.ENVIRONMENT_CONFIGURATION.name_prefix
-  use_avahi       = false
-  domain          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
-  images = ["sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o",
-    "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o"]
-
-  mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
-  use_mirror_images = true
-
-  testsuite = true
-
-  provider_settings = {
-    pool               = var.ENVIRONMENT_CONFIGURATION.base_core["pool"]
-    bridge             = var.ENVIRONMENT_CONFIGURATION.base_core["bridge"]
-    additional_network = var.ENVIRONMENT_CONFIGURATION.base_core["additional_network"]
-  }
 }
 
 module "base_arm" {
@@ -192,9 +178,9 @@ module "server_containerized" {
 }
 
 module "proxy" {
-  count               = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy", null) != null ? 1 : 0
-
+  providers = { libvirt = libvirt.host_retail }
   source               = "./modules/proxy"
+  count               = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy", null) != null ? 1 : 0
   base_configuration   = module.base_core.configuration
   server_configuration = module.server[0].configuration
   name                 = "proxy"
@@ -218,6 +204,7 @@ module "proxy" {
 }
 
 module "proxy_containerized" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/proxy_containerized"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -239,6 +226,7 @@ module "proxy_containerized" {
 }
 
 module "sles12sp5_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -254,6 +242,7 @@ module "sles12sp5_minion" {
 }
 
 module "sles15sp3_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp3_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -271,6 +260,7 @@ module "sles15sp3_minion" {
 }
 
 module "sles15sp4_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp4_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -287,6 +277,7 @@ module "sles15sp4_minion" {
 }
 
 module "sles15sp5_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -303,6 +294,7 @@ module "sles15sp5_minion" {
 }
 
 module "sles15sp6_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -319,6 +311,7 @@ module "sles15sp6_minion" {
 }
 
 module "sles15sp7_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -335,6 +328,7 @@ module "sles15sp7_minion" {
 }
 
 module "alma8_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "alma8_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -350,6 +344,7 @@ module "alma8_minion" {
 }
 
 module "alma9_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "alma9_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -365,6 +360,7 @@ module "alma9_minion" {
 }
 
 module "amazon2023_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "amazon2023_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -380,6 +376,7 @@ module "amazon2023_minion" {
 }
 
 module "centos7_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "centos7_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -395,6 +392,7 @@ module "centos7_minion" {
 }
 
 module "liberty9_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "liberty9_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -410,6 +408,7 @@ module "liberty9_minion" {
 }
 
 // module "openeuler2403_minion" {
+providers = { libvirt = libvirt.host_retail }
 //   source       
 //       = "./modules/minion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "openeuler2403_minion", null) != null ? 1 : 0
@@ -427,6 +426,7 @@ module "liberty9_minion" {
 // }
 
 module "oracle9_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "oracle9_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -442,6 +442,7 @@ module "oracle9_minion" {
 }
 
 module "rocky8_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "rocky8_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -457,6 +458,7 @@ module "rocky8_minion" {
 }
 
 module "rocky9_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "rocky9_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -472,6 +474,7 @@ module "rocky9_minion" {
 }
 
 module "ubuntu2204_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "ubuntu2204_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -487,6 +490,7 @@ module "ubuntu2204_minion" {
 }
 
 module "ubuntu2404_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "ubuntu2404_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -502,6 +506,7 @@ module "ubuntu2404_minion" {
 }
 
 module "debian12_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "debian12_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -560,6 +565,7 @@ module "sles15sp5s390_minion" {
 // This is an x86_64 SLES 15 SP5 minion (like sles15sp5-minion),
 // dedicated to testing migration from OS Salt to Salt bundle
 module "salt_migration_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "salt_migration_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -577,6 +583,7 @@ module "salt_migration_minion" {
 }
 
 module "slemicro51_minion" {
+  providers = { libvirt = libvirt.host_retail }
 
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro51_minion", null) != null ? 1 : 0
@@ -597,6 +604,7 @@ module "slemicro51_minion" {
 }
 
 module "slemicro52_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro52_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -616,6 +624,7 @@ module "slemicro52_minion" {
 }
 
 module "slemicro53_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro53_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -635,6 +644,7 @@ module "slemicro53_minion" {
 }
 
 module "slemicro54_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro54_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -654,6 +664,7 @@ module "slemicro54_minion" {
 }
 
 module "slemicro55_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro55_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -674,6 +685,7 @@ module "slemicro55_minion" {
 }
 
 module "slmicro60_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slmicro60_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -690,6 +702,7 @@ module "slmicro60_minion" {
 }
 
 module "slmicro61_minion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slmicro61_minion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -706,6 +719,7 @@ module "slmicro61_minion" {
 }
 
 module "sles12sp5_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -722,6 +736,7 @@ module "sles12sp5_sshminion" {
 }
 
 module "sles15sp3_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp3_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -736,6 +751,7 @@ module "sles15sp3_sshminion" {
 }
 
 module "sles15sp4_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp4_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -750,6 +766,7 @@ module "sles15sp4_sshminion" {
 }
 
 module "sles15sp5_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -764,7 +781,7 @@ module "sles15sp5_sshminion" {
 }
 
 module "sles15sp6_sshminion" {
-
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -780,6 +797,7 @@ module "sles15sp6_sshminion" {
 }
 
 module "sles15sp7_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -794,6 +812,7 @@ module "sles15sp7_sshminion" {
 }
 
 module "alma8_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "alma8_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -808,6 +827,7 @@ module "alma8_sshminion" {
 }
 
 module "alma9_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "alma9_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -822,6 +842,7 @@ module "alma9_sshminion" {
 }
 
 module "amazon2023_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "amazon2023_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -836,6 +857,7 @@ module "amazon2023_sshminion" {
 }
 
 module "centos7_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "centos7_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -851,6 +873,7 @@ module "centos7_sshminion" {
 
 
 module "liberty9_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "liberty9_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -865,6 +888,7 @@ module "liberty9_sshminion" {
 }
 
 // module "openeuler2403_sshminion" {
+//   providers = { libvirt = libvirt.host_retail }
 //   source           
 //   = "./modules/sshminion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "openeuler2403_sshminion", null) != null ? 1 : 0
@@ -881,6 +905,7 @@ module "liberty9_sshminion" {
 // }
 
 module "oracle9_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "oracle9_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -895,6 +920,7 @@ module "oracle9_sshminion" {
 }
 
 module "rocky8_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "rocky8_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -910,6 +936,7 @@ module "rocky8_sshminion" {
 }
 
 module "rocky9_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "rocky9_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -924,6 +951,7 @@ module "rocky9_sshminion" {
 }
 
 module "ubuntu2204_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "ubuntu2204_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -938,6 +966,7 @@ module "ubuntu2204_sshminion" {
 }
 
 module "ubuntu2404_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "ubuntu2404_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -952,6 +981,7 @@ module "ubuntu2404_sshminion" {
 }
 
 module "debian12_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/sshminion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "debian12_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -986,6 +1016,7 @@ module "opensuse156arm_sshminion" {
 }
 
 module "sles15sp5s390_sshminion" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./backend_modules/feilong/host"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5s390_sshminion", null) != null ? 1 : 0
   base_configuration = module.base_s390.configuration
@@ -1005,6 +1036,7 @@ module "sles15sp5s390_sshminion" {
 }
 
 module "sles12sp5_client" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/client"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_client", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1021,6 +1053,7 @@ module "sles12sp5_client" {
 }
 
 module "sles15sp3_client" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/client"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp3_client", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1037,6 +1070,7 @@ module "sles15sp3_client" {
 }
 
 module "sles15sp4_client" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/client"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp4_client", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1053,6 +1087,7 @@ module "sles15sp4_client" {
 }
 
 module "sles15sp5_client" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/client"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_client", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1069,6 +1104,7 @@ module "sles15sp5_client" {
 }
 
 module "sles15sp6_client" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/client"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_client", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1085,6 +1121,7 @@ module "sles15sp6_client" {
 }
 
 module "sles15sp7_client" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/client"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_client", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1101,6 +1138,7 @@ module "sles15sp7_client" {
 }
 
 module "centos7_client" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/client"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "centos7_client", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1121,6 +1159,7 @@ module "centos7_client" {
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro51_sshminion" {
+//   providers = { libvirt = libvirt.host_retail }
 //   source             = "./modules/sshminion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro51_sshminion", null) != null ? 1 : 0
 //   base_configuration = module.base_core.configuration
@@ -1137,6 +1176,7 @@ module "centos7_client" {
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro52_sshminion" {
+//   providers = { libvirt = libvirt.host_retail }
 //   source             = "./modules/sshminion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro52_sshminion", null) != null ? 1 : 0
 //   base_configuration = module.base_core.configuration
@@ -1153,6 +1193,7 @@ module "centos7_client" {
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro53_sshminion" {
+//   providers = { libvirt = libvirt.host_retail }
 //   source             = "./modules/sshminion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro53_sshminion", null) != null ? 1 : 0
 //   base_configuration = module.base_core.configuration
@@ -1169,6 +1210,7 @@ module "centos7_client" {
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro54_sshminion" {
+//   providers = { libvirt = libvirt.host_retail }
 //   source             = "./modules/sshminion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro54_sshminion", null) != null ? 1 : 0
 //   base_configuration = module.base_core.configuration
@@ -1188,6 +1230,7 @@ module "centos7_client" {
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro55_sshminion" {
+//   providers = { libvirt = libvirt.host_retail }
 //   source             = "./modules/sshminion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slemicro55_sshminion", null) != null ? 1 : 0
 //   base_configuration = module.base_core.configuration
@@ -1206,6 +1249,7 @@ module "centos7_client" {
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slmicro60_sshminion" {
+//   providers = { libvirt = libvirt.host_retail }
 //   source             = "./modules/sshminion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slmicro60_sshminion", null) != null ? 1 : 0
 //   base_configuration = module.base_core.configuration
@@ -1224,6 +1268,7 @@ module "centos7_client" {
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slmicro61_sshminion" {
+//   providers = { libvirt = libvirt.host_retail }
 //   source             = "./modules/sshminion"
 //   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slmicro61_sshminion", null) != null ? 1 : 0
 //   base_configuration = module.base_core.configuration
@@ -1241,6 +1286,7 @@ module "centos7_client" {
 //}
 
 module "sles15sp6_buildhost" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/build_host"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_buildhost", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1257,6 +1303,7 @@ module "sles15sp6_buildhost" {
 }
 
 module "sles15sp7_buildhost" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/build_host"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_buildhost", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1273,6 +1320,7 @@ module "sles15sp7_buildhost" {
 }
 
 module "sles15sp6_terminal" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/pxe_boot"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_buildhost", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1289,6 +1337,7 @@ module "sles15sp6_terminal" {
 }
 
 module "sles15sp7_terminal" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/pxe_boot"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_buildhost", null) != null ? 1 : 0
   base_configuration = module.base_core.configuration
@@ -1305,6 +1354,7 @@ module "sles15sp7_terminal" {
 }
 
 module "dhcp_dns" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/dhcp_dns"
   count = (
   length(module.proxy_containerized) > 0 &&
@@ -1326,6 +1376,7 @@ module "dhcp_dns" {
 }
 
 module "monitoring_server" {
+  providers = { libvirt = libvirt.host_retail }
 
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "monitoring_server", null) != null ? 1 : 0
@@ -1343,6 +1394,7 @@ module "monitoring_server" {
 }
 
 module "controller" {
+  providers = { libvirt = libvirt.host_retail }
   source             = "./modules/controller"
   base_configuration = module.base_core.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.controller.name
