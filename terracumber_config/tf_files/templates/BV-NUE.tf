@@ -103,7 +103,7 @@ module "build_validation_module" {
 
 output "configuration" {
   value = {
-    controller            = module.bv_logic.configuration.controller
-    server_configuration  = module.bv_logic.configuration.server_configuration
+    controller            = module.build_validation_module.configuration.controller
+    server_configuration  = module.build_validation_module.configuration.server_configuration
   }
 }
