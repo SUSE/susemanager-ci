@@ -7,6 +7,7 @@ def run(params) {
 
         env.controller_hostname = null
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
+        GString tfvarsGeneratorScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/generate_tfvars.py"
 
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
@@ -15,6 +16,8 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+        String tfVariablesFile = 'susemanager-ci/terracumber_config/tf_files/variables/build-validation-variables.tf'
+        String tfRefEnvironmentFile  = 'susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars'
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
@@ -32,7 +35,7 @@ def run(params) {
         def product_version = params.product_version ?: ''
         def base_os = params.base_os ?: ''
 
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
+        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfVariablesFile} --terraform-bin ${params.bin_path}"
 
         if (params.deploy_parallelism) {
             env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
@@ -89,18 +92,48 @@ def run(params) {
                         }
                     }
                     // Run Terracumber to deploy the environment
+                    def tfvarsDeploymentFile = null
+                    if (params.environment){
+                        tfvarsDeploymentFile = "susemanager-ci/terracumber_config/tf_files/${params.environment}_bv.tfvars"
+                        sh """
+                            python3 ${tfvarsGeneratorScript} \
+                            --env-file "${tfRefEnvironmentFile}" \
+                                    --user "${params.environment}" \
+                                    --output "${tfvarsDeploymentFile}" \
+                                    --minion1 "${params.minion1}" \
+                                    --minion2 "${params.minion2}" \
+                                    --minion3 "${params.minion3}" \
+                                    --minion4 "${params.minion4}" \
+                                    --minion5 "${params.minion5}" \
+                                    --minion6 "${params.minion6}" \
+                                    --minion7 "${params.minion7}" \
+                                    --base-os "${params.base_os}" \
+                                    --product-version "${params.product_version}" \
+                                    ${params.deploy_retail ? '--deploy-retail' : ''}
+                            """
+                    }
+                    else if (params.get('deployment_tfvars')) {
+                        echo "No environment user selected. Using provided tfvars file: ${params.deployment_tfvars}"
+                        tfvarsDeploymentFile = params.deployment_tfvars
+                    }
+                    else {
+                        error "BUILD FAILED: Configuration Error. You must provide either an 'environment' user OR a 'deployment_tfvars' file."
+                    }
                     sh """
                         set +x
                         source /home/jenkins/.credentials
                         set -x
-                    
-                        export TF_VAR_SERVER_CONTAINER_REPOSITORY=${server_container_repository}
-                        export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
-                        export TF_VAR_SERVER_CONTAINER_IMAGE=${server_container_image}
-                        export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
-                        export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
-                        export TF_VAR_PRODUCT_VERSION=${product_version}
-                        export TF_VAR_BASE_OS=${base_os}
+                        cat ${tfvarsDeploymentFile} > ${localSumaformDirPath}/terraform.tfvars
+                        cat susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
+                        echo SERVER_CONTAINER_REPOSITORY = \\\"${server_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+                        echo PROXY_CONTAINER_REPOSITORY = \\\"${proxy_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+                        echo SERVER_CONTAINER_IMAGE = \\\"${server_container_image}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+                        echo CUCUMBER_GITREPO = \\\"${params.cucumber_gitrepo}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+                        echo CUCUMBER_BRANCH = \\\"${params.cucumber_ref}\\\" >> ${localSumaformDirPath}/terraform.tfvars
+
+                        ${product_version ? "echo PRODUCT_VERSION = \\\"${product_version}\\\" >> ${localSumaformDirPath}/terraform.tfvars" : ""}
+                        ${base_os ? "echo BASE_OS = \\\"${base_os}\\\" >> ${localSumaformDirPath}/terraform.tfvars" : ""}
+
                         export TERRAFORM=${params.bin_path}
                         export TERRAFORM_PLUGINS=${params.bin_plugins_path}
                     
@@ -110,8 +143,6 @@ def run(params) {
                             --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
                             --custom-repositories ${WORKSPACE}/custom_repositories.json \
                             --sumaform-backend ${params.sumaform_backend} \
-                            --use-tf-resource-cleaner \
-                            --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} \
                             --runstep provision
                     """
                     // Generate features
@@ -123,7 +154,7 @@ def run(params) {
             }
 
             stage('Sanity check') {
-                def nodesHandler = getNodesHandler()
+                def nodesHandler = getNodesHandler(params)
                 runCucumberRakeTarget('cucumber:build_validation_sanity_check', false, nodesHandler.envVariableListToDisable)
                 // Extract controller hostname
                 try {
@@ -177,7 +208,7 @@ def run(params) {
             stage('Sync. products and channels') {
                 if (params.must_sync && (deployed || !params.must_deploy)) {
                     // Get minion list from tofu state list command
-                    def nodesHandler = getNodesHandler()
+                    def nodesHandler = getNodesHandler(params)
                     res_products = runCucumberRakeTarget('cucumber:build_validation_reposync', true, nodesHandler.envVariableListToDisable)
                     echo "Custom channels and MU repositories status code: ${res_products}"
                     sh "exit ${res_products}"
@@ -497,8 +528,8 @@ def run(params) {
  * @param return_status Boolean to decide if the command should return the exit status.
  */
 def runCucumberRakeTarget(String rake_target, boolean return_status = false, disableMinions = null) {
-    // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler()),
-    // For compatibility with the original structure where getNodesHandler().envVariableListToDisable is a string.
+    // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler(params)),
+    // For compatibility with the original structure where getNodesHandler(params).envVariableListToDisable is a string.
     def unset_vars = ""
     if (disableMinions) {
         // If it's a list/set, join it to a string. If it's already a string, use it.
@@ -534,7 +565,7 @@ def clientTestingStages(params) {
     def json_matching_non_MU_data = readJSON(file: params.non_MU_channels_tasks_file)
 
     //Get minion list from tofu state list command
-    def nodesHandler = getNodesHandler()
+    def nodesHandler = getNodesHandler(params)
     def bootstrap_repository_status = nodesHandler.BootstrapRepositoryStatus
     def required_custom_channel_status = nodesHandler.CustomChannelStatus
     // Construct a stage list for each node.
@@ -706,7 +737,7 @@ def clientTestingStages(params) {
     parallel tests
 }
 
-def getNodesHandler() {
+def getNodesHandler(params) {
     // Employ the terraform state list command to generate the list of nodes.
     // Due to the disparity between the node names in the test suite and those in the environment variables of the controller, two separate lists are maintained.
     Set<String> nodeList = new HashSet<String>()
@@ -723,6 +754,7 @@ def getNodesHandler() {
             envVar.add(instanceList[1].replaceAll('sles', 'sle').toUpperCase())
         }
     }
+    echo ("Check minion to run ${params.minions_to_run}")
     // Convert jenkins minions list parameter to list
     Set<String> nodesToRun = params.minions_to_run.split(', ')
     // Create a variable with declared nodes on Jenkins side but not deploy and print it
