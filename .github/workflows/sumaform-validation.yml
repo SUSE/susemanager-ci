@@ -39,49 +39,31 @@ jobs:
           repository: uyuni-project/sumaform
           path: sumaform
 
-      # --- CHANGED: Use 'gh' CLI instead of 'dsaltares/fetch-gh-release-asset' ---
-      - name: Download Feilong terraform provider asset
-        if: steps.tf_files.outputs.added_modified
-        uses: robinraju/release-downloader@v1.9
-        with:
-          repository: Bischoff/terraform-provider-feilong
-          tag: v0.0.6
-          fileName: terraform-provider-feilong_0.0.6_linux_amd64.tar.gz
-          extract: true
-      - name: Validate files
-        if: steps.tf_files.outputs.added_modified
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Use GitHub CLI to download the asset matching the pattern
-          gh release download v0.0.6 \
-            --repo bischoff/terraform-provider-feilong \
-            --pattern "*linux_amd64.zip" \
-            --dir sumaform
-      # --------------------------------------------------------------------------
-
-      - name: Unzip Feilong terraform provider
+      # --- CHANGED: Build provider from source instead of downloading assets ---
+      - name: Build Feilong terraform provider
         if: steps.tf_files.outputs.added_modified
         run: |
-          # Find the zip file (we used a wildcard download, so we find the specific file)
-          ZIP_FILE=$(find sumaform -name "*linux_amd64.zip" | head -n 1)
-          echo "Unzipping $ZIP_FILE..."
-          unzip "$ZIP_FILE" -d sumaform
+          echo "::group::Build Feilong Provider"
+          # Clone the specific version tag
+          git clone --depth 1 --branch v0.0.6 https://github.com/Bischoff/terraform-provider-feilong.git build_feilong
+          cd build_feilong
           
-          # Setup the provider directory structure
-          mkdir -p ~/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64
+          # Build the binary
+          go build -o terraform-provider-feilong
           
-          # Find the binary (it might be named terraform-provider-feilong_v0.0.6 or similar) and move it
-          # We search for a file that starts with terraform-provider-feilong and is NOT the zip file
-          BINARY_FILE=$(find sumaform -type f -name "terraform-provider-feilong*" ! -name "*.zip" | head -n 1)
+          # Prepare the local plugin directory structure
+          # Registry: registry.terraform.io / Namespace: bischoff / Type: feilong
+          PLUGIN_DIR="$HOME/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64"
+          mkdir -p "$PLUGIN_DIR"
           
-          if [ -z "$BINARY_FILE" ]; then
-            echo "::error::Could not find unzipped provider binary"
-            exit 1
-          fi
+          # Move and set permissions
+          mv terraform-provider-feilong "$PLUGIN_DIR/"
+          chmod +x "$PLUGIN_DIR/terraform-provider-feilong"
           
-          mv "$BINARY_FILE" ~/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64/terraform-provider-feilong
-          chmod +x ~/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64/terraform-provider-feilong
+          echo "Provider installed to $PLUGIN_DIR"
+          ls -l "$PLUGIN_DIR"
+          echo "::endgroup::"
+      # -----------------------------------------------------------------------
 
       - name: Terraform validation
         if: steps.tf_files.outputs.added_modified
