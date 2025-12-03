@@ -48,7 +48,43 @@ jobs:
           tag: v0.0.9
           fileName: terraform-provider-feilong_0.0.9_linux_amd64.tar.gz
           extract: true
+
       - name: Validate files
+        if: steps.tf_files.outputs.added_modified
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Use GitHub CLI to download the asset matching the pattern
+          gh release download v0.0.6 \
+            --repo bischoff/terraform-provider-feilong \
+            --pattern "*linux_amd64.zip" \
+            --dir sumaform
+      # --------------------------------------------------------------------------
+
+      - name: Unzip Feilong terraform provider
+        if: steps.tf_files.outputs.added_modified
+        run: |
+          # Find the zip file (we used a wildcard download, so we find the specific file)
+          ZIP_FILE=$(find sumaform -name "*linux_amd64.zip" | head -n 1)
+          echo "Unzipping $ZIP_FILE..."
+          unzip "$ZIP_FILE" -d sumaform
+          
+          # Setup the provider directory structure
+          mkdir -p ~/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64
+          
+          # Find the binary (it might be named terraform-provider-feilong_v0.0.6 or similar) and move it
+          # We search for a file that starts with terraform-provider-feilong and is NOT the zip file
+          BINARY_FILE=$(find sumaform -type f -name "terraform-provider-feilong*" ! -name "*.zip" | head -n 1)
+          
+          if [ -z "$BINARY_FILE" ]; then
+            echo "::error::Could not find unzipped provider binary"
+            exit 1
+          fi
+          
+          mv "$BINARY_FILE" ~/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64/terraform-provider-feilong
+          chmod +x ~/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64/terraform-provider-feilong
+
+      - name: Terraform validation
         if: steps.tf_files.outputs.added_modified
         run: |
           # --- Legacy Terraform Validation Loop ---
