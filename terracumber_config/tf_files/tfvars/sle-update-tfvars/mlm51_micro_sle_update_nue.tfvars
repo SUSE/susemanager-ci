@@ -24,7 +24,8 @@ ENVIRONMENT_CONFIGURATION = {
   product_version = "5.1-released"
   name_prefix     = "mlm-su-51micro-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-micro-qe-sle-update-NUE"
-
+}
+BASE_CONFIGURATIONS {
   base_core = {
     pool       = "ssd"
     bridge     = "br1"
