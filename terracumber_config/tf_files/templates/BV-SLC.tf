@@ -16,15 +16,15 @@ terraform {
 # 1. PROVIDERS (Distributed Infrastructure)
 # -------------------------------------------------------------------
 
-# Core Hypervisor (Caladan)
+# Core Hypervisor
 provider "libvirt" {
-  uri = "qemu+tcp://caladan.mgr.slc1.suse.org/system"
+  uri = "qemu+tcp://${var.BASE_CONFIGURATION.base_core.hypervisor}/system"
 }
 
-# Old SLE Host (Tatooine)
+# Old SLE Host
 provider "libvirt" {
-  alias = "tatooine"
-  uri   = "qemu+tcp://tatooine.mgr.slc1.suse.org/system"
+  alias = "old_sle"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATION.base_old_sle.hypervisor}/system"
 }
 
 # New SLE Host (Florina)
@@ -36,7 +36,7 @@ provider "libvirt" {
 # Retail/Infrastructure Host
 provider "libvirt" {
   alias = "retail"
-  uri   = "qemu+tcp://terminus.mgr.slc1.suse.org/system"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATION.retail.hypervisor}/system"
 }
 
 # Debian/Ubuntu Host
@@ -61,7 +61,7 @@ module "base_core" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = var.ENVIRONMENT_CONFIGURATION.core_images
+  images            = var.BASE_CONFIGURATION.base_core.images
 
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
@@ -69,8 +69,8 @@ module "base_core" {
   testsuite         = true
 
   provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
+    pool        = var.BASE_CONFIGURATION.base_core.pool
+    bridge      = var.BASE_CONFIGURATION.base_core.bridge
   }
 }
 
