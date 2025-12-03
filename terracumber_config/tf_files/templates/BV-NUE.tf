@@ -62,7 +62,7 @@ module "base_core" {
 # -------------------------------------------------------------------
 # 4. SHARED LOGIC INTEGRATION
 # -------------------------------------------------------------------
-module "bv_logic" {
+module "build_validation_module" {
   source = "./modules/build_validation"
 
   providers = {
@@ -79,6 +79,7 @@ module "bv_logic" {
 
   # --- VARIABLES ---
   environment_configuration       = var.ENVIRONMENT_CONFIGURATION
+  base_configurations             = var.BASE_CONFIGURATIONS
   platform_location_configuration = var.PLATFORM_LOCATION_CONFIGURATION
   location                        = var.LOCATION
   product_version                 = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version

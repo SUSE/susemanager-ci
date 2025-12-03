@@ -218,6 +218,7 @@ module "bv_logic" {
   }
 
   environment_configuration       = var.ENVIRONMENT_CONFIGURATION
+  base_configurations             = var.BASE_CONFIGURATIONS
   platform_location_configuration = var.PLATFORM_LOCATION_CONFIGURATION
   location                        = var.LOCATION
   product_version                 = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
