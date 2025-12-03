@@ -53,9 +53,9 @@ module "base_core" {
   testsuite         = true
 
   provider_settings = {
-    pool               = var.ENVIRONMENT_CONFIGURATION.base_core["pool"]
-    bridge             = var.ENVIRONMENT_CONFIGURATION.base_core["bridge"]
-    additional_network = var.ENVIRONMENT_CONFIGURATION.base_core["additional_network"]
+    pool               = var.BASE_CONFIGURATIONS.base_core["pool"]
+    bridge             = var.BASE_CONFIGURATIONS.base_core["bridge"]
+    additional_network = var.BASE_CONFIGURATIONS.base_core["additional_network"]
   }
 }
 
@@ -63,7 +63,7 @@ module "base_core" {
 # 4. SHARED LOGIC INTEGRATION
 # -------------------------------------------------------------------
 module "bv_logic" {
-  source = "./modules/build_validation_logic"
+  source = "./modules/build_validation"
 
   providers = {
     libvirt.host_old_sle = libvirt
@@ -73,17 +73,8 @@ module "bv_logic" {
     libvirt.host_retail  = libvirt
   }
 
-  # --- BASE MAPPING ---
-  # Map roles to base_core, except ARM
   base_configurations = {
     default = module.base_core.configuration
-    old_sle = module.base_core.configuration
-    new_sle = module.base_core.configuration
-    res     = module.base_core.configuration
-    debian  = module.base_core.configuration
-    retail  = module.base_core.configuration
-    # Map ARM to the specific base module defined above
-    arm     = module.base_arm.configuration
   }
 
   # --- VARIABLES ---

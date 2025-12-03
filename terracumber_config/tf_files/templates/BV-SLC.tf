@@ -12,37 +12,33 @@ terraform {
   }
 }
 
-# -------------------------------------------------------------------
-# 1. PROVIDERS (Distributed Infrastructure)
-# -------------------------------------------------------------------
-
 # Core Hypervisor
 provider "libvirt" {
-  uri = "qemu+tcp://${var.BASE_CONFIGURATION.base_core.hypervisor}/system"
+  uri = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_core.hypervisor}/system"
 }
 
 # Old SLE Host
 provider "libvirt" {
-  alias = "old_sle"
-  uri   = "qemu+tcp://${var.BASE_CONFIGURATION.base_old_sle.hypervisor}/system"
+  alias = "host_old_sle_res"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_old_sle.hypervisor}/system"
 }
 
-# New SLE Host (Florina)
+# New SLE Host
 provider "libvirt" {
-  alias = "florina"
-  uri   = "qemu+tcp://florina.mgr.slc1.suse.org/system"
+  alias = "host_new_sle"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_new_sle.hypervisor}/system"
 }
 
 # Retail/Infrastructure Host
 provider "libvirt" {
-  alias = "retail"
-  uri   = "qemu+tcp://${var.BASE_CONFIGURATION.retail.hypervisor}/system"
+  alias = "host_retail"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.retail.hypervisor}/system"
 }
 
 # Debian/Ubuntu Host
 provider "libvirt" {
-  alias = "debian"
-  uri   = "qemu+tcp://${var.BASE_CONFIGURATION.base_debian.hypervisor}/system"
+  alias = "host_debian"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_debian.hypervisor}/system"
 }
 
 
@@ -50,7 +46,7 @@ provider "libvirt" {
 # 2. DISTRIBUTED BASE CONFIGURATIONS
 # -------------------------------------------------------------------
 
-# Base Core (Caladan): Core Infra + Main Testsuite images
+# Base Core : Core Infra + Main Testsuite images
 module "base_core" {
   source = "./modules/base"
 
@@ -61,7 +57,7 @@ module "base_core" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = var.BASE_CONFIGURATION.base_core.images
+  images            = var.BASE_CONFIGURATIONS.base_core.images
 
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
@@ -69,14 +65,14 @@ module "base_core" {
   testsuite         = true
 
   provider_settings = {
-    pool        = var.BASE_CONFIGURATION.base_core.pool
-    bridge      = var.BASE_CONFIGURATION.base_core.bridge
+    pool        = var.BASE_CONFIGURATIONS.base_core.pool
+    bridge      = var.BASE_CONFIGURATIONS.base_core.bridge
   }
 }
 
-# Base Old SLE (Tatooine): SLES 12
+# Base Old SLE : SLES 12
 module "base_old_sle" {
-  providers = { libvirt = libvirt.tatooine }
+  providers = { libvirt = libvirt.host_old_sle_res }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -86,21 +82,21 @@ module "base_old_sle" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = ["sles12sp5o","sles15sp3o", "sles15sp4o"]
+  images            = var.BASE_CONFIGURATIONS.base_old_sle.images
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
 
   provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
+    pool        = var.BASE_CONFIGURATIONS.base_old_sle.pool
+    bridge      = var.BASE_CONFIGURATIONS.base_old_sle.bridge
   }
 }
 
-# Base RES (Tatooine): EL and Liberty
+# Base RES : EL and Liberty
 module "base_res" {
-  providers = { libvirt = libvirt.tatooine }
+  providers = { libvirt = libvirt.host_old_sle_res }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -110,21 +106,21 @@ module "base_res" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = ["almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "libertylinux9o"]
+  images            = var.BASE_CONFIGURATIONS.base_old_sle.images
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
 
   provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
+    pool        = var.BASE_CONFIGURATIONS.base_res.pool
+    bridge      = var.BASE_CONFIGURATIONS.base_res.bridge
   }
 }
 
-# Base New SLE (Florina): SLES 15 + Micro
+# Base New SLE : SLES 15 + Micro
 module "base_new_sle" {
-  providers = { libvirt = libvirt.florina }
+  providers = { libvirt = libvirt.host_new_sle }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -134,22 +130,20 @@ module "base_new_sle" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = ["sles15sp5o", "sles15sp6o", "sles15sp7o",
-    "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o",
-    "slmicro60o", "slmicro61o"]
+  images            = var.BASE_CONFIGURATIONS.base_new_sle.images
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
 
   provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
+    pool        = var.BASE_CONFIGURATIONS.base_new_sle.pool
+    bridge      = var.BASE_CONFIGURATIONS.base_new_sle.bridge
   }
 }
 
 module "base_retail" {
-  providers = { libvirt = libvirt.retail }
+  providers = { libvirt = libvirt.host_retail }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -159,22 +153,22 @@ module "base_retail" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = ["sles12sp5o", "sles15sp6o", "sles15sp7o", "opensuse155o", "opensuse156o", "slemicro55o"]
+  images            = var.BASE_CONFIGURATIONS.base_retail.images
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
 
   provider_settings = {
-    pool               = "ssd"
-    bridge             = "br1"
-    additional_network = "192.168.50.0/24" # SLC Specific Network
+    pool               = var.BASE_CONFIGURATIONS.base_retail.pool
+    bridge             = var.BASE_CONFIGURATIONS.base_retail.bridge
+    additional_network = var.BASE_CONFIGURATIONS.base_retail.additional_network
   }
 }
 
-# Base Debian (Trantor)
+# Base Debian
 module "base_debian" {
-  providers = { libvirt = libvirt.debian }
+  providers = { libvirt = libvirt.host_debian }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -184,15 +178,15 @@ module "base_debian" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = ["ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o"]
+  images            = var.BASE_CONFIGURATIONS.base_debian.images
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
 
   provider_settings = {
-    pool        = "ssd"
-    bridge      = "br1"
+    pool               = var.BASE_CONFIGURATIONS.base_debian.pool
+    bridge             = var.BASE_CONFIGURATIONS.base_debian.bridge
   }
 }
 
@@ -205,12 +199,11 @@ module "bv_logic" {
   # --- PROVIDER MAPPING ---
   # Plug the specific hardware providers into the logic slots
   providers = {
-    libvirt.host_old_sle = libvirt.tatooine
-    libvirt.host_new_sle = libvirt.florina
-    libvirt.host_res     = libvirt.tatooine
-    libvirt.host_debian  = libvirt.trantor
-    libvirt.host_retail  = libvirt.terminus
-    libvirt.host_arm     = libvirt.suma-arm
+    libvirt.host_old_sle = libvirt.host_old_sle_res
+    libvirt.host_new_sle = libvirt.host_new_sle
+    libvirt.host_res     = libvirt.host_old_sle_res
+    libvirt.host_debian  = libvirt.host_debian
+    libvirt.host_retail  = libvirt.host_retail
   }
 
   # --- BASE MAPPING ---
@@ -222,7 +215,6 @@ module "bv_logic" {
     res     = module.base_res.configuration
     debian  = module.base_debian.configuration
     retail  = module.base_retail.configuration
-    arm     = module.base_arm.configuration
   }
 
   # --- VARIABLES ---
@@ -247,9 +239,7 @@ module "bv_logic" {
   BASE_OS                     = var.BASE_OS
 }
 
-# -------------------------------------------------------------------
-# 4. OUTPUTS
-# -------------------------------------------------------------------
+
 output "configuration" {
   value = {
     controller = module.bv_logic.controller_configuration
