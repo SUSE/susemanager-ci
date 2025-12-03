@@ -81,7 +81,7 @@ module "bv_logic" {
   ENVIRONMENT_CONFIGURATION       = var.ENVIRONMENT_CONFIGURATION
   PLATFORM_LOCATION_CONFIGURATION = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION]
   LOCATION                        = var.LOCATION
-  product_version                 = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
+  PRODUCT_VERSION                 = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
 
   SCC_USER         = var.SCC_USER
   SCC_PASSWORD     = var.SCC_PASSWORD
