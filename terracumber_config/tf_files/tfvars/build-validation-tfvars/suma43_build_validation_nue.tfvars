@@ -110,10 +110,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:c5"
     name = "liberty9-minion"
   }
-  ubuntu2004_minion = {
-    mac  = "aa:b2:92:42:00:ba"
-    name = "ubuntu2004-minion"
-  }
   ubuntu2204_minion = {
     mac  = "aa:b2:92:42:00:bb"
     name = "ubuntu2204-minion"
@@ -222,10 +218,6 @@ ENVIRONMENT_CONFIGURATION = {
   liberty9_sshminion = {
     mac  = "aa:b2:92:42:00:e5"
     name = "liberty9-sshminion"
-  }
-  ubuntu2004_sshminion = {
-    mac  = "aa:b2:92:42:00:da"
-    name = "ubuntu2004-sshminion"
   }
   ubuntu2204_sshminion = {
     mac  = "aa:b2:92:42:00:db"
