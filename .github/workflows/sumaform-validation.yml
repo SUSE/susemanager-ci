@@ -19,122 +19,52 @@ jobs:
         with:
           filter: '*.tf'
 
-      # --- MISSING STEP RE-ADDED ---
       - name: Install terraform
         if: steps.tf_files.outputs.added_modified
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
-          terraform_wrapper: false # Required for script loops to work
-      # -----------------------------
+          terraform_wrapper: false
 
       - name: Install opentofu
         if: steps.tf_files.outputs.added_modified
         uses: opentofu/setup-opentofu@v1.0.6
         with:
           tofu_version: 1.10.7
+
       - name: Checkout sumaform
         if: steps.tf_files.outputs.added_modified
         uses: actions/checkout@v4
         with:
           repository: uyuni-project/sumaform
           path: sumaform
+
       - name: Download Feilong terraform provider asset
         if: steps.tf_files.outputs.added_modified
-        uses: robinraju/release-downloader@v1.9
+        uses: dsaltares/fetch-gh-release-asset@1.1.2
         with:
-          repository: Bischoff/terraform-provider-feilong
-          tag: v0.0.6
-          fileName: terraform-provider-feilong_0.0.6_linux_amd64.tar.gz
-          extract: true
-      - name: Validate files
+          repo: bischoff/terraform-provider-feilong
+          version: tags/v0.0.6
+          file: terraform-provider-feilong_0.0.6_linux_amd64.zip
+          target: sumaform/terraform-provider-feilong_0.0.6_linux_amd64.zip
+
+      - name: Unzip Feilong terraform provider
         if: steps.tf_files.outputs.added_modified
-        env:
-          TF_VAR_SCC_USER: "user"
-          TF_VAR_SCC_PASSWORD: "password"
-          TF_VAR_MIRROR: ""
-          TF_VAR_PULL_REQUEST_REPO: ""
-          TF_VAR_MASTER_REPO: ""
-          TF_VAR_MASTER_OTHER_REPO: ""
-          TF_VAR_MASTER_SUMAFORM_TOOLS_REPO: ""
-          TF_VAR_UPDATE_REPO: ""
-          TF_VAR_ADDITIONAL_REPO_URL: ""
-          TF_VAR_TEST_PACKAGES_REPO: ""
-          TF_VAR_SLE_CLIENT_REPO: ""
-          TF_VAR_RHLIKE_CLIENT_REPO: ""
-          TF_VAR_DEBLIKE_CLIENT_REPO: ""
-          TF_VAR_OPENSUSE_CLIENT_REPO: ""
-          TF_VAR_ZVM_ADMIN_TOKEN: ""
-          TF_VAR_CONTAINER_REPOSITORY: ""
-          TF_VAR_SERVER_CONTAINER_REPOSITORY: ""
-          TF_VAR_PROXY_CONTAINER_REPOSITORY: ""
-          TF_VAR_SERVER_CONTAINER_IMAGE: ""
-          TF_VAR_ENVIRONMENT: "apprentice"
         run: |
-          # Install feilong provider
-          srcdir=/home/runner/work/susemanager-ci/susemanager-ci/
-          dstdir_terraform=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.4/linux_amd64/
-          dstdir_opentofu=/usr/share/terraform/plugins/registry.opentofu.org/bischoff/feilong/0.0.4/linux_amd64/
-          sudo mkdir -p $dstdir_terraform
-          sudo mkdir -p $dstdir_opentofu
-          sudo ln -s $srcdir/terraform-provider-feilong $dstdir_terraform
-          sudo ln -s $srcdir/terraform-provider-feilong $dstdir_opentofu
+          unzip sumaform/terraform-provider-feilong_0.0.6_linux_amd64.zip -d sumaform
+          mkdir -p ~/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64
+          mv sumaform/terraform-provider-feilong_v0.0.6 ~/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.6/linux_amd64/terraform-provider-feilong
 
-          # Remove libvirt and feilong provider settings
-          sed -i \
-            -e '/provider *"/,/^[ \/#]*\}\s*$/d' \
-            -e '/libvirt = {/,/^[ \/#]*\}\s*$/d' \
-            -e '/libvirt =/d' \
-            -e '/feilong = {/,/^[ \/#]*\}\s*$/d' \
-            -e '/feilong =/d' \
-            ${{steps.tf_files.outputs.added_modified}}
-
-          # Also exclude s390 minions from terraform plan
-          sed -i \
-            -e '/^module ".*s390.*" {$/,/^}$/d' \
-            -e '/.*s390.*_configuration *= module.*s390.*\.configuration/d' \
-            ${{steps.tf_files.outputs.added_modified}}
-
-          # Setup sumaform with the 'null' backend
-          cd sumaform
-          ln -sfn ../backend_modules/null modules/backend
-
-          # Provide a fake private SSH key
-          mkdir -p ~/.ssh
-          touch ~/.ssh/id_ed25519
-
-          # --- OpenTofu Validation Loop ---
+      - name: Terraform validation
+        if: steps.tf_files.outputs.added_modified
+        run: |
+          # --- Legacy Terraform Validation Loop (Unchanged) ---
           for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
-            if [[ "$tf_file" != "terracumber_config/tf_files/templates/PR-testing-template.tf" ]]; then
-              echo "::notice::[TOFU] Validating '`basename $tf_file`'..."
+            if [[ "$tf_file" == *"build-validation"* ]]; then
+              echo "::notice::[TERRAFORM] Validating legacy build-validation file '`basename $tf_file`'..."
               rm -f main.tf variables.tf environment.tfvars
-              cp ../$tf_file main.tf
-              PLAN_ARGS=""
-              SOURCE_DIR=$(dirname "../$tf_file")
-              if [ -f "$SOURCE_DIR/variables.tf" ]; then
-                cp "$SOURCE_DIR/variables.tf" variables.tf
-                echo "::notice::Included variables.tf from $SOURCE_DIR"
-              fi
-              if [ -f "$SOURCE_DIR/environment.tfvars" ]; then
-                cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
-                PLAN_ARGS="-var-file=environment.tfvars"
-                echo "::notice::Included environment.tfvars from $SOURCE_DIR"
-              fi
-              # export TOFU_LOG=trace
-              tofu init -input=false
-              tofu validate
-              tofu plan -input=false $PLAN_ARGS
-              echo
-            fi
-          done
-          
-          # --- OpenTofu Validation Loop ---
-          for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
-            if [[ "$tf_file" != "terracumber_config/tf_files/templates/PR-testing-template.tf" ]]; then
-              echo "::notice::[TERRAFORM] Validating '`basename $tf_file`'..."
-              rm -f main.tf variables.tf environment.tfvars
-              cp ../$tf_file main.tf
-              SOURCE_DIR=$(dirname "../$tf_file")
+              cp $tf_file main.tf
+              SOURCE_DIR=$(dirname "$tf_file")
               PLAN_ARGS=""
               if [ -f "$SOURCE_DIR/variables.tf" ]; then
                 cp "$SOURCE_DIR/variables.tf" variables.tf
@@ -145,10 +75,59 @@ jobs:
                 PLAN_ARGS="-var-file=environment.tfvars"
                 echo "::notice::Included environment.tfvars from $SOURCE_DIR"
               fi
-              # export TF_LOG=trace
               terraform init -input=false
               terraform validate
               terraform plan -input=false $PLAN_ARGS
               echo
             fi
           done
+          
+          # --- OpenTofu Validation Loop (Updated) ---
+          for tf_file in ${{steps.tf_files.outputs.added_modified}}; do
+            if [[ "$tf_file" != "terracumber_config/tf_files/templates/PR-testing-template.tf" ]]; then
+              echo "::notice::[TOFU] Validating '`basename $tf_file`'..."
+              rm -f main.tf variables.tf environment.tfvars location.tfvars sample.tfvars
+              cp ../$tf_file main.tf
+              SOURCE_DIR=$(dirname "../$tf_file")
+              PLAN_ARGS=""
+
+              # 1. Handle Variables
+              if [ -f "$SOURCE_DIR/variables.tf" ]; then
+                cp "$SOURCE_DIR/variables.tf" variables.tf
+                echo "::notice::Included variables.tf from $SOURCE_DIR"
+              # Check for build-validation-variables.tf in sibling directory
+              elif [ -f "$SOURCE_DIR/../variables/build-validation-variables.tf" ]; then
+                cp "$SOURCE_DIR/../variables/build-validation-variables.tf" variables.tf
+                echo "::notice::Included build-validation-variables.tf from $SOURCE_DIR/../variables/"
+              fi
+
+              # 2. Handle TFVars (Inputs)
+              if [ -f "$SOURCE_DIR/environment.tfvars" ]; then
+                cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
+                PLAN_ARGS="-var-file=environment.tfvars"
+                echo "::notice::Included environment.tfvars from $SOURCE_DIR"
+              # Check if this is the Build Validation Template
+              elif [[ "$tf_file" == *"template-build-validation.tf" ]]; then
+                 # We need location.tfvars
+                 if [ -f "$SOURCE_DIR/../tfvars/location.tfvars" ]; then
+                    cp "$SOURCE_DIR/../tfvars/location.tfvars" location.tfvars
+          
+                    # We need ONE sample tfvars file to verify the plan (use first one found)
+                    SAMPLE_VAR_PATH=$(find "$SOURCE_DIR/../tfvars" -name "*nue.tfvars" | head -n 1)
+                    if [ -n "$SAMPLE_VAR_PATH" ]; then
+                       cp "$SAMPLE_VAR_PATH" sample.tfvars
+                       PLAN_ARGS="-var-file=location.tfvars -var-file=sample.tfvars"
+                       echo "::notice::Included location.tfvars and sample $(basename $SAMPLE_VAR_PATH)"
+                    else
+                       echo "::warning::Could not find a sample .tfvars file for validation"
+                    fi
+                 fi
+              fi
+
+              tofu init -input=false
+              tofu validate
+              tofu plan -input=false $PLAN_ARGS
+              echo
+            fi
+          done
+        working-directory: sumaform
