@@ -83,21 +83,21 @@ module "bv_logic" {
   location                        = var.LOCATION
   product_version                 = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
 
-  SCC_USER         = var.SCC_USER
-  SCC_PASSWORD     = var.SCC_PASSWORD
-  SCC_PTF_USER     = var.SCC_PTF_USER
-  SCC_PTF_PASSWORD = var.SCC_PTF_PASSWORD
-  ZVM_ADMIN_TOKEN  = var.ZVM_ADMIN_TOKEN
+  scc_user         = var.SCC_USER
+  scc_password     = var.SCC_PASSWORD
+  scc_ptf_user     = var.SCC_PTF_USER
+  scc_ptf_password = var.SCC_PTF_PASSWORD
+  zvm_admin_token  = var.ZVM_ADMIN_TOKEN
 
-  GIT_USER          = var.GIT_USER
-  GIT_PASSWORD      = var.GIT_PASSWORD
-  CUCUMBER_GITREPO  = var.CUCUMBER_GITREPO
-  CUCUMBER_BRANCH   = var.CUCUMBER_BRANCH
+  git_user          = var.GIT_USER
+  git_password      = var.GIT_PASSWORD
+  cucumber_gitrepo  = var.CUCUMBER_GITREPO
+  cucumber_branch   = var.CUCUMBER_BRANCH
 
-  SERVER_CONTAINER_REPOSITORY = var.SERVER_CONTAINER_REPOSITORY
-  SERVER_CONTAINER_IMAGE      = var.SERVER_CONTAINER_IMAGE
-  PROXY_CONTAINER_REPOSITORY  = var.PROXY_CONTAINER_REPOSITORY
-  BASE_OS                     = var.BASE_OS
+  server_container_repository = var.SERVER_CONTAINER_REPOSITORY
+  server_container_image      = var.SERVER_CONTAINER_IMAGE
+  proxy_container_repository  = var.PROXY_CONTAINER_REPOSITORY
+  base_os                     = var.BASE_OS
 }
 
 output "configuration" {
