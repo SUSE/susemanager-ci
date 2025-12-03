@@ -67,6 +67,7 @@ node('sumaform-cucumber') {
     def mutableParams = [:] + params
     mutableParams.product_version_display = "4.3-released"
     mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_43.json'
+    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/suma43_build_validation_nue.tfvars'
 
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(mutableParams)
