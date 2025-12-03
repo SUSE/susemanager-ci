@@ -73,7 +73,7 @@ module "bv_logic" {
     libvirt.host_retail  = libvirt
   }
 
-  base_configurations = {
+  module_base_configurations = {
     default = module.base_core.configuration
   }
 
