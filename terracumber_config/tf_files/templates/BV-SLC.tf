@@ -243,7 +243,7 @@ module "bv_logic" {
 
 output "configuration" {
   value = {
-    controller            = module.bv_logic.configuration.controller
-    server_configuration  = module.bv_logic.configuration.server_configuration
+    controller            = module.bv_logic.controller
+    server_configuration  = module.bv_logic.server_configuration
   }
 }
