@@ -227,6 +227,7 @@ module "bv_logic" {
   SCC_PASSWORD     = var.SCC_PASSWORD
   SCC_PTF_USER     = var.SCC_PTF_USER
   SCC_PTF_PASSWORD = var.SCC_PTF_PASSWORD
+  ZVM_ADMIN_TOKEN  = var.ZVM_ADMIN_TOKEN
 
   GIT_USER          = var.GIT_USER
   GIT_PASSWORD      = var.GIT_PASSWORD
