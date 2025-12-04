@@ -49,14 +49,12 @@ class TfvarsGenerator:
 
         user_start_pattern = re.compile(fr'^\s*{user}\s*=\s*{{', re.MULTILINE)
         match = user_start_pattern.search(content)
-
         if not match:
             raise ValueError(f"User '{user}' not found in {file_path}")
 
         start_index = match.end()
         open_braces = 1
         block_content = ""
-
         for char in content[start_index:]:
             if char == '{': open_braces += 1
             elif char == '}': open_braces -= 1
@@ -72,8 +70,7 @@ class TfvarsGenerator:
         core_info = {}
         for key in ['hypervisor', 'pool', 'bridge', 'additional_network']:
             m = re.search(fr'{key}\s*=\s*"([^"]+)"', block_content)
-            if m:
-                core_info[key] = m.group(1)
+            if m: core_info[key] = m.group(1)
 
         return macs, core_info
 
@@ -94,7 +91,6 @@ class TfvarsGenerator:
             'minion7': 'kvm-host',
         }
 
-        # Structure of ENVIRONMENT_CONFIGURATION
         env_config = {
             'controller': {'mac': macs.get("controller", "MISSING"), 'name': "controller"},
             'server_containerized': {
@@ -123,10 +119,7 @@ class TfvarsGenerator:
             minion_type = params.get(param_key)
             if minion_type and minion_type.strip() and minion_type != "null":
                 mac_addr = macs.get(mac_key, "MISSING_MAC")
-                env_config[minion_type] = {
-                    'mac': mac_addr,
-                    'name': param_key
-                }
+                env_config[minion_type] = {'mac': mac_addr, 'name': param_key}
 
         self.data['ENVIRONMENT_CONFIGURATION'] = env_config
         # Default LOCATION if not provided elsewhere
@@ -157,60 +150,83 @@ class TfvarsGenerator:
             if value is not None:
                 self.data[key] = value
 
+    # --- CLEANING LOGIC (Scenario B) ---
+    def clean_resources(self, keep_list):
+        if 'ENVIRONMENT_CONFIGURATION' not in self.data: return
+
+        env_config = self.data['ENVIRONMENT_CONFIGURATION']
+        exclusions = ['minion', 'client', 'terminal', 'buildhost', 'proxy', 'dhcp_dns', 'monitoring_server']
+
+        # Start with resources that DON'T match exclusions (Infrastructure)
+        final_keep_keys = {k for k in env_config.keys() if all(ex not in k for ex in exclusions)}
+
+        # Add explicitly requested resources
+        # Perform a set intersection to ensure we only keep things that actually exist in the config
+        requested_keys = set(keep_list)
+        available_keys = set(env_config.keys())
+
+        # Add requested keys that exist in the config
+        final_keep_keys.update(requested_keys.intersection(available_keys))
+
+        logger.info(f"Retaining resources: {final_keep_keys}")
+
+        # Filter the dictionary
+        cleaned_config = {k: v for k, v in env_config.items() if k in final_keep_keys}
+
+        self.data['ENVIRONMENT_CONFIGURATION'] = cleaned_config
+
     def save(self, output_path):
         logger.info(f"Saving to {output_path}")
         hcl_content = self.to_hcl(self.data)
-        hcl_content = re.sub(r'}\n(\w)', r'}\n\n\1', hcl_content) # formatting
+        hcl_content = re.sub(r'}\n(\w)', r'}\n\n\1', hcl_content)
         with open(output_path, 'w') as f:
             f.write(hcl_content)
             f.write("\n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # Core Generation Arguments
-    parser.add_argument("--env-file", help="Path to reference env file (e.g. nue.tfvars)")
-    parser.add_argument("--user", help="User identifier in env file (e.g. mlm51_micro_bv)")
-    parser.add_argument("--output", required=True, help="Output file path")
-
-    # Minion Slots
-    for i in range(1, 8):
-        parser.add_argument(f"--minion{i}", default="")
-
-    parser.add_argument("--product-version", default="5.1-released")
-    parser.add_argument("--base-os", default="slmicro61o")
+    # Scenario A Args
+    parser.add_argument("--env-file", help="Reference env file (Scenario Personal BV)")
+    parser.add_argument("--user", help="User identifier (Scenario Personal BV)")
+    for i in range(1, 8): parser.add_argument(f"--minion{i}", default="")
     parser.add_argument("--deploy-retail", action='store_true')
 
-    # Merging and Injection
-    parser.add_argument("--merge-files", nargs='*', help="Additional .tfvars files to merge")
-    parser.add_argument("--inject", action='append', help="KEY=VALUE variables to inject")
+    # Common Args
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--product-version")
+    parser.add_argument("--base-os")
+    parser.add_argument("--merge-files", nargs='*', default=[], help="Files to merge (Scenario Classic BV)")
+    parser.add_argument("--inject", action='append', help="KEY=VALUE")
+
+    # Cleaning Args
+    parser.add_argument("--clean", action='store_true', help="Enable resource cleaning")
+    parser.add_argument("--keep-resources", nargs='*', default=[], help="List of resources to keep during cleaning")
 
     args = parser.parse_args()
     j_params = vars(args)
-
-    # RETAIL LOGIC & VALIDATION
-    if args.deploy_retail:
-        m1, m2 = j_params.get('minion1', ''), j_params.get('minion2', '')
-        if (m1 and m1.strip()) or (m2 and m2.strip()):
-            print("\n[ERROR] Retail Conflict: Cannot set minion1/minion2 manually when --deploy-retail is used.")
-            sys.exit(1)
-        print("[INFO] Deploy Retail enabled. Setting defaults.")
-        j_params['minion1'] = 'sles15sp7_minion'
-        j_params['minion2'] = 'sles15sp7_buildhost'
-
-    # DUPLICATE CHECK
-    seen = set()
-    for i in range(1, 8):
-        val = j_params.get(f"minion{i}")
-        if val and val.strip() and val != "null":
-            if val in seen:
-                print(f"\n[ERROR] Duplicate minion type: '{val}'")
-                sys.exit(1)
-            seen.add(val)
-
     gen = TfvarsGenerator()
 
-    # GENERATE BASE STRUCTURE (if env-file provided)
+
+    # RETAIL LOGIC & VALIDATION
     if args.env_file and args.user:
+        # Retail Logic
+        if args.deploy_retail:
+            m1, m2 = j_params.get('minion1', ''), j_params.get('minion2', '')
+            if (m1 and m1.strip()) or (m2 and m2.strip()):
+                print("\n[ERROR] Retail Conflict: Cannot set minion1/minion2 manually when --deploy-retail is used.")
+                sys.exit(1)
+            print("[INFO] Deploy Retail enabled. Setting defaults.")
+            j_params['minion1'] = 'sles15sp7_minion'
+            j_params['minion2'] = 'sles15sp7_buildhost'
+
+        # Duplicate check
+        seen = set()
+        for i in range(1, 8):
+            val = j_params.get(f"minion{i}")
+            if val and val.strip() and val != "null":
+                if val in seen: print(f"Error: Duplicate {val}"); sys.exit(1)
+                seen.add(val)
+
         macs, core = gen.parse_env_reference_file(args.env_file, args.user)
         gen.generate_base_config(args.user, macs, core, j_params)
 
@@ -227,5 +243,9 @@ if __name__ == "__main__":
                 vars_to_inject[k] = v
     gen.inject_variables(vars_to_inject)
 
-    # SAVE
+    # 4. CLEANING (Scenario B usually)
+    if args.clean:
+        keep_list = [r for r in args.keep_resources if r.strip()]
+        gen.clean_resources(keep_list)
+
     gen.save(args.output)
