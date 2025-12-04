@@ -531,6 +531,7 @@ module "sles15sp5s390_minion" {
 
   name               = "sles15sp5s390-minion"
   image              = "s15s5-minimal-2part-xfs"
+  roles              = ["minion"]
 
   provider_settings = {
     userid             = "W51MINUE"
@@ -933,6 +934,7 @@ module "sles15sp5s390_sshminion" {
 
   name               = "sles15sp5s390-sshminion"
   image              = "s15s5-minimal-2part-xfs"
+  roles              = ["sshminion"]
 
   provider_settings = {
     userid             = "W51SSNUE"
