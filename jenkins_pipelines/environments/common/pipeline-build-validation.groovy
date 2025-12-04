@@ -144,6 +144,8 @@ def run(params) {
                             --custom-repositories ${WORKSPACE}/custom_repositories.json \
                             --sumaform-backend ${params.sumaform_backend} \
                             --tf_configuration_files ${localSumaformDirPath}/terraform.tfvars \
+                            --use-tf-resource-cleaner \
+                            --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} \
                             --runstep provision
                     """
                     // Generate features
