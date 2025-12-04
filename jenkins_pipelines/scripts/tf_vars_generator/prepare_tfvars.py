@@ -149,27 +149,20 @@ class TfvarsGenerator:
             if value is not None:
                 self.data[key] = value
 
-    # --- CLEANING LOGIC (Scenario B) ---
-    def clean_resources(self, keep_list):
+    # --- CLEANING LOGIC ---
+    def clean_resources(self, keep_list, delete_all_unused=False):
         if 'ENVIRONMENT_CONFIGURATION' not in self.data: return
-
         env_config = self.data['ENVIRONMENT_CONFIGURATION']
-        exclusions = ['minion', 'client', 'terminal', 'buildhost', 'proxy', 'proxy_containerized', 'dhcp_dns', 'monitoring_server']
-
-        # Start with resources that DON'T match exclusions (Infrastructure)
+        # Base exclusions: Always remove these unless explicitly kept
+        exclusions = ['minion', 'client']
+        # Extended exclusions: Remove infrastructure if delete_all_unused is True
+        if delete_all_unused:
+            exclusions.extend(['terminal', 'buildhost', 'proxy', 'dhcp_dns', 'monitoring_server'])
         final_keep_keys = {k for k in env_config.keys() if all(ex not in k for ex in exclusions)}
-
-        # Add explicitly requested resources
-        # Perform a set intersection to ensure we only keep things that actually exist in the config
         requested_keys = set(keep_list)
         available_keys = set(env_config.keys())
-
-        # Add requested keys that exist in the config
         final_keep_keys.update(requested_keys.intersection(available_keys))
-
         logger.info(f"Retaining resources: {final_keep_keys}")
-
-        # Filter the dictionary
         cleaned_config = {k: v for k, v in env_config.items() if k in final_keep_keys}
         self.data['ENVIRONMENT_CONFIGURATION'] = cleaned_config
 
@@ -199,6 +192,7 @@ if __name__ == "__main__":
     # Cleaning Args
     parser.add_argument("--clean", action='store_true', help="Enable resource cleaning")
     parser.add_argument("--keep-resources", nargs='*', default=[], help="List of resources to keep during cleaning")
+    parser.add_argument("--delete-all", action='store_true', help="Aggressively clean optional infrastructure (proxy, buildhost, etc) if not in keep-resources")
 
     args = parser.parse_args()
     j_params = vars(args)
@@ -243,6 +237,6 @@ if __name__ == "__main__":
     # CLEANING
     if args.clean:
         keep_list = [r for r in args.keep_resources if r.strip()]
-        gen.clean_resources(keep_list)
+        gen.clean_resources(keep_list, delete_all_unused=args.delete_all)
 
     gen.save(args.output)
