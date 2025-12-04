@@ -154,7 +154,7 @@ class TfvarsGenerator:
         if 'ENVIRONMENT_CONFIGURATION' not in self.data: return
 
         env_config = self.data['ENVIRONMENT_CONFIGURATION']
-        exclusions = ['minion', 'client', 'terminal', 'buildhost', 'proxy', 'dhcp_dns', 'monitoring_server']
+        exclusions = ['minion', 'client', 'terminal', 'buildhost', 'proxy', 'proxy_containerized', 'dhcp_dns', 'monitoring_server']
 
         # Start with resources that DON'T match exclusions (Infrastructure)
         final_keep_keys = {k for k in env_config.keys() if all(ex not in k for ex in exclusions)}
