@@ -96,7 +96,7 @@ def run(params) {
                     def outputFile = "${localSumaformDirPath}/terraform.tfvars"
 
                     // Build Common Arguments
-                    def commonArgs = ""
+                    def commonArgs = " --output \"${outputFile}\""
                     commonArgs += " --inject SERVER_CONTAINER_REPOSITORY=${server_container_repository}"
                     commonArgs += " --inject PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}"
                     commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
