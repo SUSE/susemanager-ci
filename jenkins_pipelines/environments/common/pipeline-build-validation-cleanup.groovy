@@ -20,7 +20,6 @@ def run(params) {
         GString localTfVarsFile = "${localSumaformDirPath}terraform.tfvars"
         GString localTfVarsFullFile = "${localSumaformDirPath}terraform.tfvars.full"
         GString logFile = "${resultdirbuild}/sumaform.log"
-        GString tfVariablesFile = "${localSumaformDirPath}variables.tf"
 
         // Construct the --tf-resources-to-delete argument dynamically
         ArrayList defaultResourcesToDelete = []
@@ -33,7 +32,7 @@ def run(params) {
 
         String defaultResourcesToDeleteArgs = defaultResourcesToDelete.isEmpty() ? '' : "--default-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
 
-        GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path} --tf_variables_description_file=${tfVariablesFile}"
+        GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
         // Define shared environment variables for terraform calls
         GString environmentVars = """
@@ -180,7 +179,7 @@ def run(params) {
                     # Apply changes (This will destroy the removed resources)
                     ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} \
                         --init --sumaform-backend ${params.sumaform_backend} \
-                        --tf_configuration_files "${localTfVarsFile}" \
+                        --skip-variables-check \
                         --runstep provision
                 """
             }
@@ -197,7 +196,7 @@ def run(params) {
                     # Apply changes
                     ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log \
                         --init --sumaform-backend ${params.sumaform_backend} \
-                        --tf_configuration_files "${localTfVarsFile}" \
+                        --skip-variables-check \
                         --runstep provision
                 """
             }
