@@ -89,7 +89,7 @@ jobs:
           
           echo "::group::Test 1: Generate Personal BV Configuration"
           python3 $SCRIPT_PATH \
-            --env-file "terracumber_config/tf_files/environment.tfvars" \
+            --env-file "terracumber_config/tf_files/personal/environment.tfvars" \
             --user "maxime" \
             --output "personal_generated.tfvars" \
             --minion1 "sles15sp4_minion" \
