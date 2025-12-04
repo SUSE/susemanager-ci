@@ -28,11 +28,13 @@ module "cucumber_testsuite" {
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "${var.ENVIRONMENT}-"
@@ -43,7 +45,7 @@ module "cucumber_testsuite" {
   auth_registry          = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
   container_server = true
   container_proxy  = true
@@ -89,7 +91,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_minion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
         vcpu = 2
@@ -97,7 +99,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
         vcpu = 2
@@ -123,7 +125,7 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
         vcpu = 2
@@ -131,7 +133,7 @@ module "cucumber_testsuite" {
       }
     }
     pxeboot_minion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
     }
     dhcp_dns = {
       name        = "dhcp-dns"
