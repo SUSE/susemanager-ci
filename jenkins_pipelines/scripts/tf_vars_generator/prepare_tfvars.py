@@ -102,18 +102,10 @@ class TfvarsGenerator:
                 'name': "proxy",
                 'image': params.get("base_os", "slmicro61o")
             },
-            # Global settings usually go at the top level of the map in your TF setup
             'product_version': params.get("product_version", "5.1-released"),
             'name_prefix': f"{user}-",
-            'base_core': {
-                'pool': core_info.get("pool", "MISSING"),
-                'bridge': core_info.get("bridge", "MISSING"),
-                'additional_network': core_info.get("additional_network", "MISSING"),
-                'hypervisor': core_info.get("hypervisor", "MISSING"),
-            }
         }
 
-        # Add Dynamic Minions
         for param_key, mac_key in slot_mapping.items():
             minion_type = params.get(param_key)
             if minion_type and minion_type.strip() and minion_type != "null":
@@ -121,8 +113,17 @@ class TfvarsGenerator:
                 env_config[minion_type] = {'mac': mac_addr, 'name': param_key}
 
         self.data['ENVIRONMENT_CONFIGURATION'] = env_config
-        # Default LOCATION if not provided elsewhere
         self.data['LOCATION'] = "nue"
+
+        # BASE CONFIGURATIONS (Separate Block)
+        self.data['BASE_CONFIGURATIONS'] = {
+            'base_core': {
+                'pool': core_info.get("pool", "MISSING"),
+                'bridge': core_info.get("bridge", "MISSING"),
+                'additional_network': core_info.get("additional_network", "MISSING"),
+                'hypervisor': core_info.get("hypervisor", "MISSING"),
+            }
+        }
 
     def merge_files(self, file_paths):
         """Merges additional .tfvars files into the data."""
