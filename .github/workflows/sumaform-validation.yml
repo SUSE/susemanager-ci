@@ -82,14 +82,16 @@ jobs:
 
       - name: Test TFVars Generation & Validation
         run: |
-        
           export PYTHONPATH=$PYTHONPATH:$PWD/jenkins_pipelines/scripts
           SCRIPT_PATH="jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
           TEMPLATE_TF="terracumber_config/tf_files/templates/template-build-validation-multi-providers.tf"
           
+          # --- Personal BV ---
           echo "::group::Test 1: Generate Personal BV Configuration"
+          
+          # Generate the tfvars file in the current directory
           python3 $SCRIPT_PATH \
-            --env-file "terracumber_config/tf_files/personal/environment.tfvars" \
+            --env-file "terracumber_config/tf_files/environment.tfvars" \
             --user "maxime" \
             --output "personal_generated.tfvars" \
             --minion1 "sles15sp4_minion" \
@@ -97,29 +99,46 @@ jobs:
             --base-os "slmicro61o" \
             --merge-files "terracumber_config/tf_files/tfvars/location.tfvars"
           
-          # Validate generated file against the template
-          cp $TEMPLATE_TF main.tf
-          # Create dummy variables file to satisfy TF requirements
-          echo 'variable "ENVIRONMENT_CONFIGURATION" {} variable "BASE_CONFIGURATIONS" {} variable "PLATFORM_LOCATION_CONFIGURATION" {} variable "LOCATION" {} variable "SCC_USER" { default="u" } variable "SCC_PASSWORD" { default="p" } variable "SCC_PTF_USER" { default="" } variable "SCC_PTF_PASSWORD" { default="" } variable "ZVM_ADMIN_TOKEN" { default="" } variable "GIT_USER" { default="" } variable "GIT_PASSWORD" { default="" } variable "SERVER_CONTAINER_REPOSITORY" { default="" } variable "PROXY_CONTAINER_REPOSITORY" { default="" } variable "SERVER_CONTAINER_IMAGE" { default="" } variable "BASE_OS" { default="" } variable "PRODUCT_VERSION" { default="" }' > variables.tf
+          # Prepare the execution environment inside 'sumaform' directory
+          #    This is required because the modules (source = "./modules/base") exist there.
+          cp $TEMPLATE_TF sumaform/main.tf
+          mv personal_generated.tfvars sumaform/
           
+          # Create dummy variables to satisfy TF requirements
+          echo 'variable "ENVIRONMENT_CONFIGURATION" {} variable "BASE_CONFIGURATIONS" {} variable "PLATFORM_LOCATION_CONFIGURATION" {} variable "LOCATION" {} variable "SCC_USER" { default="u" } variable "SCC_PASSWORD" { default="p" } variable "SCC_PTF_USER" { default="" } variable "SCC_PTF_PASSWORD" { default="" } variable "ZVM_ADMIN_TOKEN" { default="" } variable "GIT_USER" { default="" } variable "GIT_PASSWORD" { default="" } variable "SERVER_CONTAINER_REPOSITORY" { default="" } variable "PROXY_CONTAINER_REPOSITORY" { default="" } variable "SERVER_CONTAINER_IMAGE" { default="" } variable "BASE_OS" { default="" } variable "PRODUCT_VERSION" { default="" }' > sumaform/variables.tf
+          
+          # Run Tofu inside the sumaform directory
+          cd sumaform
           tofu init -input=false
           tofu validate
-          # We use -var-file to test if the generated values are valid structure-wise
-          # We might fail on missing var definitions if the template expects more, 
-          # so we check if tofu can at least parse the vars.
-          tofu plan -var-file="personal_generated.tfvars" -target=module.base_core -no-color > /dev/null && echo "Personal BV Plan: OK" || echo "Personal BV Plan: FAILED (syntax check only)"
+          tofu plan -var-file="personal_generated.tfvars" -target=module.base_core -no-color > /dev/null && echo "Personal BV Plan: OK" || echo "Personal BV Plan: FAILED"
+          
+          # Clean up for next test
+          rm main.tf variables.tf personal_generated.tfvars
+          cd ..
           echo "::endgroup::"
-
+          
+          # --- TEST 2: Static BV ---
           echo "::group::Test 2: Validate Static TFVars (MLM 5.1 Micro)"
           STATIC_VARS="terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm51_micro_build_validation_nue.tfvars"
           LOCATION_VARS="terracumber_config/tf_files/tfvars/location.tfvars"
           
-          # We use the prepare script to merge location vars into the static vars (simulating the pipeline)
+          # Generate/Clean
           python3 $SCRIPT_PATH \
             --output "static_merged.tfvars" \
             --merge-files "$STATIC_VARS" "$LOCATION_VARS" \
             --clean \
-            --keep-resources "sles15sp4_minion" # Keep one minion to test cleaning logic
+            --keep-resources "sles15sp4_minion"
           
+          # Move to sumaform dir
+          mv static_merged.tfvars sumaform/
+          # (Note: main.tf template must be copied again if it was cleaned up, or reused)
+          cp $TEMPLATE_TF sumaform/main.tf
+          # (Re-create variables.tf if deleted, or assume it persists if not cleaned. Re-creating is safer)
+          echo 'variable "ENVIRONMENT_CONFIGURATION" {} variable "BASE_CONFIGURATIONS" {} variable "PLATFORM_LOCATION_CONFIGURATION" {} variable "LOCATION" {} variable "SCC_USER" { default="u" } variable "SCC_PASSWORD" { default="p" } variable "SCC_PTF_USER" { default="" } variable "SCC_PTF_PASSWORD" { default="" } variable "ZVM_ADMIN_TOKEN" { default="" } variable "GIT_USER" { default="" } variable "GIT_PASSWORD" { default="" } variable "SERVER_CONTAINER_REPOSITORY" { default="" } variable "PROXY_CONTAINER_REPOSITORY" { default="" } variable "SERVER_CONTAINER_IMAGE" { default="" } variable "BASE_OS" { default="" } variable "PRODUCT_VERSION" { default="" }' > sumaform/variables.tf
+          
+          # Run Tofu
+          cd sumaform
           tofu plan -var-file="static_merged.tfvars" -target=module.base_core -no-color > /dev/null && echo "Static BV Plan: OK" || echo "Static BV Plan: FAILED"
+          cd ..
           echo "::endgroup::"
