@@ -80,7 +80,6 @@ class TfvarsGenerator:
         Generates the initial ENVIRONMENT_CONFIGURATION dictionary.
         """
         logger.info("Generating base configuration structure...")
-
         slot_mapping = {
             'minion1': 'suse-client',
             'minion2': 'suse-minion',
@@ -172,7 +171,6 @@ class TfvarsGenerator:
 
         # Filter the dictionary
         cleaned_config = {k: v for k, v in env_config.items() if k in final_keep_keys}
-
         self.data['ENVIRONMENT_CONFIGURATION'] = cleaned_config
 
     def save(self, output_path):
@@ -205,7 +203,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     j_params = vars(args)
     gen = TfvarsGenerator()
-
 
     # RETAIL LOGIC & VALIDATION
     if args.env_file and args.user:
@@ -243,7 +240,7 @@ if __name__ == "__main__":
                 vars_to_inject[k] = v
     gen.inject_variables(vars_to_inject)
 
-    # 4. CLEANING (Scenario B usually)
+    # CLEANING
     if args.clean:
         keep_list = [r for r in args.keep_resources if r.strip()]
         gen.clean_resources(keep_list)
