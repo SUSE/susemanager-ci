@@ -7,7 +7,7 @@ def run(params) {
 
         env.controller_hostname = null
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
-        GString tfvarsGeneratorScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/generate_tfvars.py"
+        GString tfvarsPrepareScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
 
         deployed = false
         env.resultdir = "${WORKSPACE}/results"
@@ -91,66 +91,69 @@ def run(params) {
                             }
                         }
                     }
-                    // Run Terracumber to deploy the environment
-                    def tfvarsDeploymentFile = null
-                    if (params.environment){
-                        tfvarsDeploymentFile = "susemanager-ci/terracumber_config/tf_files/${params.environment}_bv.tfvars"
-                        sh """
-                            python3 ${tfvarsGeneratorScript} \
-                            --env-file "${tfRefEnvironmentFile}" \
-                                    --user "${params.environment}" \
-                                    --output "${tfvarsDeploymentFile}" \
-                                    --minion1 "${params.minion1}" \
-                                    --minion2 "${params.minion2}" \
-                                    --minion3 "${params.minion3}" \
-                                    --minion4 "${params.minion4}" \
-                                    --minion5 "${params.minion5}" \
-                                    --minion6 "${params.minion6}" \
-                                    --minion7 "${params.minion7}" \
-                                    --base-os "${params.base_os}" \
-                                    --product-version "${params.product_version}" \
-                                    ${params.deploy_retail ? '--deploy-retail' : ''}
-                            """
+
+                    def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
+                    def outputFile = "${localSumaformDirPath}/terraform.tfvars"
+
+                    // Build Common Arguments
+                    def commonArgs = ""
+                    commonArgs += " --inject SERVER_CONTAINER_REPOSITORY=${server_container_repository}"
+                    commonArgs += " --inject PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}"
+                    commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
+                    commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
+                    commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
+                    if (product_version) { commonArgs += " --inject PRODUCT_VERSION=${product_version}" }
+                    if (base_os) { commonArgs += " --inject BASE_OS=${base_os}" }
+
+                    // Personal scenario specific arguments
+                    def scenarioArgs = ""
+
+                    //  -- Personal BV Arguments --
+                    if (params.environment) {
+                        // We construct from env reference. No cleaning needed as we only add selected minions.
+                        scenarioArgs += " --env-file \"${tfRefEnvironmentFile}\" --user \"${params.environment}\""
+                        scenarioArgs += " --minion1 \"${params.minion1}\""
+                        scenarioArgs += " --minion2 \"${params.minion2}\""
+                        scenarioArgs += " --minion3 \"${params.minion3}\""
+                        scenarioArgs += " --minion4 \"${params.minion4}\""
+                        scenarioArgs += " --minion5 \"${params.minion5}\""
+                        scenarioArgs += " --minion6 \"${params.minion6}\""
+                        scenarioArgs += " --minion7 \"${params.minion7}\""
+                        if (params.deploy_retail) { scenarioArgs += " --deploy-retail" }
+                        scenarioArgs += " --merge-files \"${locationFile}\"" // Merge location only
+
+                    } else if (params.get('deployment_tfvars')) {
+                        // -- Common BV arguments --
+                        // We load a static file and clean it based on minions_to_run list.
+                        def minionsToKeep = params.minions_to_run.split(', ').join(' ')
+                        scenarioArgs += " --merge-files \"${params.deployment_tfvars}\" \"${locationFile}\""
+                        scenarioArgs += " --clean --keep-resources ${minionsToKeep}"
+                    } else {
+                        error "No environment or deployment_tfvars specified"
                     }
-                    else if (params.get('deployment_tfvars')) {
-                        echo "No environment user selected. Using provided tfvars file: ${params.deployment_tfvars}"
-                        tfvarsDeploymentFile = params.deployment_tfvars
-                    }
-                    else {
-                        error "BUILD FAILED: Configuration Error. You must provide either an 'environment' user OR a 'deployment_tfvars' file."
-                    }
+                    // Generate the tfvars
+                    sh "python3 ${tfvarsPrepareScript} ${commonArgs} ${scenarioArgs}"
+                    // Deploy the environment
                     sh """
                         set +x
                         source /home/jenkins/.credentials
                         set -x
-                        cat ${tfvarsDeploymentFile} > ${localSumaformDirPath}/terraform.tfvars
-                        cat susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars >> ${localSumaformDirPath}/terraform.tfvars
-                        echo SERVER_CONTAINER_REPOSITORY = \\\"${server_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
-                        echo PROXY_CONTAINER_REPOSITORY = \\\"${proxy_container_repository}\\\" >> ${localSumaformDirPath}/terraform.tfvars
-                        echo SERVER_CONTAINER_IMAGE = \\\"${server_container_image}\\\" >> ${localSumaformDirPath}/terraform.tfvars
-                        echo CUCUMBER_GITREPO = \\\"${params.cucumber_gitrepo}\\\" >> ${localSumaformDirPath}/terraform.tfvars
-                        echo CUCUMBER_BRANCH = \\\"${params.cucumber_ref}\\\" >> ${localSumaformDirPath}/terraform.tfvars
-
-                        ${product_version ? "echo PRODUCT_VERSION = \\\"${product_version}\\\" >> ${localSumaformDirPath}/terraform.tfvars" : ""}
-                        ${base_os ? "echo BASE_OS = \\\"${base_os}\\\" >> ${localSumaformDirPath}/terraform.tfvars" : ""}
-
+            
                         export TERRAFORM=${params.bin_path}
                         export TERRAFORM_PLUGINS=${params.bin_plugins_path}
-                    
+            
                         ./terracumber-cli ${common_params} \
                             --logfile ${resultdirbuild}/sumaform.log \
                             --init \
                             --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
                             --custom-repositories ${WORKSPACE}/custom_repositories.json \
                             --sumaform-backend ${params.sumaform_backend} \
-                            --tf_configuration_files ${localSumaformDirPath}/terraform.tfvars \
-                            --use-tf-resource-cleaner \
-                            --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} \
+                            --tf_configuration_files "${outputFile}" \
                             --runstep provision
                     """
-                    // Generate features
+
+                    // Generate features and rake files
                     runCucumberRakeTarget('utils:generate_build_validation_features')
-                    // Generate rake files
                     runCucumberRakeTarget('jenkins:generate_rake_files_build_validation')
                     deployed = true
                 }
