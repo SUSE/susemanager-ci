@@ -20,6 +20,7 @@ def run(params) {
         GString localTfVarsFile = "${localSumaformDirPath}terraform.tfvars"
         GString localTfVarsFullFile = "${localSumaformDirPath}terraform.tfvars.full"
         GString logFile = "${resultdirbuild}/sumaform.log"
+        GString tfVariablesFile = "${localSumaformDirPath}variables.tf"
 
         // Construct the --tf-resources-to-delete argument dynamically
         ArrayList defaultResourcesToDelete = []
@@ -32,11 +33,11 @@ def run(params) {
 
         String defaultResourcesToDeleteArgs = defaultResourcesToDelete.isEmpty() ? '' : "--default-resources-to-delete ${defaultResourcesToDelete.join(' ')}"
 
-        GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
+        GString commonParams = "--outputdir ${resultdir} --tf ${targetedTfFile} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path} --tf_variables_description_file=${tfVariablesFile}"
 
         // Define shared environment variables for terraform calls
         GString environmentVars = """
-                set -x
+                set +x
                 source /home/jenkins/.credentials
                 export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
                 export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
@@ -165,7 +166,7 @@ def run(params) {
                 // Execute Terracumber CLI to deploy the environment without clients
                 sh """
                     ${environmentVars}
-                    set +x
+                    set -x
                     
                     # Backup the full tfvars file
                     cp "${localTfVarsFile}" "${localTfVarsFullFile}"
