@@ -2,6 +2,9 @@ def run(params) {
     timestamps {
         // Define paths and environment variables for reusability
         GString TestEnvironmentCleanerProgram = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_environment_cleaner/test_environment_cleaner_program/TestEnvironmentCleaner.py"
+        // NEW: Path to the prepare_tfvars script
+        GString PrepareTfvarsScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
+
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
@@ -14,6 +17,8 @@ def run(params) {
         GString targetedSumaformDirPath = "${WORKSPACE}/../${params.targeted_project}/results/sumaform/"
         GString localSumaformDirPath = "${resultdir}/sumaform/"
         GString localTfStateFile = "${localSumaformDirPath}terraform.tfstate"
+        GString localTfVarsFile = "${localSumaformDirPath}terraform.tfvars"
+        GString localTfVarsFullFile = "${localSumaformDirPath}terraform.tfvars.full"
         GString logFile = "${resultdirbuild}/sumaform.log"
 
         // Construct the --tf-resources-to-delete argument dynamically
@@ -31,7 +36,7 @@ def run(params) {
 
         // Define shared environment variables for terraform calls
         GString environmentVars = """
-                set -x
+                set +x
                 source /home/jenkins/.credentials
                 export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
                 export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
@@ -41,7 +46,6 @@ def run(params) {
 
         try {
             stage('Clone terracumber, susemanager-ci and sumaform') {
-
                 // Prevent rebuild option
                 if (currentBuild.getBuildCauses().toString().contains("RebuildCause")) {
                     error "Rebuild is blocked for this job."
@@ -80,7 +84,6 @@ def run(params) {
 
             stage("Extract server hostname") {
                 try {
-
                     serverHostname = sh(
                             script: """
                             set -e
@@ -153,25 +156,31 @@ def run(params) {
             }
 
             stage('Delete client VMs') {
-                // Join the resources into a comma-separated string if there are any to delete
-                String tfResourcesToDeleteArg = params.delete_all_resources ? "--tf-resources-delete-all" : ''
-                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-                    // WORKAROUND: Remove s390 clients manually until https://github.com/SUSE/spacewalk/issues/26502 is fixed.
-                    sh """
-                        set -x
-                        source ~/.credentials
-                        export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
-                        export TF_VAR_PROXY_CONTAINER_REPOSITORY='unused'
-                        set +x
-                        cd ${localSumaformDirPath}
-                        tofu refresh
-                    """
+                // Determine cleaning mode
+                String cleaningFlags = "--clean"
+                if (params.delete_all_resources) {
+                    cleaningFlags += " --delete-all"
                 }
+
                 // Execute Terracumber CLI to deploy the environment without clients
                 sh """
                     ${environmentVars}
-                    set +x
-                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} --init --sumaform-backend ${params.sumaform_backend} --use-tf-resource-cleaner --init --runstep provision ${tfResourcesToDeleteArg}
+                    set -x
+                    
+                    # Backup the full tfvars file
+                    cp "${localTfVarsFile}" "${localTfVarsFullFile}"
+
+                    # Generate a stripped tfvars file (removing clients/minions)
+                    python3 "${PrepareTfvarsScript}" \
+                        --output "${localTfVarsFile}" \
+                        --merge-files "${localTfVarsFullFile}" \
+                        ${cleaningFlags}
+
+                    # Apply changes (This will destroy the removed resources)
+                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} \
+                        --init --sumaform-backend ${params.sumaform_backend} \
+                        --skip-variables-check \
+                        --runstep provision
                 """
             }
 
@@ -180,21 +189,30 @@ def run(params) {
                 sh """
                     ${environmentVars}
                     set +x
-                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log --init --sumaform-backend ${params.sumaform_backend} --runstep provision
+                    
+                    # Restore the full tfvars file
+                    cp "${localTfVarsFullFile}" "${localTfVarsFile}"
+
+                    # Apply changes
+                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log \
+                        --init --sumaform-backend ${params.sumaform_backend} \
+                        --skip-variables-check \
+                        --runstep provision
                 """
             }
 
             stage('Sanity check') {
-                sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
+                sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --skip-variables-check --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
             }
 
-            if (params.delete_all_resources) {
+if (params.delete_all_resources) {
                 stage("Update terminal mac addresses to controller") {
+                    // CHANGED: Added double backslashes \\ for sed capture groups
                     hypervisorUrl = sh(
                             script: """
-                                    cd ${localSumaformDirPath}
-                                    grep -oP '"qemu\\+tcp://([^"]+mgr[^"]+/system)"' "main.tf" | grep -v 'arm' | sed -n 's|qemu+tcp://\\([^"]*\\)/system|\\1|p'
-                            """,
+                                set -e
+                                sed -n 's/.*hypervisor *= *"\\([^"]*\\)".*/\\1/p' "${localTfVarsFile}" | head -n 1
+                             """,
                             returnStdout: true).trim()
 
                     echo "Hypervisor URL: ${hypervisorUrl}"
