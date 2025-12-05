@@ -6,7 +6,7 @@ def run(params) {
 
         // The junit plugin doesn't affect full paths
         GString junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
-        GString exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+        GString exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CUCUMBER_PUBLISH_QUIET=true;"
         String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/personal/variables.tf'
         String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars"
         GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --tf_variables_description_file ${tfvariables_file}  --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
