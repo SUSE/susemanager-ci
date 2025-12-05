@@ -205,13 +205,14 @@ def run(params) {
                 sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --skip-variables-check --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
             }
 
-            if (params.delete_all_resources) {
+if (params.delete_all_resources) {
                 stage("Update terminal mac addresses to controller") {
+                    // CHANGED: Added double backslashes \\ for sed capture groups
                     hypervisorUrl = sh(
                             script: """
-                                    cd ${localSumaformDirPath}
-                                    grep -oP '"qemu\\+tcp://([^"]+mgr[^"]+/system)"' "main.tf" | grep -v 'arm' | sed -n 's|qemu+tcp://\\([^"]*\\)/system|\\1|p'
-                            """,
+                                set -e
+                                sed -n 's/.*hypervisor *= *"\\([^"]*\\)".*/\\1/p' "${localTfVarsFile}" | head -n 1
+                             """,
                             returnStdout: true).trim()
 
                     echo "Hypervisor URL: ${hypervisorUrl}"
