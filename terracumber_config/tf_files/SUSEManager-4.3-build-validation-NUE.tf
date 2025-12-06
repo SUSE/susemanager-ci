@@ -87,7 +87,7 @@ terraform {
     }
     feilong = {
       source = "bischoff/feilong"
-      version = "0.0.6"
+      version = "0.0.9"
     }
   }
 }
