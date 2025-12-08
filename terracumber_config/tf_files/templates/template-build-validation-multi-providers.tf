@@ -181,7 +181,7 @@ module "base_debian" {
   }
 }
 
-module "bv_logic" {
+module "build_validation_module" {
   source = "./modules/build_validation"
 
   # --- PROVIDER MAPPING ---
