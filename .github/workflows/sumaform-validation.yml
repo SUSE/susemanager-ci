@@ -52,7 +52,7 @@ jobs:
         with:
           repository: Bischoff/terraform-provider-feilong
           tag: v0.0.9
-          fileName: terraform-provider-feilong-0.0.9.tar.gz
+          fileName: terraform-provider-feilong-0.0.9_linux_amd64.tar.gz
           extract: true
 
       - name: Setup Providers
