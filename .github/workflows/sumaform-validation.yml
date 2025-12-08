@@ -33,7 +33,7 @@ jobs:
       - name: Checkout sumaform
         uses: actions/checkout@v4
         with:
-          repository: uyuni-project/sumaform
+          repository: maximenoel8/sumaform
           path: sumaform
           ref: module_bv
 
