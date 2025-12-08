@@ -103,6 +103,15 @@ jobs:
           SCRIPT_PATH="jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
           TEMPLATE_TF="terracumber_config/tf_files/templates/template-build-validation-multi-providers.tf"
           
+          # --- DEBUG: Verify Sumaform Checkout ---
+          echo "::group::Debug: Verify Sumaform Directory"
+          ls -F sumaform/
+          if [ ! -d "sumaform/modules" ]; then
+            echo "::error::sumaform/modules directory missing! Checkout failed?"
+            exit 1
+          fi
+          echo "::endgroup::"
+          
           # --- Personal BV ---
           echo "::group::Test 1: Generate Personal BV Configuration"
           
@@ -126,6 +135,11 @@ jobs:
           
           # Run Tofu inside the sumaform directory
           cd sumaform
+          
+          # --- DEBUG: Verify Modules Inside Sumaform ---
+          echo "Checking modules directory content:"
+          ls -F modules/
+          
           tofu init -input=false
           tofu validate
           tofu plan -var-file="personal_generated.tfvars" -target=module.base_core -no-color > /dev/null && echo "Personal BV Plan: OK" || echo "Personal BV Plan: FAILED"
