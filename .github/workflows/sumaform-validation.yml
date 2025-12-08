@@ -91,7 +91,7 @@ jobs:
           
           # Generate the tfvars file in the current directory
           python3 $SCRIPT_PATH \
-            --env-file "terracumber_config/personal/environment.tfvars" \
+            --env-file "terracumber_config/tf_files/personal/environment.tfvars" \
             --user "maxime" \
             --output "personal_generated.tfvars" \
             --minion1 "sles15sp4_minion" \
