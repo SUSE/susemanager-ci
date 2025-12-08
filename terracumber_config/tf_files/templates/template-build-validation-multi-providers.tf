@@ -182,7 +182,7 @@ module "base_debian" {
 }
 
 module "bv_logic" {
-  source = "./modules/build_validation_logic"
+  source = "./modules/build_validation"
 
   # --- PROVIDER MAPPING ---
   # Plug the specific hardware providers into the logic slots
