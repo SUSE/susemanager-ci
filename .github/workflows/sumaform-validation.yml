@@ -35,6 +35,7 @@ jobs:
         with:
           repository: uyuni-project/sumaform
           path: sumaform
+          ref: module_bv
 
       - name: Install Python dependencies
         run: |
