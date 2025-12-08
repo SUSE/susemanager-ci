@@ -5,10 +5,6 @@ terraform {
       source  = "dmacvicar/libvirt"
       version = "0.8.3"
     }
-    feilong = {
-      source  = "bischoff/feilong"
-      version = "0.0.6"
-    }
   }
 }
 
