@@ -30,6 +30,11 @@ jobs:
         uses: opentofu/setup-opentofu@v1.0.6
         with:
           tofu_version: 1.10.7
+      - name: Checkout sumaform
+        uses: actions/checkout@v4
+        with:
+          repository: uyuni-project/sumaform
+          path: sumaform
 
       - name: Install Python dependencies
         run: |
@@ -45,16 +50,16 @@ jobs:
         uses: robinraju/release-downloader@v1.9
         with:
           repository: Bischoff/terraform-provider-feilong
-          tag: v0.0.6
-          fileName: terraform-provider-feilong_0.0.6_linux_amd64.tar.gz
+          tag: v0.0.9
+          fileName: terraform-provider-feilong-0.0.9.tar.gz
           extract: true
 
       - name: Setup Providers
         run: |
           # Install feilong provider
           srcdir=/home/runner/work/susemanager-ci/susemanager-ci/
-          dstdir_terraform=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.4/linux_amd64/
-          dstdir_opentofu=/usr/share/terraform/plugins/registry.opentofu.org/bischoff/feilong/0.0.4/linux_amd64/
+          dstdir_terraform=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.9/linux_amd64/
+          dstdir_opentofu=/usr/share/terraform/plugins/registry.opentofu.org/bischoff/feilong/0.0.9/linux_amd64/
           sudo mkdir -p $dstdir_terraform
           sudo mkdir -p $dstdir_opentofu
           sudo ln -s $srcdir/terraform-provider-feilong $dstdir_terraform
