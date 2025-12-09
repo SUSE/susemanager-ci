@@ -83,6 +83,7 @@ jobs:
 
       - name: Test TFVars Generation & Validation
         run: |
+          git checkout terracumber_config/tf_files/templates/template-build-validation-multi-providers.tf
           export PYTHONPATH=$PYTHONPATH:$PWD/jenkins_pipelines/scripts
           SCRIPT_PATH="jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
           TEMPLATE_TF="terracumber_config/tf_files/templates/template-build-validation-multi-providers.tf"
