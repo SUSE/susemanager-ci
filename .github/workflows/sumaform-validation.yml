@@ -83,10 +83,10 @@ jobs:
 
       - name: Test TFVars Generation & Validation
         run: |
-          git checkout terracumber_config/tf_files/templates/template-build-validation-multi-providers.tf
+          git checkout terracumber_config/tf_files/templates/template-build-validation-single-providers.tf
           export PYTHONPATH=$PYTHONPATH:$PWD/jenkins_pipelines/scripts
           SCRIPT_PATH="jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
-          TEMPLATE_TF="terracumber_config/tf_files/templates/template-build-validation-multi-providers.tf"
+          TEMPLATE_TF="terracumber_config/tf_files/templates/template-build-validation-single-providers.tf"
           
           # --- DEBUG: Verify Sumaform Checkout ---
           echo "::group::Debug: Verify Sumaform Directory"
