@@ -127,7 +127,7 @@ jobs:
           
           tofu init -input=false
           tofu validate
-          tofu plan -var-file="personal_generated.tfvars" -target=module.base_core -no-color > /dev/null && echo "Personal BV Plan: OK" || echo "Personal BV Plan: FAILED"
+          tofu plan -var-file="personal_generated.tfvars" -no-color > /dev/null && echo "Personal BV Plan: OK" || echo "Personal BV Plan: FAILED"
           
           # Clean up for next test
           rm main.tf variables.tf personal_generated.tfvars
@@ -155,6 +155,6 @@ jobs:
           
           # Run Tofu
           cd sumaform
-          tofu plan -var-file="static_merged.tfvars" -target=module.base_core -no-color > /dev/null && echo "Static BV Plan: OK" || echo "Static BV Plan: FAILED"
+          tofu plan -var-file="static_merged.tfvars" -no-color > /dev/null && echo "Static BV Plan: OK" || echo "Static BV Plan: FAILED"
           cd ..
           echo "::endgroup::"
