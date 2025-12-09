@@ -41,24 +41,14 @@ jobs:
         run: |
           pip install -r jenkins_pipelines/scripts/tf_vars_generator/requirements.txt
 
-      - name: Build Feilong terraform provider
-        run: |
-            echo "::group::Build Feilong Provider"
-            git clone --depth 1 --branch v0.0.9 https://github.com/Bischoff/terraform-provider-feilong.git build_feilong
-            cd build_feilong
-            
-            go build -o terraform-provider-feilong
-            
-            # Registry: registry.terraform.io | Namespace: bischoff | Type: feilong | Version: 0.0.9
-            PLUGIN_DIR="$HOME/.terraform.d/plugins/registry.terraform.io/bischoff/feilong/0.0.9/linux_amd64"
-            mkdir -p "$PLUGIN_DIR"
-            
-            mv terraform-provider-feilong "$PLUGIN_DIR/"
-            chmod +x "$PLUGIN_DIR/terraform-provider-feilong"
-            
-            echo "Success! Provider v0.0.9 installed to $PLUGIN_DIR"
-            ls -l "$PLUGIN_DIR"
-            echo "::endgroup::"
+      - name: Download Feilong terraform provider asset
+        if: steps.tf_files.outputs.added_modified
+        uses: robinraju/release-downloader@v1.9
+        with:
+          repository: Bischoff/terraform-provider-feilong
+          tag: v0.0.9
+          fileName: terraform-provider-feilong_0.0.9_linux_amd64.tar.gz
+          extract: true
 
       - name: Setup Providers
         run: |
