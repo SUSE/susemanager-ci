@@ -66,10 +66,12 @@ variable "SCC_PASSWORD" {
 
 variable "SCC_PTF_USER" {
   type = string
+  default = null
 }
 
 variable "SCC_PTF_PASSWORD" {
   type = string
+  default = null
 }
 
 variable "GIT_USER" {
