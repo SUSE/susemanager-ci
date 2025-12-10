@@ -120,6 +120,8 @@ jobs:
           variable "SERVER_CONTAINER_IMAGE" { default="" }
           variable "BASE_OS" { default="" }
           variable "PRODUCT_VERSION" { default="" }
+          variable "CUCUMBER_GITREPO" {}
+          variable "CUCUMBER_BRANCH" {}
           EOF
         
           # Run Tofu inside the sumaform directory
@@ -170,6 +172,8 @@ jobs:
           variable "SERVER_CONTAINER_IMAGE" { default="" }
           variable "BASE_OS" { default="" }
           variable "PRODUCT_VERSION" { default="" }
+          variable "CUCUMBER_GITREPO" {}
+          variable "CUCUMBER_BRANCH" {}
           EOF
           
           # Run Tofu
