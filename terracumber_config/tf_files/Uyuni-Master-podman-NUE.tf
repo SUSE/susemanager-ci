@@ -107,7 +107,7 @@ module "cucumber_testsuite" {
   cc_username   = var.SCC_USER
   cc_password   = var.SCC_PASSWORD
 
-  images        = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp4o", "tumbleweedo"]
+  images        = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
 
   use_avahi     = false
   name_prefix   = "uyuni-ci-master-podman-"
@@ -189,14 +189,14 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      image             = "sles15sp4o"
+      image             = "sles15sp7o"
       provider_settings = {
         mac    = "aa:b2:93:01:00:2d"
         memory = 2048
       }
     }
     pxeboot_minion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
     }
     dhcp_dns = {
       name       = "dhcp-dns"

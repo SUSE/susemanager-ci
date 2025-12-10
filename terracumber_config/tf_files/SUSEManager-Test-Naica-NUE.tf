@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slemicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slemicro61o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-naica-"
@@ -176,19 +176,19 @@ module "cucumber_testsuite" {
       }
     }
     suse_client = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:64"
       }
     }
     suse_minion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:66"
       }
     }
     suse_sshminion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:68"
       }
@@ -210,7 +210,7 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:6d"
         memory = 2048

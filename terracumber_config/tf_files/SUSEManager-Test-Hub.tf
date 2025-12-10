@@ -105,7 +105,7 @@ module "base_core" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse155o", "opensuse156o", "sles15sp5o", "sles15sp4o"]
+  images = ["centos7o", "opensuse155o", "opensuse156o", "sles15sp5o", "sles15sp7o"]
   use_avahi    = false
   name_prefix  = "suma-testhub-"
   domain       = "mgr.suse.de"
@@ -122,7 +122,7 @@ module "hub" {
   base_configuration = module.base_core.configuration
   name = "hub"
   product_version = "4.3-nightly"
-  image = "sles15sp4o"
+  image = "sles15sp7o"
   provider_settings = {
     mac = "aa:b2:93:01:01:31"
     memory = 10240
@@ -140,7 +140,7 @@ module "prh1" {
   auto_accept                    = true
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration
-  image = "sles15sp4o"
+  image = "sles15sp7o"
   provider_settings = {
     mac = "aa:b2:93:01:01:32"
   }
@@ -156,7 +156,7 @@ module "prh2" {
   auto_accept                    = true
   from_email                     = "root@suse.de"
   register_to_server = module.hub.configuration
-  image = "sles15sp4o"
+  image = "sles15sp7o"
   provider_settings = {
     mac = "aa:b2:93:01:01:33"
   }
@@ -176,11 +176,11 @@ module "min-sles15sp5" {
   }
 }
 
-module "min-sles15sp4" {
+module "min-sles15sp7" {
   source = "./modules/minion"
   base_configuration = module.base_core.configuration
-  name = "min-sles15sp4"
-  image = "sles15sp4o"
+  name = "min-sles15sp7"
+  image = "sles15sp7o"
   server_configuration = module.prh2.configuration
   provider_settings = {
     mac = "aa:b2:93:01:01:35"
@@ -211,7 +211,7 @@ module "controller" {
   
   server_configuration = module.prh1.configuration
 
-  sle15sp4_minion_configuration = module.min-sles15sp4.configuration
+  sle15sp4_minion_configuration = module.min-sles15sp7.configuration
   sle15sp5_minion_configuration = module.min-sles15sp5.configuration
 
   provider_settings = {
@@ -224,7 +224,7 @@ output "configuration" {
     hub  = module.hub.configuration
     prh1 = module.prh1.configuration
     prh2 = module.prh2.configuration
-    min-sles15sp4 = module.min-sles15sp4.configuration
+    min-sles15sp7 = module.min-sles15sp7.configuration
     min-sles15sp5 = module.min-sles15sp5.configuration
     controller = module.controller.configuration
   }

@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse156o", "sles15sp4o", "ubuntu2404"]
+  images = ["rocky8", "opensuse156o", "sles15sp7o", "ubuntu2404"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -210,7 +210,7 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         instance_type = "t3a.large"
         private_ip = "172.16.3.12"
