@@ -108,6 +108,7 @@ jobs:
           # --- DEBUG: Verify Modules Inside Sumaform ---
           echo "Checking modules directory content:"
           ls -F modules/
+          cat modules/base/versions.tf
           
           tofu init -input=false
           tofu validate
