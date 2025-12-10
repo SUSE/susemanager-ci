@@ -61,21 +61,6 @@ jobs:
           sudo ln -s $srcdir/terraform-provider-feilong $dstdir_terraform
           sudo ln -s $srcdir/terraform-provider-feilong $dstdir_opentofu
 
-#          # Remove libvirt and feilong provider settings
-#          sed -i \
-#            -e '/provider *"/,/^[ \/#]*\}\s*$/d' \
-#            -e '/libvirt = {/,/^[ \/#]*\}\s*$/d' \
-#            -e '/libvirt =/d' \
-#            -e '/feilong = {/,/^[ \/#]*\}\s*$/d' \
-#            -e '/feilong =/d' \
-#            ${{steps.tf_files.outputs.added_modified}}
-
-#          # Also exclude s390 minions from terraform plan
-#          sed -i \
-#            -e '/^module ".*s390.*" {$/,/^}$/d' \
-#            -e '/.*s390.*_configuration *= module.*s390.*\.configuration/d' \
-#            ${{steps.tf_files.outputs.added_modified}}
-
           # Setup sumaform with the 'null' backend
           cd sumaform
           ln -sfn ../backend_modules/null modules/backend
@@ -83,7 +68,6 @@ jobs:
 
       - name: Test TFVars Generation & Validation
         run: |
-#          git checkout terracumber_config/tf_files/templates/template-build-validation-single-provider.tf
           export PYTHONPATH=$PYTHONPATH:$PWD/jenkins_pipelines/scripts
           SCRIPT_PATH="jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
           TEMPLATE_TF="terracumber_config/tf_files/templates/template-build-validation-single-provider.tf"
