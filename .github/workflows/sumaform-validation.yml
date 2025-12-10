@@ -124,7 +124,8 @@ jobs:
           # --- DEBUG: Verify Modules Inside Sumaform ---
           echo "Checking modules directory content:"
           ls -F modules/
-          cat modules/build_validation/versions.tf
+          ln -s ./backend/host/versions.tf versions.tf
+          
           tofu init -input=false
           tofu validate
           tofu plan -var-file="personal_generated.tfvars" -no-color > /dev/null && echo "Personal BV Plan: OK" || echo "Personal BV Plan: FAILED"
@@ -155,6 +156,7 @@ jobs:
           
           # Run Tofu
           cd sumaform
+          ln -s ./backend/host/versions.tf versions.tf
           tofu plan -var-file="static_merged.tfvars" -no-color > /dev/null && echo "Static BV Plan: OK" || echo "Static BV Plan: FAILED"
           cd ..
           echo "::endgroup::"
