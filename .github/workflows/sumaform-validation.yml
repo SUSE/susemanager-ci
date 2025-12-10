@@ -117,6 +117,8 @@ jobs:
               fi
               if [ -f "$SOURCE_DIR/environment.tfvars" ]; then
                 cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
+                echo SCC_PTF_USER="nothing" >> environment.tfvars
+                echo SCC_PTF_PASSWORD="nothing" >> environment.tfvars
                 PLAN_ARGS="-var-file=environment.tfvars"
                 echo "::notice::Included environment.tfvars from $SOURCE_DIR"
               fi
