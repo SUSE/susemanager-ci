@@ -187,14 +187,15 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    build_host = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:92:03:00:8d"
-        vcpu = 4
-        memory = 8192
-      }
-    }
+    ## WORKAROUND - build host is failing currently because of kiwi10 bug
+    # build_host = {
+    #   image = "sles15sp4o"
+    #   provider_settings = {
+    #     mac = "aa:b2:92:03:00:8d"
+    #     vcpu = 4
+    #     memory = 8192
+    #   }
+    # }
     pxeboot_minion = {
       image = "sles15sp4o"
       provider_settings = {
