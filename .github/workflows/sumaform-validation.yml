@@ -125,7 +125,7 @@ jobs:
           echo "::endgroup::"
           # --- DEBUG END ---
           
-          # Run Tofu inside the sumaform directories
+          # Run Tofu inside the sumaform directory
           cd sumaform
           
           # --- DEBUG: Verify Modules Inside Sumaform ---
