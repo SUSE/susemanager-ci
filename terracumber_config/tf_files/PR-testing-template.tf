@@ -134,7 +134,7 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
         memory = 2048
@@ -144,7 +144,7 @@ module "cucumber_testsuite" {
       }
     }
     pxeboot_minion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       additional_repos = {
         tools_update_pr = var.SLE_CLIENT_REPO
       }

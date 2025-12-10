@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp4o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-head-"
@@ -173,7 +173,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_minion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:b6"
         vcpu = 2
@@ -181,7 +181,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:b8"
         vcpu = 2
@@ -207,7 +207,7 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
       provider_settings = {
         mac = "aa:b2:93:01:00:bd"
         vcpu = 2
@@ -215,7 +215,7 @@ module "cucumber_testsuite" {
       }
     }
     pxeboot_minion = {
-      image = "sles15sp4o"
+      image = "sles15sp7o"
     }
     dhcp_dns = {
       name        = "dhcp-dns"
