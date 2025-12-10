@@ -97,10 +97,33 @@ jobs:
           # Prepare the execution environment inside 'sumaform' directory
           #    This is required because the modules (source = "./modules/base") exist there.
           cp $TEMPLATE_TF sumaform/main.tf
+          echo "::group::Debug: Check Main.tf Content"
+          cat sumaform/main.tf
+          echo "::endgroup::"
+          
           mv personal_generated.tfvars sumaform/
           
           # Create dummy variables to satisfy TF requirements
           echo 'variable "ENVIRONMENT_CONFIGURATION" {} variable "BASE_CONFIGURATIONS" {} variable "PLATFORM_LOCATION_CONFIGURATION" {} variable "LOCATION" {} variable "SCC_USER" { default="u" } variable "SCC_PASSWORD" { default="p" } variable "SCC_PTF_USER" { default="" } variable "SCC_PTF_PASSWORD" { default="" } variable "ZVM_ADMIN_TOKEN" { default="" } variable "GIT_USER" { default="" } variable "GIT_PASSWORD" { default="" } variable "SERVER_CONTAINER_REPOSITORY" { default="" } variable "PROXY_CONTAINER_REPOSITORY" { default="" } variable "SERVER_CONTAINER_IMAGE" { default="" } variable "BASE_OS" { default="" } variable "PRODUCT_VERSION" { default="" }' > sumaform/variables.tf
+          
+          # --- DEBUG START: Inspect Provider Configs ---
+          echo "::group::Debug: Inspect Provider Configuration"
+          
+          echo ">>> Checking for conflicting .tf files in Root:"
+          ls -la sumaform/*.tf
+          
+          echo ">>> Checking 'libvirt' provider definition in Root files:"
+          grep -r "libvirt" sumaform/*.tf || echo "No libvirt string found in root .tf files"
+
+          echo ">>> Checking Backend (Null) Base versions.tf:"
+          # We check modules/backend/base because that is where the symlink points
+          cat sumaform/modules/backend/base/versions.tf || echo "ERROR: sumaform/modules/backend/base/versions.tf not found!"
+
+          echo ">>> Checking Backend (Null) Host versions.tf:"
+          cat sumaform/modules/backend/host/versions.tf || echo "ERROR: sumaform/modules/backend/host/versions.tf not found!"
+          
+          echo "::endgroup::"
+          # --- DEBUG END ---
           
           # Run Tofu inside the sumaform directory
           cd sumaform
@@ -109,7 +132,7 @@ jobs:
           echo "Checking modules directory content:"
           ls -F modules/
           cat modules/base/versions.tf
-          
+          rm -f sumaform/.terraform.lock.hcl
           tofu init -input=false
           tofu validate
           tofu plan -var-file="personal_generated.tfvars" -no-color > /dev/null && echo "Personal BV Plan: OK" || echo "Personal BV Plan: FAILED"
