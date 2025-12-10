@@ -180,14 +180,15 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    build_host = {
-      image = "sles15sp4o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:ad"
-        vcpu = 2
-        memory = 2048
-      }
-    }
+    ## WORKAROUND - build host is failing currently because of kiwi10 bug
+    # build_host = {
+    #   image = "sles15sp4o"
+    #   provider_settings = {
+    #     mac = "aa:b2:93:01:00:ad"
+    #     vcpu = 2
+    #     memory = 2048
+    #   }
+    # }
     kvm_host = {
       image = "sles15sp4o"
       provider_settings = {
