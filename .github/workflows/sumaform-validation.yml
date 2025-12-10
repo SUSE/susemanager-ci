@@ -87,6 +87,8 @@ jobs:
           # Generate the tfvars file in the current directory
           python3 $SCRIPT_PATH \
             --env-file "terracumber_config/tf_files/personal/environment.tfvars" \
+            --inject "CUCUMBER_GITREPO=test" \
+            --inject "CUCUMBER_BRANCH=test" \
             --user "maxime" \
             --output "personal_generated.tfvars" \
             --minion1 "sles15sp4_minion" \
@@ -141,6 +143,8 @@ jobs:
           python3 $SCRIPT_PATH \
             --output "static_merged.tfvars" \
             --merge-files "$STATIC_VARS" "$LOCATION_VARS" \
+            --inject "CUCUMBER_GITREPO=test" \
+            --inject "CUCUMBER_BRANCH=test" \
             --clean \
             --keep-resources "sles15sp4_minion"
           
