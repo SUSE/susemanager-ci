@@ -28,7 +28,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "sles15sp4o", "sles15sp7o", "ubuntu2204o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "sles15sp4o", "ubuntu2204o"]
 
   use_avahi    = false
   name_prefix  = "${var.ENVIRONMENT}-"
@@ -39,7 +39,7 @@ module "cucumber_testsuite" {
   auth_registry          = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
+  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/internal_nue"
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -74,7 +74,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_client = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-client"]
         vcpu   = 2
@@ -82,7 +82,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_minion = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
         vcpu   = 2
@@ -90,7 +90,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
         vcpu   = 2
@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
       }
     }
     build_host = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
         vcpu   = 2
@@ -124,14 +124,14 @@ module "cucumber_testsuite" {
       }
     }
     pxeboot_minion = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         vcpu   = 2
         memory = 2048
       }
     }
     kvm_host = {
-      image = "sles15sp7o"
+      image = "sles15sp4o"
       provider_settings = {
         mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["kvm-host"]
         vcpu   = 2
