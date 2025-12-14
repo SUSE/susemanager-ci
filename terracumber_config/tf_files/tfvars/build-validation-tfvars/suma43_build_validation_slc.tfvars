@@ -296,4 +296,4 @@ BASE_CONFIGURATIONS = {
 
 MAIL_SUBJECT          = "Results 4.3 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results 4.3 Build Validation: Environment setup failed"
-LOCATION              = "nue"
+LOCATION              = "slc1"

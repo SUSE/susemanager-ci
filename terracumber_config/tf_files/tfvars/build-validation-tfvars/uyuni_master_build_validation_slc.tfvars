@@ -278,4 +278,4 @@ BASE_CONFIGURATIONS = {
 
 MAIL_SUBJECT          = "Results Uyuni Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results Uyuni Build Validation: Environment setup failed"
-LOCATION              = "nue"
+LOCATION              = "slc1"
