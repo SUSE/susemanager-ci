@@ -20,12 +20,24 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "This is defined in product tfvars"
+  description = "Testsuite git repository"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "This is defined in product tfvars"
+  description = "Testsuite git branch"
+}
+
+variable "GIT_USER" {
+  type = string
+  description = "Git user to access git repository"
+  default = null // Not needed for master, as it is public
+}
+
+variable "GIT_PASSWORD" {
+  type = string
+  description = "Git user password to access git repository"
+  default = null // Not needed for master, as it is public
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -74,51 +86,49 @@ variable "MAIL_TO" {
 // sumaform specific variables
 variable "SCC_USER" {
   type = string
+  description = "SCC user used as product organization"
 }
 
 variable "SCC_PASSWORD" {
   type = string
+  description = "SCC password used as product organization"
 }
 
 variable "SCC_PTF_USER" {
   type = string
+  description = "SCC user used for PTF Feature testing, only available for 5.1"
   default = null
   // Not needed for master, as PTFs are only build for SUSE Manager / MLM
 }
 
 variable "SCC_PTF_PASSWORD" {
   type = string
+  description = "SCC user used for PTF Feature testing, only available for 5.1"
   default = null
   // Not needed for master, as PTFs are only build for SUSE Manager / MLM
 }
 
 variable "SERVER_CONTAINER_REPOSITORY" {
   type = string
+  description = "Server container registry path"
   default = ""
 }
 
 variable "PROXY_CONTAINER_REPOSITORY" {
   type = string
+  description = "Proxy container registry path, not needed for 4.3"
   default = ""
 }
 
 variable "SERVER_CONTAINER_IMAGE" {
   type = string
+  description = "Server container image, not needed for 4.3"
   default = ""
 }
 
 variable "ZVM_ADMIN_TOKEN" {
   type = string
-}
-
-variable "GIT_USER" {
-  type = string
-  default = null // Not needed for master, as it is public
-}
-
-variable "GIT_PASSWORD" {
-  type = string
-  default = null // Not needed for master, as it is public
+  description = "Admin token for Feilong provider"
 }
 
 variable "BASE_OS" {
@@ -129,8 +139,6 @@ variable "BASE_OS" {
 
 variable "PRODUCT_VERSION" {
   type        = string
-  description = "Optional override for the product version"
-  default     = null
 }
 
 variable "BASE_CONFIGURATIONS" {
