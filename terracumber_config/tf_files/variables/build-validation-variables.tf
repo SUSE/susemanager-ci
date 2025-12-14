@@ -98,14 +98,12 @@ variable "SCC_PTF_USER" {
   type = string
   description = "SCC user used for PTF Feature testing, only available for 5.1"
   default = null
-  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
 }
 
 variable "SCC_PTF_PASSWORD" {
   type = string
   description = "SCC user used for PTF Feature testing, only available for 5.1"
   default = null
-  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
 }
 
 variable "SERVER_CONTAINER_REPOSITORY" {
