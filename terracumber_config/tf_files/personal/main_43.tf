@@ -22,6 +22,8 @@ module "cucumber_testsuite" {
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
