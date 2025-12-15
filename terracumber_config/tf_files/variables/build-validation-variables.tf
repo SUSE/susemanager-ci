@@ -21,11 +21,13 @@ variable "CUCUMBER_COMMAND" {
 variable "CUCUMBER_GITREPO" {
   type = string
   description = "Testsuite git repository"
+  default = "https://github.com/uyuni-project/uyuni.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
   description = "Testsuite git branch"
+  default = "master"
 }
 
 variable "GIT_USER" {
