@@ -93,7 +93,7 @@ def run(params) {
                     }
 
                     def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
-                    def outputFile = "${localSumaformDirPath}/terraform.tfvars"
+                    def outputFile = "${localSumaformDirPath}terraform.tfvars"
 
                     // Build Common Arguments
                     def commonArgs = " --output \"${outputFile}\""
