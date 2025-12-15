@@ -134,6 +134,8 @@ class TfvarsGenerator:
                 with open(file_path, 'r') as f:
                     content = hcl2.load(f)
                     for key, value in content.items():
+                        if isinstance(value, list) and len(value) == 1 and isinstance(value[0], dict):
+                            value = value[0]
                         if key == 'ENVIRONMENT_CONFIGURATION' and key in self.data:
                             self.data[key].update(value)
                         else:
