@@ -148,6 +148,7 @@ def run(params) {
                             --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
                             --custom-repositories ${WORKSPACE}/custom_repositories.json \
                             --sumaform-backend ${params.sumaform_backend} \
+                            --skip-variables-check \
                             --tf_configuration_files "${outputFile}" \
                             --runstep provision
                     """
