@@ -21,12 +21,21 @@ v50_sles_nodes: Dict[str, Set[str]] = {
     "server": {
         "/SUSE_Products_SUSE-Manager-Server_5.0_x86_64/",
         "/SUSE_Updates_SUSE-Manager-Server_5.0_x86_64/",
+        "/SUSE_Updates_SLE-Module-Basesystem_15-SP6_x86_64/",
+        "/SUSE_Updates_SLE-Module-Server-Applications_15-SP6_x86_64/",
+        "/SUSE_Updates_SLE-Product-SLES_15-SP6-LTSS_x86_64/",
+        "/SUSE_Updates_SLE-Module-Python3_15-SP6_x86_64/",
         "/SUSE_Updates_SLE-Module-Containers_15-SP6_x86_64/"
 
     },
     "proxy": {
         "/SUSE_Products_SUSE-Manager-Proxy_5.0_x86_64/",
         "/SUSE_Updates_SUSE-Manager-Proxy_5.0_x86_64/",
+        "/SUSE_Updates_SLE-Manager-Tools_15_x86_64/",
+        "/SUSE_Updates_SLE-Module-Basesystem_15-SP6_x86_64/",
+        "/SUSE_Updates_SLE-Module-Server-Applications_15-SP6_x86_64/",
+        "/SUSE_Updates_SLE-Product-SLES_15-SP6-LTSS_x86_64/",
+        "/SUSE_Updates_SLE-Module-Python3_15-SP6_x86_64/",
         "/SUSE_Updates_SLE-Module-Containers_15-SP6_x86_64/"
     },
 }
