@@ -328,7 +328,7 @@ module "server" {
   }
 
   server_mounted_mirror          = "minima-mirror-ci-bv.mgr.slc1.suse.org"
-  main_disk_size                 = 20
+  main_disk_size                 = 30
   repository_disk_size           = 3072
   database_disk_size             = 150
   java_debugging                 = false
