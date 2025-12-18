@@ -4,10 +4,16 @@ IBS_URL_PREFIX="http://download.suse.de/ibs/SUSE:"
 # Dictionary for SUMA 5.10 minion tools and repositories
 
 v51_uyuni_tools_sles_repos: Dict[str, Set[str]] = {
-    "server" : { "/SUSE_Updates_Multi-Linux-Manager-Server-SLE_5.1_x86_64/" },
+    "server" : {"/SUSE_Updates_Multi-Linux-Manager-Server-SLE_5.1_x86_64/",
+                "/SUSE_Updates_SLE-Module-Server-Applications_15-SP7_x86_64/",
+                "/SUSE_Updates_SLE-Module-Basesystem_15-SP7_x86_64/",
+                "/SUSE_SLE-15-SP7_Update/"},
     "proxy" : { "/SUSE_Updates_Multi-Linux-Manager-Proxy-SLE_5.1_x86_64/",
                 "/SUSE_Updates_Multi-Linux-Manager-Retail-Branch-Server-SLE_5.1_x86_64/",
-                "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_x86_64/"}
+                "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_x86_64/",
+                "/SUSE_Updates_SLE-Module-Server-Applications_15-SP7_x86_64/",
+                "/SUSE_Updates_SLE-Module-Basesystem_15-SP7_x86_64/",
+                "/SUSE_SLE-15-SP7_Update/"}
 }
 
 v51_uyuni_tools_micro_repos: Dict[str, Dict[str, str]] = {
