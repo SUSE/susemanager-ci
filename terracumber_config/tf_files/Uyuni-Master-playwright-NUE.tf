@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-podman"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-playwright"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/srbarrios/uyuni-cucumber-playwright.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "main"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Uyuni-Master podman $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Uyuni-Master playwright $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Uyuni-Master podman: Environment setup failed"
+  default = "Results Uyuni-Master playwright: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -52,7 +52,7 @@ variable "MAIL_FROM" {
 
 variable "MAIL_TO" {
   type = string
-  default = "galaxy-ci@suse.de"
+  default = "obarrios@suse.com"
 }
 
 // sumaform specific variables
@@ -90,7 +90,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-01.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-12.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -110,7 +110,7 @@ module "cucumber_testsuite" {
   images        = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
 
   use_avahi     = false
-  name_prefix   = "uyuni-ci-master-podman-"
+  name_prefix   = "uyuni-ci-master-playwright-"
   domain        = "mgr.suse.de"
   from_email    = "root@suse.de"
 
@@ -132,7 +132,7 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac       = "aa:b2:93:01:00:20"
+        mac       = "aa:b2:93:02:02:41"
         memory    = 4096
         vcpu      = 4
         cpu_model = "host-passthrough"
@@ -140,7 +140,7 @@ module "cucumber_testsuite" {
     }
     server_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:21"
+        mac = "aa:b2:93:02:02:42"
       }
       runtime               = "podman"
       container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
@@ -154,7 +154,7 @@ module "cucumber_testsuite" {
     }
     proxy_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:22"
+        mac = "aa:b2:93:02:02:43"
       }
       runtime              = "podman"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
@@ -163,19 +163,19 @@ module "cucumber_testsuite" {
     suse_minion = {
       image             = "tumbleweedo"
       provider_settings = {
-        mac = "aa:b2:93:01:00:26"
+        mac = "aa:b2:93:02:02:44"
       }
     }
     suse_sshminion = {
       image             = "tumbleweedo"
       provider_settings = {
-        mac = "aa:b2:93:01:00:28"
+        mac = "aa:b2:93:02:02:45"
       }
     }
     rhlike_minion = {
       image             = "rocky8o"
       provider_settings = {
-        mac    = "aa:b2:93:01:00:2a"
+        mac    = "aa:b2:93:02:02:46"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu   = 2
@@ -185,13 +185,13 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image             = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:2b"
+        mac = "aa:b2:93:02:02:47"
       }
     }
     build_host = {
       image             = "sles15sp7o"
       provider_settings = {
-        mac    = "aa:b2:93:01:00:2d"
+        mac    = "aa:b2:93:02:02:48"
         memory = 2048
       }
     }
@@ -202,7 +202,7 @@ module "cucumber_testsuite" {
       name       = "dhcp-dns"
       image      = "opensuse155o"
       hypervisor = {
-        host        = "suma-01.mgr.suse.de"
+        host        = "suma-12.mgr.suse.de"
         user        = "root"
         private_key = file("~/.ssh/id_ed25519")
       }
@@ -211,8 +211,8 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool               = "ssd"
     network_name       = null
-    bridge             = "br0"
-    additional_network = "192.168.102.0/24"
+    bridge             = "br1"
+    additional_network = "192.168.117.0/24"
   }
 }
 
