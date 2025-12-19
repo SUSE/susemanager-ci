@@ -131,6 +131,7 @@ module "cucumber_testsuite" {
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
+      image = "ubuntu2404o"
       provider_settings = {
         mac       = "aa:b2:93:02:02:41"
         memory    = 4096
