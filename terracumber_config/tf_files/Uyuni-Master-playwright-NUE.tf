@@ -22,7 +22,7 @@ variable "CUCUMBER_BRANCH" {
 
 variable "CUCUMBER_RESULTS" {
   type = string
-  default = "/root/spacewalk/testsuite"
+  default = "/root/spacewalk"
 }
 
 variable "MAIL_SUBJECT" {
