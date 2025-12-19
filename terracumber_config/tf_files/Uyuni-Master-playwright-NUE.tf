@@ -225,8 +225,7 @@ resource "null_resource" "configure_quality_intelligence" {
 
   provisioner "remote-exec" {
     inline = [ "echo export QUALITY_INTELLIGENCE=true >> ~/.bashrc",
-      "echo export PROMETHEUS_PUSH_GATEWAY_URL=${var.PROMETHEUS_PUSH_GATEWAY_URL} >> ~/.bashrc",
-      "source ~/.bashrc"
+      "echo export PROMETHEUS_PUSH_GATEWAY_URL=${var.PROMETHEUS_PUSH_GATEWAY_URL} >> ~/.bashrc"
     ]
     connection {
       type     = "ssh"
