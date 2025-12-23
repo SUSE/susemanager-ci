@@ -754,11 +754,14 @@ def getNodesHandler(params) {
     modules = sh(script: "cd ${resultdir}/sumaform; tofu state list",
             returnStdout: true)
     String[] moduleList = modules.split("\n")
-    moduleList.each { lane ->
-        def instanceList = lane.tokenize(".")
-        if (instanceList[1].contains('minion') || instanceList[1].contains('client')) {
-            nodeList.add(instanceList[1])
-            envVar.add(instanceList[1].replaceAll('sles', 'sle').toUpperCase())
+    moduleList.each { line ->
+        def parts = line.tokenize(".")
+        def nodePart = parts.find { it.contains('minion') || it.contains('client') || it.contains('buildhost') || it.contains('terminal') }
+        if (nodePart) {
+            // Remove the [0] or any other index suffix
+            def cleanNodeName = nodePart.replaceAll(/\[\d+\]/, "")
+            nodeList.add(cleanNodeName)
+            envVar.add(cleanNodeName.replaceAll('sles', 'sle').toUpperCase())
         }
     }
     echo ("Check minion to run ${params.minions_to_run}")
