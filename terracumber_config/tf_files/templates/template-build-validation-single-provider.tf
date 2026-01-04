@@ -55,8 +55,8 @@ module "build_validation_module" {
   providers = {
     libvirt.host_old_sle = libvirt
     libvirt.host_new_sle = libvirt
-    libvirt.host_res     = libvirt
-    libvirt.host_debian  = libvirt
+    libvirt.host_rhlike  = libvirt
+    libvirt.host_deblike = libvirt
     libvirt.host_retail  = libvirt
   }
 
