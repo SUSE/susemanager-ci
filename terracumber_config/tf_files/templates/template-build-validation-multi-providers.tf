@@ -33,7 +33,7 @@ provider "libvirt" {
 
 # Debian/Ubuntu Host
 provider "libvirt" {
-  alias = "host_debian"
+  alias = "host_deblike"
   uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_deblike.hypervisor}/system"
 }
 
@@ -157,9 +157,9 @@ module "base_retail" {
   }
 }
 
-# Base Debian
+# Base Deb-like minions
 module "base_deblike" {
-  providers = { libvirt = libvirt.host_debian }
+  providers = { libvirt = libvirt.host_deblike }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -189,8 +189,8 @@ module "build_validation_module" {
   providers = {
     libvirt.host_old_sle = libvirt.host_old_sle_rhlike
     libvirt.host_new_sle = libvirt.host_new_sle
-    libvirt.host_rhlike     = libvirt.host_old_sle_rhlike
-    libvirt.host_deblike  = libvirt.host_debian
+    libvirt.host_rhlike  = libvirt.host_old_sle_rhlike
+    libvirt.host_deblike = libvirt.host_deblike
     libvirt.host_retail  = libvirt.host_retail
   }
 
