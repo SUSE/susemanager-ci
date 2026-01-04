@@ -264,7 +264,7 @@ BASE_CONFIGURATIONS = {
     additional_network = null
     hypervisor         = "endor.mgr.slc1.suse.org"
   }
-  base_res = {
+  base_rhlike = {
     images             = [ "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o" ]
     pool               = "ssd"
     bridge             = "br1"
@@ -285,7 +285,7 @@ BASE_CONFIGURATIONS = {
     additional_network = "192.168.43.0/24"
     hypervisor         = "coruscant.mgr.slc1.suse.org"
   }
-  base_debian = {
+  base_deblike = {
     images             = [ "ubuntu2204o", "ubuntu2404", "debian12o" ]
     pool               = "ssd"
     bridge             = "br1"

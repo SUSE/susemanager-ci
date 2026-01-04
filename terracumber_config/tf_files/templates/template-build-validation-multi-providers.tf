@@ -15,7 +15,7 @@ provider "libvirt" {
 
 # Old SLE Host
 provider "libvirt" {
-  alias = "host_old_sle_res"
+  alias = "host_old_sle_rhlike"
   uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_old_sle.hypervisor}/system"
 }
 
@@ -34,7 +34,7 @@ provider "libvirt" {
 # Debian/Ubuntu Host
 provider "libvirt" {
   alias = "host_debian"
-  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_debian.hypervisor}/system"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_deblike.hypervisor}/system"
 }
 
 # Base Core : Core Infra + Main Testsuite images
@@ -63,7 +63,7 @@ module "base_core" {
 
 # Base Old SLE : SLES 12
 module "base_old_sle" {
-  providers = { libvirt = libvirt.host_old_sle_res }
+  providers = { libvirt = libvirt.host_old_sle_rhlike }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -85,9 +85,9 @@ module "base_old_sle" {
   }
 }
 
-# Base RES : EL and Liberty
-module "base_res" {
-  providers = { libvirt = libvirt.host_old_sle_res }
+# Base RedHat : EL and Liberty
+module "base_rhlike" {
+  providers = { libvirt = libvirt.host_old_sle_rhlike }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -104,8 +104,8 @@ module "base_res" {
   testsuite         = true
 
   provider_settings = {
-    pool        = var.BASE_CONFIGURATIONS.base_res.pool
-    bridge      = var.BASE_CONFIGURATIONS.base_res.bridge
+    pool        = var.BASE_CONFIGURATIONS.base_rhlike.pool
+    bridge      = var.BASE_CONFIGURATIONS.base_rhlike.bridge
   }
 }
 
@@ -158,7 +158,7 @@ module "base_retail" {
 }
 
 # Base Debian
-module "base_debian" {
+module "base_deblike" {
   providers = { libvirt = libvirt.host_debian }
   source    = "./modules/base"
 
@@ -169,15 +169,15 @@ module "base_debian" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = var.BASE_CONFIGURATIONS.base_debian.images
+  images            = var.BASE_CONFIGURATIONS.base_deblike.images
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
 
   provider_settings = {
-    pool               = var.BASE_CONFIGURATIONS.base_debian.pool
-    bridge             = var.BASE_CONFIGURATIONS.base_debian.bridge
+    pool               = var.BASE_CONFIGURATIONS.base_deblike.pool
+    bridge             = var.BASE_CONFIGURATIONS.base_deblike.bridge
   }
 }
 
@@ -187,10 +187,10 @@ module "build_validation_module" {
   # --- PROVIDER MAPPING ---
   # Plug the specific hardware providers into the logic slots
   providers = {
-    libvirt.host_old_sle = libvirt.host_old_sle_res
+    libvirt.host_old_sle = libvirt.host_old_sle_rhlike
     libvirt.host_new_sle = libvirt.host_new_sle
-    libvirt.host_res     = libvirt.host_old_sle_res
-    libvirt.host_debian  = libvirt.host_debian
+    libvirt.host_rhlike     = libvirt.host_old_sle_rhlike
+    libvirt.host_deblike  = libvirt.host_debian
     libvirt.host_retail  = libvirt.host_retail
   }
 
@@ -200,8 +200,8 @@ module "build_validation_module" {
     default = module.base_core.configuration
     old_sle = module.base_old_sle.configuration
     new_sle = module.base_new_sle.configuration
-    res     = module.base_res.configuration
-    debian  = module.base_debian.configuration
+    rhlike  = module.base_rhlike.configuration
+    deblike = module.base_deblike.configuration
     retail  = module.base_retail.configuration
   }
 

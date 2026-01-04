@@ -231,7 +231,7 @@ BASE_CONFIGURATION = {
     additional_network = null
     hypervisor         = "tatooine.mgr.slc1.suse.org"
   }
-  base_res = {
+  base_rhlike = {
     images             = [ "almalinux8o", "almalinux9o", "centos7o", "oraclelinux9o", "rocky8o", "rocky9o", "libertylinux9o" ]
     pool               = "ssd"
     bridge             = "br1"
@@ -252,7 +252,7 @@ BASE_CONFIGURATION = {
     additional_network = "192.168.50.0/24"
     hypervisor         = "terminus.mgr.slc1.suse.org"
   }
-  base_debian = {
+  base_deblike = {
     images             = ["ubuntu2204o", "ubuntu2404o", "debian12o"]
     pool               = "ssd"
     bridge             = "br1"
