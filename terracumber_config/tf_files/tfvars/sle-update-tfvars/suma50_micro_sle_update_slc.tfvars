@@ -8,11 +8,13 @@ ENVIRONMENT_CONFIGURATION = {
     mac   = "aa:b2:92:05:00:fd"
     name  = "server"
     image = "slemicro55o"
+    string_registry = false
   }
   proxy_containerized = {
     mac   = "aa:b2:92:05:00:fe"
     name  = "proxy"
     image = "slemicro55o"
+    string_registry = false
   }
 
   # Standard Minions

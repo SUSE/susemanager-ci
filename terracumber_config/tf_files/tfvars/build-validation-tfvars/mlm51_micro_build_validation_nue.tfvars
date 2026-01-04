@@ -8,11 +8,13 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:01"
     name = "server"
     image = "slmicro61o"
+    string_registry = true
   }
   proxy_containerized = {
     mac  = "aa:b2:92:42:01:02"
     name = "proxy"
     image = "slmicro61o"
+    string_registry = true
   }
   monitoring_server = {
     mac  = "aa:b2:92:42:01:03"

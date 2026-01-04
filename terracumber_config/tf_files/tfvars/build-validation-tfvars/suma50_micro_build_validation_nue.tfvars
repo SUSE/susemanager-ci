@@ -5,14 +5,16 @@ ENVIRONMENT_CONFIGURATION = {
     name = "controller"
   }
   server_containerized = {
-    mac   = "aa:b2:92:42:00:51"
-    name  = "server"
-    image = "slemicro55o"
+    mac             = "aa:b2:92:42:00:51"
+    name            = "server"
+    image           = "slemicro55o"
+    string_registry = false
   }
   proxy_containerized = {
-    mac   = "aa:b2:92:42:00:52"
-    name  = "proxy"
-    image = "slemicro55o"
+    mac             = "aa:b2:92:42:00:52"
+    name            = "proxy"
+    image           = "slemicro55o"
+    string_registry = false
   }
   monitoring_server = {
     mac  = "aa:b2:92:42:00:53"
