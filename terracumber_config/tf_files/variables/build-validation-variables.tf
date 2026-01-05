@@ -139,6 +139,7 @@ variable "BASE_OS" {
 
 variable "PRODUCT_VERSION" {
   type        = string
+  default       = null
 }
 
 variable "BASE_CONFIGURATIONS" {
