@@ -137,10 +137,6 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Micro Minions
-  slemicro51_minion = {
-    mac  = "aa:b2:92:42:00:c6"
-    name = "slemicro51-minion"
-  }
   slemicro52_minion = {
     mac  = "aa:b2:92:42:00:c7"
     name = "slemicro52-minion"

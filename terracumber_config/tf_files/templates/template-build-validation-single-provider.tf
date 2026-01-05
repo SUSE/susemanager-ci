@@ -25,7 +25,7 @@ module "base_core" {
   images = lookup(var.BASE_CONFIGURATIONS.base_core, "images", [
     "sles12sp5o",
     "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o",
-    "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o",
+    "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o",
     "slmicro60o", "slmicro61o",
     "almalinux8o", "almalinux9o",
     "amazonlinux2023o",

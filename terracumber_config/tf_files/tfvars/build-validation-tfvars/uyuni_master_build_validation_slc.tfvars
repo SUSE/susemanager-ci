@@ -114,10 +114,6 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Micro Minions
-  slemicro51_minion = {
-    mac  = "aa:b2:93:04:05:92"
-    name = "slemicro51-minion"
-  }
   slemicro52_minion = {
     mac  = "aa:b2:93:04:05:93"
     name = "slemicro52-minion"
@@ -254,7 +250,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "cosmopolitan.mgr.slc1.suse.org"
   }
   base_new_sle = {
-    images             = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "tumbleweedo" ]
+    images             = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "tumbleweedo" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
