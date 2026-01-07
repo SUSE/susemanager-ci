@@ -153,7 +153,7 @@ module "cucumber_testsuite" {
     server_containerized = {
       image = "tumbleweedo"
       provider_settings = {
-        instance_type = "m6a.xlarge"
+        instance_type = "m5a.xlarge"
         volume_size = "200"
         private_ip = "172.16.3.6"
         overwrite_fqdn = "uyuni-master-server.sumaci.aws"
@@ -167,7 +167,7 @@ module "cucumber_testsuite" {
     proxy_containerized = {
       image = "tumbleweedo"
       provider_settings = {
-        instance_type = "c6a.large"
+        instance_type = "c5a.large"
         private_ip = "172.16.3.7"
         overwrite_fqdn = "uyuni-master-proxy.sumaci.aws"
       }
