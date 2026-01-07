@@ -127,8 +127,8 @@ module "cucumber_testsuite" {
   container_server = true
   container_proxy  = true
 
-  // mirror                   = "minima-mirror-ci-bv.mgr.slc1.suse.org"
-  // use_mirror_images        = true
+  mirror                   = "minima-mirror-ci-bv.mgr.slc1.suse.org"
+  use_mirror_images        = true
   
   no_auth_registry = "registry.mgr.slc1.suse.org"
   auth_registry      = "registry.mgr.slc1.suse.org:5000/cucutest"
