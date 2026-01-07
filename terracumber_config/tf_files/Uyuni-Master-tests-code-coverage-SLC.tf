@@ -145,6 +145,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:92:04:00:f0"
         memory = 16384
         vcpu = 6
+        cpu_model = "host-passthrough"
       }
     }
     server_containerized = {
@@ -194,13 +195,13 @@ module "cucumber_testsuite" {
         vcpu = 2
       }
     }
-    // deblike_minion = {
-    //   image = "ubuntu2404o"
-    //   provider_settings = {
-    //     mac = "aa:b2:92:04:00:f7"
-    //     memory = 4096
-    //   }
-    // }
+    deblike_minion = {
+      image = "ubuntu2404o"
+      provider_settings = {
+        mac = "aa:b2:92:04:00:f7"
+        memory = 4096
+      }
+    }
     build_host = {
      image = "sles15sp7o"
      provider_settings = {
