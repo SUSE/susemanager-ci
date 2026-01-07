@@ -380,20 +380,14 @@ def run(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start running the retail tests'
                     }
-                    // ----- Start: Get Terminal List -----
-                    // Dynamically create the terminal list to test depending on the state list
-                    Set<String> terminalsList = new HashSet<String>()
-                    def tfState = sh(script: "cd ${resultdir}/sumaform; tofu state list", returnStdout: true)
-                    String[] moduleList = tfState.split("\n")
-                    moduleList.each { lane ->
-                        def instanceList = lane.tokenize(".")
-                        if (instanceList[1].contains('terminal')) {
-                            terminalsList.add(instanceList[1].replace('_terminal', ''))
-                        }
-                    }
-                    echo "Dynamic Terminal List detected from State: ${terminalsList}"
+                    def nodesHandler = getNodesHandler(params)
+                    // Filter the nodeList for items that are terminals
+                    // The handler already identifies 'terminal' strings in the state
+                    Set<String> terminalsList = nodesHandler.nodeList.findAll { it.contains('terminal') }
+                            .collect { it.replace('_terminal', '') }
+                    echo "Dynamic Terminal List detected from Handler: ${terminalsList}"
                     if (terminalsList.isEmpty()) {
-                        error "No terminal modules found in Terraform state! Expected format: module.<name>_terminal..."
+                        error "No terminal modules found in Terraform state!"
                     }
                     // ----- End: Get Terminal List -----
 
