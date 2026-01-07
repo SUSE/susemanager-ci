@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse156o", "sles15sp7o", "ubuntu2404"]
+  images = ["rocky8", "opensuse156o", "tumbleweedo", "sles15sp7o", "ubuntu2404"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -151,7 +151,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "opensuse156o"
+      image = "tumbleweedo"
       provider_settings = {
         instance_type = "m6a.xlarge"
         volume_size = "200"
@@ -165,9 +165,9 @@ module "cucumber_testsuite" {
       login_timeout = 28800
     }
     proxy_containerized = {
-      image = "opensuse156o"
+      image = "tumbleweedo"
       provider_settings = {
-        instance_type = "c6i.large"
+        instance_type = "c6a.large"
         private_ip = "172.16.3.7"
         overwrite_fqdn = "uyuni-master-proxy.sumaci.aws"
       }
@@ -176,7 +176,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
     }
     suse_minion = {
-      image = "opensuse156o"
+      image = "tumbleweedo"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.8"
@@ -184,7 +184,7 @@ module "cucumber_testsuite" {
       }
     }
     suse_sshminion = {
-      image = "opensuse156o"
+      image = "tumbleweedo"
       provider_settings = {
         instance_type = "t3a.medium"
         private_ip = "172.16.3.9"
