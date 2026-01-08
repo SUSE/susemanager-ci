@@ -1,13 +1,13 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-Head/job/manager-Head-dev-acceptance-tests-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-RKE2-NUE"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
+  default = "export PRODUCT='Uyuni' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Head-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Uyuni-Master RKE2 $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Head-NUE: Environment setup failed"
+  default = "Results Uyuni-Master RKE2: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -62,18 +62,6 @@ variable "SCC_USER" {
 
 variable "SCC_PASSWORD" {
   type = string
-}
-
-variable "SCC_PTF_USER" {
-  type = string
-  default = null
-  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
-}
-
-variable "SCC_PTF_PASSWORD" {
-  type = string
-  default = null
-  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
 }
 
 variable "GIT_USER" {
@@ -103,7 +91,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "uyuni-master"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -113,126 +101,109 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  cc_ptf_username = var.SCC_PTF_USER
-  cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse155o", "opensuse156o", "leapmicro55o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
 
   use_avahi    = false
-  name_prefix  = "mlm-ci-head-"
+  name_prefix  = "uyuni-ci-master-rke2-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
-  no_auth_registry       = "registry.mgr.suse.de"
-  auth_registry          = "registry.mgr.suse.de:5000/cucutest"
+  no_auth_registry = "registry.mgr.suse.de"
+  auth_registry      = "registry.mgr.suse.de:5000/cucutest"
   auth_registry_username = "cucutest"
   auth_registry_password = "cucusecret"
-  git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
-
+  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
+  
   container_server = true
   container_proxy  = true
-  beta_enabled = false
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
 
-  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
+  # server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:b0"
-        vcpu = 4
-        memory = 4096
+        mac = "aa:b2:93:01:00:10"
       }
     }
     server_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:b1"
-        vcpu = 8
-        memory = 32768
+        mac = "aa:b2:93:01:00:11"
       }
-      main_disk_size       = 500
-      login_timeout        = 28800
-      large_deployment     = true
-      runtime              = "podman"
-      container_repository = "registry.suse.de"
-      container_tag        = "latest"
+      runtime = "rke2"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_tag = "latest"
+
+      login_timeout = 28800
+      main_disk_size = 40
+      repository_disk_size = 300
+      database_disk_size = 60
     }
     proxy_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:b2"
-        vcpu = 2
-        memory = 2048
+        mac = "aa:b2:93:01:00:12"
       }
-      main_disk_size = 200
-      runtime = "podman"
-      container_repository = "registry.suse.de"
+      additional_packages = [ "venv-salt-minion" ]
+      install_salt_bundle = true
+      runtime = "rke2"
+      additional_repos = {
+          containerUtils = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
+      }
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
+      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/proxy-helm"
     }
     suse_minion = {
-      image = "sles15sp7o"
+      image = "tumbleweedo"
       provider_settings = {
-        mac = "aa:b2:93:01:00:b6"
-        vcpu = 2
-        memory = 2048
+        mac = "aa:b2:93:01:00:16"
       }
     }
     suse_sshminion = {
-      image = "sles15sp7o"
+      image = "tumbleweedo"
       provider_settings = {
-        mac = "aa:b2:93:01:00:b8"
-        vcpu = 2
-        memory = 2048
+        mac = "aa:b2:93:01:00:18"
       }
+      additional_packages = [ "iptables" ]
     }
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:ba"
+        mac = "aa:b2:93:01:00:1a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
-        vcpu = 2
         memory = 2048
+        vcpu = 2
       }
     }
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:bb"
-        vcpu = 2
-        memory = 2048
+        mac = "aa:b2:93:01:00:1b"
       }
     }
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:bd"
-        vcpu = 2
+        mac = "aa:b2:93:01:00:1d"
         memory = 2048
       }
     }
     pxeboot_minion = {
       image = "sles15sp7o"
     }
-    dhcp_dns = {
-      name        = "dhcp-dns"
-      image       = "opensuse155o"
-      hypervisor  = {
-        host        = "suma-01.mgr.suse.de"
-        user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
-      }
-    }
   }
-
+  
   provider_settings = {
-    pool = "ssd"
-    network_name = null
-    bridge = "br0"
-    additional_network = "192.168.99.0/24"
+    pool               = "ssd"
+    network_name       = null
+    bridge             = "br0"
+    additional_network = "192.168.101.0/24"
   }
 }
 
