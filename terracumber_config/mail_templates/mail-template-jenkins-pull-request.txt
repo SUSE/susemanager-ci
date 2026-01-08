@@ -23,7 +23,7 @@ $failures_log
 Compare the test results with master tests results and see if your PR
 fixed some or whether your failing tests are also failing in master:
 
-https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-NUE/
+https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-dev-acceptance-tests-PRG/
 
 
 In case of failure, you can connect to the server host. See $urlprefix/$timestamp for connection details.

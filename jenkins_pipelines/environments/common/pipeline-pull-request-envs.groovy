@@ -1,7 +1,7 @@
 // Default to uyuni
 
 domain = ""
-if (params.platform_localisation == "NUE") {
+if (params.platform_localisation == "PRG") {
   domain = "mgr.suse.de"
 } else if (params.platform_localisation == "SLC") {
   domain = "mgr.slc1.suse.org"

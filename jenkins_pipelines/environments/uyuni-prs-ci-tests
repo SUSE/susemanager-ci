@@ -1,10 +1,10 @@
 #!/usr/bin/env groovy
 
-node('pull-request-test-nue') {
+node('pull-request-test-prg') {
     properties([
             buildDiscarder(logRotator(numToKeepStr: '30')),
             parameters([
-                    string(name: 'platform_localisation', defaultValue: 'NUE', description: 'Decide if it will be run in \'SLC\' or \'NUE\''),
+                    string(name: 'platform_localisation', defaultValue: 'PRG', description: 'Decide if it will be run in \'SLC\' or \'PRG\''),
                     string(name: 'product_version', defaultValue: 'uyuni', description: 'Select if we are using \'uyuni\' or \'manager43\' project'),
                     string(name: 'pull_request_number', defaultValue: '', description: 'Required: Uyuni Pull Request Number'),
                     string(name: 'email_to', defaultValue: '', description: 'Recommended: Receive a report to your e-mail when it finishes with links to the results, artifacts and logs'),
@@ -36,8 +36,8 @@ node('pull-request-test-nue') {
         last_env = 10;
         email_to = params.email_to;
         pipeline_node = ""
-        if (platform_localisation == "NUE") {
-            pipeline_node = "pull-request-test-nue"
+        if (platform_localisation == "PRG") {
+            pipeline_node = "pull-request-test-prg"
         } else if (platform_localisation == "SLC") {
             pipeline_node = "pull-request-test"
         } else {
