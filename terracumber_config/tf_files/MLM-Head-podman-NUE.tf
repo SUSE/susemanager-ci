@@ -143,14 +143,14 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:b0"
+        mac = "aa:b2:93:01:00:00"
         vcpu = 4
         memory = 4096
       }
     }
     server_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:b1"
+        mac = "aa:b2:93:01:00:01"
         vcpu = 8
         memory = 32768
       }
@@ -163,7 +163,7 @@ module "cucumber_testsuite" {
     }
     proxy_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:b2"
+        mac = "aa:b2:93:01:00:02"
         vcpu = 2
         memory = 2048
       }
@@ -175,7 +175,7 @@ module "cucumber_testsuite" {
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:b6"
+        mac = "aa:b2:93:01:00:06"
         vcpu = 2
         memory = 2048
       }
@@ -183,7 +183,7 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:b8"
+        mac = "aa:b2:93:01:00:08"
         vcpu = 2
         memory = 2048
       }
@@ -191,7 +191,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:ba"
+        mac = "aa:b2:93:01:00:0a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -201,7 +201,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:bb"
+        mac = "aa:b2:93:01:00:0b"
         vcpu = 2
         memory = 2048
       }
@@ -209,7 +209,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:bd"
+        mac = "aa:b2:93:01:00:0d"
         vcpu = 2
         memory = 2048
       }
