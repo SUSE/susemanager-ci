@@ -27,6 +27,9 @@ def parse_cli_args() -> argparse.Namespace:
     parser.add_argument("--state", dest="state",help="state to filter issues by", action='store',
         choices= ["new", "ignore", "not-for-us", "analysis", "analyzed", "resolved", "deleted", "merged", "postponed", "revisit"]
     )
+    parser.add_argument("--ordering", dest="ordering", help="order results by the given field", action="store",
+        choices= ["id", "creation_date", "category"]
+    )
     # free text query params
     parser.add_argument("--search", dest="search", help="text to search for in the issue", action='store')
     parser.add_argument("--name", dest="name", help="text to search for in the issue's name", action='store')
