@@ -43,6 +43,7 @@ def parse_cli_args() -> argparse.Namespace:
 def get_bugzilla_product(product_version: str, cloud: bool) -> str:
     return f"SUSE Manager {product_version}{' in Public Clouds' if cloud else ''}"
 
+# return a txt file formatted according to .md syntax, so that it can be used in GitHub cards and the likes
 def bugs_to_links_list(products_bugs: dict[str, list[dict]], bugzilla_url: str) -> list[str]:
     lines: list[str] = []
 
@@ -78,6 +79,7 @@ def main():
 
     if args.all:
         for version in _PRODUCT_VERSIONS:
+            # get both "standard" and cloud product versions
             bugzilla_products.append(get_bugzilla_product(version, False))
             bugzilla_products.append(get_bugzilla_product(version, True))
     else:
