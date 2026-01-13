@@ -19,26 +19,29 @@ def parse_cli_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="This script retrieves a list of relevant open BSCs by querying the SUSE Bugzilla REST API and returns either a JSON output or a check-list of BSC links and summaries"
     )
-    parser.add_argument("-t", "--api_key", dest="api_key", help="Bugzilla API key", action='store', required=True)
+    # required API key
+    parser.add_argument("-k", "--api-key", dest="api_key", help="Bugzilla API key", action='store', required=True)
+    # filters
     parser.add_argument("-a", "--all", dest="all", default=False, help="Returns results for all supported products (overrides 'version' and 'cloud' flags)", action="store_true")
-    parser.add_argument("-v", "--version", dest="version",
-        help="Version of SUMA you want to run this script for, the options are 4.3 and 5.0. The default is 4.3 for now",
+    parser.add_argument("-p", "--product-version", dest="product_version", help="Product version of SUMA you want to run this script for, the options are 4.3 and 5.0. The default is 4.3 for now",
         choices=PRODUCT_VERSIONS, default="4.3", action='store'
     )
     parser.add_argument("-c", "--cloud", dest="cloud", default=False, help="Return BSCs for SUMA in Public Clouds", action="store_true")
-    parser.add_argument("-s", "--status", dest="status", default="CONFIRMED", help="Status to filter BSCs by", action="store",
+    parser.add_argument("-s", "--status", dest="status", help="Status to filter BSCs by", action="store",
         choices=["NEW", "CONFIRMED", "IN_PROGRESS", "RESOLVED"]
     )
-    parser.add_argument("-o", "--output", dest="output_file", default="", help="File in which the results will be saved", action="store")
-    parser.add_argument("-f", "--format", dest="output_format", default="json", help="Output file format (JSON default)", action="store",
+    parser.add_argument("-r", "--resolution", dest="resolution", help="Resolution to filter issues for (default empty string means open bugs)", action="store")
+    # output related flags
+    parser.add_argument("-o", "--output", dest="output_file", help="File in which the results will be saved", action="store")
+    parser.add_argument("-f", "--format", dest="output_format", default="txt", help="Output file format (txt default)", action="store",
         choices=["json", "txt"]
     )
 
     args: argparse.Namespace = parser.parse_args()
     return args
 
-def get_bugzilla_product(version: str, cloud: bool) -> str:
-    return f"SUSE Manager {version}{' in Public Clouds' if cloud else ''}"
+def get_bugzilla_product(product_version: str, cloud: bool) -> str:
+    return f"SUSE Manager {product_version}{' in Public Clouds' if cloud else ''}"
 
 def bugs_to_links_list(products_bugs: dict[str, list[dict]]) -> list[str]:
     lines: list[str] = []
@@ -78,11 +81,11 @@ def main():
             bugzilla_products.append(get_bugzilla_product(version, False))
             bugzilla_products.append(get_bugzilla_product(version, True))
     else:
-        bugzilla_products.append(get_bugzilla_product(args.version, args.cloud))
+        bugzilla_products.append(get_bugzilla_product(args.product_version, args.cloud))
 
     for bugzilla_product in bugzilla_products:
-        logging.info(f"Retrieving BSC in status {args.status} for product '{bugzilla_product}' ...")
-        product_bugs[bugzilla_product] = bugzilla_client.get_bugs(product = bugzilla_product, status = args.status)
+        logging.info(f"Retrieving BSCs for product '{bugzilla_product}'...")
+        product_bugs[bugzilla_product] = bugzilla_client.get_bugs(product = bugzilla_product, resolution = args.resolution, status = args.status)
         logging.info("Done")
     
     output_format: str = args.output_format

@@ -1,4 +1,3 @@
-import json
 import requests
 from typing import Any
 
@@ -15,7 +14,8 @@ class BugzillaClient:
         self.params: dict[str, Any] = { 'Bugzilla_api_key': self.api_key }
 
     def get_bugs(self, **kwargs) -> list[dict[str, Any]]:
-        response: requests.Response = requests.get(BUGZILLA_BUGS_ENDPOINT, params={**self.params, **kwargs})
+        additional_params: dict[str, Any] = { k: v for k, v in kwargs.items() if v is not None }
+        response: requests.Response = requests.get(BUGZILLA_BUGS_ENDPOINT, params={**self.params, **additional_params})
         if not response.ok:
             response.raise_for_status()
 
