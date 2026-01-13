@@ -31,7 +31,7 @@ jobs:
 
       - name: Install opentofu
         if: steps.tf_files.outputs.added_modified
-        uses: opentofu/setup-opentofu@v1.0.6
+        uses: opentofu/setup-opentofu@v1.0.7
         with:
           tofu_version: 1.10.7
       - name: Checkout sumaform
