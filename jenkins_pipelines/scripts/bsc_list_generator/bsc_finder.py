@@ -59,7 +59,7 @@ def parse_cli_args() -> argparse.Namespace:
     return args
 
 def get_suma_product_name(product_version: str, cloud: bool) -> str:
-    product_name: str = "SUSE Multi Linux Manager" if product_version == '5.1' else "SUSE Manager"
+    product_name: str = "SUSE Multi-Linux Manager" if product_version == '5.1' else "SUSE Manager"
     return f"{product_name} {product_version}{' in Public Clouds' if cloud else ''}"
 
 def get_suma_bugzilla_products(all, product_version: str, cloud: bool) -> list[str]:
