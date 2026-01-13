@@ -98,28 +98,15 @@ class BscFinderTestCase(unittest.TestCase):
         self.assertFalse(args.cloud)
         self.assertIsNone(args.status)
         self.assertIsNone(args.resolution)
+        self.assertIsNone(args.reporter)
         self.assertIsNone(args.output_file)
         self.assertEqual(args.output_format, "txt")
 
     def test_parse_cli_args_success(self):
         # shorthand flags
-        sys.argv = ['bsc_finder.py', "-k", "test_key", "-a", "-p", "5.0", "-n", "-c", "-s", "CONFIRMED", "-r", "", "-o", "test.json", "-f", "json"]
-        args = parse_cli_args()
-
-        self.assertEqual(args.api_key, "test_key")
-        self.assertTrue(args.all)
-        self.assertEqual(args.product_version, "5.0")
-        self.assertTrue(args.use_release)
-        self.assertTrue(args.cloud)
-        self.assertEqual(args.status, "CONFIRMED")
-        self.assertEqual(args.resolution, '')
-        self.assertEqual(args.output_file, "test.json")
-        self.assertEqual(args.output_format, "json")
-
-        # long flags
         sys.argv = [
-            "bsc_finder.py", "--api-key", "test_key", "--all", "--product-version", "5.0", "--release-notes", "--cloud", "-s", "CONFIRMED",
-            "--resolution", "", "--output", "test.json", "--format", "json"
+            'bsc_finder.py', "-k", "test_key", "-a", "-p", "5.0", "-n", "-c", "-s", "CONFIRMED",
+            "-r", "", "-t", "tester@suse.com", "-o", "test.json", "-f", "json"
         ]
         args = parse_cli_args()
 
@@ -130,6 +117,25 @@ class BscFinderTestCase(unittest.TestCase):
         self.assertTrue(args.cloud)
         self.assertEqual(args.status, "CONFIRMED")
         self.assertEqual(args.resolution, '')
+        self.assertEqual(args.reporter, "tester@suse.com")
+        self.assertEqual(args.output_file, "test.json")
+        self.assertEqual(args.output_format, "json")
+
+        # long flags
+        sys.argv = [
+            "bsc_finder.py", "--api-key", "test_key", "--all", "--product-version", "5.0", "--release-notes", "--cloud", "-s", "CONFIRMED",
+            "--resolution", "", "--reporter", "tester@suse.com", "--output", "test.json", "--format", "json"
+        ]
+        args = parse_cli_args()
+
+        self.assertEqual(args.api_key, "test_key")
+        self.assertTrue(args.all)
+        self.assertEqual(args.product_version, "5.0")
+        self.assertTrue(args.use_release)
+        self.assertTrue(args.cloud)
+        self.assertEqual(args.status, "CONFIRMED")
+        self.assertEqual(args.resolution, '')
+        self.assertEqual(args.reporter, "tester@suse.com")
         self.assertEqual(args.output_file, "test.json")
         self.assertEqual(args.output_format, "json")
     

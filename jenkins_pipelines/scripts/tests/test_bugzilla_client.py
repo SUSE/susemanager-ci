@@ -16,7 +16,7 @@ class BugzillaClientTestCase(unittest.TestCase):
     def test_get_bugs_success(self, mock_api_call):
         mock_api_call.side_effect = mock_requests_get_success
 
-        bugs: list[dict[str, Any]] = self.bugzilla_client._get_bugs(product = "Test Product", status = None, release = None)
+        bugs: list[dict[str, Any]] = self.bugzilla_client._get_bugs(product = "Test Product", reporter = None, status = None, release = None)
         mock_api_call.assert_called_once()
         # check None keys are dropped
         mock_api_call.assert_called_with(self.bugzilla_client._bugs_endpoint, params = {'Bugzilla_api_key': 'test_key', "product": "Test Product"})
@@ -28,7 +28,7 @@ class BugzillaClientTestCase(unittest.TestCase):
             self.assertEqual(bug['id'], i+1)
         
         # just check the arguments are correctly passed when there's a value
-        self.bugzilla_client._get_bugs(product = "Test Product", status = "CONFIRMED", release = None)
+        self.bugzilla_client._get_bugs(product = "Test Product", reporter = None, status = "CONFIRMED", release = None)
         mock_api_call.assert_called_with(self.bugzilla_client._bugs_endpoint, params = {'Bugzilla_api_key': 'test_key', "product": "Test Product", "status": "CONFIRMED"})
     
     @patch('requests.get')
