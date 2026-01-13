@@ -1,14 +1,14 @@
 import requests
 
-SMASH_API_URL = 'https://smash.suse.de/api'
-SMASH_API_V2_URL = "https://smash.suse.de/api2"
-SMASH_EMBARGO_ENDPOINT= f"{SMASH_API_URL}/embargoed-bugs/"
-SMASH_ISSUES_ENDPOINT = f"{SMASH_API_URL}/issues/"
-SMASH_MISSING_SUBMISSIONS_ENDPOINT = f"{SMASH_API_URL}/issues-missing-submissions/"
+_SMASH_API_URL = 'https://smash.suse.de/api'
 
 class SmashClient():
 
-    def __init__(self, api_token: str = '') -> None:
+    def __init__(self, api_url:str = _SMASH_API_URL, api_token: str = '') -> None:
+        self._api_url: str = api_url
+        self._embargo_endpoint: str = f"{api_url}/embargoed-bugs/"
+        self._issues_endpoint: str = f"{api_url}/issues/"
+        self._missing_subs_endpoint: str = f"{api_url}/issues-missing-submissions/"
         self._embargoed_ids_cache: set[str] = set()
         if api_token:
             self._headers: dict[str, str] = {
@@ -17,7 +17,7 @@ class SmashClient():
 
     def get_embargoed_bugs_ids(self) -> set[str]:
         if not self._embargoed_ids_cache:
-            res: requests.Response = requests.get(SMASH_EMBARGO_ENDPOINT)
+            res: requests.Response = requests.get(self._embargo_endpoint)
             if not res.ok:
                 res.raise_for_status()
 
@@ -35,7 +35,7 @@ class SmashClient():
         issues: list[dict] = []
         all_pages: bool = kwargs.get("all", False)
 
-        endpoint: str = SMASH_MISSING_SUBMISSIONS_ENDPOINT if missing_subs else SMASH_ISSUES_ENDPOINT
+        endpoint: str = self._missing_subs_endpoint if missing_subs else self._issues_endpoint
         res: requests.Response = requests.get(endpoint, params=kwargs, headers=self._headers)
         if not res.ok:
             res.raise_for_status()

@@ -5,7 +5,7 @@ from unittest.mock import patch
 from requests import HTTPError
 
 from tests.mock_response import mock_requests_get_success, mock_requests_get_fail
-from bsc_list_generator.bugzilla_client import BugzillaClient, BUGZILLA_BUGS_ENDPOINT
+from bsc_list_generator.bugzilla_client import BugzillaClient
 
 class BugzillaClientTestCase(unittest.TestCase):
     
@@ -19,7 +19,7 @@ class BugzillaClientTestCase(unittest.TestCase):
         bugs: list[dict[str, Any]] = self.bugzilla_client.get_bugs(product = "Test Product", status = None, release = None)
         mock_api_call.assert_called_once()
         # check None keys are dropped
-        mock_api_call.assert_called_with(BUGZILLA_BUGS_ENDPOINT, params = {'Bugzilla_api_key': 'test_key', "product": "Test Product"})
+        mock_api_call.assert_called_with(self.bugzilla_client._bugs_endpoint, params = {'Bugzilla_api_key': 'test_key', "product": "Test Product"})
         self.assertEqual(len(bugs), 3)
         for i in range(len(bugs)):
             bug: dict[str, Any] = bugs[i]
@@ -28,7 +28,7 @@ class BugzillaClientTestCase(unittest.TestCase):
         
         # just check the arguments are correctly passed when there's a value
         self.bugzilla_client.get_bugs(product = "Test Product", status = "CONFIRMED", release = None)
-        mock_api_call.assert_called_with(BUGZILLA_BUGS_ENDPOINT, params = {'Bugzilla_api_key': 'test_key', "product": "Test Product", "status": "CONFIRMED"})
+        mock_api_call.assert_called_with(self.bugzilla_client._bugs_endpoint, params = {'Bugzilla_api_key': 'test_key', "product": "Test Product", "status": "CONFIRMED"})
     
     @patch('requests.get')
     def test_get_bugs_failure(self, mock_api_call):

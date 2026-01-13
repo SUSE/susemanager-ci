@@ -2,9 +2,7 @@ import json
 from requests import HTTPError
 from typing import Any
 
-from bsc_list_generator.bugzilla_client import BUGZILLA_BUGS_ENDPOINT
 from json_generator.maintenance_json_generator import IBS_MAINTENANCE_URL_PREFIX
-from json_generator.smash_client import SMASH_EMBARGO_ENDPOINT
 
 
 class MockResponse:
@@ -22,11 +20,11 @@ class MockResponse:
 def mock_requests_get_success(*args, **kwargs) -> MockResponse:
     if args[0] == f"{IBS_MAINTENANCE_URL_PREFIX}1234/SUSE_Updates_SLE-Manager-Tools-BETA-For-Micro_5_x86_64/":
         return MockResponse(200, True)
-    elif args[0] == SMASH_EMBARGO_ENDPOINT:
+    elif "embargoed-bugs" in args[0]:
         with open('./tests/testdata/smash_embargoed_bugs.json') as smash_embargo_json:
             json_content: str = smash_embargo_json.read()
             return MockResponse(200, True, json_content)
-    elif args[0] == BUGZILLA_BUGS_ENDPOINT:
+    elif "bugzilla" in args[0]:
         with open('./tests/testdata/bugzilla_bugs.json') as bugzilla_bugs_json:
             json_content: str = bugzilla_bugs_json.read()
             return MockResponse(200, True, json_content)
