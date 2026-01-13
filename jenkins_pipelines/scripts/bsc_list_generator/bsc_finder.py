@@ -40,9 +40,21 @@ def parse_cli_args() -> argparse.Namespace:
     args: argparse.Namespace = parser.parse_args()
     return args
 
-def get_bugzilla_product(product_version: str, cloud: bool) -> str:
+def get_suma_product_name(product_version: str, cloud: bool) -> str:
     return f"SUSE Manager {product_version}{' in Public Clouds' if cloud else ''}"
 
+def get_suma_bugzilla_products(all, product_version: str, cloud: bool) -> list[str]:
+    if not all:
+        return [get_suma_product_name(product_version, cloud)]
+
+    bugzilla_products: list[str] = []
+    for version in _PRODUCT_VERSIONS:
+        # get both "standard" and cloud product versions
+        bugzilla_products.append(get_suma_product_name(version, False))
+        bugzilla_products.append(get_suma_product_name(version, True))
+    
+    return bugzilla_products
+    
 # return a txt file formatted according to .md syntax, so that it can be used in GitHub cards and the likes
 def bugs_to_links_list(products_bugs: dict[str, list[dict]], bugzilla_url: str) -> list[str]:
     lines: list[str] = []
@@ -67,23 +79,15 @@ def store_results(products_bugs: dict[str, list[dict]], output_file: str, output
             issues_links: list[str] = bugs_to_links_list(products_bugs, bugzilla_url)
             f.writelines(issues_links)
         else:
-            raise ValueError(f"Invalid output format: {output_format} - supported formats {_FORMATS_DEFAULT_FILE_NAMES.keys()}")
+            raise ValueError(f"Invalid output format: {output_format} - supported formats {_FORMATS_DEFAULT_FILE_NAMES.keys()}") 
     
 def main():
     setup_logging()
     args: argparse.Namespace = parse_cli_args()
     bugzilla_client: BugzillaClient = BugzillaClient(args.api_key)
 
-    bugzilla_products: list[str] = []
+    bugzilla_products: list[str] = get_suma_bugzilla_products(args.all, args.product_version, args.cloud)
     product_bugs: dict[str, list[dict[str, Any]]] = {}
-
-    if args.all:
-        for version in _PRODUCT_VERSIONS:
-            # get both "standard" and cloud product versions
-            bugzilla_products.append(get_bugzilla_product(version, False))
-            bugzilla_products.append(get_bugzilla_product(version, True))
-    else:
-        bugzilla_products.append(get_bugzilla_product(args.product_version, args.cloud))
 
     for bugzilla_product in bugzilla_products:
         logging.info(f"Retrieving BSCs for product '{bugzilla_product}'...")
