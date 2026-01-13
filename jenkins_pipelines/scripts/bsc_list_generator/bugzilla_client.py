@@ -36,6 +36,7 @@ class BugzillaClient:
         bsc_ids: list[str] = []
 
         for rn_path in release_note_paths:
+            logging.info(f"Parsing release notes: {rn_path[0]} - {rn_path[1]}")
             rn_ids: list[str] = self._get_mentioned_bscs(*rn_path)
             # avoid duplicating a BSC between Proxy and Server
             for id in rn_ids:
@@ -43,11 +44,28 @@ class BugzillaClient:
                     bsc_ids.append(id)
         
         return self._get_bugs(id=','.join(bsc_ids), **kwarg)
+    
+    def _bug_under_embargo(self, bsc: dict[str, Any]) -> bool:
+        summary: str = bsc['summary']
+        if "embargo" in summary.lower():
+            logging.info(f"BSC#{bsc['id']} is under embargo and will not be displayed in the results.")
+            return True
+
+        # TODO: verify that this
+        # 1) is needed
+        # 2) does not backfire: what if an embargo is lifted but the comment is still there ?)
+        
+        # comments: list[dict [str, Any]] = self._get_bug_comments(bsc['id'])
+        # for comment in comments:
+        #     if "embargo" in comment['text'].lower():
+        #         logging.info(f"BSC#{bsc['id']} - comment #{comment['id']} mentions an embargo. Skipping BSC.")
+        #         return True
+        return False
 
     def _get_mentioned_bscs(self, project: str, package:str, filename: str) -> list[str]:
         cmd: str = f"co {project} {package} {filename}"
         # check=True -> raise subprocess.CalledProcessError if the return code is != 0
-        result: subprocess.CompletedProcess[bytes] = subprocess.run(
+        subprocess.run(
             [f"osc --apiurl {_IBS_API_URL} {cmd}"],
             shell=True, check=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -65,7 +83,6 @@ class BugzillaClient:
             # first line should delimit a block, better bail out if not
             firstline: str = nf.readline().strip()
             if not len(firstline) or not all(char == '-' for char in firstline):
-                print(firstline)
                 raise ValueError("Irregular or missing release notes block: first line should only be composed by '-'")
             
             bsc_block: bool = False
@@ -93,4 +110,15 @@ class BugzillaClient:
 
         json_res: dict = response.json()
         bugs: list[dict[str, Any]] = json_res['bugs']
-        return bugs
+        filtered_bugs: list[dict[str, Any]] = [ bug for bug in bugs if not self._bug_under_embargo(bug) ]
+
+        return filtered_bugs
+    
+    def _get_bug_comments(self, bug_id: str) -> list[dict[str, Any]]:
+        response: requests.Response = requests.get(f"{self._bugs_endpoint}/{bug_id}/comment", params={**self._params})
+        if not response.ok:
+            response.raise_for_status()
+
+        json_res: dict = response.json()
+        comments: list[dict[str, Any]] = json_res['bugs'][str(bug_id)]['comments']
+        return comments
