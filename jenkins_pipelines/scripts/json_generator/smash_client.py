@@ -5,29 +5,6 @@ SMASH_API_URL = 'https://smash.suse.de/api'
 SMASH_EMBARGO_ENDPOINT= f"{SMASH_API_URL}/embargoed-bugs/"
 SMASH_ISSUES_ENDPOINT = f"{SMASH_API_URL}/issues"
 
-class Categories(StrEnum):
-    MAINTENANCE = "maintenance"
-    SECURITY = "security"
-
-class State(StrEnum): 
-    NEW = "new"
-    IGNORE = "ignore"
-    NOT_FOR_US = "not-for-us"
-    ANALYSIS = "analysis"
-    ANALYZED = "analyzed"
-    RESOLVED = "resolved"
-    DELETED = "deleted"
-    MERGED = "merged"
-    POSTPONED = "postponed"
-    REVISIT = "revisit"
-
-class Severity(StrEnum):
-    NOT_SET = "not-set"
-    CRITICAL = "critical"
-    IMPORTANT = "important"
-    MODERATE = "moderate"
-    LOW = "low"
-
 class SmashClient():
 
     def __init__(self, api_token: str = '') -> None:
@@ -54,11 +31,27 @@ class SmashClient():
         return self._embargoed_ids_cache
     
     def get_issues(self, **kwargs) -> list[dict]:
+        issues: list[dict] = []
+        all_pages: bool = kwargs.get("all", False)
+
         res: requests.Response = requests.get(SMASH_ISSUES_ENDPOINT, params=kwargs, headers=self._headers)
         if not res.ok:
             res.raise_for_status()
-
+        
         json_content : list[dict] = res.json()
-        return json_content['results']
+        issues.extend(json_content['results'])
+
+        while all_pages and json_content["next"]:
+            next_page_url: str = json_content["next"]
+            print(f"GET new page of results - {next_page_url}")
+
+            res = requests.get(next_page_url, headers=self._headers)
+            if not res.ok:
+                res.raise_for_status()
+
+            json_content = res.json()
+            issues.extend(json_content['results'])
+
+        return issues
     
 
