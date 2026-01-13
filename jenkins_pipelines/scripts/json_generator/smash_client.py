@@ -55,5 +55,3 @@ class SmashClient():
             issues.extend(json_content['results'])
 
         return issues
-    
-
