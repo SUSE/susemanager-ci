@@ -62,6 +62,27 @@
             "status": "CONFIRMED",
             "summary": "Test BSC 3",
             "version": "Test"
+        },
+        {
+            "classification": "Test",
+            "component": "Test components",
+            "creation_time": "2024-03-03T00:00:00Z",
+            "creator": "tester@suse.com",
+            "deadline": null,
+            "depends_on": [],
+            "id": 3,
+            "is_cc_accessible": true,
+            "is_confirmed": true,
+            "is_creator_accessible": true,
+            "is_open": true,
+            "priority": "P0 - Critical",
+            "product": "Test Product",
+            "remaining_time": 0,
+            "resolution": "",
+            "severity": "High",
+            "status": "CONFIRMED",
+            "summary": "VUL-0: EMBARGOED: CVE-123456789 Test BSC 4",
+            "version": "Test"
         }
     ]
 }
