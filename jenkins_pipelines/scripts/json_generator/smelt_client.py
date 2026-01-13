@@ -68,4 +68,9 @@ class SmeltGraphQLClient():
         if not response.ok:
             response.raise_for_status()
 
-        return response.json()['data']
+        json_body = response.json()
+        if not isinstance(json_body, dict) or "data" not in json_body:
+            logging.error("Unexpected GraphQL response format (missing 'data' key): %s", json_body)
+            raise KeyError("Missing 'data' key in GraphQL response")
+        
+        return json_body["data"]
