@@ -1,5 +1,6 @@
 import argparse
-from smash_client import SmashClient, Categories
+from smash_client import Categories, State
+from ibs_osc_client import IbsOscClient
 
 OUTPUT_FILE_NAME: str = 'bugzilla_tickets_list.txt'
 
@@ -19,9 +20,9 @@ def store_results(issues: list[str], output_file: str = OUTPUT_FILE_NAME):
 
 def main():
     args: argparse.Namespace = parse_cli_args()
-    smash_client: SmashClient = SmashClient(args.smash_token)
+    ibs_client: IbsOscClient = IbsOscClient(args.smash_token)
 
-    issues: list[str] = smash_client.get_bsc_links_list(category = Categories.MAINTENANCE, name = "bnc")
+    issues: list[str] = ibs_client.get_bsc_links_list(owner = "jmodak@suse.com", category = Categories.MAINTENANCE, state= State.NEW, name = "bnc")
     store_results(issues)
 
 
