@@ -11,7 +11,7 @@ class SmeltGraphQLClient():
     def __init__(self, api_url: str = _SMELT_GRAPHQL_API_URL):
         self._api_url: str = api_url
 
-    def find_products(self, contains) -> list[dict, Any]:
+    def find_products(self, contains: str) -> list[dict[str, Any]]:
         query: str = f'''{{
             products(name_Icontains: "{contains}"){{
                 edges {{
@@ -30,7 +30,7 @@ class SmeltGraphQLClient():
         if len(edges) == 0:
             logging.error("No products have been found")
         
-        products: list[dict[str, str]] = [ edge['node'] for edge in edges ]
+        products: list[dict[str, Any]] = [ edge['node'] for edge in edges ]
         return products
 
     def find_incidents(self, **kwargs) -> list[dict[str, Any]]:

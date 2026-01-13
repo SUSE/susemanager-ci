@@ -55,13 +55,13 @@ def parse_cli_args() -> argparse.Namespace:
     return args
 
 def issue_to_bsc_link(issue: dict[str, Any]) -> str|None:
-        for ref in issue['references']:
-            if ref['source'] == 'SUSE Bugzilla':
-                bsc_num: str = ref['name'].split("#")[1]
-                return f"- [ ] [Bug {bsc_num}]({ref['url']}) - {issue['summary']}\n"
-            
-        logging.error(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}\n")
-        return None
+    for ref in issue['references']:
+        if ref['source'] == 'SUSE Bugzilla':
+            bsc_num: str = ref['name'].split("#")[1]
+            return f"- [ ] [Bug {bsc_num}]({ref['url']}) - {issue['summary']}\n"
+        
+    logging.error(f"No Bugzilla reference for issue {issue['name']} - {issue['summary']}\n")
+    return None
 
 def store_results(issues: list[dict], output_file: str, output_format: str):
     with open(output_file, 'w', encoding='utf-8') as f:
@@ -69,7 +69,7 @@ def store_results(issues: list[dict], output_file: str, output_format: str):
             json.dump(issues, f, indent=2, sort_keys=True)
         elif output_format == "txt":
             issues_links: list[str] = [ issue_to_bsc_link(issue) for issue in issues if issue ]
-            f.writelines(issues_links)
+            f.writelines((link for link in issues_links if link is not None))
         else:
             raise ValueError(f"Invalid output format: {output_format} - supported formats {_FORMATS_DEFAULT_FILE_NAMES.keys()}")
     
@@ -85,7 +85,7 @@ def cli_args_to_query_params(args: argparse.Namespace) -> dict[str, str|bool]:
 
 def main():
     args: argparse.Namespace = parse_cli_args()
-    ibs_client: IbsOscClient = IbsOscClient(args.smash_token)
+    ibs_client: IbsOscClient = IbsOscClient(smash_api_token=args.smash_token)
 
     output_format: str = args.output_format
     output_file: str = args.output_file if args.output_file else _FORMATS_DEFAULT_FILE_NAMES[output_format]

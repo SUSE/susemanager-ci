@@ -37,14 +37,14 @@ class BugzillaClientTestCase(unittest.TestCase):
         self.assertRaises(HTTPError, self.bugzilla_client._get_bugs)
 
     def test_parse_release_notes(self):
-        bug_ids: str = self.bugzilla_client._parse_release_notes('./tests/testdata/test_release_notes.changes')
+        bug_ids: list[str] = self.bugzilla_client._parse_release_notes('./tests/testdata/test_release_notes.changes')
         self.assertListEqual(bug_ids, ['1', '2', '3', '4', '5', '6', '7'])
 
         # first line is not ---------------- 
         self.assertRaises(ValueError, self.bugzilla_client._parse_release_notes, './tests/testdata/test_invalid_release_notes.changes')
 
     def test_bug_under_embargo(self):
-        bsc: dict[str, any] = {
+        bsc: dict[str, Any] = {
             "classification": "Test",
             "component": "Test components",
             "creation_time": "2024-03-03T00:00:00Z",

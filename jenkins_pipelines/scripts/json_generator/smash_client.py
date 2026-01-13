@@ -1,3 +1,4 @@
+import logging
 import requests
 
 _SMASH_API_URL = 'https://smash.suse.de/api'
@@ -10,10 +11,9 @@ class SmashClient():
         self._issues_endpoint: str = f"{api_url}/issues/"
         self._missing_subs_endpoint: str = f"{api_url}/issues-missing-submissions/"
         self._embargoed_ids_cache: set[str] = set()
+        self._headers: dict[str, str] = {}
         if api_token:
-            self._headers: dict[str, str] = {
-                "Authorization": f"Token {api_token}"
-            }
+            self._headers["Authorization"] = f"Token {api_token}"
 
     def get_embargoed_bugs_ids(self) -> set[str]:
         if not self._embargoed_ids_cache:
@@ -45,7 +45,7 @@ class SmashClient():
 
         while all_pages and json_content["next"]:
             next_page_url: str = json_content["next"]
-            print(f"GET new page of results - {next_page_url}")
+            logging.info(f"GET new page of results - {next_page_url}")
 
             res = requests.get(next_page_url, headers=self._headers)
             if not res.ok:

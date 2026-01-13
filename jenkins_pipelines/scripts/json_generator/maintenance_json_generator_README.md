@@ -42,7 +42,7 @@ that are under embargo.
 ## Requirements
 
 - Python 3.11
-- `ibs_osc_client` library: Ensure you have the `obs_osc_client` module available in
+- `ibs_osc_client` library: Ensure you have the `ibs_osc_client` module available in
   your environment.
 
 ## Usage

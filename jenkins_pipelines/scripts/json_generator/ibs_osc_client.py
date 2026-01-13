@@ -1,6 +1,5 @@
 from datetime import date, datetime
 import logging
-from typing import Any
 import xml.etree.ElementTree as ET
 from shutil import copyfile, rmtree
 import subprocess

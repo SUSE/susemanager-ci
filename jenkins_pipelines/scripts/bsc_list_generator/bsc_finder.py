@@ -76,9 +76,9 @@ def bugs_to_links_list(products_bugs: dict[str, list[dict]], bugzilla_url: str) 
     for product, bugs_list in products_bugs.items():
         lines.append(f"## {product}\n\n")
         for bug in bugs_list:
-            id: str = bug['id']
-            bug_url: str = f"{bugzilla_url}?id={id}"
-            lines.append(f"- [ ] [Bug {id}]({bug_url}) - {bug['priority']} - ({bug['component']}) {bug['summary']}\n")
+            bug_id: str = bug['id']
+            bug_url: str = f"{bugzilla_url}?id={bug_id}"
+            lines.append(f"- [ ] [Bug {bug_id}]({bug_url}) - {bug['priority']} - ({bug['component']}) {bug['summary']}\n")
         lines.append("\n")
     
     return lines
@@ -104,7 +104,7 @@ def main():
     if args.use_release:
         product_versions: list[str] = _PRODUCT_VERSIONS if args.all else [args.product_version]
         for version in product_versions:
-            release_notes_paths: tuple[tuple[str, str, str]] =_IBS_RELEASE_NOTES_FOR_SUMA_VERSION[version]
+            release_notes_paths: tuple[tuple[str, str, str]] = _IBS_RELEASE_NOTES_FOR_SUMA_VERSION[version]
             product_bugs[f"SUSE Manager {version}"] = bugzilla_client.bscs_from_release_notes(release_notes_paths, reporter = args.reporter, status = args.status, resolution = args.resolution)
     else:
         bugzilla_products: list[str] = get_suma_bugzilla_products(args.all, args.product_version, args.cloud)

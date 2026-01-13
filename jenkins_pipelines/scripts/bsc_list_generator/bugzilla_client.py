@@ -32,42 +32,32 @@ class BugzillaClient:
 
         return product_bugs
     
-    def bscs_from_release_notes(self, release_note_paths: tuple[tuple[str, str, str]], **kwarg) -> list[dict[str, Any]]:
+    def bscs_from_release_notes(self, release_note_paths: tuple[tuple[str, str, str]], **kwargs) -> list[dict[str, Any]]:
         bsc_ids: list[str] = []
 
         for rn_path in release_note_paths:
             logging.info(f"Parsing release notes: {rn_path[0]} - {rn_path[1]}")
             rn_ids: list[str] = self._get_mentioned_bscs(*rn_path)
             # avoid duplicating a BSC between Proxy and Server
-            for id in rn_ids:
-                if id not in bsc_ids:
-                    bsc_ids.append(id)
+            for bug_id in rn_ids:
+                if bug_id not in bsc_ids:
+                    bsc_ids.append(bug_id)
         
-        return self._get_bugs(id=','.join(bsc_ids), **kwarg)
+        return self._get_bugs(id=','.join(bsc_ids), **kwargs)
     
     def _bug_under_embargo(self, bsc: dict[str, Any]) -> bool:
         summary: str = bsc['summary']
         if "embargo" in summary.lower():
             logging.info(f"BSC#{bsc['id']} is under embargo and will not be displayed in the results.")
             return True
-
-        # TODO: verify that this
-        # 1) is needed
-        # 2) does not backfire: what if an embargo is lifted but the comment is still there ?)
-        
-        # comments: list[dict [str, Any]] = self._get_bug_comments(bsc['id'])
-        # for comment in comments:
-        #     if "embargo" in comment['text'].lower():
-        #         logging.info(f"BSC#{bsc['id']} - comment #{comment['id']} mentions an embargo. Skipping BSC.")
-        #         return True
+            
         return False
 
     def _get_mentioned_bscs(self, project: str, package:str, filename: str) -> list[str]:
-        cmd: str = f"co {project} {package} {filename}"
         # check=True -> raise subprocess.CalledProcessError if the return code is != 0
         subprocess.run(
-            [f"osc --apiurl {_IBS_API_URL} {cmd}"],
-            shell=True, check=True,
+            ["osc", "--apiurl", _IBS_API_URL, "co", project, package, filename],
+            check=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         bugs_ids: list[str] = self._parse_release_notes(filename)
