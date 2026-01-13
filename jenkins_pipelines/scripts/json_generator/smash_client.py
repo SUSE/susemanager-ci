@@ -2,8 +2,10 @@ import requests
 from enum import StrEnum
 
 SMASH_API_URL = 'https://smash.suse.de/api'
+SMASH_API_V2_URL = "https://smash.suse.de/api2"
 SMASH_EMBARGO_ENDPOINT= f"{SMASH_API_URL}/embargoed-bugs/"
-SMASH_ISSUES_ENDPOINT = f"{SMASH_API_URL}/issues"
+SMASH_ISSUES_ENDPOINT = f"{SMASH_API_URL}/issues/"
+SMASH_MISSING_SUBMISSIONS_ENDPOINT = f"{SMASH_API_URL}/issues-missing-submissions/"
 
 class SmashClient():
 
@@ -30,11 +32,12 @@ class SmashClient():
 
         return self._embargoed_ids_cache
     
-    def get_issues(self, **kwargs) -> list[dict]:
+    def get_issues(self, missing_subs=False, **kwargs) -> list[dict]:
         issues: list[dict] = []
         all_pages: bool = kwargs.get("all", False)
 
-        res: requests.Response = requests.get(SMASH_ISSUES_ENDPOINT, params=kwargs, headers=self._headers)
+        endpoint: str = SMASH_MISSING_SUBMISSIONS_ENDPOINT if missing_subs else SMASH_ISSUES_ENDPOINT
+        res: requests.Response = requests.get(endpoint, params=kwargs, headers=self._headers)
         if not res.ok:
             res.raise_for_status()
         

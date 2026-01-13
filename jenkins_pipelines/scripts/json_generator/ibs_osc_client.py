@@ -1,5 +1,6 @@
 from datetime import date, datetime
 import logging
+from typing import Any
 import xml.etree.ElementTree as ET
 from shutil import copyfile, rmtree
 import subprocess
@@ -19,9 +20,9 @@ class IbsOscClient():
         self._current_date: date = date.today()
         self._smash_client = SmashClient(smash_api_token)
 
-    def get_bsc_links_list(self, **kwargs) -> list[str]:
-        issues: list[dict] = self._smash_client.get_issues(**kwargs)
-        print(f"Found {len(issues)} issues")
+    def get_bsc_links_list(self, missing_subs=False, **kwargs) -> list[str]:
+        issues: list[dict] = self._smash_client.get_issues(missing_subs, **kwargs)
+        logging.info(f"Found {len(issues)} issues")
 
         return [ self._issue_to_bsc_link(issue) for issue in issues ]
 
@@ -122,12 +123,12 @@ class IbsOscClient():
         tracker: str = issue_xml.attrib['tracker']
         return f"{tracker}#{issue_id}" if tracker == 'bnc' else f"{tracker.upper()}-{issue_id}"
     
-    def _issue_to_bsc_link(self, issue: dict[str, any]) -> str:
+    def _issue_to_bsc_link(self, issue: dict[str, Any]) -> str:
         for ref in issue['references']:
             if ref['source'] == 'SUSE Bugzilla':
                 bsc_num: str = ref['name'].split("#")[1]
                 return f"- [ ] [Bug {bsc_num}]({ref['url']}) - {issue['summary']}\n"
             
-        print(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}\n")
+        logging.error(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}\n")
         return ""
         # raise ValueError(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}")
