@@ -20,11 +20,10 @@ class IbsOscClient():
         self._current_date: date = date.today()
         self._smash_client = SmashClient(smash_api_token)
 
-    def get_bsc_links_list(self, missing_subs=False, **kwargs) -> list[str]:
+    def get_issues_list(self, missing_subs=False, **kwargs) -> list[dict]:
         issues: list[dict] = self._smash_client.get_issues(missing_subs, **kwargs)
         logging.info(f"Found {len(issues)} issues")
-
-        return [ self._issue_to_bsc_link(issue) for issue in issues ]
+        return issues
 
     def find_maintenance_incidents(self, status: str = 'open', group: str = 'qam-manager') -> set[str]:
         cmd: str = f"qam {status}"
@@ -122,13 +121,3 @@ class IbsOscClient():
         issue_id: str = issue_xml.attrib['id']
         tracker: str = issue_xml.attrib['tracker']
         return f"{tracker}#{issue_id}" if tracker == 'bnc' else f"{tracker.upper()}-{issue_id}"
-    
-    def _issue_to_bsc_link(self, issue: dict[str, Any]) -> str:
-        for ref in issue['references']:
-            if ref['source'] == 'SUSE Bugzilla':
-                bsc_num: str = ref['name'].split("#")[1]
-                return f"- [ ] [Bug {bsc_num}]({ref['url']}) - {issue['summary']}\n"
-            
-        logging.error(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}\n")
-        return ""
-        # raise ValueError(f"No Bugzilla reference for issue {issue['name']}- {issue['summary']}")

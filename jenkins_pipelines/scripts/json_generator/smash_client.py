@@ -1,5 +1,4 @@
 import requests
-from enum import StrEnum
 
 SMASH_API_URL = 'https://smash.suse.de/api'
 SMASH_API_V2_URL = "https://smash.suse.de/api2"
