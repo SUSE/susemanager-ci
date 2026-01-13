@@ -10,7 +10,7 @@ _FORMATS_DEFAULT_FILE_NAMES: dict[str, str] = {
     "txt": "bsc_list.txt"
 }
 
-_PRODUCT_VERSIONS: list[str] = ["4.3", "5.0"]
+_PRODUCT_VERSIONS: list[str] = ["4.3", "5.0", "5.1"]
 
 # version -> (project, package, filename)
 _IBS_RELEASE_NOTES_FOR_SUMA_VERSION: dict[str, tuple[tuple[str, str, str]]] = {
@@ -21,7 +21,11 @@ _IBS_RELEASE_NOTES_FOR_SUMA_VERSION: dict[str, tuple[tuple[str, str, str]]] = {
     "5.0": (
         ("Devel:Galaxy:Manager:5.0", "release-notes-susemanager", "release-notes-susemanager.changes"),
         ("Devel:Galaxy:Manager:5.0", "release-notes-susemanager-proxy", "release-notes-susemanager-proxy.changes"),
-    )
+    ),
+    "5.1": {
+        ("Devel:Galaxy:Manager:5.1", "release-notes-multi-linux-manager", "release-notes-multi-linux-manager.changes"),
+        ("Devel:Galaxy:Manager:5.1", "release-notes-multi-linux-manager-proxy", "release-notes-multi-linux-manager-proxy.changes"),
+    }
 }
 
 def setup_logging():
@@ -35,11 +39,11 @@ def parse_cli_args() -> argparse.Namespace:
     parser.add_argument("-k", "--api-key", dest="api_key", help="Bugzilla API key", action='store', required=True)
     # filters
     parser.add_argument("-a", "--all", dest="all", default=False, help="Returns results for all supported products (overrides 'version' and 'cloud' flags)", action="store_true")
-    parser.add_argument("-p", "--product-version", dest="product_version", help="Product version of SUMA you want to run this script for, the options are 4.3 and 5.0. The default is 4.3 for now",
+    parser.add_argument("-p", "--product-version", dest="product_version", help="Product version of SUMA you want to run this script for, the options are 4.3, 5.0 and 5.1. The default is 4.3 for now",
         choices=_PRODUCT_VERSIONS, default="4.3", action='store'
     )
     parser.add_argument("-n", "--release-notes", dest="use_release", default=False, help="Obtain the bugs list from the release notes for the specified SUMA version", action="store_true")
-    parser.add_argument("-c", "--cloud", dest="cloud", default=False, help="Return BSCs for SUMA in Public Clouds", action="store_true")
+    parser.add_argument("-c", "--cloud", dest="cloud", default=False, help="Return BSCs for SUMA/MLM in Public Clouds", action="store_true")
     parser.add_argument("-s", "--status", dest="status", help="Status to filter BSCs by", action="store",
         choices=["NEW", "CONFIRMED", "IN_PROGRESS", "RESOLVED"]
     )
@@ -55,7 +59,8 @@ def parse_cli_args() -> argparse.Namespace:
     return args
 
 def get_suma_product_name(product_version: str, cloud: bool) -> str:
-    return f"SUSE Manager {product_version}{' in Public Clouds' if cloud else ''}"
+    product_name: str = "SUSE Multi Linux Manager" if product_version == '5.1' else "SUSE Manager"
+    return f"{product_name} {product_version}{' in Public Clouds' if cloud else ''}"
 
 def get_suma_bugzilla_products(all, product_version: str, cloud: bool) -> list[str]:
     if not all:
@@ -105,7 +110,7 @@ def main():
         product_versions: list[str] = _PRODUCT_VERSIONS if args.all else [args.product_version]
         for version in product_versions:
             release_notes_paths: tuple[tuple[str, str, str]] = _IBS_RELEASE_NOTES_FOR_SUMA_VERSION[version]
-            product_bugs[f"SUSE Manager {version}"] = bugzilla_client.bscs_from_release_notes(release_notes_paths, reporter = args.reporter, status = args.status, resolution = args.resolution)
+            product_bugs[f"SUSE Manager/MLM {version}"] = bugzilla_client.bscs_from_release_notes(release_notes_paths, reporter = args.reporter, status = args.status, resolution = args.resolution)
     else:
         bugzilla_products: list[str] = get_suma_bugzilla_products(args.all, args.product_version, args.cloud)
         product_bugs = bugzilla_client.find_suma_bscs(bugzilla_products, reporter = args.reporter, status = args.status, resolution = args.resolution)

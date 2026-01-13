@@ -31,7 +31,7 @@ performs the following tasks:
 
 The output is a JSON file, which can be used for further testing in the BV
 (Business Validation) testsuite pipeline. The script supports both SUSE Manager
-4.3 (SUMA 4.3) and SUSE Manager 5.0 (SUMA 5.0).
+4.3 (SUMA 4.3), SUSE Manager 5.0 (SUMA 5.0) and SUSE Multi-Linux Manager 5.1 (MLM 5.1).
 
 ## Features
 

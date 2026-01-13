@@ -44,7 +44,7 @@ class IbsOscClient():
         xml_attributes: ET.Element = ET.fromstring(output)
 
         embargo_attribute: ET.Element|None = xml_attributes.find("./attribute[@name='EmbargoDate'][value]")
-        if embargo_attribute:
+        if embargo_attribute is not None:
             embargo_attribute_content: str = embargo_attribute.find('./value').text
             embargo_end_date: date = self._parse_embargo_date(embargo_attribute_content)
             if embargo_end_date >= self._current_date:

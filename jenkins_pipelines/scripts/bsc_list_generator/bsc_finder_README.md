@@ -22,12 +22,12 @@ This Python script automates the process of gathering, processing and storing bu
 consuming Bugzilla REST API.
 It requires a valid API key to function.
 
-The script allows users to filter bug reports for SUMA 4.3 and 5.0 products.
+The script allows users to filter bug reports for SUMA 4.3. SUMA 5.0 and MLM 5.1 products.
 
 ## Features
 
 - Fetches and stores bug reports from Bugzilla REST API through a CLI
-- Can retrieve the bugs mentioned in SUMA 4.3 and 5.0 release notes
+- Can retrieve the bugs mentioned in SUMA 4.3, SUMA 5.0 and MLM 5.1 release notes
 
 ## Requirements
 
@@ -68,13 +68,13 @@ Options:
         Description: Returns results for all supported products, overriding version and cloud flags.
         Usage: -a or --all (flag)
     - Product Version (-p or --product-version):
-        Description: Specify the product version of SUMA to run the script for. Options: 4.3 or 5.0. Default is 4.3.
+        Description: Specify the product version of SUMA/MLM to run the script for. Options: 4.3, 5.0 or 5.1. Default is 4.3.
         Usage: -p 5.0 or --product-version 5.0
     - Release notes (-n or --release-notes):
-        Description: Retrieves the bug reports mentioned in the latest release notes for the selected SUMA version(s)
+        Description: Retrieves the bug reports mentioned in the latest release notes for the selected SUMA/MLM version(s)
         Usage: -n or --release-notes
     - Cloud (-c or --cloud):
-        Description: Returns BSCs for SUMA in Public Clouds.
+        Description: Returns BSCs for SUMA/MLM in Public Clouds.
         Usage: -c or --cloud (flag)
     - Status (-s or --status):
         Description: Filters BSCs by status. Options: NEW, CONFIRMED, IN_PROGRESS, RESOLVED.

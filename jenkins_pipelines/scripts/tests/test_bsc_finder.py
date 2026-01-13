@@ -144,6 +144,8 @@ class BscFinderTestCase(unittest.TestCase):
         self.assertEqual(result, "SUSE Manager 5.0")
         result: str = get_suma_product_name("5.0", True)
         self.assertEqual(result, "SUSE Manager 5.0 in Public Clouds")
+        result: str = get_suma_product_name("5.1", True)
+        self.assertEqual(result, "SUSE Multi Linux Manager 5.1 in Public Clouds")
 
     def test_get_suma_bugzilla_products(self):
         # only version, no cloud
@@ -158,7 +160,9 @@ class BscFinderTestCase(unittest.TestCase):
                 "SUSE Manager 4.3",
                 "SUSE Manager 4.3 in Public Clouds",
                 "SUSE Manager 5.0",
-                "SUSE Manager 5.0 in Public Clouds"
+                "SUSE Manager 5.0 in Public Clouds",
+                "SUSE Multi Linux Manager 5.1",
+                "SUSE Multi Linux Manager 5.1 in Public Clouds"
             ]
         )
 
