@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'terracumber_config/tf_files/**/*.tf'
+      - '.github/workflows/sumaform-validation.yml'
       - '!terracumber_config/tf_files/*build-validation*.tf'
       - '!terracumber_config/tf_files/PR-testing-template.tf'
 
@@ -44,8 +45,8 @@ jobs:
         uses: robinraju/release-downloader@v1.9
         with:
           repository: Bischoff/terraform-provider-feilong
-          tag: v0.0.9
-          fileName: terraform-provider-feilong_0.0.9_linux_amd64.tar.gz
+          tag: 'v0.0.9'
+          fileName: 'terraform-provider-feilong_0.0.9_linux_amd64.tar.gz'
           extract: true
       - name: Validate files
         if: steps.tf_files.outputs.added_modified
@@ -117,8 +118,8 @@ jobs:
               fi
               if [ -f "$SOURCE_DIR/environment.tfvars" ]; then
                 cp "$SOURCE_DIR/environment.tfvars" environment.tfvars
-#                echo SCC_PTF_USER="nothing" >> environment.tfvars
-#                echo SCC_PTF_PASSWORD="nothing" >> environment.tfvars
+                # echo SCC_PTF_USER="nothing" >> environment.tfvars
+                # echo SCC_PTF_PASSWORD="nothing" >> environment.tfvars
                 PLAN_ARGS="-var-file=environment.tfvars"
                 echo "::notice::Included environment.tfvars from $SOURCE_DIR"
               fi
