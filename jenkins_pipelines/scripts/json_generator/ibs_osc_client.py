@@ -18,7 +18,7 @@ class IbsOscClient():
     def __init__(self, api_url: str = _IBS_API_URL, smash_api_token: str = '') -> None:
         self._api_url: str = api_url
         self._current_date: date = date.today()
-        self._smash_client = SmashClient(smash_api_token)
+        self._smash_client = SmashClient(api_token=smash_api_token)
 
     def get_issues_list(self, missing_subs=False, **kwargs) -> list[dict]:
         issues: list[dict] = self._smash_client.get_issues(missing_subs, **kwargs)
