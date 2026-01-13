@@ -149,19 +149,18 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_get_version_nodes(self):
         # 4.3
-        self.assertDictEqual(v43_nodes, get_version_nodes('43'))
+        v43_nodes_sorted: dict[str, list[str]] = {k:sorted(v) for k,v in v43_nodes.items()}
+        self.assertDictEqual(v43_nodes_sorted, get_version_nodes('43'))
         # 5.0
-        self.assertDictEqual(v50_nodes, get_version_nodes('50'))
+        v50_nodes_sorted: dict[str, list[str]] = {k:sorted(v) for k,v in v50_nodes.items()}
+        self.assertDictEqual(v50_nodes_sorted, get_version_nodes('50'))
         # invalid
         self.assertRaises(ValueError, get_version_nodes, '99')
 
     def test_init_custom_repositories(self):
         # 5.0
-        custom_repos: dict[str, dict[str, str]] = init_custom_repositories('50')
-        self.assertIsNotNone(custom_repos['server'])
-        self.assertIsNotNone(custom_repos['proxy'])
-        # everything else
-        self.assertEqual({}, init_custom_repositories('43'))
+        custom_repos: dict[str, dict[str, str]] = init_custom_repositories()
+        self.assertIsNotNone(custom_repos['slmicro60_minion'])
 
     def test_update_custom_repositories(self):
         custom_repos: dict[str, dict[str, str]] = {}
