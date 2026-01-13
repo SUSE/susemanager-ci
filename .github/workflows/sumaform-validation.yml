@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'terracumber_config/tf_files/**/*.tf'
+      - '.github/workflows/sumaform-validation.yml'
       - '!terracumber_config/tf_files/*build-validation*.tf'
       - '!terracumber_config/tf_files/PR-testing-template.tf'
 
