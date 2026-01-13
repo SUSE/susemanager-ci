@@ -16,14 +16,19 @@ class BugzillaClientTestCase(unittest.TestCase):
     def test_get_bugs_success(self, mock_api_call):
         mock_api_call.side_effect = mock_requests_get_success
 
-        bugs: list[dict[str, Any]] = self.bugzilla_client.get_bugs(product = "Test Product")
+        bugs: list[dict[str, Any]] = self.bugzilla_client.get_bugs(product = "Test Product", status = None, release = None)
         mock_api_call.assert_called_once()
+        # check None keys are dropped
         mock_api_call.assert_called_with(BUGZILLA_BUGS_ENDPOINT, params = {'Bugzilla_api_key': 'test_key', "product": "Test Product"})
         self.assertEqual(len(bugs), 3)
         for i in range(len(bugs)):
             bug: dict[str, Any] = bugs[i]
             self.assertEqual(bug['product'], "Test Product")
             self.assertEqual(bug['id'], i+1)
+        
+        # just check the arguments are correctly passed when there's a value
+        self.bugzilla_client.get_bugs(product = "Test Product", status = "CONFIRMED", release = None)
+        mock_api_call.assert_called_with(BUGZILLA_BUGS_ENDPOINT, params = {'Bugzilla_api_key': 'test_key', "product": "Test Product", "status": "CONFIRMED"})
     
     @patch('requests.get')
     def test_get_bugs_failure(self, mock_api_call):
