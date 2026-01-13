@@ -15,15 +15,28 @@ def parse_cli_args() -> argparse.Namespace:
     )
     # query params with fixed choices
     parser.add_argument("--reference", dest="reference", help="source to filter the issues by", action="store")
-    parser.add_argument("--category", dest="category", help="category to filter issues by", action='store', choices=["maintenance", "security"])
-    parser.add_argument("--group", dest="group", help="group to filter issues by", action='store', choices=["Maintenance", "Kernel Maintenance", "Security"])
-    parser.add_argument("--severity", dest="severity", help="severity to filter issues by", action='store', choices=["not-set", "low", "moderate", "important", "critical"])
+    parser.add_argument("--category", dest="category", help="category to filter issues by", action='store',
+        choices=["maintenance", "security"]
+    )
+    parser.add_argument("--group", dest="group", help="group to filter issues by", action='store',
+        choices=["Maintenance", "Kernel Maintenance", "Security"]
+    )
+    parser.add_argument("--severity", dest="severity", help="severity to filter issues by", action='store',
+        choices=["not-set", "low", "moderate", "important", "critical"]
+    )
     parser.add_argument("--state", dest="state",help="state to filter issues by", action='store',
         choices= ["new", "ignore", "not-for-us", "analysis", "analyzed", "resolved", "deleted", "merged", "postponed", "revisit"]
     )
     # free text query params
     parser.add_argument("--search", dest="search", help="text to search for in the issue", action='store')
     parser.add_argument("--name", dest="name", help="text to search for in the issue's name", action='store')
+    # date query params
+    parser.add_argument("--created-after", dest="min_creation_date",
+        help="return only issues created after the given date (YYYY-MM-DD format)", action="store"
+    )
+    parser.add_argument("--created-before", dest="max_creation_date",
+        help="return only issues created before the given date (YYYY-MM-DD format)", action="store"
+    )
 
     args: argparse.Namespace = parser.parse_args()
     return args
