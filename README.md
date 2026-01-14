@@ -64,7 +64,7 @@ image for testing Pull Requests built with the open build service. This needs to
 | Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04  | Ubuntu 22.04 |
 | Virthost    | -             | -             | -            | -            | SLES 15 SP7   | SLES 15 SP4  |
 | Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP4  | SLES 15 SP7   | SLES 15 SP4  |
+| Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
 | DHCP-DNS    | Leap 15.5     | Leap 15.5     | Leap 15.5    | Leap 15.5    | Leap 15.5     | -            |
 | Controller  | Leap 15.6     | Leap 15.6     | Leap 15.6    | Leap 15.6    | Leap 15.6     | Leap 15.6    |
 | Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
