@@ -3,6 +3,7 @@ from functools import cache
 import json
 import requests
 import logging
+import re
 
 from ibs_osc_client import IbsOscClient
 from repository_versions import nodes_by_version
@@ -46,10 +47,48 @@ def clean_mi_ids(mi_ids: list[str]) -> set[str]:
 
 @cache
 def create_url(mi_id: str, suffix: str) -> str:
+    """
+    Build the maintenance URL for the given MI and suffix, request it and try to
+    detect whether the page/directory contains a .repo file. If a .repo is found
+    return the directory URL (not the .repo file URL). Otherwise log an error, but still including it.
+    """
     url = f"{IBS_MAINTENANCE_URL_PREFIX}{mi_id}{suffix}"
 
-    res: requests.Response = requests.get(url, timeout=6)
-    return url if res.ok else ""
+    try:
+        res: requests.Response = requests.get(url, timeout=6)
+    except requests.RequestException:
+        logging.error(f"Error requesting: {url};")
+
+    if not res.ok:
+        logging.error(f"Error requesting: {url};")
+
+    body = res.text or ""
+
+    # If the URL itself points directly to a .repo file, consider the parent directory a valid repo URL.
+    if url.lower().endswith('.repo'):
+        # return parent directory (ensure trailing slash)
+        parent = url.rsplit('/', 1)[0] + '/'
+        return parent
+
+    # Search the response body for links or references to .repo files.
+    # First try to find href="...*.repo" or href='...*.repo'
+    href_repo_re = re.compile(r'href=["\'](?P<link>[^"\']+?\.repo)\b["\']', re.IGNORECASE)
+    m = href_repo_re.search(body)
+    repo_candidate = None
+    if m:
+        repo_candidate = m.group('link')
+    else:
+        # Fall back to any occurrence of a token ending in .repo (plain text listings)
+        token_repo_re = re.compile(r'(?P<link>https?://[^\s"\'<>]+?\.repo\b)|(?P<link2>[^\s"\'<>]+?\.repo\b)', re.IGNORECASE)
+        m2 = token_repo_re.search(body)
+        if m2:
+            repo_candidate = m2.group('link') or m2.group('link2')
+
+    if not repo_candidate:
+        logging.error(f"No .repo reference found at {url}; That might be a Debian-Like repo.")
+
+    # We found at least one .repo reference on the page, consider the directory valid and return the directory URL.
+    return url
 
 def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
     if not custom_repositories:
