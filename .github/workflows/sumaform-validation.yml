@@ -70,7 +70,7 @@ jobs:
         run: |
           export PYTHONPATH=$PYTHONPATH:$PWD/jenkins_pipelines/scripts
           SCRIPT_PATH="jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
-          TEMPLATE_TF="terracumber_config/tf_files/templates/template-build-validation-single-provider.tf"
+          TEMPLATE_TF="terracumber_config/tf_files/templates/build-validation-single-provider.tf"
           
           # --- DEBUG: Verify Sumaform Checkout ---
           echo "::group::Debug: Verify Sumaform Directory"
