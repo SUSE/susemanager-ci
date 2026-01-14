@@ -13,7 +13,7 @@ jobs:
     name: Validate sumaform files
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: tf_files
         name: Get modified .tf files
         uses: Ana06/get-changed-files@v2.3.0
@@ -36,7 +36,7 @@ jobs:
           tofu_version: 1.10.7
       - name: Checkout sumaform
         if: steps.tf_files.outputs.added_modified
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: uyuni-project/sumaform
           path: sumaform
