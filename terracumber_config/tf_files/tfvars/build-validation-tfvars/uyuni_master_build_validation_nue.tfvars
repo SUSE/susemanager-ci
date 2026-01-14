@@ -222,7 +222,7 @@ ENVIRONMENT_CONFIGURATION = {
   name_prefix           = "uyuni-bv-master-"
   url_prefix            = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-qe-build-validation"
 }
-BASE_CONFIGURATIONS {
+BASE_CONFIGURATIONS = {
   base_core = {
     pool               = "ssd"
     bridge             = "br0"

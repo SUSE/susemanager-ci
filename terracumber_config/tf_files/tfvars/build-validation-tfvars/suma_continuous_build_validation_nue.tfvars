@@ -220,7 +220,7 @@ ENVIRONMENT_CONFIGURATION = {
   name_prefix     = "suma-continuous-bv-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-qe-build-validation-continuous-NUE"
 }
-BASE_CONFIGURATIONS {
+BASE_CONFIGURATIONS = {
   base_core = {
     pool               = "ssd"
     bridge             = "br1"

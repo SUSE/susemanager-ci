@@ -213,7 +213,7 @@ ENVIRONMENT_CONFIGURATION = {
   name_prefix     = "suma-bv-50micro-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.0-micro-qe-build-validation-NUE"
 }
-BASE_CONFIGURATIONS {
+BASE_CONFIGURATIONS = {
   base_core = {
     pool               = "ssd"
     bridge             = "br0"
