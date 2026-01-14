@@ -46,49 +46,49 @@ def clean_mi_ids(mi_ids: list[str]) -> set[str]:
     return { id.replace(',', '') for id in mi_ids }
 
 @cache
-def create_url(mi_id: str, suffix: str) -> str:
+def create_url(mi_id: str, suffix: str) -> str | None:
     """
-    Build the maintenance URL for the given MI and suffix, request it and try to
-    detect whether the page/directory contains a .repo file. If a .repo is found
-    return the directory URL (not the .repo file URL). Otherwise log an error, but still including it.
+    Build the maintenance URL for the given MI and suffix.
+    Validates if it's a valid RPM repo (contains .repo) or Debian repo (contains Release/InRelease).
+    Returns the directory URL if valid, None otherwise.
     """
     url = f"{IBS_MAINTENANCE_URL_PREFIX}{mi_id}{suffix}"
 
     try:
         res: requests.Response = requests.get(url, timeout=6)
-    except requests.RequestException:
-        logging.error(f"Error requesting: {url};")
-
-    if not res.ok:
-        logging.error(f"Error requesting: {url};")
+        res.raise_for_status()
+    except requests.RequestException as e:
+        logging.error(f"Error requesting: {url}; {e}")
+        return None
 
     body = res.text or ""
 
-    # If the URL itself points directly to a .repo file, consider the parent directory a valid repo URL.
+    # --- Strategy 1: RPM Repository Check ---
+    # If the URL itself points directly to a .repo file
     if url.lower().endswith('.repo'):
-        # return parent directory (ensure trailing slash)
-        parent = url.rsplit('/', 1)[0] + '/'
-        return parent
+        return url.rsplit('/', 1)[0] + '/'
 
-    # Search the response body for links or references to .repo files.
-    # First try to find href="...*.repo" or href='...*.repo'
-    href_repo_re = re.compile(r'href=["\'](?P<link>[^"\']+?\.repo)\b["\']', re.IGNORECASE)
-    m = href_repo_re.search(body)
-    repo_candidate = None
-    if m:
-        repo_candidate = m.group('link')
-    else:
-        # Fall back to any occurrence of a token ending in .repo (plain text listings)
-        token_repo_re = re.compile(r'(?P<link>https?://[^\s"\'<>]+?\.repo\b)|(?P<link2>[^\s"\'<>]+?\.repo\b)', re.IGNORECASE)
-        m2 = token_repo_re.search(body)
-        if m2:
-            repo_candidate = m2.group('link') or m2.group('link2')
+    # Search for links to .repo files in the HTML body
+    # Matches: href="something.repo"
+    rpm_regex = re.compile(r'href=["\'](?P<link>[^"\']+?\.repo)\b["\']', re.IGNORECASE)
+    if rpm_regex.search(body):
+        return url
 
-    if not repo_candidate:
-        logging.error(f"No .repo reference found at {url}; That might be a Debian-Like repo.")
+    # Fallback for plain text listings of .repo files
+    token_repo_re = re.compile(r'(?P<link>https?://[^\s"\'<>]+?\.repo\b)|(?P<link2>[^\s"\'<>]+?\.repo\b)', re.IGNORECASE)
+    if token_repo_re.search(body):
+        return url
 
-    # We found at least one .repo reference on the page, consider the directory valid and return the directory URL.
-    return url
+    # --- Strategy 2: Debian/Ubuntu Repository Check ---
+    # Debian repos define a 'Release' or 'InRelease' file at the repository root.
+    # Matches: href="Release" or href="InRelease"
+    deb_regex = re.compile(r'href=["\'](?P<link>(?:In)?Release)["\']', re.IGNORECASE)
+    if deb_regex.search(body):
+        logging.info(f"Identified Debian-like repository at: {url}")
+        return url
+
+    logging.error(f"No .repo, Release, or InRelease found at {url}. Skipping.")
+    return None
 
 def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
     if not custom_repositories:
