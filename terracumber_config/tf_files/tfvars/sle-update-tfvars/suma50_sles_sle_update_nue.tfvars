@@ -27,7 +27,7 @@ ENVIRONMENT_CONFIGURATION = {
   name_prefix     = "suma-su-50sles-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-sles-qe-sle-update-NUE"
 }
-BASE_CONFIGURATIONS {
+BASE_CONFIGURATIONS = {
   base_core = {
     pool               = "ssd"
     bridge             = "br1"

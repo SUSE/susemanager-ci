@@ -26,7 +26,7 @@ ENVIRONMENT_CONFIGURATION = {
   name_prefix     = "mlm-bv-51sles-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-sles-qe-build-validation-NUE"
 }
-BASE_CONFIGURATIONS   = {
+BASE_CONFIGURATIONS = {
   base_core = {
     pool               = "ssd"
     bridge             = "br1"
