@@ -135,8 +135,7 @@ module "cucumber_testsuite" {
       provider_settings = {
         mac = "aa:b2:93:01:00:11"
       }
-      runtime = "k3s"
-      # TODO: change to "rke2" once supported in sumaform
+      runtime = "rke2"
       container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
 
@@ -151,8 +150,7 @@ module "cucumber_testsuite" {
       }
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
-      runtime = "k3s"
-      # TODO: change to "rke2" once supported in sumaform
+      runtime = "rke2"
       additional_repos = {
           containerUtils = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
       }
