@@ -187,6 +187,11 @@ def run(params) {
                                 reportName: "TestSuite Report"]
                     )
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+
+                    // Test Report Summary
+                    def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_review_summary"
+                    def testSummary = sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/test_review_summary.py ${resultdirbuild}/cucumber_report/cucumber_report.html.json", returnStdout: true).trim()
+                    echo testSummary
                 }
                 // Send email
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
