@@ -19,7 +19,7 @@ def get_status(tags):
         tag_name = tag.get('name')
         if tag_name in TAG_MAPPING:
             found_status = TAG_MAPPING[tag_name]
-            # Stop at the first relevant tag found (or remove break to prioritise last)
+            # Stop at the first relevant tag found (or remove break to prioritize last)
             break
     return found_status
 
