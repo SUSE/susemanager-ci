@@ -12,7 +12,7 @@ TAG_MAPPING = {
 }
 
 def get_status(tags):
-    """Determines status based on tags. Returns 'New' if no matching tag found."""
+    """Determines status based on tags. Returns 'Not reported' if no matching tag found."""
     found_status = 'Not reported'
     # Priority order can be adjusted here if needed
     for tag in tags:
