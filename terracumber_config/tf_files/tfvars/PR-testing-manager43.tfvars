@@ -1,7 +1,7 @@
 ############ Spacewalk unique variables ############
 
 IMAGE                  = "sles15sp4o"
-IMAGES                 = ["rocky9o", "opensuse155o", "sles15sp4o", "ubuntu2204o"]
+IMAGES                 = ["rocky9o", "opensuse156o", "sles15sp4o", "ubuntu2204o"]
 SERVER_IMAGE           = "sles15sp4o"
 PROXY_IMAGE            = "sles15sp4o"
 SUSE_MINION_IMAGE      = "sles15sp4o"

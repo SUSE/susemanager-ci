@@ -149,7 +149,7 @@ module "base_core" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.slc1.suse.org"
-  images            = [ "sles15sp4o", "opensuse155o", "opensuse156o", "leapmicro55o" ]
+  images            = [ "sles15sp4o", "opensuse156o", "leapmicro55o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
@@ -254,7 +254,7 @@ module "base_retail" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.slc1.suse.org"
-  images            = [ "sles12sp5o", "sles15sp4o", "opensuse155o", "leapmicro55o" ]
+  images            = [ "sles12sp5o", "sles15sp4o", "leapmicro55o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
@@ -1393,7 +1393,7 @@ module "dhcp_dns" {
   source             = "./modules/dhcp_dns"
   base_configuration = module.base_retail.configuration
   name               = "dhcp-dns"
-  image              = "opensuse155o"
+  image              = "opensuse156o"
   private_hosts = [
     module.proxy_containerized.configuration,
     module.sles15sp4_terminal.configuration
@@ -1412,7 +1412,7 @@ module "monitoring_server" {
   source             = "./modules/minion"
   base_configuration = module.base_retail.configuration
   name               = "monitoring"
-  image              = "opensuse155o"
+  image              = "opensuse156o"
   provider_settings = {
     mac                = "aa:b2:93:04:05:6f"
     memory             = 2048

@@ -105,7 +105,7 @@ module "base_core" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["centos7o", "opensuse155o", "opensuse156o", "sles15sp5o", "sles15sp7o"]
+  images = ["centos7o", "opensuse156o", "sles15sp5o", "sles15sp7o"]
   use_avahi    = false
   name_prefix  = "suma-testhub-"
   domain       = "mgr.suse.de"
