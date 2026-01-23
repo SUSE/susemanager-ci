@@ -151,7 +151,7 @@ module "base_core" {
   name_prefix       = "suma-continuous-bv-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -563,24 +563,6 @@ module "salt_migration_minion" {
   auto_connect_to_master  = true
   use_os_released_updates = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-  install_salt_bundle = false
-}
-
-module "slemicro51_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  name               = "slemicro51-minion"
-  image              = "slemicro51-ign"
-  provider_settings = {
-    mac                = "aa:b2:93:01:02:a6"
-    memory             = 2048
-  }
-
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  // WORKAROUND: Does not work in sumaform, yet
   install_salt_bundle = false
 }
 
@@ -1131,7 +1113,6 @@ module "controller" {
 
   salt_migration_minion_configuration = module.salt_migration_minion.configuration
 
-  slemicro51_minion_configuration    = module.slemicro51_minion.configuration
   slemicro52_minion_configuration    = module.slemicro52_minion.configuration
   slemicro53_minion_configuration    = module.slemicro53_minion.configuration
   slemicro54_minion_configuration    = module.slemicro54_minion.configuration

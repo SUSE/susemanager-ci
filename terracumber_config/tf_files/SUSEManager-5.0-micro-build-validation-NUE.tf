@@ -142,7 +142,7 @@ module "base_core" {
   name_prefix       = "suma-bv-50micro-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse155o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -556,24 +556,6 @@ module "salt_migration_minion" {
   install_salt_bundle = false
 }
 
-module "slemicro51_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  name               = "slemicro51-minion"
-  image              = "slemicro51-ign"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:76"
-    memory             = 2048
-  }
-
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-// WORKAROUND: Does not work in sumaform, yet
-  install_salt_bundle = false
-}
-
 module "slemicro52_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -940,20 +922,6 @@ module "sles15sp5s390_sshminion" {
 }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro51_sshminion" {
-//   source             = "./modules/sshminion"
-//   base_configuration = module.base_core.configuration
-//   name               = "slemicro51-sshminion"
-//   image              = "slemicro51-ign"
-//   provider_settings = {
-//     mac                = "aa:b2:92:42:00:96"
-//     memory             = 2048
-//   }
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-// }
-
-//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro52_sshminion" {
 //   source             = "./modules/sshminion"
 //   base_configuration = module.base_core.configuration
@@ -1223,10 +1191,6 @@ module "controller" {
   sle15sp5s390_sshminion_configuration = module.sles15sp5s390_sshminion.configuration
 
   salt_migration_minion_configuration = module.salt_migration_minion.configuration
-
-  slemicro51_minion_configuration    = module.slemicro51_minion.configuration
-//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro51_sshminion_configuration = module.slemicro51_sshminion.configuration
 
   slemicro52_minion_configuration    = module.slemicro52_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
