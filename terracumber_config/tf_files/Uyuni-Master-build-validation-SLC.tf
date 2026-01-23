@@ -149,7 +149,7 @@ module "base_core" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.slc1.suse.org"
-  images            = [ "sles15sp4o", "opensuse156o", "leapmicro55o" ]
+  images            = [ "sles15sp4o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
@@ -254,7 +254,7 @@ module "base_retail" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.slc1.suse.org"
-  images            = [ "sles12sp5o", "sles15sp4o", "leapmicro55o" ]
+  images            = [ "sles12sp5o", "sles15sp4o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
