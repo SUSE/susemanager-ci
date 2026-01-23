@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slemicro55o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slemicro55o"]
 
   use_avahi    = false
   name_prefix  = "suma-test-ion-"

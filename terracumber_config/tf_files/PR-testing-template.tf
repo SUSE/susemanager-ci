@@ -59,7 +59,7 @@ module "cucumber_testsuite" {
     }
     dhcp_dns = {
       name = "dhcp-dns"
-      image = "opensuse155o"
+      image = "opensuse156o"
       hypervisor = {
         host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
         user        = "root"

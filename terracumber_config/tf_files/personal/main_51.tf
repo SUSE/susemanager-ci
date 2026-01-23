@@ -35,7 +35,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse155o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix   = "${var.ENVIRONMENT}-"
@@ -141,7 +141,7 @@ module "cucumber_testsuite" {
     }
     dhcp_dns = {
       name = "dhcp-dns"
-      image = "opensuse155o"
+      image = "opensuse156o"
       hypervisor = {
         host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
         user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
