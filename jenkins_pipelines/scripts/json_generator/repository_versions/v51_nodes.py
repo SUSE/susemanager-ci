@@ -63,7 +63,6 @@ v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
                          "/SUSE_Updates_SLE-Module-Development-Tools_15-SP6_x86_64/"},
     "sle15sp7_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_x86_64/",
                          "/SUSE_Updates_SLE-Module-Development-Tools_15-SP7_x86_64/"},
-    "slemicro51_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-Micro-5_x86_64/" },
     "slemicro52_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-Micro-5_x86_64/" },
     "slemicro53_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-Micro-5_x86_64/" },
     "slemicro54_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-Micro-5_x86_64/" },

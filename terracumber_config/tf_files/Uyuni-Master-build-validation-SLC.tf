@@ -228,7 +228,7 @@ module "base_new_sle" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.slc1.suse.org"
-  images            = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro51-ign", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "tumbleweedo" ]
+  images            = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "tumbleweedo" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
@@ -783,28 +783,6 @@ module "salt_migration_minion" {
   install_salt_bundle = false
 }
 
-
-module "slemicro51_minion" {
-  providers = {
-    libvirt = libvirt.ginfizz
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_new_sle.configuration
-  name               = "slemicro51-minion"
-  image              = "slemicro51-ign"
-  provider_settings = {
-    mac                = "aa:b2:93:04:05:92"
-    memory             = 2048
-  }
-
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-// WORKAROUND: Does not work in sumaform, yet
-//  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = false
-}
-
 module "slemicro52_minion" {
   providers = {
     libvirt = libvirt.ginfizz
@@ -1271,23 +1249,6 @@ module "sles15sp5s390_sshminion" {
 }
 
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-// module "slemicro51_sshminion" {
-//   providers = {
-//     libvirt = libvirt.ginfizz
-//   }
-//   source             = "./modules/sshminion"
-//   base_configuration = module.base_new_sle.configuration
-//   name               = "slemicro51-sshminion"
-//   image              = "slemicro51-ign"
-//   provider_settings = {
-//     mac                = "aa:b2:93:04:05:b2"
-//     memory             = 2048
-//   }
-//   use_os_released_updates = false
-//   ssh_key_path            = "./salt/controller/id_ed25519.pub"
-// }
-
-//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
 // module "slemicro52_sshminion" {
 //   providers = {
 //     libvirt = libvirt.ginfizz
@@ -1546,10 +1507,6 @@ module "controller" {
   sle15sp5s390_sshminion_configuration = module.sles15sp5s390_sshminion.configuration
 
   salt_migration_minion_configuration = module.salt_migration_minion.configuration
-
-  slemicro51_minion_configuration    = module.slemicro51_minion.configuration
-//  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
-//  slemicro51_sshminion_configuration = module.slemicro51_sshminion.configuration
 
   slemicro52_minion_configuration    = module.slemicro52_minion.configuration
 //  WORKAROUND until https://bugzilla.suse.com/show_bug.cgi?id=1208045 gets fixed
