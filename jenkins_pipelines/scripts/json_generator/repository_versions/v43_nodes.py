@@ -77,7 +77,6 @@ v43_client_tools: dict[str, Set[str]] = {
     "centos7_minion": {"/SUSE_Updates_RES_7-CLIENT-TOOLS_x86_64"},
     "rocky8_minion": {"/SUSE_Updates_RES_8-CLIENT-TOOLS_x86_64/"},
     "alma8_minion": {"/SUSE_Updates_RES_8-CLIENT-TOOLS_x86_64/"},
-    "ubuntu2004_minion": {"/SUSE_Updates_Ubuntu_20.04-CLIENT-TOOLS_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_Ubuntu_22.04-CLIENT-TOOLS_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_Ubuntu_24.04-CLIENT-TOOLS_x86_64/"},
     "debian12_minion": {"/SUSE_Updates_Debian_12-CLIENT-TOOLS_x86_64/"},
