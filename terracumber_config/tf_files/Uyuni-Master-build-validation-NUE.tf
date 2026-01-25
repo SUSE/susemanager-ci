@@ -129,7 +129,7 @@ module "base_core" {
   name_prefix       = "uyuni-bv-master-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse156o", "tumbleweedo" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse156o", "tumbleweedo" ]
                     // disabled: "openeuler2403o"
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
@@ -450,20 +450,6 @@ module "rocky9_minion" {
   image              = "rocky9o"
   provider_settings = {
     mac                = "aa:b2:93:02:01:c1"
-    memory             = 4096
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-}
-
-module "ubuntu2004_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  name               = "ubuntu2004-minion"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:ba"
     memory             = 4096
   }
   auto_connect_to_master  = false
@@ -872,19 +858,6 @@ module "rocky9_sshminion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
-module "ubuntu2004_sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  name               = "ubuntu2004-sshminion"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:93:02:01:da"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-}
-
 module "ubuntu2204_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -1159,9 +1132,6 @@ module "controller" {
 
   rocky9_minion_configuration    = module.rocky9_minion.configuration
   rocky9_sshminion_configuration = module.rocky9_sshminion.configuration
-
-  ubuntu2004_minion_configuration    = module.ubuntu2004_minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004_sshminion.configuration
 
   ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204_sshminion.configuration

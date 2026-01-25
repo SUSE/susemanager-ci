@@ -116,7 +116,7 @@ module "base_core" {
   name_prefix       = "suma-bv-43-"
   use_avahi         = false
   domain            = "mgr.suse.de"
-  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2004o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse156o" ]
+  images            = [ "sles12sp5o", "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "almalinux8o", "almalinux9o", "centos7o", "libertylinux9o", "oraclelinux9o", "rocky8o", "rocky9o", "ubuntu2204o", "ubuntu2404o", "debian12o", "opensuse156o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images = true
@@ -596,27 +596,6 @@ module "rocky9_minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004_minion" {
-  source             = "./modules/minion"
-  base_configuration = module.base_core.configuration
-  name               = "ubuntu2004-minion"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:ba"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-proxy.mgr.suse.de"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
 module "ubuntu2204_minion" {
   source             = "./modules/minion"
   base_configuration = module.base_core.configuration
@@ -1051,23 +1030,6 @@ module "rocky9_sshminion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004_sshminion" {
-  source             = "./modules/sshminion"
-  base_configuration = module.base_core.configuration
-  name               = "ubuntu2004-sshminion"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:92:42:00:da"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
 module "ubuntu2204_sshminion" {
   source             = "./modules/sshminion"
   base_configuration = module.base_core.configuration
@@ -1379,9 +1341,6 @@ module "controller" {
 
   rocky9_minion_configuration    = module.rocky9_minion.configuration
   rocky9_sshminion_configuration = module.rocky9_sshminion.configuration
-
-  ubuntu2004_minion_configuration    = module.ubuntu2004_minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004_sshminion.configuration
 
   ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204_sshminion.configuration

@@ -267,7 +267,7 @@ module "base_debian" {
   name_prefix       = "suma-bv-43-"
   use_avahi         = false
   domain            = "mgr.slc1.suse.org"
-  images            = [ "ubuntu2004o", "ubuntu2204o", "ubuntu2404", "debian12o" ]
+  images            = [ "ubuntu2204o", "ubuntu2404", "debian12o" ]
 
   mirror            = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images = true
@@ -811,30 +811,6 @@ module "rocky9_minion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004_minion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/minion"
-  base_configuration = module.base_debian.configuration
-  name               = "ubuntu2004-minion"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:92:05:00:ba"
-    memory             = 4096
-  }
-  server_configuration = {
-    hostname = "suma-bv-43-proxy.mgr.slc1.suse.org"
-  }
-  auto_connect_to_master  = false
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
 module "ubuntu2204_minion" {
   providers = {
     libvirt = libvirt.mandalore
@@ -1339,26 +1315,6 @@ module "rocky9_sshminion" {
   install_salt_bundle = true
 }
 
-module "ubuntu2004_sshminion" {
-  providers = {
-    libvirt = libvirt.mandalore
-  }
-  source             = "./modules/sshminion"
-  base_configuration = module.base_debian.configuration
-  name               = "ubuntu2004-sshminion"
-  image              = "ubuntu2004o"
-  provider_settings = {
-    mac                = "aa:b2:92:05:00:da"
-    memory             = 4096
-  }
-  use_os_released_updates = false
-  ssh_key_path            = "./salt/controller/id_ed25519.pub"
-
-  # WORKAROUND https://github.com/uyuni-project/uyuni/issues/7637
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-}
-
 module "ubuntu2204_sshminion" {
   providers = {
     libvirt = libvirt.mandalore
@@ -1719,9 +1675,6 @@ module "controller" {
 
   rocky9_minion_configuration    = module.rocky9_minion.configuration
   rocky9_sshminion_configuration = module.rocky9_sshminion.configuration
-
-  ubuntu2004_minion_configuration    = module.ubuntu2004_minion.configuration
-  ubuntu2004_sshminion_configuration = module.ubuntu2004_sshminion.configuration
 
   ubuntu2204_minion_configuration    = module.ubuntu2204_minion.configuration
   ubuntu2204_sshminion_configuration = module.ubuntu2204_sshminion.configuration
