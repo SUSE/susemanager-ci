@@ -229,7 +229,7 @@ ENVIRONMENT_CONFIGURATION = {
 
 BASE_CONFIGURATIONS = {
   base_core = {
-    images             = [ "tumbleweedo", "opensuse155o", "sles15sp7o" ]
+    images             = [ "tumbleweedo", "opensuse156o", "sles15sp7o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
@@ -257,7 +257,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "ginfizz.mgr.slc1.suse.org"
   }
   base_retail = {
-    images             = [ "sles15sp6o", "sles15sp7o", "opensuse155o", "leapmicro55o" ]
+    images             = [ "sles15sp6o", "sles15sp7o", "opensuse156o", "leapmicro55o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = "192.168.100.0/24"

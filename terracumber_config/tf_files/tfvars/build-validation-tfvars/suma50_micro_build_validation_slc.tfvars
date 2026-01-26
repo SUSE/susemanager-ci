@@ -245,7 +245,7 @@ BASE_CONFIGURATION = {
     hypervisor         = "florina.mgr.slc1.suse.org"
   }
   base_retail = {
-    images             = ["sles15sp6o","sles15sp7o", "opensuse155o", "slemicro55o"]
+    images             = ["sles15sp6o","sles15sp7o", "opensuse156o", "slemicro55o"]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = "192.168.50.0/24"
