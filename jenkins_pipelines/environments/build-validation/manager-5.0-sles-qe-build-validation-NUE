@@ -1,0 +1,56 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    def minionList = 'sles15sp6_minion'
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'Manager-5.0', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/templates/build-validation-single-provider.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
+                    value: minionList,
+                    defaultValue: minionList,
+                    description: 'Node list to run during BV'),
+            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
+            // This is different than other pipelines to make it work with the simple proxy_traditional without refactoring all feature files
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
+            booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
+            booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
+            booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
+            booleanParam(name: 'enable_proxy_stages', defaultValue: true, description: 'Run Proxy stages'),
+            booleanParam(name: 'enable_client_stages', defaultValue: true, description: 'Run Client stages'),
+            booleanParam(name: 'must_add_MU_repositories', defaultValue: true, description: 'Add MU channels'),
+            booleanParam(name: 'must_add_non_MU_repositories', defaultValue: true, description: 'Add non MU channels'),
+            booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
+            booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
+            booleanParam(name: 'must_boot_node', defaultValue: true, description: 'Bootstrap Node'),
+            booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
+            booleanParam(name: 'must_run_containerization_tests', defaultValue: false, description: 'Run Containerization Tests'),
+            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
+            ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    def mutableParams = [:] + params
+    mutableParams.sumaform_backend = "libvirt"
+    mutableParams.bin_path = "/usr/bin/tofu"
+    mutableParams.bin_plugins_path = "/usr/bin"
+    mutableParams.product_version_display = "5.0-released"
+    mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_50.json'
+    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/suma50_sles_build_validation_nue.tfvars'
+
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
+    pipeline.run(mutableParams)
+}
