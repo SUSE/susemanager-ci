@@ -27,7 +27,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Install opentofu
-        uses: opentofu/setup-opentofu@v1.0.6
+        uses: opentofu/setup-opentofu@v1.0.8
         with:
           tofu_version: 1.10.7
       - name: Checkout sumaform
