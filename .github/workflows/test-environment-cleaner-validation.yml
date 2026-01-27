@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Validate api manager script
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v2

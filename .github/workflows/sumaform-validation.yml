@@ -12,7 +12,7 @@ jobs:
     name: Validate sumaform files
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - id: tf_files
         name: Get modified .tf files
@@ -31,7 +31,7 @@ jobs:
         with:
           tofu_version: 1.10.7
       - name: Checkout sumaform
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: maximenoel8/sumaform
           path: sumaform
