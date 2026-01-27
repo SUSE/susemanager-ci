@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'jenkins_pipelines/scripts/test_environment_cleaner/**'
+      - '.github/workflows/test-environment-cleaner-validation.yml'
 
 jobs:
   test:
