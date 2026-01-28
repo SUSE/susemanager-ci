@@ -258,8 +258,11 @@ BASE_CONFIGURATION = {
     additional_network = null
     hypervisor         = "trantor.mgr.slc1.suse.org"
   }
-  base_arm ={
+  base_arm = {
+    pool               = "ssd"
     bridge             = "br0"
+    additional_network = null
+    hypervisor         = "suma-arm.mgr.suse.de"
   }
 }
 MAIL_SUBJECT          = "Results 5.0 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

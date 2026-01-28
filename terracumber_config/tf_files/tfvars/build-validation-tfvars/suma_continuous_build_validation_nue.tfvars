@@ -227,8 +227,11 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "suma-11.mgr.suse.de"
     additional_network = "192.168.100.0/24"
   }
-  base_arm ={
+  base_arm = {
+    pool               = "ssd"
     bridge             = "br1"
+    additional_network = null
+    hypervisor         = "suma-arm.mgr.suse.de"
   }
 }
 MAIL_SUBJECT          = "Results Continuous Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

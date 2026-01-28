@@ -288,8 +288,11 @@ BASE_CONFIGURATIONS = {
     additional_network = null
     hypervisor         = "mandalore.mgr.slc1.suse.org"
   }
-  base_arm ={
+  base_arm = {
+    pool               = "ssd"
     bridge             = "br0"
+    additional_network = null
+    hypervisor         = "suma-arm.mgr.suse.de"
   }
 }
 
