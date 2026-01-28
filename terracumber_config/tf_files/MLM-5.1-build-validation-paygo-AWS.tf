@@ -252,7 +252,6 @@ module "sles12sp5_paygo_minion" {
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles12sp5_paygo_minion.name
-  name               = "sles12sp5-paygo-minion"
   image              = "sles12sp5-paygo"
   product_version    = var.ENVIRONMENT_CONFIGURATION.sles12sp5_paygo_minion.product_version
   provider_settings = {
