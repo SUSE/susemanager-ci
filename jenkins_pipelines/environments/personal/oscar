@@ -35,6 +35,8 @@ node('sumaform-cucumber') {
     timeout(activity: false, time: 18, unit: 'HOURS') {
         //Capybara configuration
         def newParams = [:] + params
+        newParams.capybara_timeout = 10
+        newParams.default_timeout = 250
         newParams.environment = 'oscar'
         def pipeline = load "jenkins_pipelines/environments/personal/pipeline-personal.groovy"
         pipeline.run(newParams)
