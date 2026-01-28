@@ -21,7 +21,7 @@ def run(params) {
         deployed = false
 
         GString tfvarsPrepareScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
-        GString mirror_hostname_aws_private = ""
+        String mirror_hostname_aws_private = ""
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
