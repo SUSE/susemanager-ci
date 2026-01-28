@@ -189,6 +189,7 @@ def run(params) {
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
 
                     // Test Report Summary
+                    sh "python3 -m venv ${WORKSPACE}/venv"
                     def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_review_summary"
                     def testSummary = sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/test_review_summary.py ${resultdirbuild}/cucumber_report/cucumber_report.html.json", returnStdout: true).trim()
                     echo testSummary
