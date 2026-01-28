@@ -270,6 +270,9 @@ BASE_CONFIGURATIONS = {
     additional_network = null
     hypervisor         = "caipirinha.mgr.slc1.suse.org"
   }
+  base_arm ={
+    bridge             = "br0"
+  }
 }
 
 MAIL_SUBJECT          = "Results Uyuni Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

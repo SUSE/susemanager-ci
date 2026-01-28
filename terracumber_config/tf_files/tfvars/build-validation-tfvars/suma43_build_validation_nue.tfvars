@@ -247,6 +247,9 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "suma-07.mgr.suse.de"
     additional_network = "192.168.43.0/24"
   }
+  base_arm ={
+    bridge             = "br0"
+  }
 }
 MAIL_SUBJECT          = "Results 4.3 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results 4.3 Build Validation: Environment setup failed"
