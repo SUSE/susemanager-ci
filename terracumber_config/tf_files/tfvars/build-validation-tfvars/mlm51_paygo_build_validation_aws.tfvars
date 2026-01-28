@@ -1,10 +1,10 @@
 ENVIRONMENT_CONFIGURATION = {
   server_containerized = {
-    name = "server"
-    product_version = "5.1-paygo"
+    name               = "server"
+    product_version    = "5.1-paygo"
   }
   proxy_containerized = {
-    name = "proxy"
+    name               = "proxy"
   }
   sles12sp5_paygo_minion = {
     name               = "sles12sp5-paygo-minion"
