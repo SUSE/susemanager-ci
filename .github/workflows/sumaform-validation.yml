@@ -6,6 +6,7 @@ on:
       - 'terracumber_config/tf_files/**/*.tf'
       - 'terracumber_config/tf_files/tfvars/**/*.tfvars'
       - 'jenkins_pipelines/scripts/tf_vars_generator/**'
+      - '.github/workflows/sumaform-validation.yml'
 
 jobs:
   validate_sumaform:
@@ -42,7 +43,6 @@ jobs:
           pip install -r jenkins_pipelines/scripts/tf_vars_generator/requirements.txt
 
       - name: Download Feilong terraform provider asset
-        if: steps.tf_files.outputs.added_modified
         uses: robinraju/release-downloader@v1.12
         with:
           repository: Bischoff/terraform-provider-feilong
