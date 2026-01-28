@@ -288,6 +288,9 @@ BASE_CONFIGURATIONS = {
     additional_network = null
     hypervisor         = "mandalore.mgr.slc1.suse.org"
   }
+  base_arm ={
+    bridge             = "br0"
+  }
 }
 
 MAIL_SUBJECT          = "Results 4.3 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

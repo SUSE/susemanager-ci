@@ -227,6 +227,9 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "suma-11.mgr.suse.de"
     additional_network = "192.168.100.0/24"
   }
+  base_arm ={
+    bridge             = "br1"
+  }
 }
 MAIL_SUBJECT          = "Results Continuous Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results Continuous Build Validation: Environment setup failed"
