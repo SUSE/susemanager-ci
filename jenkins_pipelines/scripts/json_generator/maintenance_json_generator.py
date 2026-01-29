@@ -3,6 +3,7 @@ from functools import cache
 import json
 import requests
 import logging
+import re
 
 from ibs_osc_client import IbsOscClient
 from repository_versions import nodes_by_version
@@ -45,11 +46,49 @@ def clean_mi_ids(mi_ids: list[str]) -> set[str]:
     return { id.replace(',', '') for id in mi_ids }
 
 @cache
-def create_url(mi_id: str, suffix: str) -> str:
+def create_url(mi_id: str, suffix: str) -> str | None:
+    """
+    Build the maintenance URL for the given MI and suffix.
+    Validates if it's a valid RPM repo (contains .repo) or Debian repo (contains Release/InRelease).
+    Returns the directory URL if valid, None otherwise.
+    """
     url = f"{IBS_MAINTENANCE_URL_PREFIX}{mi_id}{suffix}"
 
-    res: requests.Response = requests.get(url, timeout=6)
-    return url if res.ok else ""
+    try:
+        res: requests.Response = requests.get(url, timeout=6)
+        res.raise_for_status()
+    except requests.RequestException as e:
+        logging.error(f"Error requesting: {url}; {e}")
+        return None
+
+    body = res.text or ""
+
+    # --- Strategy 1: RPM Repository Check ---
+    # If the URL itself points directly to a .repo file
+    if url.lower().endswith('.repo'):
+        return url.rsplit('/', 1)[0] + '/'
+
+    # Search for links to .repo files in the HTML body
+    # Matches: href="something.repo"
+    rpm_regex = re.compile(r'href=["\'](?P<link>[^"\']+?\.repo)\b["\']', re.IGNORECASE)
+    if rpm_regex.search(body):
+        return url
+
+    # Fallback for plain text listings of .repo files
+    token_repo_re = re.compile(r'(?P<link>https?://[^\s"\'<>]+?\.repo\b)|(?P<link2>[^\s"\'<>]+?\.repo\b)', re.IGNORECASE)
+    if token_repo_re.search(body):
+        return url
+
+    # --- Strategy 2: Debian/Ubuntu Repository Check ---
+    # Debian repos define a 'Release' or 'InRelease' file at the repository root.
+    # Matches: href="Release" or href="InRelease"
+    deb_regex = re.compile(r'href=["\'](?P<link>(?:In)?Release)["\']', re.IGNORECASE)
+    if deb_regex.search(body):
+        logging.info(f"Identified Debian-like repository at: {url}")
+        return url
+
+    logging.error(f"No .repo, Release, or InRelease found at {url}. Skipping.")
+    return None
 
 def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
     if not custom_repositories:
