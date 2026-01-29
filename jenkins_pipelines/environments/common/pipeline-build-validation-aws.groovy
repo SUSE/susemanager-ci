@@ -614,13 +614,15 @@ def getNodesHandler(minionType = 'default') {
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
         def nodeName = lane.tokenize(".")[1]
-        if ( minionType == 'default' && (nodeName.contains('minion') || nodeName.contains('client'))) {
-            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
-            envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        // Nodes come with [0] in there names now because of the count introduction
+        def cleanNodeName = nodeName.replaceAll(/\[\d+\]/, "")
+        if ( minionType == 'default' && (cleanNodeName.contains('minion') || nodeName.contains('client'))) {
+            nodeList.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
+            envVar.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
-        else if (( minionType == 'paygo' && (nodeName.contains('paygo') || nodeName.contains('byos')))) {
-            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
-            envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        else if (( minionType == 'paygo' && (cleanNodeName.contains('paygo') || nodeName.contains('byos')))) {
+            nodeList.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
+            envVar.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
     }
     // Convert jenkins minions list parameter to list
