@@ -249,7 +249,7 @@ module "proxy_containerized" {
 
 module "sles12sp5_paygo_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_paygo_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles12sp5_paygo_minion.name
   image              = "sles12sp5-paygo"
@@ -266,7 +266,7 @@ module "sles12sp5_paygo_minion" {
 
 module "sles15sp5_paygo_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_paygo_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp5_paygo_minion.name
   image              = "sles15sp5-paygo"
@@ -283,7 +283,7 @@ module "sles15sp5_paygo_minion" {
 
 module "sles15sp6_paygo_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_paygo_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp6_paygo_minion.name
   image              = "sles15sp6-paygo"
@@ -300,7 +300,7 @@ module "sles15sp6_paygo_minion" {
 
 module "slesforsap15sp5_paygo_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slesforsap15sp5_paygo_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.slesforsap15sp5_paygo_minion.name
   image              = "slesforsap15sp5-paygo"
@@ -318,7 +318,7 @@ module "slesforsap15sp5_paygo_minion" {
 
 module "sles12sp5_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles12sp5_minion.name
   image              = "sles12sp5"
@@ -337,7 +337,7 @@ module "sles12sp5_minion" {
 
 module "sles15sp4_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp4_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp4_minion.name
   image              = "sles15sp4o"
@@ -355,7 +355,7 @@ module "sles15sp4_minion" {
 
 module "sles15sp5_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp5_minion.name
   image              = "sles15sp5o"
@@ -373,7 +373,7 @@ module "sles15sp5_minion" {
 
 module "sles15sp6_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp6_minion.name
   image              = "sles15sp6o"
@@ -391,7 +391,7 @@ module "sles15sp6_minion" {
 
 module "sles12sp5_sshminion" {
   source             = "./modules/sshminion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_sshminion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles12sp5_sshminion.name
   image              = "sles12sp5"
@@ -408,7 +408,7 @@ module "sles12sp5_sshminion" {
 
 module "sles15sp4_sshminion" {
   source             = "./modules/sshminion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp4_sshminion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp4_sshminion.name
   image              = "sles15sp4o"
@@ -424,7 +424,7 @@ module "sles15sp4_sshminion" {
 
 module "sles15sp5_sshminion" {
   source             = "./modules/sshminion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_sshminion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp5_sshminion.name
   image              = "sles15sp5o"
@@ -440,7 +440,7 @@ module "sles15sp5_sshminion" {
 
 module "sles15sp6_sshminion" {
   source             = "./modules/sshminion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_sshminion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp6_sshminion.name
   image              = "sles15sp6o"
@@ -456,7 +456,7 @@ module "sles15sp6_sshminion" {
 
 module "rhel9_paygo_minion" {
   source             = "./modules/minion"
-  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "rhel9_paygo_minion", null) != null ? 1 : 0
   base_configuration = merge(module.base.configuration,
     {
       testsuite = "false"
