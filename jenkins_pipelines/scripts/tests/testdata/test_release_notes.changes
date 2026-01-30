@@ -1,0 +1,23 @@
+-------------------------------------------------------------------
+Fri Oct 11 12:10:33 UTC 2024 - Test User <testuser@suse.com>
+
+- Update to SUSE Manager
+  * Something 1
+  * Something 2
+  * Something 3
+  * CVE Fixed
+    CVE-1, CVE-2
+  * Bugs mentioned
+    bsc#1, bsc#2, bsc#3, bsc#4, bsc#5
+    bsc#6, bsc#7
+
+-------------------------------------------------------------------
+Mon Aug 19 12:10:33 UTC 2024 - Test User <testuser@suse.com>
+
+- Update to SUSE Manager
+  * Something 1
+  * Something 2
+  * Bugs mentioned
+    bsc#8, bsc#9
+
+-------------------------------------------------------------------

@@ -8,16 +8,21 @@ from os import getcwd, path
 from smash_client import SmashClient
 
 
-IBS_API_URL: str = 'https://api.suse.de'
+_IBS_API_URL: str = 'https://api.suse.de'
 
 class IbsOscClient():
     # TODO: verify if this covers all possible formats for MIs under embargo
     _EMBARGO_END_DATE_FORMATS: set[str] = {'%Y-%m-%d %H:%M %Z', '%Y-%m-%d'}
     
-    def __init__(self) -> None:
-        self._api_url: str = IBS_API_URL
+    def __init__(self, api_url: str = _IBS_API_URL, smash_api_token: str = '') -> None:
+        self._api_url: str = api_url
         self._current_date: date = date.today()
-        self._smash_client = SmashClient()
+        self._smash_client = SmashClient(api_token=smash_api_token)
+
+    def get_issues_list(self, missing_subs=False, **kwargs) -> list[dict]:
+        issues: list[dict] = self._smash_client.get_issues(missing_subs, **kwargs)
+        logging.info(f"Found {len(issues)} issues")
+        return issues
 
     def find_maintenance_incidents(self, status: str = 'open', group: str = 'qam-manager') -> set[str]:
         cmd: str = f"qam {status}"
@@ -39,7 +44,7 @@ class IbsOscClient():
         xml_attributes: ET.Element = ET.fromstring(output)
 
         embargo_attribute: ET.Element|None = xml_attributes.find("./attribute[@name='EmbargoDate'][value]")
-        if embargo_attribute:
+        if embargo_attribute is not None:
             embargo_attribute_content: str = embargo_attribute.find('./value').text
             embargo_end_date: date = self._parse_embargo_date(embargo_attribute_content)
             if embargo_end_date >= self._current_date:
