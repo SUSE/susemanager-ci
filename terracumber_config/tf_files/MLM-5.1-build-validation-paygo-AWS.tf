@@ -298,6 +298,23 @@ module "sles15sp6_paygo_minion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
+module "sles15sp7_paygo_minion" {
+  source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_paygo_minion", null) != null ? 1 : 0
+  base_configuration = module.base.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp7_paygo_minion.name
+  image              = "sles15sp7-paygo"
+  product_version    = var.ENVIRONMENT_CONFIGURATION.sles15sp7_paygo_minion.product_version
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  install_salt_bundle     = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
 module "slesforsap15sp5_paygo_minion" {
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slesforsap15sp5_paygo_minion", null) != null ? 1 : 0
@@ -377,6 +394,24 @@ module "sles15sp6_minion" {
   base_configuration = module.base.configuration
   name               = var.ENVIRONMENT_CONFIGURATION.sles15sp6_minion.name
   image              = "sles15sp6o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  install_salt_bundle     = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+}
+
+module "sles15sp7_minion" {
+  source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_minion", null) != null ? 1 : 0
+  base_configuration = module.base.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp7_minion.name
+  image              = "sles15sp7o"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false

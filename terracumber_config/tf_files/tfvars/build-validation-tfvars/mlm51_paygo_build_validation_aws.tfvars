@@ -18,6 +18,10 @@ ENVIRONMENT_CONFIGURATION = {
     name               = "sles15sp6-paygo-minion"
     product_version    = "5.1-paygo"
   }
+  sles15sp7_paygo_minion = {
+    name               = "sles15sp7-paygo-minion"
+    product_version    = "5.1-paygo"
+  }
   slesforsap15sp5_paygo_minion = {
     name               = "slesforsap15sp5-paygo-minion"
     product_version    = "5.1-paygo"
@@ -45,6 +49,9 @@ ENVIRONMENT_CONFIGURATION = {
   }
   sles15sp6_sshminion = {
     name               = "sles15sp6-sshminion"
+  }
+  sles15sp7_minion = {
+    name               = "sles15sp7-minion"
   }
   rhel9_paygo_minion = {
     name               = "rhel9-paygo-minion"
