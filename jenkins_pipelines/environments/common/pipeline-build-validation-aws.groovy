@@ -6,19 +6,22 @@ def run(params) {
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         local_mirror_dir = "${resultdir}/sumaform-local"
-        aws_mirror_dir = "${resultdir}/sumaform-aws"
+        GString aws_mirror_dir = "${resultdir}/sumaform-aws"
         awscli = '/usr/local/bin/aws'
         node_user = 'jenkins'
         build_validation = true
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; export CUCUMBER_PUBLISH_QUIET=true;"
 
         ssh_option = '-o StrictHostKeyChecking=no -o ConnectTimeout=7200 -o ServerAliveInterval=60'
-        server_ami = params.server_ami ?: ""
-        proxy_ami  = params.proxy_ami ?: ""
+        String server_ami = params.server_ami ?: ""
+        String proxy_ami  = params.proxy_ami ?: ""
 
         //Deployment variables
         deployed_local = false
         deployed = false
+
+        GString tfvarsPrepareScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
+        String mirror_hostname_aws_private = ""
 
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
@@ -130,7 +133,7 @@ def run(params) {
                                 returnStdout: true).trim()
                         mirror_hostname_aws_public = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_public_name.value[0]' ",
                                 returnStdout: true).trim()
-                        env.mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
+                        mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                                 returnStdout: true).trim()
 
                         if (params.prepare_aws_env) {
@@ -156,7 +159,7 @@ def run(params) {
                 }
             } else {
                 stage("Get mirror private IP") {
-                    env.mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
+                    mirror_hostname_aws_private = sh(script: "cat ${aws_mirror_dir}/terraform.tfstate | jq -r '.outputs.aws_mirrors_private_name.value[0]' ",
                             returnStdout: true).trim()
                 }
             }
@@ -169,8 +172,19 @@ def run(params) {
                     sh "sed -i 's/ibs\\///g' ${WORKSPACE}/custom_repositories.json"
 
                     // Deploying AWS server using MU repositories
-                    sh "echo \"export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; export TF_VAR_SERVER_AMI=${server_ami}; export TF_VAR_PROXY_AMI=${proxy_ami}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --runstep provision --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend aws\""
-                    sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.registration set -x; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TF_VAR_ARCHITECTURE=${params.architecture}; export TF_VAR_MIRROR=${env.mirror_hostname_aws_private}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; export TF_VAR_SERVER_AMI=${server_ami}; export TF_VAR_PROXY_AMI=${proxy_ami}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --use-tf-resource-cleaner --tf-resources-to-keep ${params.minions_to_run.split(', ').join(' ')} --runstep provision --sumaform-backend aws"
+                    sh "python3 ${tfvarsPrepareScript} \
+                    --output ${aws_mirror_dir}/terraform.tfvars \
+                    --merge-files ${aws_mirror_dir}/terraform.tfvars ${params.deployment_tfvars} \
+                    --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo} \
+                    --inject CUCUMBER_BRANCH=${params.cucumber_ref} \
+                    --inject ARCHITECTURE=${params.architecture}\
+                    --inject MIRROR=${mirror_hostname_aws_private}\
+                    --inject SERVER_AMI=${server_ami}\
+                    --inject PROXY_AMI=${proxy_ami}\
+                    --clean --keep-resources ${params.minions_to_run.split(', ').join(' ')}"
+
+                    sh "echo \"export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --runstep provision --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend aws\""
+                    sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.registration set -x; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws"
                     deployed = true
 
                 }
@@ -600,13 +614,15 @@ def getNodesHandler(minionType = 'default') {
     String[] moduleList = modules.split("\n")
     moduleList.each { lane ->
         def nodeName = lane.tokenize(".")[1]
-        if ( minionType == 'default' && (nodeName.contains('minion') || nodeName.contains('client'))) {
-            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
-            envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        // Nodes come with [0] in there names now because of the count introduction
+        def cleanNodeName = nodeName.replaceAll(/\[\d+\]/, "")
+        if ( minionType == 'default' && (cleanNodeName.contains('minion') || nodeName.contains('client'))) {
+            nodeList.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
+            envVar.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
-        else if (( minionType == 'paygo' && (nodeName.contains('paygo') || nodeName.contains('byos')))) {
-            nodeList.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
-            envVar.add(nodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+        else if (( minionType == 'paygo' && (cleanNodeName.contains('paygo') || nodeName.contains('byos')))) {
+            nodeList.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
+            envVar.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
         }
     }
     // Convert jenkins minions list parameter to list

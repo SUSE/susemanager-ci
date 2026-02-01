@@ -146,6 +146,15 @@ variable "ARCHITECTURE" {
   default     = "x86_64"
 }
 
+variable "ENVIRONMENT_CONFIGURATION" {
+  description = "Environment declaration"
+}
+
+locals {
+  empty_minion_config = { ids = [], hostnames = [], macaddrs = [], private_macs = [], ipaddrs = [] }
+  empty_proxy_config = { hostname = null }
+}
+
 provider "aws" {
   region     = var.REGION
 }
@@ -181,17 +190,17 @@ module "mirror" {
 }
 
 module "server" {
-  source                     = "./modules/server_containerized"
+  source             = "./modules/server_containerized"
   base_configuration = merge(module.base.configuration,
     {
       mirror = null
     })
-  name                       = "server"
+  name                       = var.ENVIRONMENT_CONFIGURATION.server_containerized.name
   image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "smlm-server-51-${var.ARCHITECTURE}-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
-  product_version            = "5.1-paygo"
+  product_version            = var.ENVIRONMENT_CONFIGURATION.server_containerized.product_version
 
   auto_accept                    = false
   monitored                      = false
@@ -217,11 +226,12 @@ module "server" {
 
 }
 
-module "proxy" {
+module "proxy_containerized" {
+  count                     = lookup(var.ENVIRONMENT_CONFIGURATION, "proxy_containerized", null) != null ? 1 : 0
   source                    = "./modules/proxy_containerized"
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
-  name                      = "proxy"
+  name                      = var.ENVIRONMENT_CONFIGURATION.proxy_containerized.name
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
   image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "smlm-proxy-51-${var.ARCHITECTURE}-byos"
   provision                 = false
@@ -239,10 +249,11 @@ module "proxy" {
 
 module "sles12sp5_paygo_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_paygo_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles12sp5-paygo-minion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles12sp5_paygo_minion.name
   image              = "sles12sp5-paygo"
-  product_version    = "5.1-paygo"
+  product_version    = var.ENVIRONMENT_CONFIGURATION.sles12sp5_paygo_minion.product_version
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -255,10 +266,28 @@ module "sles12sp5_paygo_minion" {
 
 module "sles15sp5_paygo_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_paygo_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles15sp5-paygo-minion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp5_paygo_minion.name
   image              = "sles15sp5-paygo"
-  product_version    = "5.1-paygo"
+  product_version    = var.ENVIRONMENT_CONFIGURATION.sles15sp5_paygo_minion.product_version
+  provider_settings  = {
+    instance_type = "t3a.medium"
+  }
+  server_configuration    = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  install_salt_bundle     = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
+module "sles15sp6_paygo_minion" {
+  source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_paygo_minion", null) != null ? 1 : 0
+  base_configuration = module.base.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp6_paygo_minion.name
+  image              = "sles15sp6-paygo"
+  product_version    = var.ENVIRONMENT_CONFIGURATION.sles15sp6_paygo_minion.product_version
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -269,12 +298,13 @@ module "sles15sp5_paygo_minion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
-module "sles15sp6_paygo_minion" {
+module "sles15sp7_paygo_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_paygo_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles15sp6-paygo-minion"
-  image              = "sles15sp6-paygo"
-  product_version    = "5.1-paygo"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp7_paygo_minion.name
+  image              = "sles15sp7-paygo"
+  product_version    = var.ENVIRONMENT_CONFIGURATION.sles15sp7_paygo_minion.product_version
   provider_settings = {
     instance_type = "t3a.medium"
   }
@@ -287,10 +317,11 @@ module "sles15sp6_paygo_minion" {
 
 module "slesforsap15sp5_paygo_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "slesforsap15sp5_paygo_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "slesforsap15sp5-paygo-minion"
+  name               = var.ENVIRONMENT_CONFIGURATION.slesforsap15sp5_paygo_minion.name
   image              = "slesforsap15sp5-paygo"
-  product_version    = "5.1-paygo"
+  product_version    = var.ENVIRONMENT_CONFIGURATION.slesforsap15sp5_paygo_minion.product_version
   provider_settings = {
     instance_type = "t3.large"
   }
@@ -304,8 +335,9 @@ module "slesforsap15sp5_paygo_minion" {
 
 module "sles12sp5_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles12sp5-minion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles12sp5_minion.name
   image              = "sles12sp5"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
@@ -322,8 +354,9 @@ module "sles12sp5_minion" {
 
 module "sles15sp4_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp4_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles15sp4-minion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp4_minion.name
   image              = "sles15sp4o"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
@@ -339,8 +372,9 @@ module "sles15sp4_minion" {
 
 module "sles15sp5_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles15sp5-minion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp5_minion.name
   image              = "sles15sp5o"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
@@ -356,9 +390,28 @@ module "sles15sp5_minion" {
 
 module "sles15sp6_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_minion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles15sp6-minion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp6_minion.name
   image              = "sles15sp6o"
+  server_configuration = module.server.configuration
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  install_salt_bundle     = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+
+}
+
+module "sles15sp7_minion" {
+  source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_minion", null) != null ? 1 : 0
+  base_configuration = module.base.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp7_minion.name
+  image              = "sles15sp7o"
   server_configuration = module.server.configuration
   sles_registration_code = var.SLES_REGISTRATION_CODE
   auto_connect_to_master  = false
@@ -373,8 +426,9 @@ module "sles15sp6_minion" {
 
 module "sles12sp5_sshminion" {
   source             = "./modules/sshminion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles12sp5_sshminion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles12sp5-sshminion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles12sp5_sshminion.name
   image              = "sles12sp5"
   use_os_released_updates = false
   install_salt_bundle     = false
@@ -389,8 +443,9 @@ module "sles12sp5_sshminion" {
 
 module "sles15sp4_sshminion" {
   source             = "./modules/sshminion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp4_sshminion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles15sp4-sshminion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp4_sshminion.name
   image              = "sles15sp4o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
@@ -404,8 +459,9 @@ module "sles15sp4_sshminion" {
 
 module "sles15sp5_sshminion" {
   source             = "./modules/sshminion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp5_sshminion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles15sp5-sshminion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp5_sshminion.name
   image              = "sles15sp5o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
@@ -419,8 +475,9 @@ module "sles15sp5_sshminion" {
 
 module "sles15sp6_sshminion" {
   source             = "./modules/sshminion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp6_sshminion", null) != null ? 1 : 0
   base_configuration = module.base.configuration
-  name               = "sles15sp6-sshminion"
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp6_sshminion.name
   image              = "sles15sp6o"
   sles_registration_code = var.SLES_REGISTRATION_CODE
   use_os_released_updates = false
@@ -434,17 +491,18 @@ module "sles15sp6_sshminion" {
 
 module "rhel9_paygo_minion" {
   source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "rhel9_paygo_minion", null) != null ? 1 : 0
   base_configuration = merge(module.base.configuration,
     {
       testsuite = "false"
     })
-  name               = "rhel9-paygo-minion"
+  name               = var.ENVIRONMENT_CONFIGURATION.rhel9_paygo_minion.name
   image              = "rhel9"
   server_configuration = module.server.configuration
   auto_connect_to_master  = false
   use_os_released_updates = false
   install_salt_bundle     = true
-  product_version         = "5.1-paygo"
+  product_version         = var.ENVIRONMENT_CONFIGURATION.rhel9_paygo_minion.product_version
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
   provider_settings = {
     memory = 2048
@@ -477,26 +535,26 @@ module "controller" {
 
 
   server_configuration    = module.server.configuration
-  proxy_configuration     = module.proxy.configuration
+  proxy_configuration     = length(module.proxy_containerized) > 0 ? module.proxy_containerized[0].configuration : local.empty_proxy_config
 
-  sle12sp5_paygo_minion_configuration       = module.sles12sp5_paygo_minion.configuration
-  sle15sp5_paygo_minion_configuration       = module.sles15sp5_paygo_minion.configuration
-  sle15sp6_paygo_minion_configuration       = module.sles15sp6_paygo_minion.configuration
-  sleforsap15sp5_paygo_minion_configuration = module.slesforsap15sp5_paygo_minion.configuration
+  sle12sp5_paygo_minion_configuration       = length(module.sles12sp5_paygo_minion) > 0 ? module.sles12sp5_paygo_minion[0].configuration : local.empty_minion_config
+  sle15sp5_paygo_minion_configuration       = length(module.sles15sp5_paygo_minion) > 0 ? module.sles15sp5_paygo_minion[0].configuration : local.empty_minion_config
+  sle15sp6_paygo_minion_configuration       = length(module.sles15sp6_paygo_minion) > 0 ? module.sles15sp6_paygo_minion[0].configuration : local.empty_minion_config
+  sleforsap15sp5_paygo_minion_configuration = length(module.slesforsap15sp5_paygo_minion) > 0 ? module.slesforsap15sp5_paygo_minion[0].configuration : local.empty_minion_config
 
-  sle12sp5_minion_configuration    = module.sles12sp5_minion.configuration
-  sle12sp5_sshminion_configuration = module.sles12sp5_sshminion.configuration
+  sle12sp5_minion_configuration     = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
+  sle12sp5_sshminion_configuration  = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp4_minion_configuration    = module.sles15sp4_minion.configuration
-  sle15sp4_sshminion_configuration = module.sles15sp4_sshminion.configuration
+  sle15sp4_minion_configuration     = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
+  sle15sp4_sshminion_configuration  = length(module.sles15sp4_sshminion) > 0 ? module.sles15sp4_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp5_minion_configuration    = module.sles15sp5_minion.configuration
-  sle15sp5_sshminion_configuration = module.sles15sp5_sshminion.configuration
+  sle15sp5_minion_configuration    = length(module.sles15sp5_minion) > 0 ? module.sles15sp5_minion[0].configuration : local.empty_minion_config
+  sle15sp5_sshminion_configuration = length(module.sles15sp5_sshminion) > 0 ? module.sles15sp5_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp6_minion_configuration    = module.sles15sp6_minion.configuration
-  sle15sp6_sshminion_configuration = module.sles15sp6_sshminion.configuration
+  sle15sp6_minion_configuration    = length(module.sles15sp6_minion) > 0 ? module.sles15sp6_minion[0].configuration : local.empty_minion_config
+  sle15sp6_sshminion_configuration = length(module.sles15sp6_sshminion) > 0 ? module.sles15sp6_sshminion[0].configuration : local.empty_minion_config
 
-  rhel9_minion_configuration       = module.rhel9_paygo_minion.configuration
+  rhel9_minion_configuration       = length(module.rhel9_paygo_minion) > 0 ? module.rhel9_paygo_minion[0].configuration : local.empty_minion_config
 }
 
 output "bastion_public_name" {
