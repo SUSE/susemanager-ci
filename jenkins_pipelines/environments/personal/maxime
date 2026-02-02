@@ -29,8 +29,10 @@ node('sumaform-cucumber') {
                     name: 'functional_scopes',
                     description: 'Choose the functional scopes that you want to test',
                     choiceType: 'PT_CHECKBOX',
-                    script: groovyScript(
-                            script: secureGroovyScript(
+                    script: [
+                            $class: 'GroovyScript',
+                            script: [
+                                    $class: 'SecureGroovyScript',
                                     script: """
                 return [
                     '@scope_smdba', '@scope_spacecmd', '@scope_spacewalk_utils', '@scope_visualization',
@@ -46,13 +48,14 @@ node('sumaform-cucumber') {
                     '@scope_retracted_patches', '@scope_ansible'
                 ]
             """.stripIndent(),
-                                    sandbox: true // Ensures the script runs in the Jenkins sandbox
-                            ),
-                            fallbackScript: secureGroovyScript(
+                                    sandbox: true
+                            ],
+                            fallbackScript: [
+                                    $class: 'SecureGroovyScript',
                                     script: "return ['error_loading_scopes']",
                                     sandbox: true
-                            )
-                    )
+                            ]
+                    ]
             )
         ])
     ])
