@@ -8,7 +8,7 @@ from ibs_osc_client import IbsOscClient
 from repository_versions import nodes_by_version
 
 IBS_MAINTENANCE_URL_PREFIX: str = 'http://download.suse.de/ibs/SUSE:/Maintenance:/'
-JSON_OUTPUT_FILE_NAME: str = 'custom_repositories.json'
+_JSON_OUTPUT_FILE_NAME: str = 'custom_repositories.json'
 
 def setup_logging():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -51,7 +51,7 @@ def create_url(mi_id: str, suffix: str) -> str:
     res: requests.Response = requests.get(url, timeout=(3, 6))
     return url if res.ok else ""
 
-def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
+def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = _JSON_OUTPUT_FILE_NAME):
     if not custom_repositories:
         raise SystemExit("Empty custom_repositories dictionary, something went wrong")
 
