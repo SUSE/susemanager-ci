@@ -1,0 +1,82 @@
+#!/usr/bin/python3
+
+from argparse import ArgumentParser
+from configparser import ConfigParser
+from os.path import dirname, expanduser, realpath
+from sys import exit
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+
+
+def obs_get_package_link(args, package):
+    url = "{}/source/{}/{}".format(args.apiurl, args.project, package)
+    user = args.user
+    password = args.password
+    password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+    password_mgr.add_password(None, url, user, password)
+    auth_handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
+    opener = urllib.request.build_opener(auth_handler)
+    urllib.request.install_opener(opener)
+    req = urllib.request.Request(url=url, method='GET')
+    resource = urllib.request.urlopen(req)
+    charset = resource.headers.get_content_charset()
+    if charset is None:
+        charset = 'utf-8'
+    doc = ET.fromstring(resource.read().decode(charset))
+    return doc.findall("./linkinfo")[0]
+
+
+def parse_arguments():
+    """ Parse arguments from command line """
+    parser = ArgumentParser(
+        description="Check if Uyuni versions are aligned at all packages before a release")
+    parser.add_argument("-u", "--user", action="store", dest="user",
+                        help="OBS Username or read from ~/.oscrc")
+    parser.add_argument("-P", "--password", action="store", dest="password",
+                        help="OBS Password or read from ~/.oscrc")
+    parser.add_argument("-a", "--api-url", action="store", dest="apiurl",
+                        default="https://api.opensuse.org",
+                        help="OBS API URL (Default: https://api.opensuse.org")
+    parser.add_argument("-p", "--project", action="store", dest="project", required=True,
+                        help="Project where the package to be checked is")
+    parser.add_argument("-l", "--link", action="store", dest="link", required=True,
+                        help="The project that should be linked")
+    parser.add_argument("-j", "--package", action="store", dest="package", required=True,
+                        help="The package to check")
+    args = parser.parse_args()
+    if not args.user or not args.password:
+        try:
+            creds_path = "%s/.oscrc" % expanduser('~')
+            creds = ConfigParser()
+            creds.read(creds_path)
+            args.user = creds.get(args.apiurl, 'user')
+            args.password = creds.get(args.apiurl, 'pass')
+        except Exception:
+            raise RuntimeError(
+                'Could not find credentials for {} at {}'.format(args.apiurl, creds_path))
+    return args
+
+
+def print_info(msg):
+    print("[\033[01m\033[34mINFO \033[0m] %s" % msg)
+
+
+def print_ok(msg):
+    print("[\033[01m\033[32mOK   \033[0m] %s" % msg)
+
+
+def print_error(msg):
+    print("[\033[01m\033[31mERROR\033[0m] %s" % msg)
+
+
+args = parse_arguments()
+print_info("Checking {}/{}".format(args.project, args.package))
+linkinfo = obs_get_package_link(args, args.package).attrib
+if linkinfo['project'] == args.link and linkinfo['package'] == args.package:
+    print_ok(
+        "The package links to {}/{}".format(linkinfo['project'], linkinfo['package']))
+    exit(0)
+print_error(
+    "The package links to {}/{}".format(linkinfo['project'], linkinfo['package']))
+exit(1)
