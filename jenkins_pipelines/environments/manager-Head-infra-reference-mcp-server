@@ -80,7 +80,7 @@ node('sumaform-cucumber') {
                 }
 
                 stage('Run MCP Server') {
-                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper install -y docker; systemctl start docker; systemctl enable docker'"
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper install -y docker firewalld ; systemctl start docker ; systemctl enable docker ; systemctl start firewalld ; systemctl enable firewalld; firewall-cmd --permanent --add-port=8080/tcp ; firewall-cmd --reload'"
                     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'docker run -d -e UYUNI_SERVER=mlm-ref-head-server.mgr.suse.de -e UYUNI_MCP_TRANSPORT=http -e UYUNI_MCP_HOST=0.0.0.0 -e UYUNI_MCP_PORT=8080 -e UYUNI_USER=admin -e UYUNI_PASS=admin -p 8080:8080 ghcr.io/uyuni-project/mcp-server-uyuni:latest'"
                 }
             }
