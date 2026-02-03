@@ -90,7 +90,6 @@ node('sumaform-cucumber') {
                     archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
                     // Clean up old results
                     sh "./clean-old-results -r ${resultdir}"
-                    sh "exit ${error}"
                 }
             }
         }
