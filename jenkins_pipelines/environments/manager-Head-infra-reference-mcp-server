@@ -53,7 +53,7 @@ node('sumaform-cucumber') {
                     }
                 }
 
-                stage('Deploy') {
+                stage('Deploy VM') {
                     // Provision the environment
                     if (params.terraform_init) {
                         env.TERRAFORM_INIT = '--init'
@@ -79,16 +79,33 @@ node('sumaform-cucumber') {
                     deployed = true
                 }
 
-                stage('Run MCP Server') {
-                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper install -y docker ; systemctl start docker ; systemctl enable docker'"
+                stage('MCP Server') {
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper install -y docker; systemctl start docker; systemctl enable docker;"
                     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'docker run -d -e UYUNI_MCP_SSL_VERIFY=false -e UYUNI_SERVER=mlm-ref-head-server.mgr.suse.de -e UYUNI_MCP_TRANSPORT=http -e UYUNI_MCP_HOST=0.0.0.0 -e UYUNI_MCP_PORT=443 -e UYUNI_USER=admin -e UYUNI_PASS=admin -p 443:443 ghcr.io/uyuni-project/mcp-server-uyuni:latest'"
+                }
+
+                stage('Gemini Cli') {
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper install -y nodejs22; npm install -g @google/gemini-cli'"
+                    def geminiConfig = """{
+                      "security": {
+                        "auth": {
+                          "selectedType": "oauth-personal"
+                        }
+                      },
+                      "mcpServers": {
+                        "uyuni": {
+                          "url": "http://mlm-ref-head-mcp-server.mgr.suse.de:443/mcp",
+                          "type": "http"
+                        }
+                      }
+                    }"""
+                    sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'mkdir -p .gemini && echo \"${geminiConfig.replace('"', '\\"')}\" > .gemini/settings.json'"
                 }
             }
 
             finally {
                 stage('Save TF state') {
                     archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
-                    // Clean up old results
                     sh "./clean-old-results -r ${resultdir}"
                 }
             }
