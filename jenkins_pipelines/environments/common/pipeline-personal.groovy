@@ -21,48 +21,70 @@ def run(params) {
         // Start pipeline
         deployed = false
         try {
-
-            stage('Clone terracumber, susemanager-ci and sumaform') {
-                if (params.show_product_changes) {
-                    // Rename build using product commit hash
-                    currentBuild.description = "[${params.tf_file}]"
-                }
-                // Create a directory for  to place the directory with the build results (if it does not exist)
-                sh "mkdir -p ${resultdir}"
-                git url: params.terracumber_gitrepo, branch: params.terracumber_ref
-                dir("susemanager-ci") {
-                    checkout scm
-                }
-                if (params.run_deployment) {
-                    // Clone sumaform
-                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-                }
-                // Restore Terraform states from artifacts
-                if (params.use_previous_terraform_state) {
-                    copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
-                }
-            }
-            stage('Deploy') {
-                if (params.run_deployment) {
-                    // Provision the environment
-                    String TERRAFORM_INIT = ''
-                    if (params.terraform_init) {
-                        TERRAFORM_INIT = '--init'
+            withCredentials([file(credentialsId: 'sumaform-secrets', variable: 'SECRET_FILE')]) {
+                stage('Clone terracumber, susemanager-ci and sumaform') {
+                    if (params.show_product_changes) {
+                        // Rename build using product commit hash
+                        currentBuild.description = "[${params.tf_file}]"
                     }
-                    String TERRAFORM_TAINT = ''
-                    if (params.terraform_taint) {
-                        TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'"
+                    // Create a directory for  to place the directory with the build results (if it does not exist)
+                    sh "mkdir -p ${resultdir}"
+                    git url: params.terracumber_gitrepo, branch: params.terracumber_ref
+                    dir("susemanager-ci") {
+                        checkout scm
                     }
-                    sh "rm -f ${resultdir}/sumaform/terraform.tfvars"
-                    sh "cat ${tfvars_infra_description} >> ${resultdir}/sumaform/terraform.tfvars"
-                    sh "echo 'ENVIRONMENT = \"${params.environment}\"' >> ${resultdir}/sumaform/terraform.tfvars"
-                    if (params.container_repository != '') {
-                        sh "echo 'CONTAINER_REPOSITORY=\"${params.container_repository}\"' >> ${resultdir}/sumaform/terraform.tfvars"
+                    if (params.run_deployment) {
+                        // Use the dot operator (.) instead of source for shell compatibility
+                        sh """
+                            #!/bin/bash
+                            . ${SECRET_FILE}
+                            ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
+                        """
                     }
-                    sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; export ENVIRONMENT=${params.environment}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${TERRAFORM_INIT} ${TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
-                    deployed = true
-                    // Collect and tag Flaky tests from the GitHub Board
-                    def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:collect_and_tag_flaky_tests'", returnStatus: true
+                    // Restore Terraform states from artifacts
+                    if (params.use_previous_terraform_state) {
+                        copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                    }
+                }
+                stage('Deploy') {
+                    if (params.run_deployment) {
+                        // Provision the environment
+                        String TERRAFORM_INIT = ''
+                        if (params.terraform_init) {
+                            TERRAFORM_INIT = '--init'
+                        }
+                        String TERRAFORM_TAINT = ''
+                        if (params.terraform_taint) {
+                            TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'"
+                        }
+                        sh "rm -f ${resultdir}/sumaform/terraform.tfvars"
+                        sh "cat ${tfvars_infra_description} >> ${resultdir}/sumaform/terraform.tfvars"
+                        sh "echo 'ENVIRONMENT = \"${params.environment}\"' >> ${resultdir}/sumaform/terraform.tfvars"
+                        if (params.container_repository != '') {
+                            sh "echo 'CONTAINER_REPOSITORY=\"${params.container_repository}\"' >> ${resultdir}/sumaform/terraform.tfvars"
+                        }
+                        sh """
+                            #!/bin/bash
+                            set -e -o pipefail
+                            . ${SECRET_FILE}
+                            
+                            export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
+                            export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
+                            export TERRAFORM=${params.bin_path}
+                            export TERRAFORM_PLUGINS=${params.bin_plugins_path}
+                            export ENVIRONMENT=${params.environment}
+            
+                            ./terracumber-cli ${common_params} \
+                                --logfile ${resultdirbuild}/sumaform.log \
+                                ${TERRAFORM_INIT} ${TERRAFORM_TAINT} \
+                                --sumaform-backend ${params.sumaform_backend} \
+                                --runstep provision | \
+                            sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'
+                        """
+                        deployed = true
+                        // Collect and tag Flaky tests from the GitHub Board
+                        def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:collect_and_tag_flaky_tests'", returnStatus: true
+                    }
                 }
             }
             stage('Product changes') {
