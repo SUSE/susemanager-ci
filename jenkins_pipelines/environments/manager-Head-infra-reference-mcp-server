@@ -85,6 +85,7 @@ node('sumaform-cucumber') {
                 }
 
                 stage('Gemini Cli') {
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper ar -f http://dist.suse.de/ibs/SUSE/Products/SLE-Module-Web-Scripting/15-SP7/x86_64/product/ web_scripting_pool; zypper ar -f http://dist.suse.de/ibs/SUSE/Updates/SLE-Module-Web-Scripting/15-SP7/x86_64/update/ web_scripting_update; zypper ref'"
                     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper install -y nodejs22; npm install -g @google/gemini-cli'"
                     def geminiConfig = """{
                       "security": {
