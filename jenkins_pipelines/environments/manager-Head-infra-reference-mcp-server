@@ -81,7 +81,7 @@ node('sumaform-cucumber') {
 
                 stage('MCP Server') {
                     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper install -y docker; systemctl start docker; systemctl enable docker;'"
-                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'docker run -d -e UYUNI_MCP_SSL_VERIFY=false -e UYUNI_SERVER=mlm-ref-head-server.mgr.suse.de -e UYUNI_MCP_TRANSPORT=http -e UYUNI_MCP_HOST=0.0.0.0 -e UYUNI_MCP_PORT=443 -e UYUNI_USER=admin -e UYUNI_PASS=admin -p 443:443 ghcr.io/uyuni-project/mcp-server-uyuni:latest'"
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'docker run -d -e UYUNI_MCP_WRITE_TOOLS_ENABLED=true -e UYUNI_MCP_SSL_VERIFY=false -e UYUNI_SERVER=mlm-ref-head-server.mgr.suse.de -e UYUNI_MCP_TRANSPORT=http -e UYUNI_MCP_HOST=0.0.0.0 -e UYUNI_MCP_PORT=443 -e UYUNI_USER=admin -e UYUNI_PASS=admin -p 443:443 ghcr.io/uyuni-project/mcp-server-uyuni:latest'"
                 }
 
                 stage('Gemini Cli') {
