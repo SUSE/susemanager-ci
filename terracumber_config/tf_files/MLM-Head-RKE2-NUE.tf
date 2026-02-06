@@ -149,6 +149,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
+      image = "ubuntu2404o"
       provider_settings = {
         mac = "aa:b2:92:42:00:f1"
         vcpu = 8
@@ -162,6 +163,7 @@ module "cucumber_testsuite" {
       container_tag        = "latest"
     }
     proxy_containerized = {
+      image = "ubuntu2404o"
       provider_settings = {
         mac = "aa:b2:92:42:00:f2"
         vcpu = 2
