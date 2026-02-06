@@ -132,6 +132,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
+      image = "ubuntu2404o"
       provider_settings = {
         mac = "aa:b2:93:01:00:11"
       }
@@ -145,6 +146,7 @@ module "cucumber_testsuite" {
       database_disk_size = 60
     }
     proxy_containerized = {
+      image = "ubuntu2404o"
       provider_settings = {
         mac = "aa:b2:93:01:00:12"
       }
