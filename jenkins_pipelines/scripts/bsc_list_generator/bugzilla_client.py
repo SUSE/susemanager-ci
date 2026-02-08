@@ -1,0 +1,114 @@
+import logging
+from os import remove
+import subprocess
+import requests
+from typing import Any
+
+_SUSE_BUGZILLA_BASE_URL = "https://bugzilla.suse.com"
+_IBS_API_URL: str = "https://api.suse.de"
+
+class BugzillaClient:
+
+    def __init__(self, api_key: str, base_url: str = _SUSE_BUGZILLA_BASE_URL, api_type: str = "rest"):
+        # api_key is needed for actual API calls so we may as well fail here
+        if not api_key:
+            raise ValueError("api_key is None or empty")
+        # private
+        self._api_key: str = api_key
+        self._base_url: str = base_url
+        self._api_url: str = f"{base_url}/{api_type}"
+        self._bugs_endpoint = f"{base_url}/{api_type}/bug"
+        self._params: dict[str, Any] = { 'Bugzilla_api_key': self._api_key }
+        # public 
+        self.show_bug_url: str = f"{base_url}/show_bug.cgi"
+
+    def find_suma_bscs(self, bugzilla_products: list[str], **kwargs) -> dict[str, list[dict[str, Any]]]:
+        product_bugs: dict[str, list[dict[str, Any]]] = {}
+
+        for bugzilla_product in bugzilla_products:
+            logging.info(f"Retrieving BSCs for product '{bugzilla_product}'...")
+            product_bugs[bugzilla_product] = self._get_bugs(product = bugzilla_product, **kwargs)
+            logging.info("Done")
+
+        return product_bugs
+    
+    def bscs_from_release_notes(self, release_note_paths: tuple[tuple[str, str, str]], **kwargs) -> list[dict[str, Any]]:
+        bsc_ids: list[str] = []
+
+        for rn_path in release_note_paths:
+            logging.info(f"Parsing release notes: {rn_path[0]} - {rn_path[1]}")
+            rn_ids: list[str] = self._get_mentioned_bscs(*rn_path)
+            # avoid duplicating a BSC between Proxy and Server
+            for bug_id in rn_ids:
+                if bug_id not in bsc_ids:
+                    bsc_ids.append(bug_id)
+        
+        return self._get_bugs(id=','.join(bsc_ids), **kwargs)
+    
+    def _bug_under_embargo(self, bsc: dict[str, Any]) -> bool:
+        summary: str = bsc['summary']
+        if "embargo" in summary.lower():
+            logging.info(f"BSC#{bsc['id']} is under embargo and will not be displayed in the results.")
+            return True
+            
+        return False
+
+    def _get_mentioned_bscs(self, project: str, package:str, filename: str) -> list[str]:
+        # check=True -> raise subprocess.CalledProcessError if the return code is != 0
+        subprocess.run(
+            ["osc", "--apiurl", _IBS_API_URL, "co", project, package, filename],
+            check=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        bugs_ids: list[str] = self._parse_release_notes(filename)
+        # cleanup
+        remove(filename)
+
+        return bugs_ids
+
+    def _parse_release_notes(self, notes_filename: str) -> list[str]:
+        bsc_ids: list[str] = []
+        # retrieve BSC IDs only for the latest release notes block
+        with open(notes_filename) as nf:
+            # first line should delimit a block, better bail out if not
+            firstline: str = nf.readline().strip()
+            if not len(firstline) or not all(char == '-' for char in firstline):
+                raise ValueError("Irregular or missing release notes block: first line should only be composed by '-'")
+            
+            bsc_block: bool = False
+            while(True):
+                cur_line: str = nf.readline().strip()
+
+                if cur_line.startswith("bsc#"):
+                    bsc_block = True
+                    bsc_entries: str = cur_line.split(", ")
+                    bsc_ids.extend([entry.replace("bsc#", "") for entry in bsc_entries])
+                    continue
+                
+                # this is True only only if we have ended parsing a previous bsc block
+                if bsc_block:
+                    break
+
+        return bsc_ids
+            
+    def _get_bugs(self, **kwargs) -> list[dict[str, Any]]:
+        # drops CLI args that have not been used and have no default
+        additional_params: dict[str, Any] = { k: v for k, v in kwargs.items() if v is not None }
+        response: requests.Response = requests.get(self._bugs_endpoint, params={**self._params, **additional_params})
+        if not response.ok:
+            response.raise_for_status()
+
+        json_res: dict = response.json()
+        bugs: list[dict[str, Any]] = json_res['bugs']
+        filtered_bugs: list[dict[str, Any]] = [ bug for bug in bugs if not self._bug_under_embargo(bug) ]
+
+        return filtered_bugs
+    
+    def _get_bug_comments(self, bug_id: str) -> list[dict[str, Any]]:
+        response: requests.Response = requests.get(f"{self._bugs_endpoint}/{bug_id}/comment", params={**self._params})
+        if not response.ok:
+            response.raise_for_status()
+
+        json_res: dict = response.json()
+        comments: list[dict[str, Any]] = json_res['bugs'][str(bug_id)]['comments']
+        return comments
