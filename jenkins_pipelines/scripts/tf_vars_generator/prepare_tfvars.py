@@ -95,12 +95,14 @@ class TfvarsGenerator:
             'server_containerized': {
                 'mac': macs.get("server", "MISSING"),
                 'name': "server",
-                'image': params.get("base_os", "slmicro61o")
+                'image': params.get("base_os", "slmicro61o"),
+                'string_registry': params.get("string_registry", "false")
             },
             'proxy_containerized': {
                 'mac': macs.get("proxy", "MISSING"),
                 'name': "proxy",
-                'image': params.get("base_os", "slmicro61o")
+                'image': params.get("base_os", "slmicro61o"),
+                'string_registry': params.get("string_registry", "false")
             },
             'product_version': params.get("product_version", "5.1-released"),
             'name_prefix': f"{user}-",
@@ -189,6 +191,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", required=True)
     parser.add_argument("--product-version")
     parser.add_argument("--base-os")
+    parser.add_argument("--string-registry", default="false")
     parser.add_argument("--merge-files", nargs='*', default=[], help="Files to merge (Scenario Classic BV)")
     parser.add_argument("--inject", action='append', help="KEY=VALUE")
 
