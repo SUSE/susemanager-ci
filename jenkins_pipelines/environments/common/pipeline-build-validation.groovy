@@ -119,6 +119,8 @@ def run(params) {
                         scenarioArgs += " --minion5 \"${params.minion5}\""
                         scenarioArgs += " --minion6 \"${params.minion6}\""
                         scenarioArgs += " --minion7 \"${params.minion7}\""
+                        scenarioArgs += " --base-os \"${params.base_os}\""
+                        scenarioArgs += " --string-registry \"${params.string_registry}\""
                         if (params.deploy_retail) { scenarioArgs += " --deploy-retail" }
                         scenarioArgs += " --merge-files \"${locationFile}\"" // Merge location only
 
