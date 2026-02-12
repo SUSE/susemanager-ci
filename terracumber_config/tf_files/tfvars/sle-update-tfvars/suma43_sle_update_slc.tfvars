@@ -22,7 +22,7 @@ ENVIRONMENT_CONFIGURATION = {
   # Global Settings
   product_version = "4.3-released"
   name_prefix     = "suma-su-43-"
-  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-sle-update-SLC"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-mi-validation-sles-BACKUP"
 }
 
 BASE_CONFIGURATIONS = {

@@ -25,7 +25,7 @@ ENVIRONMENT_CONFIGURATION = {
 
   product_version = "5.0-released"
   name_prefix     = "suma-su-50micro-"
-  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-micro-qe-sle-update-SLC"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-qe-mi-validation-mgrtools-BACKUP"
 }
 
 BASE_CONFIGURATIONS = {

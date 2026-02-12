@@ -24,7 +24,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   product_version = "5.1-released"
   name_prefix     = "mlm-bv-51sles-"
-  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-sles-qe-build-validation-NUE"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-sles-qe-build-validation"
 }
 BASE_CONFIGURATIONS = {
   base_core = {

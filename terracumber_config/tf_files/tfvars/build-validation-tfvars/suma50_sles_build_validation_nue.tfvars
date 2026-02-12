@@ -24,7 +24,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   product_version = "5.0-released"
   name_prefix     = "suma-bv-50sles-"
-  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-sles-qe-build-validation-NUE"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-sles-qe-build-validation"
 }
 BASE_CONFIGURATIONS = {
   base_core = {
