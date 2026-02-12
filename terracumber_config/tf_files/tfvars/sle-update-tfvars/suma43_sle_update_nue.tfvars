@@ -21,7 +21,7 @@ ENVIRONMENT_CONFIGURATION = {
 
   product_version = "4.3-released"
   name_prefix     = "suma-su-43-"
-  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-sle-update-NUE"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-mi-validation-sles"
 }
 BASE_CONFIGURATIONS = {
   base_core = {

@@ -224,7 +224,7 @@ ENVIRONMENT_CONFIGURATION = {
 
   product_version = "uyuni-master"
   name_prefix     = "uyuni-bv-master-"
-  url_prefix      = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-qe-build-validation"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-qe-build-validation-BACKUP"
 }
 
 BASE_CONFIGURATIONS = {
