@@ -21,7 +21,7 @@ def run(params) {
         // Start pipeline
         def deployed = false
         try {
-            withCredentials([file(string: 'sumaform-secrets', variable: 'SECRET_CONTENT')]) {
+            withCredentials([string(credentialsId: 'sumaform-secrets', variable: 'SECRET_CONTENT')]) {
                 stage('Clone terracumber, susemanager-ci and sumaform') {
                     if (params.show_product_changes) {
                         // Rename build using product commit hash
