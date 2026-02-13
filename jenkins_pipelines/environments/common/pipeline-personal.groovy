@@ -21,7 +21,7 @@ def run(params) {
         // Start pipeline
         def deployed = false
         try {
-            withCredentials([file(credentialsId: 'sumaform-secrets', variable: 'SECRET_FILE')]) {
+            withCredentials([file(string: 'sumaform-secrets', variable: 'SECRET_CONTENT')]) {
                 stage('Clone terracumber, susemanager-ci and sumaform') {
                     if (params.show_product_changes) {
                         // Rename build using product commit hash
@@ -37,7 +37,10 @@ def run(params) {
                         // Use the dot operator (.) instead of source for shell compatibility
                         sh """
                             #!/bin/bash
-                            . ${SECRET_FILE}
+                            # Write the secret to a temporary file
+                            echo "${SECRET_CONTENT}" > /tmp/.credentials
+                            # Source it
+                            . /tmp/.credentials
                             ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
                         """
                     }
@@ -66,7 +69,8 @@ def run(params) {
                         sh """
                             #!/bin/bash
                             set -e -o pipefail
-                            . ${SECRET_FILE}
+                            echo "${SECRET_CONTENT}" > /tmp/.credentials
+                            . /tmp/.credentials
                             
                             export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
                             export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
