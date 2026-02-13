@@ -39,7 +39,7 @@ def run(params) {
                             #!/bin/bash
                             set +x
                             # Write the secret to a temporary file
-                            echo "${SECRET_CONTENT}" > /tmp/.credentials
+                            echo "\$SECRET_CONTENT" > /tmp/.credentials
                             # Source it
                             . /tmp/.credentials
                             set -x
@@ -72,7 +72,7 @@ def run(params) {
                             #!/bin/bash
                             set -e -o pipefail
                             set +x
-                            echo "${SECRET_CONTENT}" > /tmp/.credentials
+                            echo "\$SECRET_CONTENT" > /tmp/.credentials
                             . /tmp/.credentials
                             set -x
                             export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
