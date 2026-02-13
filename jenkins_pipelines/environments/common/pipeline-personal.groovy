@@ -37,10 +37,12 @@ def run(params) {
                         // Use the dot operator (.) instead of source for shell compatibility
                         sh """
                             #!/bin/bash
+                            set +x
                             # Write the secret to a temporary file
                             echo "${SECRET_CONTENT}" > /tmp/.credentials
                             # Source it
                             . /tmp/.credentials
+                            set -x
                             ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
                         """
                     }
@@ -69,9 +71,10 @@ def run(params) {
                         sh """
                             #!/bin/bash
                             set -e -o pipefail
+                            set +x
                             echo "${SECRET_CONTENT}" > /tmp/.credentials
                             . /tmp/.credentials
-                            
+                            set -x
                             export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
                             export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
                             export TERRAFORM=${params.bin_path}
