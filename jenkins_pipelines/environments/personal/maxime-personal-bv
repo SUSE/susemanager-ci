@@ -24,7 +24,7 @@ node('sumaform-cucumber') {
         checkout scm
     }
     // Load shared parameter library
-    def sharedParams = load "susemanager-ci/jenkins_pipelines/lib/shared-parameters.groovy"
+    def sharedParams = load "jenkins_pipelines/lib/shared-parameters.groovy"
     
     properties([
         buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
