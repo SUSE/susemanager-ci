@@ -1,4 +1,5 @@
 def run(params) {
+    def sharedParams = load "jenkins_pipelines/lib/shared-parameters.groovy"
     timestamps {
         //Capybara configuration
         def capybara_timeout = 60
@@ -51,7 +52,7 @@ def run(params) {
             }
 
             stage('Name run') {
-                currentBuild.description = nameDisplay(params)
+                currentBuild.description = nameDisplay(params, sharedParams)
             }
 
             stage('Build containers'){
@@ -226,7 +227,7 @@ def run(params) {
 
             /** Proxy stages begin **/
             stage('Add MUs Proxy') {
-                if (params.must_add_MU_repositories && params.enable_proxy_stages) {
+                if (sharedParams.isParamEnabled(params.must_add_MU_repositories_proxy)) {
                     echo 'Add proxy MUs'
                     if (params.confirm_before_continue) {
                         input 'Press any key to start adding Maintenance Update repositories'
@@ -238,7 +239,7 @@ def run(params) {
                 }
             }
             stage('Add Activation Keys Proxy') {
-                if (params.must_add_keys && params.enable_proxy_stages) {
+                if (sharedParams.isParamEnabled(params.must_add_keys_proxy)) {
                     echo 'Add proxy activation key'
                     if (params.confirm_before_continue) {
                         input 'Press any key to start adding activation keys'
@@ -249,7 +250,7 @@ def run(params) {
                 }
             }
             stage('Create bootstrap repository Proxy') {
-                if (params.must_create_bootstrap_repos && params.enable_proxy_stages) {
+                if (sharedParams.isParamEnabled(params.must_create_bootstrap_repos_proxy)) {
                     echo 'Create bootstrap repository ${node}'
                     if (params.confirm_before_continue) {
                         input 'Press any key to start creating the proxy bootstrap repository'
@@ -260,7 +261,7 @@ def run(params) {
                 }
             }
             stage('Bootstrap Proxy') {
-                if (params.must_boot_node && params.enable_proxy_stages) {
+                if (sharedParams.isParamEnabled(params.must_boot_node_proxy)) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start bootstraping the Proxy'
                     }
@@ -276,7 +277,7 @@ def run(params) {
             if (params.enable_monitoring_stages) {
                 try {
                     stage('Add MUs Monitoring') {
-                        if (params.must_add_MU_repositories && params.enable_monitoring_stages) {
+                        if (sharedParams.isParamEnabled(params.must_add_MU_repositories_monitoring)) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start adding Maintenance Update repositories'
                             }
@@ -287,7 +288,7 @@ def run(params) {
                         }
                     }
                     stage('Add Activation Keys Monitoring') {
-                        if (params.must_add_keys && params.enable_monitoring_stages) {
+                        if (sharedParams.isParamEnabled(params.must_add_keys_monitoring)) {
                             echo 'Add server monitoring activation key'
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start adding activation keys'
@@ -298,7 +299,7 @@ def run(params) {
                         }
                     }
                     stage('Create bootstrap repository Monitoring') {
-                        if (params.must_create_bootstrap_repos && params.enable_monitoring_stages) {
+                        if (sharedParams.isParamEnabled(params.must_create_bootstrap_repos_monitoring)) {
                             echo 'Create server monitoring bootstrap repository'
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start creating the Server Monitoring bootstrap repository'
@@ -309,7 +310,7 @@ def run(params) {
                         }
                     }
                     stage('Bootstrap Monitoring Server') {
-                        if (params.must_boot_node && params.enable_monitoring_stages) {
+                        if (sharedParams.isParamEnabled(params.must_boot_node_monitoring)) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start bootstraping the Monitoring Server'
                             }
@@ -331,7 +332,7 @@ def run(params) {
                 // Call the minion testing.
                 try {
                     stage('Clients stages') {
-                        clientTestingStages(params)
+                        clientTestingStages(params, sharedParams)
                     }
                 } catch (Exception ex) {
                     println('ERROR: one or more clients have failed')
@@ -559,7 +560,7 @@ def runCucumberRakeTarget(String rake_target, boolean return_status = false, dis
 
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
-def clientTestingStages(params) {
+def clientTestingStages(params, sharedParams) {
 
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
@@ -582,7 +583,7 @@ def clientTestingStages(params) {
                 echo "Testing ${node}"
             }
             stage("Add MUs ${node}") {
-                if (params.must_add_MU_repositories) {
+                if (sharedParams.isParamEnabled(params.must_add_MU_repositories_client)) {
                     if (!node.contains('ssh')) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
@@ -603,7 +604,7 @@ def clientTestingStages(params) {
                 }
             }
             stage("Add non MU Repositories ${node}") {
-                if (params.must_add_non_MU_repositories) {
+                if (sharedParams.isParamEnabled(params.must_add_non_MU_repositories_client)) {
                     if (!node.contains('ssh')) {
                         // We have this condition inside the stage to see in Jenkins which minion is skipped
                         if (json_matching_non_MU_data.containsKey(node)) {
@@ -629,7 +630,7 @@ def clientTestingStages(params) {
             }
             stage("Add Activation Keys ${node}") {
                 // skip this stage for Salt migration minion
-                if (params.must_add_keys && !node.contains('salt_migration_minion')) {
+                if (sharedParams.isParamEnabled(params.must_add_keys_client) && !node.contains('salt_migration_minion')) {
                     if (node.contains('sshminion')) {
                         // SSH minion need mandatory custom channel repository. The channel is created during minion stage.
                         // This section wait until minion creates custom channel.
@@ -656,7 +657,7 @@ def clientTestingStages(params) {
                 }
             }
             stage("Create bootstrap repository ${node}") {
-                if (params.must_create_bootstrap_repos) {
+                if (sharedParams.isParamEnabled(params.must_create_bootstrap_repos_client)) {
                     if (node.contains('sshminion')) {
                         // SSH minion need bootstrap repository. The bootstrap repository is created during minion stage.
                         // This section wait until minion creates bootstrap repository
@@ -702,7 +703,7 @@ def clientTestingStages(params) {
                 bootstrap_repository_status[node] = 'CREATED'
             }
             stage("Bootstrap client ${node}") {
-                if (params.must_boot_node) {
+                if (sharedParams.isParamEnabled(params.must_boot_node_client)) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start bootstraping the clients'
                     }
@@ -720,7 +721,7 @@ def clientTestingStages(params) {
                 }
             }
             stage("Run Smoke Tests ${node}") {
-                if (params.must_run_tests) {
+                if (sharedParams.isParamEnabled(params.must_run_tests_client)) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start running the smoke tests'
                     }
@@ -825,26 +826,26 @@ def nameDisplay(params) {
     if (params.must_sync) buildLabel << 'reposync'
 
     buildLabel << buildComponentLabel("proxy", params, [
-            'must_add_MU_repositories'     : 'AddMU',
-            'must_add_keys'                : 'ActKeys',
-            'must_create_bootstrap_repos'  : 'CrBoot',
-            'must_boot_node'               : 'Boot'
+            'must_add_MU_repositories_proxy'     : 'AddMU',
+            'must_add_keys_proxy'                : 'ActKeys',
+            'must_create_bootstrap_repos_proxy'  : 'CrBoot',
+            'must_boot_node_proxy'               : 'Boot'
     ], params.enable_proxy_stages)
 
     buildLabel << buildComponentLabel("monitoring", params, [
-            'must_add_MU_repositories'     : 'AddMU',
-            'must_add_keys'                : 'ActKeys',
-            'must_create_bootstrap_repos'  : 'CrBoot',
-            'must_boot_node'               : 'Boot'
+            'must_add_MU_repositories_monitoring'     : 'AddMU',
+            'must_add_keys_monitoring'                : 'ActKeys',
+            'must_create_bootstrap_repos_monitoring'  : 'CrBoot',
+            'must_boot_node_monitoring'               : 'Boot'
     ], params.enable_monitoring_stages)
 
     buildLabel << buildComponentLabel("client", params, [
-            'must_add_MU_repositories'     : 'AddMU',
-            'must_add_non_MU_repositories' : 'AddNonMU',
-            'must_add_keys'                : 'ActKeys',
-            'must_create_bootstrap_repos'  : 'CrBoot',
-            'must_boot_node'               : 'Boot',
-            'must_run_tests'               : 'Smoke'
+            'must_add_MU_repositories_client'     : 'AddMU',
+            'must_add_non_MU_repositories_client' : 'AddNonMU',
+            'must_add_keys_client'                : 'ActKeys',
+            'must_create_bootstrap_repos_client'  : 'CrBoot',
+            'must_boot_node_client'               : 'Boot',
+            'must_run_tests_client'               : 'Smoke'
     ], params.enable_client_stages)
 
     if (params.must_run_products_and_salt_migration_tests) buildLabel << 'migration'
@@ -868,12 +869,12 @@ def nameDisplay(params) {
     return fullLabel
 }
 
-def buildComponentLabel(component, params, conditionsMap, isEnabled) {
+def buildComponentLabel(component, params, conditionsMap, isEnabled, sharedParams) {
     if (!isEnabled) return null
 
     def options = []
     for (entry in conditionsMap) {
-        if (params.get(entry.key)) {
+        if (sharedParams.isParamEnabled(params.get(entry.key))) {
             options << entry.value
         }
     }
