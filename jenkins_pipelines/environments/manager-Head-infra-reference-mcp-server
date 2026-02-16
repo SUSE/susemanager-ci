@@ -88,19 +88,23 @@ node('sumaform-cucumber') {
                     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper ar -f http://dist.suse.de/ibs/SUSE/Products/SLE-Module-Web-Scripting/15-SP7/x86_64/product/ web_scripting_pool; zypper ar -f http://dist.suse.de/ibs/SUSE/Updates/SLE-Module-Web-Scripting/15-SP7/x86_64/update/ web_scripting_update; zypper ref'"
                     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@mlm-ref-head-mcp-server.mgr.suse.de 'zypper install -y nodejs22; npm install -g @google/gemini-cli'"
                     def geminiConfig = """{
-                      "security": {
-                        "auth": {
-                          "selectedType": "oauth-personal"
-                        }
-                      },
-                      "mcpServers": {
-                        "uyuni": {
-                          "url": "http://mlm-ref-head-mcp-server.mgr.suse.de:443/mcp",
-                          "type": "http"
-                        }
-                      }
-                    }"""
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "mcpServers": {
+    "uyuni": {
+      "url": "http://mlm-ref-head-mcp-server.mgr.suse.de:443/mcp",
+      "type": "http"
+    }
+  },
+  "tools": {
+    "sandbox": "docker"
+  }
+}"""
                     sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'mkdir -p .gemini && echo \"${geminiConfig.replace('"', '\\"')}\" > .gemini/settings.json'"
+                    sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'echo \"SEATBELT_PROFILE=restrictive-open\" > .gemini/.env'"
                 }
             }
 
