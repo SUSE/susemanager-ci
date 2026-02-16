@@ -22,7 +22,7 @@ node('sumaform-cucumber') {
     def minionList = minionListString.split(',').collect { it.trim() }
     
     // Load shared parameter library
-    def sharedParams = load "jenkins_pipelines/lib/shared-parameters.groovy"
+    def sharedParams = load "susemanager-ci/jenkins_pipelines/lib/shared-parameters.groovy"
     
     properties([
         buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),

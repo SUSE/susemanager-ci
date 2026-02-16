@@ -1,5 +1,5 @@
 def run(params) {
-    def sharedParams = load "jenkins_pipelines/lib/shared-parameters.groovy"
+    def sharedParams = load "susemanager-ci/jenkins_pipelines/lib/shared-parameters.groovy"
     timestamps {
         //Capybara configuration
         def capybara_timeout = 60
