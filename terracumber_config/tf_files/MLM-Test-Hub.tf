@@ -107,7 +107,7 @@ module "base_core" {
 
   images = ["centos7o", "opensuse156o", "sles15sp5o", "sles15sp7o"]
   use_avahi    = false
-  name_prefix  = "suma-testhub-"
+  name_prefix  = "mlm-testhub-"
   domain       = "mgr.suse.de"
 
   provider_settings = {

@@ -24,7 +24,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   product_version = "5.1-released"
-  name_prefix     = "mlm-su-51sles-"
+  name_prefix     = "mlm-su-51-sles-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-qe-mi-validation-bci"
 }
 BASE_CONFIGURATIONS = {

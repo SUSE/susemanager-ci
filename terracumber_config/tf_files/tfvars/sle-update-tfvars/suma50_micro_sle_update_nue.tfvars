@@ -24,7 +24,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   product_version = "5.0-released"
-  name_prefix     = "suma-su-50micro-"
+  name_prefix     = "suma-su-50-micro-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-qe-mi-validation-mgrtools"
 }
 BASE_CONFIGURATIONS = {
