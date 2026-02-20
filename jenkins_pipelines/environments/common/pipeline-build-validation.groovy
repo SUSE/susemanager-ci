@@ -31,7 +31,7 @@ def run(params) {
         def server_container_repository = params.server_container_repository ?: null
         def proxy_container_repository = params.proxy_container_repository ?: null
         def server_container_image = params.server_container_image ?: ''
-        // Parameters used for continuous pipeline
+        // Parameters used for sandbox pipeline
         def product_version = params.product_version ?: ''
         def base_os = params.base_os ?: ''
 

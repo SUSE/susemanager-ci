@@ -211,7 +211,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   # Note: Amazon Linux 2023 is not present in SUMA 5.0
   product_version = "5.0-released"
-  name_prefix     = "suma-bv-50micro-"
+  name_prefix     = "suma-bv-50-micro-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.0-micro-qe-build-validation-BACKUP"
 }
 

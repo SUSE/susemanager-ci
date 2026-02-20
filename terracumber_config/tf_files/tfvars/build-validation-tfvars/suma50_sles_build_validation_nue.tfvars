@@ -23,7 +23,7 @@ ENVIRONMENT_CONFIGURATION = {
     name = "sles15sp6-minion"
   }
   product_version = "5.0-released"
-  name_prefix     = "suma-bv-50sles-"
+  name_prefix     = "suma-bv-50-sles-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-sles-qe-build-validation"
 }
 BASE_CONFIGURATIONS = {

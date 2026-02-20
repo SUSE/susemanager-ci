@@ -208,7 +208,7 @@ ENVIRONMENT_CONFIGURATION = {
     additional_network  = "192.168.20.0/24"
     dhcp_user           = "root"
   }
-  suma-test-ai = {
+  mlm-test-ai = {
     mac = {
       controller     = "aa:b2:93:01:00:80"
       server         = "aa:b2:93:01:00:81"

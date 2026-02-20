@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
   use_avahi    = false
-  name_prefix  = "suma-test-vega-"
+  name_prefix  = "mlm-test-vega-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 

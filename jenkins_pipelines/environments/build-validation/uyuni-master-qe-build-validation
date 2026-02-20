@@ -68,9 +68,9 @@ node('sumaform-cucumber') {
     mutableParams.sumaform_backend = "libvirt"
     mutableParams.bin_path = "/usr/bin/tofu"
     mutableParams.bin_plugins_path = "/usr/bin"
-    mutableParams.product_version_display = "uyuni-master"
+    mutableParams.product_version_display = "head"
     mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_50.json'
-    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/uyuni_master_build_validation_nue.tfvars'
+    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/manager_head_build_validation_nue.tfvars'
 
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(mutableParams)

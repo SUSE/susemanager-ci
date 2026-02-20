@@ -24,7 +24,7 @@ node {
                                 'manager-5.0-sles-qe-build-validation',
                                 'manager-5.1-micro-qe-build-validation',
                                 'manager-5.1-sles-qe-build-validation',
-                                'manager-qe-continuous-build-validation',
+                                'manager-sandbox-qe-build-validation',
                                 'manager-4.3-qe-build-validation-BACKUP',
                                 'manager-5.0-qe-build-validation-BACKUP',
                                 'manager-5.1-qe-build-validation-BACKUP'

@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Hexagon-acceptance-tests"
+  default = "https://ci.suse.de/view/Manager/view/Manager-Test/job/manager-TEST-Ion-acceptance-tests"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results TEST-HEXAGON $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results TEST-ION $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results TEST-HEXAGON: Environment setup failed"
+  default = "Results TEST-ION: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -97,14 +97,13 @@ terraform {
 }
 
 provider "libvirt" {
-  //uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
-  uri = "qemu+tcp://suma-03.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-04.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
+  product_version = "5.0-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -117,10 +116,10 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slemicro55o"]
 
   use_avahi    = false
-  name_prefix  = "suma-test-hexagon-"
+  name_prefix  = "mlm-test-ion-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -130,60 +129,49 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
-  container_server = true
-  container_proxy  = true
-  beta_enabled = false
-
-  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
-  use_mirror_images        = true
-
-  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
+  # server_http_proxy = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
+
+  container_server = true
+  container_proxy = true
 
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:50"
-        vcpu = 4
-        memory = 4096
+        mac = "aa:b2:93:01:00:40"
       }
     }
     server_containerized = {
       provider_settings = {
-        mac = "aa:b2:93:01:00:51"
+        mac = "aa:b2:93:01:00:41"
         vcpu = 8
         memory = 32768
       }
-      main_disk_size       = 500
-      login_timeout        = 28800
-      large_deployment     = true
-      runtime              = "podman"
-      container_repository = "registry.suse.de"   
-      container_tag        = "latest"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61"
-      }
-
+      main_disk_size = 500
+      login_timeout = 28800
+      runtime = "podman"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/ion/containerfile"
+      container_tag = "latest"
+      beta_enabled = false
     }
     proxy_containerized = {
-      image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:52"
+        mac = "aa:b2:93:01:00:42"
         vcpu = 2
         memory = 2048
       }
-      main_disk_size = 200
-      runtime = "podman"
-      container_repository = "registry.suse.de"
-      container_tag = "latest"
-      additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61/"
+    }
+    slemicro_minion = {
+      provider_settings = {
+        mac = "aa:b2:93:01:00:44"
+        vcpu = 2
+        memory = 2048
       }
     }
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:56"
+        mac = "aa:b2:93:01:00:46"
         vcpu = 2
         memory = 2048
       }
@@ -191,7 +179,7 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:58"
+        mac = "aa:b2:93:01:00:48"
         vcpu = 2
         memory = 2048
       }
@@ -199,7 +187,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac    = "aa:b2:93:01:00:5a"
+        mac = "aa:b2:93:01:00:49"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -209,7 +197,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:5b"
+        mac = "aa:b2:93:01:00:4b"
         vcpu = 2
         memory = 2048
       }
@@ -217,7 +205,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:00:5d"
+        mac = "aa:b2:93:01:00:4d"
         vcpu = 2
         memory = 2048
       }
@@ -225,21 +213,18 @@ module "cucumber_testsuite" {
     pxeboot_minion = {
       image = "sles15sp7o"
     }
-    dhcp_dns = {
-      name        = "dhcp-dns"
-      image       = "opensuse156o"
-      hypervisor  = {
-        host        = "suma-03.mgr.suse.de"
-        user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
+    kvm_host = {
+      image = "sles15sp7o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:4e"
       }
     }
   }
-
   provider_settings = {
-    pool = "ssd"
-    network_name = null
-    bridge = "br0"
+    pool               = "ssd"
+    network_name       = null
+    bridge             = "br0"
+    additional_network = "192.168.41.0/24"
   }
 }
 

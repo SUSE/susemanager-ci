@@ -37,7 +37,7 @@ node('sumaform-cucumber') {
         def newParams = [:] + params
         newParams.capybara_timeout = 10
         newParams.default_timeout = 250
-        newParams.environment = 'suma-test-ai'
+        newParams.environment = 'mlm-test-ai'
         def pipeline = load "jenkins_pipelines/environments/common/pipeline-personal.groovy"
         pipeline.run(newParams)
     }
