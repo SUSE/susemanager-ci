@@ -8,11 +8,13 @@ ENVIRONMENT_CONFIGURATION = {
     mac   = "aa:b2:93:04:05:6d"
     name  = "server"
     image = "tumbleweedo"
+    string_registry = false
   }
   proxy_containerized = {
     mac   = "aa:b2:93:04:05:6e"
     name  = "proxy"
     image = "tumbleweedo"
+    string_registry = false
   }
   monitoring_server = {
     mac  = "aa:b2:93:04:05:6f"
