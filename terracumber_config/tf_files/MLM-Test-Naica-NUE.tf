@@ -145,7 +145,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slemicro61o"
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:61"
         vcpu = 8
