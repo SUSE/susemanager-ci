@@ -220,7 +220,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   product_version       = "head"
   name_prefix           = "mlm-bv-head-"
-  url_prefix            = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-master-qe-build-validation"
+  url_prefix            = "https://ci.suse.de/view/Manager/view/Uyuni/job/manager-head-qe-build-validation"
 }
 BASE_CONFIGURATIONS = {
   base_core = {
