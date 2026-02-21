@@ -26,8 +26,7 @@ node {
                                 'manager-5.1-sles-qe-build-validation',
                                 'manager-sandbox-qe-build-validation',
                                 'manager-4.3-qe-build-validation-BACKUP',
-                                'manager-5.0-qe-build-validation-BACKUP',
-                                'manager-5.1-qe-build-validation-BACKUP'
+                                'manager-5.0-micro-qe-build-validation-BACKUP'
                         ], description: 'Path to the tf file to be used'),
                         string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
                         string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
