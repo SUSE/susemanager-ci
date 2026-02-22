@@ -85,8 +85,8 @@ def generate_summary(json_file_path):
     print(f"- Failed Scenarios: {total_failed_scenarios}")
 
     # Format Breakdown
-    breakdown = [f"- {k}: {v}\n" for k, v in sorted(status_counts.items()) if v > 0]
-    print(f"- Breakdown by Status:\n {''.join(breakdown)}")
+    breakdown = [f" - {k}: {v}\n" for k, v in sorted(status_counts.items()) if v > 0]
+    print(f"- Breakdown by Status:\n{''.join(breakdown)}")
     print("-" * 51)
     print(" List of failed features and first failed scenario ")
     print("-" * 51)
