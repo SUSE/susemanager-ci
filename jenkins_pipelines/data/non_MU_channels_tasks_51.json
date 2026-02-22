@@ -1,5 +1,6 @@
 {
   "_comment":  "List of minions that require specific custom channels with corresponding run_set",
   "centos7_minion" : "build_validation_centos7_minion_add_iso",
-  "rocky8_minion" : "build_validation_rocky8_minion_add_iso"
+  "rocky8_minion" : "build_validation_rocky8_minion_add_iso",
+  "ubuntu2404_minion" : "build_validation_ubuntu2404_minion_add_universe_and_main_noble_repositories"
 }
