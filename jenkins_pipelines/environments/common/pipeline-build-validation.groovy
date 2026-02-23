@@ -22,6 +22,7 @@ def run(params) {
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
         retailProxyConfigurationLock = 'lock proxy retail setup'
+        def muSemaphoreLock = createSemaphore(5)
         // Variables to store none critical stage run status
         def monitoring_stage_result_fail = false
         def client_stage_result_fail = false
@@ -587,13 +588,15 @@ def clientTestingStages(params) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
-                        echo 'Add custom channels and MU repositories'
-                        res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
-                        echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
-                        echo "Custom channels and MU repositories status code: ${res_mu_repos}"
-                        if (res_mu_repos != 0) {
-                            required_custom_channel_status[node] = 'FAIL'
-                            error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
+                        withThrottle(muSemaphoreLock) {
+                            echo 'Add custom channels and MU repositories'
+                            res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
+                            echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
+                            echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+                            if (res_mu_repos != 0) {
+                                required_custom_channel_status[node] = 'FAIL'
+                                error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
+                            }
                         }
                     }
                 }
@@ -611,13 +614,15 @@ def clientTestingStages(params) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start adding common channels'
                             }
-                            echo 'Add non MU Repositories'
-                            res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", true, temporaryList)
-                            echo "Non MU Repositories status code: ${res_non_MU_repositories}"
-                            echoHtmlReportPath(build_validation_non_MU_script)
-                            if (res_non_MU_repositories != 0) {
-                                required_custom_channel_status[node] = 'FAIL'
-                                error("Add common channels failed with status code: ${res_non_MU_repositories}")
+                            withThrottle(muSemaphoreLock) {
+                                echo 'Add non MU Repositories'
+                                res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", true, temporaryList)
+                                echo "Non MU Repositories status code: ${res_non_MU_repositories}"
+                                echoHtmlReportPath(build_validation_non_MU_script)
+                                if (res_non_MU_repositories != 0) {
+                                    required_custom_channel_status[node] = 'FAIL'
+                                    error("Add common channels failed with status code: ${res_non_MU_repositories}")
+                                }
                             }
                         }
                     }
@@ -919,6 +924,32 @@ def echoHtmlReportPath(String rake_target) {
         // This catches network errors, DNS failures, or httpRequest throwing
         // an exception if throwExceptionOnError is true (e.g., 404 response).
         echo "Error fetching HTML path from ${path_export_url}: ${e.getMessage()}"
+    }
+}
+
+@NonCPS
+def createSemaphore(int count) {
+    return new java.util.concurrent.Semaphore(count)
+}
+
+@NonCPS
+def tryAcquireSlot(semaphore) {
+    return semaphore.tryAcquire()
+}
+
+@NonCPS
+def releaseSlot(semaphore) {
+    semaphore.release()
+}
+
+def withThrottle = { semaphore, Closure body ->
+    waitUntil {
+        tryAcquireSlot(semaphore)
+    }
+    try {
+        body()
+    } finally {
+        releaseSlot(semaphore)
     }
 }
 
