@@ -22,7 +22,7 @@ def run(params) {
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
         retailProxyConfigurationLock = 'lock proxy retail setup'
-        def muSemaphoreLock = createSemaphore(5)
+        def syncChannelLockCounter = new java.util.concurrent.atomic.AtomicInteger(0)
         // Variables to store none critical stage run status
         def monitoring_stage_result_fail = false
         def client_stage_result_fail = false
@@ -588,7 +588,7 @@ def clientTestingStages(params) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
-                        withThrottle(muSemaphoreLock) {
+                        withThrottle(syncChannelLockCounter, 5) {
                             echo 'Add custom channels and MU repositories'
                             res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
                             echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
@@ -614,7 +614,7 @@ def clientTestingStages(params) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start adding common channels'
                             }
-                            withThrottle(muSemaphoreLock) {
+                            withThrottle(syncChannelLockCounter, 5) {
                                 echo 'Add non MU Repositories'
                                 res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", true, temporaryList)
                                 echo "Non MU Repositories status code: ${res_non_MU_repositories}"
@@ -928,28 +928,27 @@ def echoHtmlReportPath(String rake_target) {
 }
 
 @NonCPS
-def createSemaphore(int count) {
-    return new java.util.concurrent.Semaphore(count)
+def tryAcquireSlot(counter, int max) {
+    int current = counter.get()
+    if (current < max) {
+        return counter.compareAndSet(current, current + 1)
+    }
+    return false
 }
 
 @NonCPS
-def tryAcquireSlot(semaphore) {
-    return semaphore.tryAcquire()
+def releaseSlot(counter) {
+    counter.decrementAndGet()
 }
 
-@NonCPS
-def releaseSlot(semaphore) {
-    semaphore.release()
-}
-
-def withThrottle = { semaphore, Closure body ->
+def withThrottle = { counter, int max = 5, Closure body ->
     waitUntil {
-        tryAcquireSlot(semaphore)
+        tryAcquireSlot(counter, max)
     }
     try {
         body()
     } finally {
-        releaseSlot(semaphore)
+        releaseSlot(counter)
     }
 }
 
