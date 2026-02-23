@@ -442,6 +442,7 @@ def run(params) {
             }
             /** Retail stages end **/
 
+            // todo: remove once 4.3 is EOL
             /** Containerization stages start **/
             try {
                 stage('Containerization') {
