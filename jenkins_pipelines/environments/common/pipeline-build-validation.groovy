@@ -22,7 +22,7 @@ def run(params) {
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
         retailProxyConfigurationLock = 'lock proxy retail setup'
-        def syncChannelLockCounter = new java.util.concurrent.atomic.AtomicInteger(0)
+        def muLockSlots = [].asSynchronized()
         // Variables to store none critical stage run status
         def monitoring_stage_result_fail = false
         def client_stage_result_fail = false
@@ -588,7 +588,7 @@ def clientTestingStages(params) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
-                        withThrottle(syncChannelLockCounter, 5) {
+                        withThrottle(muLockSlots, 5) {
                             echo 'Add custom channels and MU repositories'
                             res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
                             echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
@@ -614,7 +614,7 @@ def clientTestingStages(params) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start adding common channels'
                             }
-                            withThrottle(syncChannelLockCounter, 5) {
+                            withThrottle(muLockSlots, 5) {
                                 echo 'Add non MU Repositories'
                                 res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", true, temporaryList)
                                 echo "Non MU Repositories status code: ${res_non_MU_repositories}"
@@ -928,27 +928,27 @@ def echoHtmlReportPath(String rake_target) {
 }
 
 @NonCPS
-def tryAcquireSlot(counter, int max) {
-    int current = counter.get()
+def tryAcquireSlot(slots, int max) {
+    int current = slots.get()
     if (current < max) {
-        return counter.compareAndSet(current, current + 1)
+        return slots.compareAndSet(current, current + 1)
     }
     return false
 }
 
 @NonCPS
-def releaseSlot(counter) {
-    counter.decrementAndGet()
+def releaseSlot(slots) {
+    slots.decrementAndGet()
 }
 
-def withThrottle = { counter, int max = 5, Closure body ->
+def withThrottle = { slots, int max = 5, Closure body ->
     waitUntil {
-        tryAcquireSlot(counter, max)
+        tryAcquireSlot(slots, max)
     }
     try {
         body()
     } finally {
-        releaseSlot(counter)
+        releaseSlot(slots)
     }
 }
 
