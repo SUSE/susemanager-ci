@@ -68,17 +68,17 @@ Each tfvars file defines two top-level variables:
 ENVIRONMENT_CONFIGURATION = {
   # Core infrastructure — always present
   controller = {
-    mac  = "aa:b2:92:42:00:50"
+    mac  = "xx:xx:xx:xx:xx:xx"
     name = "controller"
   }
   server_containerized = {
-    mac             = "aa:b2:92:42:00:51"
+    mac             = "xx:xx:xx:xx:xx:xx"
     name            = "server"
     image           = "slemicro55o"
     string_registry = false
   }
   proxy_containerized = {
-    mac             = "aa:b2:92:42:00:52"
+    mac             = "xx:xx:xx:xx:xx:xx"
     name            = "proxy"
     image           = "slemicro55o"
     string_registry = false
@@ -86,25 +86,25 @@ ENVIRONMENT_CONFIGURATION = {
 
   # Optional minions — only deployed when declared
   sles15sp7_minion = {
-    mac  = "aa:b2:92:42:00:65"
+    mac  = "xx:xx:xx:xx:xx:x"
     name = "sles15sp7-minion"
   }
   rocky8_minion = {
-    mac  = "aa:b2:92:42:00:68"
+    mac  = "xx:xx:xx:xx:xx:xx"
     name = "rocky8-minion"
   }
   # ... more minions
 
   # s390x minions require an additional userid field
   sles15sp5s390_minion = {
-    mac    = "02:00:00:42:00:28"
+    mac    = "xx:xx:xx:xx:xx:xx"
     name   = "sles15sp5s390-minion"
-    userid = "S50MINUE"
+    userid = "SXXMINUE"
   }
 
-  product_version = "5.0-released"
-  name_prefix     = "suma-bv-50-micro-"
-  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.0-micro-qe-build-validation"
+  product_version = "x.x-released"
+  name_prefix     = "suma-bv-xx-micro-"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-x.x-micro-qe-build-validation"
 }
 ```
 
@@ -116,8 +116,8 @@ BASE_CONFIGURATIONS = {
   base_core = {
     pool               = "ssd"
     bridge             = "br0"
-    additional_network = "192.168.50.0/24"
-    hypervisor         = "suma-06.mgr.suse.de"
+    additional_network = "192.168.xx.0/24"
+    hypervisor         = "suma-xx.mgr.suse.de"
   }
   base_arm = {
     pool               = "ssd"
@@ -131,15 +131,15 @@ BASE_CONFIGURATIONS = {
 BASE_CONFIGURATIONS = {
   base_core_1 = {
     pool               = "ssd"
-    bridge             = "br1"
-    additional_network = "192.168.50.0/24"
-    hypervisor         = "suma-slc-01.mgr.suse.de"
+    bridge             = "brx"
+    additional_network = "192.168.xx.0/24"
+    hypervisor         = "suma-slc-xx.mgr.suse.de"
   }
   base_core_2 = {
     pool               = "ssd"
     bridge             = "br1"
-    additional_network = "192.168.50.0/24"
-    hypervisor         = "suma-slc-02.mgr.suse.de"
+    additional_network = "192.168.xx.0/24"
+    hypervisor         = "suma-slc-xx.mgr.suse.de"
   }
 }
 ```
