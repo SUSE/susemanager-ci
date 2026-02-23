@@ -224,7 +224,9 @@ module "build_validation_module" {
 
   server_container_repository = var.SERVER_CONTAINER_REPOSITORY
   server_container_image      = var.SERVER_CONTAINER_IMAGE
+  server_additional_repos     = var.SERVER_ADDITIONAL_REPOS
   proxy_container_repository  = var.PROXY_CONTAINER_REPOSITORY
+  proxy_additional_repos      = var.PROXY_ADDITIONAL_REPOS
   base_os                     = var.BASE_OS
 }
 
