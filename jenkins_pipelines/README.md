@@ -1,39 +1,101 @@
-# Contents
+# jenkins_pipelines
 
-- [environments](environments/): Testsuite (cucumber) and reference environments
-- [manager_testsuite](manager_testsuite/): Manager testsuite pipelines for QA/QAM (deprecated)
-- [uyuni_testsuite](uyuni_testsuite/): Uyuni testsuite pipelines for QA/QAM (deprecated)
-- [manager_prs](manager_prs/): Manager PR Checks
-- [uyuni_prs](uyuni_prs/): Uyuni PR Checks
+This directory contains the Jenkins pipeline definitions used to deploy and test SUSE Multi-Linux Manager and Uyuni environments.
 
-## Testsuite (cucumber) and reference environments
+## Contents
 
-The directory contains jobs definitions for all of our testsuite and reference environment jobs.
+- [environments](environments/): Job definitions for all testsuite, Build Validation, and reference environment pipelines
+- [manager_prs](manager_prs/): Manager PR checks
+- [uyuni_prs](uyuni_prs/): Uyuni PR checks
+- [scripts](scripts/): Helper scripts used by the pipelines
 
-Check [environments/README.md](environments/README.md) for more details.
+## Directory structure
 
-## Manager and Uyuni testsuite pipelines for QA/QAM (deprecated)
+```
+jenkins_pipelines/
+├── environments/
+│   ├── build-validation/        # One job file per BV environment (parameter files)
+│   ├── common/                  # Shared Groovy pipeline logic
+│   ├── personal/                # Personal pipeline job definitions
+│   ├── salt-shaker/             # One job file per Salt-shaker job (parameter files)
+│   └── sle-maintenance-update/  # One job file per SLE Maintenance environment (parameter files)
+└── scripts/
+    └── tf_vars_generator/
+        └── prepare_tfvars.py    # tfvars assembly script (see below)
+```
 
-**WARNING:** This is deprecrated and only exists until QAM jobs can be migrated to the new pipelines with terracumber at [environments](environments/) folder.
+### `environments/build-validation/`
 
-This directory contains pipelines related to QA and QAM testsuites for suse-manager.
+Each file in this directory is a **job definition** for one BV environment (e.g. `manager-5.0-micro-qe-build-validation`). These files are thin wrappers: they define the job-specific parameters and delegate all pipeline logic to the shared `common/pipeline-build-validation.groovy`.
 
-### How to make a pipeline from scratch 
+### `environments/common/`
 
-If you are new to pipeline, start reading this:
+Contains the shared Groovy pipeline scripts reused across multiple jobs:
 
-https://jenkins.io/doc/book/pipeline/getting-started/#defining-a-pipeline-in-scm
+| File | Purpose                              |
+|---|--------------------------------------|
+| `pipeline-build-validation.groovy` | Standard BV pipeline (deploy + test) |
+| `pipeline-build-validation-aws.groovy` | BV pipeline for AWS deployments      |
+| `pipeline-build-validation-cleanup.groovy` | Standalone cleanup pipeline for BV   |
+| `pipeline-personal.groovy` | Personal CI pipeline                 |
+| `pipeline.groovy` | Standard testsuite pipeline (CI)     |
+| `pipeline-pull-request.groovy` | Pull request testing pipeline        |
+| `pipeline-reference.groovy` / `pipeline-reference-new.groovy` | Reference environment pipelines      |
+| `pipeline-salt-shaker.groovy` | Salt-shaker pipeline                 |
 
-#### Steps to create a pipeline:
+## Build Validation pipeline
 
-0) Create a Jenkins Pipeline Job
-1) Configure Jenkins to clone from your custom PR Branch. ( in this way you can tests the pipeline before it get merged in master)  
-2) When the PR is merged, update your Job Pipeline to use the **master** branch
-3) Create a directory if you are creating pipelines for a special topic. Otherwise add it in the proper namespaces.
+### How it works
 
-## Manager PR Checks/Uyuni PR Checks
+The BV pipeline assembles a `terraform.tfvars` file at runtime by merging several sources, then passes it to terracumber for deployment. The assembly is handled by `prepare_tfvars.py` (see [tfvars generator](#tfvars-generator) below).
 
-This directory contains all pipelines that are executed for testing prs for spacewalk.
+The pipeline supports two deployment modes, selected by which parameter is provided:
 
-This pipelines use the same patterns, which is to use the gitarro tools for github PRS.
-1) Use gitarro https://github.com/openSUSE/gitarro
+**Standard BV** (`deployment_tfvars` parameter): loads a static per-environment tfvars file from `terracumber_config/tf_files/tfvars/build-validation-tfvars/`, optionally strips minions not listed in `minions_to_run`, then merges location variables and injects dynamic values from Jenkins.
+
+*POC-WIP* **Personal BV** (`environment` parameter): builds the configuration from a personal environment reference file, selecting only the minions specified by the `minion1`–`minion7` parameters.
+
+### Key parameters
+
+| Parameter | Description |
+|---|---|
+| `deployment_tfvars` | Path to the static `.tfvars` file for the environment (standard BV) |
+| `minions_to_run` | Space-separated list of resource keys to keep; all others are stripped from the tfvars |
+| `environment` | Personal environment identifier (personal BV, mutually exclusive with `deployment_tfvars`) |
+| `sumaform_gitrepo` / `sumaform_ref` | Sumaform repository and branch to clone |
+| `must_deploy` | Whether to run the deploy stage |
+| `use_previous_terraform_state` | Restore Terraform state from the previous build's artifacts |
+| `custom_repositories` | JSON string with additional package repositories to inject |
+| `mi_ids` | Maintenance Incident IDs; triggers JSON generation for MI testing |
+| `server_container_repository` / `proxy_container_repository` | Container image sources injected into tfvars |
+| `cucumber_gitrepo` / `cucumber_ref` | Cucumber testsuite repository and branch |
+
+### tfvars generator
+
+`scripts/tf_vars_generator/prepare_tfvars.py` assembles the final `terraform.tfvars` consumed by terracumber. It is called during the Deploy stage before `tofu apply`.
+
+**What it does:**
+
+- Merges the static per-environment tfvars file with `tfvars/location.tfvars` (site-specific network settings)
+- Injects dynamic values from Jenkins at runtime (container repositories, image tags, Cucumber branch, product version, etc.) via `--inject KEY=VALUE` flags
+- In standard BV mode: strips minions not present in `minions_to_run` via `--clean --keep-resources` to allow partial deployments without editing the tfvars file
+- In personal BV mode: constructs the configuration from a personal environment reference and the selected minions via `--env-file`, `--user`, and `--minion1`–`--minion7`
+
+**Invocation in the pipeline (simplified):**
+
+```bash
+python3 scripts/tf_vars_generator/prepare_tfvars.py \
+  --output terraform.tfvars \
+  --inject SERVER_CONTAINER_REPOSITORY=<value> \
+  --inject CUCUMBER_BRANCH=<value> \
+  # Standard BV:
+  --merge-files deployment.tfvars location.tfvars \
+  --clean --keep-resources sles15sp7_minion rocky8_minion ...
+  # OR personal BV:
+  --env-file environment.tfvars --user <username> \
+  --minion1 sles15sp7_minion --minion2 rocky8_minion ...
+```
+
+The output file is then passed to terracumber via `--tf_configuration_files`.
+
+For the full picture of how the tfvars files are structured and how they map to the sumaform `build_validation` module, see [terracumber_config/README.md](../terracumber_config/README.md).
