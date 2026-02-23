@@ -100,7 +100,8 @@ node('sumaform-cucumber') {
     }
   },
   "tools": {
-    "sandbox": "docker"
+    // TO BE FIXED: It get's stuck, we need to debug why.
+    // "sandbox": "docker"
   }
 }"""
                    sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'mkdir -p /home/admin/.gemini && chown admin:admin /home/admin/.gemini'"
