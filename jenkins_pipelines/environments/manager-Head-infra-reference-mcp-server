@@ -103,8 +103,9 @@ node('sumaform-cucumber') {
     "sandbox": "docker"
   }
 }"""
-                    sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'mkdir -p .gemini && echo \"${geminiConfig.replace('"', '\\"')}\" > .gemini/settings.json'"
-                    sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'echo \"SEATBELT_PROFILE=restrictive-open\" > .gemini/.env'"
+                   sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'mkdir -p /home/admin/.gemini && chown admin:admin /home/admin/.gemini'"
+                   sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'echo \"${geminiConfig.replace('"', '\\"')}\" > /home/admin/.gemini/settings.json && chown admin:admin /home/admin/.gemini/settings.json'"
+                   sh "ssh -o StrictHostKeyChecking=no root@mlm-ref-head-mcp-server.mgr.suse.de 'echo \"SEATBELT_PROFILE=restrictive-open\" > /home/admin/.gemini/.env && chown admin:admin /home/admin/.gemini/.env'"
                 }
             }
 
