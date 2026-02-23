@@ -178,16 +178,16 @@ def run(params) {
                             export TERRAFORM=${params.bin_path}
                             export TERRAFORM_PLUGINS=${params.bin_plugins_path}
             
-                            ./terracumber-cli ${common_params} \
-                                --logfile ${resultdirbuild}/sumaform.log \
-                                --init \
-                                --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
-                                --custom-repositories ${WORKSPACE}/custom_repositories.json \
-                                --sumaform-backend ${params.sumaform_backend} \
-                                --skip-variables-check \
-                                --tf_configuration_files "${outputFile}" \
-                                --runstep provision
-                        """
+                        ./terracumber-cli ${common_params} \
+                            --logfile ${resultdirbuild}/sumaform.log \
+                            --init \
+                            --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
+                            ${(!params.mode || params.mode == 'BV') ? "--custom-repositories ${WORKSPACE}/custom_repositories.json \\" : ''} \
+                            --sumaform-backend ${params.sumaform_backend} \
+                            --skip-variables-check \
+                            --tf_configuration_files "${outputFile}" \
+                            --runstep provision
+                    """
 
                         // Generate features and rake files
                         runCucumberRakeTarget('utils:generate_build_validation_features')
