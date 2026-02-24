@@ -116,7 +116,7 @@ variable "SERVER_CONTAINER_REPOSITORY" {
 
 variable "SERVER_ADDITIONAL_REPOS" {
   type        = map(string)
-  description = "extra server repositories in the form {label = url}"
+  description = "extra server repositories in the form {label = \"url\"}"
   default     = {}
 }
 
@@ -128,7 +128,7 @@ variable "PROXY_CONTAINER_REPOSITORY" {
 
 variable "PROXY_ADDITIONAL_REPOS" {
   type        = map(string)
-  description = "extra proxy repositories in the form {label = url}"
+  description = "extra proxy repositories in the form {label = \"url\"}"
   default     = {}
 }
 
