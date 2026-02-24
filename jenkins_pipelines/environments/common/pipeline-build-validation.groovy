@@ -105,7 +105,7 @@ def run(params) {
                     if (product_version) { commonArgs += " --inject PRODUCT_VERSION=${product_version}" }
                     if (base_os) { commonArgs += " --inject BASE_OS=${base_os}" }
                     if ( fileExists('custom_repositories.json')) {
-                        commonArgs += " --custom-repositories-json ${WORKSPACE}/custom_repositories.json"   
+                        commonArgs += " --custom-repositories-json ${WORKSPACE}/custom_repositories.json"
                     }
 
                     // Personal scenario specific arguments

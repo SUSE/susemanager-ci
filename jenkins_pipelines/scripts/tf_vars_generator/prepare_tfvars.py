@@ -238,7 +238,7 @@ if __name__ == "__main__":
     if args.inject:
         for item in args.inject:
             if '=' in item:
-                k, v = item.split('=', 1) 
+                k, v = item.split('=', 1)
                 vars_to_inject[k] = v
 
     # INJECT CUSTOM REPOSITORIES FOR SERVER AND PROXY
@@ -247,7 +247,7 @@ if __name__ == "__main__":
             with open(args.custom_repositories_json, 'r') as f:
                 repos: dict = json.load(f)
         except Exception as e:
-            print(f"\n[ERROR]: Failed to parse custom repositorie JSON file at {args.custom_repositories_json}. Error: {e}")
+            print(f"\n[ERROR]: Failed to parse custom repositories JSON file at {args.custom_repositories_json}. Error: {e}")
             sys.exit(1)
 
         for k in ["server", "proxy"]:
