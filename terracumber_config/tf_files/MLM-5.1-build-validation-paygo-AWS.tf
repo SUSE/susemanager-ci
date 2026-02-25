@@ -134,10 +134,22 @@ variable "SERVER_AMI" {
   default     = ""
 }
 
+variable "SERVER_ADDITIONAL_REPOS" {
+  type        = map(string)
+  description = "extra server repositories in the form {label = \"url\"}"
+  default     = {}
+}
+
 variable "PROXY_AMI" {
   description = "Custom AMI ID to use for proxy. Leave empty to use the default SUSE Manager image."
   type        = string
   default     = ""
+}
+
+variable "PROXY_ADDITIONAL_REPOS" {
+  type        = map(string)
+  description = "extra proxy repositories in the form {label = \"url\"}"
+  default     = {}
 }
 
 variable "ARCHITECTURE" {
@@ -222,8 +234,7 @@ module "server" {
     instance_type = var.ARCHITECTURE == "x86_64" ? "m6a.2xlarge" : "m6g.2xlarge"
   }
 
-  //server_additional_repos
-
+  additional_repos               = var.SERVER_ADDITIONAL_REPOS
 }
 
 module "proxy_containerized" {
@@ -244,7 +255,7 @@ module "proxy_containerized" {
     instance_type = var.ARCHITECTURE == "x86_64" ?  "c6i.large" : "c6g.large"
   }
 
-  //proxy_additional_repos
+  additional_repos          = var.PROXY_ADDITIONAL_REPOS
 }
 
 module "sles12sp5_paygo_minion" {
