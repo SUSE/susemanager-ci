@@ -34,9 +34,9 @@ jobs:
       - name: Checkout sumaform
         uses: actions/checkout@v6
         with:
-          repository: maximenoel8/sumaform
+          repository: uyuni-project/sumaform
           path: sumaform
-          ref: module_bv
+          ref: master
 
       - name: Install Python dependencies
         run: |
@@ -118,6 +118,8 @@ jobs:
           variable "SERVER_CONTAINER_REPOSITORY" { default="" }
           variable "PROXY_CONTAINER_REPOSITORY" { default="" }
           variable "SERVER_CONTAINER_IMAGE" { default="" }
+          variable "SERVER_ADDITIONAL_REPOS" { default={} }
+          variable "PROXY_ADDITIONAL_REPOS" { default={} }
           variable "BASE_OS" { default="" }
           variable "PRODUCT_VERSION" { default="" }
           variable "CUCUMBER_GITREPO" {}
