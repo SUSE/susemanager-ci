@@ -114,10 +114,22 @@ variable "SERVER_CONTAINER_REPOSITORY" {
   default = ""
 }
 
+variable "SERVER_ADDITIONAL_REPOS" {
+  type        = map(string)
+  description = "extra server repositories in the form {label = \"url\"}"
+  default     = {}
+}
+
 variable "PROXY_CONTAINER_REPOSITORY" {
   type = string
   description = "Proxy container registry path, not needed for 4.3"
   default = ""
+}
+
+variable "PROXY_ADDITIONAL_REPOS" {
+  type        = map(string)
+  description = "extra proxy repositories in the form {label = \"url\"}"
+  default     = {}
 }
 
 variable "SERVER_CONTAINER_IMAGE" {

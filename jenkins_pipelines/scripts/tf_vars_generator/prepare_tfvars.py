@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import sys
 import re
@@ -194,6 +195,7 @@ if __name__ == "__main__":
     parser.add_argument("--string-registry", default="false")
     parser.add_argument("--merge-files", nargs='*', default=[], help="Files to merge (Scenario Classic BV)")
     parser.add_argument("--inject", action='append', help="KEY=VALUE")
+    parser.add_argument("--custom-repositories-json", default="", help="JSON file defining additional repositories")
 
     # Cleaning Args
     parser.add_argument("--clean", action='store_true', help="Enable resource cleaning")
@@ -238,6 +240,20 @@ if __name__ == "__main__":
             if '=' in item:
                 k, v = item.split('=', 1)
                 vars_to_inject[k] = v
+
+    # INJECT CUSTOM REPOSITORIES FOR SERVER AND PROXY
+    if args.custom_repositories_json:
+        try:
+            with open(args.custom_repositories_json, 'r') as f:
+                repos: dict = json.load(f)
+        except Exception as e:
+            print(f"\n[ERROR]: Failed to parse custom repositories JSON file at {args.custom_repositories_json}. Error: {e}")
+            sys.exit(1)
+
+        for k in ["server", "proxy"]:
+            if k in repos:
+                vars_to_inject[f"{k.upper()}_ADDITIONAL_REPOS"] = repos[k]
+
     gen.inject_variables(vars_to_inject)
 
     # CLEANING
