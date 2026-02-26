@@ -13,15 +13,23 @@ This directory contains the Jenkins pipeline definitions used to deploy and test
 
 ```
 jenkins_pipelines/
+├── data/                        # Non MU channels tasks description
 ├── environments/
 │   ├── build-validation/        # One job file per BV environment (parameter files)
 │   ├── common/                  # Shared Groovy pipeline logic
 │   ├── personal/                # Personal pipeline job definitions
 │   ├── salt-shaker/             # One job file per Salt-shaker job (parameter files)
-│   └── sle-maintenance-update/  # One job file per SLE Maintenance environment (parameter files)
-└── scripts/
-    └── tf_vars_generator/
-        └── prepare_tfvars.py    # tfvars assembly script (see below)
+│   ├── sle-maintenance-update/  # One job file per SLE Maintenance environment (parameter files)
+│   └── manager* | uyuni*        # One job file per other environment (parameter files) mainly CIs
+├── manager_prs/                 # SUMA/MLM PRs project related configurations (not used)
+├── scripts/
+│   ├── edit_bci_project/        # Edit BCI project to build container images (SLE Mi BCI 5.1 and 5.0 pipeline)
+│   ├── json_generator/          # JSON generation scripts
+│   ├── test_review_summary/     # Test review summary script 
+│   ├── tests/                   # Unit tests for the scripts
+│   └── tf_vars_generator/
+│       └── prepare_tfvars.py    # tfvars assembly script (see below)
+└── uyuni_prs/                   # Uyuni PRs project related configurations (not used)
 ```
 
 ### `environments/build-validation/`
