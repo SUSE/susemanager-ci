@@ -86,7 +86,7 @@ ENVIRONMENT_CONFIGURATION = {
 
   # Optional minions — only deployed when declared
   sles15sp7_minion = {
-    mac  = "xx:xx:xx:xx:xx:x"
+    mac  = "xx:xx:xx:xx:xx:xx"
     name = "sles15sp7-minion"
   }
   rocky8_minion = {
@@ -162,7 +162,7 @@ This script merges several sources into one file:
 
 For **standard BV pipelines**, the script also accepts a `--clean` / `--keep-resources` option to strip minions that are not in the `minions_to_run` parameter, so the same tfvars file can be used for both full and partial runs without editing it manually.
 
-For **personal BV pipelines**, the script accepts `--env-file` and `--user` to build a configuration from a personal environment reference, plus individual `--minion1` … `--minion7` flags to select which minions to include.
+For **personal BV pipelines** (*work in progress*), the script builds a minimalist configuration from a personal environment reference, selecting only the minions the user wants to test against. Personal BV reuses the same hardware as Personal CI; the two are **mutually exclusive** — only one can be deployed at a time on the same hardware.
 
 The output is written to `terraform.tfvars` in the sumaform working directory and passed directly to terracumber via `--tf_configuration_files`.
 
