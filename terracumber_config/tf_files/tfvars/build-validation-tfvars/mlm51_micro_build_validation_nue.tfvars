@@ -18,9 +18,9 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Standard Minions
-  sles15sp6_minion = {
+  sles15sp7_minion = {
     mac  = "aa:b2:93:02:03:fb"
-    name = "sles15sp6-minion"
+    name = "sles15sp7-minion"
   }
   product_version = "5.1-released"
   name_prefix     = "mlm-bv-51-micro-"
