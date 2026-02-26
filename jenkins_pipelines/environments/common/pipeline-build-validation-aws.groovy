@@ -171,18 +171,22 @@ def run(params) {
                     sh "sed -i 's/download.suse.de/${mirror_hostname_aws_private}/g' ${WORKSPACE}/custom_repositories.json"
                     sh "sed -i 's/ibs\\///g' ${WORKSPACE}/custom_repositories.json"
 
-                    // Deploying AWS server using MU repositories
-                    sh "python3 ${tfvarsPrepareScript} \
-                    --output ${aws_mirror_dir}/terraform.tfvars \
-                    --merge-files ${aws_mirror_dir}/terraform.tfvars ${params.deployment_tfvars} \
-                    --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo} \
-                    --inject CUCUMBER_BRANCH=${params.cucumber_ref} \
-                    --inject ARCHITECTURE=${params.architecture}\
-                    --inject MIRROR=${mirror_hostname_aws_private}\
-                    --inject SERVER_AMI=${server_ami}\
-                    --inject PROXY_AMI=${proxy_ami}\
-                    --clean --keep-resources ${params.minions_to_run.split(', ').join(' ')}"
+                    def scriptArgs = " --output ${aws_mirror_dir}/terraform.tfvars"
+                    scriptArgs += " --merge-files ${aws_mirror_dir}/terraform.tfvars ${params.deployment_tfvars}"
+                    scriptArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
+                    scriptArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
+                    scriptArgs += " --inject ARCHITECTURE=${params.architecture}"
+                    scriptArgs += " --inject MIRROR=${mirror_hostname_aws_private}"
+                    scriptArgs += " --inject SERVER_AMI=${server_ami}"
+                    scriptArgs += " --inject PROXY_AMI=${proxy_ami}"
+                    scriptArgs += " --clean --keep-resources ${params.minions_to_run.split(', ').join(' ')}"
+                    if (fileExists('custom_repositories.json')) {
+                        scriptArgs += " --custom-repositories-json ${WORKSPACE}/custom_repositories.json"
+                    }
 
+                    // Deploying AWS server using MU repositories
+                    sh "python3 ${tfvarsPrepareScript} ${scriptArgs}"
+                    
                     sh "echo \"export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --runstep provision --custom-repositories ${WORKSPACE}/custom_repositories.json --sumaform-backend aws\""
                     sh "set +x; source /home/jenkins/.credentials set -x; source /home/jenkins/.registration set -x; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform-aws.log --init --taint '.*(domain|main_disk).*' --custom-repositories ${WORKSPACE}/custom_repositories.json --runstep provision --sumaform-backend aws"
                     deployed = true
