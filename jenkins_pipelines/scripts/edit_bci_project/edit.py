@@ -43,6 +43,7 @@ def run_osc_command(command, input_data=None):
 
     except subprocess.CalledProcessError as e:
         logging.error(f"STDOUT:\n{e.stdout.strip()}\nSTDERR:\n{e.stderr.strip()}")
+        sys.exit(1)
 
 
 def wait_for_build_completion(api_url, project, repository="containerfile"):
