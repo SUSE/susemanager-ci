@@ -59,7 +59,7 @@ def run(params) {
                     def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/edit_bci_project"
                     sh "python3 -m venv ${WORKSPACE}/venv"
                     sh "${WORKSPACE}/venv/bin/pip install -r ${SCRIPT_DIR}/requirements.txt"
-                    sh( script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --prefer ${params.prefer} --mi-project ${params.mi_project} --mi-repo-name ${params.mi_repo_name}", returnStdout: true)
+                    sh( script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --mi-project ${params.mi_project} --mi-repo-name ${params.mi_repo_name}", returnStdout: true)
                     custom_project_path = "registry.suse.de/${params.container_project.toLowerCase().replaceAll(':', '/')}/containerfile"
                     server_container_repository = custom_project_path
                     proxy_container_repository = custom_project_path
