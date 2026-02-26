@@ -7,13 +7,17 @@ ENVIRONMENT_CONFIGURATION = {
   server_containerized = {
     mac   = "aa:b2:93:02:03:c1"
     name  = "server"
-    image = "slmicro62o"
+    # TODO: use final value
+    image = "slmicro61o"
+    # image = "slmicro62o"
     string_registry = true
   }
   proxy_containerized = {
     mac   = "aa:b2:93:02:03:c2"
     name  = "proxy"
-    image = "slmicro62o"
+    # TODO: use final value
+    image = "slmicro61o"
+    # image = "slmicro62o"
     string_registry = true
   }
 
