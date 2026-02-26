@@ -1,11 +1,11 @@
 ENVIRONMENT_CONFIGURATION = {
   # Core Infrastructure
   controller = {
-    mac  = "aa:b2:93:02:03:c0"
+    mac  = "aa:b2:93:02:03:c8"
     name = "controller"
   }
   server_containerized = {
-    mac   = "aa:b2:93:02:03:c1"
+    mac   = "aa:b2:93:02:03:c9"
     name  = "server"
     # TODO: use final value
     image = "slmicro61o"
@@ -13,7 +13,7 @@ ENVIRONMENT_CONFIGURATION = {
     string_registry = true
   }
   proxy_containerized = {
-    mac   = "aa:b2:93:02:03:c2"
+    mac   = "aa:b2:93:02:03:ca"
     name  = "proxy"
     # TODO: use final value
     image = "slmicro61o"
@@ -23,7 +23,7 @@ ENVIRONMENT_CONFIGURATION = {
 
   # Standard Minions
   sles15sp7_minion = {
-    mac  = "aa:b2:93:02:03:c3"
+    mac  = "aa:b2:93:02:03:cb"
     name = "sles15sp7-minion"
   }
   # TODO: use final value
