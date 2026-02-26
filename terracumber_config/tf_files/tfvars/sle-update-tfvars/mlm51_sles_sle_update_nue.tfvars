@@ -33,7 +33,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     hypervisor         = "suma-11.mgr.suse.de"
     additional_network = null
-    images              = ["sles15sp7o", "opensuse156o", "sles15sp7o"]
+    images              = ["sles15sp7o", "opensuse156o"]
   }
 }
 MAIL_SUBJECT          = "Results 5.1 SLE Update $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

@@ -18,9 +18,9 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Standard Minions
-  sles15sp7_minion = {
+  sles15sp6_minion = {
     mac  = "aa:b2:92:05:00:ff"
-    name = "sles15sp7-minion"
+    name = "sles15sp6-minion"
   }
 
   product_version = "5.0-released"
@@ -34,7 +34,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     hypervisor         = "riverworld.mgr.slc1.suse.org"
     additional_network = null
-    images             = [ "sles15sp7o", "opensuse156o", "slemicro55o" ]
+    images             = [ "sles15sp6o", "opensuse156o", "slemicro55o" ]
   }
 }
 MAIL_SUBJECT          = "Results 5.0 SLE Update $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

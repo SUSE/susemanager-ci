@@ -18,9 +18,9 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Standard Minions
-  sles15sp7_minion = {
+  sles15sp6_minion = {
     mac  = "aa:b2:93:02:03:eb"
-    name = "sles15sp7-minion"
+    name = "sles15sp6-minion"
   }
   product_version = "5.0-released"
   name_prefix     = "suma-bv-50-sles-"
@@ -32,6 +32,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     hypervisor         = "suma-11.mgr.suse.de"
     additional_network = null
+    images             = [ "sles15sp6o", "opensuse156o"]
   }
 }
 MAIL_SUBJECT          = "Results 5.0 SLE Update $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
