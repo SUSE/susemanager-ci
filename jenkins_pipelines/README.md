@@ -61,7 +61,7 @@ The pipeline supports two deployment modes, selected by which parameter is provi
 
 **Standard BV** (`deployment_tfvars` parameter): loads a static per-environment tfvars file from `terracumber_config/tf_files/tfvars/build-validation-tfvars/`, optionally strips minions not listed in `minions_to_run`, then merges location variables and injects dynamic values from Jenkins.
 
-*POC-WIP* **Personal BV** (`environment` parameter): builds the configuration from a personal environment reference file, selecting only the minions specified by the `minion1`–`minion7` parameters.
+**Personal BV** (`environment` parameter) — *work in progress*: a minimalist sandbox (controller, server, proxy, and up to 7 minions) that lets a developer test a specific submission or minion change in isolation, without impacting shared BV environments. Unlike *Sandbox BV* (which is used for BV pipeline development), Personal BV is intended for testing submission content. Personal BV reuses the same hardware as Personal CI; the two are **mutually exclusive** — only one can be deployed at a time on the same hardware.
 
 ### Key parameters
 
@@ -87,21 +87,17 @@ The pipeline supports two deployment modes, selected by which parameter is provi
 - Merges the static per-environment tfvars file with `tfvars/location.tfvars` (site-specific network settings)
 - Injects dynamic values from Jenkins at runtime (container repositories, image tags, Cucumber branch, product version, etc.) via `--inject KEY=VALUE` flags
 - In standard BV mode: strips minions not present in `minions_to_run` via `--clean --keep-resources` to allow partial deployments without editing the tfvars file
-- In personal BV mode: constructs the configuration from a personal environment reference and the selected minions via `--env-file`, `--user`, and `--minion1`–`--minion7`
+- In personal BV mode: constructs a minimalist configuration from a personal environment reference, selecting only the minions the user wants to test against (*work in progress*)
 
-**Invocation in the pipeline (simplified):**
+**Invocation in the pipeline (standard BV, simplified):**
 
 ```bash
 python3 scripts/tf_vars_generator/prepare_tfvars.py \
   --output terraform.tfvars \
   --inject SERVER_CONTAINER_REPOSITORY=<value> \
   --inject CUCUMBER_BRANCH=<value> \
-  # Standard BV:
   --merge-files deployment.tfvars location.tfvars \
   --clean --keep-resources sles15sp7_minion rocky8_minion ...
-  # OR personal BV:
-  --env-file environment.tfvars --user <username> \
-  --minion1 sles15sp7_minion --minion2 rocky8_minion ...
 ```
 
 The output file is then passed to terracumber via `--tf_configuration_files`.
