@@ -38,7 +38,7 @@ node('sumaform-cucumber') {
             text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format'),
             string(name: 'container_project', defaultValue: 'Devel:Galaxy:Manager:MUTesting:5.1', description: 'Containers project'),
             string(name: 'mi_project', defaultValue: '', description: 'The project name of the MI to validate into the containers (e.g., SUSE:Maintenance:12345).'),
-            string(name: 'mi_repo_name', defaultValue: '', description: 'The repository name including the packages to validate (e.g., SUSE_Updates_SLE-Module-Basesystem_15-SP7_x86_64).')
+            string(name: 'mi_repo_name', defaultValue: '', description: 'The repository name including the packages to validate, it might vary depending the package, example: SUSE_Updates_SLE-Module-Basesystem_15-SP7_x86_64')
         ])
     ])
 
