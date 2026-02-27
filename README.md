@@ -91,8 +91,8 @@ image for testing Pull Requests built with the open build service. This needs to
 |             | 5.2          | 5.1          | 5.0           | 4.3          |
 |-------------|--------------|--------------|---------------|--------------|
 | Controller  | Leap 15.6    | Leap 15.6    | Leap 15.6     | Leap 15.6    |
-| Alt server  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
-| Alt proxy   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
+| Server      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
+| Proxy       | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
 | Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
 
 ### In the MI test suites for the mgradm and mgrpxy utilities
