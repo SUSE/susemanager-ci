@@ -53,9 +53,12 @@ the build is reproducible.
 image for testing Pull Requests built with the open build service. This needs to be copied manually.
 - http://minima-mirror-ci-bv.mgr.slc1.suse.org/distribution/leap/: oss and non-oss repositories.
 
-## Used image versions in the CI test suite
 
-|             | GitHub PR test| Uyuni         | HEAD         | 5.1          | 5.0           | 4.3          |
+## Used image versions
+
+### In the CI test suite
+
+|             | GitHub PR test| Uyuni         | Head         | 5.1          | 5.0           | 4.3          |
 |-------------|---------------|---------------|--------------|--------------|---------------|--------------|
 | Minion      | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
 | SSH minion  | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
@@ -69,6 +72,38 @@ image for testing Pull Requests built with the open build service. This needs to
 | Controller  | Leap 15.6     | Leap 15.6     | Leap 15.6    | Leap 15.6    | Leap 15.6     | Leap 15.6    |
 | Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
 | Proxy       | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
+
+### In the full BV test suites
+
+(please refer to the code for now)
+
+### In the mini-BV test suites
+
+|             | 5.2          | 5.1          | 5.0           | 4.3          |
+|-------------|--------------|--------------|---------------|--------------|
+| Controller  | Leap 15.6    | Leap 15.6    | Leap 15.6     | Leap 15.6    |
+| Server      | SL Micro 6.2 | SL Micro 6.1 | SLES 15 SP6   | SLES 15 SP4  |
+| Proxy       | SL Micro 6.2 | SL Micro 6.1 | SLES 15 SP6   | SLES 15 SP4  |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
+
+### In the MI test suites for packages running in containers
+
+|             | 5.2          | 5.1          | 5.0           | 4.3          |
+|-------------|--------------|--------------|---------------|--------------|
+| Controller  | Leap 15.6    | Leap 15.6    | Leap 15.6     | Leap 15.6    |
+| Alt server  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
+| Alt proxy   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
+
+### In the MI test suites for the mgradm and mgrpxy utilities
+
+|             | 5.2          | 5.1          | 5.0           | 4.3          |
+|-------------|--------------|--------------|---------------|--------------|
+| Controller  | Leap 15.6    | Leap 15.6    | Leap 15.6     | -            |
+| Server      | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | -            |
+| Proxy       | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | -            |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | -            |
+
 
 ## Testing SLES maintenance incidents from inside the SUSE Multi-Linux Manager containers
 
