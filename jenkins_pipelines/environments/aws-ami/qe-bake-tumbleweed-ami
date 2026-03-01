@@ -1,0 +1,26 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'aws_region', defaultValue: 'eu-central-1', description: 'Describe the AWS region where to search and bake AMIs'),
+            string(name: 'ami_id', defaultValue: '', description: 'Use the AMI with this ID as base - leave empty to apply other filters'),
+            string(name: 'ami_name_filter', defaultValue: 'openSUSE-Tumbleweed', description: 'Filter AMIs by this name - disabled if an AMI ID is provided'),
+            string(name: 'new_ami_name_prefix', defaultValue: 'openSUSE-Tumbleweed', description: 'Prefix for the name of the newly baked AMI'),
+            string(name: 'builder_instance_name', defaultValue: 'tumbleweed-ami-baker', description: 'Name given to the temporary EC2 instance used to bake images'),
+            string(name: 'updates_wait_time', defaultValue: '900', description: 'Seconds to wait for updates to be applied before baking a new AMI (15 mins default)'),
+            booleanParam(name: 'cleanup_amis', defaultValue: true, description: 'Cleanup old AMIs'),
+            string(name: 'cleanup_name_filter', defaultValue: 'openSUSE-Tumbleweed', description: 'Filter AMIs to cleanup by this name'),
+            string(name: 'retain_count', defaultValue: '2', description: 'Enter the number of previous AMIs to keep')
+        ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    def mutableParams = [:] + params
+    def pipeline = load "jenkins_pipelines/environments/aws-ami/pipeline-aws-ami.groovy"
+    pipeline.run(mutableParams)
+}
