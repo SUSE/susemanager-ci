@@ -5,6 +5,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
+from json_generator.repository_versions import nodes_by_version
 from json_generator.maintenance_json_generator import *
 from tests.mock_response import mock_requests_get_success
 
@@ -19,36 +20,36 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_parse_cli_args_success(self):
         # shorthand flags
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '1234', '5678', '-e']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-micro")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
         self.assertTrue(args.embargo_check)
         # shorthand flags - mi_ids variant 1
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234,5678', '-f', 'some_file', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-sles', '-i', '1234,5678', '-f', 'some_file', '-e']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-sles")
         self.assertListEqual(args.mi_ids, ['1234,5678'])
         self.assertTrue(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
         # shorthand flags - mi_ids variant 2
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234,', '5678', '-f', 'some_file', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '1234,', '5678', '-f', 'some_file', '-e']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-micro")
         self.assertListEqual(args.mi_ids, ['1234,' , '5678'])
         self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
         # long flags
-        sys.argv = ['maintenance_json_generator.py', '--version', '50', '--mi_ids', '1234', '5678', '--file', 'some_file', '--no_embargo']
+        sys.argv = ['maintenance_json_generator.py', '--version', '50-sles', '--mi_ids', '1234', '5678', '--file', 'some_file', '--no_embargo']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-sles")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
         self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
         # doubly defined -i flag
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '9012', '3456' , '-f', 'some_file', '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '9012', '3456' , '-f', 'some_file', '-i', '1234', '5678', '-e']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-micro")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
         self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
@@ -60,11 +61,11 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             self.assertEqual(cm.exception.code, 2)
             self.assertIn("error: unrecognized arguments: -x", cm.msg)
 
-        sys.argv = ['maintenance_json_generator.py',  '-v' , '999']
+        sys.argv = ['maintenance_json_generator.py',  '-v' , '50']
         with self.assertRaises(SystemExit) as cm:
             parse_cli_args()
             self.assertEqual(cm.exception.code, 2)
-            self.assertIn("error: argument -v/--version: invalid choice: '999'", cm.msg)
+            self.assertIn("error: argument -v/--version: invalid choice: '50'", cm.msg)
 
     def test_clean_mi_ids(self):
         # support 1234 4567 8901 format
@@ -149,19 +150,24 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_get_version_nodes(self):
         # 4.3
-        self.assertDictEqual(v43_nodes, get_version_nodes('43'))
+        v43_nodes_sorted: dict[str, list[str]] = {k:sorted(v) for k,v in nodes_by_version['43']['dynamic'].items()}
+        self.assertDictEqual(v43_nodes_sorted, get_version_nodes('43')['dynamic'])
         # 5.0
-        self.assertDictEqual(v50_nodes, get_version_nodes('50'))
+        v50_nodes_sorted: dict[str, list[str]] = {k:sorted(v) for k,v in nodes_by_version['50-micro']['dynamic'].items()}
+        self.assertDictEqual(v50_nodes_sorted, get_version_nodes('50-micro')['dynamic'])
+        # 5.1
+        v51_nodes_sorted: dict[str, list[str]] = {k:v for k,v in nodes_by_version['51-micro']['dynamic'].items()}
+        self.assertDictEqual(v51_nodes_sorted, get_version_nodes('51-micro')['dynamic'])
         # invalid
         self.assertRaises(ValueError, get_version_nodes, '99')
 
     def test_init_custom_repositories(self):
+        # 4.3
+        custom_repos: dict[str, dict[str, str]] = init_custom_repositories('43')
+        self.assertDictEqual(custom_repos, {})
         # 5.0
-        custom_repos: dict[str, dict[str, str]] = init_custom_repositories('50')
-        self.assertIsNotNone(custom_repos['server'])
-        self.assertIsNotNone(custom_repos['proxy'])
-        # everything else
-        self.assertEqual({}, init_custom_repositories('43'))
+        custom_repos: dict[str, dict[str, str]] = init_custom_repositories('50-micro')
+        self.assertDictEqual(custom_repos, {})
 
     def test_update_custom_repositories(self):
         custom_repos: dict[str, dict[str, str]] = {}
@@ -227,32 +233,32 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
     def test_merge_mi_ids(self):
         test_file_path: str = './tests/testdata/mi_ids_file.txt'
         # no ids at all
-        sys.argv = ['maintenance_json_generator.py', '-v', '50']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, set())
         # no mi ids file
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '1234', '5678', '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'1234', '5678'})
         # only mi ids file
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-f', test_file_path, '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'11111', '22222', '33333'})
         # ids both from flag and file
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-f', test_file_path, '-i', '1234', '5678', '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})
         # duplicated IDs from flag and file should be removed
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '11111', '1234', '33333', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-f', test_file_path, '-i', '11111', '1234', '33333', '5678', '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})
         # check alternate -i flag values format
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '11111,1234,33333,5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-f', test_file_path, '-i', '11111,1234,33333,5678', '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})

@@ -4,6 +4,7 @@
 
 - [Overview](#overview)
 - [Features](#features)
+- [Requirements](#requirements)
 - [Usage](#usage)
 - [Output](#output)
 - [Logging](#logging)
@@ -20,16 +21,16 @@ This Python script automates the process of gathering and processing open QAM
 (Quality Assurance Maintenance) requests for SUSE Linux Enterprise Server (SLES)
 that affect SUSE Manager. The output is a JSON file, which can be fed into the
 BV (Business Validation) testsuite pipeline for further testing. It supports
-both SUSE Manager 4.3 (SUMA 4.3) and SUSE Manager 5.0 (SUMA 5.0).
+both SUSE Manager 4.3 (SUMA 4.3), SUSE Manager 5.0 (SUMA 5.0) and Multi Linux Manager 5.1 (MLM 5.1).
 
 The script allows users to input Maintenance Incident (MI) IDs and generates the
-appropriate repository information for SUMA 4.3 or 5.0 nodes (servers, proxies,
+appropriate repository information for SUMA 4.3, SUMA 5.0 and MLM 5.1 nodes (servers, proxies,
 and clients). It retrieves the necessary information for these nodes and their
 associated repositories.
 
 ## Features
 
-- Support for SUSE Manager 4.3 and 5.0: The script allows users to specify which
+- Support for SUSE Manager 4.3, 5.0 and MLM 5.1: The script allows users to specify which
 version of SUSE Manager they are working with.
 - Flexible MI ID Input: MI IDs can be provided via CLI arguments or by reading
 from a file.
@@ -37,6 +38,12 @@ from a file.
 information for the SUSE Manager BV testsuite pipeline.
 - Embargo Checks: The script has an option to reject Maintenance Incidents (MIs)
 that are under embargo.
+
+## Requirements
+
+- Python 3.11 or higher
+- `ibs_osc_client` library: Ensure you have the `ibs_osc_client` module available in
+  your environment.
 
 ## Usage
 
@@ -51,7 +58,7 @@ python3.11 maintenance_json_generator.py [options]
 Options:
 
 `-v`, `--version`: Specifies the SUSE Manager version. Options are `43` for SUSE
-Manager 4.3 and `50` for SUSE Manager 5.0. Default is 43.
+Manager 4.3, `50-micro` or `50-sles` for SUSE Manager 5.0 and `51-micro` or `51-sles` for SUSE Multi-Linux Manager 5.1. Default is 43.
 `-i`, `--mi_ids`: A space-separated list of MI IDs.
 `-f`, `--file`: Path to a file containing MI IDs, each on a new line.
 `-e`, `--no_embargo`: Reject any MIs that are currently under embargo.
@@ -59,12 +66,12 @@ Manager 4.3 and `50` for SUSE Manager 5.0. Default is 43.
 Example:
 
 ```bash
-python3.11 maintenance_json_generator.py --version 50 --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
+python3.11 maintenance_json_generator.py --version 50-micro --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
 ```
 
 This command will:
 
-1. Run the script for SUSE Manager 5.0 (`--version 50`).
+1. Run the script for SUSE Manager 5.0 (`--version 50-micro`).
 2. Use MI IDs 1234 and 5678 along with any additional MI IDs from the file
 mi_ids.txt.
 3. Reject any MIs that are under embargo (`--no_embargo`).
@@ -91,7 +98,7 @@ messages will display timestamped INFO-level messages.
 
 ### Repository Data
 
-The script contains two main dictionaries for SUSE Manager client tools
+The script contains three main dictionaries for SUSE Manager/MLM client tools
 repositories:
 
 - `v43_client_tools`: Contains repository data for SUMA 4.3 client tools.
@@ -99,14 +106,15 @@ repositories:
 - `merged_client_tools`: Merges the 4.3 and 5.0 beta client tools into a single
 dictionary.
 
-It also defines two dictionaries for SUSE Manager server and proxy
+It also defines two dictionaries for SUSE Manager/MLM server and proxy
 repositories:
 
 - `v43_nodes`: Includes repository data for SUMA 4.3 server and proxy nodes.
 - `v50_nodes`: Includes repository data for SUMA 5.0 server and proxy nodes.
+- `v51_nodes`: Includes repository data for MLM 5.1 server and proxy nodes.
 
 The final repository information is stored in the nodes_by_version dictionary,
-which maps SUMA version numbers (`43`, `50`) to the corresponding repository data.
+which maps SUMA/MLM version numbers (`43`, `50-micro`, `50-sles`, `51-micro`, `51-sles`) to the corresponding repository data.
 
 ## Error Handling
 
