@@ -77,7 +77,7 @@ image for testing Pull Requests built with the open build service. This needs to
 
 (please refer to the code for now)
 
-### In the mini-BV test suites
+### In the mini BV test suites
 
 |             | 5.2          | 5.1          | 5.0           | 4.3          |
 |-------------|--------------|--------------|---------------|--------------|
