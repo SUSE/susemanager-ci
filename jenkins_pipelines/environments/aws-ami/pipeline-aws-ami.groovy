@@ -17,7 +17,7 @@ def run(params) {
                     error "TERMINATING: The provided AMI ID ${params.ami_id} does not exist or you don't have access to it."
                 }
             
-                echo "Verification successful. Using ${source_amiD}"
+                echo "Verification successful. Using ${source_ami}"
             }
             else {
                 echo "No AMI ID provided. Searching for the latest image with name ${params.ami_name_filter}..."
@@ -44,55 +44,67 @@ def run(params) {
         }
 
         stage('AMI Bake') {
-            def timestamp = new Date().format("yyyy-MM-dd-HHmm")
-            def new_name = "${params.new_ami_name_prefix}-${timestamp}"
-            
-            // Launch instance with user data to run updates automatically
-            def user_data = "#!/bin/bash\nzypper -n ref && zypper -n dup --no-recommends\n"
-            def encoded_user_data = sh(
-                script: "printf '${user_data}' | base64 -w 0", 
-                returnStdout: true
-            ).trim()
+            def builder_instance_id = null
 
-            echo "Launching temporary builder instance..."
-            def instance_id = sh(script: """
-                ${awscli} ec2 run-instances \
-                    --region ${params.aws_region} \
-                    --image-id ${source_ami} \
-                    --instance-type t3.medium \
-                    --user-data '${encoded_user_data}' \
-                    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${params.builder_instance_name}}]' \
-                    --query 'Instances[0].InstanceId' \
-                    --output text
-            """, returnStdout: true).trim()
+            try {
+                def timestamp = new Date().format("yyyy-MM-dd-HHmm")
+                def new_name = "${params.new_ami_name_prefix}-${timestamp}"
+                
+                // Launch instance with user data to run updates automatically
+                def user_data = "#!/bin/bash\nzypper -n ref && zypper -n dup --no-recommends\n"
+                def encoded_user_data = sh(
+                    script: "printf '${user_data}' | base64 -w 0", 
+                    returnStdout: true
+                ).trim()
 
-            // Wait for the instance to finish its updates
-            wait_time = params.updates_wait_time.toInteger()
-            echo "Waiting for updates to complete on ${params.builder_instance_name} - ID: ${instance_id} (Sleeping ${wait_time} seconds)..."
-            sleep wait_time
+                echo "Launching temporary builder instance..."
+                builder_instance_id = sh(script: """
+                    ${awscli} ec2 run-instances \
+                        --region ${params.aws_region} \
+                        --image-id ${source_ami} \
+                        --instance-type t3.medium \
+                        --user-data '${encoded_user_data}' \
+                        --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${params.builder_instance_name}}]' \
+                        --query 'Instances[0].InstanceId' \
+                        --output text
+                """, returnStdout: true).trim()
 
-            // Create the new AMI
-            echo "Creating new AMI: ${new_name}"
-            def new_ami_id = sh(script: """
-                ${awscli} ec2 create-image \
-                    --region ${params.aws_region} \
-                    --instance-id ${instance_id} \
-                    --name "${new_name}" \
-                    --no-reboot \
-                    --query 'ImageId' \
-                    --output text
-            """, returnStdout: true).trim()
+                // Wait for the instance to finish its updates
+                def wait_time = params.updates_wait_time.toInteger()
+                echo "Waiting for updates to complete on ${params.builder_instance_name} - ID: ${builder_instance_id} (Sleeping ${wait_time} seconds)..."
+                sleep wait_time
 
-            // Cleanup service EC2
-            echo "Terminating builder instance ${params.builder_instance_name} - ${instance_id}..."
-            sh "${awscli} ec2 terminate-instances --instance-ids ${instance_id}"
-            
-            echo "Successfully baked new AMI with ID: ${new_ami_id}"
+                // Create the new AMI
+                echo "Creating new AMI: ${new_name}"
+                def new_ami_id = sh(script: """
+                    ${awscli} ec2 create-image \
+                        --region ${params.aws_region} \
+                        --instance-id ${builder_instance_id} \
+                        --name "${new_name}" \
+                        --no-reboot \
+                        --query 'ImageId' \
+                        --output text
+                """, returnStdout: true).trim()
+
+                echo "Successfully baked new AMI with ID: ${new_ami_id}"
+            }
+            catch (Exception e) {
+                echo "Error during AMI Bake: ${e.message}"
+                throw e
+            }
+            finally {
+                if (builder_instance_id) {
+                    echo "Terminating builder instance ${params.builder_instance_name} - ${builder_instance_id}..."
+                    sh "${awscli} ec2 terminate-instances --region ${params.aws_region} --instance-ids ${builder_instance_id}"
+                } else {
+                    echo "No builder instance was launched; skipping cleanup."
+                }
+            }
         }
 
         stage("Cleanup old AMIs") {
             if (!params.cleanup_amis) {
-                echo "AMIs cleanup is disabled or a specific AMI ID was provided. Skipping ..."
+                echo "AMIs cleanup is disabled. Skipping ..."
             }
             else  {
                 echo "Cleaning up AMIs matching '${params.cleanup_name_filter}*', keeping the latest ${params.retain_count}..."
