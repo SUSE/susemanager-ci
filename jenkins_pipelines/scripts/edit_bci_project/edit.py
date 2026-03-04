@@ -46,29 +46,36 @@ def run_osc_command(command, input_data=None):
         sys.exit(1)
 
 
-def wait_for_build_completion(api_url, project, repository="containerfile"):
+def wait_for_build_completion(api_url, project, repository="containerfile", timeout_minutes=90):
     """
     Polls the OBS project until all packages in the specified repository
     reach a 'succeeded' (or ignored) state.
 
     Includes an initial safety sleep to ensure the scheduler has time to
-    invalidate previous build results.
+    acknowledge the 'rebuild' command.
     """
     # --- SAFETY SLEEP ---
-    # We wait 60 seconds before the first check.
-    # This ensures we don't accidentally read "succeeded" from a previous run
-    # before the scheduler has had time to mark the packages as "scheduled" or "building".
-    logging.info("Metadata updated. Waiting 60 seconds for the IBS/OBS scheduler to trigger rebuilds...")
-    time.sleep(60)
+    # Since we explicitly call 'osc rebuild' now, we wait 30 seconds
+    # for the backend to transition from 'succeeded' to 'scheduled' or 'building'.
+    logging.info(f"Waiting 30 seconds for the IBS/OBS scheduler to process the rebuild request...")
+    time.sleep(30)
 
     logging.info(f"Starting to poll build results in project '{project}', repository '{repository}'...")
 
+    start_time = time.time()
+    timeout_seconds = timeout_minutes * 60
     cmd = ["osc", "-A", api_url, "results", project, "-r", repository, "--xml"]
 
     success_states = {'succeeded', 'excluded', 'disabled'}
     failure_states = {'failed', 'broken', 'unresolvable'}
 
     while True:
+        # Check for timeout
+        elapsed_time = time.time() - start_time
+        if elapsed_time > timeout_seconds:
+            logging.error(f"Timeout reached: Build did not complete within {timeout_minutes} minutes.")
+            sys.exit(1)
+
         try:
             xml_output = run_osc_command(cmd)
             root = ET.fromstring(xml_output)
@@ -78,7 +85,7 @@ def wait_for_build_completion(api_url, project, repository="containerfile"):
 
             if not statuses:
                 logging.info("No package status found yet. Waiting...")
-                time.sleep(10)
+                time.sleep(15)
                 continue
 
             # Check for failures
@@ -95,15 +102,16 @@ def wait_for_build_completion(api_url, project, repository="containerfile"):
                 break
             else:
                 unique_pending = set(pending)
-                logging.info(f"Build in progress. Packages processing: {len(pending)}. States: {unique_pending}")
-                time.sleep(10)
+                mins_elapsed = int(elapsed_time // 60)
+                logging.info(f"[{mins_elapsed}m elapsed] Build in progress. Packages processing: {len(pending)}. States: {unique_pending}")
+                time.sleep(30)
 
         except ET.ParseError:
             logging.warning("Failed to parse build results XML. Retrying...")
-            time.sleep(10)
+            time.sleep(15)
         except Exception as e:
             logging.warning(f"Unexpected error during polling: {e}. Retrying...")
-            time.sleep(10)
+            time.sleep(15)
 
 
 def print_registries(container_project):
@@ -159,6 +167,9 @@ def main():
                         help="The repository name including the packages to validate (e.g., SUSE_Updates_SLE-Module-Basesystem_15-SP6_x86_64).")
     args = parser.parse_args()
 
+    # Flag to track if we need to trigger a rebuild
+    needs_rebuild = False
+
     # --- Edit Project Configuration (prjconf) ---
     if args.prefer:
         prjconf_cmd = ["osc", "-A", args.api_url, "meta", "prjconf", args.container_project]
@@ -187,6 +198,7 @@ def main():
         run_osc_command(upload_cmd)
         os.remove(tmp_file_path)
         logging.info(f"Successfully updated project configuration for '{args.container_project}'.")
+        needs_rebuild = True
 
     # --- Edit Project Metadata (meta) ---
     if args.mi_project and args.mi_repo_name:
@@ -221,9 +233,7 @@ def main():
             run_osc_command(upload_cmd)
             os.remove(tmp_file_path)
             logging.info(f"Successfully updated project metadata for '{args.container_project}'.")
-
-            wait_for_build_completion(args.api_url, args.container_project)
-            print_registries(args.container_project)
+            needs_rebuild = True
 
         except ET.ParseError:
             logging.error("Failed to parse the project metadata XML. It might be malformed.")
@@ -231,6 +241,17 @@ def main():
         except ValueError as e:
             logging.error(e)
             sys.exit(1)
+
+    # --- Forced Manual Rebuild ---
+    # We trigger this regardless of whether OBS thought the metadata was 'new' or not.
+    if needs_rebuild:
+        rebuild_cmd = ["osc", "-A", args.api_url, "rebuild", args.container_project, "-r", "containerfile"]
+        run_osc_command(rebuild_cmd)
+        logging.info("Explicit rebuild triggered to bypass scheduler automation.")
+
+        # Wait for the build to finish (with 90-minute timeout)
+        wait_for_build_completion(args.api_url, args.container_project, timeout_minutes=90)
+        print_registries(args.container_project)
 
 
 if __name__ == "__main__":
