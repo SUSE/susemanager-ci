@@ -22,6 +22,7 @@ def run(params) {
         // Declare lock resource use during node bootstrap
         mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
         retailProxyConfigurationLock = 'lock proxy retail setup'
+        downloadPackagesLock = 'lock the download package step during client add MU stage'
         // Variables to store none critical stage run status
         def monitoring_stage_result_fail = false
         def client_stage_result_fail = false
@@ -591,14 +592,21 @@ def clientTestingStages(params) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
-                        echo 'Add custom channels and MU repositories'
-                        res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
-                        echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
-                        echo "Custom channels and MU repositories status code: ${res_mu_repos}"
-                        if (res_mu_repos != 0) {
-                            required_custom_channel_status[node] = 'FAIL'
-                            error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
+                        lock(resource: downloadPackagesLock, timeout: 600) {
+                            try {
+                                echo 'Add custom channels and MU repositories'
+                                res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
+                                echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
+                                echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+                                if (res_mu_repos != 0) {
+                                    required_custom_channel_status[node] = 'FAIL'
+                                    error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
+                                }
+                            } finally {
+                                echo 'Release resource downloadPackagesLock'
+                            }
                         }
+
                     }
                 }
                 // Don't update required_custom_channel_status for minion who needs non MU repositories
