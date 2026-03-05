@@ -34,7 +34,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o", "slmicro62o"]
 
   use_avahi    = false
   name_prefix  = "${var.ENVIRONMENT}-"
@@ -80,6 +80,7 @@ module "cucumber_testsuite" {
       container_tag        = "latest"
     }
     proxy_containerized = {
+      image = "slmicro62o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
         vcpu = 2
