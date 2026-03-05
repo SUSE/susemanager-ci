@@ -102,9 +102,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:88"
     name = "debian12-minion"
   }
-  opensuse156arm_minion = {
+  opensuse160arm_minion = {
     mac  = "aa:b2:92:42:00:10"
-    name = "opensuse156arm-minion-slc"
+    name = "opensuse160arm-minion-slc"
   }
   sles15sp5s390_minion = {
     mac    = "02:00:00:02:01:34"
@@ -215,9 +215,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:a8"
     name = "debian12-sshminion"
   }
-  opensuse156arm_sshminion = {
+  opensuse160arm_sshminion = {
     mac  = "aa:b2:92:42:00:11"
-    name = "opensuse156arm-sshminion-slc"
+    name = "opensuse160arm-sshminion-slc"
   }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:02:01:35"
