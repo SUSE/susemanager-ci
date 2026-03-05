@@ -20,7 +20,7 @@ node('sumaform-cucumber') {
                     booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
                     booleanParam(name: 'terraform_taint', defaultValue: true, description: 'Call terraform taint (so the resources, except volumes, are recreated)'),
                     booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
-                    booleanParam(name: 'show_product_changes', defaultValue: true, description: 'Show the product changes since the last build'),
+                    booleanParam(name: 'show_product_changes', defaultValue: false, description: 'Show the product changes since the last build'),
                     booleanParam(name: 'run_deployment', defaultValue: true, description: 'Run sumaform deployment'),
                     booleanParam(name: 'run_core', defaultValue: true, description: 'Run core testsuite'),
                     booleanParam(name: 'run_secondary', defaultValue: true, description: 'Run secondary testsuite'),
