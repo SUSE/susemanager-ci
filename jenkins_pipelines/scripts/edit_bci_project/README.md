@@ -1,27 +1,21 @@
 # IBS/OBS Project Metadata & Configuration Editor (`edit.py`)
 
 ## Overview
-This script automates the validation of SUSE Maintenance Incidents (MIs) within containerized environments. [cite_start]It programmatically modifies Open Build Service (OBS/IBS) projects to ensure the exact RPMs provided in an MI are prioritized during the build process[cite: 1, 8].
+This script automates Maintenance Incident (MI) validation for SUSE Manager containers. It programmatically reconfigures Internal Build Service (IBS) projects to ensure new RPMs from an MI are prioritized over standard system updates during the build process.
 
-## Key Features
+## Architecture
+The script performs three critical phases to ensure a clean and valid test environment:
 
 ### 1. Dynamic Package Discovery
-[cite_start]The script utilizes `osc ls -b` to inspect the targeted MI repository. [cite_start]It automatically generates `Prefer:` rules for **every RPM** found in the MI (e.g., PostgreSQL, ca-certificates), preventing "Shadowing" where the build service might otherwise default to standard repository versions.
+Instead of hardcoding package names, the script scans the MI project (`osc ls -b`) to identify every RPM currently being tested. This allows it to automatically handle PostgreSQL updates today and security fixes (like `ca-certificates`) tomorrow without manual code changes.
 
-### 2. Automated Project Configuration (`prjconf`)
-* **Clean State**: Prior to each run, the script identifies and removes existing MI-related `Prefer:` rules to prevent configuration bloat.
-* [cite_start]**Preference Enforcement**: Injects new rules directly into the relevant `%if` repository blocks to force the solver's decision[cite: 1, 8].
+### 2. Solver Preference Enforcement (`prjconf`)
+To prevent "Shadowing" (where IBS chooses a standard repo package over our test package because they share the same version), the script injects `Prefer:` rules for every discovered RPM.
+* Example: `Prefer: postgresql16-server:SUSE:Maintenance:42738`
 
-### 3. Forced Build Execution
-To solve the issue of the IBS scheduler skipping builds when metadata remains identical, the script invokes an explicit `osc rebuild`. [cite_start]This ensures that rerunning a pipeline against the same MI always generates a fresh, traceable container image[cite: 1].
+### 3. Forced Build Triggering
+Because the IBS scheduler may skip rebuilds if metadata remains identical, the script invokes an explicit `osc rebuild`. Combined with a **90-minute timeout** and success polling, this ensures the Jenkins pipeline only proceeds if a fresh container was successfully generated.
 
-### 4. Robust Polling & Timeouts
-* **90-Minute Timeout**: Prevents Jenkins executors from hanging indefinitely if the build service queue is delayed.
-* **Success Verification**: Monitors build states until final resolution. [cite_start]Exits with an error if fatal states (`broken`, `failed`, `unresolvable`) are encountered[cite: 1].
-
-## Usage
-```bash
-python3 edit.py \
-  --container-project Devel:Galaxy:Manager:MUTesting:5.0 \
-  --mi-project SUSE:Maintenance:42738 \
-  --mi-repo-name SUSE_Updates_SLE-Product-SLES_15-SP6-LTSS_x86_64
+## Requirements
+* `osc` CLI configured with credentials for `api.suse.de`.
+* Python packages listed in `requirements.txt`.
