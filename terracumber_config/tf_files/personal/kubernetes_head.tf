@@ -1,89 +1,7 @@
-// Mandatory variables for terracumber
-variable "URL_PREFIX" {
+variable "CONTAINER_REPOSITORY" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-Head/job/manager-Head-dev-acceptance-tests-RKE2"
-}
-
-// Not really used as this is for --runall parameter, and we run cucumber step by step
-variable "CUCUMBER_COMMAND" {
-  type = string
-  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
-}
-
-variable "CUCUMBER_GITREPO" {
-  type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
-}
-
-variable "CUCUMBER_BRANCH" {
-  type = string
-  default = "master"
-}
-
-variable "CUCUMBER_RESULTS" {
-  type = string
-  default = "/root/spacewalk/testsuite"
-}
-
-variable "MAIL_SUBJECT" {
-  type = string
-  default = "Results Head-RKE2-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
-}
-
-variable "MAIL_TEMPLATE" {
-  type = string
-  default = "../mail_templates/mail-template-jenkins.txt"
-}
-
-variable "MAIL_SUBJECT_ENV_FAIL" {
-  type = string
-  default = "Results Head-RKE2-NUE: Environment setup failed"
-}
-
-variable "MAIL_TEMPLATE_ENV_FAIL" {
-  type = string
-  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
-}
-
-variable "MAIL_FROM" {
-  type = string
-  default = "jenkins@suse.de"
-}
-
-variable "MAIL_TO" {
-  type = string
-  default = "galaxy-ci@suse.de"
-}
-
-// sumaform specific variables
-variable "SCC_USER" {
-  type = string
-}
-
-variable "SCC_PASSWORD" {
-  type = string
-}
-
-variable "SCC_PTF_USER" {
-  type = string
-  default = null
-  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
-}
-
-variable "SCC_PTF_PASSWORD" {
-  type = string
-  default = null
-  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
-}
-
-variable "GIT_USER" {
-  type = string
-  default = null // Not needed for master, as it is public
-}
-
-variable "GIT_PASSWORD" {
-  type = string
-  default = null // Not needed for master, as it is public
+  description = "Container repository for server and proxy"
+  default = "registry.suse.de"
 }
 
 terraform {
@@ -97,7 +15,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-01.mgr.suse.de/system"
+  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor}/system"
 }
 
 module "cucumber_testsuite" {
@@ -110,16 +28,16 @@ module "cucumber_testsuite" {
   git_password = var.GIT_PASSWORD
   git_repo     = var.CUCUMBER_GITREPO
   branch       = var.CUCUMBER_BRANCH
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
-  cc_ptf_username = var.SCC_PTF_USER
-  cc_ptf_password = var.SCC_PTF_PASSWORD
 
   images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
   use_avahi    = false
-  name_prefix  = "mlm-ci-head-rke2-"
+  name_prefix  = "${var.ENVIRONMENT}-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -146,16 +64,15 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:42:00:f0"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
         vcpu = 4
         memory = 4096
       }
     }
     server_kubernetes = {
-      image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:f1"
-        vcpu = 2
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
+        vcpu   = 2
         memory = 16384
       }
       main_disk_size       = 500
@@ -164,27 +81,26 @@ module "cucumber_testsuite" {
       runtime              = "rke2"
       container_tag        = "latest"
       container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/server"
-      helm_chart_name = "server-helm"
-      helm_chart_url = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
+      helm_chart_name      = "server-helm"
+      helm_chart_url       = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
     }
     proxy_kubernetes = {
-      image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:f2"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
         vcpu = 2
         memory = 16384
       }
-      main_disk_size = 200
-      runtime = "rke2"
-      container_tag = "latest"
+      main_disk_size       = 200
+      runtime              = "rke2"
+      container_tag        = "latest"
       container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/proxy"
-      helm_chart_name = "proxy-helm"
-      helm_chart_url = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
+      helm_chart_name      = "proxy-helm"
+      helm_chart_url       = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
     }
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:f6"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
         vcpu = 2
         memory = 2048
       }
@@ -192,7 +108,7 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:f8"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
         vcpu = 2
         memory = 2048
       }
@@ -200,7 +116,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:fa"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -210,7 +126,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:fb"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["deblike-minion"]
         vcpu = 2
         memory = 2048
       }
@@ -218,7 +134,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:fd"
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
         vcpu = 2
         memory = 2048
       }
@@ -230,18 +146,18 @@ module "cucumber_testsuite" {
       name        = "dhcp-dns"
       image       = "opensuse156o"
       hypervisor  = {
-        host        = "suma-01.mgr.suse.de"
-        user        = "root"
+        host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
+        user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
         private_key = file("~/.ssh/id_ed25519")
       }
     }
   }
 
   provider_settings = {
-    pool = "ssd"
-    network_name = null
-    bridge = "br0"
-    additional_network = "192.168.98.0/24"
+    pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
+    network_name       = null
+    bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
+    additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
   }
 }
 
