@@ -98,9 +98,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:1d"
     name = "ubuntu2404-minion"
   }
-  opensuse156arm_minion = {
-    mac  = "aa:b2:92:42:01:2e"
-    name = "opensuse156arm-minion"
+  opensuse160arm_minion = {
+    mac  = "aa:b2:93:01:02:ae"
+    name = "opensuse160arm-minion"
   }
   salt_migration_minion = {
     mac  = "aa:b2:92:42:01:2f"
@@ -207,9 +207,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:3d"
     name = "ubuntu2404-sshminion"
   }
-  opensuse156arm_sshminion = {
-    mac  = "aa:b2:92:42:01:4e"
-    name = "opensuse156arm-sshminion"
+  opensuse160arm_sshminion = {
+    mac  = "aa:b2:93:01:02:ce"
+    name = "opensuse160arm-sshminion"
   }
   sles15sp5s390_sshminion = {
     mac  = "02:00:00:42:00:2b"
