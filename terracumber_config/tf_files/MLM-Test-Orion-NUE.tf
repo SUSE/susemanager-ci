@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   use_avahi    = false
   name_prefix  = "mlm-test-orion-"
@@ -149,7 +149,7 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slmicro61o"
+      image = "slmicro62o"
       provider_settings = {
         mac = "aa:b2:93:01:00:71"
         vcpu = 8
@@ -163,12 +163,12 @@ module "cucumber_testsuite" {
       //container_repository = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
       container_tag        = "latest"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_62/"
       }
 
     }
     proxy_containerized = {
-      image = "slmicro61o"
+      image = "slmicro62o"
       provider_settings = {
         mac = "aa:b2:93:01:00:72"
         vcpu = 2
@@ -180,7 +180,7 @@ module "cucumber_testsuite" {
       //container_repository = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
       container_tag = "latest"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_61/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_62/"
       }
     }
     suse_minion = {
