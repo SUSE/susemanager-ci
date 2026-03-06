@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright (c) 2025 SUSE LLC
+# Copyright (c) 2026 SUSE LLC
 # Licensed under GPLv2
 
 import argparse
@@ -16,6 +16,7 @@ import sys
 import time
 
 def run_osc_command(command, input_data=None):
+    """Executes osc commands and handles errors with logging."""
     logging.info(f"Running command: {' '.join(command)}")
     try:
         result = subprocess.run(
@@ -34,16 +35,16 @@ def run_osc_command(command, input_data=None):
 
 def get_mi_packages(api_url, mi_project):
     """
-    Scans the MI project for SOURCE packages.
-    This is much more reliable than binary discovery.
+    Scans the MI project for source packages to identify what to prefer.
+    Source discovery is used because binaries may not be published yet.
     """
     logging.info(f"Searching for source packages in {mi_project}...")
     cmd_list = ["osc", "-A", api_url, "ls", mi_project]
 
     try:
-        source_packages = run_osc_command(cmd_list).splitlines()
-        # Filter: ignore empty lines and 'patchinfo'
-        found_list = [p.strip() for p in source_packages if p.strip() and p.strip() != "patchinfo"]
+        source_output = run_osc_command(cmd_list).splitlines()
+        # Filter: ignore empty lines and non-RPM entities like 'patchinfo'
+        found_list = [p.strip() for p in source_output if p.strip() and p.strip() != "patchinfo"]
 
         if found_list:
             logging.info(f"Successfully discovered {len(found_list)} source packages in {mi_project}")
@@ -54,14 +55,17 @@ def get_mi_packages(api_url, mi_project):
     return []
 
 def wait_for_build_completion(api_url, project, repository="containerfile", timeout_minutes=90):
-    logging.info("Initiating 30s safety wait for IBS scheduler...")
+    """Polls build results until success or failure states are reached."""
+    logging.info("Initiating 30s safety wait for IBS scheduler to recognize rebuild...")
     time.sleep(30)
+
     start_time = time.time()
     timeout_seconds = timeout_minutes * 60
     cmd = ["osc", "-A", api_url, "results", project, "-r", repository, "--xml"]
 
     while True:
-        if (time.time() - start_time) > timeout_seconds:
+        elapsed = time.time() - start_time
+        if elapsed > timeout_seconds:
             logging.error(f"Timeout: Build exceeded {timeout_minutes} minutes."); sys.exit(1)
 
         xml = run_osc_command(cmd)
@@ -71,16 +75,19 @@ def wait_for_build_completion(api_url, project, repository="containerfile", time
         if not statuses:
             time.sleep(15); continue
 
+        # Fatal states that stop the pipeline immediately
         if any(s in {'failed', 'broken', 'unresolvable'} for s in statuses):
-            logging.error("Build failed in IBS. Check build logs."); sys.exit(1)
+            logging.error("Build failed in IBS. Review build logs."); sys.exit(1)
 
+        # Success/Ignored states
         if all(s in {'succeeded', 'excluded', 'disabled'} for s in statuses):
-            logging.info("All packages built successfully."); break
+            logging.info("All packages built or resolved successfully."); break
 
-        logging.info(f"Build in progress... ({int((time.time()-start_time)//60)}m elapsed)")
+        logging.info(f"Build in progress... ({int(elapsed//60)}m elapsed)")
         time.sleep(45)
 
 def print_registries(container_project):
+    """Extracts and prints published container registry paths."""
     base_url = f"http://download.suse.de/ibs/{container_project.replace(':', ':/')}/containerfile/"
     try:
         r = requests.get(base_url); r.raise_for_status()
@@ -91,35 +98,34 @@ def print_registries(container_project):
                 content = requests.get(f"{base_url}{fn}").text
                 print(content.splitlines()[1].split().pop())
     except Exception as e:
-        logging.error(f"Registry extraction failed: {e}")
+        logging.error(f"Registry path extraction failed: {e}")
 
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s', stream=sys.stderr)
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="IBS Project Metadata & Config Editor")
     parser.add_argument("--container-project", required=True)
     parser.add_argument("--api-url", default="https://api.suse.de")
-    parser.add_argument("--prefer")
-    parser.add_argument("--mi-project")
-    parser.add_argument("--mi-repo-name")
+    parser.add_argument("--prefer", help="Specific preference (e.g. init image version)")
+    parser.add_argument("--mi-project", help="Maintenance Incident project ID")
+    parser.add_argument("--mi-repo-name", help="External repository target name")
     args = parser.parse_args()
 
     needs_rebuild = False
 
-    # --- Step 1: Dynamic prjconf Updates ---
+    # --- Step 1: Update Project Configuration (prjconf) ---
     if args.mi_project:
+        # Discover packages in MI to generate dynamic Prefer rules
         mi_pkgs = get_mi_packages(args.api_url, args.mi_project)
-        # Force the solver to pick these specific source packages from our MI
         dynamic_prefers = [f"Prefer: {p}:{args.mi_project}" for p in mi_pkgs]
-
         prjconf_text = run_osc_command(["osc", "-A", args.api_url, "meta", "prjconf", args.container_project])
-        # Strip any existing Maintenance preferences
+        # Clean old MI-related rules to avoid configuration bloat
         lines = [l for l in prjconf_text.splitlines() if ':SUSE:Maintenance:' not in l]
 
         final_lines = []
         injected = False
         for line in lines:
             final_lines.append(line)
-            # Inject new preferences into the containerfile repo block
+            # Inject preference rules into the containerfile build repository block
             if 'if "%_repository" == "containerfile"' in line and not injected:
                 final_lines.extend(dynamic_prefers)
                 if args.prefer:
@@ -129,9 +135,10 @@ def main():
         with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
             tmp.write("\n".join(final_lines) + "\n")
             tmp_path = tmp.name
+
         run_osc_command(["osc", "-A", args.api_url, "meta", "prjconf", args.container_project, "-F", tmp_path])
         os.remove(tmp_path)
-        logging.info("Project Configuration updated with source preferences.")
+        logging.info("Project configuration updated with source-based MI preferences.")
         needs_rebuild = True
 
     # --- Step 2: Metadata Update ---
