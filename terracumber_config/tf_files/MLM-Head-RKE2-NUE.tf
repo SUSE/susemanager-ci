@@ -148,7 +148,7 @@ module "cucumber_testsuite" {
         memory = 4096
       }
     }
-    server_containerized = {
+    server_kubernetes = {
       image = "ubuntu2404o"
       provider_settings = {
         mac = "aa:b2:92:42:00:f1"
@@ -159,20 +159,24 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "rke2"
-      container_repository = "registry.suse.de"
       container_tag        = "latest"
+      container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/server"
+      helm_chart_name = "server-helm"
+      helm_chart_url = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
     }
-    proxy_containerized = {
+    proxy_kubernetes = {
       image = "ubuntu2404o"
       provider_settings = {
         mac = "aa:b2:92:42:00:f2"
-        vcpu = 2
-        memory = 2048
+        vcpu = 4
+        memory = 16384
       }
-      main_disk_size = 200
+      main_disk_size = 500
       runtime = "rke2"
-      container_repository = "registry.suse.de"
       container_tag = "latest"
+      container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/proxy"
+      helm_chart_name = "proxy-helm"
+      helm_chart_url = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
     }
     suse_minion = {
       image = "sles15sp7o"
