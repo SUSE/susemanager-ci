@@ -1,22 +1,21 @@
 # IBS/OBS Project Metadata & Configuration Editor (`edit.py`)
 
 ## Overview
-This script automates the editing of Open Build Service (OBS) / Internal Build Service (IBS) project metadata and configurations. It is specifically designed to facilitate containerization testing for SUSE Multi-Linux Manager by programmatically injecting Maintenance Incident (MI) repositories and enforcing package preferences prior to a build.
+This script automates Maintenance Incident (MI) validation for SUSE Manager containers. It programmatically reconfigures Internal Build Service (IBS) projects to ensure new RPMs from an MI are prioritized over standard system updates during the build process.
 
-## Architecture & Design
-The script is written in Python 3 and bridges standard OS operations with external HTTP requests. It utilizes `subprocess` to interface securely with the `osc` CLI tool, `xml.etree.ElementTree` for precise XML manipulation, and `requests` + `BeautifulSoup4` for web scraping build artifacts.
+## Architecture
+The script performs three critical phases to ensure a clean and valid test environment:
 
-### Key Components
+### 1. Dynamic Package Discovery
+Instead of hardcoding package names, the script scans the MI project (`osc ls -b`) to identify every RPM currently being tested. This allows it to automatically handle PostgreSQL updates today and security fixes (like `ca-certificates`) tomorrow without manual code changes.
 
-* **`run_osc_command(command, input_data)`**:
-  A centralized helper function that executes `osc` commands inside a neutral temporary directory. It captures standard output and standard error, providing robust error logging if the command fails.
-* **Project Configuration (`prjconf`) Editing**:
-  If a `--prefer` argument is provided, the script fetches the current project configuration. It parses the text line-by-line, dynamically replacing or appending the `Prefer:` rule (e.g., pinning a specific version) before uploading the modified configuration back to IBS.
-* **Project Metadata (`meta`) Editing**:
-  The script fetches the project's XML metadata and searches specifically for the `<repository name='containerfile'>` node. It uses regular expressions to locate the existing Maintenance Incident path (`SUSE:Maintenance:\d+`) and overrides the `project` and `repository` attributes with the newly provided MI parameters. The updated XML is then written to a temporary file and uploaded.
-* **`wait_for_build_completion(api_url, project)`**:
-  A smart polling mechanism that waits for the IBS scheduler to process the updated metadata.
-    * **Safety Sleep**: It initiates a 60-second sleep before polling to ensure previous build states are properly invalidated by the scheduler.
-    * **State Evaluation**: It continuously queries `osc results`, tracking packages until they all reach a final state (`succeeded`, `excluded`, `disabled`). If any package enters a fatal state (`failed`, `broken`, `unresolvable`), the script exits with an error.
-* **`print_registries(container_project)`**:
-  Once the build succeeds, this function queries the IBS download HTML directory. Using `BeautifulSoup`, it scrapes the page for generated `*.registry.txt` files, downloads them, and extracts the exact registry paths/tags produced by the build. This information is then printed to the console to be consumed by downstream processes.
+### 2. Solver Preference Enforcement (`prjconf`)
+To prevent "Shadowing" (where IBS chooses a standard repo package over our test package because they share the same version), the script injects `Prefer:` rules for every discovered RPM.
+* Example: `Prefer: postgresql16-server:SUSE:Maintenance:42738`
+
+### 3. Forced Build Triggering
+Because the IBS scheduler may skip rebuilds if metadata remains identical, the script invokes an explicit `osc rebuild`. Combined with a **90-minute timeout** and success polling, this ensures the Jenkins pipeline only proceeds if a fresh container was successfully generated.
+
+## Requirements
+* `osc` CLI configured with credentials for `api.suse.de`.
+* Python packages listed in `requirements.txt`.
