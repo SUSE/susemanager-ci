@@ -105,81 +105,101 @@ image for testing Pull Requests built with the open build service. This needs to
 | Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | -            |
 
 
-## Testing SLES maintenance incidents from inside the SUSE Multi-Linux Manager containers
+## ## Testing SLES Maintenance Incidents
 
-This Jenkins pipeline architecture automates the validation of Maintenance Incidents (MIs) by building custom server and proxy containers dynamically. By integrating directly with the Internal Build Service (IBS), the CI/CD pipeline alters build configurations on the fly, triggers container rebuilds, and automatically points the deployment stages to the newly generated registries.
+### Overview
+
+The pipeline integrates directly with the **Internal Build Service (IBS)** to alter configurations on the fly, trigger container rebuilds, and point deployment stages to newly generated registries. This ensures that unreleased patches are validated in a production-like environment before public release.
+
+---
+
+### Test Strategy
+
+The core objective is to validate the impact of a single MI on the SUSE Multi-Linux Manager ecosystem.
+
+#### 1. The Principle of Isolation
+
+The pipeline adheres to a **Single-MI Validation** rule to ensure results are untainted.
+
+* **The "Why":** MIs are released independently. Testing multiple MIs simultaneously creates "co-dependency" risks where a test passes only because of a specific combination that may never exist in production.
+* **The Scope:** We replicate the current released state plus *only* the specific unreleased packages from the target MI.
+
+#### 2. Targeted Package Updates
+
+Containers are rebuilt against the MI project to observe the resulting package set:
+
+* **Repository Configuration:** Uses `edit.py` to swap existing `SUSE:Maintenance:*` paths in IBS metadata with the target MI.
+* **Package Selection:** The resolver pulls MI packages automatically unless explicit `Prefer` rules are required in the project metadata.
+* **Structural Integrity:** Validates that the update doesn't break dependencies, service startup, or core functionality.
+
+#### 3. Validation Goal
+
+At the end of the build, we have a **"What-If" snapshot**. This provides the **qam-manager** team with data-backed approval for SLES maintenance packages before they go live.
+
+---
 
 ### Pipeline Workflow & Architecture
 
 #### 1. Parameterization
-The pipeline UI exposes specific parameters to the QE team, allowing them to target exact Maintenance Incidents without hardcoding values:
-* `container_project`: The target IBS project (e.g., `Devel:Galaxy:Manager:MUTesting:5.0`).
-* `mi_project`: The incident project (e.g., `SUSE:Maintenance:12345`).
-* `mi_repo_name`: The specific repository within the incident (e.g., `SUSE_Updates_SLE-Module-Basesystem_15-SP6_x86_64`).
 
-#### 2. The "Build containers" Stage
-Located in the shared `pipeline-build-validation.groovy` script, this stage acts as the bridge between Jenkins and IBS.
-* **Environment Isolation**: To prevent dependency conflicts on Jenkins worker nodes, the pipeline dynamically creates a Python virtual environment (`venv`) inside the workspace and installs necessary scraping and API libraries.
-* **IBS Trigger**: The pipeline invokes `edit.py`, which overrides the targeted IBS project's metadata (`meta`) and configuration (`prjconf`).
+The UI allows the QE team to target exact incidents without code changes:
 
+* **`container_project`**: The target IBS project (e.g., `Devel:Galaxy:Manager:MUTesting:5.0`).
+* **`mi_project`**: The incident project (e.g., `SUSE:Maintenance:12345`).
+* **`mi_repo_name`**: The specific repository within the incident (e.g., `SUSE_SLE-15-SP6_Update`). As future enhancement, we can get rid of this parameter and extract the codestreams directly from the MI project metadata. 
+  * Manually identify codestreams via:
+      ```
+      osc meta prj SUSE:Maintenance:<ID> | xmllint --xpath '//repository/path/@project' - | awk -F'"' '{print $2}' | grep -E -v '^(SUSE:Maintenance|SUSE:Updates)' | sed 's/:/_/g'
+      ```
+
+#### 2. The "Build Containers" Stage
+
+Acting as the bridge between Jenkins and IBS, this stage handles:
+
+* **Environment Isolation:** Creates a Python `venv` inside the workspace for API libraries.
+* **IBS Metadata Injection:** Invokes `edit.py` to override the project `meta`.
+  * **Important**: When injecting MIs, we must use the specific codestream of the MI project. If multiple exist, they must be included in reverse alphabetical order.
+* **Wipe before Rebuild:** A `wipe` operation clears old artifacts to ensure a clean build.
+  * *Manual command:* `osc wipebinaries --all <container_project>`
+
+  
 #### 3. IBS Rebuild Trigger
 
-IBS (or OBS) is a declarative build system. By altering the `meta` to include the sources of a new Maintenance Incident, in the past we were adjusting the `prjconf` to prefer specific packages, so this feature will stay available on the `edit.py` script, the OBS scheduler automatically detects that the dependencies for the `containerfile` repository have changed. It invalidates the old container binaries and schedules a fresh rebuild incorporating the new MI packages.
+Once the `meta` is altered, the OBS scheduler detects dependency changes, invalidates old binaries, and schedules a fresh rebuild.
+
+* **Manual Verification:**
+    ```bash
+    # Check specific package build info
+    osc buildinfo -d <container_project> <package_name> <repository_name> x86_64
+    
+    # Filter for specific MI packages
+    osc buildinfo -d <container_project> server-image containerfile x86_64 | grep bdep | grep <package_name>
+    
+    ```
 
 #### 4. Dynamic Deployment Routing
-Once the script verifies the IBS build is successful, Jenkins intercepts the newly created registry paths. The pipeline dynamically rewrites the deployment variables:
+
+Upon a successful build, Jenkins intercepts the new registry paths and rewrites the following variables to point to `registry.suse.de/[PROJECT]/containerfile`:
+
 * `custom_project_path`
 * `server_container_repository`
 * `proxy_container_repository`
 
-By redefining these paths to point to `registry.suse.de/[PROJECT]/containerfile`, the subsequent Terraform and deployment stages will automatically pull and provision the custom-built containers instead of the standard release containers.
-
-Here is an explanation of the package branching concept in OBS/IBS. This is a crucial part of your pipeline's design, and it perfectly explains *why* you are able to manipulate these builds so freely.
-
-I have formatted this as an additional section that you can drop directly into the second README file (under "Pipeline Workflow & Architecture" or as a new standalone section).
+---
 
 ### Understanding the IBS "Branching" Architecture
 
-To safely test new Maintenance Incidents (MIs) without risking the stability of official production containers, the pipeline relies on the IBS feature known as **branching** (or linking).
+To safely test without risking production stability, the pipeline utilizes **IBS Branching**. Projects like `MUTesting:5.0` do not host independent source code; they are branched from official release projects.
 
-If you look at the `Devel:Galaxy:Manager:MUTesting:5.0` and `5.1` projects, the packages inside them (such as `server-image`, `proxy-squid-image`, `proxy-helm`, etc.) do not host their own independent source code. Instead, they are branched directly from the official release projects (e.g., `SUSE:SLE-15-SP6:Update:Products:Manager50:Update`). If we want to build new packages available on the official release project, we can simply branch the package into our `MUTesting` project.
+#### Current Packages Rebuilt
 
-You can access these projects from:
-- https://build.suse.de/project/show/Devel:Galaxy:Manager:MUTesting:5.0
-- https://build.suse.de/project/show/Devel:Galaxy:Manager:MUTesting:5.1
+| Category | 5.0 Packages | 5.1 Packages |
+| --- | --- | --- |
+| **Server** | `server-image`, `server-attestation-image`, `server-hub-xmlrpc-api-image`, `server-migration-14-16-image`, `init-image` | `server-image`, `server-attestation-image`, `server-hub-xmlrpc-api-image`, `server-migration-14-16-image`, `server-postgresql-image`, `server-saline-image` |
+| **Proxy** | `proxy-helm`, `proxy-httpd`, `proxy-salt-broker`, `proxy-squid`, `proxy-ssh`, `proxy-tftpd` | `proxy-helm`, `proxy-httpd`, `proxy-salt-broker`, `proxy-squid`, `proxy-ssh`, `proxy-tftpd` |
 
-Currently we re-build these packages:
-5.0:
-- init-image (obsolete once 5.0.7 is released)
-- proxy-helm
-- proxy-httpd-image
-- proxy-salt-broker-image
-- proxy-squid-image
-- proxy-ssh-image
-- proxy-tftpd-image
-- server-attestation-image
-- server-hub-xmlrpc-api-image
-- server-image
-- server-migration-14-16-image
+#### Key Benefits of this Architecture
 
-5.1:
-- proxy-helm
-- proxy-httpd-image
-- proxy-salt-broker-image
-- proxy-squid-image
-- proxy-ssh-image
-- proxy-tftpd-image
-- server-attestation-image
-- server-hub-xmlrpc-api-image
-- server-image
-- server-migration-14-16-image
-- server-postgresql-image
-- server-saline-image
-
-#### What This Means for the Pipeline
-
-Branching creates a powerful, isolated sandbox for the QE pipeline with several key benefits:
-
-1. **Perfect Inheritance (Source of Truth):** A branched package automatically inherits the exact `Dockerfile`, `spec` files, and source code from its parent project. This guarantees that the containers built in the `MUTesting` project are structurally identical to the official SUSE containers. The testing environment perfectly mirrors production.
-2. **Complete Isolation:** Because the branched project (`MUTesting`) has its own independent `prjconf` and `meta` configurations, the Jenkins pipeline can aggressively modify them. When the Python script (`edit.py`) injects a new `SUSE:Maintenance:12345` repository or pins a `Prefer` rule, these changes *only* apply to the branched environment. The official release project remains entirely untouched and safe.
-3. **Targeted Validation (The "What If" Scenario):** Branching allows the pipeline to create a highly accurate "What If" scenario. By combining the **official source code** (via the branch link) with the **unreleased Maintenance Incident binaries** (injected via the Jenkins pipeline and Python script), the build system produces a custom container. This proves exactly how the official container will behave *after* the MI is officially published, allowing QE to catch regressions before they hit the public registry.
+1. **Perfect Inheritance:** Branched packages inherit the exact `Dockerfile` and `spec` files from the parent, ensuring the test environment perfectly mirrors production.
+2. **Complete Isolation:** Modifications made by `edit.py` (like injecting an MI) *only* affect the branched `MUTesting` environment.
+3. **Targeted Validation:** By combining official source code with unreleased binaries, we catch regressions before they reach the public registry.
