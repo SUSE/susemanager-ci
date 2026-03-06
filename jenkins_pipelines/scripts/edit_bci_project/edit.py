@@ -34,11 +34,7 @@ def run_osc_command(command, input_data=None):
         sys.exit(1)
 
 def get_mi_packages(api_url, mi_project, mi_repo_name):
-    """
-    Identifies binary RPM names from the MI using 'osc ls --binaries'.
-    Simplifies discovery by stripping the .rpm extension from results.
-    """
-    # 1. Extract the SP version from the mi_repo_name (e.g., 15-SP6)
+    """Identifies binary RPM names from the MI using 'osc ls --binaries'."""
     sp_match = re.search(r'15-SP\d', mi_repo_name)
     if not sp_match:
         logging.error(f"Could not determine SP version from {mi_repo_name}")
@@ -48,7 +44,6 @@ def get_mi_packages(api_url, mi_project, mi_repo_name):
     internal_repo = f"SUSE_SLE-{sp_version}_Update"
     logging.info(f"Targeting internal build repository: {internal_repo} for binaries.")
 
-    # 2. Run the binary list command
     cmd = [
         "osc", "-A", api_url, "ls", "--binaries",
         mi_project,
@@ -59,19 +54,13 @@ def get_mi_packages(api_url, mi_project, mi_repo_name):
     packages = set()
     try:
         output = run_osc_command(cmd).splitlines()
-        logging.debug(f"Raw output from osc ls --binaries: {output}")
-
         for line in output:
             line = line.strip()
-            # Skip debuginfo, debugsource, and patchinfo
             if any(x in line for x in ["debuginfo", "debugsource", "patchinfo"]):
                 continue
-
-            # Simple strip of the extension since version numbers aren't in this output
             if line.endswith(".rpm"):
                 pkg_name = line.replace(".rpm", "")
                 packages.add(pkg_name)
-
     except Exception as e:
         logging.error(f"Failed to list binaries for {internal_repo}: {e}")
         return []
@@ -106,6 +95,20 @@ def wait_for_build_completion(api_url, project, repository="containerfile", time
         logging.info(f"Build in progress... ({int(elapsed//60)}m elapsed)")
         time.sleep(45)
 
+def print_registries(container_project):
+    """Extracts and prints published container registry paths."""
+    base_url = f"http://download.suse.de/ibs/{container_project.replace(':', ':/')}/containerfile/"
+    try:
+        r = requests.get(base_url); r.raise_for_status()
+        soup = BeautifulSoup(r.text, 'html.parser')
+        for link in soup.find_all('a'):
+            fn = link.get('href')
+            if fn and fn.endswith('.registry.txt'):
+                content = requests.get(f"{base_url}{fn}").text
+                print(content.splitlines()[1].split().pop())
+    except Exception as e:
+        logging.error(f"Registry extraction failed: {e}")
+
 def main():
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s', stream=sys.stderr)
     parser = argparse.ArgumentParser()
@@ -114,6 +117,7 @@ def main():
     parser.add_argument("--prefer", help="Specific preference (e.g. init image version)")
     parser.add_argument("--mi-project", help="Maintenance Incident project ID")
     parser.add_argument("--mi-repo-name", help="External repository target name")
+    parser.add_argument("--no-rebuild", action="store_true", help="Skip the rebuild and wait phase")
     args = parser.parse_args()
 
     needs_rebuild = False
@@ -123,17 +127,13 @@ def main():
         rpm_names = get_mi_packages(args.api_url, args.mi_project, args.mi_repo_name)
         dynamic_prefers = [f"Prefer: {rpm}:{args.mi_project}" for rpm in rpm_names]
 
-        logging.debug(f"Dynamic preferences: {dynamic_prefers}")
-
         prjconf_text = run_osc_command(["osc", "-A", args.api_url, "meta", "prjconf", args.container_project])
-        # Clean old MI rules
         lines = [l for l in prjconf_text.splitlines() if ':SUSE:Maintenance:' not in l]
 
         final_lines = []
         injected = False
         for line in lines:
             final_lines.append(line)
-            # Inject preference rules into the containerfile build repository block
             if line.strip().startswith('%if') and 'containerfile' in line and not injected:
                 final_lines.extend(dynamic_prefers)
                 if args.prefer:
@@ -144,7 +144,7 @@ def main():
         with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
             tmp.write("\n".join(final_lines) + "\n")
             tmp_path = tmp.name
-        logging.debug(f"Temporary file: {tmp_path}")
+
         run_osc_command(["osc", "-A", args.api_url, "meta", "prjconf", args.container_project, "-F", tmp_path])
         os.remove(tmp_path)
         needs_rebuild = True
@@ -170,6 +170,9 @@ def main():
     if needs_rebuild and not args.no_rebuild:
         run_osc_command(["osc", "-A", args.api_url, "rebuild", args.container_project, "-r", "containerfile"])
         wait_for_build_completion(args.api_url, args.container_project)
+        print_registries(args.container_project)
+    elif args.no_rebuild:
+        logging.info("Skipping rebuild as --no-rebuild was specified.")
 
 if __name__ == "__main__":
     main()
