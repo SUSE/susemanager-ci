@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright (c) 2025 SUSE LLC
+# Copyright (c) 2026 SUSE LLC
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -27,7 +27,7 @@ def run_osc_command(command, input_data=None):
     A helper function to run osc commands from a neutral directory.
     It returns the stdout of the command.
     """
-    logging.info(f"Running command: {' '.join(command)}")
+    logging.debug(f"Running command: {' '.join(command)}")
 
     try:
         result = subprocess.run(
@@ -46,18 +46,43 @@ def run_osc_command(command, input_data=None):
         sys.exit(1)
 
 
+def get_mi_repo_names(api_url, mi_project):
+    """
+    Retrieves a list of repository names by inspecting the metadata of the mi-project.
+    Filters out Maintenance/Updates and replaces colons with underscores.
+    """
+    logging.info(f"Resolving repository names for maintenance project: {mi_project}")
+    cmd = ["osc", "-A", api_url, "meta", "prj", mi_project]
+    meta_xml = run_osc_command(cmd)
+
+    try:
+        root = ET.fromstring(meta_xml)
+        paths = root.findall(".//repository/path")
+
+        resolved_repos = []
+        for p in paths:
+            project_val = p.get('project')
+            if project_val and not re.match(r'^(SUSE:Maintenance|SUSE:Updates)', project_val):
+                repo_name = project_val.replace(":", "_")
+                if repo_name not in resolved_repos:
+                    resolved_repos.append(repo_name)
+
+        if not resolved_repos:
+            raise ValueError(f"Could not find any valid base projects in {mi_project} metadata.")
+
+        logging.info(f"Resolved repository names: {', '.join(resolved_repos)}")
+        return resolved_repos
+
+    except (ET.ParseError, ValueError) as e:
+        logging.error(f"Error resolving repo names: {e}")
+        sys.exit(1)
+
+
 def wait_for_build_completion(api_url, project, repository="containerfile"):
     """
-    Polls the OBS project until all packages in the specified repository
-    reach a 'succeeded' (or ignored) state.
-
-    Includes an initial safety sleep to ensure the scheduler has time to
-    invalidate previous build results.
+    Polls the OBS project until all packages reach a final state.
+    Returns the final status XML for further processing.
     """
-    # --- SAFETY SLEEP ---
-    # We wait 60 seconds before the first check.
-    # This ensures we don't accidentally read "succeeded" from a previous run
-    # before the scheduler has had time to mark the packages as "scheduled" or "building".
     logging.info("Metadata updated. Waiting 60 seconds for the IBS/OBS scheduler to trigger rebuilds...")
     time.sleep(60)
 
@@ -66,7 +91,7 @@ def wait_for_build_completion(api_url, project, repository="containerfile"):
     cmd = ["osc", "-A", api_url, "results", project, "-r", repository, "--xml"]
 
     success_states = {'succeeded', 'excluded', 'disabled'}
-    failure_states = {'failed', 'broken', 'unresolvable'}
+    failure_states = {'failed', 'broken'}
 
     while True:
         try:
@@ -78,32 +103,67 @@ def wait_for_build_completion(api_url, project, repository="containerfile"):
 
             if not statuses:
                 logging.info("No package status found yet. Waiting...")
-                time.sleep(10)
+                time.sleep(20)
                 continue
 
-            # Check for failures
-            failed_packages = [s for s in statuses if s in failure_states]
-            if failed_packages:
-                logging.error(f"Build failed. Found fatal statuses: {set(failed_packages)}")
+            if any(s in failure_states for s in statuses):
+                logging.error(f"Build failed. Found fatal statuses: {set(statuses) & failure_states}")
                 sys.exit(1)
 
-            # Check for pending (anything not success and not failed)
-            pending = [s for s in statuses if s not in success_states]
-
-            if not pending:
+            if all(s in success_states for s in statuses):
                 logging.info("All packages in repository are in a succeeded/final state.")
-                break
-            else:
-                unique_pending = set(pending)
-                logging.info(f"Build in progress. Packages processing: {len(pending)}. States: {unique_pending}")
-                time.sleep(10)
+                return root
 
-        except ET.ParseError:
-            logging.warning("Failed to parse build results XML. Retrying...")
-            time.sleep(10)
+            logging.info(f"Build in progress. Packages processing: {len([s for s in statuses if s not in success_states])}")
+            time.sleep(20)
+
         except Exception as e:
-            logging.warning(f"Unexpected error during polling: {e}. Retrying...")
+            logging.warning(f"Error during polling: {e}. Retrying...")
             time.sleep(10)
+
+
+def print_mi_build_info(api_url, project, mi_project, results_xml, repository="containerfile"):
+    """
+    For each package and architecture, runs 'osc buildinfo' and prints dependencies
+    originating from the mi_project.
+    """
+    logging.info(f"Checking build dependencies from {mi_project}...")
+
+    # Iterate through each result entry in the results XML to get architectures
+    for result in results_xml.findall(".//result"):
+        arch = result.get('arch')
+
+        # Iterate through each status entry in the results XML to get package names and arches
+        for status in results_xml.findall(".//status"):
+            package = status.get('package')
+            code = status.get('code')
+
+            # Skip if we are missing critical information or if the build didn't succeed
+            if not package or not arch or code != 'succeeded':
+                continue
+
+            logging.info(f"Retrieving buildinfo for {package} ({arch})...")
+            # Ensure all items in this list are strings to avoid "NoneType found" errors
+            cmd = ["osc", "-A", str(api_url), "buildinfo", str(project), str(package), str(repository), str(arch)]
+
+            try:
+                info_xml = run_osc_command(cmd)
+                info_root = ET.fromstring(info_xml)
+
+                # Find all bdeps where project matches mi_project
+                bdeps = info_root.findall(f".//bdep[@project='{mi_project}']")
+
+                for bdep in bdeps:
+                    name = bdep.get('name')
+                    version = bdep.get('version')
+                    release = bdep.get('release')
+                    b_arch = bdep.get('arch')
+                    repo = bdep.get('repository')
+
+                    print(f"  <bdep name=\"{name}\" version=\"{version}\" release=\"{release}\" arch=\"{b_arch}\" project=\"{mi_project}\" repository=\"{repo}\"/>")
+
+            except Exception as e:
+                logging.error(f"Failed to process buildinfo for {package}: {e}")
 
 
 def print_registries(container_project):
@@ -123,7 +183,6 @@ def print_registries(container_project):
             filename = link.get('href')
             if filename and filename.endswith('.registry.txt'):
                 registry_url = f"{base_url}{filename}"
-                logging.info(f"Found registry file: {filename}")
                 file_response = requests.get(registry_url)
                 file_response.raise_for_status()
                 # Print the registry content as requested
@@ -131,7 +190,7 @@ def print_registries(container_project):
                     print(file_response.text.splitlines()[1].split().pop())
                     found_any = True
                 except IndexError:
-                    logging.warning(f"Registry file {filename} seemed empty or malformed.")
+                    pass
 
         if not found_any:
             logging.warning("No *.registry.txt files found.")
@@ -148,88 +207,66 @@ def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s', stream=sys.stderr)
 
     parser = argparse.ArgumentParser(description="Automate editing OBS project metadata and configuration.")
-    parser.add_argument("--container-project", required=True,
-                        help="The name of the OBS project (e.g., home:oscar-barrios:SLE_Testing).")
-    parser.add_argument("--api-url", default="https://api.suse.de",
-                        help="The OBS API URL to use (e.g., https://api.suse.de).")
-    parser.add_argument("--prefer",
-                        help="The value for the 'Prefer' rule in project config (e.g., container:suse-manager-5.0-init-5.0.5).")
-    parser.add_argument("--mi-project", help="The project name of the MI to validate (e.g., SUSE:Maintenance:12345).")
-    parser.add_argument("--mi-repo-name",
-                        help="The repository name including the packages to validate (e.g., SUSE_Updates_SLE-Module-Basesystem_15-SP6_x86_64).")
+    parser.add_argument("--container-project", required=True, help="The name of the OBS project.")
+    parser.add_argument("--api-url", default="https://api.suse.de", help="The OBS API URL.")
+    parser.add_argument("--prefer", help="The value for the 'Prefer' rule in prjconf.")
+    parser.add_argument("--mi-project", help="The project name of the MI to validate.")
     args = parser.parse_args()
 
-    # --- Edit Project Configuration (prjconf) ---
+    # --- Edit Project Configuration ---
     if args.prefer:
         prjconf_cmd = ["osc", "-A", args.api_url, "meta", "prjconf", args.container_project]
         current_prjconf = run_osc_command(prjconf_cmd)
 
         prefer_line = f"Prefer: {args.prefer}"
         lines = current_prjconf.splitlines()
-        new_lines = []
-        found_prefer = False
-        for line in lines:
-            if line.strip().startswith("Prefer: container:suse-manager"):
-                new_lines.append(prefer_line)
-                found_prefer = True
-            else:
-                new_lines.append(line)
-        if not found_prefer:
+        new_lines = [prefer_line if l.strip().startswith("Prefer: container:suse-manager") else l for l in lines]
+        if not any(l.strip().startswith("Prefer: container:suse-manager") for l in lines):
             new_lines.append(prefer_line)
 
-        modified_prjconf = "\n".join(new_lines) + "\n"
+        with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
+            tmp.write("\n".join(new_lines) + "\n")
+            upload_cmd = ["osc", "-A", args.api_url, "meta", "prjconf", args.container_project, "-F", tmp.name]
+            run_osc_command(upload_cmd)
+        os.remove(tmp.name)
 
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_file:
-            tmp_file.write(modified_prjconf)
-            tmp_file_path = tmp_file.name
-
-        upload_cmd = ["osc", "-A", args.api_url, "meta", "prjconf", args.container_project, "-F", tmp_file_path]
-        run_osc_command(upload_cmd)
-        os.remove(tmp_file_path)
-        logging.info(f"Successfully updated project configuration for '{args.container_project}'.")
-
-    # --- Edit Project Metadata (meta) ---
-    if args.mi_project and args.mi_repo_name:
-        meta_cmd = ["osc", "-A", args.api_url, "meta", "prj", args.container_project]
-        current_meta_xml = run_osc_command(meta_cmd)
+    # --- Edit Project Metadata ---
+    if args.mi_project:
+        mi_repo_names = get_mi_repo_names(args.api_url, args.mi_project)
+        meta_xml = run_osc_command(["osc", "-A", args.api_url, "meta", "prj", args.container_project])
 
         try:
-            root = ET.fromstring(current_meta_xml)
-            containerfile_repo = root.find(".//repository[@name='containerfile']")
-            if containerfile_repo is None:
-                raise ValueError("Could not find repository with name='containerfile' in the metadata.")
+            root = ET.fromstring(meta_xml)
+            repo_node = root.find(".//repository[@name='containerfile']")
 
-            path_to_modify = None
-            for path_elem in containerfile_repo.findall("./path"):
-                if re.match(r'SUSE:Maintenance:\d+', path_elem.get('project')):
-                    path_to_modify = path_elem
-                    break
+            # Remove existing MI paths
+            for p in repo_node.findall("./path"):
+                if re.match(r'SUSE:Maintenance:\d+', p.get('project', '')):
+                    repo_node.remove(p)
 
-            if path_to_modify is None:
-                raise ValueError("Could not find a matching SUSE:Maintenance path to modify in the metadata.")
+            # Insert before the last path element
+            remaining_paths = repo_node.findall("./path")
+            insertion_index = list(repo_node).index(remaining_paths[-1]) if remaining_paths else 0
 
-            path_to_modify.set('project', args.mi_project)
-            path_to_modify.set('repository', args.mi_repo_name)
+            for i, repo_name in enumerate(mi_repo_names):
+                new_path = ET.Element('path', {'project': args.mi_project, 'repository': repo_name})
+                repo_node.insert(insertion_index + i, new_path)
 
-            modified_meta_xml = ET.tostring(root, encoding='unicode')
+            with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
+                tmp.write(ET.tostring(root, encoding='unicode'))
+                run_osc_command(["osc", "-A", args.api_url, "meta", "prj", args.container_project, "-F", tmp.name])
+            os.remove(tmp.name)
 
-            with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_file:
-                tmp_file.write(modified_meta_xml)
-                tmp_file_path = tmp_file.name
+            # Wipe and Wait
+            run_osc_command(["osc", "-A", args.api_url, "wipebinaries", "--all", args.container_project])
+            final_results = wait_for_build_completion(args.api_url, args.container_project)
 
-            upload_cmd = ["osc", "-A", args.api_url, "meta", "prj", args.container_project, "-F", tmp_file_path]
-            run_osc_command(upload_cmd)
-            os.remove(tmp_file_path)
-            logging.info(f"Successfully updated project metadata for '{args.container_project}'.")
-
-            wait_for_build_completion(args.api_url, args.container_project)
+            # --- Verification Step ---
+            print_mi_build_info(args.api_url, args.container_project, args.mi_project, final_results)
             print_registries(args.container_project)
 
-        except ET.ParseError:
-            logging.error("Failed to parse the project metadata XML. It might be malformed.")
-            sys.exit(1)
-        except ValueError as e:
-            logging.error(e)
+        except Exception as e:
+            logging.error(f"Error: {e}")
             sys.exit(1)
 
 

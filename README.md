@@ -146,11 +146,6 @@ The UI allows the QE team to target exact incidents without code changes:
 
 * **`container_project`**: The target IBS project (e.g., `Devel:Galaxy:Manager:MUTesting:5.0`).
 * **`mi_project`**: The incident project (e.g., `SUSE:Maintenance:12345`).
-* **`mi_repo_name`**: The specific repository within the incident (e.g., `SUSE_SLE-15-SP6_Update`). As future enhancement, we can get rid of this parameter and extract the codestreams directly from the MI project metadata. 
-  * Manually identify codestreams via:
-      ```
-      osc meta prj SUSE:Maintenance:<ID> | xmllint --xpath '//repository/path/@project' - | awk -F'"' '{print $2}' | grep -E -v '^(SUSE:Maintenance|SUSE:Updates)' | sed 's/:/_/g'
-      ```
 
 #### 2. The "Build Containers" Stage
 
