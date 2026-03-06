@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# Copyright (c) 2025 SUSE LLC
+# Licensed under GPLv2
+
 import argparse
 import subprocess
 import os
@@ -31,46 +34,24 @@ def run_osc_command(command, input_data=None):
 
 def get_mi_packages(api_url, mi_project):
     """
-    Scans the MI project for build repositories containing RPMs.
-    It automatically finds repositories like 'SUSE_SLE-15-SP6_Update'
-    and extracts the package names.
+    Scans the MI project for SOURCE packages.
+    This is much more reliable than binary discovery.
     """
-    logging.info(f"Searching for binary repositories in {mi_project}...")
+    logging.info(f"Searching for source packages in {mi_project}...")
+    cmd_list = ["osc", "-A", api_url, "ls", mi_project]
 
-    # 1. Get the list of all internal build targets
-    repo_list_cmd = ["osc", "-A", api_url, "ls", "-b", mi_project]
-    all_targets = run_osc_command(repo_list_cmd).splitlines()
+    try:
+        source_packages = run_osc_command(cmd_list).splitlines()
+        # Filter: ignore empty lines and 'patchinfo'
+        found_list = [p.strip() for p in source_packages if p.strip() and p.strip() != "patchinfo"]
 
-    packages = set()
-    # 2. Iterate through targets to find those containing RPMs
-    # We look for targets ending in /x86_64
-    for target in all_targets:
-        if not target.endswith("/x86_64"):
-            continue
+        if found_list:
+            logging.info(f"Successfully discovered {len(found_list)} source packages in {mi_project}")
+            return sorted(found_list)
+    except Exception as e:
+        logging.error(f"Failed to list sources in {mi_project}: {e}")
 
-        repo_name = target.split('/')[0]
-        logging.info(f"Checking repository target: {repo_name}...")
-
-        binary_list_cmd = ["osc", "-A", api_url, "ls", "-b", mi_project, repo_name, "x86_64"]
-        try:
-            binaries = run_osc_command(binary_list_cmd).splitlines()
-            for line in binaries:
-                line = line.strip()
-                if line.endswith(".rpm") and not any(x in line for x in ["debuginfo", "debugsource"]):
-                    # Extract name before the version (e.g. postgresql16-server)
-                    match = re.match(r'^(.+?)-[0-9].*', line)
-                    if match:
-                        packages.add(match.group(1))
-        except Exception:
-            continue
-
-    found_list = sorted(list(packages))
-    if found_list:
-        logging.info(f"Successfully discovered {len(found_list)} packages in {mi_project}")
-    else:
-        logging.warning(f"No RPMs discovered in {mi_project}. Verify build status in IBS.")
-
-    return found_list
+    return []
 
 def wait_for_build_completion(api_url, project, repository="containerfile", timeout_minutes=90):
     logging.info("Initiating 30s safety wait for IBS scheduler...")
@@ -91,7 +72,7 @@ def wait_for_build_completion(api_url, project, repository="containerfile", time
             time.sleep(15); continue
 
         if any(s in {'failed', 'broken', 'unresolvable'} for s in statuses):
-            logging.error("Build failed in IBS. Check logs."); sys.exit(1)
+            logging.error("Build failed in IBS. Check build logs."); sys.exit(1)
 
         if all(s in {'succeeded', 'excluded', 'disabled'} for s in statuses):
             logging.info("All packages built successfully."); break
@@ -108,7 +89,6 @@ def print_registries(container_project):
             fn = link.get('href')
             if fn and fn.endswith('.registry.txt'):
                 content = requests.get(f"{base_url}{fn}").text
-                # Print the second line's last word (the full registry path)
                 print(content.splitlines()[1].split().pop())
     except Exception as e:
         logging.error(f"Registry extraction failed: {e}")
@@ -118,28 +98,28 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--container-project", required=True)
     parser.add_argument("--api-url", default="https://api.suse.de")
-    parser.add_argument("--prefer", help="Extra preference (e.g. init image version)")
+    parser.add_argument("--prefer")
     parser.add_argument("--mi-project")
     parser.add_argument("--mi-repo-name")
     args = parser.parse_args()
 
     needs_rebuild = False
 
-    # --- Step 1: Update Project Config (prjconf) ---
+    # --- Step 1: Dynamic prjconf Updates ---
     if args.mi_project:
-        # DYNAMIC DISCOVERY: Find all packages in the MI to avoid Shadowing
         mi_pkgs = get_mi_packages(args.api_url, args.mi_project)
+        # Force the solver to pick these specific source packages from our MI
         dynamic_prefers = [f"Prefer: {p}:{args.mi_project}" for p in mi_pkgs]
 
         prjconf_text = run_osc_command(["osc", "-A", args.api_url, "meta", "prjconf", args.container_project])
-        # Clean old MI rules
+        # Strip any existing Maintenance preferences
         lines = [l for l in prjconf_text.splitlines() if ':SUSE:Maintenance:' not in l]
 
         final_lines = []
         injected = False
         for line in lines:
             final_lines.append(line)
-            # Inject inside the container repo block
+            # Inject new preferences into the containerfile repo block
             if 'if "%_repository" == "containerfile"' in line and not injected:
                 final_lines.extend(dynamic_prefers)
                 if args.prefer:
@@ -151,10 +131,10 @@ def main():
             tmp_path = tmp.name
         run_osc_command(["osc", "-A", args.api_url, "meta", "prjconf", args.container_project, "-F", tmp_path])
         os.remove(tmp_path)
-        logging.info("Project Config updated with dynamic MI preferences.")
+        logging.info("Project Configuration updated with source preferences.")
         needs_rebuild = True
 
-    # --- Step 2: Update Project Metadata (meta prj) ---
+    # --- Step 2: Metadata Update ---
     if args.mi_project and args.mi_repo_name:
         meta_text = run_osc_command(["osc", "-A", args.api_url, "meta", "prj", args.container_project])
         root = ET.fromstring(meta_text)
@@ -169,10 +149,10 @@ def main():
                 tmp_path = tmp.name
             run_osc_command(["osc", "-A", args.api_url, "meta", "prj", args.container_project, "-F", tmp_path])
             os.remove(tmp_path)
-            logging.info(f"Project Metadata updated to point to {args.mi_project}")
+            logging.info(f"Project Metadata updated to {args.mi_project}")
             needs_rebuild = True
 
-    # --- Step 3: Trigger Build and Poll ---
+    # --- Step 3: Trigger rebuild and wait ---
     if needs_rebuild:
         run_osc_command(["osc", "-A", args.api_url, "rebuild", args.container_project, "-r", "containerfile"])
         wait_for_build_completion(args.api_url, args.container_project)
