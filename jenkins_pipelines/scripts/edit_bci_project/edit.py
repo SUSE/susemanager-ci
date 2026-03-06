@@ -48,10 +48,10 @@ def run_osc_command(command, input_data=None):
 
 def get_mi_repo_names(api_url, mi_project):
     """
-    Retrieves a list of repository names by inspecting the metadata of the mi-project.
+    Retrieves a list of codestreams by inspecting the metadata of the mi-project.
     Filters out Maintenance/Updates and replaces colons with underscores.
     """
-    logging.info(f"Resolving repository names for maintenance project: {mi_project}")
+    logging.info(f"Resolving codestreams for maintenance project: {mi_project}")
     cmd = ["osc", "-A", api_url, "meta", "prj", mi_project]
     meta_xml = run_osc_command(cmd)
 
@@ -70,7 +70,7 @@ def get_mi_repo_names(api_url, mi_project):
         if not resolved_repos:
             raise ValueError(f"Could not find any valid base projects in {mi_project} metadata.")
 
-        logging.info(f"Resolved repository names: {', '.join(resolved_repos)}")
+        logging.info(f"Resolved codestreams: {', '.join(resolved_repos)}")
         return resolved_repos
 
     except (ET.ParseError, ValueError) as e:
