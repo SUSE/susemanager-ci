@@ -105,7 +105,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_minion = {
     mac    = "02:00:00:42:00:28"
     name   = "sles15sp5s390-minion"
-    userid = "S50MINUE"
+    userid = "S50MIPRG"
   }
 
   # Micro Minions
@@ -206,7 +206,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:42:00:29"
     name   = "sles15sp5s390-sshminion"
-    userid = "S50SSNUE"
+    userid = "S50SSPRG"
   }
   # Note: Amazon Linux 2023 is not present in SUMA 5.0
   product_version = "5.0-released"

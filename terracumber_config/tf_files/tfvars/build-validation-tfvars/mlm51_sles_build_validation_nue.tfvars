@@ -109,7 +109,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_minion = {
     mac  = "02:00:00:42:00:2a"
     name = "sles15sp5s390-minion"
-    userid = "S51MINUE"
+    userid = "M51MIPRG"
   }
 
   # Micro Minions
@@ -214,7 +214,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_sshminion = {
     mac  = "02:00:00:42:00:2b"
     name = "sles15sp5s390-sshminion"
-    userid = "S51SSNUE"
+    userid = "M51SSPRG"
   }
   product_version       = "5.1-released"
   name_prefix           = "mlm-bv-51-sles-"

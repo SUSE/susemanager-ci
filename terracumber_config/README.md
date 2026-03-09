@@ -99,7 +99,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_minion = {
     mac    = "xx:xx:xx:xx:xx:xx"
     name   = "sles15sp5s390-minion"
-    userid = "SXXMINUE"
+    userid = "MxxMIPRG"
   }
 
   product_version = "x.x-released"
