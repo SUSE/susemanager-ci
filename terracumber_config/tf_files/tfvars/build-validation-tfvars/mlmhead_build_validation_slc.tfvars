@@ -108,7 +108,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_minion = {
     mac    = "02:00:00:02:01:34"
     name   = "sles15sp5s390-minion"
-    userid = "UYMMISLC"
+    userid = "M99MISLC"
   }
   salt_migration_minion = {
     mac  = "aa:b2:93:04:05:9b"
@@ -221,7 +221,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:02:01:35"
     name   = "sles15sp5s390-sshminion"
-    userid = "UYMSSSLC"
+    userid = "M99SSSLC"
   }
 
   product_version = "head"

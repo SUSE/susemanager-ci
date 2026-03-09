@@ -133,7 +133,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_minion = {
     mac    = "02:00:00:42:00:26"
     name   = "sles15sp5s390-minion"
-    userid = "S43MINUE"
+    userid = "S43MIPRG"
   }
 
   # Micro Minions
@@ -234,7 +234,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:42:00:27"
     name   = "sles15sp5s390-sshminion"
-    userid = "S43SSNUE"
+    userid = "S43SSPRG"
   }
   product_version = "4.3-released"
   name_prefix     = "suma-bv-43-"
