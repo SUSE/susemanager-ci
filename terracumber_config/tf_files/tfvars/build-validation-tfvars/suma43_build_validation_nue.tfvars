@@ -32,6 +32,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:a8"
     name = "sles12sp5-client"
   }
+  sles15sp3_client = {
+    mac  = "aa:b2:92:42:00:a9"
+    name = "sles15sp3-client"
+  }
   sles15sp4_client = {
     mac  = "aa:b2:92:42:00:aa"
     name = "sles15sp4-client"
@@ -57,6 +61,10 @@ ENVIRONMENT_CONFIGURATION = {
   sles12sp5_minion = {
     mac  = "aa:b2:92:42:00:b0"
     name = "sles12sp5-minion"
+  }
+  sles15sp3_minion = {
+    mac  = "aa:b2:92:42:00:b1"
+    name = "sles15sp3-minion"
   }
   sles15sp4_minion = {
     mac  = "aa:b2:92:42:00:b2"
@@ -159,6 +167,10 @@ ENVIRONMENT_CONFIGURATION = {
   sles12sp5_sshminion = {
     mac  = "aa:b2:92:42:00:d0"
     name = "sles12sp5-sshminion"
+  }
+  sles15sp3_sshminion = {
+    mac  = "aa:b2:92:42:00:d1"
+    name = "sles15sp3-sshminion"
   }
   sles15sp4_sshminion = {
     mac  = "aa:b2:92:42:00:d2"
