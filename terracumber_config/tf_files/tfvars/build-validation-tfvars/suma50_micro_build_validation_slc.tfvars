@@ -35,10 +35,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:10"
     name = "sles12sp5-minion"
   }
-  sles15sp3_minion = {
-    mac  = "aa:b2:92:05:00:11"
-    name = "sles15sp3-minion"
-  }
   sles15sp4_minion = {
     mac  = "aa:b2:92:05:00:12"
     name = "sles15sp4-minion"
@@ -140,10 +136,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:30"
     name = "sles12sp5-sshminion"
   }
-  sles15sp3_sshminion = {
-    mac  = "aa:b2:92:05:00:31"
-    name = "sles15sp3-sshminion"
-  }
   sles15sp4_sshminion = {
     mac  = "aa:b2:92:05:00:32"
     name = "sles15sp4-sshminion"
@@ -238,7 +230,7 @@ BASE_CONFIGURATION = {
     hypervisor         = "tatooine.mgr.slc1.suse.org" # Share base_old_sle hypervisor
   }
   base_new_sle = {
-    images             = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o" ]
+    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
