@@ -32,10 +32,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:7c"
     name = "sles12sp5-minion"
   }
-  sles15sp3_minion = {
-    mac  = "aa:b2:93:04:05:7d"
-    name = "sles15sp3-minion"
-  }
   sles15sp4_minion = {
     mac  = "aa:b2:93:04:05:7e"
     name = "sles15sp4-minion"
@@ -146,10 +142,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:9c"
     name = "sles12sp5-sshminion"
   }
-  sles15sp3_sshminion = {
-    mac  = "aa:b2:93:04:05:9d"
-    name = "sles15sp3-sshminion"
-  }
   sles15sp4_sshminion = {
     mac  = "aa:b2:93:04:05:9e"
     name = "sles15sp4-sshminion"
@@ -252,7 +244,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "cosmopolitan.mgr.slc1.suse.org"
   }
   base_new_sle = {
-    images             = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "tumbleweedo" ]
+    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "tumbleweedo" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
