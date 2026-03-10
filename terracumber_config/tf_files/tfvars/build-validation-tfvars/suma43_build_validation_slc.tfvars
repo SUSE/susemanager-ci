@@ -33,6 +33,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:a8"
     name = "sles12sp5-client"
   }
+  sles15sp3_client = {
+    mac  = "aa:b2:92:05:00:a9"
+    name = "sles15sp3-client"
+  }
   sles15sp4_client = {
     mac  = "aa:b2:92:05:00:aa"
     name = "sles15sp4-client"
@@ -58,6 +62,10 @@ ENVIRONMENT_CONFIGURATION = {
   sles12sp5_minion = {
     mac  = "aa:b2:92:05:00:b0"
     name = "sles12sp5-minion"
+  }
+  sles15sp3_minion = {
+    mac  = "aa:b2:92:05:00:b1"
+    name = "sles15sp3-minion"
   }
   sles15sp4_minion = {
     mac  = "aa:b2:92:05:00:b2"
@@ -162,6 +170,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:d0"
     name = "sles12sp5-sshminion"
   }
+  sles15sp3_sshminion = {
+    mac  = "aa:b2:92:05:00:d1"
+    name = "sles15sp3-sshminion"
+  }
   sles15sp4_sshminion = {
     mac  = "aa:b2:92:05:00:d2"
     name = "sles15sp4-sshminion"
@@ -258,7 +270,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "endor.mgr.slc1.suse.org"
   }
   base_new_sle = {
-    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o" ]
+    images             = [ "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o" ]
     pool               = "default"
     bridge             = "br1"
     additional_network = null
