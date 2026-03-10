@@ -21,7 +21,7 @@ module "base_core" {
   name_prefix     = var.ENVIRONMENT_CONFIGURATION.name_prefix
   use_avahi       = false
   domain          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
-
+  ssh_key_path    = var.PUBLIC_SSH_KEY_PATH
   images = lookup(var.BASE_CONFIGURATIONS.base_core, "images", [
     "sles12sp5o",
     "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o",
