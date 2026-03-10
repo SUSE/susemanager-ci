@@ -158,3 +158,9 @@ variable "BASE_CONFIGURATIONS" {
   type        = map
   description = "Describe the base configuration (default core for NUE and all bases for SLC1)"
 }
+
+variable "PRIVATE_KEY_PATH" {
+  type        = string
+  default     = "~/.ssh/id_ed25519"
+  description = "Path to private key used for ssh access"
+}

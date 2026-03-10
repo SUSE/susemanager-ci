@@ -88,6 +88,7 @@ module "build_validation_module" {
   proxy_container_repository  = var.PROXY_CONTAINER_REPOSITORY
   proxy_additional_repos      = var.PROXY_ADDITIONAL_REPOS
   base_os                     = var.BASE_OS
+  private_key_path            = var.PRIVATE_KEY_PATH
 }
 
 output "configuration" {
