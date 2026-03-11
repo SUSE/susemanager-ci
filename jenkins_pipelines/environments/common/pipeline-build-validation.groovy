@@ -55,15 +55,31 @@ def run(params) {
                 currentBuild.description = nameDisplay(params)
             }
 
-            stage('Build containers'){
+            stage('Build containers') {
                 if (params.container_project && params.mi_project && params.mi_repo_name) {
-                    def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/edit_bci_project"
-                    sh "python3 -m venv ${WORKSPACE}/venv"
-                    sh "${WORKSPACE}/venv/bin/pip install -r ${SCRIPT_DIR}/requirements.txt"
-                    sh( script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --mi-project ${params.mi_project} --mi-repo-name ${params.mi_repo_name}", returnStdout: true)
-                    custom_project_path = "registry.suse.de/${params.container_project.toLowerCase().replaceAll(':', '/')}/containerfile"
-                    server_container_repository = custom_project_path
-                    proxy_container_repository = custom_project_path
+                    script {
+                        def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/edit_bci_project"
+
+                        // Set up environment
+                        sh "python3 -m venv ${WORKSPACE}/venv"
+                        sh "${WORKSPACE}/venv/bin/pip install -r ${SCRIPT_DIR}/requirements.txt"
+
+                        // Run script and stream output to Jenkins console
+                        // We use 'sh' without returnStdout: true so we can see the 'logging.info' live
+                        sh """
+                            ${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py \
+                            --container-project ${params.container_project} \
+                            --mi-project ${params.mi_project} \
+                            --mi-repo-name ${params.mi_repo_name} \
+                            --api-url https://api.suse.de
+                        """
+
+                        // Set variables for subsequent stages
+                        def sanitized_project = params.container_project.toLowerCase().replaceAll(':', '/')
+                        custom_project_path = "registry.suse.de/${sanitized_project}/containerfile"
+                        server_container_repository = custom_project_path
+                        proxy_container_repository = custom_project_path
+                    }
                 }
             }
 
