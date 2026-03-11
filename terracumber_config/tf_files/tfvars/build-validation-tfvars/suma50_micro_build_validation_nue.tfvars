@@ -58,6 +58,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:67"
     name = "centos7-minion"
   }
+  # We forgot to automate amazon2
   rocky8_minion = {
     mac  = "aa:b2:92:42:00:68"
     name = "rocky8-minion"
@@ -105,7 +106,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_minion = {
     mac    = "02:00:00:42:00:28"
     name   = "sles15sp5s390-minion"
-    userid = "S50MINUE"
+    userid = "S50MIPRG"
   }
 
   # Micro Minions
@@ -163,6 +164,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:87"
     name = "centos7-sshminion"
   }
+  # We forgot to automate amazon2
   rocky8_sshminion = {
     mac  = "aa:b2:92:42:00:88"
     name = "rocky8-sshminion"
@@ -206,9 +208,8 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:42:00:29"
     name   = "sles15sp5s390-sshminion"
-    userid = "S50SSNUE"
+    userid = "S50SSPRG"
   }
-  # Note: Amazon Linux 2023 is not present in SUMA 5.0
   product_version = "5.0-released"
   name_prefix     = "suma-bv-50-micro-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.0-micro-qe-build-validation"

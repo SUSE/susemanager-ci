@@ -91,6 +91,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:c2"
     name = "alma9-minion"
   }
+  # We forgot to automate amazon2
   centos7_minion = {
     mac  = "aa:b2:92:05:00:b7"
     name = "centos7-minion"
@@ -201,6 +202,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:d7"
     name = "centos7-sshminion"
   }
+  # We forgot to automate amazon2
   liberty9_sshminion = {
     mac  = "aa:b2:92:05:00:e5"
     name = "liberty9-sshminion"

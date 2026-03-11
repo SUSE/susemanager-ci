@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o", "slmicro62o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-head-podman-"
@@ -162,6 +162,7 @@ module "cucumber_testsuite" {
       container_tag        = "latest"
     }
     proxy_containerized = {
+      image = "slmicro62o"
       provider_settings = {
         mac = "aa:b2:93:01:00:02"
         vcpu = 2

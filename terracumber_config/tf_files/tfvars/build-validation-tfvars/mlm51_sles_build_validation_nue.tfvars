@@ -58,6 +58,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:17"
     name = "centos7-minion"
   }
+  # We forgot to automate amazon 2
   rocky8_minion = {
     mac  = "aa:b2:92:42:01:18"
     name = "rocky8-minion"
@@ -109,7 +110,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_minion = {
     mac  = "02:00:00:42:00:2a"
     name = "sles15sp5s390-minion"
-    userid = "S51MINUE"
+    userid = "M51MIPRG"
   }
 
   # Micro Minions
@@ -167,6 +168,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:37"
     name = "centos7-sshminion"
   }
+  # We forgot to automate amazon 2
   rocky8_sshminion = {
     mac  = "aa:b2:92:42:01:38"
     name = "rocky8-sshminion"
@@ -214,7 +216,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp5s390_sshminion = {
     mac  = "02:00:00:42:00:2b"
     name = "sles15sp5s390-sshminion"
-    userid = "S51SSNUE"
+    userid = "M51SSPRG"
   }
   product_version       = "5.1-released"
   name_prefix           = "mlm-bv-51-sles-"
