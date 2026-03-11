@@ -124,6 +124,8 @@ jobs:
           variable "PRODUCT_VERSION" { default="" }
           variable "CUCUMBER_GITREPO" {}
           variable "CUCUMBER_BRANCH" {}
+          variable PRIVATE_SSH_KEY_PATH { default="" }
+          variable PUBLIC_SSH_KEY_PATH { default="" }
           EOF
         
           # Run Tofu inside the sumaform directory
@@ -178,6 +180,8 @@ jobs:
           variable "PRODUCT_VERSION" { default="" }
           variable "CUCUMBER_GITREPO" {}
           variable "CUCUMBER_BRANCH" {}
+          variable PRIVATE_SSH_KEY_PATH { default="" }
+          variable PUBLIC_SSH_KEY_PATH { default="" }
           EOF
           
           # Run Tofu
