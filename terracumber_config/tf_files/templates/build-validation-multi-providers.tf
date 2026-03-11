@@ -50,7 +50,7 @@ module "base_core" {
 
   images            = var.BASE_CONFIGURATIONS.base_core.images
 
-
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -75,6 +75,7 @@ module "base_old_sle" {
 
   images            = var.BASE_CONFIGURATIONS.base_old_sle.images
 
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -99,6 +100,7 @@ module "base_rhlike" {
 
   images            = var.BASE_CONFIGURATIONS.base_old_sle.images
 
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -123,6 +125,7 @@ module "base_new_sle" {
 
   images            = var.BASE_CONFIGURATIONS.base_new_sle.images
 
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -146,6 +149,7 @@ module "base_retail" {
 
   images            = var.BASE_CONFIGURATIONS.base_retail.images
 
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -171,6 +175,7 @@ module "base_deblike" {
 
   images            = var.BASE_CONFIGURATIONS.base_deblike.images
 
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -228,6 +233,8 @@ module "build_validation_module" {
   proxy_container_repository  = var.PROXY_CONTAINER_REPOSITORY
   proxy_additional_repos      = var.PROXY_ADDITIONAL_REPOS
   base_os                     = var.BASE_OS
+  private_ssh_key_path        = var.PRIVATE_SSH_KEY_PATH
+  public_ssh_key_path         = var.PUBLIC_SSH_KEY_PATH
 }
 
 

@@ -158,3 +158,15 @@ variable "BASE_CONFIGURATIONS" {
   type        = map
   description = "Describe the base configuration (default core for NUE and all bases for SLC1)"
 }
+
+variable "PRIVATE_SSH_KEY_PATH" {
+  type        = string
+  default     = "~/.ssh/id_ed25519"
+  description = "Path to private ssh key used for access"
+}
+
+variable "PUBLIC_SSH_KEY_PATH" {
+  type        = string
+  default     = "./salt/controller/id_ed25519.pub"
+  description = "Path to public ssh key used for access"
+}
