@@ -157,7 +157,6 @@ module "cucumber_testsuite" {
       runtime               = "podman"
       container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag         = "latest"
-      helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
       main_disk_size        = 40
       repository_disk_size  = 250
       database_disk_size    = 60

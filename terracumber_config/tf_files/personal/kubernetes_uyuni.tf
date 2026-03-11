@@ -55,6 +55,9 @@ module "cucumber_testsuite" {
   server_http_proxy         = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint  = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
+  kubernetes = true
+  use_devel_oci = true
+
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
@@ -65,26 +68,31 @@ module "cucumber_testsuite" {
         cpu_model = "host-passthrough"
       }
     }
-    server_containerized = {
+    server_kubernetes = {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
       }
-      runtime               = "podman"
-      container_repository  = var.CONTAINER_REPOSITORY
+      runtime               = "rke2"
       container_tag         = "latest"
       main_disk_size        = 50
       repository_disk_size  = 150
       database_disk_size    = 50
       login_timeout         = 28800
       large_deployment      = true
+
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      helm_chart_name      = "server-helm"
+      helm_chart_url       = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
     }
-    proxy_containerized = {
+    proxy_kubernetes = {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
       }
-      runtime              = "podman"
-      container_repository = var.CONTAINER_REPOSITORY
+      runtime              = "rke2"
       container_tag        = "latest"
+      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      helm_chart_name      = "proxy-helm"
+      helm_chart_url       = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
     }
     suse_minion = {
       image             = "tumbleweedo"
