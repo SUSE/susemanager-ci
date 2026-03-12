@@ -51,7 +51,7 @@ v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "centos7_minion": { "/SUSE_Updates_MultiLinuxManagerTools_RES-7_x86_64/"},
     "liberty9_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
     "openeuler2403_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
-    "opensuse156arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_aarch64/"},
+    "opensuse160arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-16_aarch64/"},
     "oracle9_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
     "rhel9_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
     "rocky8_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-8_x86_64/"},
