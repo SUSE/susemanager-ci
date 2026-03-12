@@ -120,7 +120,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ref-head-"
@@ -151,7 +151,6 @@ module "cucumber_testsuite" {
       }
     }
     server_containerized = {
-      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:c1"
       }
