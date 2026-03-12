@@ -58,6 +58,7 @@ module "base_core" {
   provider_settings = {
     pool        = var.BASE_CONFIGURATIONS.base_core.pool
     bridge      = var.BASE_CONFIGURATIONS.base_core.bridge
+    libvirt_uri = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_core.hypervisor}/system"
   }
 }
 
@@ -83,6 +84,7 @@ module "base_old_sle" {
   provider_settings = {
     pool        = var.BASE_CONFIGURATIONS.base_old_sle.pool
     bridge      = var.BASE_CONFIGURATIONS.base_old_sle.bridge
+    libvirt_uri = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_old_sle.hypervisor}/system"
   }
 }
 
@@ -108,6 +110,7 @@ module "base_rhlike" {
   provider_settings = {
     pool        = var.BASE_CONFIGURATIONS.base_rhlike.pool
     bridge      = var.BASE_CONFIGURATIONS.base_rhlike.bridge
+    libvirt_uri = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_old_sle.hypervisor}/system"
   }
 }
 
@@ -133,6 +136,7 @@ module "base_new_sle" {
   provider_settings = {
     pool        = var.BASE_CONFIGURATIONS.base_new_sle.pool
     bridge      = var.BASE_CONFIGURATIONS.base_new_sle.bridge
+    libvirt_uri = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_new_sle.hypervisor}/system"
   }
 }
 
@@ -158,6 +162,7 @@ module "base_retail" {
     pool               = var.BASE_CONFIGURATIONS.base_retail.pool
     bridge             = var.BASE_CONFIGURATIONS.base_retail.bridge
     additional_network = var.BASE_CONFIGURATIONS.base_retail.additional_network
+    libvirt_uri        = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_retail.hypervisor}/system"
   }
 }
 
@@ -183,6 +188,7 @@ module "base_deblike" {
   provider_settings = {
     pool               = var.BASE_CONFIGURATIONS.base_deblike.pool
     bridge             = var.BASE_CONFIGURATIONS.base_deblike.bridge
+    libvirt_uri        = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_deblike.hypervisor}/system"
   }
 }
 
