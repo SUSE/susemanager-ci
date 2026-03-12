@@ -89,8 +89,12 @@ terraform {
   }
 }
 
+locals {
+  libvirt_uri = "qemu+tcp://suma-12.mgr.suse.de/system"
+}
+
 provider "libvirt" {
-  uri = "qemu+tcp://suma-12.mgr.suse.de/system"
+  uri = local.libvirt_uri
 }
 
 module "cucumber_testsuite" {
@@ -214,6 +218,7 @@ module "cucumber_testsuite" {
     network_name       = null
     bridge             = "br1"
     additional_network = "192.168.117.0/24"
+    libvirt_uri        = local.libvirt_uri
   }
 }
 
