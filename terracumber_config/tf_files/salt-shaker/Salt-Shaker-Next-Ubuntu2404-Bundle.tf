@@ -80,8 +80,12 @@ terraform {
   }
 }
 
+locals {
+  libvirt_uri = "qemu+tcp://suma-04.mgr.suse.de/system"
+}
+
 provider "libvirt" {
-  uri = "qemu+tcp://suma-04.mgr.suse.de/system"
+  uri = local.libvirt_uri
 }
 
 module "base" {
@@ -94,6 +98,7 @@ module "base" {
     pool               = "ssd"
     network_name       = null
     bridge             = "br1"
+    libvirt_uri        = local.libvirt_uri
   }
 
   images = [ "ubuntu2404o" ]
