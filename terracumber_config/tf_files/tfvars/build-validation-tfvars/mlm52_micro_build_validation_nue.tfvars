@@ -23,7 +23,7 @@ ENVIRONMENT_CONFIGURATION = {
     name = "sles15sp7-minion"
   }
   # TODO: use final value
-  product_version = "head"
+  product_version = "head-staging"
   # product_version = "5.2-released"
   name_prefix     = "mlm-bv-52-micro-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.2/job/manager-5.2-micro-qe-build-validation"

@@ -273,7 +273,7 @@ ENVIRONMENT_CONFIGURATION = {
     userid = "M52SSPRG"
   }
   # TODO: use final value
-  product_version       = "head"
+  product_version       = "head-staging"
   # product_version     = "5.2-released"
   name_prefix           = "mlm-bv-52-sles-"
   url_prefix            = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.2-sles-qe-build-validation"
