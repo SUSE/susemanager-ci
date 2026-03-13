@@ -21,11 +21,8 @@ node('sumaform-cucumber') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
-            // TODO: replace with final values
-            string(name: 'server_container_repository', defaultValue: 'registry.suse.de', description: 'Server container registry'),
-            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de', description: 'Proxy container registry'),
-            // string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile', description: 'Server container registry'),
-            // string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             // This is different than other pipelines to make it work with the simple proxy_traditional without refactoring all feature files
             booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
@@ -52,7 +49,6 @@ node('sumaform-cucumber') {
     mutableParams.sumaform_backend = "libvirt"
     mutableParams.bin_path = "/usr/bin/tofu"
     mutableParams.bin_plugins_path = "/usr/bin"
-    mutableParams.base_os = "slmicro62o"
     // TODO: replace with final values
     mutableParams.product_version_display = "head"
     mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
