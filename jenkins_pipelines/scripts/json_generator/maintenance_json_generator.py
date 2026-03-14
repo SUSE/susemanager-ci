@@ -5,6 +5,7 @@ import json
 import os
 import requests
 import logging
+import threading
 
 from ibs_osc_client import IbsOscClient
 from repository_versions import VersionNodes, nodes_by_version
@@ -168,7 +169,7 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
 
     custom_repositories = init_custom_repositories(static_repos)
 
-    # Build list of all (node, mi_id, repo) combinations to check
+    # Build a list of all (node, mi_id, repo) combinations to check
     tasks = []
     for node, repositories in dynamic_nodes.items():
         for mi_id in mi_ids:
@@ -178,7 +179,6 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
     logging.info(f"Checking {len(tasks)} repository URLs in parallel (max_workers={max_workers})")
 
     # Execute HTTP requests in parallel
-    import threading
     lock = threading.Lock()
     found_count = 0
 
