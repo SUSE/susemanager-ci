@@ -5,6 +5,7 @@ import json
 import os
 import requests
 import logging
+import threading
 
 from ibs_osc_client import IbsOscClient
 from repository_versions import VersionNodes, nodes_by_version
@@ -12,6 +13,12 @@ from repository_versions import VersionNodes, nodes_by_version
 IBS_MAINTENANCE_URL_PREFIX: str = 'http://download.suse.de/ibs/SUSE:/Maintenance:/'
 IBS_URL_PREFIX: str = 'http://download.suse.de/ibs/SUSE:'
 JSON_OUTPUT_FILE_NAME: str = 'custom_repositories.json'
+
+# Short timeouts are intentional: thousands of parallel checks are made and
+# @cache prevents retrying the same URL, so false negatives are cheap to
+# accept in exchange for overall throughput. Increase if IBS is unreachable.
+REQUEST_CONNECT_TIMEOUT: float = 1
+REQUEST_READ_TIMEOUT: float = 2
 
 def setup_logging():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -73,7 +80,7 @@ def clean_mi_ids(mi_ids: list[str]) -> set[str]:
 def create_url(mi_id: str, suffix: str) -> str:
     url = f"{IBS_MAINTENANCE_URL_PREFIX}{mi_id}{suffix}"
 
-    res: requests.Response = requests.get(url, timeout=(1, 2))
+    res: requests.Response = requests.get(url, timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT))
     return url if res.ok else ""
 
 def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
@@ -159,6 +166,8 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
     Args:
         mi_ids: Set of MI ID strings
         version: SUMA version (43, 50-sles, 51-sles, etc.)
+        slfo_pull_request_id: Optional SLFO PullRequest id for sles160_minion and
+            slmicro62_minion; only valid for stable 51-* / 52-* versions.
         max_workers: Number of concurrent HTTP requests (default: 20)
     """
     version_data = get_version_nodes(version)
@@ -168,7 +177,7 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
 
     custom_repositories = init_custom_repositories(static_repos)
 
-    # Build list of all (node, mi_id, repo) combinations to check
+    # Build a list of all (node, mi_id, repo) combinations to check
     tasks = []
     for node, repositories in dynamic_nodes.items():
         for mi_id in mi_ids:
@@ -178,7 +187,6 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
     logging.info(f"Checking {len(tasks)} repository URLs in parallel (max_workers={max_workers})")
 
     # Execute HTTP requests in parallel
-    import threading
     lock = threading.Lock()
     found_count = 0
 
