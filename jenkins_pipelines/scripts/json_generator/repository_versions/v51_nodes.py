@@ -37,6 +37,9 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     },
     "slmicro61_minion": {
         "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/"
+    },
+    "sles16_minion": {
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
     }
 }
 
@@ -49,6 +52,7 @@ v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "alma9_minion": {"/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
     "centos7_minion": { "/SUSE_Updates_MultiLinuxManagerTools_RES-7_x86_64/"},
     "liberty9_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
+    "liberty10_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-10_x86_64/"},
     "openeuler2403_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
     "opensuse156arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_aarch64/"},
     "oracle9_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
