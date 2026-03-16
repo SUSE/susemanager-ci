@@ -18,7 +18,7 @@ def parse_cli_args() -> argparse.Namespace:
         description="This script reads the open qam-manager requests and creates a json file that can be fed to the BV testsuite pipeline"
     )
     parser.add_argument("-v", "--version", dest="version",
-                        help="Version of SUMA you want to run this script for, the options are 43 for 4.3, 50 for 5.0, 51 for 5.1, and 52 for 5.2",
+                        help="Version of SUMA you want to run this script for; options are: 43, 50-micro, 50-sles, 51-micro, 51-sles, 52-micro, 52-sles",
                         choices=["43", "50-micro", "50-sles", "51-micro","51-sles", "52-micro", "52-sles"], default="43", action='store')
     parser.add_argument("-i", "--mi_ids", required=False, dest="mi_ids", help="Space separated list of MI IDs", nargs='*', action='store')
     parser.add_argument("-f", "--file", required=False, dest="file", help="Path to a file containing MI IDs separated by newline character", action='store')
