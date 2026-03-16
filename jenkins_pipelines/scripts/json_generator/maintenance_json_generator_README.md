@@ -59,12 +59,12 @@ Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, and
 Example:
 
 ```bash
-python3.11 maintenance_json_generator.py --version 50 --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
+python3.11 maintenance_json_generator.py --version 50-micro --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
 ```
 
 This command will:
 
-1. Run the script for SUSE Manager 5.0 (`--version 50`).
+1. Run the script for SUSE Manager 5.0 (`--version 50-micro`).
 2. Use MI IDs 1234 and 5678 along with any additional MI IDs from the file
 mi_ids.txt.
 3. Reject any MIs that are under embargo (`--no_embargo`).
