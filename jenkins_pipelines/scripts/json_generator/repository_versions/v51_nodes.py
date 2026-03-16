@@ -1,7 +1,6 @@
 from typing import Dict, Set, List
 
 IBS_URL_PREFIX="http://download.suse.de/ibs/SUSE:"
-# Dictionary for SUMA 5.10 minion tools and repositories
 
 v51_uyuni_tools_sles_repos: Dict[str, Set[str]] = {
     "server" : {"/SUSE_Updates_Multi-Linux-Manager-Server-SLE_5.1_x86_64/",
@@ -79,7 +78,7 @@ v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
 
 def get_v51_static_and_client_tools(variant: str = "micro") -> (Dict[str, Dict[str, str]], Dict[str, List[str]]):
     """
-    Generate the full set of static and dynamic client tool repositories for SUMA 5.1.
+    Generate the full set of static and dynamic client tool repositories for MLM 5.1.
 
     The function merges static client repositories with Uyuni server/proxy repositories,
     prepends the IBS URL prefix, and returns both static and dynamic sets in a
