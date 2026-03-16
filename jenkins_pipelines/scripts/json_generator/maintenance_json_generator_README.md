@@ -19,7 +19,7 @@
 This Python script automates the process of gathering and processing open QAM
 (Quality Assurance Maintenance) requests for SUSE Linux Enterprise Server (SLES)
 that affect SUSE Manager. The output is a JSON file, which can be fed into the
-BV (Business Validation) testsuite pipeline for further testing. It supports
+BV (Build Validation) testsuite pipeline for further testing. It supports
 both SUSE Manager 4.3 (SUMA 4.3) and SUSE Manager 5.0 (SUMA 5.0).
 
 The script allows users to input Maintenance Incident (MI) IDs and generates the
@@ -51,7 +51,7 @@ python3.11 maintenance_json_generator.py [options]
 Options:
 
 `-v`, `--version`: Specifies the SUSE Manager version. Options are `43` for SUSE
-Manager 4.3 and `50` for SUSE Manager 5.0. Default is 43.
+Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, and `52-micro` / `52-sles` for 5.2. Default is 43.
 `-i`, `--mi_ids`: A space-separated list of MI IDs.
 `-f`, `--file`: Path to a file containing MI IDs, each on a new line.
 `-e`, `--no_embargo`: Reject any MIs that are currently under embargo.
