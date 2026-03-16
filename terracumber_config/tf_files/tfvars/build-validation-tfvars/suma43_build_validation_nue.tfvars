@@ -17,6 +17,7 @@ ENVIRONMENT_CONFIGURATION = {
   monitoring_server = {
     mac  = "aa:b2:92:42:00:a3"
     name = "monitoring"
+    image = "sles15sp4o"
   }
   sles15sp6_buildhost = {
     mac  = "aa:b2:92:42:00:a6"
