@@ -18,8 +18,8 @@ def parse_cli_args() -> argparse.Namespace:
         description="This script reads the open qam-manager requests and creates a json file that can be fed to the BV testsuite pipeline"
     )
     parser.add_argument("-v", "--version", dest="version",
-                        help="Version of SUMA you want to run this script for, the options are 43 for 4.3, 50 for 5.0, and 51 for 5.1",
-                        choices=["43", "50-micro", "50-sles", "51-micro","51-sles"], default="43", action='store')
+                        help="Version of SUMA/MLM you want to run this script for, options include 43, 50, 51, and 52 variations (including beta)",
+                        choices=["43", "50-micro", "50-sles", "51-micro","51-sles", "52-micro", "52-sles", "52-micro-beta", "52-sles-beta"], default="43", action='store')
     parser.add_argument("-i", "--mi_ids", required=False, dest="mi_ids", help="Space separated list of MI IDs", nargs='*', action='store')
     parser.add_argument("-f", "--file", required=False, dest="file", help="Path to a file containing MI IDs separated by newline character", action='store')
     parser.add_argument("-e", "--no_embargo", dest="embargo_check", help="Reject MIs under embargo",  action='store_true')
@@ -73,7 +73,9 @@ def get_version_nodes(version: str):
 
 def init_custom_repositories(version: str, static_repos: dict[str, dict[str, str]] = None) -> dict[str, dict[str, str]]:
     custom_repositories: dict[str, dict[str, str]] = {}
-    if version.startswith("51") and static_repos:
+
+    # Check for version 51 or 52 (which successfully matches "52-micro", "52-sles-beta", etc.)
+    if (version.startswith("51") or version.startswith("52")) and static_repos:
         for node, named_urls in static_repos.items():
             custom_repositories[node] = {
                 name: f"{IBS_MAINTENANCE_URL_PREFIX}{url}" if not url.startswith("http") else url
