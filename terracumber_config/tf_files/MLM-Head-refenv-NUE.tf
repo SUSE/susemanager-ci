@@ -124,7 +124,8 @@ module "cucumber_testsuite" {
 
   use_avahi    = false
   name_prefix  = "mlm-ref-head-"
-  use_shared_resources = true
+  # when use_shared_resources is set to true, images are expected to be available
+  use_shared_resources = false
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
