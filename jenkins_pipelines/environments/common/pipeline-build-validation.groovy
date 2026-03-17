@@ -904,13 +904,13 @@ def cleanMigrationFeatureName(String feature) {
 }
 
 /**
- * Fetches the HTML report path from the file exposed via HTTP on the controller
- * and logs the full HTTP link to the job steps.
+ * Fetches the HTML report path from the file exposed via HTTPS on the controller
+ * and logs the full HTTPS URL to the job steps.
  * * @param rake_target The rake target (e.g., build_validation_smoke_tests_NODETAG).
  */
 def echoHtmlReportPath(String rake_target) {
     // Construct the full URL to the file containing the HTML path
-    def path_export_url = "http://${env.controller_hostname}/results/${env.BUILD_NUMBER}/${rake_target}_html_path.txt"
+    def path_export_url = "https://${env.controller_hostname}/results/${env.BUILD_NUMBER}/${rake_target}_html_path.txt"
 
     def html_report_path = ''
     try {
@@ -921,8 +921,8 @@ def echoHtmlReportPath(String rake_target) {
             // The content is the full relative path to the HTML report
             html_report_path = response.content.trim()
 
-            // Construct and log the full HTTP URL for the actual report
-            def full_html_url = "http://${env.controller_hostname}/${html_report_path}"
+            // Construct and log the full HTTPS URL for the actual report
+            def full_html_url = "https://${env.controller_hostname}/${html_report_path}"
             echo "HTML Report URL: ${full_html_url}"
         } else {
             echo "Warning: Failed to fetch HTML path file. HTTP Status: ${response.status}"
