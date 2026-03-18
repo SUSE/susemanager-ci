@@ -132,17 +132,21 @@ module "cucumber_testsuite" {
       }
     }
     server_kubernetes = {
-      image = "ubuntu2404o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:11"
         vcpu = 8
         memory = 32768
       }
-      runtime = "rke2"
-      container_tag = "latest"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
-      helm_chart_name = "server-helm"
-      helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
+      runtime                        = "rke2"
+      container_tag                  = "latest"
+      container_repository           = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      helm_chart_name                = "server-helm"
+      helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
+      install_mlm_server             = true
+      install_mlm_proxy              = true
+      install_traefik                = true
+      install_local_path_provisioner = true
 
       login_timeout = 28800
       main_disk_size = 40
@@ -150,7 +154,7 @@ module "cucumber_testsuite" {
       database_disk_size = 60
     }
     proxy_kubernetes = {
-      image = "ubuntu2404o"
+      image = "tumbleweedo"
       provider_settings = {
         mac = "aa:b2:93:01:00:12"
         vcpu = 2
