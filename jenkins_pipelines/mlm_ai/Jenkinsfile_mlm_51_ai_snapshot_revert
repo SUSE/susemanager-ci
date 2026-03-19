@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        label 'sumaform-cucumber'
+    }
+
+    options {
+        // Keeps the console clean and adds timestamps
+        timestamps()
+        // Prevents the job from hanging forever if the SSH connection fails
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    stages {
+        stage('Revert Snapshot') {
+            steps {
+                echo "Initiating snapshot revert on suma-09.mgr.suse.de..."
+                
+                sh 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10root@suma-09.mgr.suse.de revert-last-snapshot-env.sh mlm-test-ai'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Snapshot reverted successfully.'
+        }
+        failure {
+            echo 'Revert failed. Please check the SSH connection or the script on the target server.'
+        }
+    }
+}

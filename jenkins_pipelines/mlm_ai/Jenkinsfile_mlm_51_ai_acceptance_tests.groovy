@@ -1,0 +1,116 @@
+pipeline {
+    agent {
+        label 'sumaform-cucumber'
+    }
+
+    options {
+        // Keeps the console clean and adds timestamps
+        timestamps()
+        // Prevents the job from hanging forever if SSH or Docker operations hang
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    environment {
+        // Sanitize JOB_NAME for Docker compatibility (lowercase, no illegal chars)
+        DOCKER_TAG = "${env.JOB_NAME.toLowerCase().replaceAll(/[^a-z0-9]/, '-')}"
+    }
+
+    stages {
+        stage('Revert Snapshot') {
+            steps {
+                echo 'Reverting environment to clean state...'
+                sh 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10root@suma-09.mgr.suse.de revert-last-snapshot-env.sh mlm-test-ai'
+            }
+        }
+
+        stage('Build Test Image') {
+            steps {
+                echo "Building Docker image: ${env.DOCKER_TAG}"
+                sh "docker build -f Dockerfile.test -t ${env.DOCKER_TAG} ."
+            }
+        }
+
+        stage('Prepare Configuration') {
+            steps {
+                echo 'Generating environment configuration...'
+                sh '''
+                    [ -d .venv ] || mkdir .venv
+                    touch .venv/config
+                    chmod 600 .venv/config
+                    cat <<EOF > .venv/config
+UYUNI_SERVER=mlm-test-ai-server.mgr.suse.de
+UYUNI_MCP_WRITE_TOOLS_ENABLED=true
+UYUNI_MCP_TRANSPORT=stdio
+UYUNI_MCP_LOG_FILE_PATH=/tmp/mcp-server-uyuni.log
+UYUNI_MCP_LOG_LEVEL=DEBUG
+EOF
+                '''
+            }
+        }
+
+        stage('Run Acceptance Tests') {
+            steps {
+                echo 'Running Dockerized tests...'
+                sh '''
+                    [ -d results ] || mkdir results
+                    if [ ! -f "$HOME/.ai_secrets" ]; then
+                        echo "ERROR: Required env file $HOME/.secrets not found."
+                        echo "Please provision this file on the agent or generate it via Jenkins credentials in the workspace."
+                        exit 1
+                    fi
+                    docker run -v $(pwd)/results:/app/results \
+                               --rm \
+                               --env-file .venv/config \
+                               --env-file $HOME/.ai_secrets \
+                               -v $(pwd)/test/test_config.json:/app/test_config.json \
+                               --network=host \
+                               $DOCKER_TAG
+                '''
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                echo 'Cleaning up Docker images and local config...'
+                sh "docker rmi ${env.DOCKER_TAG} || true"
+                sh "rm -f .venv/config"
+            }
+        }
+    }
+
+    post {
+        always {
+            // Archive JUnit Results
+            junit testResults: 'results/results.xml', allowEmptyResults: true
+            
+            // Publish HTML Report
+            publishHTML([
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'results',
+                reportFiles: 'report.html',
+                reportName: 'DeepEval HTML Results',
+                reportTitle: 'DeepEval Test Report'
+            ])
+        }
+
+        unstable {
+            emailext (
+                to: 'discuss-mlm-ai-test-r-aaaatphnhqm7cvlkd7xpw7vlh4@suse.slack.com',
+                subject: "Unstable Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Tests finished with some failures. Check results at ${env.BUILD_URL}",
+                attachLog: true
+            )
+        }
+
+        failure {
+            emailext (
+                to: 'discuss-mlm-ai-test-r-aaaatphnhqm7cvlkd7xpw7vlh4@suse.slack.com',
+                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The build failed before completion. See logs: ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']]
+            )
+        }
+    }
+}
