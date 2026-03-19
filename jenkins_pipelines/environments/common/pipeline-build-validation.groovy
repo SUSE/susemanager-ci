@@ -58,9 +58,9 @@ def run(params) {
             stage('Build containers'){
                 if (params.container_project && params.mi_project && params.must_deploy) {
                     def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/edit_bci_project"
-                    sh "python3 -m venv ${WORKSPACE}/venv"
-                    sh "${WORKSPACE}/venv/bin/pip install -r ${SCRIPT_DIR}/requirements.txt"
-                    sh( script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --mi-project ${params.mi_project}", returnStdout: true)
+                    sh "python3.11 -m venv ${WORKSPACE}/venv"
+                    sh "${WORKSPACE}/venv/bin/pip3.11 install -r ${SCRIPT_DIR}/requirements.txt"
+                    sh( script: "${WORKSPACE}/venv/bin/python3.11 ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --mi-project ${params.mi_project}", returnStdout: true)
                     custom_project_path = "registry.suse.de/${params.container_project.toLowerCase().replaceAll(':', '/')}/containerfile"
                     server_container_repository = custom_project_path
                     proxy_container_repository = custom_project_path
