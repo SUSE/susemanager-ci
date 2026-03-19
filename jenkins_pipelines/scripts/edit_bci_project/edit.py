@@ -78,6 +78,36 @@ def get_mi_repo_names(api_url, mi_project):
         sys.exit(1)
 
 
+def verify_metadata(api_url, container_project, mi_project):
+    """
+    Re-fetches the project metadata from OBS and verifies that:
+    - No stale SUSE:Maintenance paths remain (other than the expected mi_project)
+    - The expected mi_project path is present in the containerfile repository
+    Exits with an error if verification fails.
+    """
+    logging.info("Verifying metadata was correctly applied...")
+    verified_xml = run_osc_command(["osc", "-A", api_url, "meta", "prj", container_project])
+    verified_root = ET.fromstring(verified_xml)
+    verified_paths = [
+        p.get('project')
+        for p in verified_root.findall(".//repository[@name='containerfile']/path")
+    ]
+
+    stale_mi = [
+        p for p in verified_paths
+        if p and re.match(r'SUSE:Maintenance:\d+', p) and p != mi_project
+    ]
+    if stale_mi:
+        logging.error(f"Metadata verification failed: stale MI paths still present: {stale_mi}")
+        sys.exit(1)
+
+    if mi_project not in verified_paths:
+        logging.error(f"Metadata verification failed: expected MI path '{mi_project}' not found.")
+        sys.exit(1)
+
+    logging.info("Metadata verification passed.")
+
+
 def wait_for_build_completion(api_url, project, repository="containerfile"):
     """
     Polls the OBS project until all packages reach a final state.
@@ -100,6 +130,7 @@ def wait_for_build_completion(api_url, project, repository="containerfile"):
 
             # Extract all 'code' attributes from <status> tags
             statuses = [status.get('code') for status in root.findall(".//status")]
+            logging.debug(f"Current build statuses: {statuses}")
 
             if not statuses:
                 logging.info("No package status found yet. Waiting...")
@@ -133,14 +164,17 @@ def print_mi_build_info(api_url, project, mi_project, results_xml, repository="c
     for result in results_xml.findall(".//result"):
         arch = result.get('arch')
 
-        # Iterate through each status entry in the results XML to get package names and arches
-        for status in results_xml.findall(".//status"):
+        # Iterate through each status scoped to the current result to avoid cross-pairing
+        for status in result.findall("./status"):
             package = status.get('package')
             code = status.get('code')
 
             # Skip if we are missing critical information or if the build didn't succeed
             if not package or not arch or code != 'succeeded':
+                logging.debug(f"Skipping package='{package}' arch='{arch}' code='{code}'")
                 continue
+
+            logging.debug(f"Processing buildinfo for package='{package}' arch='{arch}' code='{code}'")
 
             logging.info(f"Retrieving buildinfo for {package} ({arch})...")
             # Ensure all items in this list are strings to avoid "NoneType found" errors
@@ -204,7 +238,7 @@ def main():
     """
     Main function to parse arguments and run the update logic.
     """
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s', stream=sys.stderr)
+    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s', stream=sys.stderr)
 
     parser = argparse.ArgumentParser(description="Automate editing OBS project metadata and configuration.")
     parser.add_argument("--container-project", required=True, help="The name of the OBS project.")
@@ -239,10 +273,13 @@ def main():
             root = ET.fromstring(meta_xml)
             repo_node = root.find(".//repository[@name='containerfile']")
 
-            # Remove existing MI paths
-            for p in repo_node.findall("./path"):
-                if re.match(r'SUSE:Maintenance:\d+', p.get('project', '')):
-                    repo_node.remove(p)
+            # Remove existing MI paths (collect first to avoid mutating during iteration)
+            mi_paths = [
+                p for p in repo_node.findall("./path")
+                if re.match(r'SUSE:Maintenance:\d+', p.get('project', ''))
+            ]
+            for p in mi_paths:
+                repo_node.remove(p)
 
             # Insert before the last path element
             remaining_paths = repo_node.findall("./path")
@@ -253,9 +290,15 @@ def main():
                 repo_node.insert(insertion_index + i, new_path)
 
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
-                tmp.write(ET.tostring(root, encoding='unicode'))
+                ET.indent(root)
+                xml_content = ET.tostring(root, encoding='unicode')
+                logging.debug(f"Uploading project metadata:\n{xml_content}")
+                tmp.write(xml_content)
                 run_osc_command(["osc", "-A", args.api_url, "meta", "prj", args.container_project, "-F", tmp.name])
             os.remove(tmp.name)
+
+            # --- Verify metadata was correctly applied before wiping ---
+            verify_metadata(args.api_url, args.container_project, args.mi_project)
 
             # Wipe and Wait
             run_osc_command(["osc", "-A", args.api_url, "wipebinaries", "--all", args.container_project])
