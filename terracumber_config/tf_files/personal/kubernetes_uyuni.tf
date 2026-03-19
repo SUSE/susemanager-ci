@@ -80,9 +80,9 @@ module "cucumber_testsuite" {
       login_timeout         = 28800
       large_deployment      = true
 
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
-      helm_chart_name      = "server-helm"
-      helm_chart_url       = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      helm_chart_name       = "server-helm"
+      helm_chart_url        = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
     }
     proxy_kubernetes = {
       provider_settings = {
@@ -90,7 +90,7 @@ module "cucumber_testsuite" {
       }
       runtime              = "rke2"
       container_tag        = "latest"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       helm_chart_name      = "proxy-helm"
       helm_chart_url       = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
     }

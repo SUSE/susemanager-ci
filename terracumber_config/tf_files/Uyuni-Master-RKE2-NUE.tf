@@ -92,6 +92,13 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "uyuni-master"
+  kubernetes = true
+  use_devel_oci = true
+  install_mlm_server = true
+  install_mlm_proxy = true
+  install_traefik = true
+  install_local_path_provisioner = true
+
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -140,7 +147,7 @@ module "cucumber_testsuite" {
       }
       runtime                        = "rke2"
       container_tag                  = "latest"
-      container_repository           = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      container_repository           = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
       helm_chart_name                = "server-helm"
       helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
       install_mlm_server             = true
@@ -163,13 +170,11 @@ module "cucumber_testsuite" {
       additional_packages = [ "venv-salt-minion" ]
       install_salt_bundle = true
       runtime = "rke2"
-      additional_repos = {
-          containerUtils = "https://download.opensuse.org/repositories/systemsmanagement:/Uyuni:/Master:/ContainerUtils/openSUSE_Leap_15.5/"
-      }
       container_tag = "latest"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/hexagon/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
       helm_chart_name = "proxy-helm"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
+      login_timeout = 28800
     }
     suse_minion = {
       image = "tumbleweedo"
