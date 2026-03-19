@@ -93,9 +93,10 @@ def verify_metadata(api_url, container_project, mi_project):
         for p in verified_root.findall(".//repository[@name='containerfile']/path")
     ]
 
+    mi_pattern = re.compile(r'^SUSE:Maintenance:\d+$').match
     stale_mi = [
         p for p in verified_paths
-        if p and re.match(r'SUSE:Maintenance:\d+', p) and p != mi_project
+        if p != mi_project and p and mi_pattern(p)
     ]
     if stale_mi:
         logging.error(f"Metadata verification failed: stale MI paths still present: {stale_mi}")
@@ -255,7 +256,7 @@ def main():
 
         with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
             tmp.write("\n".join(new_lines) + "\n")
-            tmp.flush()
+            os.fsync(tmp.fileno())
             upload_cmd = ["osc", "-A", args.api_url, "meta", "prjconf", args.container_project, "-F", tmp.name]
             run_osc_command(upload_cmd)
         os.remove(tmp.name)
@@ -289,7 +290,7 @@ def main():
                 ET.indent(root)
                 xml_content = ET.tostring(root, encoding='unicode')
                 tmp.write(xml_content)
-                tmp.flush()
+                os.fsync(tmp.fileno())
                 run_osc_command(["osc", "-A", args.api_url, "meta", "prj", args.container_project, "-F", tmp.name])
             os.remove(tmp.name)
 
