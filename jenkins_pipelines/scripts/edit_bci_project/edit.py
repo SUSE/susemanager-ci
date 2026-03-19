@@ -130,7 +130,6 @@ def wait_for_build_completion(api_url, project, repository="containerfile"):
 
             # Extract all 'code' attributes from <status> tags
             statuses = [status.get('code') for status in root.findall(".//status")]
-            logging.debug(f"Current build statuses: {statuses}")
 
             if not statuses:
                 logging.info("No package status found yet. Waiting...")
@@ -171,10 +170,7 @@ def print_mi_build_info(api_url, project, mi_project, results_xml, repository="c
 
             # Skip if we are missing critical information or if the build didn't succeed
             if not package or not arch or code != 'succeeded':
-                logging.debug(f"Skipping package='{package}' arch='{arch}' code='{code}'")
                 continue
-
-            logging.debug(f"Processing buildinfo for package='{package}' arch='{arch}' code='{code}'")
 
             logging.info(f"Retrieving buildinfo for {package} ({arch})...")
             # Ensure all items in this list are strings to avoid "NoneType found" errors
@@ -219,7 +215,6 @@ def print_registries(container_project):
                 registry_url = f"{base_url}{filename}"
                 file_response = requests.get(registry_url)
                 file_response.raise_for_status()
-                # Print the registry content as requested
                 try:
                     print(file_response.text.splitlines()[1].split().pop())
                     found_any = True
@@ -238,7 +233,7 @@ def main():
     """
     Main function to parse arguments and run the update logic.
     """
-    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s', stream=sys.stderr)
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s', stream=sys.stderr)
 
     parser = argparse.ArgumentParser(description="Automate editing OBS project metadata and configuration.")
     parser.add_argument("--container-project", required=True, help="The name of the OBS project.")
@@ -260,6 +255,7 @@ def main():
 
         with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
             tmp.write("\n".join(new_lines) + "\n")
+            tmp.flush()
             upload_cmd = ["osc", "-A", args.api_url, "meta", "prjconf", args.container_project, "-F", tmp.name]
             run_osc_command(upload_cmd)
         os.remove(tmp.name)
@@ -292,8 +288,8 @@ def main():
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
                 ET.indent(root)
                 xml_content = ET.tostring(root, encoding='unicode')
-                logging.debug(f"Uploading project metadata:\n{xml_content}")
                 tmp.write(xml_content)
+                tmp.flush()
                 run_osc_command(["osc", "-A", args.api_url, "meta", "prj", args.container_project, "-F", tmp.name])
             os.remove(tmp.name)
 
