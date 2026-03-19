@@ -1,0 +1,109 @@
+pipeline {
+    agent {
+        label 'sumaform-cucumber'
+    }
+
+    environment {
+        // Sanitize JOB_NAME for Docker compatibility (lowercase, no illegal chars)
+        DOCKER_TAG = "${env.JOB_NAME.toLowerCase().replaceAll(/[^a-z0-9]/, '-')}"
+    }
+
+    stages {
+        stage('Revert Snapshot') {
+            steps {
+                echo 'Reverting environment to clean state...'
+                sh 'ssh root@suma-09.mgr.suse.de revert-last-snapshot-env.sh mlm-test-ai'
+            }
+        }
+
+        stage('Build Test Image') {
+            steps {
+                echo "Building Docker image: ${DOCKER_TAG}"
+                sh "docker build -f Dockerfile.test -t ${DOCKER_TAG} ."
+            }
+        }
+
+        stage('Prepare Configuration') {
+            steps {
+                echo 'Generating environment configuration...'
+                sh '''
+                    [ -d .venv ] || mkdir .venv
+                    touch .venv/config
+                    chmod 600 .venv/config
+                    cat <<EOF > .venv/config
+UYUNI_SERVER=mlm-test-ai-server.mgr.suse.de
+UYUNI_USER=admin
+UYUNI_PASS=admin
+UYUNI_MCP_WRITE_TOOLS_ENABLED=true
+UYUNI_MCP_TRANSPORT=stdio
+UYUNI_SSH_PRIV_KEY_PASS=""
+UYUNI_MCP_LOG_FILE_PATH=/tmp/mcp-server-uyuni.log
+UYUNI_MCP_SSL_VERIFY=false
+EOF
+                '''
+            }
+        }
+
+        stage('Run Acceptance Tests') {
+            steps {
+                echo 'Running Dockerized tests...'
+                // Using set +e (or a script block) to ensure we can capture results even on test failure
+                sh '''
+                    [ -d results ] || mkdir results
+                    docker run -v $(pwd)/results:/app/results \
+                               --rm \
+                               --env-file .venv/config \
+                               --env-file ~/.secrets \
+                               -v $(pwd)/test/test_config.json:/app/test_config.json \
+                               --network=host \
+                               ${DOCKER_TAG}
+                '''
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                echo 'Cleaning up Docker images and local config...'
+                sh "docker rmi ${DOCKER_TAG} || true"
+                sh "rm -f .venv/config"
+            }
+        }
+    }
+
+    post {
+        always {
+            // Archive JUnit Results
+            junit testResults: 'results/results.xml', allowEmptyResults: true
+            
+            // Publish HTML Report
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'results',
+                reportFiles: 'report.html',
+                reportName: 'DeepEval HTML Results',
+                reportTitle: 'DeepEval Test Report'
+            ])
+        }
+
+        unstable {
+            emailext (
+                to: 'discuss-mlm-ai-test-r-aaaatphnhqm7cvlkd7xpw7vlh4@suse.slack.com',
+                subject: "Unstable Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Tests finished with some failures. Check results at ${env.BUILD_URL}",
+                attachLog: true
+            )
+        }
+
+        failure {
+            emailext (
+                to: 'discuss-mlm-ai-test-r-aaaatphnhqm7cvlkd7xpw7vlh4@suse.slack.com',
+                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The build failed before completion. See logs: ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']]
+            )
+        }
+    }
+}
+
