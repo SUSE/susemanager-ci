@@ -163,7 +163,7 @@ module "cucumber_testsuite" {
       large_deployment               = true
       runtime                        = "rke2"
       container_tag                  = "latest"
-      container_repository           = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/server"
+      container_repository           = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64"
       helm_chart_name                = "server-helm"
       helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
       install_mlm_server             = true
@@ -181,7 +181,7 @@ module "cucumber_testsuite" {
       main_disk_size = 200
       runtime = "rke2"
       container_tag = "latest"
-      container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/proxy"
+      container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64"
       helm_chart_name = "proxy-helm"
       helm_chart_url = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
     }
