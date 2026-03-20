@@ -46,6 +46,7 @@ module "base_core" {
     pool               = var.BASE_CONFIGURATIONS.base_core["pool"]
     bridge             = var.BASE_CONFIGURATIONS.base_core["bridge"]
     additional_network = var.BASE_CONFIGURATIONS.base_core["additional_network"]
+    libvirt_uri        = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_core["hypervisor"]}/system"
   }
 }
 
