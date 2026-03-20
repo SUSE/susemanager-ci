@@ -138,6 +138,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:ac"
     name = "slmicro61-minion"
   }
+  slmicro62_minion = {
+    mac  = "aa:b2:93:01:02:ad"
+    name = "slmicro62-minion"
+  }
 
   # SSH Minions
   sles12sp5_sshminion = {
