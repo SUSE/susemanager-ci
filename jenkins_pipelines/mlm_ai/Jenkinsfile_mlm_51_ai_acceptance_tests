@@ -60,18 +60,15 @@ EOF
                 '''
             }
         }
-
-        stage('Cleanup') {
-            steps {
-                echo 'Cleaning up Docker images and local config...'
-                sh "docker rmi ${DOCKER_TAG} || true"
-                sh "rm -f .venv/config"
-            }
-        }
     }
 
     post {
         always {
+            // Cleanup Docker image and local config (runs even on failure)
+            echo 'Cleaning up Docker images and local config...'
+            sh "docker rmi ${DOCKER_TAG} || true"
+            sh "rm -f .venv/config"
+
             // Archive JUnit Results
             junit testResults: 'results/results.xml', allowEmptyResults: true
             
