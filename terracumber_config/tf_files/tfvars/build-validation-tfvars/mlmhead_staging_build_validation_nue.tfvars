@@ -21,9 +21,9 @@ ENVIRONMENT_CONFIGURATION = {
     name = "monitoring"
     image = "sles15sp7o"
   }
-  sles15sp4_buildhost = {
-    mac  = "aa:b2:93:02:01:a5"
-    name = "sles15sp4-build"
+  sles15sp7_buildhost = {
+    mac  = "aa:b2:93:02:01:a7"
+    name = "sles15sp7-build"
   }
 
   # Standard Minions
