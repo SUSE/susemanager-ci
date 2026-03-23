@@ -23,9 +23,9 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Build Hosts
-  sles15sp4_buildhost = {
-    mac  = "aa:b2:93:04:05:71"
-    name = "sles15sp4-build"
+  sles15sp7_buildhost = {
+    mac  = "aa:b2:93:04:05:73"
+    name = "sles15sp7-build"
   }
 
   # Standard Minions

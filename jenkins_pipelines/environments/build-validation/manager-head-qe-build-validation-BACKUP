@@ -38,6 +38,7 @@ node('sumaform-cucumber-slc1') {
             string(name: 'server_container_repository', defaultValue: 'registry.suse.de', description: 'Server container registry'),
             string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
+            booleanParam(name: 'test_milestone', defaultValue: false, description: 'Mark this checkbox to validate a new milestone (from ToTest) instead of Head (Devel:Galaxy:Main).'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
@@ -74,7 +75,7 @@ node('sumaform-cucumber-slc1') {
     } else {
         mutableParams.product_version = "head"
     }
-    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlmhead_staging_build_validation_slc.tfvars'
+    mutableParams.deployment_tfvars = "susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlmhead_build_validation_slc.tfvars"
     mutableParams.product_version_display = mutableParams.product_version
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(mutableParams)
