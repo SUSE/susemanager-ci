@@ -216,14 +216,14 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    kvm_host = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:93:01:01:0e"
-        vcpu = 2
-        memory = 2048
-      }
-    }
+    #kvm_host = {
+    #  image = "sles15sp7o"
+    #  provider_settings = {
+    #    mac = "aa:b2:93:01:01:0e"
+    #    vcpu = 2
+    #    memory = 2048
+    #  }
+    #}
   }
   provider_settings = {
     pool = "ssd"

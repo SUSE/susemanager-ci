@@ -233,14 +233,14 @@ module "cucumber_testsuite" {
         private_key = file("~/.ssh/id_ed25519")
       }
     }
-    kvm_host = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:fe"
-        vcpu = 4
-        memory = 4096
-      }
-    }
+    #kvm_host = {
+    #  image = "sles15sp7o"
+    #  provider_settings = {
+    #    mac = "aa:b2:93:01:00:fe"
+    #    vcpu = 4
+    #    memory = 4096
+    #  }
+    #}
   }
 
   provider_settings = {
