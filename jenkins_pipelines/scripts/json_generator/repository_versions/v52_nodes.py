@@ -69,7 +69,7 @@ v52_nodes_static_client_tools_repositories_beta: Dict[str, Dict[str, str]] = {
     "slmicro62_minion": {
         "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SL-Micro-6-x86_64/"
     },
-    "sle160_minion": {
+    "sles160_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
     }
 }
