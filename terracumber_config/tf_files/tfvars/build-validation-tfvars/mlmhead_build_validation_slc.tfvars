@@ -21,8 +21,10 @@ ENVIRONMENT_CONFIGURATION = {
     name = "monitoring"
     image = "sles15sp7o"
   }
-
-  # Build Hosts
+  sles15sp6_buildhost = {
+    mac  = "aa:b2:93:04:05:72"
+    name = "sles15sp6-build"
+  }
   sles15sp7_buildhost = {
     mac  = "aa:b2:93:04:05:73"
     name = "sles15sp7-build"
