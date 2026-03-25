@@ -288,9 +288,7 @@ def main():
                 repo_node.insert(insertion_index + i, new_path)
 
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
-                ET.indent(root)
-                xml_content = ET.tostring(root, encoding='unicode')
-                tmp.write(xml_content)
+                tmp.write(ET.tostring(root, encoding='unicode'))
                 tmp.flush()
                 os.fsync(tmp.fileno())
                 run_osc_command(["osc", "-A", args.api_url, "meta", "prj", args.container_project, "-F", tmp.name])
