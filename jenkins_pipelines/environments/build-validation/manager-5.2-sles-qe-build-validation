@@ -17,7 +17,8 @@ node('sumaform-cucumber') {
             'debian13_minion, debian13_sshminion, raspios13_minion, raspios13_sshminion, ' +
             'opensuse160arm_minion, opensuse160arm_sshminion, ' +
             'sles15sp5s390_minion, sles15sp5s390_sshminion, ' +
-            'slemicro53_minion, slemicro54_minion, slemicro55_minion' +
+            'sle160_minion, sle160_sshminion, ' +
+            'slemicro53_minion, slemicro54_minion, slemicro55_minion, ' +
             'slmicro60_minion, slmicro61_minion, slmicro62_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),

@@ -24,7 +24,7 @@ module "base_core" {
   ssh_key_path    = var.PUBLIC_SSH_KEY_PATH
   images = lookup(var.BASE_CONFIGURATIONS.base_core, "images", [
     "sles12sp5o",
-    "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o",
+    "sles15sp3o", "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o",
     "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o",
     "slmicro60o", "slmicro61o", "slmicro62o",
     "almalinux8o", "almalinux9o",
