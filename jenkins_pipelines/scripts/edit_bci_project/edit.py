@@ -279,13 +279,12 @@ def main():
             for p in mi_paths:
                 repo_node.remove(p)
 
-            # Insert before the last path element
-            remaining_paths = repo_node.findall("./path")
-            insertion_index = list(repo_node).index(remaining_paths[-1]) if remaining_paths else 0
-
+            # Insert MI path at position 0 (highest priority) so it takes precedence
+            # over all other repo paths during dependency resolution.
+            # This ensures the MI package version wins over the released version.
             for i, repo_name in enumerate(mi_repo_names):
                 new_path = ET.Element('path', {'project': args.mi_project, 'repository': repo_name})
-                repo_node.insert(insertion_index + i, new_path)
+                repo_node.insert(i, new_path)
 
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
                 tmp.write(ET.tostring(root, encoding='unicode'))
