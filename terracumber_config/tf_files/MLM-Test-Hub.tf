@@ -95,8 +95,12 @@ terraform {
   }
 }
 
+locals {
+  libvirt_uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
+}
+
 provider "libvirt" {
-  uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
+  uri = local.libvirt_uri
 }
 
 module "base_core" {
@@ -114,6 +118,7 @@ module "base_core" {
     pool         = "ssd"
     network_name = null
     bridge       = "br0"
+    libvirt_uri        = local.libvirt_uri
   }
 }
 
