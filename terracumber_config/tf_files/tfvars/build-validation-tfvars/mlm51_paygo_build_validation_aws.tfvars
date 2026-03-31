@@ -22,6 +22,10 @@ ENVIRONMENT_CONFIGURATION = {
     name               = "sles15sp7-paygo-minion"
     product_version    = "5.1-paygo"
   }
+  sles160_paygo_minion = {
+    name               = "sles160-paygo-minion"
+    product_version    = "5.1-paygo"
+  }
   slesforsap15sp5_paygo_minion = {
     name               = "slesforsap15sp5-paygo-minion"
     product_version    = "5.1-paygo"
