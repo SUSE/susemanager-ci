@@ -3,6 +3,13 @@ pipeline {
         label 'sumaform-cucumber'
     }
 
+    options {
+        // Keeps the console clean and adds timestamps
+        timestamps()
+        // Prevents the job from hanging forever if SSH or Docker operations hang
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
     environment {
         // Sanitize JOB_NAME for Docker compatibility (lowercase, no illegal chars)
         DOCKER_TAG = "${env.JOB_NAME.toLowerCase().replaceAll(/[^a-z0-9]/, '-')}"
@@ -12,14 +19,14 @@ pipeline {
         stage('Revert Snapshot') {
             steps {
                 echo 'Reverting environment to clean state...'
-                sh 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10root@suma-09.mgr.suse.de revert-last-snapshot-env.sh mlm-test-ai'
+                sh 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 root@suma-09.mgr.suse.de revert-last-snapshot-env.sh mlm-test-ai'
             }
         }
 
         stage('Build Test Image') {
             steps {
-                echo "Building Docker image: ${DOCKER_TAG}"
-                sh "docker build -f Dockerfile.test -t ${DOCKER_TAG} ."
+                echo "Building Docker image: ${env.DOCKER_TAG}"
+                sh "docker build -f Dockerfile.test -t ${env.DOCKER_TAG} ."
             }
         }
 
@@ -57,7 +64,7 @@ EOF
                                --env-file $HOME/.ai_secrets \
                                -v $(pwd)/test/test_config.json:/app/test_config.json \
                                --network=host \
-                               ${DOCKER_TAG}
+                               $DOCKER_TAG
                 '''
             }
         }
@@ -65,7 +72,7 @@ EOF
         stage('Cleanup') {
             steps {
                 echo 'Cleaning up Docker images and local config...'
-                sh "docker rmi ${DOCKER_TAG} || true"
+                sh "docker rmi ${env.DOCKER_TAG} || true"
                 sh "rm -f .venv/config"
             }
         }
@@ -84,7 +91,7 @@ EOF
                 reportDir: 'results',
                 reportFiles: 'report.html',
                 reportName: 'DeepEval HTML Results',
-                reportTitle: 'DeepEval Test Report'
+                reportTitles: 'DeepEval Test Report'
             ])
         }
 
