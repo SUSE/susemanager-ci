@@ -10,6 +10,14 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
     }
 
+    parameters {
+        string(
+            name: 'MCP_SERVER_BRANCH',
+            defaultValue: 'main',
+            description: 'The branch to check out from the mcp-server-uyuni repository.'
+        )
+    }
+
     environment {
         // Sanitize JOB_NAME for Docker compatibility (lowercase, no illegal chars)
         DOCKER_TAG = "${env.JOB_NAME.toLowerCase().replaceAll(/[^a-z0-9]/, '-')}"
@@ -20,6 +28,13 @@ pipeline {
             steps {
                 echo 'Reverting environment to clean state...'
                 sh 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 root@suma-09.mgr.suse.de revert-last-snapshot-env.sh mlm-test-ai'
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                echo 'Checking out mcp-server-uyuni...'
+                git url: 'https://github.com/uyuni-project/mcp-server-uyuni.git', branch: params.MCP_SERVER_BRANCH
             }
         }
 
@@ -114,4 +129,3 @@ EOF
         }
     }
 }
-
