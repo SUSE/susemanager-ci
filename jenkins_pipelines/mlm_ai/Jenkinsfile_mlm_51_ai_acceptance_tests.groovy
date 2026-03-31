@@ -91,7 +91,7 @@ EOF
                 reportDir: 'results',
                 reportFiles: 'report.html',
                 reportName: 'DeepEval HTML Results',
-                reportTitle: 'DeepEval Test Report'
+                reportTitles: 'DeepEval Test Report'
             ])
         }
 
