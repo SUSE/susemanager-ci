@@ -15,7 +15,7 @@ pipeline {
             steps {
                 echo "Initiating snapshot revert on suma-09.mgr.suse.de..."
                 
-                sh 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10root@suma-09.mgr.suse.de revert-last-snapshot-env.sh mlm-test-ai'
+                sh 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 root@suma-09.mgr.suse.de revert-last-snapshot-env.sh mlm-test-ai'
             }
         }
     }

@@ -21,7 +21,7 @@ pipeline {
                 
                 // Execute the remote shell command
                 sh '''
-                    ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10root@suma-09.mgr.suse.de create-snapshot-env.sh mlm-test-ai \
+                    ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 root@suma-09.mgr.suse.de create-snapshot-env.sh mlm-test-ai \
                     "Snapshot created by jenkins job ${BUILD_URL}"
                 '''
             }
