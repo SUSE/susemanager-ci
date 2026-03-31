@@ -1,0 +1,39 @@
+pipeline {
+    agent {
+        label 'sumaform-cucumber'
+    }
+
+    options {
+        // Keeps the console clean and adds timestamps
+        timestamps()
+        // Prevents the job from hanging forever if the SSH connection fails
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    triggers {
+        upstream(upstreamProjects: 'mlm-51-ai', threshold: hudson.model.Result.SUCCESS)
+    }
+
+    stages {
+        stage('Create Snapshot') {
+            steps {
+                echo 'Build mlm-51-ai was successful. Proceeding with snapshot...'
+                
+                // Execute the remote shell command
+                sh '''
+                    ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10root@suma-09.mgr.suse.de create-snapshot-env.sh mlm-test-ai \
+                    "Snapshot created by jenkins job ${BUILD_URL}"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Snapshot created successfully.'
+        }
+        failure {
+            echo 'Failed to create snapshot.'
+        }
+    }
+}
