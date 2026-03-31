@@ -309,6 +309,23 @@ module "sles15sp6_paygo_minion" {
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
 }
 
+module "sles160_paygo_minion" {
+  source             = "./modules/minion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles160_paygo_minion", null) != null ? 1 : 0
+  base_configuration = module.base.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles160_paygo_minion.name
+  image              = "sles160-paygo"
+  product_version    = var.ENVIRONMENT_CONFIGURATION.sles160_paygo_minion.product_version
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+  server_configuration = module.server.configuration
+  auto_connect_to_master  = false
+  use_os_released_updates = false
+  install_salt_bundle     = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+}
+
 module "sles15sp7_paygo_minion" {
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_paygo_minion", null) != null ? 1 : 0
@@ -500,6 +517,21 @@ module "sles15sp6_sshminion" {
 
 }
 
+module "sles15sp7_sshminion" {
+  source             = "./modules/sshminion"
+  count              = lookup(var.ENVIRONMENT_CONFIGURATION, "sles15sp7_sshminion", null) != null ? 1 : 0
+  base_configuration = module.base.configuration
+  name               = var.ENVIRONMENT_CONFIGURATION.sles15sp7_sshminion.name
+  image              = "sles15sp7o"
+  sles_registration_code = var.SLES_REGISTRATION_CODE
+  use_os_released_updates = false
+  install_salt_bundle     = false
+  ssh_key_path            = "./salt/controller/id_ed25519.pub"
+  provider_settings = {
+    instance_type = "t3a.medium"
+  }
+}
+
 module "rhel9_paygo_minion" {
   source             = "./modules/minion"
   count              = lookup(var.ENVIRONMENT_CONFIGURATION, "rhel9_paygo_minion", null) != null ? 1 : 0
@@ -551,6 +583,8 @@ module "controller" {
   sle12sp5_paygo_minion_configuration       = length(module.sles12sp5_paygo_minion) > 0 ? module.sles12sp5_paygo_minion[0].configuration : local.empty_minion_config
   sle15sp5_paygo_minion_configuration       = length(module.sles15sp5_paygo_minion) > 0 ? module.sles15sp5_paygo_minion[0].configuration : local.empty_minion_config
   sle15sp6_paygo_minion_configuration       = length(module.sles15sp6_paygo_minion) > 0 ? module.sles15sp6_paygo_minion[0].configuration : local.empty_minion_config
+  sle15sp7_paygo_minion_configuration       = length(module.sles15sp7_paygo_minion) > 0 ? module.sles15sp7_paygo_minion[0].configuration : local.empty_minion_config
+  sle160_paygo_minion_configuration         = length(module.sles160_paygo_minion) > 0 ? module.sles160_paygo_minion[0].configuration : local.empty_minion_config
   sleforsap15sp5_paygo_minion_configuration = length(module.slesforsap15sp5_paygo_minion) > 0 ? module.slesforsap15sp5_paygo_minion[0].configuration : local.empty_minion_config
 
   sle12sp5_minion_configuration     = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
@@ -564,6 +598,8 @@ module "controller" {
 
   sle15sp6_minion_configuration    = length(module.sles15sp6_minion) > 0 ? module.sles15sp6_minion[0].configuration : local.empty_minion_config
   sle15sp6_sshminion_configuration = length(module.sles15sp6_sshminion) > 0 ? module.sles15sp6_sshminion[0].configuration : local.empty_minion_config
+  sle15sp7_minion_configuration    = length(module.sles15sp7_minion) > 0 ? module.sles15sp7_minion[0].configuration : local.empty_minion_config
+  sle15sp7_sshminion_configuration = length(module.sles15sp7_sshminion) > 0 ? module.sles15sp7_sshminion[0].configuration : local.empty_minion_config
 
   rhel9_minion_configuration       = length(module.rhel9_paygo_minion) > 0 ? module.rhel9_paygo_minion[0].configuration : local.empty_minion_config
 }
