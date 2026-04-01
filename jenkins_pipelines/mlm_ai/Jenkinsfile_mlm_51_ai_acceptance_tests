@@ -67,8 +67,6 @@ EOF
             steps {
                 echo 'Running Dockerized tests...'
                 sh '''
-                    [ -d results ] || mkdir -p results
-                    touch results/results.xml
                     if [ ! -f "$HOME/.ai_secrets" ]; then
                         echo "ERROR: Required env file $HOME/.secrets not found."
                         echo "Please provision this file on the agent or generate it via Jenkins credentials in the workspace."
@@ -77,10 +75,10 @@ EOF
                     docker run --rm \
                                --env-file .venv/config \
                                --env-file $HOME/.ai_secrets \
-                               -v $(pwd)/results/results.xml:/app/results.xml \
+                               -v $(pwd)/results:/app/results \
                                -v $(pwd)/test/test_config.json:/app/test_config.json \
                                --network=host \
-                               $DOCKER_TAG
+                               $DOCKER_TAG -s test/test_deepeval.py --junit-xml=results/results.xml
                 '''
             }
         }
