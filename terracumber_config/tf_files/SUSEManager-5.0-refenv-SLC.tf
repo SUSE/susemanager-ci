@@ -100,8 +100,12 @@ terraform {
   }
 }
 
+locals {
+  libvirt_uri = "qemu+tcp://selektah.mgr.slc1.suse.org/system"
+}
+
 provider "libvirt" {
-  uri = "qemu+tcp://selektah.mgr.slc1.suse.org/system"
+  uri = local.libvirt_uri
 }
 
 module "cucumber_testsuite" {
@@ -229,6 +233,7 @@ module "cucumber_testsuite" {
     pool = "ssd"
     network_name = null
     bridge = "br1"
+    libvirt_uri        = local.libvirt_uri
   }
 }
 

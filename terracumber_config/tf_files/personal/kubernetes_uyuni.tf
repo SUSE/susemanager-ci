@@ -14,8 +14,12 @@ terraform {
   }
 }
 
+locals {
+  libvirt_uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor}/system"
+}
+
 provider "libvirt" {
-  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor}/system"
+  uri = local.libvirt_uri
 }
 
 module "cucumber_testsuite" {
@@ -147,6 +151,7 @@ module "cucumber_testsuite" {
     network_name       = null
     bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
     additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
+    libvirt_uri        = local.libvirt_uri
   }
 }
 
