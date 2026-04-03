@@ -88,7 +88,7 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
     final_id: str = mi_id
     i: int = 1
     while final_id in node_ids:
-        final_id = f"{mi_id}-{i}"
+        final_id = f"{mi_id}_{i}"
         i += 1
     node_ids[final_id] = url
     custom_repositories[node] = node_ids
