@@ -185,7 +185,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertDictEqual({
             'test_node_1': {
                 '1234': '1234_url',
-                '1234-1': '2nd_1234_url',
+                '1234_1': '2nd_1234_url',
                 '5678': '5678_url'
             }
         }, custom_repos)
@@ -194,7 +194,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertDictEqual({
             'test_node_1': {
                 '1234': '1234_url',
-                '1234-1': '2nd_1234_url',
+                '1234_1': '2nd_1234_url',
                 '5678': '5678_url'
             },
             'test_node_2': {
@@ -206,8 +206,8 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertDictEqual({
             'test_node_1': {
                 '1234': '1234_url',
-                '1234-1': '2nd_1234_url',
-                '1234-2': '3rd_1234_url',
+                '1234_1': '2nd_1234_url',
+                '1234_2': '3rd_1234_url',
                 '5678': '5678_url'
             },
             'test_node_2': {
