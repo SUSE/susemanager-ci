@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   use_avahi    = false
   name_prefix  = "mlm-test-hexagon-"
@@ -161,12 +161,11 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de"   
       container_tag        = "latest"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_62/"
       }
 
     }
     proxy_containerized = {
-      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:52"
         vcpu = 2
@@ -177,7 +176,7 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de"
       container_tag = "latest"
       additional_repos = {
-        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_61/"
+        Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Hexagon/SL_Micro_62/"
       }
     }
     suse_minion = {
