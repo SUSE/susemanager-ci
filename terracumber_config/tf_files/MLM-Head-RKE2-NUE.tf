@@ -104,6 +104,12 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "head"
+  kubernetes = true
+  use_devel_oci = true
+  install_mlm_server = true
+  install_mlm_proxy = true
+  install_traefik = true
+  install_local_path_provisioner = true
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -139,8 +145,6 @@ module "cucumber_testsuite" {
   server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
-  kubernetes = true
-  use_devel_oci = true
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
