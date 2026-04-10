@@ -48,6 +48,7 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
 
 v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-12_x86_64/"},
+    "debian13_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-13_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-22.04_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-24.04_x86_64/"},
     "alma8_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-8_x86_64/"},
