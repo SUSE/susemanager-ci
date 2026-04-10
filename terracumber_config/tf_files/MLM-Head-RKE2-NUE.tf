@@ -104,11 +104,11 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "head"
-  kubernetes = true
-  use_devel_oci = true
-  install_mlm_server = true
-  install_mlm_proxy = true
-  install_traefik = true
+  kubernetes                     = true
+  use_devel_oci                  = true
+  install_mlm_server             = true
+  install_mlm_proxy              = true
+  install_traefik                = true
   install_local_path_provisioner = true
 
   // Cucumber repository configuration for the controller
@@ -169,11 +169,7 @@ module "cucumber_testsuite" {
       container_tag                  = "latest"
       container_repository           = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64"
       helm_chart_name                = "server-helm"
-      helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
-      install_mlm_server             = true
-      install_mlm_proxy              = true
-      install_traefik                = true
-      install_local_path_provisioner = true
+      helm_chart_url                 = "oci://registry.suse.com/suse/multi-linux-manager/5.2"
     }
     proxy_kubernetes = {
       image = "sles15sp7o"
@@ -187,7 +183,7 @@ module "cucumber_testsuite" {
       container_tag = "latest"
       container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64"
       helm_chart_name = "proxy-helm"
-      helm_chart_url = "oci://registry.suse.de/devel/galaxy/manager/head/charts/suse/multi-linux-manager/5.2"
+      helm_chart_url = "oci://registry.suse.com/suse/multi-linux-manager/5.2"
     }
     suse_minion = {
       image = "sles15sp7o"

@@ -92,11 +92,11 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "uyuni-master"
-  kubernetes = true
-  use_devel_oci = true
-  install_mlm_server = true
-  install_mlm_proxy = true
-  install_traefik = true
+  kubernetes                     = true
+  use_devel_oci                  = true
+  install_mlm_server             = true
+  install_mlm_proxy              = true
+  install_traefik                = true
   install_local_path_provisioner = true
 
 
@@ -150,10 +150,6 @@ module "cucumber_testsuite" {
       container_repository           = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
       helm_chart_name                = "server-helm"
       helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
-      install_mlm_server             = true
-      install_mlm_proxy              = true
-      install_traefik                = true
-      install_local_path_provisioner = true
 
       login_timeout = 28800
       main_disk_size = 40
