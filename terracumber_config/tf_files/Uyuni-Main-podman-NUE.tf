@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "main"
+  default = "master"
 }
 
 variable "CUCUMBER_RESULTS" {
