@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    triggers {
+        // 'H H * * *' tells Jenkins to pick a random time once a day
+        // This is better for server performance than '0 0 * * *'
+        cron('H H * * *')
+    }
     environment {
         // The URL of the image repository page
         TARGET_URL = "https://registry.suse.com/repositories/suse-agentic-mcp-multi-linux-manager"
