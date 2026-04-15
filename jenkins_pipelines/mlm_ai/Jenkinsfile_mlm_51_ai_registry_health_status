@@ -1,0 +1,68 @@
+pipeline {
+    agent {
+        label 'sumaform-cucumber'
+    }
+
+    options {
+        timestamps()
+        timeout(time: 10, unit: 'MINUTES')
+    }
+    triggers {
+        // 'H H * * *' tells Jenkins to pick a random time once a day
+        // This is better for server performance than '0 0 * * *'
+        cron('H H * * *')
+    }
+    environment {
+        // The URL of the image repository page
+        TARGET_URL = 'https://registry.suse.com/repositories/suse-agentic-mcp-multi-linux-manager'
+    }
+
+    stages {
+        stage('Check SUSE Image Health') {
+            steps {
+                script {
+                    echo "Checking Health Index for: ${env.TARGET_URL}"
+
+                    /**
+                     * The Shell Script Logic:
+                     * 1. set -o pipefail: Fail the pipeline if any command in it fails.
+                     * 2. curl -sL: Fetch page silently, follow redirects.
+                     * 3. -H "User-Agent...": Mimic a browser to avoid being blocked.
+                     * 4. grep -oE 'grade-[A-Z]' | sed 's/grade-//': Look for 'grade-X' and return only 'X' using portable tools.
+                     * 5. head -1: Ensure we only get the first match (usually the main badge).
+                     */
+                    def healthGrade = sh(
+                        script: """#!/usr/bin/env bash
+                            set -o pipefail
+                            curl -sL -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "${env.TARGET_URL}" | \
+                            grep -oE 'grade-[A-Z]' | \
+                            sed 's/grade-//' | \
+                            head -1
+                        """,
+                        returnStdout: true
+                    ).trim()
+
+                    if (!healthGrade) {
+                        error "FAIL: Could not find the Health Index on the page. The site layout might have changed."
+                    }
+
+                    echo "Detected Health Grade: ${healthGrade}"
+
+                    if (healthGrade == 'A') {
+                        echo "SUCCESS: Image is healthy (Grade A)."
+                    } else {
+                        // This will stop the pipeline and mark it as 'Failure'
+                        error "FAIL: Image health check did not meet the required threshold. Detected grade: '${healthGrade}'. URL: ${env.TARGET_URL}"
+                    }
+                }
+            }
+        }
+        
+    }
+
+    post {
+        always {
+            echo "Finished Health Check."
+        }
+    }
+}
