@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        // The URL of the image repository page
+        TARGET_URL = "https://registry.suse.com/repositories/suse-agentic-mcp-multi-linux-manager"
+    }
+
+    stages {
+        stage('Check SUSE Image Health') {
+            steps {
+                script {
+                    echo "Checking Health Index for: ${env.TARGET_URL}"
+
+                    /**
+                     * The Shell Script Logic:
+                     * 1. curl -sL: Fetch page silently, follow redirects.
+                     * 2. -H "User-Agent...": Mimic a browser to avoid being blocked.
+                     * 3. grep -oP 'grade-\K[A-Z]': Look for 'grade-X' and return only 'X'.
+                     * 4. head -1: Ensure we only get the first match (usually the main badge).
+                     */
+                    def healthGrade = sh(
+                        script: """
+                            curl -sL -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "${env.TARGET_URL}" | \
+                            grep -oP 'grade-\\K[A-Z]' | \
+                            head -1
+                        """,
+                        returnStdout: true
+                    ).trim()
+
+                    if (!healthGrade) {
+                        error "FAIL: Could not find the Health Index on the page. The site layout might have changed."
+                    }
+
+                    echo "Detected Health Grade: ${healthGrade}"
+
+                    if (healthGrade == 'A') {
+                        echo "SUCCESS: Image is healthy (Grade A)."
+                    } else {
+                        // This will stop the pipeline and mark it as 'Failure'
+                        error "FAIL: Image health is '${healthGrade}'. Pipeline stopped for security reasons."
+                    }
+                }
+            }
+        }
+        
+    }
+
+    post {
+        always {
+            echo "Finished Health Check."
+        }
+    }
+}
