@@ -14,7 +14,7 @@ pipeline {
     }
     environment {
         // The URL of the image repository page
-        TARGET_URL = "https://registry.suse.com/repositories/suse-agentic-mcp-multi-linux-manager"
+        TARGET_URL = 'https://registry.suse.com/repositories/suse-agentic-mcp-multi-linux-manager'
     }
 
     stages {
