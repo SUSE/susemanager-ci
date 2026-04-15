@@ -178,6 +178,7 @@ module "cucumber_testsuite" {
       image = "tumbleweedo"
       provider_settings = {
         instance_type = "t3a.medium"
+        volume_size = "30"
         private_ip = "172.16.3.8"
         overwrite_fqdn = "uyuni-master-suse-minion.sumaci.aws"
       }
@@ -186,6 +187,7 @@ module "cucumber_testsuite" {
       image = "tumbleweedo"
       provider_settings = {
         instance_type = "t3a.medium"
+        volume_size = "30"
         private_ip = "172.16.3.9"
         overwrite_fqdn = "uyuni-master-suse-sshminion.sumaci.aws"
       }
@@ -196,6 +198,7 @@ module "cucumber_testsuite" {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
         instance_type = "t3a.medium"
+        volume_size = "30"
         private_ip = "172.16.3.10"
         overwrite_fqdn = "uyuni-master-rhlike-minion.sumaci.aws"
       }
@@ -204,6 +207,7 @@ module "cucumber_testsuite" {
       image = "ubuntu2404"
       provider_settings = {
         instance_type = "t3a.medium"
+        volume_size = "30"
         private_ip = "172.16.3.11"
         overwrite_fqdn = "uyuni-master-deblike-minion.sumaci.aws"
       }
@@ -212,6 +216,7 @@ module "cucumber_testsuite" {
       image = "sles15sp7o"
       provider_settings = {
         instance_type = "t3a.large"
+        volume_size = "30"
         private_ip = "172.16.3.12"
         overwrite_fqdn = "uyuni-master-build-host.sumaci.aws"
       }
