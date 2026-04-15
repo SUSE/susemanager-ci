@@ -3,6 +3,10 @@ pipeline {
         label 'sumaform-cucumber'
     }
 
+    options {
+        timestamps()
+        timeout(time: 10, unit: 'MINUTES')
+    }
     triggers {
         // 'H H * * *' tells Jenkins to pick a random time once a day
         // This is better for server performance than '0 0 * * *'
