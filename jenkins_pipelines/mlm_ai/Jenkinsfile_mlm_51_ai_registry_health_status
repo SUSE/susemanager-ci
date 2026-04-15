@@ -25,15 +25,18 @@ pipeline {
 
                     /**
                      * The Shell Script Logic:
-                     * 1. curl -sL: Fetch page silently, follow redirects.
-                     * 2. -H "User-Agent...": Mimic a browser to avoid being blocked.
-                     * 3. grep -oP 'grade-\K[A-Z]': Look for 'grade-X' and return only 'X'.
-                     * 4. head -1: Ensure we only get the first match (usually the main badge).
+                     * 1. set -o pipefail: Fail the pipeline if any command in it fails.
+                     * 2. curl -sL: Fetch page silently, follow redirects.
+                     * 3. -H "User-Agent...": Mimic a browser to avoid being blocked.
+                     * 4. grep -oE 'grade-[A-Z]' | sed 's/grade-//': Look for 'grade-X' and return only 'X' using portable tools.
+                     * 5. head -1: Ensure we only get the first match (usually the main badge).
                      */
                     def healthGrade = sh(
                         script: """
+                            set -o pipefail
                             curl -sL -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "${env.TARGET_URL}" | \
-                            grep -oP 'grade-\\K[A-Z]' | \
+                            grep -oE 'grade-[A-Z]' | \
+                            sed 's/grade-//' | \
                             head -1
                         """,
                         returnStdout: true
