@@ -52,7 +52,7 @@ pipeline {
                         echo "SUCCESS: Image is healthy (Grade A)."
                     } else {
                         // This will stop the pipeline and mark it as 'Failure'
-                        error "FAIL: Image health is '${healthGrade}'. Pipeline stopped for security reasons."
+                        error "FAIL: Image health check did not meet the required threshold. Detected grade: '${healthGrade}'. URL: ${env.TARGET_URL}"
                     }
                 }
             }
