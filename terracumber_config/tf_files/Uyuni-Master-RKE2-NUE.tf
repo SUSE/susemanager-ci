@@ -109,7 +109,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
+  images = ["opensuse156o", "tumbleweedo"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ci-master-rke2-"
@@ -171,45 +171,6 @@ module "cucumber_testsuite" {
       helm_chart_name = "proxy-helm"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
       login_timeout = 28800
-    }
-    suse_minion = {
-      image = "tumbleweedo"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:16"
-      }
-    }
-    suse_sshminion = {
-      image = "tumbleweedo"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:18"
-      }
-      additional_packages = [ "iptables" ]
-    }
-    rhlike_minion = {
-      image = "rocky8o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:1a"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        memory = 2048
-        vcpu = 2
-      }
-    }
-    deblike_minion = {
-      image = "ubuntu2404o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:1b"
-      }
-    }
-    build_host = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:1d"
-        memory = 2048
-      }
-    }
-    pxeboot_minion = {
-      image = "sles15sp7o"
     }
   }
   
