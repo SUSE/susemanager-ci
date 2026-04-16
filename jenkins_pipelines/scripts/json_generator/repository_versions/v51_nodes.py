@@ -1,6 +1,6 @@
-from typing import Dict, Set, List
+from typing import Dict, Set, List, Tuple
 
-IBS_URL_PREFIX="http://download.suse.de/ibs/SUSE:"
+IBS_URL_PREFIX = "http://download.suse.de/ibs/SUSE:"
 
 v51_uyuni_tools_sles_repos: Dict[str, Set[str]] = {
     "server" : {"/SUSE_Updates_Multi-Linux-Manager-Server-SLE_5.1_x86_64/",
@@ -38,12 +38,6 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     "slmicro61_minion": {
         "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/"
     },
-    "slmicro62_minion": {
-        "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
-    },
-    "sles160_minion": {
-        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
-    }
 }
 
 v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
@@ -87,48 +81,54 @@ v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "slemicro55_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-Micro-5_x86_64/" }
 }
 
-def get_v51_static_and_client_tools(variant: str = "micro") -> (Dict[str, Dict[str, str]], Dict[str, List[str]]):
+def get_v51_static_and_client_tools(
+    variant: str = "micro",
+) -> Tuple[Dict[str, Dict[str, str]], Dict[str, List[str]]]:
     """
     Generate the full set of static and dynamic client tool repositories for MLM 5.1.
 
-    The function merges static client repositories with Uyuni server/proxy repositories,
-    prepends the IBS URL prefix, and returns both static and dynamic sets in a
-    deterministic, sorted form.
+    The function merges static client repositories with Uyuni server/proxy repositories
+    and returns a pair (static_repos, dynamic_repos) in a deterministic form.
 
     Parameters:
         variant (str): Either "micro" or "sles", determines which Uyuni tool set to use.
-                       "micro" → v51_uyuni_tools_micro_repos (static)
-                       "sles"  → v51_uyuni_tools_sles_repos (dynamic)
+                       "micro" -> v51_uyuni_tools_micro_repos (goes into static_repos)
+                       "sles"  -> v51_uyuni_tools_sles_repos  (goes into dynamic_repos)
 
     Returns:
         Tuple[
             Dict[str, Dict[str, str]],  # static_repos
-                - Maps node IDs (e.g., "alma8_minion", "server", "proxy" for 'micro' variant) to
-                  repo names → full IBS URLs.
-            Dict[str, List[str]]        # dynamic_client_tools_repos
-                - Maps dynamic client nodes (e.g., "debian12_minion", "server", "proxy" for 'sles' variant) to
-                  a sorted list of full IBS URLs.
+                - Maps node IDs (e.g. "slmicro60_minion", and "server"/"proxy" for the
+                  'micro' variant) to {repo_name: full_IBS_URL}. Full URLs are built by
+                  prepending IBS_URL_PREFIX to the configured path fragments.
+            Dict[str, List[str]]        # dynamic_repos
+                - Maps dynamic nodes (e.g. "debian12_minion", and "server"/"proxy" for
+                  the 'sles' variant) to a sorted list of maintenance-path suffixes
+                  (e.g. "/SUSE_Updates_MultiLinuxManagerTools_Debian-12_x86_64/").
+                  These are NOT full URLs: callers combine them with
+                  IBS_MAINTENANCE_URL_PREFIX and an MI id via
+                  create_url(mi_id, suffix) in maintenance_json_generator.py.
         ]
 
     Type and structure notes:
     1. Static repositories:
        - Input: v51_nodes_static_client_tools_repositories (Dict[str, Dict[str, str]])
-       - Merged with Uyuni server/proxy repos for the 'micro' variant
-       - Output: Dict[str, Dict[str, str]] with full URLs
+       - Merged with Uyuni server/proxy repos for the 'micro' variant.
+       - Output: Dict[str, Dict[str, str]] with full IBS URLs.
 
     2. Dynamic client tool repositories:
        - Input: v51_nodes_dynamic_client_tools_repos (Dict[str, Set[str]])
-       - Merged with Uyuni server/proxy repos for the 'sles' variant
-       - Output: Dict[str, List[str]] with sorted full URLs
+       - Merged with Uyuni server/proxy repos for the 'sles' variant.
+       - Output: Dict[str, List[str]] with sorted maintenance-path suffixes.
        - Mirrors the pattern in v43/v50: sets of paths are converted to sorted lists.
 
     Example:
         static_repos, dynamic_repos = get_v51_static_and_client_tools("micro")
-        static_repos["server"]["server_uyuni_tools"]
-        dynamic_repos["debian12_minion"][0]
+        static_repos["server"]["server_uyuni_tools"]   # full URL
+        dynamic_repos["debian12_minion"][0]            # maintenance suffix
         # Example for the sles variant:
         # static_repos, dynamic_repos = get_v51_static_and_client_tools("sles")
-        # dynamic_repos["server"][0]
+        # dynamic_repos["server"][0]                   # maintenance suffix
     """
     # 1. Initialize static repositories with IBS prefix
     static_repos: Dict[str, Dict[str, str]] = {
@@ -167,4 +167,7 @@ def get_v51_static_and_client_tools(variant: str = "micro") -> (Dict[str, Dict[s
     else:
         raise ValueError(f"Invalid variant '{variant}'. Choose from: 'micro', 'sles'")
 
-    return static_repos, dynamic_maintenance_repos
+    dynamic_repos_sorted: Dict[str, List[str]] = {
+        key: sorted(paths) for key, paths in dynamic_maintenance_repos.items()
+    }
+    return static_repos, dynamic_repos_sorted
