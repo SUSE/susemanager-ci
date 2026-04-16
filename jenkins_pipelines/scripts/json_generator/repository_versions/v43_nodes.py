@@ -102,6 +102,29 @@ v43_client_tools: dict[str, Set[str]] = {
                               "/SUSE_Updates_SLE-Module-Python3_15-SP5_x86_64/"},
 }
 
+# Static Salt / image repos for SL Micro 6.0 / 6.1 (SUMA 4.3 / 5.0 only; full IBS URLs)
+v43_static_slmicro_salt_repositories: Dict[str, Dict[str, str]] = {
+    "slmicro60_minion": {
+        "slmicro60_salt": (
+            "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/"
+            "SL-Micro-6.0-x86_64/"
+        ),
+        "slmicro6_salt_bundle": (
+            "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/"
+            "SUSE-Manager-Tools-For-SL-Micro-6-x86_64/"
+        ),
+    },
+    "slmicro61_minion": {
+        "slmicro61_salt": (
+            "http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Staging:/Z/images/repo/SL-Micro-6.1-x86_64/"
+        ),
+        "slmicro6_salt_bundle": (
+            "http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/"
+            "SUSE-Manager-Tools-For-SL-Micro-6-x86_64/"
+        ),
+    },
+}
+
 # Dictionary for SUMA 4.3 Server and Proxy
 v43_nodes: Dict[str, Set[str]] = {
     "server": {"/SUSE_Updates_SLE-Module-SUSE-Manager-Server_4.3_x86_64/",

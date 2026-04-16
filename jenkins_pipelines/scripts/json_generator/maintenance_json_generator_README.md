@@ -51,10 +51,11 @@ python3.11 maintenance_json_generator.py [options]
 Options:
 
 `-v`, `--version`: Specifies the SUSE Manager version. Options are `43` for SUSE
-Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, and `52-micro` / `52-sles` for 5.2. Default is 43.
+Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, and `52-micro` / `52-sles` for 5.2 (including `52-micro-beta` / `52-sles-beta`). Default is `51-sles`.
 `-i`, `--mi_ids`: A space-separated list of MI IDs.
 `-f`, `--file`: Path to a file containing MI IDs, each on a new line.
 `-e`, `--no_embargo`: Reject any MIs that are currently under embargo.
+`--slfo-pull-request`: SLFO PullRequest id for `sles160_minion` and `slmicro62_minion` on 5.1 / 5.2 only (independent of MI ids).
 
 Example:
 
@@ -73,6 +74,10 @@ mi_ids.txt.
 
 The script generates a file named custom_repositories.json, which contains the
 repository data for the provided MI IDs.
+
+For **`43`**, **`50-micro`**, and **`50-sles`**, the output always includes static Salt image
+repository URLs for **`slmicro60_minion`** and **`slmicro61_minion`** (`slmicro60_salt`,
+`slmicro61_salt`, `slmicro6_salt_bundle`) in addition to MI-based maintenance URLs.
 
 ## Logging
 
