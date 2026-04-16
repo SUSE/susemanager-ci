@@ -91,13 +91,13 @@ terraform {
   }
 }
 
-
-provider "libvirt" {
-  uri = "qemu+tcp://suma-05.mgr.suse.de/system"
-}
-
 locals {
   pool = "ssd"
+  libvirt_uri = "qemu+tcp://suma-05.mgr.suse.de/system"
+}
+
+provider "libvirt" {
+  uri = local.libvirt_uri
 }
 
 module "base" {
@@ -113,6 +113,7 @@ module "base" {
     pool = local.pool
     network_name = null
     bridge = "br0"
+    uri = local.libvirt_uri
   }
 }
 
