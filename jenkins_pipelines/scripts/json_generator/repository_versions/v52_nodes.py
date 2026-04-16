@@ -66,12 +66,6 @@ v52_nodes_static_client_tools_repositories_beta: Dict[str, Dict[str, str]] = {
     "slmicro61_minion": {
         "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SL-Micro-6-x86_64/"
     },
-    "slmicro62_minion": {
-        "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
-    },
-    "sles160_minion": {
-        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
-    }
 }
 
 v52_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
@@ -149,4 +143,7 @@ def get_v52_static_and_client_tools(variant: str = "micro", beta: bool = False) 
     else:
         raise ValueError(f"Invalid variant '{variant}'. Choose from: 'micro', 'sles'")
 
-    return static_repos, dynamic_maintenance_repos
+    dynamic_repos_sorted: Dict[str, List[str]] = {
+        key: sorted(paths) for key, paths in dynamic_maintenance_repos.items()
+    }
+    return static_repos, dynamic_repos_sorted

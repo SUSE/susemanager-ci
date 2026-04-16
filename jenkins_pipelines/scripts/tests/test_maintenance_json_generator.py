@@ -1,70 +1,104 @@
 from argparse import Namespace
+from contextlib import redirect_stderr
+import io
 import json
 from os import path, remove
+from pathlib import Path
 import sys
 import unittest
 from unittest.mock import patch
 
 from json_generator.maintenance_json_generator import *
+from json_generator.repository_versions.v43_nodes import v43_static_slmicro_salt_repositories
+from json_generator.repository_versions.v51_nodes import get_v51_static_and_client_tools
+from json_generator.repository_versions.v52_nodes import get_v52_static_and_client_tools
 from tests.mock_response import mock_requests_get_success
+
+TESTDATA_DIR = Path(__file__).resolve().parent / 'testdata'
 
 class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_parse_cli_args_default_values(self):
         sys.argv = ['maintenance_json_generator.py']
         args = parse_cli_args()
-        self.assertEqual(args.version, "43")
+        self.assertEqual(args.version, "51-sles")
         self.assertIsNone(args.mi_ids)
         self.assertFalse(args.embargo_check)
+        self.assertIsNone(args.slfo_pull_request)
 
     def test_parse_cli_args_success(self):
         # shorthand flags
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '1234', '5678', '-e']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-micro")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
         self.assertTrue(args.embargo_check)
         # shorthand flags - mi_ids variant 1
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234,5678', '-f', 'some_file', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '1234,5678', '-f', 'some_file', '-e']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-micro")
         self.assertListEqual(args.mi_ids, ['1234,5678'])
-        self.assertTrue(args.file, 'some_file')
+        self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
         # shorthand flags - mi_ids variant 2
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234,', '5678', '-f', 'some_file', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '1234,', '5678', '-f', 'some_file', '-e']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-micro")
         self.assertListEqual(args.mi_ids, ['1234,' , '5678'])
         self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
         # long flags
-        sys.argv = ['maintenance_json_generator.py', '--version', '50', '--mi_ids', '1234', '5678', '--file', 'some_file', '--no_embargo']
+        sys.argv = ['maintenance_json_generator.py', '--version', '50-micro', '--mi_ids', '1234', '5678', '--file', 'some_file', '--no_embargo']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-micro")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
         self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
         # doubly defined -i flag
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '9012', '3456' , '-f', 'some_file', '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '9012', '3456' , '-f', 'some_file', '-i', '1234', '5678', '-e']
         args: Namespace = parse_cli_args()
-        self.assertEqual(args.version, "50")
+        self.assertEqual(args.version, "50-micro")
         self.assertListEqual(args.mi_ids, ['1234', '5678'])
         self.assertEqual(args.file, 'some_file')
         self.assertTrue(args.embargo_check)
+        # supported SLFO PullRequest flag
+        sys.argv = ['maintenance_json_generator.py', '--version', '51-sles', '--slfo-pull-request', '9999']
+        args = parse_cli_args()
+        self.assertEqual(args.version, '51-sles')
+        self.assertEqual(args.slfo_pull_request, '9999')
 
     def test_parse_cli_args_failure(self):
         sys.argv = ['maintenance_json_generator.py',  '-x']
-        with self.assertRaises(SystemExit) as cm:
-            parse_cli_args()
-            self.assertEqual(cm.exception.code, 2)
-            self.assertIn("error: unrecognized arguments: -x", cm.msg)
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as cm:
+                parse_cli_args()
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("error: unrecognized arguments: -x", stderr.getvalue())
 
         sys.argv = ['maintenance_json_generator.py',  '-v' , '999']
-        with self.assertRaises(SystemExit) as cm:
-            parse_cli_args()
-            self.assertEqual(cm.exception.code, 2)
-            self.assertIn("error: argument -v/--version: invalid choice: '999'", cm.msg)
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as cm:
+                parse_cli_args()
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("error: argument -v/--version: invalid choice: '999'", stderr.getvalue())
+
+        sys.argv = ['maintenance_json_generator.py', '--version', '43', '--slfo-pull-request', '9999']
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as cm:
+                parse_cli_args()
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("--slfo-pull-request is only supported for 51-* and 52-* versions", stderr.getvalue())
+
+        sys.argv = ['maintenance_json_generator.py', '--version', '50-micro', '--slfo-pull-request', '9999']
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as cm:
+                parse_cli_args()
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("--slfo-pull-request is only supported for 51-* and 52-* versions", stderr.getvalue())
 
     def test_clean_mi_ids(self):
         # support 1234 4567 8901 format
@@ -149,19 +183,76 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_get_version_nodes(self):
         # 4.3
-        self.assertDictEqual(v43_nodes, get_version_nodes('43'))
+        self.assertDictEqual(nodes_by_version['43'], get_version_nodes('43'))
         # 5.0
-        self.assertDictEqual(v50_nodes, get_version_nodes('50'))
+        self.assertDictEqual(nodes_by_version['50-micro'], get_version_nodes('50-micro'))
         # invalid
         self.assertRaises(ValueError, get_version_nodes, '99')
 
     def test_init_custom_repositories(self):
-        # 5.0
-        custom_repos: dict[str, dict[str, str]] = init_custom_repositories('50')
-        self.assertIsNotNone(custom_repos['server'])
-        self.assertIsNotNone(custom_repos['proxy'])
-        # everything else
-        self.assertEqual({}, init_custom_repositories('43'))
+        self.assertEqual({}, init_custom_repositories('43', None))
+        self.assertEqual({}, init_custom_repositories('51-sles', None))
+        salt_static = v43_static_slmicro_salt_repositories
+        custom_repos_43: dict[str, dict[str, str]] = init_custom_repositories('43', salt_static)
+        self.assertIn('slmicro60_minion', custom_repos_43)
+        self.assertIn('slmicro61_minion', custom_repos_43)
+        self.assertEqual(
+            set(custom_repos_43['slmicro60_minion'].keys()),
+            {'slmicro60_salt', 'slmicro6_salt_bundle'},
+        )
+        self.assertEqual(
+            set(custom_repos_43['slmicro61_minion'].keys()),
+            {'slmicro61_salt', 'slmicro6_salt_bundle'},
+        )
+        custom_repos_50: dict[str, dict[str, str]] = init_custom_repositories('50-micro', salt_static)
+        self.assertEqual(custom_repos_43['slmicro60_minion'], custom_repos_50['slmicro60_minion'])
+
+    def test_apply_slfo_pullrequest_client_tools(self):
+        custom_repos: dict[str, dict[str, str]] = {}
+
+        apply_slfo_pullrequest_client_tools(custom_repos, '51-sles', '12345')
+
+        self.assertDictEqual(
+            {
+                'sles160_minion': {
+                    '12345': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/'
+                },
+                'slmicro62_minion': {
+                    '12345': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SL-Micro-6/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/'
+                },
+            },
+            custom_repos,
+        )
+
+    def test_apply_slfo_pullrequest_client_tools_beta(self):
+        custom_repos: dict[str, dict[str, str]] = {}
+
+        apply_slfo_pullrequest_client_tools(custom_repos, '52-sles-beta', '12345')
+
+        self.assertDictEqual(
+            {
+                'sles160_minion': {
+                    '12345': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools-Beta:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/'
+                },
+                'slmicro62_minion': {
+                    '12345': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools-Beta:/PullRequest:/12345:/SL-Micro-6/product/repo/Multi-Linux-ManagerTools-Beta-SL-Micro-6-x86_64/'
+                },
+            },
+            custom_repos,
+        )
+
+    def test_v51_v52_dynamic_repos_are_sorted_lists(self):
+        test_cases = [
+            get_v51_static_and_client_tools('sles')[1],
+            get_v52_static_and_client_tools('sles', beta=False)[1],
+            get_v52_static_and_client_tools('sles', beta=True)[1],
+        ]
+
+        for dynamic_repos in test_cases:
+            self.assertIsInstance(dynamic_repos['server'], list)
+            self.assertIsInstance(dynamic_repos['proxy'], list)
+            self.assertEqual(dynamic_repos['server'], sorted(dynamic_repos['server']))
+            self.assertEqual(dynamic_repos['proxy'], sorted(dynamic_repos['proxy']))
 
     def test_update_custom_repositories(self):
         custom_repos: dict[str, dict[str, str]] = {}
@@ -217,7 +308,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
 
     def test_read_mi_ids_from_file(self):
-        test_file_path: str = './tests/testdata/mi_ids_file.txt'
+        test_file_path = TESTDATA_DIR / 'mi_ids_file.txt'
 
         file_ids: list[str] = read_mi_ids_from_file(test_file_path)
         self.assertEqual(file_ids, ['11111', '22222', '33333'])
@@ -225,34 +316,35 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertRaises(OSError, read_mi_ids_from_file, 'file_not_found.txt')
 
     def test_merge_mi_ids(self):
-        test_file_path: str = './tests/testdata/mi_ids_file.txt'
+        test_file_path = TESTDATA_DIR / 'mi_ids_file.txt'
+        test_file_path_str = str(test_file_path)
         # no ids at all
-        sys.argv = ['maintenance_json_generator.py', '-v', '50']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, set())
         # no mi ids file
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-i', '1234', '5678', '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'1234', '5678'})
         # only mi ids file
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-f', test_file_path_str, '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'11111', '22222', '33333'})
         # ids both from flag and file
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '1234', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-f', test_file_path_str, '-i', '1234', '5678', '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})
         # duplicated IDs from flag and file should be removed
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '11111', '1234', '33333', '5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-f', test_file_path_str, '-i', '11111', '1234', '33333', '5678', '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})
         # check alternate -i flag values format
-        sys.argv = ['maintenance_json_generator.py', '-v', '50', '-f', test_file_path, '-i', '11111,1234,33333,5678', '-e']
+        sys.argv = ['maintenance_json_generator.py', '-v', '50-micro', '-f', test_file_path_str, '-i', '11111,1234,33333,5678', '-e']
         args = parse_cli_args()
         ids: set[str] = merge_mi_ids(args)
         self.assertEqual(ids, {'1234', '5678', '11111', '22222', '33333'})
