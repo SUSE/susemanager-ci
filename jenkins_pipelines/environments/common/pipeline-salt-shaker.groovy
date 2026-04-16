@@ -6,7 +6,16 @@ def run(params) {
 
         // The junit plugin doesn't affect full paths
         junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
+
+        String tf_file             = 'susemanager-ci/terracumber_config/tf_files/templates/salt-shaker.tf'
+        String tfvariables_file    = 'susemanager-ci/terracumber_config/tf_files/variables/salt-shaker.tf'
+        String tfvars_file         = 'susemanager-ci/terracumber_config/tf_files/tfvars/salt-shaker/salt-shaker.tfvars'
+
+        GString common_params = "--outputdir ${resultdir} --tf ${tf_file} --tf_variables_description_file ${tfvariables_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
+
+        if (params.deploy_parallelism) {
+            common_params = "${common_params} --parallelism ${params.deploy_parallelism}"
+        }
 
         // Start pipeline
         deployed = false
@@ -27,19 +36,18 @@ def run(params) {
             }
             stage('Deploy') {
                 // Provision the environment
+                String TERRAFORM_INIT = ''
                 if (params.terraform_init) {
-                    env.TERRAFORM_INIT = '--init'
-                } else {
-                    env.TERRAFORM_INIT = ''
+                    TERRAFORM_INIT = '--init'
                 }
-                env.TERRAFORM_TAINT = ''
+                String TERRAFORM_TAINT = ''
                 if (params.terraform_taint) {
                     switch(params.sumaform_backend) {
                         case "libvirt":
-                            env.TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'";
+                            TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'";
                             break;
                         case "aws":
-                            env.TERRAFORM_TAINT = " --taint '.*(host).*'";
+                            TERRAFORM_TAINT = " --taint '.*(host).*'";
                             break;
                         default:
                             println("ERROR: Unknown backend ${params.sumaform_backend}");
@@ -47,8 +55,12 @@ def run(params) {
                             break;
                     }
                 }
+                // Write the tfvars file and append the selected environment key
+                sh "rm -f ${resultdir}/sumaform/terraform.tfvars"
+                sh "cat ${tfvars_file} >> ${resultdir}/sumaform/terraform.tfvars"
+                sh "echo 'ENVIRONMENT = \"${params.minion}\"' >> ${resultdir}/sumaform/terraform.tfvars"
                 retry(count: 3) {
-                    sh "set +x; source /home/jenkins/.credentials set -x; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
+                    sh "set +x; source /home/jenkins/.credentials set -x; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${TERRAFORM_INIT} ${TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision"
                     deployed = true
                     if (params.wait_after_deploy) {
                         echo "Waiting ${params.wait_after_deploy} seconds after sumaform deployment (usually to allow transactional system to reboot)"
@@ -100,7 +112,7 @@ def run(params) {
         }
         finally {
             stage('Save TF state') {
-                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+                archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
             }
 
             stage('Get results') {
