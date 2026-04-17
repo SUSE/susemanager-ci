@@ -168,8 +168,7 @@ module "cucumber_testsuite" {
       runtime                        = "rke2"
       container_tag                  = "latest"
       container_repository           = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.2/x86_64"
-      helm_chart_name                = "server-helm"
-      helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2"
+      helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2/server-helm"
     }
     proxy_kubernetes = {
       image = "sles15sp7o"
@@ -182,8 +181,7 @@ module "cucumber_testsuite" {
       runtime                     = "rke2"
       container_tag               = "latest"
       container_repository        = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.2/x86_64"
-      helm_chart_name             = "proxy-helm"
-      helm_chart_url              = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2"
+      helm_chart_url              = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2/proxy-helm"
     }
     dhcp_dns = {
       name        = "dhcp-dns"
