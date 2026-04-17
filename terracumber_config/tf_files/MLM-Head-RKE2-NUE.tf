@@ -122,7 +122,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o"]
+  images = ["opensuse156o", "sles15sp7o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-head-rke2-"
@@ -167,9 +167,9 @@ module "cucumber_testsuite" {
       large_deployment               = true
       runtime                        = "rke2"
       container_tag                  = "latest"
-      container_repository           = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64"
+      container_repository           = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.2/x86_64"
       helm_chart_name                = "server-helm"
-      helm_chart_url                 = "oci://registry.suse.com/suse/multi-linux-manager/5.2"
+      helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2"
     }
     proxy_kubernetes = {
       image = "sles15sp7o"
@@ -178,57 +178,12 @@ module "cucumber_testsuite" {
         vcpu = 2
         memory = 16384
       }
-      main_disk_size = 200
-      runtime = "rke2"
-      container_tag = "latest"
-      container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64"
-      helm_chart_name = "proxy-helm"
-      helm_chart_url = "oci://registry.suse.com/suse/multi-linux-manager/5.2"
-    }
-    suse_minion = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:f6"
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    suse_sshminion = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:f8"
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    rhlike_minion = {
-      image = "rocky8o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:fa"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    deblike_minion = {
-      image = "ubuntu2404o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:fb"
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    build_host = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:fd"
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    pxeboot_minion = {
-      image = "sles15sp7o"
+      main_disk_size              = 200
+      runtime                     = "rke2"
+      container_tag               = "latest"
+      container_repository        = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      helm_chart_name             = "proxy-helm"
+      helm_chart_url              = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2"
     }
     dhcp_dns = {
       name        = "dhcp-dns"
