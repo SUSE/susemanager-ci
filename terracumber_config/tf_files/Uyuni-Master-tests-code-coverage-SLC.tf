@@ -155,7 +155,7 @@ module "cucumber_testsuite" {
         vcpu = 6
       }
       runtime               = "podman"
-      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/main/containerfile"
       container_tag         = "latest"
       main_disk_size        = 40
       repository_disk_size  = 250
@@ -169,7 +169,7 @@ module "cucumber_testsuite" {
         memory = 16384
       }
       runtime               = "podman"
-      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/main/containerfile"
       container_tag         = "latest"
     }
     suse_minion = {
