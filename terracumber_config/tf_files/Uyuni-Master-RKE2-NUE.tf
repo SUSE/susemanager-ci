@@ -147,9 +147,9 @@ module "cucumber_testsuite" {
       }
       runtime                        = "rke2"
       container_tag                  = "latest"
-      container_repository           = "registry.opensuse.org/systemsmanagement/uyuni/main/containerfile/uyuni"
+      container_repository           = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
       helm_chart_name                = "server-helm"
-      helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/main/charts/uyuni"
+      helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
 
       login_timeout = 28800
       main_disk_size = 40
