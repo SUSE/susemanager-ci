@@ -122,7 +122,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["sles15sp7o"]
+  images = ["sles15sp7o", "opensuse156o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-head-rke2-"
