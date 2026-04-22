@@ -109,7 +109,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["tumbleweedo"]
+  images = ["tumbleweedo", "opensuse156o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ci-master-rke2-"
@@ -147,9 +147,9 @@ module "cucumber_testsuite" {
       }
       runtime                        = "rke2"
       container_tag                  = "latest"
-      container_repository           = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
+      container_repository           = "registry.opensuse.org/systemsmanagement/uyuni/main/containerfile/uyuni"
       helm_chart_name                = "server-helm"
-      helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
+      helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/main/charts/uyuni"
 
       login_timeout = 28800
       main_disk_size = 40
