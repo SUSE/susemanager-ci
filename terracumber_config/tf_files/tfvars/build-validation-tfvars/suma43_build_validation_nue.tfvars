@@ -3,6 +3,7 @@ ENVIRONMENT_CONFIGURATION = {
   controller = {
     mac  = "aa:b2:92:42:00:a0"
     name = "controller"
+    memory = 24576
   }
   # SUMA 4.3 uses VM-based Server, not containerized
   server = {

@@ -3,6 +3,7 @@ ENVIRONMENT_CONFIGURATION = {
   controller = {
     mac  = "aa:b2:92:42:01:00"
     name = "controller"
+    memory = 24576
   }
   server_containerized = {
     mac  = "aa:b2:92:42:01:01"
