@@ -76,6 +76,7 @@ v52_nodes_static_client_tools_repositories_beta: Dict[str, Dict[str, str]] = {
 
 v52_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
     "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-12_x86_64/"},
+    "debian13_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-13_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Ubuntu-22.04_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Ubuntu-24.04_x86_64/"},
     "alma8_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-8_x86_64/"},
