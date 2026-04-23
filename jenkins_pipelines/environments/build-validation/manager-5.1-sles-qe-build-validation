@@ -8,12 +8,12 @@ node('sumaform-cucumber') {
             'sles15sp7_minion, sles15sp7_sshminion, ' +
             'sles160_minion, sles160_sshminion, ' +
             'salt_migration_minion, ' +
-            'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, ' +
+            'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, alma10_minion, alma10_sshminion, ' +
             'amazon2023_minion, amazon2023_sshminion, ' +
             'centos7_minion, centos7_sshminion, ' +
             'liberty9_minion, liberty9_sshminion, ' +
-            'oracle9_minion, oracle9_sshminion, ' +
-            'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, ' +
+            'oracle9_minion, oracle9_sshminion, oracle10_minion, oracle10_sshminion, ' +
+            'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, rocky10_minion, rocky10_sshminion, ' +
             'ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ' +
             'debian12_minion, debian12_sshminion, ' +
             'debian13_minion, debian13_sshminion, ' +

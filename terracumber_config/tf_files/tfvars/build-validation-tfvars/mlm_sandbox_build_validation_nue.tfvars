@@ -1,25 +1,25 @@
 ENVIRONMENT_CONFIGURATION = {
   # Core Infrastructure
   controller = {
-    mac  = "aa:b2:93:01:02:80"
-    name = "controller"
+    mac    = "aa:b2:93:01:02:80"
+    name   = "controller"
     memory = 24576
   }
   server_containerized = {
-    mac   = "aa:b2:93:01:02:81"
-    name  = "server"
-    image = "slmicro61o"
+    mac             = "aa:b2:93:01:02:81"
+    name            = "server"
+    image           = "slmicro61o"
     string_registry = true
   }
   proxy_containerized = {
-    mac   = "aa:b2:93:01:02:82"
-    name  = "proxy"
-    image = "slmicro61o"
+    mac             = "aa:b2:93:01:02:82"
+    name            = "proxy"
+    image           = "slmicro61o"
     string_registry = true
   }
   monitoring_server = {
-    mac  = "aa:b2:93:01:02:83"
-    name = "monitoring"
+    mac   = "aa:b2:93:01:02:83"
+    name  = "monitoring"
     image = "sles15sp7o"
   }
   sles15sp6_buildhost = {
@@ -35,10 +35,6 @@ ENVIRONMENT_CONFIGURATION = {
   sles12sp5_minion = {
     mac  = "aa:b2:93:01:02:90"
     name = "sles12sp5-minion"
-  }
-  sles15sp3_minion = {
-    mac  = "aa:b2:93:01:02:91"
-    name = "sles15sp3-minion"
   }
   sles15sp4_minion = {
     mac  = "aa:b2:93:01:02:92"
@@ -72,13 +68,25 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:a1"
     name = "rocky9-minion"
   }
+  rocky10_minion = {
+    mac  = "aa:b2:93:01:02:9e"
+    name = "rocky10-minion"
+  }
   alma9_minion = {
     mac  = "aa:b2:93:01:02:a2"
     name = "alma9-minion"
   }
+  alma10_minion = {
+    mac  = "aa:b2:93:01:02:9a"
+    name = "alma10-minion"
+  }
   oracle9_minion = {
     mac  = "aa:b2:93:01:02:a3"
     name = "oracle9-minion"
+  }
+  oracle10_minion = {
+    mac  = "aa:b2:93:01:02:9f"
+    name = "oracle10-minion"
   }
   amazon2023_minion = {
     mac  = "aa:b2:93:01:02:a4"
@@ -95,6 +103,10 @@ ENVIRONMENT_CONFIGURATION = {
   debian12_minion = {
     mac  = "aa:b2:93:01:02:9c"
     name = "debian12-minion"
+  }
+  debian13_minion = {
+    mac  = "aa:b2:93:01:02:91"
+    name = "debian13-minion"
   }
   ubuntu2404_minion = {
     mac  = "aa:b2:93:01:02:9d"
@@ -149,10 +161,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:b0"
     name = "sles12sp5-sshminion"
   }
-  sles15sp3_sshminion = {
-    mac  = "aa:b2:93:01:02:b1"
-    name = "sles15sp3-sshminion"
-  }
   sles15sp4_sshminion = {
     mac  = "aa:b2:93:01:02:b2"
     name = "sles15sp4-sshminion"
@@ -185,13 +193,25 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:c1"
     name = "rocky9-sshminion"
   }
+  rocky10_sshminion = {
+    mac  = "aa:b2:93:01:02:be"
+    name = "rocky10-sshminion"
+  }
   alma9_sshminion = {
     mac  = "aa:b2:93:01:02:c2"
     name = "alma9-sshminion"
   }
+  alma10_sshminion = {
+    mac  = "aa:b2:93:01:02:ba"
+    name = "alma10-sshminion"
+  }
   oracle9_sshminion = {
     mac  = "aa:b2:93:01:02:c3"
     name = "oracle9-sshminion"
+  }
+  oracle10_sshminion = {
+    mac  = "aa:b2:93:01:02:bf"
+    name = "oracle10-sshminion"
   }
   amazon2023_sshminion = {
     mac  = "aa:b2:93:01:02:c4"
@@ -208,6 +228,10 @@ ENVIRONMENT_CONFIGURATION = {
   debian12_sshminion = {
     mac  = "aa:b2:93:01:02:bc"
     name = "debian12-sshminion"
+  }
+  debian13_sshminion = {
+    mac  = "aa:b2:93:01:02:b1"
+    name = "debian13-sshminion"
   }
   ubuntu2404_sshminion = {
     mac  = "aa:b2:93:01:02:bd"
