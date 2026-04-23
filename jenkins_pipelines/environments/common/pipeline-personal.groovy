@@ -63,6 +63,18 @@ def run(params) {
                     deployed = true
                     // Collect and tag Flaky tests from the GitHub Board
                     def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:collect_and_tag_flaky_tests'", returnStatus: true
+
+                    // Setup AI Test Reviewer
+                    if (deployed && fileExists("${env.HOME}/.ai_secrets")) {
+                        sh """
+                        set +x
+                        SECRETS_B64=\$(sed '/^\$/d; s/^/export /' "\$HOME/.ai_secrets" | base64 -w0)
+                        ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd "grep -q '# BEGIN ai_secrets' /root/.bashrc || { echo '# BEGIN ai_secrets'; echo \${SECRETS_B64} | base64 -d; echo '# END ai_secrets'; } >> /root/.bashrc"
+                        """
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake ai_test_reviewer:setup'"
+                    } else {
+                        println("Skipping AI secrets upload: deployed=${deployed}, file present=${fileExists("${env.HOME}/.ai_secrets")}")
+                    }
                 }
             }
             stage('Product changes') {
