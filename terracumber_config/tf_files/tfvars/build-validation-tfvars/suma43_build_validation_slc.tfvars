@@ -3,6 +3,7 @@ ENVIRONMENT_CONFIGURATION = {
   controller = {
     mac  = "aa:b2:92:05:00:a0"
     name = "controller"
+    memory = 24576
   }
   server = {
     mac   = "aa:b2:92:05:00:a1"
