@@ -3,7 +3,7 @@
 node('sumaform-cucumber-slc1') {
     def minionList = 'sles15sp6_minion'
     properties([
-        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '3')),
+        buildDiscarder(logRotator(numToKeepStr: '12', artifactNumToKeepStr: '3')),
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
@@ -14,15 +14,26 @@ node('sumaform-cucumber-slc1') {
             string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
-            extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
-                    value: minionList,
-                    defaultValue: minionList,
-                    description: 'Node list to run during BV'),
+            [$class: 'ChoiceParameter',
+             choiceType: 'PT_CHECKBOX',
+             name: 'minions_to_run',
+             script: [
+                     $class: 'GroovyScript',
+                     script: [
+                             script: """
+                            def minionList = 'sles15sp6_minion:selected'
+                            return minionList.split(',').collect { it.trim() }
+                        """,
+                             sandbox: false
+                     ]
+             ],
+             description: 'Node list to run during BV'
+            ],
             string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Server container registry'),
             string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             // This is different than other pipelines to make it work with the simple proxy_traditional without refactoring all feature files
-            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
             booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),

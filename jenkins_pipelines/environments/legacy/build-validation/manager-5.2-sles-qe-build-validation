@@ -1,45 +1,50 @@
 #!/usr/bin/env groovy
 
-node('sumaform-cucumber-slc1') {
+node('sumaform-cucumber') {
+    def minionList = 'sles12sp5_minion, sles12sp5_sshminion, ' +
+            'sles15sp4_minion, sles15sp4_sshminion, ' +
+            'sles15sp5_minion, sles15sp5_sshminion, ' +
+            'sles15sp6_minion, sles15sp6_sshminion, ' +
+            'sles15sp7_minion, sles15sp7_sshminion, ' +
+            'sles160_minion, sles160_sshminion, ' +
+            'salt_migration_minion, ' +
+            'alma8_minion, alma8_sshminion, alma9_minion, alma9_sshminion, alma10_minion, alma10_sshminion, ' +
+            'amazon2023_minion, amazon2023_sshminion, ' +
+            'centos7_minion, centos7_sshminion, ' +
+            'liberty9_minion, liberty9_sshminion, liberty10_minion, liberty10_sshminion, ' +
+            'oracle9_minion, oracle9_sshminion, oracle10_minion, oracle10_sshminion, ' +
+            'rocky8_minion, rocky8_sshminion, rocky9_minion, rocky9_sshminion, rocky10_minion, rocky10_sshminion, ' +
+            'ubuntu2204_minion, ubuntu2204_sshminion, ubuntu2404_minion, ubuntu2404_sshminion, ubuntu2604_minion, ubuntu2604_sshminion, ' +
+            'debian13_minion, debian13_sshminion, raspios13_minion, raspios13_sshminion, ' +
+            'opensuse160arm_minion, opensuse160arm_sshminion, ' +
+            'sles15sp5s390_minion, sles15sp5s390_sshminion, ' +
+            'slemicro53_minion, slemicro54_minion, slemicro55_minion, ' +
+            'slmicro60_minion, slmicro61_minion, slmicro62_minion'
     properties([
         buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
         disableConcurrentBuilds(),
         parameters([
+            // TODO: replace with final values
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'master', description: 'Branch prepared for the MU tested'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/templates/build-validation-multi-providers.tf', description: 'Path to the tf file to be used'),
+            // string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
+            // string(name: 'cucumber_ref', defaultValue: 'Manager-5.2', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/templates/build-validation-single-provider.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
-            activeChoice(name: 'minions_to_run', description: 'Node list to run during BV', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
-                return [
-                    'sles12sp5_minion:selected', 'sles12sp5_sshminion:selected',
-                    'sles15sp4_minion:selected', 'sles15sp4_sshminion:selected',
-                    'sles15sp5_minion:selected', 'sles15sp5_sshminion:selected',
-                    'sles15sp6_minion:selected', 'sles15sp6_sshminion:selected',
-                    'sles15sp7_minion:selected', 'sles15sp7_sshminion:selected',
-                    'sles160_minion:selected', 'sles160_sshminion:selected',
-                    'salt_migration_minion:selected',
-                    'alma8_minion:selected', 'alma8_sshminion:selected', 'alma9_minion:selected', 'alma9_sshminion:selected', 'alma10_minion:selected', 'alma10_sshminion:selected',
-                    'amazon2023_minion:selected', 'amazon2023_sshminion:selected',
-                    'centos7_minion:selected', 'centos7_sshminion:selected',
-                    'liberty9_minion:selected', 'liberty9_sshminion:selected', 'liberty10_minion:selected', 'liberty10_sshminion:selected',
-                    'oracle9_minion:selected', 'oracle9_sshminion:selected', 'oracle10_minion:selected', 'oracle10_sshminion:selected',
-                    'rocky8_minion:selected', 'rocky8_sshminion:selected', 'rocky9_minion:selected', 'rocky9_sshminion:selected', 'rocky10_minion:selected', 'rocky10_sshminion:selected',
-                    'ubuntu2204_minion:selected', 'ubuntu2204_sshminion:selected', 'ubuntu2404_minion:selected', 'ubuntu2404_sshminion:selected', 'ubuntu2604_minion:selected', 'ubuntu2604_sshminion:selected',
-                    'debian13_minion:selected', 'debian13_sshminion:selected', 'raspios13_minion:selected', 'raspios13_sshminion:selected',
-                    'opensuse160arm_minion:selected', 'opensuse160arm_sshminion:selected',
-                    'sles15sp5s390_minion:selected', 'sles15sp5s390_sshminion:selected',
-                    'slemicro53_minion:selected', 'slemicro54_minion:selected', 'slemicro55_minion:selected',
-                    'slmicro60_minion:selected', 'slmicro61_minion:selected', 'slmicro62_minion:selected'
-                ]
-            """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
-            string(name: 'server_container_repository', defaultValue: 'registry.suse.de', description: 'Server container registry'),
-            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de', description: 'Proxy container registry'),
+            extendedChoice(name: 'minions_to_run',  multiSelectDelimiter: ', ', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_CHECKBOX', visibleItemCount: 15,
+                    value: minionList,
+                    defaultValue: minionList,
+                    description: 'Node list to run during BV'),
+            // TODO: replace with final values
+            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Proxy container registry'),
+            // string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile', description: 'Server container registry'),
+            // string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
-            booleanParam(name: 'test_milestone', defaultValue: false, description: 'Mark this checkbox to validate a new milestone (from ToTest) instead of Head (Devel:Galaxy:Main).'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
@@ -69,15 +74,10 @@ node('sumaform-cucumber-slc1') {
     mutableParams.sumaform_backend = "libvirt"
     mutableParams.bin_path = "/usr/bin/tofu"
     mutableParams.bin_plugins_path = "/usr/bin"
-    mutableParams.product_version_display = "head"
+    mutableParams.product_version_display = "5.2-released"
     mutableParams.non_MU_channels_tasks_file = "susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_52.json"
-    if (params.test_milestone == true) {
-        mutableParams.product_version = "head-staging"
-    } else {
-        mutableParams.product_version = "head"
-    }
-    mutableParams.deployment_tfvars = "susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlmhead_build_validation_slc.tfvars"
-    mutableParams.product_version_display = mutableParams.product_version
+    mutableParams.deployment_tfvars = "susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm52_sles_build_validation_nue.tfvars"
+
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(mutableParams)
 }
