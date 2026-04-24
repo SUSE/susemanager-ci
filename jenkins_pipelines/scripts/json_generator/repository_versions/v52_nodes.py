@@ -1,10 +1,10 @@
-from typing import Dict, Set, List
+from typing import Dict, Set, List, Tuple
 
 # Import the shared client tools from 5.1 for non-beta usage
 from .v51_nodes import (
     v51_nodes_static_client_tools_repositories,
     v51_nodes_dynamic_client_tools_repos,
-    IBS_URL_PREFIX
+    IBS_URL_PREFIX,
 )
 
 # --- NON-BETA 5.2 REPOSITORIES ---
@@ -49,6 +49,24 @@ v52_uyuni_tools_sles_repos_beta: Dict[str, Set[str]] = {
                 "/SUSE_Updates_SLE-Module-Python3_15-SP7_x86_64/"},
 }
 
+# SLES 5.2 beta: fixed ToTest *image* repo path fragments for server/proxy (not MI
+# maintenance suffixes). Values are joined with IBS_URL_PREFIX in
+# get_v52_static_and_client_tools when variant == "sles" and beta is True.
+v52_uyuni_tools_sles_static_repos_beta: Dict[str, Dict[str, str]] = {
+    "server": {
+        "mlm52_sles_beta_totest_images_sp7": (
+            "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/"
+            "images-SP7/repo/SUSE-Multi-Linux-Manager-Server-SLE-5.2-POOL-x86_64-Media1/"
+        ),
+    },
+    "proxy": {
+        "mlm52_sles_beta_totest_images_sp7_proxy": (
+            "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/"
+            "images-SP7/repo/SUSE-Multi-Linux-Manager-Proxy-SLE-5.2-POOL-x86_64-Media1/"
+        ),
+    },
+}
+
 v52_uyuni_tools_micro_repos_beta: Dict[str, Dict[str, str]] = {
     "server": {
         "server_uyuni_tools": "/SLFO:/Products:/Multi-Linux-Manager:/5.2:/ToTest/product/repo/Multi-Linux-Manager-Server-5.2-x86_64/"},
@@ -66,12 +84,13 @@ v52_nodes_static_client_tools_repositories_beta: Dict[str, Dict[str, str]] = {
     "slmicro61_minion": {
         "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SL-Micro-6-x86_64/"
     },
+    # 6.2 uses the SLES-16 client-tools ToTest repo (same path as sles160_minion), not SL-Micro-6.
     "slmicro62_minion": {
-        "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
     },
     "sles160_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
-    }
+    },
 }
 
 v52_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
@@ -88,6 +107,7 @@ v52_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
     "liberty9_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "openeuler2403_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "opensuse156arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_aarch64/"},
+    "opensuse160arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-16_aarch64/"},
     "oracle9_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "oracle10_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-10_x86_64/"},
     "rhel9_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
@@ -113,7 +133,9 @@ v52_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
     "slemicro55_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-Micro-5_x86_64/" }
 }
 
-def get_v52_static_and_client_tools(variant: str = "micro", beta: bool = False) -> (Dict[str, Dict[str, str]], Dict[str, List[str]]):
+def get_v52_static_and_client_tools(
+    variant: str = "micro", beta: bool = False,
+) -> Tuple[Dict[str, Dict[str, str]], Dict[str, List[str]]]:
     # Determine the sources to map based on the beta flag
     if beta:
         source_static_repos = v52_nodes_static_client_tools_repositories_beta
@@ -150,7 +172,16 @@ def get_v52_static_and_client_tools(variant: str = "micro", beta: bool = False) 
                 dynamic_maintenance_repos[key] = set()
             for path in uyuni_tools.get(key, set()):
                 dynamic_maintenance_repos[key].add(path)
+        if beta:
+            for key in ("server", "proxy"):
+                if key not in static_repos:
+                    static_repos[key] = {}
+                for name, path in v52_uyuni_tools_sles_static_repos_beta.get(key, {}).items():
+                    static_repos[key][name] = f"{IBS_URL_PREFIX}{path}"
     else:
         raise ValueError(f"Invalid variant '{variant}'. Choose from: 'micro', 'sles'")
 
-    return static_repos, dynamic_maintenance_repos
+    dynamic_repos_sorted: Dict[str, List[str]] = {
+        key: sorted(paths) for key, paths in dynamic_maintenance_repos.items()
+    }
+    return static_repos, dynamic_repos_sorted
