@@ -10,6 +10,17 @@ def run(params) {
         GString tfvarsPrepareScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
 
         deployed = false
+        def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
+        def credInit = isNewJenkins
+            ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; . /tmp/.credentials; set -x'
+            : 'set +x; . /home/jenkins/.credentials; set -x'
+        def withCreds = { Closure body ->
+            if (isNewJenkins) {
+                withCredentials([string(credentialsId: 'sumaform-secrets', variable: 'SECRET_CONTENT')]) { body() }
+            } else {
+                body()
+            }
+        }
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString localSumaformDirPath = "${resultdir}/sumaform/"
@@ -68,54 +79,68 @@ def run(params) {
             }
 
             stage('Deploy') {
-                // Restore Terraform states from artifacts
                 if (params.use_previous_terraform_state) {
-                    copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                    // Restore Terraform states from artifacts
+                    copyArtifacts(
+                            projectName: env.JOB_NAME,
+                            selector: [$class: 'SpecificBuildSelector', buildNumber: "${currentBuild.previousBuild.number}"],
+                            optional: true
+                    )
                 }
 
                 if (params.must_deploy) {
-                    // Clone sumaform
-                    sh "set +x; source /home/jenkins/.credentials set -x; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
+                    withCreds {
+                        // Clone sumaform
+                        sh """
+                            #!/bin/bash
+                            set -e -o pipefail
+                            ${credInit}
+                            ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
+                        """
 
-                    // Generate custom_repositories.json file in the workspace from the value passed by parameter
-                    if (params.custom_repositories?.trim()) {
-                        writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
-                    }
-                    // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
-                    if (params.mi_ids?.trim()) {
-                        node('manager-jenkins-node') {
-                            checkout scm
-                            def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
-                            echo "Build Validation JSON script return code:\n ${res_python_script_}"
-                            if (res_python_script_ != 0) {
-                                error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                        // Generate custom_repositories.json file in the workspace from the value passed by parameter
+                        if (params.custom_repositories?.trim()) {
+                            writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
+                        }
+                        // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
+                        if (params.mi_ids?.trim()) {
+                            node('manager-jenkins-node') {
+                                checkout scm
+                                def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids}", returnStatus: true)
+                                echo "Build Validation JSON script return code:\n ${res_python_script_}"
+                                if (res_python_script_ != 0) {
+                                    error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                                }
                             }
                         }
-                    }
 
-                    def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
-                    def outputFile = "${localSumaformDirPath}terraform.tfvars"
+                        def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
+                        def outputFile = "${localSumaformDirPath}terraform.tfvars"
 
-                    // Build Common Arguments
-                    def commonArgs = " --output \"${outputFile}\""
-                    commonArgs += " --inject SERVER_CONTAINER_REPOSITORY=${server_container_repository}"
-                    commonArgs += " --inject PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}"
-                    commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
-                    commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
-                    commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
-                    if (product_version) { commonArgs += " --inject PRODUCT_VERSION=${product_version}" }
-                    if (base_os) { commonArgs += " --inject BASE_OS=${base_os}" }
-                    if ( fileExists('custom_repositories.json')) {
-                        commonArgs += " --custom-repositories-json ${WORKSPACE}/custom_repositories.json"
-                    }
+                        // Build Common Arguments
+                        def commonArgs = " --output \"${outputFile}\""
+                        commonArgs += " --inject SERVER_CONTAINER_REPOSITORY=${server_container_repository}"
+                        commonArgs += " --inject PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}"
+                        commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
+                        commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
+                        commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
+                        if (isNewJenkins) {
+                            commonArgs += " --inject PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.worker\""
+                            commonArgs += " --inject PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
+                        }
+                        if (product_version) { commonArgs += " --inject PRODUCT_VERSION=${product_version}" }
+                        if (base_os) { commonArgs += " --inject BASE_OS=${base_os}" }
+                        if (fileExists('custom_repositories.json')) {
+                            commonArgs += " --custom-repositories-json ${WORKSPACE}/custom_repositories.json"
+                        }
 
-                    // Personal scenario specific arguments
-                    def scenarioArgs = ""
+                        // Personal scenario specific arguments
+                        def scenarioArgs = ""
 
                     //  -- Personal BV Arguments --
                     if (params.environment) {
                         // We construct from env reference. No cleaning needed as we only add selected minions.
-                        scenarioArgs += " --env-file \"${tfRefEnvironmentFile}\" --user \"${params.environment}\""
+                        scenarioArgs += " --env-file \"${tfRefEnvironmentFile}\" --user \"${params.environment}\" --product-version \"${params.product_version}\""
                         scenarioArgs += " --minion1 \"${params.minion1}\""
                         scenarioArgs += " --minion2 \"${params.minion2}\""
                         scenarioArgs += " --minion3 \"${params.minion3}\""
@@ -128,41 +153,43 @@ def run(params) {
                         if (params.deploy_retail) { scenarioArgs += " --deploy-retail" }
                         scenarioArgs += " --merge-files \"${locationFile}\"" // Merge location only
 
-                    } else if (params.get('deployment_tfvars')) {
-                        // -- Common BV arguments --
-                        // We load a static file and clean it based on minions_to_run list.
-                        def minionsToKeep = params.minions_to_run.split(', ').join(' ')
-                        scenarioArgs += " --merge-files \"${params.deployment_tfvars}\" \"${locationFile}\""
-                        scenarioArgs += " --clean --keep-resources ${minionsToKeep}"
-                    } else {
-                        error "No environment or deployment_tfvars specified"
-                    }
-                    // Generate the tfvars
-                    sh "python3 ${tfvarsPrepareScript} ${commonArgs} ${scenarioArgs}"
-                    // Deploy the environment
-                    sh """
-                        set +x
-                        source /home/jenkins/.credentials
-                        set -x
-            
-                        export TERRAFORM=${params.bin_path}
-                        export TERRAFORM_PLUGINS=${params.bin_plugins_path}
-            
-                        ./terracumber-cli ${common_params} \
-                            --logfile ${resultdirbuild}/sumaform.log \
-                            --init \
-                            --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
-                            --custom-repositories ${WORKSPACE}/custom_repositories.json \
-                            --sumaform-backend ${params.sumaform_backend} \
-                            --skip-variables-check \
-                            --tf_configuration_files "${outputFile}" \
-                            --runstep provision
-                    """
+                        } else if (params.get('deployment_tfvars')) {
+                            // -- Common BV arguments --
+                            // We load a static file and clean it based on minions_to_run list.
+                            def minionsToKeep = params.minions_to_run.split(', ').join(' ')
+                            scenarioArgs += " --merge-files \"${params.deployment_tfvars}\" \"${locationFile}\""
+                            scenarioArgs += " --clean --keep-resources ${minionsToKeep}"
+                        } else {
+                            error "No environment or deployment_tfvars specified"
+                        }
 
-                    // Generate features and rake files
-                    runCucumberRakeTarget('utils:generate_build_validation_features')
-                    runCucumberRakeTarget('jenkins:generate_rake_files_build_validation')
-                    deployed = true
+                        // Generate the tfvars
+                        sh "python3 ${tfvarsPrepareScript} ${commonArgs} ${scenarioArgs}"
+
+                        // Deploy the environment
+                        sh """
+                            #!/bin/bash
+                            set -e -o pipefail
+                            ${credInit}
+                            export TERRAFORM=${params.bin_path}
+                            export TERRAFORM_PLUGINS=${params.bin_plugins_path}
+            
+                            ./terracumber-cli ${common_params} \
+                                --logfile ${resultdirbuild}/sumaform.log \
+                                --init \
+                                --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
+                                --custom-repositories ${WORKSPACE}/custom_repositories.json \
+                                --sumaform-backend ${params.sumaform_backend} \
+                                --skip-variables-check \
+                                --tf_configuration_files "${outputFile}" \
+                                --runstep provision
+                        """
+
+                        // Generate features and rake files
+                        runCucumberRakeTarget('utils:generate_build_validation_features')
+                        runCucumberRakeTarget('jenkins:generate_rake_files_build_validation')
+                        deployed = true
+                    }
                 }
             }
 
@@ -499,8 +526,6 @@ def run(params) {
                     )
 //                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
-                // Send email
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
                 // Fail pipeline if client stages failed
