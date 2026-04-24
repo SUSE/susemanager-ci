@@ -18,6 +18,13 @@ pipeline {
         )
     }
 
+    triggers {
+        // Poll the SCM every five minutes for changes.
+        // 'H' is used to spread out the load on Jenkins.
+        // This requires the Jenkins job to be configured to point to the mcp-server-uyuni git repository.
+        pollSCM('H/5 * * * *')
+    }
+
     environment {
         // Sanitize JOB_NAME for Docker compatibility (lowercase, no illegal chars)
         DOCKER_TAG = "${env.JOB_NAME.toLowerCase().replaceAll(/[^a-z0-9]/, '-')}"
