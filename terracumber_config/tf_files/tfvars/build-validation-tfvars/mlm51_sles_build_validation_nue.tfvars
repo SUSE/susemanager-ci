@@ -1,25 +1,25 @@
 ENVIRONMENT_CONFIGURATION = {
   # Core Infrastructure
   controller = {
-    mac  = "aa:b2:92:42:01:00"
-    name = "controller"
+    mac    = "aa:b2:92:42:01:00"
+    name   = "controller"
     memory = 24576
   }
   server_containerized = {
-    mac  = "aa:b2:92:42:01:01"
-    name = "server"
-    image = "sles15sp7o"
+    mac             = "aa:b2:92:42:01:01"
+    name            = "server"
+    image           = "sles15sp7o"
     string_registry = true
   }
   proxy_containerized = {
-    mac  = "aa:b2:92:42:01:02"
-    name = "proxy"
-    image = "sles15sp7o"
+    mac             = "aa:b2:92:42:01:02"
+    name            = "proxy"
+    image           = "sles15sp7o"
     string_registry = true
   }
   monitoring_server = {
-    mac  = "aa:b2:92:42:01:03"
-    name = "monitoring"
+    mac   = "aa:b2:92:42:01:03"
+    name  = "monitoring"
     image = "sles15sp7o"
   }
   sles15sp6_buildhost = {
@@ -73,13 +73,25 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:21"
     name = "rocky9-minion"
   }
+  rocky10_minion = {
+    mac  = "aa:b2:92:42:01:1e"
+    name = "rocky10-minion"
+  }
   alma9_minion = {
     mac  = "aa:b2:92:42:01:22"
     name = "alma9-minion"
   }
+  alma10_minion = {
+    mac  = "aa:b2:92:42:01:1a"
+    name = "alma10-minion"
+  }
   oracle9_minion = {
     mac  = "aa:b2:92:42:01:23"
     name = "oracle9-minion"
+  }
+  oracle10_minion = {
+    mac  = "aa:b2:92:42:01:1f"
+    name = "oracle10-minion"
   }
   amazon2023_minion = {
     mac  = "aa:b2:92:42:01:24"
@@ -114,8 +126,8 @@ ENVIRONMENT_CONFIGURATION = {
     name = "salt-migration-minion"
   }
   sles15sp5s390_minion = {
-    mac  = "02:00:00:42:00:2a"
-    name = "sles15sp5s390-minion"
+    mac    = "02:00:00:42:00:2a"
+    name   = "sles15sp5s390-minion"
     userid = "M51MIPRG"
   }
 
@@ -191,13 +203,25 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:41"
     name = "rocky9-sshminion"
   }
+  rocky10_sshminion = {
+    mac  = "aa:b2:92:42:01:3e"
+    name = "rocky10-sshminion"
+  }
   alma9_sshminion = {
     mac  = "aa:b2:92:42:01:42"
     name = "alma9-sshminion"
   }
+  alma10_sshminion = {
+    mac  = "aa:b2:92:42:01:3a"
+    name = "alma10-sshminion"
+  }
   oracle9_sshminion = {
     mac  = "aa:b2:92:42:01:43"
     name = "oracle9-sshminion"
+  }
+  oracle10_sshminion = {
+    mac  = "aa:b2:92:42:01:3f"
+    name = "oracle10-sshminion"
   }
   amazon2023_sshminion = {
     mac  = "aa:b2:92:42:01:44"
@@ -228,13 +252,13 @@ ENVIRONMENT_CONFIGURATION = {
     name = "opensuse160arm-sshminion"
   }
   sles15sp5s390_sshminion = {
-    mac  = "02:00:00:42:00:2b"
-    name = "sles15sp5s390-sshminion"
+    mac    = "02:00:00:42:00:2b"
+    name   = "sles15sp5s390-sshminion"
     userid = "M51SSPRG"
   }
-  product_version       = "5.1-released"
-  name_prefix           = "mlm-bv-51-sles-"
-  url_prefix            = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.1-sles-qe-build-validation"
+  product_version = "5.1-released"
+  name_prefix     = "mlm-bv-51-sles-"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.1-sles-qe-build-validation"
 }
 BASE_CONFIGURATIONS = {
   base_core = {

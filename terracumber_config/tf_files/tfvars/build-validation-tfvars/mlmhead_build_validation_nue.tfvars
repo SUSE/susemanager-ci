@@ -1,25 +1,25 @@
 ENVIRONMENT_CONFIGURATION = {
   # Core Infrastructure
   controller = {
-    mac  = "aa:b2:93:02:01:a0"
-    name = "controller"
+    mac    = "aa:b2:93:02:01:a0"
+    name   = "controller"
     memory = 24576
   }
   server_containerized = {
-    mac   = "aa:b2:93:02:01:a1"
-    name  = "server"
-    image = "sles15sp7o"
+    mac             = "aa:b2:93:02:01:a1"
+    name            = "server"
+    image           = "sles15sp7o"
     string_registry = true
   }
   proxy_containerized = {
-    mac   = "aa:b2:93:02:01:a2"
-    name  = "proxy"
-    image = "sles15sp7o"
+    mac             = "aa:b2:93:02:01:a2"
+    name            = "proxy"
+    image           = "sles15sp7o"
     string_registry = true
   }
   monitoring_server = {
-    mac  = "aa:b2:93:02:01:a3"
-    name = "monitoring"
+    mac   = "aa:b2:93:02:01:a3"
+    name  = "monitoring"
     image = "sles15sp7o"
   }
   sles15sp6_buildhost = {
@@ -35,10 +35,6 @@ ENVIRONMENT_CONFIGURATION = {
   sles12sp5_minion = {
     mac  = "aa:b2:93:02:01:b0"
     name = "sles12sp5-minion"
-  }
-  sles15sp3_minion = {
-    mac  = "aa:b2:93:02:01:b1"
-    name = "sles15sp3-minion"
   }
   sles15sp4_minion = {
     mac  = "aa:b2:93:02:01:b2"
@@ -76,13 +72,25 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:c1"
     name = "rocky9-minion"
   }
+  rocky10_minion = {
+    mac  = "aa:b2:93:02:01:be"
+    name = "rocky10-minion"
+  }
   alma9_minion = {
     mac  = "aa:b2:93:02:01:c2"
     name = "alma9-minion"
   }
+  alma10_minion = {
+    mac  = "aa:b2:93:02:01:ba"
+    name = "alma10-minion"
+  }
   oracle9_minion = {
     mac  = "aa:b2:93:02:01:c3"
     name = "oracle9-minion"
+  }
+  oracle10_minion = {
+    mac  = "aa:b2:93:02:01:bf"
+    name = "oracle10-minion"
   }
   amazon2023_minion = {
     mac  = "aa:b2:93:02:01:c4"
@@ -92,10 +100,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:c5"
     name = "liberty9-minion"
   }
-  ubuntu2004_minion = {
-    mac  = "aa:b2:93:02:01:ba"
-    name = "ubuntu2004-minion"
-  }
   ubuntu2204_minion = {
     mac  = "aa:b2:93:02:01:bb"
     name = "ubuntu2204-minion"
@@ -103,6 +107,10 @@ ENVIRONMENT_CONFIGURATION = {
   debian12_minion = {
     mac  = "aa:b2:93:02:01:bc"
     name = "debian12-minion"
+  }
+  debian13_minion = {
+    mac  = "aa:b2:93:02:01:b1"
+    name = "debian13-minion"
   }
   ubuntu2404_minion = {
     mac  = "aa:b2:93:02:01:bd"
@@ -157,10 +165,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:d0"
     name = "sles12sp5-sshminion"
   }
-  sles15sp3_sshminion = {
-    mac  = "aa:b2:93:02:01:d1"
-    name = "sles15sp3-sshminion"
-  }
   sles15sp4_sshminion = {
     mac  = "aa:b2:93:02:01:d2"
     name = "sles15sp4-sshminion"
@@ -197,13 +201,25 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:e1"
     name = "rocky9-sshminion"
   }
+  rocky10_sshminion = {
+    mac  = "aa:b2:93:02:01:de"
+    name = "rocky10-sshminion"
+  }
   alma9_sshminion = {
     mac  = "aa:b2:93:02:01:e2"
     name = "alma9-sshminion"
   }
+  alma10_sshminion = {
+    mac  = "aa:b2:93:02:01:da"
+    name = "alma10-sshminion"
+  }
   oracle9_sshminion = {
     mac  = "aa:b2:93:02:01:e3"
     name = "oracle9-sshminion"
+  }
+  oracle10_sshminion = {
+    mac  = "aa:b2:93:02:01:df"
+    name = "oracle10-sshminion"
   }
   amazon2023_sshminion = {
     mac  = "aa:b2:93:02:01:e4"
@@ -213,10 +229,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:e5"
     name = "liberty9-sshminion"
   }
-  ubuntu2004_sshminion = {
-    mac  = "aa:b2:93:02:01:da"
-    name = "ubuntu2004-sshminion"
-  }
   ubuntu2204_sshminion = {
     mac  = "aa:b2:93:02:01:db"
     name = "ubuntu2204-sshminion"
@@ -224,6 +236,10 @@ ENVIRONMENT_CONFIGURATION = {
   debian12_sshminion = {
     mac  = "aa:b2:93:02:01:dc"
     name = "debian12-sshminion"
+  }
+  debian13_sshminion = {
+    mac  = "aa:b2:93:02:01:d1"
+    name = "debian13-sshminion"
   }
   ubuntu2404_sshminion = {
     mac  = "aa:b2:93:02:01:dd"
@@ -238,9 +254,9 @@ ENVIRONMENT_CONFIGURATION = {
     name   = "sles15sp5s390-sshminion"
     userid = "M99SSPRG"
   }
-  product_version       = "head"
-  name_prefix           = "mlm-bv-head-"
-  url_prefix            = "https://ci.suse.de/view/Manager/view/Uyuni/job/manager-head-qe-build-validation"
+  product_version = "head"
+  name_prefix     = "mlm-bv-head-"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Uyuni/job/manager-head-qe-build-validation"
 }
 BASE_CONFIGURATIONS = {
   base_core = {
