@@ -1,21 +1,21 @@
 def run(params) {
     timestamps {
         // Init path env variables
-        env.resultdir = "${WORKSPACE}/results"
-        env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+        GString resultdir = "${WORKSPACE}/results"
+        GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
 
         // The junit plugin doesn't affect full paths
-        junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
-        env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
+        GString junit_resultdir = "${resultdirbuild}/results_junit"
+        GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
 
         if (params.deploy_parallelism) {
-            env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
+            common_params = "${common_params} --parallelism ${params.deploy_parallelism}"
         }
         if (params.bastion_ssh_key_file) {
-            env.common_params = "${env.common_params} --bastion_ssh_key ${params.bastion_ssh_key_file} --bastion_user ${params.bastion_username}"
+            common_params = "${common_params} --bastion_ssh_key ${params.bastion_ssh_key_file} --bastion_user ${params.bastion_username}"
             if (params.bastion_hostname) {
-                env.common_params = "${env.common_params} --bastion_hostname ${params.bastion_hostname}"
+                common_params = "${common_params} --bastion_hostname ${params.bastion_hostname}"
             }
         }
 
@@ -87,7 +87,7 @@ def run(params) {
                             break;
                         case "aws":
                             env.TERRAFORM_TAINT = " --taint '.*(host).*'";
-                            env.exports = "${env.exports} export PUBLISH_CUCUMBER_REPORT=true;"; 
+                            env.exports = "${env.exports} export PUBLISH_CUCUMBER_REPORT=true;";
                             break;
                         default:
                             println("ERROR: Unknown backend ${params.sumaform_backend}");
