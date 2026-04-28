@@ -4,7 +4,7 @@ def run(params) {
         env.resultdir = "${WORKSPACE}/results"
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         // The junit plugin doesn't affect full paths
-        junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
+        junit_resultdir = "${resultdirbuild}/results_junit"
         local_mirror_dir = "${resultdir}/sumaform-local"
         GString aws_mirror_dir = "${resultdir}/sumaform-aws"
         awscli = '/usr/local/bin/aws'
