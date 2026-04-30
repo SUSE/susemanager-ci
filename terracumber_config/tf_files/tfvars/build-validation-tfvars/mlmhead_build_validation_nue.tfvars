@@ -53,7 +53,7 @@ ENVIRONMENT_CONFIGURATION = {
     name = "sles15sp7-minion"
   }
   sles160_minion = {
-    mac  = "aa:b2:93:01:02:96"
+    mac  = "aa:b2:93:02:01:b6"
     name = "sles160-minion"
   }
   centos7_minion = {
@@ -182,7 +182,7 @@ ENVIRONMENT_CONFIGURATION = {
     name = "sles15sp7-sshminion"
   }
   sles160_sshminion = {
-    mac  = "aa:b2:93:01:02:b6"
+    mac  = "aa:b2:93:02:01:d6"
     name = "sles160-sshminion"
   }
   centos7_sshminion = {
