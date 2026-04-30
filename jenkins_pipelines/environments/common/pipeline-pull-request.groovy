@@ -369,8 +369,8 @@ def run(params) {
                                             allowMissing: true,
                                             alwaysLinkToLastBuild: false,
                                             keepAll: true,
-                                            reportDir: "${resultdirbuild}/cucumber_report/",
-                                            reportFiles: 'cucumber_report.html',
+                                            reportDir: "${resultdirbuild}/results/cucumber_report/",
+                                            reportFiles: 'index.html',
                                             reportName: "TestSuite Report for Pull Request ${builder_project}:${pull_request_number}"]
                                 )
                                 junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml"
