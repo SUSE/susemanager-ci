@@ -202,25 +202,15 @@ def run(params) {
                     // and filter by passed/failed/skipped — all inside Jenkins.
                     cucumber(
                             fileIncludePattern: '**/*.json',
-                            // Exclude the merged report produced by multiple-cucumber-html-reporter
-                            // and any other non-Cucumber JSON files in the results folder
-                            fileExcludePattern: '**/package*.json, **/total_result.json',
+                            // Exclude non-Cucumber JSON files
+                            fileExcludePattern: '**/package*.json, **/total_result.json, **/cucumber_report/**',
                             jsonReportDirectory: "${resultdirbuild}/results",
                             reportTitle: 'TestSuite Report',
-                            // Mark build UNSTABLE (not FAILED) when tests fail so the
-                            // pipeline still archives artifacts and sends notifications
                             buildStatus: 'UNSTABLE',
-                            // Keep trend history for the last 30 builds
                             trendsLimit: 30,
-                            // Use NATURAL order to match the JSON execution order
-                            // (ALPHABETICAL is the plugin default — avoid it)
                             sortingMethod: 'NATURAL',
-                            // Do not fail the build on skipped or undefined steps —
-                            // these are expected during partial runs
                             skippedFails: false,
                             undefinedFails: false,
-                            // Merge features that span multiple JSON files (e.g. init_clients-*)
-                            // into a single feature entry in the overview
                             mergeFeaturesById: false,
                             mergeFeaturesWithRerunData: false
                     )
