@@ -144,7 +144,7 @@ def run(params) {
                                                 rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/results/${env.BUILD_NUMBER}/ /mnt/www/${env.BUILD_NUMBER}/ && \
                                                 rsync -av --no-owner --no-group  /root/spacewalk/testsuite/spacewalk-debug.tar.bz2 /mnt/www/${env.BUILD_NUMBER}/ && \
                                                 rsync -av --no-owner --no-group  /root/spacewalk/testsuite/logs/ /mnt/www/${env.BUILD_NUMBER}/ && \
-                                                rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/cucumber_report/ /mnt/www/${env.BUILD_NUMBER}/'
+                                                rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/results/${env.BUILD_NUMBER}/results/cucumber_report/ /mnt/www/${env.BUILD_NUMBER}/'
                             """
                         } catch(err) {
                             println("ERROR: Exporting reports to external AWS Web Server: ${err}")
