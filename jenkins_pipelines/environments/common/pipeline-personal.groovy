@@ -151,14 +151,14 @@ def run(params) {
                             error = 1
                         }
                     }
-                    publishHTML( target: [
+                    publishHTML(target: [
                             allowMissing: true,
                             alwaysLinkToLastBuild: false,
                             keepAll: true,
-                            reportDir: "${resultdirbuild}/cucumber_report/",
-                            reportFiles: 'cucumber_report.html',
-                            reportName: "TestSuite Report"]
-                    )
+                            reportDir: "${resultdirbuild}/results/cucumber_report/",
+                            reportFiles: 'index.html',
+                            reportName: 'TestSuite Report (multiple-cucumber)'
+                    ])
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
                 // Send email
