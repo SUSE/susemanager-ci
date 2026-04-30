@@ -5,7 +5,7 @@ def run(params) {
         GString resultdirbuild = "${resultdir}/${env.BUILD_NUMBER}"
 
         // The junit plugin doesn't affect full paths
-        GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
+        GString junit_resultdir = "${resultdirbuild}/results_junit"
         GString exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
         String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/personal/variables.tf'
         String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars"
@@ -151,15 +151,15 @@ def run(params) {
                             error = 1
                         }
                     }
-                    publishHTML( target: [
+                    publishHTML(target: [
                             allowMissing: true,
                             alwaysLinkToLastBuild: false,
                             keepAll: true,
-                            reportDir: "${resultdirbuild}/cucumber_report/",
-                            reportFiles: 'cucumber_report.html',
-                            reportName: "TestSuite Report"]
-                    )
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true
+                            reportDir: "${resultdirbuild}/results/cucumber_report/",
+                            reportFiles: 'index.html',
+                            reportName: 'TestSuite Report (multiple-cucumber)'
+                    ])
+                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
                 // Send email
                 // Clean up old results
