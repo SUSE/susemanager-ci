@@ -22,8 +22,8 @@ def run(params) {
         def deployed = false
         def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
         def credInit = isNewJenkins
-            ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; . /tmp/.credentials; set -x'
-            : 'set +x; . /home/jenkins/.credentials; set -x'
+                ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; . /tmp/.credentials; set -x'
+                : 'set +x; . /home/jenkins/.credentials; set -x'
         def withCreds = { Closure body ->
             if (isNewJenkins) {
                 withCredentials([string(credentialsId: 'sumaform-secrets', variable: 'SECRET_CONTENT')]) { body() }
@@ -196,13 +196,33 @@ def run(params) {
                             error = 1
                         }
                     }
-                    publishHTML( target: [
-                            allowMissing: true,
-                            alwaysLinkToLastBuild: false,
-                            keepAll: true,
-                            reportDir: "${resultdirbuild}/cucumber_report/",
-                            reportFiles: 'cucumber_report.html',
-                            reportName: "TestSuite Report"]
+                    // Publish rich Cucumber report via the cucumber-reports plugin.
+                    // Reads all JSON files from the per-build results folder and produces
+                    // an interactive report with trend graphs, feature/scenario breakdown,
+                    // and filter by passed/failed/skipped — all inside Jenkins.
+                    cucumber(
+                            fileIncludePattern: '**/*.json',
+                            // Exclude the merged report produced by multiple-cucumber-html-reporter
+                            // and any other non-Cucumber JSON files in the results folder
+                            fileExcludePattern: '**/package*.json, **/total_result.json',
+                            jsonReportDirectory: "${resultdirbuild}/results",
+                            reportTitle: 'TestSuite Report',
+                            // Mark build UNSTABLE (not FAILED) when tests fail so the
+                            // pipeline still archives artifacts and sends notifications
+                            buildStatus: 'UNSTABLE',
+                            // Keep trend history for the last 30 builds
+                            trendsLimit: 30,
+                            // Use NATURAL order to match the JSON execution order
+                            // (ALPHABETICAL is the plugin default — avoid it)
+                            sortingMethod: 'NATURAL',
+                            // Do not fail the build on skipped or undefined steps —
+                            // these are expected during partial runs
+                            skippedFails: false,
+                            undefinedFails: false,
+                            // Merge features that span multiple JSON files (e.g. init_clients-*)
+                            // into a single feature entry in the overview
+                            mergeFeaturesById: false,
+                            mergeFeaturesWithRerunData: false
                     )
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
