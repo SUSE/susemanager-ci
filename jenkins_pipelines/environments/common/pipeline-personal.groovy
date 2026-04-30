@@ -144,21 +144,21 @@ def run(params) {
                                                 rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/results/${env.BUILD_NUMBER}/ /mnt/www/${env.BUILD_NUMBER}/ && \
                                                 rsync -av --no-owner --no-group  /root/spacewalk/testsuite/spacewalk-debug.tar.bz2 /mnt/www/${env.BUILD_NUMBER}/ && \
                                                 rsync -av --no-owner --no-group  /root/spacewalk/testsuite/logs/ /mnt/www/${env.BUILD_NUMBER}/ && \
-                                                rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/cucumber_report/ /mnt/www/${env.BUILD_NUMBER}/'
+                                                rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/results/${env.BUILD_NUMBER}/results/cucumber_report/ /mnt/www/${env.BUILD_NUMBER}/'
                             """
                         } catch(err) {
                             println("ERROR: Exporting reports to external AWS Web Server: ${err}")
                             error = 1
                         }
                     }
-                    publishHTML( target: [
+                    publishHTML(target: [
                             allowMissing: true,
                             alwaysLinkToLastBuild: false,
                             keepAll: true,
-                            reportDir: "${resultdirbuild}/cucumber_report/",
-                            reportFiles: 'cucumber_report.html',
-                            reportName: "TestSuite Report"]
-                    )
+                            reportDir: "${resultdirbuild}/results/cucumber_report/",
+                            reportFiles: 'index.html',
+                            reportName: 'TestSuite Report (multiple-cucumber)'
+                    ])
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
                 // Send email

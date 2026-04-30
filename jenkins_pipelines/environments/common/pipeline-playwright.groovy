@@ -103,8 +103,8 @@ def run(params) {
                             allowMissing: true,
                             alwaysLinkToLastBuild: false,
                             keepAll: true,
-                            reportDir: "${resultdirbuild}/reports/cucumber-report.html",
-                            reportFiles: 'cucumber-report.html',
+                            reportDir: "${resultdirbuild}/results/cucumber_report/",
+                            reportFiles: 'index.html',
                             reportName: "TestSuite Report"]
                     )
                 }
