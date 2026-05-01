@@ -5,7 +5,7 @@ def run(params) {
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
 
         // The junit plugin doesn't affect full paths
-        GString junit_resultdir = "${resultdirbuild}/results_junit"
+        GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
 
@@ -186,7 +186,7 @@ def run(params) {
                                 reportFiles: 'cucumber_report.html',
                                 reportName: "TestSuite Report"]
                     )
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true
 
                     // Test Report Summary
                     sh "python3 -m venv ${WORKSPACE}/venv"
