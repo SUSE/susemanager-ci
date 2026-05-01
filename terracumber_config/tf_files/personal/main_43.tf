@@ -30,6 +30,7 @@ module "cucumber_testsuite" {
 
   images = ["rocky8o", "opensuse156o", "sles15sp4o", "ubuntu2204o"]
 
+  ssh_key_path = var.PUBLIC_SSH_KEY_PATH
   use_avahi    = false
   name_prefix  = "${var.ENVIRONMENT}-"
   domain       = "mgr.suse.de"
