@@ -212,7 +212,8 @@ def run(params) {
                             skippedFails: false,
                             undefinedFails: false,
                             mergeFeaturesById: false,
-                            mergeFeaturesWithRerunData: false
+                            mergeFeaturesWithRerunData: false,
+                            pendingFails: false,      // pending steps don't fail the build
                     )
                     junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
                 }
