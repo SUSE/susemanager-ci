@@ -5,7 +5,7 @@ def run(params) {
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
 
         // The junit plugin doesn't affect full paths
-        GString junit_resultdir = "${resultdirbuild}/results_junit"
+        GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
         // Start pipeline
@@ -107,7 +107,7 @@ def run(params) {
                 def error = 0
                 if (deployed) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker_getresults"
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true
                 }
                 // Send email
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep saltshaker_mail"

@@ -14,7 +14,7 @@ def run(params) {
         env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString localSumaformDirPath = "${resultdir}/sumaform/"
         // The junit plugin doesn't affect full paths
-        GString junit_resultdir = "${resultdirbuild}/results_junit"
+        GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
         String tfVariablesFile = 'susemanager-ci/terracumber_config/tf_files/variables/build-validation-variables.tf'
         String tfRefEnvironmentFile  = 'susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars'
@@ -497,7 +497,7 @@ def run(params) {
                             reportFiles: 'cucumber_report.html',
                             reportName: "Build Validation report"]
                     )
-//                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+//                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true
                 }
                 // Send email
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
