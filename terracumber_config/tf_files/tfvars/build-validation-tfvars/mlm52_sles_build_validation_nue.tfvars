@@ -283,8 +283,7 @@ BASE_CONFIGURATIONS = {
     pool               = "ssd"
     bridge             = "br1"
     additional_network = "192.168.52.0/24"
-    # Move as soon as we have a new hypervisor:
-    hypervisor         = "suma-10.mgr.suse.de"
+    hypervisor         = "suma-14.mgr.suse.de"
   }
   base_arm = {
     pool               = "ssd"
