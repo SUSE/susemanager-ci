@@ -143,7 +143,7 @@ module "cucumber_testsuite" {
       hypervisor = {
         host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
         user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
-        private_key = file(var.PRIVATE_SSH_KEY_PATH)
+        private_key = file(pathexpand(var.PRIVATE_SSH_KEY_PATH))
       }
     }
   }
