@@ -22,7 +22,7 @@ def run(params) {
         def deployed = false
         def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
         def credInit = isNewJenkins
-                ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; . /tmp/.credentials; set -x'
+                ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; chmod 600 /tmp/.credentials; . /tmp/.credentials; rm -f /tmp/.credentials; set -x'
                 : 'set +x; . /home/jenkins/.credentials; set -x'
         def withCreds = { Closure body ->
             if (isNewJenkins) {
@@ -53,7 +53,7 @@ def run(params) {
                         """
                     }
                     // Restore Terraform states from artifacts
-                    if (params.use_previous_terraform_state) {
+                    if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
                         copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
                     }
                 }
@@ -139,7 +139,7 @@ def run(params) {
                     def tags_list = ""
                     if (params.functional_scopes) {
                         def transformed_scopes = params.functional_scopes.replaceAll(',', ' or ')
-                        tags_list = "TAGS='${transformed_scopes}'; "
+                        tags_list = "export TAGS='${transformed_scopes}'; "
                     }
 
                     def cucumberCmd1 = "${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary"

@@ -5,9 +5,10 @@ node {
     String nodeName = 'sumaform-cucumber'
 
     // Check the value of targeted_project and adjust the nodeName accordingly
-    if (params.targeted_project.contains('BACKUP')) {
+    def targeted = params.targeted_project ?: ''
+    if (targeted.contains('BACKUP')) {
         nodeName = 'sumaform-cucumber-slc1'  // Use this for BACKUP projects
-    } else if (params.targeted_project.contains('NUE')) {
+    } else if (targeted.contains('NUE')) {
         nodeName = 'sumaform-cucumber'  // Use this for NUE projects
     }
 

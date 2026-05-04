@@ -12,7 +12,7 @@ def run(params) {
         deployed = false
         def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
         def credInit = isNewJenkins
-            ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; . /tmp/.credentials; set -x'
+            ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; chmod 600 /tmp/.credentials; . /tmp/.credentials; rm -f /tmp/.credentials; set -x'
             : 'set +x; . /home/jenkins/.credentials; set -x'
         def withCreds = { Closure body ->
             if (isNewJenkins) {
@@ -79,7 +79,7 @@ def run(params) {
             }
 
             stage('Deploy') {
-                if (params.use_previous_terraform_state) {
+                if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
                     // Restore Terraform states from artifacts
                     copyArtifacts(
                             projectName: env.JOB_NAME,

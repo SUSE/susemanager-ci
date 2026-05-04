@@ -25,7 +25,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'run_core', defaultValue: true, description: 'Run core testsuite'),
             booleanParam(name: 'run_secondary', defaultValue: true, description: 'Run secondary testsuite'),
             choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
-            activeChoice(name: 'functional_scopes', description: 'Choose the functional scopes that you want to test', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', groovyHtml: true, script: [$class: 'SecureGroovyScript', sandbox: false, script: """
+            activeChoice(name: 'functional_scopes', description: 'Choose the functional scopes that you want to test', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
                 return [
                     '@scope_smdba', '@scope_spacecmd', '@scope_spacewalk_utils', '@scope_visualization',
                     '@scope_notification_message', '@scope_virtual_host_manager', '@scope_subscription_matching',
