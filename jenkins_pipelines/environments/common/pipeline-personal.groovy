@@ -22,7 +22,7 @@ def run(params) {
         def deployed = false
         def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
         def credInit = isNewJenkins
-                ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; chmod 600 /tmp/.credentials; . /tmp/.credentials; rm -f /tmp/.credentials; set -x'
+                ? 'set +x; credFile=$(mktemp); echo "$SECRET_CONTENT" > "${credFile}"; chmod 600 "${credFile}"; . "${credFile}"; rm -f "${credFile}"; set -x'
                 : 'set +x; . /home/jenkins/.credentials; set -x'
         def withCreds = { Closure body ->
             if (isNewJenkins) {

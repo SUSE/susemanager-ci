@@ -12,7 +12,7 @@ def run(params) {
         deployed = false
         def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
         def credInit = isNewJenkins
-            ? 'set +x; echo "$SECRET_CONTENT" > /tmp/.credentials; chmod 600 /tmp/.credentials; . /tmp/.credentials; rm -f /tmp/.credentials; set -x'
+            ? 'set +x; credFile=$(mktemp); echo "$SECRET_CONTENT" > "${credFile}"; chmod 600 "${credFile}"; . "${credFile}"; rm -f "${credFile}"; set -x'
             : 'set +x; . /home/jenkins/.credentials; set -x'
         def withCreds = { Closure body ->
             if (isNewJenkins) {
@@ -140,7 +140,7 @@ def run(params) {
                     //  -- Personal BV Arguments --
                     if (params.environment) {
                         // We construct from env reference. No cleaning needed as we only add selected minions.
-                        scenarioArgs += " --env-file \"${tfRefEnvironmentFile}\" --user \"${params.environment}\" --product-version \"${params.product_version}\""
+                        scenarioArgs += " --env-file \"${tfRefEnvironmentFile}\" --user \"${params.environment}\" --product-version \"${product_version}\""
                         scenarioArgs += " --minion1 \"${params.minion1}\""
                         scenarioArgs += " --minion2 \"${params.minion2}\""
                         scenarioArgs += " --minion3 \"${params.minion3}\""
@@ -148,7 +148,7 @@ def run(params) {
                         scenarioArgs += " --minion5 \"${params.minion5}\""
                         scenarioArgs += " --minion6 \"${params.minion6}\""
                         scenarioArgs += " --minion7 \"${params.minion7}\""
-                        scenarioArgs += " --base-os \"${params.base_os}\""
+                        scenarioArgs += " --base-os \"${base_os}\""
                         scenarioArgs += " --string-registry \"${params.string_registry}\""
                         if (params.deploy_retail) { scenarioArgs += " --deploy-retail" }
                         scenarioArgs += " --merge-files \"${locationFile}\"" // Merge location only
@@ -156,7 +156,7 @@ def run(params) {
                         } else if (params.get('deployment_tfvars')) {
                             // -- Common BV arguments --
                             // We load a static file and clean it based on minions_to_run list.
-                            def minionsToKeep = params.minions_to_run.split(', ').join(' ')
+                            def minionsToKeep = params.minions_to_run.split(/,\s*/).join(' ')
                             scenarioArgs += " --merge-files \"${params.deployment_tfvars}\" \"${locationFile}\""
                             scenarioArgs += " --clean --keep-resources ${minionsToKeep}"
                         } else {
@@ -799,7 +799,7 @@ def getNodesHandler(params) {
     }
     echo ("Check minion to run ${params.minions_to_run}")
     // Convert jenkins minions list parameter to list
-    Set<String> nodesToRun = params.minions_to_run.split(', ')
+    Set<String> nodesToRun = params.minions_to_run.split(/,\s*/)
     // Create a variable with declared nodes on Jenkins side but not deploy and print it
     def notDeployedNode = nodesToRun.findAll { !nodeList.contains(it) }
     println "These minions are declared in jenkins but not deployed! ${notDeployedNode}"
