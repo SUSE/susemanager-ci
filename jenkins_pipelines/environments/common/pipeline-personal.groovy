@@ -121,12 +121,6 @@ def run(params) {
                 def error = 0
                 if (deployed) {
                     try {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:finishing'"
-                    } catch(err) {
-                        println("ERROR: rake cucumber:finishing failed: ${err}")
-                        error = 1
-                    }
-                    try {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:generate_test_report'"
                     } catch(err) {
                         println("ERROR: rake utils:generate_test_repor failed: ${err}")

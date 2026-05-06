@@ -92,12 +92,6 @@ def run(params) {
             stage('Get results') {
                 def error = 0
                 if (deployed) {
-                    try {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; ${env.exports} npm run cucumber:finishing'"
-                    } catch(err) {
-                        println("ERROR: rake cucumber:finishing failed: ${err}")
-                        error = 1
-                    }
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
                     publishHTML( target: [
                             allowMissing: true,
