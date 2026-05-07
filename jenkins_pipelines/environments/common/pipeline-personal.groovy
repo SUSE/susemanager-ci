@@ -5,7 +5,7 @@ def run(params) {
         GString resultdirbuild = "${resultdir}/${env.BUILD_NUMBER}"
 
         // The junit plugin doesn't affect full paths
-        GString junit_resultdir = "${resultdirbuild}/results_junit"
+        GString junit_resultdir = "results/${BUILD_NUMBER}/results_junit"
         GString exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${params.capybara_timeout}; export DEFAULT_TIMEOUT=${params.default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
         String tfvariables_file  = 'susemanager-ci/terracumber_config/tf_files/personal/variables.tf'
         String tfvars_infra_description = "susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars"
@@ -159,7 +159,9 @@ def run(params) {
                             reportFiles: 'index.html',
                             reportName: 'TestSuite Report (multiple-cucumber)'
                     ])
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml"
+                    // skipPublishingChecks: Checks API not configured on this instance
+                    // skipMarkingBuildUnstable: prevents warning icon when checks are skipped
+                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true, skipMarkingBuildUnstable: true
                 }
                 // Send email
                 // Clean up old results
