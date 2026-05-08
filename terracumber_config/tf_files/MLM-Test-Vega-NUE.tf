@@ -165,12 +165,6 @@ module "cucumber_testsuite" {
       container_repository = "registry.suse.de"
       container_tag = "latest"
     }
-    suse_client = {
-      image = "slmicro61o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:34"
-      }
-    }
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
