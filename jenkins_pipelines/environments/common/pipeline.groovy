@@ -187,9 +187,11 @@ def run(params) {
                                 reportName: "TestSuite Report"]
                     )
                     // skipPublishingChecks: Checks API not configured on this instance
-                    // skipMarkingBuildUnstable: prevents warning icon when checks are skipped
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true, skipMarkingBuildUnstable: true
-
+                    catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
+                        junit allowEmptyResults: true,
+                                testResults: "${junit_resultdir}/*.xml",
+                                skipPublishingChecks: true
+                    }
                     // Test Report Summary
                     sh "python3 -m venv ${WORKSPACE}/venv"
                     def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_review_summary"

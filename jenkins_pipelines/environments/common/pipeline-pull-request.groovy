@@ -374,8 +374,11 @@ def run(params) {
                                             reportName: "TestSuite Report for Pull Request ${builder_project}:${pull_request_number}"]
                                 )
                                 // skipPublishingChecks: Checks API not configured on this instance
-                                // skipMarkingBuildUnstable: prevents warning icon when checks are skipped
-                                junit allowEmptyResults: true, testResults: "results/${BUILD_NUMBER}/results_junit/*.xml", skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                                catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
+                                    junit allowEmptyResults: true,
+                                            testResults: "${junit_resultdir}/*.xml",
+                                            skipPublishingChecks: true
+                                }
                             }
                             if (fileExists("results/${BUILD_NUMBER}")) {
                                 archiveArtifacts artifacts: "results/${BUILD_NUMBER}/**/*"

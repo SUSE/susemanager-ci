@@ -160,8 +160,11 @@ def run(params) {
                             reportName: 'TestSuite Report (multiple-cucumber)'
                     ])
                     // skipPublishingChecks: Checks API not configured on this instance
-                    // skipMarkingBuildUnstable: prevents warning icon when checks are skipped
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                    catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
+                        junit allowEmptyResults: true,
+                                testResults: "${junit_resultdir}/*.xml",
+                                skipPublishingChecks: true
+                    }
                 }
                 // Send email
                 // Clean up old results
