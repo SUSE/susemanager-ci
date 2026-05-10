@@ -915,7 +915,7 @@ def echoHtmlReportPath(String rake_target) {
     def html_report_path = ''
     try {
         // Use httpRequest to fetch the file content
-        def response = httpRequest(url: path_export_url, throwExceptionOnError: true, quiet: true)
+        def response = httpRequest(url: path_export_url, ignoreSslErrors: true, throwExceptionOnError: true, quiet: true)
 
         if (response.status == 200) {
             // The content is the full relative path to the HTML report
@@ -928,8 +928,6 @@ def echoHtmlReportPath(String rake_target) {
             echo "Warning: Failed to fetch HTML path file. HTTP Status: ${response.status}"
         }
     } catch (Exception e) {
-        // This catches network errors, DNS failures, or httpRequest throwing
-        // an exception if throwExceptionOnError is true (e.g., 404 response).
         echo "Error fetching HTML path from ${path_export_url}: ${e.getMessage()}"
     }
 }
