@@ -198,8 +198,16 @@ def run(params) {
                     def testSummary = sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/test_review_summary.py ${resultdirbuild}/cucumber_report/cucumber_report.html.json", returnStdout: true).trim()
                     echo testSummary
                     // Test Report Vibes (PoC)
-                    sh(script: "pip install test-report-vibes", returnStdout: false).trim()
-                    sh(script: "test-report-vibes ${resultdirbuild}/cucumber_report/cucumber_report.html.json -o test-report-vibes.html", returnStdout: true).trim()
+                    sh(script: "${WORKSPACE}/venv/bin/pip install test-report-vibes", returnStdout: false)
+                    sh(script: "${WORKSPACE}/venv/bin/test-report-vibes ${resultdirbuild}/cucumber_report/cucumber_report.html.json -o ${resultdirbuild}/cucumber_report/test-report-vibes.html", returnStdout: true).trim()
+                    publishHTML( target: [
+                                allowMissing: true,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: "${resultdirbuild}/results/cucumber_report/",
+                                reportFiles: 'test-report-vibes.html',
+                                reportName: "TestSuite Vibes"]
+                    )
                 }
                 // Send email
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
