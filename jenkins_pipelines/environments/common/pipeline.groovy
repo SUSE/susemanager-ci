@@ -193,10 +193,22 @@ def run(params) {
                                 skipPublishingChecks: true
                     }
                     // Test Report Summary
-                    sh "python3 -m venv ${WORKSPACE}/venv"
+                    sh "python3.11 -m venv ${WORKSPACE}/venv"
                     def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_review_summary"
                     def testSummary = sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/test_review_summary.py ${resultdirbuild}/cucumber_report/cucumber_report.html.json", returnStdout: true).trim()
                     echo testSummary
+
+                    // Test Report Vibes (PoC)
+                    sh(script: "${WORKSPACE}/venv/bin/pip install test-report-vibes==0.2.1")
+                    sh(script: "${WORKSPACE}/venv/bin/test-report-vibes ${resultdirbuild}/cucumber_report/cucumber_report.html.json -o ${resultdirbuild}/cucumber_report/test-report-vibes.html")
+                    publishHTML( target: [
+                                allowMissing: true,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: "${resultdirbuild}/cucumber_report/",
+                                reportFiles: 'test-report-vibes.html',
+                                reportName: "TestSuite Vibes"]
+                    )
                 }
                 // Send email
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
