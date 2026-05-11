@@ -121,7 +121,7 @@ module "hub" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
   name = "hub"
-  product_version = "4.3-nightly"
+  product_version = "5.2-released"
   image = "sles15sp7o"
   provider_settings = {
     mac = "aa:b2:93:01:01:31"
@@ -135,7 +135,7 @@ module "hub" {
 module "prh1" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
-  product_version = "4.3-nightly"
+  product_version = "5.2-released"
   name = "prh1"
   auto_accept                    = true
   from_email                     = "root@suse.de"
@@ -151,7 +151,7 @@ module "prh1" {
 module "prh2" {
   source = "./modules/server"
   base_configuration = module.base_core.configuration
-  product_version = "4.3-nightly"
+  product_version = "5.2-released"
   name = "prh2"
   auto_accept                    = true
   from_email                     = "root@suse.de"
