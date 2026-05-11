@@ -199,7 +199,7 @@ def run(params) {
                     echo testSummary
                     // Test Report Vibes (PoC)
                     sh(script: "pip install test-report-vibes", returnStdout: false)
-                    sh(script: "test-report-vibes ${resultdirbuild}/cucumber_report/cucumber_report.html.json -o ${resultdirbuild}/cucumber_report/test-report-vibes.html", returnStdout: true).trim()
+                    sh(script: "test-report-vibes ${resultdirbuild}/cucumber_report/cucumber_report.html.json -o ${resultdirbuild}/cucumber_report/test-report-vibes.html", returnStdout: true)
                     publishHTML( target: [
                                 allowMissing: true,
                                 alwaysLinkToLastBuild: false,
