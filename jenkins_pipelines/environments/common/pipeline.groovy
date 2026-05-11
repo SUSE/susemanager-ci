@@ -203,7 +203,7 @@ def run(params) {
                     // Test Report Summary
                     sh "python3 -m venv ${WORKSPACE}/venv"
                     def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_review_summary"
-                    def testSummary = sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/test_review_summary.py ${resultdirbuild}/cucumber_report/cucumber_report.html.json --ci-label ${ci_label}", returnStdout: true).trim()
+                    def testSummary = sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/test_review_summary.py ${resultdirbuild}/cucumber_report/cucumber_report.html.json", returnStdout: true).trim()
                     echo testSummary
                     // Test Report Vibes (PoC)
                     sh(script: "${WORKSPACE}/venv/bin/pip install test-report-vibes", returnStdout: false)
