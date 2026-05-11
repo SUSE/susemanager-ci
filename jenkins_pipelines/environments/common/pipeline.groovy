@@ -23,6 +23,14 @@ def run(params) {
         def product_commit = null
         def mirror_scope = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
         mirror_scope = mirror_scope.replaceAll("-dev", "")
+        def ci_label_map = [
+                '4.3' : '4.3_ci',
+                '5.0' : '5.0_ci',
+                '5.1' : '5.1_ci',
+                'Head': 'head_ci',
+                'uyuni': 'uyuni_podman_ci'
+        ]
+        def ci_label = ci_label_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: ''
         if (params.show_product_changes) {
             // Retrieve the hash commit of the last product built in OBS/IBS and previous job
             def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
@@ -98,7 +106,8 @@ def run(params) {
                 sh "set +x; source /home/jenkins/.credentials set -x; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
                 deployed = true
                 // Collect and tag Flaky tests from the GitHub Board
-                def statusCode = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake utils:collect_and_tag_flaky_tests'", returnStatus:true
+                def rakeTarget = ci_label ? "utils:collect_and_tag_flaky_tests[${ci_label}]" : "utils:collect_and_tag_flaky_tests"
+                def statusCode = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake ${rakeTarget}'", returnStatus:true
             }
             stage('Product changes') {
                 if (params.show_product_changes) {
