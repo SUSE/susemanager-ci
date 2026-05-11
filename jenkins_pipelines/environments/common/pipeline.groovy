@@ -198,8 +198,8 @@ def run(params) {
                     def testSummary = sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/test_review_summary.py ${resultdirbuild}/cucumber_report/cucumber_report.html.json", returnStdout: true).trim()
                     echo testSummary
                     // Test Report Vibes (PoC)
-                    sh(script: "${WORKSPACE}/venv/bin/pip install test-report-vibes", returnStdout: false)
-                    sh(script: "${WORKSPACE}/venv/bin/test-report-vibes ${resultdirbuild}/cucumber_report/cucumber_report.html.json -o ${resultdirbuild}/cucumber_report/test-report-vibes.html", returnStdout: true).trim()
+                    sh(script: "pip install test-report-vibes", returnStdout: false)
+                    sh(script: "test-report-vibes ${resultdirbuild}/cucumber_report/cucumber_report.html.json -o ${resultdirbuild}/cucumber_report/test-report-vibes.html", returnStdout: true)
                     publishHTML( target: [
                                 allowMissing: true,
                                 alwaysLinkToLastBuild: false,
