@@ -122,7 +122,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["sles15sp7o", "opensuse156o"]
+  images = ["slmicro62o", "opensuse156o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-head-rke2-"
@@ -156,7 +156,7 @@ module "cucumber_testsuite" {
       }
     }
     server_kubernetes = {
-      image = "sles15sp7o"
+      image = "slmicro62o"
       provider_settings = {
         mac = "aa:b2:92:42:00:f1"
         vcpu = 2
@@ -172,7 +172,7 @@ module "cucumber_testsuite" {
       helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2"
     }
     proxy_kubernetes = {
-      image = "sles15sp7o"
+      image = "slmicro62o"
       provider_settings = {
         mac = "aa:b2:92:42:00:f2"
         vcpu = 2
