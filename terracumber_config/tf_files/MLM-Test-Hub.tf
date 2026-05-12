@@ -118,10 +118,10 @@ module "base_core" {
 }
 
 module "hub" {
-  source = "./modules/server"
+  source = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
   name = "hub"
-  product_version = "5.2-released"
+  product_version = "head-staging"
   image = "sles15sp7o"
   provider_settings = {
     mac = "aa:b2:93:01:01:31"
@@ -130,12 +130,15 @@ module "hub" {
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+  runtime              = "podman"
+  container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_tag        = "latest"
 }
 
 module "prh1" {
-  source = "./modules/server"
+  source = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
-  product_version = "5.2-released"
+  product_version = "head-staging"
   name = "prh1"
   auto_accept                    = true
   from_email                     = "root@suse.de"
@@ -146,12 +149,15 @@ module "prh1" {
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+  runtime              = "podman"
+  container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_tag        = "latest"
 }
 
 module "prh2" {
-  source = "./modules/server"
+  source = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
-  product_version = "5.2-released"
+  product_version = "head-staging"
   name = "prh2"
   auto_accept                    = true
   from_email                     = "root@suse.de"
@@ -162,6 +168,9 @@ module "prh2" {
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+  runtime              = "podman"
+  container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_tag        = "latest"
 }
 
 
