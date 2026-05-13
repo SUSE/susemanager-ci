@@ -125,7 +125,7 @@ def run(params) {
                         commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
                         commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
                         if (isNewJenkins) {
-                            commonArgs += " --inject PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.worker\""
+                            commonArgs += " --inject PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.oldworker\""
                             commonArgs += " --inject PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
                         }
                         if (product_version) { commonArgs += " --inject PRODUCT_VERSION=${product_version}" }
