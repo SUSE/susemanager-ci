@@ -15,6 +15,16 @@ pipeline {
             name: 'MCP_SERVER_BRANCH',
             defaultValue: 'main',
             description: 'The branch to check out from the mcp-server-uyuni repository.'
+        ),
+        string(
+            name: 'AGENT_MODEL',
+            defaultValue: 'gemini-3.1-flash-lite',
+            description: 'The model to use for the AI agent during testing.'
+        ),
+        string(
+            name: 'JUDGE_MODEL',
+            defaultValue: 'gemini-3.1-flash-lite',
+            description: 'The model to use for the AI judge during testing.'
         )
     }
 
@@ -74,6 +84,8 @@ EOF
                     fi
                     docker run --rm \
                                --env-file .venv/config \
+                               -e AGENT_MODEL=${params.AGENT_MODEL} \
+                               -e JUDGE_MODEL=${params.JUDGE_MODEL} \
                                --env-file $HOME/.ai_secrets \
                                -v $(pwd)/results:/app/results \
                                -v $(pwd)/test/test_config.json:/app/test_config.json \
