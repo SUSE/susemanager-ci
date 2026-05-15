@@ -31,15 +31,7 @@ def run(params) {
                 'uyuni': 'uyuni_podman_ci'
         ]
         def ci_label = ci_label_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: ''
-        def rrtg_version_map = [
-                '4.3'  : '4.3',
-                '5.0'  : '5.0',
-                '5.1'  : '5.1',
-                'Head' : 'head',
-                'uyuni': 'uyuni'
-        ]
-        def rrtg_version = rrtg_version_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value
-
+        def rrtg_version = env.JOB_BASE_NAME.find(/4\.3|5\.0|5\.1|Head|uyuni/)?.toLowerCase()
         if (params.show_product_changes) {
             // Retrieve the hash commit of the last product built in OBS/IBS and previous job
             def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
@@ -221,9 +213,9 @@ def run(params) {
 
                 if (rrtg_version) {
                     sh """
-                      set +x; source /home/jenkins/.credentials; set -x
-                      curl -sf -X POST \
-                        "https://su-agent.your-host.com/api/rrtg/ingest/${rrtg_version}?build=${BUILD_NUMBER}" \
+                      set +x; source /home/jenkins/.credentials
+                      curl -sf -k -X POST \
+                        "https://su-agent.qe-hub.mgr.suse.de/api/rrtg/ingest/${rrtg_version}?build=${BUILD_NUMBER}" \
                         -u "\${RRTG_USER}:\${RRTG_PASS}" \
                         -H "Content-Type: application/json" \
                       || echo "RRTG ingest failed (non-fatal)"
