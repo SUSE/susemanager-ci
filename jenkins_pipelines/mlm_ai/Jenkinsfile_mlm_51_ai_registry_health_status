@@ -64,5 +64,13 @@ pipeline {
         always {
             echo "Finished Health Check."
         }
+        failure {
+            emailext (
+                to: 'discuss-multi-linux-m-aaaapzrjnplfhk62cc6ytfxpzu@suse.slack.com',
+                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The build failed before completion. See logs: ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']]
+            )
+        }
     }
 }
