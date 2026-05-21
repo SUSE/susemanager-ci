@@ -8,9 +8,9 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES')
     }
     triggers {
-        // 'H H * * *' tells Jenkins to pick a random time once a day
-        // This is better for server performance than '0 0 * * *'
-        cron('H H * * *')
+        // 'H * * * *' tells Jenkins to pick a random minute, 
+        // running the job exactly once every hour.
+        cron('H * * * *')
     }
     environment {
         // The URL of the image repository page
@@ -29,7 +29,7 @@ pipeline {
                      * 2. curl -sL: Fetch page silently, follow redirects.
                      * 3. -H "User-Agent...": Mimic a browser to avoid being blocked.
                      * 4. grep -oE 'grade-[A-Z]' | sed 's/grade-//': Look for 'grade-X' and return only 'X' using portable tools.
-                     * 5. head -1: Ensure we only get the first match (usually the main badge).
+                     * 5. tail -1: Ensure we get the last match (to get the main badge).
                      */
                     def healthGrade = sh(
                         script: """#!/usr/bin/env bash
@@ -37,7 +37,7 @@ pipeline {
                             curl -sL -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "${env.TARGET_URL}" | \
                             grep -oE 'grade-[A-Z]' | \
                             sed 's/grade-//' | \
-                            head -1
+                            tail -1
                         """,
                         returnStdout: true
                     ).trim()
@@ -68,8 +68,7 @@ pipeline {
             emailext (
                 to: 'discuss-multi-linux-m-aaaapzrjnplfhk62cc6ytfxpzu@suse.slack.com',
                 subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "The build failed before completion. See logs: ${env.BUILD_URL}",
-                recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']]
+                body: "The build failed before completion. See logs: ${env.BUILD_URL}"
             )
         }
     }
