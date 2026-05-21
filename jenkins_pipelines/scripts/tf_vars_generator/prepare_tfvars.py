@@ -14,27 +14,46 @@ class TfvarsGenerator:
         self.data = {}
 
     # --- HCL FORMATTING ---
+    def hcl_key(self, key, top_level=False):
+        """Format an HCL object/map key safely."""
+        key = str(key)
+        if top_level:
+            return key
+        if re.match(r'^[A-Za-z_][A-Za-z0-9_]*$', key):
+            return key
+        safe_key = key.replace('\\', '\\\\').replace('"', '\\"')
+        return f'"{safe_key}"'
+
     def to_hcl(self, obj, indent_level=0):
         indent = "  " * indent_level
+
         if isinstance(obj, dict):
             lines = []
             for key, value in obj.items():
+                formatted_key = self.hcl_key(key, top_level=(indent_level == 0))
                 formatted_value = self.to_hcl(value, indent_level + 1)
+
                 if isinstance(value, dict):
-                    lines.append(f"{indent}{key} = {{\n{formatted_value}\n{indent}}}")
+                    lines.append(f"{indent}{formatted_key} = {{\n{formatted_value}\n{indent}}}")
                 else:
-                    lines.append(f"{indent}{key} = {formatted_value}")
+                    lines.append(f"{indent}{formatted_key} = {formatted_value}")
+
             return "\n".join(lines)
+
         elif isinstance(obj, list):
             items = [self.to_hcl(item, 0) for item in obj]
             return f"[{', '.join(items)}]"
+
         elif isinstance(obj, str):
-            safe_str = obj.replace('"', '\\"')
+            safe_str = obj.replace('\\', '\\\\').replace('"', '\\"')
             return f'"{safe_str}"'
+
         elif isinstance(obj, bool):
             return str(obj).lower()
+
         elif obj is None:
             return "null"
+
         else:
             return str(obj)
 
