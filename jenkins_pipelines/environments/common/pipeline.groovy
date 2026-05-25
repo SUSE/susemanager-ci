@@ -31,7 +31,10 @@ def run(params) {
                 'uyuni': 'uyuni_podman_ci'
         ]
         def ci_label = ci_label_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: ''
-        def rrtg_version = env.JOB_BASE_NAME.find(/4\.3|5\.0|5\.1|Head|uyuni/)?.toLowerCase()
+        def rrtg_version = env.JOB_BASE_NAME.find(/4\.3|5\.0|5\.1|Head/)?.toLowerCase()
+        if (!rrtg_version && env.JOB_BASE_NAME == 'uyuni-master-dev-acceptance-tests-podman') {
+            rrtg_version = 'uyuni'
+        }
         if (params.show_product_changes) {
             // Retrieve the hash commit of the last product built in OBS/IBS and previous job
             def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
