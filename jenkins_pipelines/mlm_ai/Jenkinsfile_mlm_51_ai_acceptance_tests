@@ -53,7 +53,7 @@ pipeline {
         stage('Build Test Image') {
             steps {
                 echo "Building Docker image: ${env.DOCKER_TAG}"
-                sh "docker build -f Dockerfile.test -t ${env.DOCKER_TAG} ."
+                sh "/usr/lib/docker/cli-plugins/docker-buildx build -f Dockerfile.test -t ${env.DOCKER_TAG} ."
             }
         }
 
