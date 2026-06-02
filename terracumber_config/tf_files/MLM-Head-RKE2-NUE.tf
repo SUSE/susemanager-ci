@@ -104,12 +104,19 @@ module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
   product_version = "head"
+
+  // Kubernetes variables
   kubernetes                     = true
   use_devel_oci                  = true
   install_mlm_server             = true
   install_mlm_proxy              = true
   install_traefik                = true
   install_local_path_provisioner = true
+  deploy_coco_attestation        = true
+  deploy_saline                  = true
+  deploy_tftp                    = true
+  install_kubectl_helm           = false
+  kubeconfig_content             = null
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
