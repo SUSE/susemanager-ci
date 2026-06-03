@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8", "opensuse156o", "tumbleweedo", "sles15sp7o", "ubuntu2404"]
+  images = ["rocky9", "opensuse156o", "tumbleweedo", "sles15sp7o", "ubuntu2404"]
 
   use_avahi    = false
   name_prefix  = "uyuni-master-"
@@ -193,7 +193,7 @@ module "cucumber_testsuite" {
       }
     }
     rhlike_minion = {
-      image = "rocky8"
+      image = "rocky9"
       provider_settings = {
         // openscap cannot run with less than 1.25 GB of RAM
         // use small instead of micro
