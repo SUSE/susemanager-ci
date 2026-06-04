@@ -29,6 +29,7 @@ module "base_core" {
     network_name = null
     bridge       = "br0"
   }
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
 
 module "hub" {
@@ -47,6 +48,7 @@ module "hub" {
   runtime              = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
   container_tag        = "latest"
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
 
 module "prh1" {
@@ -66,6 +68,7 @@ module "prh1" {
   runtime              = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
   container_tag        = "latest"
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
 
 module "prh2" {
@@ -85,6 +88,7 @@ module "prh2" {
   runtime              = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
   container_tag        = "latest"
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
 
 
@@ -97,6 +101,7 @@ module "min-sles15sp5" {
   provider_settings = {
     mac = "aa:b2:93:01:01:c7"
   }
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
 
 module "min-sles15sp7" {
@@ -110,6 +115,7 @@ module "min-sles15sp7" {
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
 
 module "controller" {
