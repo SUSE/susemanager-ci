@@ -104,7 +104,7 @@ module "cucumber_testsuite" {
   deploy_saline                  = true
   deploy_tftp                    = true
   install_kubectl_helm           = false
-  kubeconfig_content             = null
+  kubeconfig_path                = null
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

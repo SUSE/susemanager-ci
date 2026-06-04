@@ -69,7 +69,7 @@ module "cucumber_testsuite" {
   deploy_saline                  = true
   deploy_tftp                    = true
   install_kubectl_helm           = false
-  kubeconfig_content             = null
+  kubeconfig_path                = null
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
