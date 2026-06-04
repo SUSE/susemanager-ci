@@ -59,16 +59,22 @@ pipeline {
         }
         
     }
-
     post {
-        always {
-            echo "Finished Health Check."
-        }
-        failure {
+        // 1. Fire ONLY on the downward transition (when it breaks)
+        regression {
             emailext (
                 to: 'discuss-multi-linux-m-aaaapzrjnplfhk62cc6ytfxpzu@suse.slack.com',
-                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "The build failed before completion. See logs: ${env.BUILD_URL}"
+                subject: "ALERT: Health Check Degraded: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+               body: "The image health index dropped. Status: ${currentBuild.currentResult}. Logs: ${env.BUILD_URL}"
+            )
+        }
+
+        // 2. Fire ONLY on the upward transition (when it recovers)
+        fixed {
+            emailext (
+                to: 'discuss-multi-linux-m-aaaapzrjnplfhk62cc6ytfxpzu@suse.slack.com',
+                subject: "FIXED: Health Check Restored: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The health check is passing cleanly again. History: ${env.BUILD_URL}"
             )
         }
     }
