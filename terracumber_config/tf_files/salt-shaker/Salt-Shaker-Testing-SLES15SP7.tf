@@ -21,7 +21,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Salt Shaker - saltstack:products:testing - SLES15SP7 $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Salt Shaker - saltstack - SLES15SP7 $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -31,7 +31,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Salt Shaker - saltstack:products:testing - SLES15SP7: Environment setup failed"
+  default = "Results Salt Shaker - saltstack - SLES15SP7: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -107,7 +107,7 @@ module "salt-shaker-products-testing" {
 
   name               = "salt-shaker-products-testing-sles15sp7"
   image              = "sles15sp7o"
-  salt_obs_flavor    = "saltstack:products:testing"
+  salt_obs_flavor    = "saltstack"
   provider_settings  = {
     mac = "aa:b2:93:02:02:2e"
   }
