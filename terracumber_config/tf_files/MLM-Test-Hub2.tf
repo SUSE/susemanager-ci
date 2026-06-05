@@ -56,6 +56,7 @@ module "hub" {
   ssh_key_path         = var.PUBLIC_SSH_KEY_PATH
   server_hub_main      = true
   hub_peripheral_fqdns = [local.prh1_hostname, local.prh2_hostname]
+  large_deployment     = false
 }
 
 module "prh1" {
@@ -76,6 +77,7 @@ module "prh1" {
   container_tag         = "latest"
   ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
   server_hub_peripheral = module.hub.configuration.hostname
+  large_deployment      = false
 }
 
 module "prh2" {
@@ -96,6 +98,7 @@ module "prh2" {
   container_tag         = "latest"
   ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
   server_hub_peripheral = module.hub.configuration.hostname
+  large_deployment      = false
 }
 
 
