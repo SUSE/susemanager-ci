@@ -78,6 +78,7 @@ module "prh1" {
   ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
   server_hub_peripheral = module.hub.configuration.hostname
   large_deployment      = false
+  publish_private_ssl_key = false
 }
 
 module "prh2" {
@@ -99,6 +100,7 @@ module "prh2" {
   ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
   server_hub_peripheral = module.hub.configuration.hostname
   large_deployment      = false
+  publish_private_ssl_key = false
 }
 
 
