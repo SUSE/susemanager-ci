@@ -38,15 +38,15 @@ module "base_core" {
 }
 
 module "hub" {
-  source = "./modules/server_containerized"
+  source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
-  name = "hub"
-  product_version = "head-staging"
-  image = "sles15sp7o"
-  provider_settings = {
-    mac = "aa:b2:93:01:01:c4"
-    memory = 10240
-    vcpu = 8
+  name               = "hub"
+  product_version    = "head-staging"
+  image              = "sles15sp7o"
+  provider_settings  = {
+    mac     = "aa:b2:93:01:01:c4"
+    memory  = 10240
+    vcpu    = 8
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -59,14 +59,14 @@ module "hub" {
 }
 
 module "prh1" {
-  source = "./modules/server_containerized"
+  source             = "./modules/server_containerized"
   base_configuration = module.base_core.configuration
-  product_version = "head-staging"
-  name = "prh1"
-  auto_accept                    = true
-  from_email                     = "root@suse.de"
-  image = "sles15sp7o"
-  provider_settings = {
+  product_version    = "head-staging"
+  name               = "prh1"
+  auto_accept        = true
+  from_email         = "root@suse.de"
+  image              = "sles15sp7o"
+  provider_settings  = {
     mac = "aa:b2:93:01:01:c5"
   }
   additional_packages   = [ "venv-salt-minion" ]
@@ -79,22 +79,22 @@ module "prh1" {
 }
 
 module "prh2" {
-  source = "./modules/server_containerized"
-  base_configuration = module.base_core.configuration
-  product_version = "head-staging"
-  name = "prh2"
-  auto_accept                    = true
-  from_email                     = "root@suse.de"
-  image = "sles15sp7o"
-  provider_settings = {
+  source              = "./modules/server_containerized"
+  base_configuration  = module.base_core.configuration
+  product_version     = "head-staging"
+  name                = "prh2"
+  auto_accept         = true
+  from_email          = "root@suse.de"
+  image               = "sles15sp7o"
+  provider_settings   = {
     mac = "aa:b2:93:01:01:c6"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-  runtime              = "podman"
-  container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
-  container_tag        = "latest"
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  additional_packages   = [ "venv-salt-minion" ]
+  install_salt_bundle   = true
+  runtime               = "podman"
+  container_repository  = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_tag         = "latest"
+  ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
   server_hub_peripheral = module.hub.configuration.hostname
 }
 
