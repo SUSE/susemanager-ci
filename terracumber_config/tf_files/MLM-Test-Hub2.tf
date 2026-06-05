@@ -13,6 +13,11 @@ provider "libvirt" {
   uri = "qemu+tcp://suma-05.mgr.suse.de/system"
 }
 
+locals {
+  prh1_hostname = "${module.base_core.configuration["name_prefix"]}prh1.${module.base_core.configuration["domain"]}"
+  prh2_hostname = "${module.base_core.configuration["name_prefix"]}prh2.${module.base_core.configuration["domain"]}"
+}
+
 module "base_core" {
   source = "./modules/base"
 
@@ -48,7 +53,9 @@ module "hub" {
   runtime              = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
   container_tag        = "latest"
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  ssh_key_path         = var.PUBLIC_SSH_KEY_PATH
+  server_hub_main      = true
+  hub_peripheral_fqdns = [local.prh1_hostname, local.prh2_hostname]
 }
 
 module "prh1" {
@@ -58,17 +65,17 @@ module "prh1" {
   name = "prh1"
   auto_accept                    = true
   from_email                     = "root@suse.de"
-  register_to_server = module.hub.configuration
   image = "sles15sp7o"
   provider_settings = {
     mac = "aa:b2:93:01:01:c5"
   }
-  additional_packages = [ "venv-salt-minion" ]
-  install_salt_bundle = true
-  runtime              = "podman"
-  container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
-  container_tag        = "latest"
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  additional_packages   = [ "venv-salt-minion" ]
+  install_salt_bundle   = true
+  runtime               = "podman"
+  container_repository  = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_tag         = "latest"
+  ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
+  server_hub_peripheral = module.hub.configuration.hostname
 }
 
 module "prh2" {
@@ -78,7 +85,6 @@ module "prh2" {
   name = "prh2"
   auto_accept                    = true
   from_email                     = "root@suse.de"
-  register_to_server = module.hub.configuration
   image = "sles15sp7o"
   provider_settings = {
     mac = "aa:b2:93:01:01:c6"
@@ -89,6 +95,7 @@ module "prh2" {
   container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
   container_tag        = "latest"
   ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  server_hub_peripheral = module.hub.configuration.hostname
 }
 
 
