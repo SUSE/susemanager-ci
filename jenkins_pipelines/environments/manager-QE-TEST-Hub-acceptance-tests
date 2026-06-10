@@ -50,7 +50,7 @@ node('sumaform-cucumber') {
         //Capybara configuration
         capybara_timeout = 10
         default_timeout = 250
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline-personal.groovy"
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
         pipeline.run(params)
     }
 }
