@@ -17,29 +17,35 @@ node('sumaform-cucumber') {
             string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
-            booleanParam(name: 'terraform_init', defaultValue: true, description: 'Call terraform init (needed if modules are added or changes)'),
-            booleanParam(name: 'terraform_taint', defaultValue: true, description: 'Call terraform taint (so the resources, except volumes, are recreated)'),
-            booleanParam(name: 'use_previous_terraform_state', defaultValue: true, description: 'Use previous Terraform state'),
-            booleanParam(name: 'run_deployment', defaultValue: true, description: 'Run sumaform deployment'),
-            booleanParam(name: 'run_core', defaultValue: true, description: 'Run core testsuite'),
-            booleanParam(name: 'run_secondary', defaultValue: true, description: 'Run secondary testsuite'),
-            booleanParam(name: 'show_product_changes', defaultValue: false, description: 'Show the product changes since the last build'),
-            choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
-            activeChoice(name: 'functional_scopes', description: 'Choose the functional scopes that you want to test', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
+            activeChoice(name: 'minions_to_run', description: 'Node list to run during BV', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
                 return [
-                    '@scope_smdba', '@scope_spacecmd', '@scope_spacewalk_utils', '@scope_visualization',
-                    '@scope_notification_message', '@scope_virtual_host_manager', '@scope_subscription_matching',
-                    '@scope_formulas', '@scope_sp_migration', '@scope_cve_audit', '@scope_onboarding',
-                    '@scope_content_lifecycle_management', '@scope_res', '@scope_recurring_actions',
-                    '@scope_maintenance_windows', '@scope_building_container_images', '@scope_kubernetes_integration',
-                    '@scope_openscap', '@scope_deblike', '@scope_action_chains', '@scope_salt_ssh',
-                    '@scope_tomcat', '@scope_changing_software_channels', '@scope_monitoring', '@scope_salt',
-                    '@scope_cobbler', '@scope_sumatoolbox', '@scope_virtualization', '@scope_hub', '@scope_retail',
-                    '@scope_configuration_channels', '@scope_content_staging', '@scope_proxy',
-                    '@scope_traditional_client', '@scope_api', '@scope_power_management',
-                    '@scope_retracted_patches', '@scope_ansible'
+                    'sles15sp5_minion:selected',
+                    'sles15sp7_minion:selected'
                 ]
-            """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_scopes']"]])
+            """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
+            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
+            booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
+            booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
+            booleanParam(name: 'must_sync', defaultValue: true, description: 'Sync. products and channels'),
+            booleanParam(name: 'enable_proxy_stages', defaultValue: true, description: 'Run Proxy stages'),
+            booleanParam(name: 'enable_monitoring_stages', defaultValue: true, description: 'Run Monitoring stages'),
+            booleanParam(name: 'enable_client_stages', defaultValue: true, description: 'Run Client stages'),
+            booleanParam(name: 'must_add_MU_repositories', defaultValue: true, description: 'Add MU channels'),
+            booleanParam(name: 'must_add_non_MU_repositories', defaultValue: true, description: 'Add non MU channels'),
+            booleanParam(name: 'must_add_keys', defaultValue: true, description: 'Add Activation Keys'),
+            booleanParam(name: 'must_create_bootstrap_repos', defaultValue: true, description: 'Create bootstrap repositories'),
+            booleanParam(name: 'must_boot_node', defaultValue: true, description: 'Bootstrap Node'),
+            booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
+            booleanParam(name: 'must_run_products_and_salt_migration_tests', defaultValue: false, description: 'Run products and Salt migration Tests'),
+            booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Bootstrap build hosts'),
+            booleanParam(name: 'must_test_retail_terminal', defaultValue: false, description: 'Test retail terminal deployments'),
+            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
+            booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
+            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
         ])
     ])
 
