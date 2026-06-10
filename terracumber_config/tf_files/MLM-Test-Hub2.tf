@@ -104,10 +104,10 @@ module "prh2" {
 }
 
 
-module "min-sles15sp5" {
+module "sles15sp5_minion" {
   source = "./modules/minion"
   base_configuration = module.base_core.configuration
-  name = "min-sles15sp5"
+  name = "sles15sp5-minion"
   image = "sles15sp5o"
   server_configuration = module.prh1.configuration
   provider_settings = {
@@ -116,14 +116,28 @@ module "min-sles15sp5" {
   ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
 
-module "min-sles15sp7" {
+module "sles15sp7_minion" {
   source = "./modules/minion"
   base_configuration = module.base_core.configuration
-  name = "min-sles15sp7"
+  name = "sles15sp7-minion"
   image = "sles15sp7o"
   server_configuration = module.prh2.configuration
   provider_settings = {
     mac = "aa:b2:93:01:01:c8"
+  }
+  additional_packages = [ "venv-salt-minion" ]
+  install_salt_bundle = true
+  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+}
+
+module "monitoring_server" {
+  source = "./modules/minion"
+  base_configuration = module.base_core.configuration
+  name = "monitoring"
+  image = "sles15sp7o"
+  server_configuration = module.hub.configuration
+  provider_settings = {
+    mac = "aa:b2:93:01:01:c9"
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -150,10 +164,11 @@ module "controller" {
 
   # server_http_proxy = "http-proxy.mgr.suse.de:3128"
   
-  server_configuration = module.prh1.configuration
+  server_configuration = module.hub.configuration
 
-  sle15sp4_minion_configuration = module.min-sles15sp7.configuration
-  sle15sp5_minion_configuration = module.min-sles15sp5.configuration
+  sle15sp4_minion_configuration = module.sles15sp7_minion.configuration
+  sle15sp5_minion_configuration = module.sles15sp5_minion.configuration
+  monitoringserver_configuration = module.monitoring_server.configuration
 
   provider_settings = {
     mac = "aa:b2:93:01:01:c3"
