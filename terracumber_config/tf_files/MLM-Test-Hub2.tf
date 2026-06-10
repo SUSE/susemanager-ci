@@ -176,7 +176,7 @@ module "controller" {
 
   # server_http_proxy = "http-proxy.mgr.suse.de:3128"
   
-  server_configuration = module.prh1.configuration
+  server_configuration = module.hub.configuration
   proxy_configuration  = module.proxy.configuration
 
   sle15sp4_minion_configuration = module.sles15sp7_minion.configuration
