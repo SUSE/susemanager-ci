@@ -48,7 +48,6 @@ module "hub" {
     memory  = 10240
     vcpu    = 8
   }
-  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
   runtime              = "podman"
   container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
@@ -70,8 +69,6 @@ module "prh1" {
   provider_settings  = {
     mac = "aa:b2:93:01:01:c5"
   }
-  additional_packages   = [ "venv-salt-minion" ]
-  install_salt_bundle   = true
   runtime               = "podman"
   container_repository  = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
   container_tag         = "latest"
@@ -92,8 +89,6 @@ module "prh2" {
   provider_settings   = {
     mac = "aa:b2:93:01:01:c6"
   }
-  additional_packages   = [ "venv-salt-minion" ]
-  install_salt_bundle   = true
   runtime               = "podman"
   container_repository  = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
   container_tag         = "latest"
@@ -101,6 +96,24 @@ module "prh2" {
   server_hub_peripheral = module.hub.configuration.hostname
   large_deployment      = false
   publish_private_ssl_key = false
+}
+
+module "proxy" {
+  source             = "./modules/proxy_containerized"
+  base_configuration = module.base_core.configuration
+  product_version    = "head-staging"
+  name               = "proxy"
+  auto_accept        = true
+  from_email         = "root@suse.de"
+  image              = "sles15sp7o"
+  provider_settings  = {
+    mac = "aa:b2:93:01:01:c7"
+  }
+  runtime               = "podman"
+  container_repository  = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_tag         = "latest"
+  ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
+  auto_configure       = false
 }
 
 
@@ -111,7 +124,7 @@ module "sles15sp5_minion" {
   image = "sles15sp5o"
   server_configuration = module.prh1.configuration
   provider_settings = {
-    mac = "aa:b2:93:01:01:c7"
+    mac = "aa:b2:93:01:01:c8"
   }
   ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
@@ -123,9 +136,8 @@ module "sles15sp7_minion" {
   image = "sles15sp7o"
   server_configuration = module.prh2.configuration
   provider_settings = {
-    mac = "aa:b2:93:01:01:c8"
+    mac = "aa:b2:93:01:01:c9"
   }
-  additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
   ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
 }
@@ -137,7 +149,7 @@ module "monitoring_server" {
   image = "sles15sp7o"
   server_configuration = module.hub.configuration
   provider_settings = {
-    mac = "aa:b2:93:01:01:c9"
+    mac = "aa:b2:93:01:01:ca"
   }
   additional_packages = [ "venv-salt-minion" ]
   install_salt_bundle = true
@@ -164,7 +176,8 @@ module "controller" {
 
   # server_http_proxy = "http-proxy.mgr.suse.de:3128"
   
-  server_configuration = module.hub.configuration
+  server_configuration = module.prh1.configuration
+  proxy_configuration  = module.proxy.configuration
 
   sle15sp4_minion_configuration = module.sles15sp7_minion.configuration
   sle15sp5_minion_configuration = module.sles15sp5_minion.configuration
