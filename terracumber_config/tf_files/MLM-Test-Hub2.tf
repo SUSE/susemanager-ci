@@ -103,8 +103,6 @@ module "proxy" {
   base_configuration = module.base_core.configuration
   product_version    = "head-staging"
   name               = "proxy"
-  auto_accept        = true
-  from_email         = "root@suse.de"
   image              = "sles15sp7o"
   provider_settings  = {
     mac = "aa:b2:93:01:01:c7"
