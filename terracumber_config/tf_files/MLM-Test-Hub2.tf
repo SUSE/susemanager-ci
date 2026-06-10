@@ -191,8 +191,8 @@ output "configuration" {
     hub  = module.hub.configuration
     prh1 = module.prh1.configuration
     prh2 = module.prh2.configuration
-    sles15sp7-minion = module.sles15sp7_minion.configuration
-    sles15sp5 = module.sles15sp5-minion.configuration
+    sles15sp7_minion = module.sles15sp7_minion.configuration
+    sles15sp5_minion = module.sles15sp5_minion.configuration
     controller = module.controller.configuration
   }
 }
