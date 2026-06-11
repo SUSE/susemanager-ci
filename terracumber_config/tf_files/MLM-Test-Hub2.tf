@@ -50,7 +50,8 @@ module "hub" {
   }
   install_salt_bundle = true
   runtime              = "podman"
-  container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  #container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_repository = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
   container_tag        = "latest"
   ssh_key_path         = var.PUBLIC_SSH_KEY_PATH
   server_hub_main      = true
@@ -70,7 +71,8 @@ module "prh1" {
     mac = "aa:b2:93:01:01:c5"
   }
   runtime               = "podman"
-  container_repository  = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  #container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_repository = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
   container_tag         = "latest"
   ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
   server_hub_peripheral = module.hub.configuration.hostname
@@ -90,7 +92,8 @@ module "prh2" {
     mac = "aa:b2:93:01:01:c6"
   }
   runtime               = "podman"
-  container_repository  = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  #container_repository = "registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile"
+  container_repository = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
   container_tag         = "latest"
   ssh_key_path          = var.PUBLIC_SSH_KEY_PATH
   server_hub_peripheral = module.hub.configuration.hostname
