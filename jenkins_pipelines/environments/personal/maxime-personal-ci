@@ -38,7 +38,13 @@ node('sumaform-cucumber') {
             string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Server container registry'),
             string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
-            booleanParam(name: 'string_registry', defaultValue: false, description: 'In mgradm.yaml, describe registry using a string ?'),
+            activeChoice(name: 'minions_to_run', description: 'Node list to run during BV', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
+                return [
+                    'sles15sp6_minion:selected', 'sles15sp6_sshminion:selected',
+                    'rocky8_minion:selected', 'rocky8_sshminion:selected',
+                    'ubuntu2404_minion:selected', 'ubuntu2404_sshminion:selected'
+                ]
+            """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
