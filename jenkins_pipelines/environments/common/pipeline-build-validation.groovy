@@ -132,10 +132,6 @@ def run(params) {
                             commonArgs += " --inject PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.oldworker\""
                             commonArgs += " --inject PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
                         }
-                        else {
-                            commonArgs += " --inject PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519\""
-                            commonArgs += " --inject PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub\""
-                        }
                         if (product_version) { commonArgs += " --inject PRODUCT_VERSION=${product_version}" }
                         if (base_os) { commonArgs += " --inject BASE_OS=${base_os}" }
                         if (fileExists('custom_repositories.json')) {
