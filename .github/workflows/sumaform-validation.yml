@@ -125,6 +125,7 @@ jobs:
           variable "PRODUCT_VERSION" { default="" }
           variable "CUCUMBER_GITREPO" {}
           variable "CUCUMBER_BRANCH" {}
+          variable HYPERVISOR_PRIVATE_SSH_KEY_PATH { default="" }
           variable PRIVATE_SSH_KEY_PATH { default="" }
           variable PUBLIC_SSH_KEY_PATH { default="" }
           EOF
@@ -182,6 +183,7 @@ jobs:
           variable "PRODUCT_VERSION" { default="" }
           variable "CUCUMBER_GITREPO" {}
           variable "CUCUMBER_BRANCH" {}
+          variable HYPERVISOR_PRIVATE_SSH_KEY_PATH { default="" }
           variable PRIVATE_SSH_KEY_PATH { default="" }
           variable PUBLIC_SSH_KEY_PATH { default="" }
           EOF
