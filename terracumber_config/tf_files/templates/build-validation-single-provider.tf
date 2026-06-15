@@ -90,8 +90,8 @@ module "build_validation_module" {
   proxy_additional_repos          = var.PROXY_ADDITIONAL_REPOS
   base_os                         = var.BASE_OS
   hypervisor_private_ssh_key_path = var.HYPERVISOR_PRIVATE_SSH_KEY_PATH
-  private_ssh_key_path            = var.PRIVATE_SSH_KEY_PATH
-  public_ssh_key_path             = var.PUBLIC_SSH_KEY_PATH
+  controller_private_ssh_key_path = var.CONTROLLER_PRIVATE_SSH_KEY_PATH
+  controller_public_ssh_key_path  = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
 }
 
 output "configuration" {
