@@ -128,6 +128,7 @@ def run(params) {
                         commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
                         commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
                         commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
+                        commonArgs += " --inject S390_LOCAL_USER=\"jenkins@${env.JENKINS_URL}\""
                         if (isNewJenkins) {
                             commonArgs += " --inject PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.oldworker\""
                             commonArgs += " --inject PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""

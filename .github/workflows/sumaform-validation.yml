@@ -113,6 +113,7 @@ jobs:
           variable "SCC_PTF_USER" { default="" }
           variable "SCC_PTF_PASSWORD" { default="" }
           variable "ZVM_ADMIN_TOKEN" { default="" }
+          variable "S390_LOCAL_USER" { default="" }
           variable "GIT_USER" { default="" }
           variable "GIT_PASSWORD" { default="" }
           variable "SERVER_CONTAINER_REPOSITORY" { default="" }
@@ -169,6 +170,7 @@ jobs:
           variable "SCC_PTF_USER" { default="" }
           variable "SCC_PTF_PASSWORD" { default="" }
           variable "ZVM_ADMIN_TOKEN" { default="" }
+          variable "S390_LOCAL_USER" { default="" }
           variable "GIT_USER" { default="" }
           variable "GIT_PASSWORD" { default="" }
           variable "SERVER_CONTAINER_REPOSITORY" { default="" }

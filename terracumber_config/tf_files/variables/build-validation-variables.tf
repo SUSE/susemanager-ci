@@ -170,3 +170,9 @@ variable "PUBLIC_SSH_KEY_PATH" {
   default     = "./salt/controller/id_ed25519.pub"
   description = "Path to public ssh key used for access"
 }
+
+variable "S390_LOCAL_USER" {
+  type        = string
+  default     = "jenkins@jenkins-worker.mgr.suse.de"
+  description = "Jenkins worker from where the deployment is executed."
+}

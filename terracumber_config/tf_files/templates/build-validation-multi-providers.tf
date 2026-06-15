@@ -221,6 +221,7 @@ module "build_validation_module" {
   scc_ptf_user     = var.SCC_PTF_USER
   scc_ptf_password = var.SCC_PTF_PASSWORD
   zvm_admin_token  = var.ZVM_ADMIN_TOKEN
+  s390_local_user  = var.S390_LOCAL_USER
 
   git_user          = var.GIT_USER
   git_password      = var.GIT_PASSWORD
