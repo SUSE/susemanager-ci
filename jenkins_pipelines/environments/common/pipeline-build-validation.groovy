@@ -13,6 +13,7 @@ def run(params) {
 
         deployed = false
         def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
+        def jenkinsHost = env.JENKINS_URL.replaceAll('https?://', '').replaceAll('/$', '')
         def credInit = isNewJenkins
             ? 'set +x; credFile=$(mktemp); echo "$SECRET_CONTENT" > "${credFile}"; chmod 600 "${credFile}"; . "${credFile}"; rm -f "${credFile}"; set -x'
             : 'set +x; . /home/jenkins/.credentials; set -x'
@@ -128,7 +129,7 @@ def run(params) {
                         commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
                         commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
                         commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
-                        commonArgs += " --inject S390_LOCAL_USER=\"jenkins@${env.JENKINS_URL}\""
+                        commonArgs += " --inject S390_LOCAL_USER=\"jenkins@${jenkinsHost}\""
                         if (isNewJenkins) {
                             commonArgs += " --inject PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.oldworker\""
                             commonArgs += " --inject PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
