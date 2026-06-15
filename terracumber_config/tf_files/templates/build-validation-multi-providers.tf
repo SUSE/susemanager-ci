@@ -50,7 +50,7 @@ module "base_core" {
 
   images            = var.BASE_CONFIGURATIONS.base_core.images
 
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -75,7 +75,7 @@ module "base_old_sle" {
 
   images            = var.BASE_CONFIGURATIONS.base_old_sle.images
 
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -100,7 +100,7 @@ module "base_rhlike" {
 
   images            = var.BASE_CONFIGURATIONS.base_old_sle.images
 
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -125,7 +125,7 @@ module "base_new_sle" {
 
   images            = var.BASE_CONFIGURATIONS.base_new_sle.images
 
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -149,7 +149,7 @@ module "base_retail" {
 
   images            = var.BASE_CONFIGURATIONS.base_retail.images
 
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
@@ -175,7 +175,7 @@ module "base_deblike" {
 
   images            = var.BASE_CONFIGURATIONS.base_deblike.images
 
-  ssh_key_path      = var.PUBLIC_SSH_KEY_PATH
+  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
   use_mirror_images = true
   testsuite         = true
