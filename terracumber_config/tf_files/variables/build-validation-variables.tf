@@ -159,7 +159,7 @@ variable "BASE_CONFIGURATIONS" {
   description = "Describe the base configuration (default core for NUE and all bases for SLC1)"
 }
 
-variable "hypervisor_private_ssh_key_path" {
+variable "HYPERVISOR_PRIVATE_SSH_KEY_PATH" {
   type        = string
   default     = "~/.ssh/id_ed25519"
   description = "Path to private key used to access hypervisor (dhcp deployment)"
