@@ -159,9 +159,15 @@ variable "BASE_CONFIGURATIONS" {
   description = "Describe the base configuration (default core for NUE and all bases for SLC1)"
 }
 
-variable "PRIVATE_SSH_KEY_PATH" {
+variable "hypervisor_private_ssh_key_path" {
   type        = string
   default     = "~/.ssh/id_ed25519"
+  description = "Path to private key used to access hypervisor (dhcp deployment)"
+}
+
+variable "PRIVATE_SSH_KEY_PATH" {
+  type        = string
+  default     = "./salt/controller/id_ed25519"
   description = "Path to private ssh key used for access"
 }
 
