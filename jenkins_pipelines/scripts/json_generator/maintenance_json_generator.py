@@ -182,6 +182,14 @@ def main():
     args: argparse.Namespace = parse_cli_args()
     osc_client: IbsOscClient = IbsOscClient()
 
+    # Warn if using placeholder beta versions
+    if args.version in ("53-sles-beta", "53-micro-beta"):
+        logging.warning("=" * 80)
+        logging.warning("WARNING: 53-*-beta versions are PLACEHOLDERS and not yet ready for production!")
+        logging.warning("URLs in v53_nodes.py need to be updated when 5.3 beta project is created.")
+        logging.warning("The generated JSON may contain incorrect or non-existent repository URLs.")
+        logging.warning("=" * 80)
+
     mi_ids: set[str] = merge_mi_ids(args)
     logging.info(f"MI IDs: {mi_ids}")
     if args.slfo_pull_request is not None:
@@ -194,6 +202,9 @@ def main():
         mi_ids = { id for id in mi_ids if not osc_client.mi_is_under_embargo(id) }
 
     find_valid_repos(mi_ids, args.version, args.slfo_pull_request)
+
+    logging.info("JSON file generated successfully: %s", JSON_OUTPUT_FILE_NAME)
+    logging.info("You can open it with: cat %s", JSON_OUTPUT_FILE_NAME)
 
 if __name__ == '__main__':
     main()

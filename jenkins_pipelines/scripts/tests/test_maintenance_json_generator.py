@@ -12,6 +12,7 @@ from json_generator.maintenance_json_generator import *
 from repository_versions.v43_nodes import v43_static_slmicro_salt_repositories
 from repository_versions.v51_nodes import get_v51_static_and_client_tools
 from repository_versions.v52_nodes import get_v52_static_and_client_tools
+from repository_versions.v53_nodes import get_v53_static_and_client_tools
 from tests.mock_response import mock_requests_get_success
 
 TESTDATA_DIR = Path(__file__).resolve().parent / 'testdata'
@@ -244,27 +245,30 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             custom_repos,
         )
 
-    def test_slfo_pull_request_rejected_for_beta(self):
-        sys.argv = ['maintenance_json_generator.py', '--version', '52-sles-beta', '--slfo-pull-request', '9999']
+    def test_slfo_pull_request_rejected_for_unsupported_versions(self):
+        # --slfo-pull-request is only supported for 51-* and 52-* versions
+        # 5.3 versions (beta or not) are rejected due to version range check
+        sys.argv = ['maintenance_json_generator.py', '--version', '53-sles-beta', '--slfo-pull-request', '9999']
         stderr = io.StringIO()
         with redirect_stderr(stderr):
             with self.assertRaises(SystemExit) as cm:
                 parse_cli_args()
         self.assertEqual(cm.exception.code, 2)
-        self.assertIn("--slfo-pull-request is not supported for beta versions", stderr.getvalue())
+        self.assertIn("--slfo-pull-request is only supported for 51-* and 52-* versions", stderr.getvalue())
 
-        sys.argv = ['maintenance_json_generator.py', '--version', '52-micro-beta', '--slfo-pull-request', '9999']
+        sys.argv = ['maintenance_json_generator.py', '--version', '53-micro-beta', '--slfo-pull-request', '9999']
         stderr = io.StringIO()
         with redirect_stderr(stderr):
             with self.assertRaises(SystemExit) as cm:
                 parse_cli_args()
         self.assertEqual(cm.exception.code, 2)
-        self.assertIn("--slfo-pull-request is not supported for beta versions", stderr.getvalue())
+        self.assertIn("--slfo-pull-request is only supported for 51-* and 52-* versions", stderr.getvalue())
 
     @patch('json_generator.maintenance_json_generator.validate_and_store_results')
     def test_beta_version_injects_totest_static_urls(self, _mock_validate):
         # Beta versions must auto-populate sles160_minion and slmicro62_minion
         # from the static :ToTest map (no --slfo-pull-request required).
+        # Updated to test 5.3 beta (5.2 is now stable)
         captured: dict[str, dict[str, dict[str, str]]] = {}
 
         def _capture(_ids, custom_repositories, *_args, **_kwargs):
@@ -272,7 +276,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
         _mock_validate.side_effect = _capture
 
-        find_valid_repos(set(), '52-sles-beta')
+        find_valid_repos(set(), '53-sles-beta')
 
         repos = captured['repos']
         self.assertIn('sles160_minion', repos)
@@ -284,34 +288,124 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertEqual(repos['sles160_minion'].get('sles16_client_tools'), sles16_url)
         self.assertEqual(repos['slmicro62_minion'].get('sles16_client_tools'), sles16_url)
         self.assertEqual(
-            repos['server'].get('mlm52_sles_beta_totest_images_sp7'),
+            repos['server'].get('mlm53_sles_beta_totest_images_sp7'),
+            'http://download.suse.de/ibs/SUSE:/SLE-15-SP7:/Update:/Products:/MultiLinuxManager53:/ToTest/'
+            'images-SP7/repo/SUSE-Multi-Linux-Manager-Server-SLE-5.3-POOL-x86_64-Media1/',
+        )
+        self.assertEqual(
+            repos['proxy'].get('mlm53_sles_beta_totest_images_sp7_proxy'),
+            'http://download.suse.de/ibs/SUSE:/SLE-15-SP7:/Update:/Products:/MultiLinuxManager53:/ToTest/'
+            'images-SP7/repo/SUSE-Multi-Linux-Manager-Proxy-SLE-5.3-POOL-x86_64-Media1/',
+        )
+
+        find_valid_repos(set(), '53-micro-beta')
+        repos_micro = captured['repos']
+        self.assertEqual(
+            repos_micro['server'].get('server_uyuni_tools'),
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.3:/ToTest/product/repo/'
+            'Multi-Linux-Manager-Server-5.3-x86_64/',
+        )
+        self.assertEqual(
+            repos_micro['proxy'].get('proxy_uyuni_tools'),
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.3:/ToTest/product/repo/'
+            'Multi-Linux-Manager-Proxy-5.3-x86_64/',
+        )
+
+    def test_v52_sles_stable_includes_totest_static_repos(self):
+        # Test that 5.2 stable (non-beta) includes the new static ToTest image repos
+        static, _dynamic = get_v52_static_and_client_tools('sles')
+
+        # Server should have the ToTest image repo
+        self.assertIn('server', static)
+        self.assertIn('mlm52_sles_totest_images_sp7', static['server'])
+        server_url = static['server']['mlm52_sles_totest_images_sp7']
+        self.assertTrue(server_url.startswith('http://download.suse.de/ibs/SUSE:'))
+        self.assertIn('SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/', server_url)
+        self.assertIn('SUSE-Multi-Linux-Manager-Server-SLE-5.2-POOL-x86_64-Media1/', server_url)
+
+        # Proxy should have the ToTest image repo
+        self.assertIn('proxy', static)
+        self.assertIn('mlm52_sles_totest_images_sp7_proxy', static['proxy'])
+        proxy_url = static['proxy']['mlm52_sles_totest_images_sp7_proxy']
+        self.assertTrue(proxy_url.startswith('http://download.suse.de/ibs/SUSE:'))
+        self.assertIn('SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/', proxy_url)
+        self.assertIn('SUSE-Multi-Linux-Manager-Proxy-SLE-5.2-POOL-x86_64-Media1/', proxy_url)
+
+    def test_v52_micro_stable_includes_totest_static_repos(self):
+        # Test that 5.2 micro stable includes the SLFO ToTest product repos
+        static, _dynamic = get_v52_static_and_client_tools('micro')
+
+        # Server should have ToTest repo
+        self.assertIn('server', static)
+        self.assertIn('server_uyuni_tools', static['server'])
+        server_url = static['server']['server_uyuni_tools']
+        self.assertEqual(
+            server_url,
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/ToTest/product/repo/'
+            'Multi-Linux-Manager-Server-5.2-x86_64/'
+        )
+
+        # Proxy should have ToTest repos including slmicro6_client_tools
+        self.assertIn('proxy', static)
+        self.assertIn('proxy_uyuni_tools', static['proxy'])
+        self.assertIn('retail_uyuni_tools', static['proxy'])
+        self.assertIn('slmicro6_client_tools', static['proxy'])
+
+        proxy_url = static['proxy']['proxy_uyuni_tools']
+        self.assertEqual(
+            proxy_url,
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/ToTest/product/repo/'
+            'Multi-Linux-Manager-Proxy-5.2-x86_64/'
+        )
+
+        retail_url = static['proxy']['retail_uyuni_tools']
+        self.assertEqual(
+            retail_url,
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/ToTest/product/repo/'
+            'Multi-Linux-Manager-Retail-Branch-Server-5.2-x86_64/'
+        )
+
+        slmicro6_url = static['proxy']['slmicro6_client_tools']
+        self.assertEqual(
+            slmicro6_url,
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/'
+            'Multi-Linux-ManagerTools-SL-Micro-6-x86_64/'
+        )
+
+    @patch('json_generator.maintenance_json_generator.validate_and_store_results')
+    def test_v52_sles_stable_totest_repos_in_final_output(self, _mock_validate):
+        # Verify that the static ToTest repos appear in the final custom_repositories output
+        captured: dict[str, dict[str, dict[str, str]]] = {}
+
+        def _capture(_ids, custom_repositories, *_args, **_kwargs):
+            captured['repos'] = custom_repositories
+
+        _mock_validate.side_effect = _capture
+
+        # Generate for 52-sles with no MI IDs to verify static repos appear
+        find_valid_repos(set(), '52-sles')
+
+        repos = captured['repos']
+
+        # Verify the static ToTest repos are present in final output
+        self.assertEqual(
+            repos['server'].get('mlm52_sles_totest_images_sp7'),
             'http://download.suse.de/ibs/SUSE:/SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/'
             'images-SP7/repo/SUSE-Multi-Linux-Manager-Server-SLE-5.2-POOL-x86_64-Media1/',
         )
         self.assertEqual(
-            repos['proxy'].get('mlm52_sles_beta_totest_images_sp7_proxy'),
+            repos['proxy'].get('mlm52_sles_totest_images_sp7_proxy'),
             'http://download.suse.de/ibs/SUSE:/SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/'
             'images-SP7/repo/SUSE-Multi-Linux-Manager-Proxy-SLE-5.2-POOL-x86_64-Media1/',
         )
 
-        find_valid_repos(set(), '52-micro-beta')
-        repos_micro = captured['repos']
-        self.assertEqual(
-            repos_micro['server'].get('server_uyuni_tools'),
-            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/ToTest/product/repo/'
-            'Multi-Linux-Manager-Server-5.2-x86_64/',
-        )
-        self.assertEqual(
-            repos_micro['proxy'].get('proxy_uyuni_tools'),
-            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/ToTest/product/repo/'
-            'Multi-Linux-Manager-Proxy-5.2-x86_64/',
-        )
-
-    def test_v51_v52_dynamic_repos_are_sorted_lists(self):
+    def test_v51_v52_v53_dynamic_repos_are_sorted_lists(self):
+        # 5.2 no longer has beta parameter (it's now stable)
+        # Test 5.1, 5.2 stable, and 5.3 beta
         test_cases = [
             get_v51_static_and_client_tools('sles')[1],
-            get_v52_static_and_client_tools('sles', beta=False)[1],
-            get_v52_static_and_client_tools('sles', beta=True)[1],
+            get_v52_static_and_client_tools('sles')[1],
+            get_v53_static_and_client_tools('sles', beta=True)[1],
         ]
 
         for dynamic_repos in test_cases:
