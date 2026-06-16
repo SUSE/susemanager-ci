@@ -6,7 +6,7 @@ Results for $timestamp build.
 Build:   $urlprefix/$timestamp
 Console: $urlprefix/$timestamp/console
 Results: $urlprefix/$timestamp/artifact/results/$timestamp
-Report:  $urlprefix/$timestamp/artifact/results/$timestamp/cucumber_report/cucumber_report.html
+Report:  $urlprefix/$timestamp/artifact/results/$timestamp/cucumber_report/index.html
 Logs:    $urlprefix/$timestamp/artifact/results/$timestamp/spacewalk-debug.tar.bz2
 
 #################################################################

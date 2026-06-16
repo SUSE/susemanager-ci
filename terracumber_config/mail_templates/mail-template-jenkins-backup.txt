@@ -4,7 +4,7 @@
 Build:   $urlprefix/$timestamp
 Console: $urlprefix/$timestamp/console
 Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
-Report:  $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/cucumber_report/cucumber_report.html
+Report:  $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/cucumber_report/index.html
 Logs:    $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/spacewalk-debug.tar.bz2
 
 Please notice this is a staging area for test suite and CI refactorings,

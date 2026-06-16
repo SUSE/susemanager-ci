@@ -2,7 +2,7 @@
 # SUMMARY
 #################################################################
 Results: $urlprefix-$timestamp
-Report:  $urlprefix-$timestamp/cucumber_report/cucumber_report.html
+Report:  $urlprefix-$timestamp/cucumber_report/index.html
 Logs:    $urlprefix-$timestamp/spacewalk-debug.tar.bz2
  
 #################################################################
