@@ -119,16 +119,16 @@ def init_custom_repositories(static_repos: dict[str, dict[str, str]] | None = No
 def supports_slfo_pull_request(version: str) -> bool:
     return version.startswith("51") or version.startswith("52")
 
-def slfo_pullrequest_client_tool_url(pr_id: str) -> str:
-    """Return the stable SLE-16 MultiLinuxManagerTools URL for the given PullRequest id.
+def slfo_pullrequest_client_tool_url(pr_id: str, arch: str = "x86_64") -> str:
+    """Return the stable SLE-16 MultiLinuxManagerTools URL for the given PullRequest id and architecture.
 
-    This URL is used for both sles160_minion and slmicro62_minion: SL Micro 6.2
-    consumes the same SLE-16 client-tools repo on the stable PullRequest path.
+    This URL is used for sles160_minion, slmicro62_minion (x86_64), and opensuse160arm_minion (aarch64).
+    SL Micro 6.2 consumes the same SLE-16 client-tools repo on the stable PullRequest path.
     Beta client tools do not use PullRequest URLs - they are served from a static
     :ToTest project baked into repository_versions/v52_nodes.py.
     """
     root = "/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest"
-    tail = f":/{pr_id}:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
+    tail = f":/{pr_id}:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-{arch}/"
     return f"{IBS_URL_PREFIX}{root}{tail}"
 
 
@@ -140,10 +140,16 @@ def slfo_pullrequest_repo_key(pr_id: str) -> str:
 def apply_slfo_pullrequest_client_tools(
     custom_repositories: dict[str, dict[str, str]], pr_id: str
 ) -> None:
-    url = slfo_pullrequest_client_tool_url(pr_id)
     repo_key = slfo_pullrequest_repo_key(pr_id)
-    update_custom_repositories(custom_repositories, "sles160_minion", repo_key, url)
-    update_custom_repositories(custom_repositories, "slmicro62_minion", repo_key, url)
+
+    # x86_64 minions
+    url_x86_64 = slfo_pullrequest_client_tool_url(pr_id, arch="x86_64")
+    update_custom_repositories(custom_repositories, "sles160_minion", repo_key, url_x86_64)
+    update_custom_repositories(custom_repositories, "slmicro62_minion", repo_key, url_x86_64)
+
+    # aarch64 minion
+    url_aarch64 = slfo_pullrequest_client_tool_url(pr_id, arch="aarch64")
+    update_custom_repositories(custom_repositories, "opensuse160arm_minion", repo_key, url_aarch64)
 
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
