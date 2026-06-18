@@ -44,36 +44,41 @@ class ResourceManager:
             self.client.contentmanagement.removeProject(self.session_key, project['label'])
 
     def delete_software_channels(self):
+        """Delete only custom child channels (keeps all parent channels and vendor child channels)."""
+        # Specific child channels to delete by exact label match (use set for O(1) lookup)
+        specific_channels_to_delete = {
+            "ubuntu-2404-noble-amd64"
+        }
+
+        # No need to differentiate between versions (SUMA 4.3, 5.0, 5.1, 5.2 vs Uyuni)
+        # Uyuni BV is now gone, and the behavior should be the same across all versions and products
         channels = self.client.channel.listMyChannels(self.session_key)
-        product_version = self.get_product_version()
-
-
-        if all(version not in product_version for version in ["5.0", "4.3", "5.1"]):
-            for channel in channels:
-                if "custom" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_keep):
-                    logger.info(f"Delete custom channel: {channel['label']}")
-                    self.client.channel.software.delete(self.session_key, channel['label'])
-            logging.warning("Delete only custom channels for uyuni")
-            return
 
         for channel in channels:
-            details = self.client.channel.software.getDetails(self.session_key, channel['label'])
-            if "appstream" in channel['label'] and details['parent_channel_label']:
-                if not any(protected in channel['label'] for protected in self.resources_to_keep):
-                    logger.info(f"Delete sub channel appstream: {channel['label']}")
-                    self.client.channel.software.delete(self.session_key, channel['label'])
+            channel_label = channel['label']
 
-        channels = self.client.channel.listMyChannels(self.session_key)
-        for channel in channels:
-            if "appstream" in channel['label'] and not any(protected in channel['label'] for protected in self.resources_to_keep):
-                logger.info(f"Delete parent channel appstream: {channel['label']}")
-                self.client.channel.software.delete(self.session_key, channel['label'])
+            # Skip protected channels early to avoid unnecessary API calls
+            if any(protected in channel_label for protected in self.resources_to_keep):
+                continue
 
-        channels = self.client.channel.listMyChannels(self.session_key)
-        for channel in channels:
-            if not any(protected in channel['label'] for protected in self.resources_to_keep):
-                logger.info(f"Delete common channel: {channel['label']}")
-                self.client.channel.software.delete(self.session_key, channel['label'])
+            # Pre-filter: only check details for potential deletion candidates
+            # (channels with "custom" in label or in specific list)
+            is_candidate = (
+                "custom" in channel_label.lower() or
+                channel_label in specific_channels_to_delete
+            )
+
+            if not is_candidate:
+                continue
+
+            # Get channel details to check if it's a child channel
+            # (only called for deletion candidates, avoiding N+1 query waste)
+            details = self.client.channel.software.getDetails(self.session_key, channel_label)
+
+            # Only delete child channels (those with a parent)
+            if details.get('parent_channel_label'):
+                logger.info(f"Delete child channel: {channel_label} (parent: {details['parent_channel_label']})")
+                self.client.channel.software.delete(self.session_key, channel_label)
 
     def delete_systems(self):
         systems = self.client.system.listSystems(self.session_key)
@@ -120,8 +125,23 @@ class ResourceManager:
         self.client.saltkey.delete(self.session_key, system_name)
 
     def delete_image_profiles(self):
-        self.client.image.profile.delete(self.session_key, "suse_os_image_15_sp6")
-        self.client.image.profile.delete(self.session_key, "suse_os_image_15_sp7")
+        try:
+            profiles = self.client.image.profile.listImageProfiles(self.session_key)
+        except xmlrpc.client.Fault as e:
+            logger.warning(f"Failed to list image profiles (fault {e.faultCode}): {e.faultString}")
+            return
+        except Exception:
+            logger.exception("Unexpected error listing image profiles")
+            raise
+
+        for profile in profiles:
+            try:
+                logger.info(f"Delete image profile: {profile['label']}")
+                self.client.image.profile.delete(self.session_key, profile['label'])
+            except xmlrpc.client.Fault as e:
+                logger.warning(f"Failed to delete profile {profile['label']} (fault {e.faultCode}): {e.faultString}")
+                # Continue with other profiles
+                continue
 
     def get_product_version(self):
         product_version = self.client.api.systemVersion()
