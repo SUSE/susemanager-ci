@@ -46,7 +46,7 @@ def parse_cli_args() -> argparse.Namespace:
         dest="slfo_pull_request",
         metavar="ID",
         type=_slfo_pr_id,
-        help="SLFO PullRequest id for sles160_minion and slmicro62_minion (stable 51-* / 52-* only; beta uses :ToTest automatically)",
+        help="SLFO PullRequest id for sle160_minion, slmicro62_minion (x86_64), and opensuse160arm_minion (aarch64) on stable 51-* / 52-* only; rejected for *-beta versions (beta uses :ToTest automatically)",
     )
     args = parser.parse_args()
     if args.slfo_pull_request is not None:
@@ -122,10 +122,10 @@ def supports_slfo_pull_request(version: str) -> bool:
 def slfo_pullrequest_client_tool_url(pr_id: str, arch: str = "x86_64") -> str:
     """Return the stable SLE-16 MultiLinuxManagerTools URL for the given PullRequest id and architecture.
 
-    This URL is used for sles160_minion, slmicro62_minion (x86_64), and opensuse160arm_minion (aarch64).
+    This URL is used for sle160_minion, slmicro62_minion (x86_64), and opensuse160arm_minion (aarch64).
     SL Micro 6.2 consumes the same SLE-16 client-tools repo on the stable PullRequest path.
-    Beta client tools do not use PullRequest URLs - they are served from a static
-    :ToTest project baked into repository_versions/v52_nodes.py.
+    Beta client tools do not use PullRequest URLs - they are served from static
+    :ToTest definitions in repository_versions/*_nodes.py.
     """
     root = "/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest"
     tail = f":/{pr_id}:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-{arch}/"
@@ -144,7 +144,7 @@ def apply_slfo_pullrequest_client_tools(
 
     # x86_64 minions
     url_x86_64 = slfo_pullrequest_client_tool_url(pr_id, arch="x86_64")
-    update_custom_repositories(custom_repositories, "sles160_minion", repo_key, url_x86_64)
+    update_custom_repositories(custom_repositories, "sle160_minion", repo_key, url_x86_64)
     update_custom_repositories(custom_repositories, "slmicro62_minion", repo_key, url_x86_64)
 
     # aarch64 minion
@@ -172,8 +172,9 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
     Args:
         mi_ids: Set of MI ID strings
         version: SUMA version (43, 50-sles, 51-sles, etc.)
-        slfo_pull_request_id: Optional SLFO PullRequest id for sles160_minion and
-            slmicro62_minion; only valid for stable 51-* / 52-* versions.
+        slfo_pull_request_id: Optional SLFO PullRequest id for sle160_minion,
+            slmicro62_minion (x86_64), and opensuse160arm_minion (aarch64); only
+            valid for stable 51-* / 52-* versions.
         max_workers: Number of concurrent HTTP requests (default: 20)
     """
     version_data = get_version_nodes(version)
