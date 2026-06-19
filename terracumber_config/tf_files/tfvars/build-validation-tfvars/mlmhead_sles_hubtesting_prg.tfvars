@@ -46,7 +46,7 @@ ENVIRONMENT_CONFIGURATION = {
 
   product_version      = "head"
   name_prefix          = "mlm-testhub-"
-  url_prefix           = "https://ci.suse.de/view/Manager/view/Manager-5.2/job/manager-5.2-micro-qe-build-validation"
+  url_prefix           = "https://jenkins.mgr.suse.de/job/manager-qe-test-hub-acceptance-tests"
 }
 BASE_CONFIGURATIONS = {
   base_core = {
