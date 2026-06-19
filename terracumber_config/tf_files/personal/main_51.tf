@@ -37,7 +37,7 @@ module "cucumber_testsuite" {
 
   images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
-  ssh_key_path = var.PUBLIC_SSH_KEY_PATH
+  ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   use_avahi    = false
   name_prefix   = "${var.ENVIRONMENT}-"
   domain       = "mgr.suse.de"
@@ -146,7 +146,7 @@ module "cucumber_testsuite" {
       hypervisor = {
         host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
         user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
-        private_key = file(pathexpand(var.PRIVATE_SSH_KEY_PATH))
+        private_key = file(pathexpand(var.HYPERVISOR_PRIVATE_SSH_KEY_PATH))
       }
     }
   }

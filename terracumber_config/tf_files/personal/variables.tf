@@ -103,12 +103,12 @@ variable "SCC_PTF_PASSWORD" {
   // Not needed for master, as PTFs are only build for SUSE Manager / MLM
 }
 
-variable "PUBLIC_SSH_KEY_PATH" {
+variable "CONTROLLER_PUBLIC_SSH_KEY_PATH" {
   type = string
   default = "./salt/controller/id_ed25519.pub"
 }
 
-variable "PRIVATE_SSH_KEY_PATH" {
+variable "HYPERVISOR_PRIVATE_SSH_KEY_PATH" {
   type = string
   default = "~/.ssh/id_ed25519"
 }

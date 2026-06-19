@@ -130,7 +130,7 @@ def run(params) {
                         commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
                         if (isNewJenkins) {
                             commonArgs += " --inject HYPERVISOR_PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.worker\""
-                            commonArgs += " --inject PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
+                            commonArgs += " --inject CONTROLLER_PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
                             commonArgs += " --inject S390_LOCAL_USER=\"jenkins@jenkins.mgr.suse.de\""
                         }
                         if (product_version) { commonArgs += " --inject PRODUCT_VERSION=${product_version}" }
