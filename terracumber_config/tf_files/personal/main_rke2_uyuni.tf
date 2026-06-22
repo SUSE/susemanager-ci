@@ -80,6 +80,7 @@ module "cucumber_testsuite" {
       }
     }
     server_kubernetes = {
+      image = "tumbleweedo"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
       }

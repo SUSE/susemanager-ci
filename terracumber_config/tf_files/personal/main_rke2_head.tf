@@ -34,7 +34,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   use_avahi    = false
@@ -81,6 +81,7 @@ module "cucumber_testsuite" {
       }
     }
     server_kubernetes = {
+      image = "slmicro62o"
       provider_settings = {
         mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
         vcpu   = 2
