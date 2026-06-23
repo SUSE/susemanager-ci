@@ -97,7 +97,6 @@ terraform {
 }
 
 provider "libvirt" {
-  //uri = "qemu+tcp://cthulhu.mgr.suse.de/system"
   uri = "qemu+tcp://suma-04.mgr.suse.de/system"
 }
 
@@ -227,6 +226,15 @@ module "cucumber_testsuite" {
     }
     pxeboot_minion = {
       image = "sles15sp7o"
+    }
+    dhcp_dns = {
+      name        = "dhcp-dns"
+      image       = "opensuse156o"
+      hypervisor  = {
+        host        = "suma-04.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_ed25519")
+      }
     }
   }
 
