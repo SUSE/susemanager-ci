@@ -76,6 +76,10 @@ variable "SCC_PTF_PASSWORD" {
   // Not needed for master, as PTFs are only build for SUSE Manager / MLM
 }
 
+variable "SCC_MICRO_CREDENTIALS" {
+  type = string
+}
+
 variable "GIT_USER" {
   type = string
   default = null // Not needed for master, as it is public
@@ -129,6 +133,7 @@ module "cucumber_testsuite" {
   cc_password = var.SCC_PASSWORD
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
+  scc_slmicro_pass = var.SCC_MICRO_CREDENTIALS
 
   images = ["slmicro62o", "opensuse156o"]
 
