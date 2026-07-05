@@ -19,6 +19,12 @@ ENVIRONMENT_CONFIGURATION = {
     name = "sles15sp4-minion"
   }
 
+  # Build host
+  sles15sp6_buildhost = {
+    mac  = "aa:b2:93:02:03:d4"
+    name = "sles15sp6-build"
+  }
+
   product_version = "4.3-released"
   name_prefix     = "suma-su-43-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-4.3/job/manager-4.3-qe-mi-validation-sles"
