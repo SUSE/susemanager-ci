@@ -21,6 +21,21 @@ def run(params) {
         GString localTfVarsFullFile = "${localSumaformDirPath}terraform.tfvars.full"
         GString logFile = "${resultdirbuild}/sumaform.log"
 
+        // Detect the new Jenkins setup (containerized worker)
+        def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
+        // Credentials initialization: new Jenkins injects a secret via withCredentials,
+        // old Jenkins sources the credentials file present on the host.
+        def credInit = isNewJenkins
+                ? 'set +x; credFile=$(mktemp); echo "$SECRET_CONTENT" > "${credFile}"; chmod 600 "${credFile}"; . "${credFile}"; rm -f "${credFile}"; set -x'
+                : 'set +x; . /home/jenkins/.credentials; set -x'
+        def withCreds = { Closure body ->
+            if (isNewJenkins) {
+                withCredentials([string(credentialsId: 'sumaform-secrets', variable: 'SECRET_CONTENT')]) { body() }
+            } else {
+                body()
+            }
+        }
+
         // Construct the --tf-resources-to-delete argument dynamically
         ArrayList defaultResourcesToDelete = []
         if (params.delete_all_resources) {
@@ -36,8 +51,6 @@ def run(params) {
 
         // Define shared environment variables for terraform calls
         GString environmentVars = """
-                set +x
-                source /home/jenkins/.credentials
                 export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
                 export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
                 export TERRAFORM=${params.bin_path}
@@ -163,49 +176,56 @@ def run(params) {
                 }
 
                 // Execute Terracumber CLI to deploy the environment without clients
-                sh """
-                    ${environmentVars}
-                    set -x
-                    
-                    # Backup the full tfvars file
-                    cp "${localTfVarsFile}" "${localTfVarsFullFile}"
+                withCreds {
+                    sh """
+                        #!/bin/bash
+                        ${credInit}
+                        ${environmentVars}
+                        set -x
+                        
+                        # Backup the full tfvars file
+                        cp "${localTfVarsFile}" "${localTfVarsFullFile}"
 
-                    # Generate a stripped tfvars file (removing clients/minions)
-                    python3 "${PrepareTfvarsScript}" \
-                        --output "${localTfVarsFile}" \
-                        --merge-files "${localTfVarsFullFile}" \
-                        ${cleaningFlags}
+                        # Generate a stripped tfvars file (removing clients/minions)
+                        python3 "${PrepareTfvarsScript}" \
+                            --output "${localTfVarsFile}" \
+                            --merge-files "${localTfVarsFullFile}" \
+                            ${cleaningFlags}
 
-                    # Apply changes (This will destroy the removed resources)
-                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} \
-                        --init --sumaform-backend ${params.sumaform_backend} \
-                        --skip-variables-check \
-                        --runstep provision
-                """
+                        # Apply changes (This will destroy the removed resources)
+                        ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${logFile} \
+                            --init --sumaform-backend ${params.sumaform_backend} \
+                            --skip-variables-check \
+                            --runstep provision
+                    """
+                }
             }
 
             stage('Redeploy the environment with new client VMs') {
                 // Run Terracumber to deploy the environment
-                sh """
-                    ${environmentVars}
-                    set +x
-                    
-                    # Restore the full tfvars file
-                    cp "${localTfVarsFullFile}" "${localTfVarsFile}"
+                withCreds {
+                    sh """
+                        #!/bin/bash
+                        ${credInit}
+                        ${environmentVars}
+                        
+                        # Restore the full tfvars file
+                        cp "${localTfVarsFullFile}" "${localTfVarsFile}"
 
-                    # Apply changes
-                    ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log \
-                        --init --sumaform-backend ${params.sumaform_backend} \
-                        --skip-variables-check \
-                        --runstep provision
-                """
+                        # Apply changes
+                        ${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/sumaform.log \
+                            --init --sumaform-backend ${params.sumaform_backend} \
+                            --skip-variables-check \
+                            --runstep provision
+                    """
+                }
             }
 
             stage('Sanity check') {
                 sh "${WORKSPACE}/terracumber-cli ${commonParams} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --skip-variables-check --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:build_validation_sanity_check'"
             }
 
-if (params.delete_all_resources) {
+            if (params.delete_all_resources) {
                 stage("Update terminal mac addresses to controller") {
                     // CHANGED: Added double backslashes \\ for sed capture groups
                     hypervisorUrl = sh(
