@@ -215,27 +215,8 @@ module "cucumber_testsuite" {
     bridge             = "br1"
     additional_network = "192.168.117.0/24"
   }
-}
 
-
-resource "null_resource" "configure_quality_intelligence" {
-
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-
-  provisioner "remote-exec" {
-    inline = [ "echo export QUALITY_INTELLIGENCE=true >> ~/.bashrc",
-      "echo export PROMETHEUS_PUSH_GATEWAY_URL=${var.PROMETHEUS_PUSH_GATEWAY_URL} >> ~/.bashrc"
-    ]
-    connection {
-      type     = "ssh"
-      user     = "root"
-      password = "linux"
-      host     = "${module.cucumber_testsuite.configuration.controller.hostname}"
-    }
-  }
-
+  prometheus_push_gateway_url = var.PROMETHEUS_PUSH_GATEWAY_URL
 }
 
 output "configuration" {
