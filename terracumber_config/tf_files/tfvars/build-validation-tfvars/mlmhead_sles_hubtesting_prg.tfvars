@@ -9,6 +9,7 @@ ENVIRONMENT_CONFIGURATION = {
     name  = "hub"
     image = "sles15sp7o"
     string_registry = true
+    server_hub_main = true
   }
   server2_containerized = {
     mac   = "aa:b2:93:01:01:32"
