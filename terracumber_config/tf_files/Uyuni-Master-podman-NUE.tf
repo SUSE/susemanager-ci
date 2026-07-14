@@ -128,6 +128,13 @@ module "cucumber_testsuite" {
   server_http_proxy         = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint  = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
 
+  ## Add extra containers
+  deploy_tftp              = true
+  deploy_saline            = true
+  deploy_coco_attestation  = true
+  deploy_hub_api           = true
+
+
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
     controller = {
