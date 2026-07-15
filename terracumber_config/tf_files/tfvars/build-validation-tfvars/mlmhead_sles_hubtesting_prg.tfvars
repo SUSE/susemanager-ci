@@ -5,23 +5,30 @@ ENVIRONMENT_CONFIGURATION = {
     name = "controller"
   }
   server_containerized = {
-    mac   = "aa:b2:93:01:01:31"
-    name  = "hub"
-    image = "sles15sp7o"
-    string_registry = true
-    server_hub_main = true
+    mac                 = "aa:b2:93:01:01:31"
+    name                = "hub"
+    image               = "slmicro62o"
+    string_registry     = true
+    deploy_hub_api      = true
+    skip_server_install = false
   }
   server2_containerized = {
-    mac   = "aa:b2:93:01:01:32"
-    name  = "prh1"
-    image = "sles15sp7o"
-    string_registry = true
+    mac                 = "aa:b2:93:01:01:32"
+    name                = "prh1"
+    image               = "slmicro62o"
+    string_registry     = true
+    use_mirror          = false
+    deploy_hub_api      = false
+    skip_server_install = true
   }
   server3_containerized = {
-    mac   = "aa:b2:93:01:01:33"
-    name  = "prh2"
-    image = "sles15sp7o"
-    string_registry = true
+    mac                 = "aa:b2:93:01:01:33"
+    name                = "prh2"
+    image               = "slmicro62o"
+    string_registry     = true
+    use_mirror          = false
+    deploy_hub_api      = false
+    skip_server_install = true
   }
   proxy_containerized = {
     mac   = "aa:b2:93:01:01:34"
@@ -45,7 +52,7 @@ ENVIRONMENT_CONFIGURATION = {
     image = "sles15sp7o"
   }
 
-  product_version      = "head"
+  product_version      = "5.2-nightly"
   name_prefix          = "mlm-testhub-"
   url_prefix           = "https://jenkins.mgr.suse.de/job/manager-qe-test-hub-acceptance-tests"
 }
@@ -55,7 +62,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     hypervisor         = "cthulhu.mgr.suse.de"
     additional_network = null
-    images             = ["sles15sp7o", "opensuse156o", "opensuse160o", "sles15sp5o"]
+    images             = ["sles15sp7o", "opensuse156o", "sles15sp5o", "slmicro62o"]
   }
 }
 MAIL_SUBJECT          = "Results 5.2 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

@@ -5,8 +5,8 @@ node('sumaform-cucumber') {
         buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
         disableConcurrentBuilds(),
         parameters([
-            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Branch prepared for the MU tested'),
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/maximenoel8/uyuni.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'hub_testing', description: 'Branch prepared for the MU tested'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/templates/build-validation-single-provider.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
@@ -18,8 +18,8 @@ node('sumaform-cucumber') {
                     'sles15sp5_minion:selected', 'sles15sp7_minion:selected' 
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
-            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile', description: 'Server container registry'),
-            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_registry', defaultValue: 'registry.suse.de', description: 'Server container registry'),
+            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             booleanParam(name: 'test_milestone', defaultValue: false, description: 'Mark this checkbox to validate a new milestone (from ToTest) instead of Head (Devel:Galaxy:Main).'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
