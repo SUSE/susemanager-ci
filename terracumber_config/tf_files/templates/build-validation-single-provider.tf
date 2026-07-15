@@ -5,12 +5,17 @@ terraform {
       source  = "dmacvicar/libvirt"
       version = "0.8.3"
     }
+    feilong = {
+      source  = "bischoff/feilong"
+      version = "0.0.9"
+    }
   }
 }
 
 provider "libvirt" {
   uri = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_core["hypervisor"]}/system"
 }
+
 
 module "base_core" {
   source = "./modules/base"

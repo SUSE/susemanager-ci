@@ -5,6 +5,10 @@ terraform {
       source  = "dmacvicar/libvirt"
       version = "0.8.3"
     }
+    feilong = {
+      source  = "bischoff/feilong"
+      version = "0.0.9"
+    }
   }
 }
 
@@ -36,6 +40,7 @@ provider "libvirt" {
   alias = "host_deblike"
   uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_deblike.hypervisor}/system"
 }
+
 
 # Base Core : Core Infra + Main Testsuite images
 module "base_core" {
