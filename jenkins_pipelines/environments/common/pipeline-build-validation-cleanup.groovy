@@ -8,7 +8,7 @@ def run(params) {
         GString resultdir = "${WORKSPACE}/results"
         GString resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
         GString exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export BUILD_VALIDATION=true; "
-        String proxy_container_repository = params.proxy_container_repository ?: null
+        String proxy_container_repository = params.proxy_container_repository ?: ''
         String serverHostname = null
         String controllerHostname = null
         String hypervisorUrl = null
@@ -52,7 +52,7 @@ def run(params) {
         // Define shared environment variables for terraform calls
         GString environmentVars = """
                 export TF_VAR_SERVER_CONTAINER_REPOSITORY='unused'
-                export TF_VAR_PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}
+                export TF_VAR_PROXY_CONTAINER_REPOSITORY='${proxy_container_repository}'
                 export TERRAFORM=${params.bin_path}
                 export TERRAFORM_PLUGINS=${params.bin_plugins_path}
             """

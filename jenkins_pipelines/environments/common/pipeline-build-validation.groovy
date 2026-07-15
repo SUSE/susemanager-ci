@@ -42,8 +42,8 @@ def run(params) {
         def products_and_salt_migration_stage_result_fail = false
         def retail_stage_result_fail = false
         def containerization_stage_result_fail = false
-        def server_container_repository = params.server_container_repository ?: null
-        def proxy_container_repository = params.proxy_container_repository ?: null
+        def server_container_repository = params.server_container_repository ?: ''
+        def proxy_container_repository = params.proxy_container_repository ?: ''
         def server_container_image = params.server_container_image ?: ''
         // Parameters used for sandbox pipeline
         def product_version = params.product_version ?: ''
