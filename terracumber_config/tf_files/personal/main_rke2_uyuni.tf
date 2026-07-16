@@ -83,6 +83,8 @@ module "cucumber_testsuite" {
       image = "tumbleweedo"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
+        vcpu   = 2
+        memory = 16384
       }
       runtime               = "rke2"
       container_tag         = "latest"
@@ -99,6 +101,8 @@ module "cucumber_testsuite" {
     proxy_kubernetes = {
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
+        vcpu = 2
+        memory = 16384
       }
       runtime              = "rke2"
       container_tag        = "latest"
