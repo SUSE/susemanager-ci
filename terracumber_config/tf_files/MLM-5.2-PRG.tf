@@ -91,6 +91,16 @@ variable "PROMETHEUS_PUSH_GATEWAY_URL" {
   default = null
 }
 
+variable "CONTROLLER_PUBLIC_SSH_KEY_PATH" {
+  type = string
+  default = "./salt/controller/id_ed25519.pub"
+}
+
+variable "HYPERVISOR_PRIVATE_SSH_KEY_PATH" {
+  type = string
+  default = "~/.ssh/id_ed25519"
+}
+
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
@@ -122,10 +132,12 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
+
+  images = ["rocky8o", "opensuse156o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   use_avahi    = false
-  name_prefix  = "mlm-ci-52-"
+  name_prefix  = "mlm-ci-52-podman-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -148,15 +160,15 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:01:10"
+        mac = "aa:b2:93:01:02:e0"
         vcpu = 4
         memory = 4096
       }
     }
     server_containerized = {
-      image = "slmicro61o"
+      image = "slmicro62o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:11"
+        mac = "aa:b2:93:01:02:e1"
         vcpu = 8
         memory = 32768
       }
@@ -166,12 +178,11 @@ module "cucumber_testsuite" {
       runtime              = "podman"
       container_registry   = "registry.suse.de"
       container_tag        = "latest"
-
     }
     proxy_containerized = {
       image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:12"
+        mac = "aa:b2:93:01:02:e2"
         vcpu = 2
         memory = 2048
       }
@@ -183,7 +194,7 @@ module "cucumber_testsuite" {
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:16"
+        mac = "aa:b2:93:01:02:e6"
         vcpu = 2
         memory = 2048
       }
@@ -191,7 +202,7 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:18"
+        mac = "aa:b2:93:01:02:e8"
         vcpu = 2
         memory = 2048
       }
@@ -200,9 +211,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:1a"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
+        mac = "aa:b2:93:01:02:ea"
         vcpu = 2
         memory = 2048
       }
@@ -210,7 +219,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:1b"
+        mac = "aa:b2:93:01:02:eb"
         vcpu = 2
         memory = 2048
       }
@@ -218,7 +227,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:1d"
+        mac = "aa:b2:93:01:01:ed"
         vcpu = 2
         memory = 2048
       }
@@ -232,7 +241,7 @@ module "cucumber_testsuite" {
       hypervisor = {
         host        = "suma-01.mgr.suse.de"
         user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
+        private_key = file(pathexpand(var.HYPERVISOR_PRIVATE_SSH_KEY_PATH))
       }
     }
   }
@@ -240,7 +249,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool = "ssd"
     network_name = null
-    bridge = "br0"
+    bridge = "br1"
     additional_network = "192.168.52.0/24"
   }
 }
