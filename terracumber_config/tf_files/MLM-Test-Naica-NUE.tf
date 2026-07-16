@@ -154,7 +154,7 @@ module "cucumber_testsuite" {
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
+      container_registry = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
       container_tag = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
@@ -169,7 +169,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
+      container_registry = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
       container_tag = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"

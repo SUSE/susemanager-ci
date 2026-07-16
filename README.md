@@ -177,8 +177,8 @@ Once the `meta` is altered, the OBS scheduler detects dependency changes, invali
 Upon a successful build, Jenkins intercepts the new registry paths and rewrites the following variables to point to `registry.suse.de/[PROJECT]/containerfile`:
 
 * `custom_project_path`
-* `server_container_repository`
-* `proxy_container_repository`
+* `server_container_registry`
+* `proxy_container_registry`
 
 ---
 

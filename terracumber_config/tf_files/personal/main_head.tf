@@ -1,4 +1,4 @@
-variable "CONTAINER_REPOSITORY" {
+variable "CONTAINER_REGISTRY" {
   type = string
   description = "Container repository for server and proxy"
   default = "registry.suse.de"
@@ -83,7 +83,7 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
-      container_repository = var.CONTAINER_REPOSITORY
+      container_registry   = var.CONTAINER_REGISTRY
       container_tag        = "latest"
     }
     proxy_containerized = {
@@ -95,7 +95,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = var.CONTAINER_REPOSITORY
+      container_registry = var.CONTAINER_REGISTRY
       container_tag = "latest"
     }
     suse_minion = {

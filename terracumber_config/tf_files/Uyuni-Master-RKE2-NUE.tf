@@ -154,7 +154,7 @@ module "cucumber_testsuite" {
       }
       runtime                        = "rke2"
       container_tag                  = "latest"
-      container_repository           = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
+      container_registry             = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
       helm_chart_name                = "server-helm"
       helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
 
@@ -174,7 +174,7 @@ module "cucumber_testsuite" {
       install_salt_bundle = true
       runtime = "rke2"
       container_tag = "latest"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
+      container_registry = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
       helm_chart_name = "proxy-helm"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
       login_timeout = 28800

@@ -1,4 +1,4 @@
-variable "CONTAINER_REPOSITORY" {
+variable "CONTAINER_REGISTRY" {
   type = string
   description = "Container repository for server and proxy"
   default = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
@@ -77,7 +77,7 @@ module "cucumber_testsuite" {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
       }
       runtime               = "podman"
-      container_repository  = var.CONTAINER_REPOSITORY
+      container_registry    = var.CONTAINER_REGISTRY
       container_tag         = "latest"
       main_disk_size        = 50
       repository_disk_size  = 150
@@ -90,7 +90,7 @@ module "cucumber_testsuite" {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
       }
       runtime              = "podman"
-      container_repository = var.CONTAINER_REPOSITORY
+      container_registry   = var.CONTAINER_REGISTRY
       container_tag        = "latest"
     }
     suse_minion = {

@@ -74,7 +74,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size       = 400
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_registry = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       login_timeout = 28800
       additional_repos_only = var.ADDITIONAL_REPOS_ONLY
       additional_repos = local.additional_repos["server"]
@@ -83,7 +83,7 @@ module "cucumber_testsuite" {
       main_disk_size = 500
     }
     proxy_containerized = {
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_registry = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
       image = var.PROXY_IMAGE
       provider_settings = {

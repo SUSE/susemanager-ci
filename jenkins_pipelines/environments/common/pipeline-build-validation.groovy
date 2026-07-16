@@ -42,8 +42,8 @@ def run(params) {
         def products_and_salt_migration_stage_result_fail = false
         def retail_stage_result_fail = false
         def containerization_stage_result_fail = false
-        def server_container_repository = params.server_container_repository ?: ''
-        def proxy_container_repository = params.proxy_container_repository ?: ''
+        def server_container_registry = params.server_container_registry ?: ''
+        def proxy_container_registry = params.proxy_container_registry ?: ''
         def server_container_image = params.server_container_image ?: ''
         // Parameters used for sandbox pipeline
         def product_version = params.product_version ?: ''
@@ -75,8 +75,8 @@ def run(params) {
                     sh "${WORKSPACE}/venv/bin/pip install -r ${SCRIPT_DIR}/requirements.txt"
                     sh( script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --mi-project ${params.mi_project}", returnStdout: true)
                     custom_project_path = "registry.suse.de/${params.container_project.toLowerCase().replaceAll(':', '/')}/containerfile"
-                    server_container_repository = custom_project_path
-                    proxy_container_repository = custom_project_path
+                    server_container_registry = custom_project_path
+                    proxy_container_registry = custom_project_path
                 } else if (isNewJenkins) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
@@ -123,8 +123,8 @@ def run(params) {
 
                         // Build Common Arguments
                         def commonArgs = " --output \"${outputFile}\""
-                        commonArgs += " --inject SERVER_CONTAINER_REPOSITORY=${server_container_repository}"
-                        commonArgs += " --inject PROXY_CONTAINER_REPOSITORY=${proxy_container_repository}"
+                        commonArgs += " --inject SERVER_CONTAINER_REGISTRY=${server_container_registry}"
+                        commonArgs += " --inject PROXY_CONTAINER_REGISTRY=${proxy_container_registry}"
                         commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
                         commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
                         commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"

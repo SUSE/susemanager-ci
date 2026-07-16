@@ -145,7 +145,7 @@ module "cucumber_testsuite" {
       database_disk_size = 60
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_registry = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni/server"
     }
@@ -157,7 +157,7 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_registry = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
     }
     suse_minion = {

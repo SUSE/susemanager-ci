@@ -150,7 +150,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:21"
       }
       runtime               = "podman"
-      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_registry    = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag         = "latest"
       main_disk_size        = 40
       repository_disk_size  = 250
@@ -166,7 +166,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:22"
       }
       runtime              = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
+      container_registry   = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag        = "latest"
       additional_repos = {
         podman6_repo = "https://download.opensuse.org/repositories/devel:/microos/openSUSE_Tumbleweed/"

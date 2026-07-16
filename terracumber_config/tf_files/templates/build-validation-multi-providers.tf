@@ -228,10 +228,10 @@ module "build_validation_module" {
   cucumber_gitrepo  = var.CUCUMBER_GITREPO
   cucumber_branch   = var.CUCUMBER_BRANCH
 
-  server_container_repository     = var.SERVER_CONTAINER_REPOSITORY
+  server_container_registry       = var.SERVER_CONTAINER_REGISTRY
   server_container_image          = var.SERVER_CONTAINER_IMAGE
   server_additional_repos         = var.SERVER_ADDITIONAL_REPOS
-  proxy_container_repository      = var.PROXY_CONTAINER_REPOSITORY
+  proxy_container_registry        = var.PROXY_CONTAINER_REGISTRY
   proxy_additional_repos          = var.PROXY_ADDITIONAL_REPOS
   base_os                         = var.BASE_OS
   hypervisor_private_ssh_key_path = var.HYPERVISOR_PRIVATE_SSH_KEY_PATH

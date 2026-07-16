@@ -143,7 +143,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:d1"
       }
       runtime               = "podman"
-      container_repository  = "registry.opensuse.org/systemsmanagement/uyuni/main/containerfile"
+      container_registry    = "registry.opensuse.org/systemsmanagement/uyuni/main/containerfile"
       container_tag         = "latest"
       main_disk_size        = 40
       repository_disk_size  = 250
@@ -156,7 +156,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:d2"
       }
       runtime              = "podman"
-      container_repository = "registry.opensuse.org/systemsmanagement/uyuni/main/containerfile"
+      container_registry   = "registry.opensuse.org/systemsmanagement/uyuni/main/containerfile"
       container_tag        = "latest"
     }
     suse_minion = {

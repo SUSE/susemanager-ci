@@ -158,8 +158,8 @@ module "cucumber_testsuite" {
       login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
-      container_repository = "registry.suse.de"
-      //container_repository = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
+      container_registry   = "registry.suse.de"
+      //container_registry = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
       container_tag        = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_62/"
@@ -175,8 +175,8 @@ module "cucumber_testsuite" {
       }
       main_disk_size = 200
       runtime = "podman"
-      container_repository = "registry.suse.de"
-      //container_repository = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
+      container_registry = "registry.suse.de"
+      //container_registry = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
       container_tag = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_62/"

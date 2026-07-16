@@ -71,8 +71,8 @@ def run(params) {
                         sh "rm -f ${resultdir}/sumaform/terraform.tfvars"
                         sh "cat ${tfvars_infra_description} >> ${resultdir}/sumaform/terraform.tfvars"
                         sh "echo 'ENVIRONMENT = \"${params.environment}\"' >> ${resultdir}/sumaform/terraform.tfvars"
-                        if (params.container_repository != '') {
-                            sh "echo 'CONTAINER_REPOSITORY=\"${params.container_repository}\"' >> ${resultdir}/sumaform/terraform.tfvars"
+                        if (params.container_registry != '') {
+                            sh "echo 'CONTAINER_REGISTRY=\"${params.container_registry}\"' >> ${resultdir}/sumaform/terraform.tfvars"
                         }
                         if (isNewJenkins) {
                             sh """echo 'HYPERVISOR_PRIVATE_SSH_KEY_PATH="/home/jenkins/.ssh/id_ed25519.worker"' >> ${resultdir}/sumaform/terraform.tfvars"""

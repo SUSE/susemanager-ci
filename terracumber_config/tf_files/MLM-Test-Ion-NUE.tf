@@ -150,7 +150,7 @@ module "cucumber_testsuite" {
       main_disk_size = 500
       login_timeout = 28800
       runtime = "podman"
-      container_repository = "registry.suse.de/devel/galaxy/manager/test/ion/containerfile"
+      container_registry = "registry.suse.de/devel/galaxy/manager/test/ion/containerfile"
       container_tag = "latest"
       beta_enabled = false
     }

@@ -75,7 +75,7 @@ The pipeline supports two deployment modes, selected by which parameter is provi
 | `use_previous_terraform_state` | Restore Terraform state from the previous build's artifacts |
 | `custom_repositories` | JSON string with additional package repositories to inject |
 | `mi_ids` | Maintenance Incident IDs; triggers JSON generation for MI testing |
-| `server_container_repository` / `proxy_container_repository` | Container image sources injected into tfvars |
+| `server_container_registry` / `proxy_container_registry` | Container image sources injected into tfvars |
 | `cucumber_gitrepo` / `cucumber_ref` | Cucumber testsuite repository and branch |
 
 ### tfvars generator
@@ -95,7 +95,7 @@ The pipeline supports two deployment modes, selected by which parameter is provi
 ```bash
 python3 scripts/tf_vars_generator/prepare_tfvars.py \
   --output terraform.tfvars \
-  --inject SERVER_CONTAINER_REPOSITORY=<value> \
+  --inject SERVER_CONTAINER_REGISTRY=<value> \
   --inject CUCUMBER_BRANCH=<value> \
   --merge-files deployment.tfvars location.tfvars \
   --clean --keep-resources sles15sp7_minion rocky8_minion ...

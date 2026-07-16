@@ -1,4 +1,4 @@
-variable "CONTAINER_REPOSITORY" {
+variable "CONTAINER_REGISTRY" {
   type = string
   description = "Container repository for server and proxy"
   default = "registry.suse.de"
@@ -92,7 +92,7 @@ module "cucumber_testsuite" {
       large_deployment     = true
       runtime              = "rke2"
       container_tag        = "latest"
-      container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/server"
+      container_registry   = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/server"
       helm_chart_name      = "server-helm"
       helm_chart_url       = "oci://registry.suse.com/suse/multi-linux-manager/5.2"
     }
@@ -105,7 +105,7 @@ module "cucumber_testsuite" {
       main_disk_size       = 200
       runtime              = "rke2"
       container_tag        = "latest"
-      container_repository = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/proxy"
+      container_registry   = "registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers/suse/multi-linux-manager/5.2/x86_64/proxy"
       helm_chart_name      = "proxy-helm"
       helm_chart_url       = "oci://registry.suse.com/suse/multi-linux-manager/5.2"
     }
