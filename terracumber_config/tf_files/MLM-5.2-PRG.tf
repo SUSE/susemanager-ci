@@ -180,7 +180,7 @@ module "cucumber_testsuite" {
       container_tag        = "latest"
     }
     proxy_containerized = {
-      image = "slmicro61o"
+      image = "slmicro62o"
       provider_settings = {
         mac = "aa:b2:93:01:02:e2"
         vcpu = 2
