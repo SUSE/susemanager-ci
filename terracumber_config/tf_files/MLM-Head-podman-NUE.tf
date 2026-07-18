@@ -97,7 +97,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-03.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-01.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
@@ -227,7 +227,7 @@ module "cucumber_testsuite" {
       name        = "dhcp-dns"
       image       = "opensuse156o"
       hypervisor  = {
-        host        = "suma-03.mgr.suse.de"
+        host        = "suma-01.mgr.suse.de"
         user        = "root"
         private_key = file("~/.ssh/id_ed25519")
       }
