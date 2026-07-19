@@ -237,6 +237,14 @@ module "build_validation_module" {
   hypervisor_private_ssh_key_path = var.HYPERVISOR_PRIVATE_SSH_KEY_PATH
   controller_private_ssh_key_path = var.CONTROLLER_PRIVATE_SSH_KEY_PATH
   controller_public_ssh_key_path  = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
+
+  server_containerized_main_disk_size            = var.SERVER_CONTAINERIZED_MAIN_DISK_SIZE
+  server_containerized_repository_disk_size      = var.SERVER_CONTAINERIZED_REPOSITORY_DISK_SIZE
+  server_containerized_database_disk_size        = var.SERVER_CONTAINERIZED_DATABASE_DISK_SIZE
+  server_containerized_disable_auto_bootstrap    = var.SERVER_CONTAINERIZED_DISABLE_AUTO_BOOTSTRAP
+  server_containerized_disable_auto_channel_sync = var.SERVER_CONTAINERIZED_DISABLE_AUTO_CHANNEL_SYNC
+  server_containerized_server_mounted_mirror     = var.SERVER_CONTAINERIZED_SERVER_MOUNTED_MIRROR
+  server_containerized_use_os_released_updates   = var.SERVER_CONTAINERIZED_USE_OS_RELEASED_UPDATES
 }
 
 

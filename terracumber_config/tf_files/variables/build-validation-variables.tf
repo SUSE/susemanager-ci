@@ -182,3 +182,39 @@ variable "S390_LOCAL_USER" {
   default     = "jenkins@jenkins-worker.mgr.suse.de"
   description = "Jenkins worker from where the deployment is executed."
 }
+
+variable "SERVER_CONTAINERIZED_MAIN_DISK_SIZE" {
+  description = "Size of main disk for the containerized server, defined in GiB"
+  default     = 100
+}
+
+variable "SERVER_CONTAINERIZED_REPOSITORY_DISK_SIZE" {
+  description = "Size of repository disk for the containerized server, defined in GiB"
+  default     = 3072
+}
+
+variable "SERVER_CONTAINERIZED_DATABASE_DISK_SIZE" {
+  description = "Size of database disk for the containerized server, defined in GiB"
+  default     = 150
+}
+
+variable "SERVER_CONTAINERIZED_DISABLE_AUTO_BOOTSTRAP" {
+  description = "Disable the default bootstrap mgr-create-bootstrap-repo call after product synchronization"
+  default     = true
+}
+
+variable "SERVER_CONTAINERIZED_DISABLE_AUTO_CHANNEL_SYNC" {
+  description = "Disable automatic channel synchronization after product synchronization"
+  default     = true
+}
+
+variable "SERVER_CONTAINERIZED_SERVER_MOUNTED_MIRROR" {
+  type        = string
+  description = "Override server_mounted_mirror for the containerized server. null = use location default mirror, empty string = no mirror"
+  default     = null
+}
+
+variable "SERVER_CONTAINERIZED_USE_OS_RELEASED_UPDATES" {
+  description = "Apply all updates from SUSE Linux Enterprise repos for the containerized server"
+  default     = true
+}

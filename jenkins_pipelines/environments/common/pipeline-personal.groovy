@@ -138,7 +138,13 @@ def run(params) {
                 if (params.run_secondary) {
                     def tags_list = ""
                     if (params.functional_scopes) {
-                        def transformed_scopes = params.functional_scopes.replaceAll(',', ' or ')
+                        // Re-add the @ prefix stripped from the job parameters
+                        // (Jenkins' Safe HTML markup formatter escapes @ as &#64; in Active Choices labels).
+                        // startsWith guard keeps backward compatibility with jobs still passing @-prefixed scopes.
+                        def transformed_scopes = params.functional_scopes.split(',')
+                                .collect { it.trim() }
+                                .collect { it.startsWith('@') ? it : "@${it}" }
+                                .join(' or ')
                         tags_list = "export TAGS='${transformed_scopes}'; "
                     }
 
