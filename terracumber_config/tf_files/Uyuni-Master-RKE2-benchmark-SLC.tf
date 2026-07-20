@@ -85,7 +85,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://https://moscowmule.mgr.slc1.suse.org//system"
+  uri = "qemu+tcp://moscowmule.mgr.slc1.suse.org/system"
 }
 
 module "cucumber_testsuite" {
@@ -118,24 +118,18 @@ module "cucumber_testsuite" {
   images = ["tumbleweedo", "opensuse156o"]
 
   use_avahi    = false
-  name_prefix  = "uyuni-ci-master-benchmark-rke2-"
-  domain       = "mgr.suse.de"
+  name_prefix  = "uyuni-benchmark-master-"
+  domain       = "mgr.slc1.suse.org"
   from_email   = "root@suse.de"
-
-  no_auth_registry = "registry.mgr.suse.de"
-  auth_registry      = "registry.mgr.suse.de:5000/cucutest"
-  auth_registry_username = "cucutest"
-  auth_registry_password = "cucusecret"
-  git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
   
   container_server = true
   container_proxy  = true
 
-  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
+  mirror                   = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images        = true
 
-  # server_http_proxy = "http-proxy.mgr.suse.de:3128"
-  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
+  # server_http_proxy = "http-proxy.mgr.slc1.suse.org:3128"
+  custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.slc1.suse.org:445"
 
   # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
   host_settings = {
