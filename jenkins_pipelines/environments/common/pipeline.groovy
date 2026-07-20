@@ -210,9 +210,9 @@ def run(params) {
                         def cucumberCmd2 = "${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable"
                         def cucumberCmd3 = "${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing"
 
-                        def encoded1 = cucumberCmd1.bytes.encodeBase64().toString()
-                        def encoded2 = cucumberCmd2.bytes.encodeBase64().toString()
-                        def encoded3 = cucumberCmd3.bytes.encodeBase64().toString()
+                        def encoded1 = cucumberCmd1.toString().bytes.encodeBase64().toString()
+                        def encoded2 = cucumberCmd2.toString().bytes.encodeBase64().toString()
+                        def encoded3 = cucumberCmd3.toString().bytes.encodeBase64().toString()
 
                         def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'echo ${encoded1} | base64 -d | bash'", returnStatus: true
                         def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'echo ${encoded2} | base64 -d | bash'", returnStatus: true
