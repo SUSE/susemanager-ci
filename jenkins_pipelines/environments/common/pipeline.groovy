@@ -206,17 +206,9 @@ def run(params) {
                             tags_list = "export TAGS='${transformed_scopes}'; "
                         }
 
-                        def cucumberCmd1 = "${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary"
-                        def cucumberCmd2 = "${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable"
-                        def cucumberCmd3 = "${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing"
-
-                        def encoded1 = cucumberCmd1.toString().bytes.encodeBase64().toString()
-                        def encoded2 = cucumberCmd2.toString().bytes.encodeBase64().toString()
-                        def encoded3 = cucumberCmd3.toString().bytes.encodeBase64().toString()
-
-                        def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'echo ${encoded1} | base64 -d | bash'", returnStatus: true
-                        def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'echo ${encoded2} | base64 -d | bash'", returnStatus: true
-                        def statusCode3 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'echo ${encoded3} | base64 -d | bash'", returnStatus: true
+                        def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true
+                        def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
+                        def statusCode3 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true
                         sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
                     }
                 }
