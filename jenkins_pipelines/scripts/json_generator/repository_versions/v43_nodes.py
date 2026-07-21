@@ -56,7 +56,7 @@ v43_client_tools: dict[str, Set[str]] = {
                         "/SUSE_Updates_SLE-Module-Server-Applications_15-SP7_x86_64/",
                         "/SUSE_Updates_SLE-Module-Systems-Management_15-SP7_x86_64/",
                         "/SUSE_Updates_SLE-Module-Python3_15-SP7_x86_64/",
-                        "/SUSE_Updates_SLE-Module-Development-Tools_15-SP6_x86_64/"},
+                        "/SUSE_Updates_SLE-Module-Development-Tools_15-SP7_x86_64/"},
     "sles15sp5s390_minion": {"/SUSE_Updates_SLE-Manager-Tools_15_s390x/",
                             "/SUSE_Updates_SLE-Module-Basesystem_15-SP5_s390x/",
                             "/SUSE_Updates_SLE-Module-Server-Applications_15-SP5_s390x/",
