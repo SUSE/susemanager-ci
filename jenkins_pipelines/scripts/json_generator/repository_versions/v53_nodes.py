@@ -63,7 +63,7 @@ v53_nodes_static_client_tools_repositories_beta: Dict[str, Dict[str, str]] = {
     "slmicro62_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
     },
-    "sle160_minion": {
+    "sles160_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
     },
 }
@@ -90,14 +90,14 @@ v53_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
     "rocky9_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "rocky10_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-10_x86_64/"},
     "salt_migration_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/" },
-    "sle12sp5_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-12_x86_64/" },
-    "sle15sp3_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/" },
-    "sle15sp4_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/" },
-    "sle15sp5_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/", },
-    "sle15sp5s390_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_s390x/" },
-    "sle15sp6_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/",
+    "sles12sp5_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-12_x86_64/" },
+    "sles15sp3_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/" },
+    "sles15sp4_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/" },
+    "sles15sp5_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/", },
+    "sles15sp5s390_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_s390x/" },
+    "sles15sp6_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/",
                          "/SUSE_Updates_SLE-Module-Development-Tools_15-SP6_x86_64/"},
-    "sle15sp7_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/",
+    "sles15sp7_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_x86_64/",
                          "/SUSE_Updates_SLE-Module-Server-Applications_15-SP7_x86_64/",
                          "/SUSE_Updates_SLE-Module-Basesystem_15-SP7_x86_64/",
                          "/SUSE_Updates_SLE-Module-Python3_15-SP7_x86_64/",

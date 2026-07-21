@@ -38,7 +38,7 @@ from a file.
 information for the SUSE Manager BV testsuite pipeline.
 - Embargo Checks: The script has an option to reject Maintenance Incidents (MIs)
 that are under embargo.
-- SLFO client tools for `sle160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64):
+- SLFO client tools for `sles160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64):
   - Stable `51-*` / `52-sles` / `52-micro`: use `--slfo-pull-request <id>` to
     inject a `:PullRequest:/<id>` client-tools URL (independent of MI IDs).
   - Beta `53-sles-beta` / `53-micro-beta`: a static `:ToTest` URL is baked in
@@ -63,7 +63,7 @@ Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, `52
 `-i`, `--mi_ids`: A space-separated list of MI IDs.
 `-f`, `--file`: Path to a file containing MI IDs, each on a new line.
 `-e`, `--no_embargo`: Reject any MIs that are currently under embargo.
-`--slfo-pull-request`: SLFO PullRequest id for `sle160_minion`, `slmicro62_minion` (x86_64), and `opensuse160arm_minion` (aarch64 SLE-16 client-tools) on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which receive a fixed `:ToTest` URL automatically. In `custom_repositories.json`, those entries use the inner key pattern `slfo_pr_<id>` (not the bare PR id) so they cannot collide with MI id keys.
+`--slfo-pull-request`: SLFO PullRequest id for `sles160_minion`, `slmicro62_minion` (x86_64), and `opensuse160arm_minion` (aarch64 SLE-16 client-tools) on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which receive a fixed `:ToTest` URL automatically. In `custom_repositories.json`, those entries use the inner key pattern `slfo_pr_<id>` (not the bare PR id) so they cannot collide with MI id keys.
 
 Example:
 
@@ -88,7 +88,7 @@ repository URLs for **`slmicro60_minion`** and **`slmicro61_minion`** (`slmicro6
 `slmicro61_salt`, `slmicro6_salt_bundle`) in addition to MI-based maintenance URLs.
 
 For **`53-sles-beta`** and **`53-micro-beta`**, the output always includes fixed `:ToTest`
-client-tools URLs independently of MI IDs. **`slmicro62_minion`** and **`sle160_minion`**
+client-tools URLs independently of MI IDs. **`slmicro62_minion`** and **`sles160_minion`**
 share the same **SLES-16** MultiLinuxManagerTools-Beta **`:ToTest`** path under the inner key
 **`sles16_client_tools`**. **`opensuse160arm_minion`** and other client minions receive
 MI-based maintenance URLs from the dynamic map (e.g. **`opensuse160arm_minion`** uses
@@ -102,7 +102,7 @@ MI-based maintenance URLs from the dynamic map (e.g. **`opensuse160arm_minion`**
 `server_uyuni_tools` and `proxy_uyuni_tools` to the `http://`
 `SLFO:/Products:/Multi-Linux-Manager:/5.3:/ToTest/product/repo/` tree
 (`Multi-Linux-Manager-Server-5.3-x86_64/` and `Multi-Linux-Manager-Proxy-5.3-x86_64/`). On the stable `51-*` / `52-sles` / `52-micro` flows,
-equivalent URLs for `sle160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64) are only added when
+equivalent URLs for `sles160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64) are only added when
 `--slfo-pull-request <id>` is provided.
 
 ## Logging

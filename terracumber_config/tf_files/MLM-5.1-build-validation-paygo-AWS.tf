@@ -580,26 +580,26 @@ module "controller" {
   server_configuration    = module.server.configuration
   proxy_configuration     = length(module.proxy_containerized) > 0 ? module.proxy_containerized[0].configuration : local.empty_proxy_config
 
-  sle12sp5_paygo_minion_configuration       = length(module.sles12sp5_paygo_minion) > 0 ? module.sles12sp5_paygo_minion[0].configuration : local.empty_minion_config
-  sle15sp5_paygo_minion_configuration       = length(module.sles15sp5_paygo_minion) > 0 ? module.sles15sp5_paygo_minion[0].configuration : local.empty_minion_config
-  sle15sp6_paygo_minion_configuration       = length(module.sles15sp6_paygo_minion) > 0 ? module.sles15sp6_paygo_minion[0].configuration : local.empty_minion_config
-  sle15sp7_paygo_minion_configuration       = length(module.sles15sp7_paygo_minion) > 0 ? module.sles15sp7_paygo_minion[0].configuration : local.empty_minion_config
-  sle160_paygo_minion_configuration         = length(module.sles160_paygo_minion) > 0 ? module.sles160_paygo_minion[0].configuration : local.empty_minion_config
-  sleforsap15sp5_paygo_minion_configuration = length(module.slesforsap15sp5_paygo_minion) > 0 ? module.slesforsap15sp5_paygo_minion[0].configuration : local.empty_minion_config
+  sles12sp5_paygo_minion_configuration       = length(module.sles12sp5_paygo_minion) > 0 ? module.sles12sp5_paygo_minion[0].configuration : local.empty_minion_config
+  sles15sp5_paygo_minion_configuration       = length(module.sles15sp5_paygo_minion) > 0 ? module.sles15sp5_paygo_minion[0].configuration : local.empty_minion_config
+  sles15sp6_paygo_minion_configuration       = length(module.sles15sp6_paygo_minion) > 0 ? module.sles15sp6_paygo_minion[0].configuration : local.empty_minion_config
+  sles15sp7_paygo_minion_configuration       = length(module.sles15sp7_paygo_minion) > 0 ? module.sles15sp7_paygo_minion[0].configuration : local.empty_minion_config
+  sles160_paygo_minion_configuration         = length(module.sles160_paygo_minion) > 0 ? module.sles160_paygo_minion[0].configuration : local.empty_minion_config
+  slesforsap15sp5_paygo_minion_configuration = length(module.slesforsap15sp5_paygo_minion) > 0 ? module.slesforsap15sp5_paygo_minion[0].configuration : local.empty_minion_config
 
-  sle12sp5_minion_configuration     = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
-  sle12sp5_sshminion_configuration  = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
+  sles12sp5_minion_configuration     = length(module.sles12sp5_minion) > 0 ? module.sles12sp5_minion[0].configuration : local.empty_minion_config
+  sles12sp5_sshminion_configuration  = length(module.sles12sp5_sshminion) > 0 ? module.sles12sp5_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp4_minion_configuration     = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
-  sle15sp4_sshminion_configuration  = length(module.sles15sp4_sshminion) > 0 ? module.sles15sp4_sshminion[0].configuration : local.empty_minion_config
+  sles15sp4_minion_configuration     = length(module.sles15sp4_minion) > 0 ? module.sles15sp4_minion[0].configuration : local.empty_minion_config
+  sles15sp4_sshminion_configuration  = length(module.sles15sp4_sshminion) > 0 ? module.sles15sp4_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp5_minion_configuration    = length(module.sles15sp5_minion) > 0 ? module.sles15sp5_minion[0].configuration : local.empty_minion_config
-  sle15sp5_sshminion_configuration = length(module.sles15sp5_sshminion) > 0 ? module.sles15sp5_sshminion[0].configuration : local.empty_minion_config
+  sles15sp5_minion_configuration    = length(module.sles15sp5_minion) > 0 ? module.sles15sp5_minion[0].configuration : local.empty_minion_config
+  sles15sp5_sshminion_configuration = length(module.sles15sp5_sshminion) > 0 ? module.sles15sp5_sshminion[0].configuration : local.empty_minion_config
 
-  sle15sp6_minion_configuration    = length(module.sles15sp6_minion) > 0 ? module.sles15sp6_minion[0].configuration : local.empty_minion_config
-  sle15sp6_sshminion_configuration = length(module.sles15sp6_sshminion) > 0 ? module.sles15sp6_sshminion[0].configuration : local.empty_minion_config
-  sle15sp7_minion_configuration    = length(module.sles15sp7_minion) > 0 ? module.sles15sp7_minion[0].configuration : local.empty_minion_config
-  sle15sp7_sshminion_configuration = length(module.sles15sp7_sshminion) > 0 ? module.sles15sp7_sshminion[0].configuration : local.empty_minion_config
+  sles15sp6_minion_configuration    = length(module.sles15sp6_minion) > 0 ? module.sles15sp6_minion[0].configuration : local.empty_minion_config
+  sles15sp6_sshminion_configuration = length(module.sles15sp6_sshminion) > 0 ? module.sles15sp6_sshminion[0].configuration : local.empty_minion_config
+  sles15sp7_minion_configuration    = length(module.sles15sp7_minion) > 0 ? module.sles15sp7_minion[0].configuration : local.empty_minion_config
+  sles15sp7_sshminion_configuration = length(module.sles15sp7_sshminion) > 0 ? module.sles15sp7_sshminion[0].configuration : local.empty_minion_config
 
   rhel9_minion_configuration       = length(module.rhel9_paygo_minion) > 0 ? module.rhel9_paygo_minion[0].configuration : local.empty_minion_config
 }

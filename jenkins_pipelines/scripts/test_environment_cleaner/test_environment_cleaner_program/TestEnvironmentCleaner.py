@@ -78,10 +78,11 @@ def main():
         terminal_names = virsh_output.strip().split("\n") if virsh_output.strip() else []
         logger.debug(f"Terminal list: {terminal_names}")
         for terminal_name in terminal_names:
-            logger.debug(f"Updating the mac address to controller for {terminal_name.replace('sles','sle').upper().split('-')[-2]}")
+            terminal_env = terminal_name.upper().split('-')[-2]
+            logger.debug(f"Updating the mac address to controller for {terminal_env}")
             macaddress = ssh_hypervisor_session.run_command(f"virsh domiflist {terminal_name} | grep -v 'Interface' | awk '{{print $5}}'")
             ssh_controller_session.run_command(
-                f"sed -i 's|^export {terminal_name.replace('sles', 'sle').upper().split('-')[-2]}_TERMINAL_MAC=\".*\"|export {terminal_name.replace('sles', 'sle').upper().split('-')[-2]}_TERMINAL_MAC=\"{macaddress.upper()}\"|' /root/.bashrc"
+                f"sed -i 's|^export {terminal_env}_TERMINAL_MAC=\".*\"|export {terminal_env}_TERMINAL_MAC=\"{macaddress.upper()}\"|' /root/.bashrc"
             )
     else:
         ssh_manager = SSHClientManager(url=manager_url, password= "linux", product_version=product_version)

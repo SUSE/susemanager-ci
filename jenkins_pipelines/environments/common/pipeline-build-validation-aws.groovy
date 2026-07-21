@@ -621,12 +621,12 @@ def getNodesHandler(minionType = 'default') {
         // Nodes come with [0] in there names now because of the count introduction
         def cleanNodeName = nodeName.replaceAll(/\[\d+\]/, "")
         if ( minionType == 'default' && (cleanNodeName.contains('minion') || nodeName.contains('client'))) {
-            nodeList.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
-            envVar.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+            nodeList.add(cleanNodeName.replaceAll('-', '_'))
+            envVar.add(cleanNodeName.replaceAll('-', '_').toUpperCase())
         }
         else if (( minionType == 'paygo' && (cleanNodeName.contains('paygo') || nodeName.contains('byos')))) {
-            nodeList.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle'))
-            envVar.add(cleanNodeName.replaceAll('-', '_').replaceAll('sles', 'sle').toUpperCase())
+            nodeList.add(cleanNodeName.replaceAll('-', '_'))
+            envVar.add(cleanNodeName.replaceAll('-', '_').toUpperCase())
         }
     }
     // Convert jenkins minions list parameter to list

@@ -235,7 +235,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
         self.assertDictEqual(
             {
-                'sle160_minion': {
+                'sles160_minion': {
                     'slfo_pr_12345': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/'
                 },
                 'slmicro62_minion': {
@@ -257,7 +257,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertNotIn('aarch64', x86_url)
         self.assertNotIn('x86_64', aarch64_url)
 
-    def test_v51_dynamic_includes_opensuse160arm_sle16_aarch64(self):
+    def test_v51_dynamic_includes_opensuse160arm_sles16_aarch64(self):
         _static, dynamic = get_v51_static_and_client_tools('sles')
 
         self.assertIn('opensuse160arm_minion', dynamic)
@@ -266,7 +266,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             dynamic['opensuse160arm_minion'],
         )
 
-    def test_v52_dynamic_includes_opensuse160arm_sle16_aarch64(self):
+    def test_v52_dynamic_includes_opensuse160arm_sles16_aarch64(self):
         _static, dynamic = get_v52_static_and_client_tools('sles')
 
         self.assertIn('opensuse160arm_minion', dynamic)
@@ -300,7 +300,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             repos['opensuse160arm_minion'].get('slfo_pr_12345'),
             'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/',
         )
-        self.assertIn('sle160_minion', repos)
+        self.assertIn('sles160_minion', repos)
         self.assertIn('slmicro62_minion', repos)
 
     def test_slfo_pull_request_rejected_for_unsupported_versions(self):
@@ -324,7 +324,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     @patch('json_generator.maintenance_json_generator.validate_and_store_results')
     def test_beta_version_injects_totest_static_urls(self, _mock_validate):
-        # Beta versions must auto-populate sle160_minion and slmicro62_minion
+        # Beta versions must auto-populate sles160_minion and slmicro62_minion
         # from the static :ToTest map (no --slfo-pull-request required).
         # Updated to test 5.3 beta (5.2 is now stable)
         captured: dict[str, dict[str, dict[str, str]]] = {}
@@ -337,13 +337,13 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         find_valid_repos(set(), '53-sles-beta')
 
         repos = captured['repos']
-        self.assertIn('sle160_minion', repos)
+        self.assertIn('sles160_minion', repos)
         self.assertIn('slmicro62_minion', repos)
         sles16_url = (
             'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:'
             '/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/'
         )
-        self.assertEqual(repos['sle160_minion'].get('sles16_client_tools'), sles16_url)
+        self.assertEqual(repos['sles160_minion'].get('sles16_client_tools'), sles16_url)
         self.assertEqual(repos['slmicro62_minion'].get('sles16_client_tools'), sles16_url)
         self.assertEqual(
             repos['server'].get('mlm53_sles_beta_totest_images_sp7'),
