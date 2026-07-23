@@ -37,7 +37,7 @@ node('sumaform-cucumber') {
                     'scope_cobbler', 'scope_sumatoolbox', 'scope_virtualization', 'scope_hub', 'scope_retail',
                     'scope_configuration_channels', 'scope_content_staging', 'scope_proxy',
                     'scope_traditional_client', 'scope_api', 'scope_power_management',
-                    'scope_retracted_patches', 'scope_ansible'
+                    'scope_retracted_patches', 'scope_ansible', 'scope_reportdb', 'scope_containerized_proxy'
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_scopes']"]])
         ])
