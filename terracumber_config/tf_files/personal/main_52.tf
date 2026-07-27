@@ -64,6 +64,7 @@ module "cucumber_testsuite" {
   deploy_coco_attestation  = true
   deploy_hub_api           = true
 
+  # when changing images, please also keep in mind to adjust the image matrix in the "Used image versions" section of the README.
   host_settings = {
     controller = {
       provider_settings = {
