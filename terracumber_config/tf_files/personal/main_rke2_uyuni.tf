@@ -69,7 +69,7 @@ module "cucumber_testsuite" {
   install_kubectl_helm           = false
   kubeconfig_path                = null
 
-  # when changing images, please also keep in mind to adjust the image matrix at the end of the README.
+  # when changing images, please also keep in mind to adjust the image matrix in the "Used image versions" section of the README.
   host_settings = {
     controller = {
       provider_settings = {

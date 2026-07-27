@@ -58,20 +58,20 @@ image for testing Pull Requests built with the open build service. This needs to
 
 ### In the CI test suite
 
-|             | GitHub PR test| Uyuni         | Head         | 5.1          | 5.0           | 4.3          |
-|-------------|---------------|---------------|--------------|--------------|---------------|--------------|
-| Minion      | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| SSH minion  | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| Client      | -             | -             | -            | -            | -             | SLES 15 SP4  |
-| RH-like     | Rocky 8       | Rocky 8       | Rocky 8      | Rocky 8      | Rocky 8       | Rocky 8      |
-| Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04  | Ubuntu 22.04 |
-| Virthost    | -             | -             | -            | -            | SLES 15 SP7   | SLES 15 SP4  |
-| Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| DHCP-DNS    | Leap 15.6     | Leap 15.6     | Leap 15.6    | Leap 15.6    | Leap 15.6     | -            |
-| Controller  | Leap 15.6     | Leap 15.6     | Leap 15.6    | Leap 15.6    | Leap 15.6     | Leap 15.6    |
-| Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
-| Proxy       | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
+|             | GitHub PR test| Uyuni         | Head         | 5.2          | 5.1          | 5.0           | 4.3          |
+|-------------|---------------|---------------|--------------|--------------|--------------|---------------|--------------|
+| Minion      | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
+| SSH minion  | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
+| Client      | -             | -             | -            | -            | -            | -             | SLES 15 SP4  |
+| RH-like     | Rocky 8       | Rocky 8       | Rocky 8      | Rocky 8      | Rocky 8      | Rocky 8       | Rocky 8      |
+| Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04  | Ubuntu 22.04 |
+| Virthost    | -             | -             | -            | -            | -            | SLES 15 SP7   | SLES 15 SP4  |
+| Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
+| Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
+| DHCP-DNS    | Leap 15.6     | Leap 15.6     | Leap 15.6    | Leap 15.6    | Leap 15.6    | Leap 15.6     | -            |
+| Controller  | Leap 15.6     | Leap 15.6     | Leap 15.6    | Leap 15.6    | Leap 15.6    | Leap 15.6     | Leap 15.6    |
+| Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
+| Proxy       | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
 
 ### In the full BV test suites
 
