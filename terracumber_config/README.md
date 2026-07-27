@@ -16,8 +16,8 @@ terracumber_config/
 │   │   └── PR-testing.tf
 │   ├── tfvars/
 │   │   ├── build-validation-tfvars/   # Per-environment tfvars for BV pipelines
-│   │   │   ├── mlm51_micro_build_validation_nue.tfvars
-│   │   │   ├── suma50_micro_build_validation_nue.tfvars
+│   │   │   ├── mlm51_micro_build_validation_prg.tfvars
+│   │   │   ├── suma50_micro_build_validation_prg.tfvars
 │   │   │   ├── suma50_micro_build_validation_slc.tfvars
 │   │   │   └── ...
 │   │   ├── sle-update-tfvars/         # Per-environment tfvars for SLE update pipelines
@@ -58,7 +58,7 @@ Each environment has a dedicated `.tfvars` file under `tfvars/build-validation-t
 <product_version>_<image_type>_build_validation_<location>.tfvars
 ```
 
-For example: `suma50_micro_build_validation_nue.tfvars`
+For example: `suma50_micro_build_validation_prg.tfvars`
 
 Each tfvars file defines two top-level variables:
 
@@ -133,18 +133,18 @@ BASE_CONFIGURATIONS = {
     pool               = "ssd"
     bridge             = "brx"
     additional_network = "192.168.xx.0/24"
-    hypervisor         = "suma-slc-xx.mgr.suse.de"
+    hypervisor         = "xx.mgr.slc1.suse.org"
   }
   base_core_2 = {
     pool               = "ssd"
     bridge             = "br1"
     additional_network = "192.168.xx.0/24"
-    hypervisor         = "suma-slc-xx.mgr.suse.de"
+    hypervisor         = "xx.mgr.slc1.suse.org"
   }
 }
 ```
 
-The file also defines mail subject templates and the `LOCATION` variable (e.g. `"nue"` or `"slc"`), which `location.tfvars` uses to inject the correct network settings.
+The file also defines mail subject templates and the `LOCATION` variable (e.g. `"prg2"` or `"slc1"`), which `location.tfvars` uses to inject the correct network settings.
 
 ### tfvars generation
 
