@@ -126,7 +126,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   ubuntu2604_minion = {
     mac  = "aa:b2:92:42:01:6c"
-    name = "ubuntu2404-minion"
+    name = "ubuntu2604-minion"
   }
   opensuse160arm_minion = {
     mac  = "aa:b2:92:42:01:7e"
@@ -294,4 +294,4 @@ BASE_CONFIGURATIONS = {
 }
 MAIL_SUBJECT          = "Results 5.2 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results 5.2 Build Validation: Environment setup failed"
-LOCATION              = "nue"
+LOCATION              = "prg"
