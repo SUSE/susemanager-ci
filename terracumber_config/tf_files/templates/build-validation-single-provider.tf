@@ -34,7 +34,6 @@ module "base_core" {
     "libertylinux9o", "libertylinux10o",
     "openeuler2403o",
     "oraclelinux9o", "oraclelinux10o",
-    "raspios13o",
     "rocky8o", "rocky9o", "rocky10o",
     "ubuntu2204o", "ubuntu2404o", "ubuntu2604o",
     "debian12o", "debian13o",
