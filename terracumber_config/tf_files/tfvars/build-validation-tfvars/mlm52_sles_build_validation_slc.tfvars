@@ -290,14 +290,14 @@ BASE_CONFIGURATION = {
     hypervisor         = "terminus.mgr.slc1.suse.org"
   }
   base_deblike = {
-    images             = [ "ubuntu2204o", "ubuntu2404o", "ubuntu2604", "debian13o", "raspios13o" ]
+    images             = [ "ubuntu2204o", "ubuntu2404o", "ubuntu2604", "debian13o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
     hypervisor         = "trantor.mgr.slc1.suse.org"
   }
   base_arm = {
-    images             = [ "opensuse160armo" ]
+    images             = [ "opensuse160armo", "raspios13o" ]
     pool               = "ssd"
     bridge             = "br0"
     additional_network = null
