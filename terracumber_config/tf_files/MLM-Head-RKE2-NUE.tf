@@ -135,7 +135,7 @@ module "cucumber_testsuite" {
   cc_ptf_password = var.SCC_PTF_PASSWORD
   scc_slmicro_pass = var.SCC_MICRO_CREDENTIALS
 
-  images = ["slmicro62o", "opensuse156o"]
+  images = ["slmicro62o", "opensuse156o", "opensuse160o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-head-rke2-"

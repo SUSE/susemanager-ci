@@ -27,7 +27,7 @@ ENVIRONMENT_CONFIGURATION = {
 
 BASE_CONFIGURATIONS = {
   base_core = {
-    images             = [ "sles15sp4o", "opensuse156o" ]
+    images             = [ "sles15sp4o", "opensuse156o", "opensuse160o" ]
     pool               = "ssd"
     bridge             = "br0"
     hypervisor         = "riverworld.mgr.slc1.suse.org"
