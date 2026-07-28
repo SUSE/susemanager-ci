@@ -237,7 +237,7 @@ ENVIRONMENT_CONFIGURATION = {
 
 BASE_CONFIGURATIONS = {
   base_core = {
-    images             = [ "sles15sp4o", "opensuse156o", "sles15sp7o" ]
+    images             = [ "sles15sp4o", "opensuse156o", "opensuse160o", "sles15sp7o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null

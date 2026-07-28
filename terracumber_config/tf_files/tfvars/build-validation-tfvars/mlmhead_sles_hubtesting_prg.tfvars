@@ -55,7 +55,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     hypervisor         = "cthulhu.mgr.suse.de"
     additional_network = null
-    images             = ["sles15sp7o", "opensuse156o", "sles15sp5o"]
+    images             = ["sles15sp7o", "opensuse156o", "opensuse160o", "sles15sp5o"]
   }
 }
 MAIL_SUBJECT          = "Results 5.2 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

@@ -3,7 +3,7 @@
 IMAGE                  = "opensuse155-ci-pro"
 SERVER_IMAGE           = "leapmicro55o"
 PROXY_IMAGE            = "leapmicro55o"
-IMAGES                 = ["rocky9o", "opensuse156o", "opensuse155-ci-pro", "ubuntu2404o", "sles15sp4o", "leapmicro55o"]
+IMAGES                 = ["rocky9o", "opensuse156o", "opensuse160o", "opensuse155-ci-pro", "ubuntu2404o", "sles15sp4o", "leapmicro55o"]
 SUSE_MINION_IMAGE      = "opensuse156o"
 PRODUCT_VERSION        = "uyuni-pr"
 MAIL_TEMPLATE_ENV_FAIL = "../mail_templates/mail-template-jenkins-pull-request-env-fail.txt"
