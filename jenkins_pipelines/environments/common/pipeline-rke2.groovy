@@ -73,6 +73,42 @@ def run(params) {
             stage('Kubernetes tests') {
                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_tests'"
             }
+            stage('Core - Setup') {
+                    if (runCore) {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
+                    }
+            }
+            stage('Core - Proxy') {
+                if (runCore) {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:proxy'"
+                }
+            }
+            stage('Core - Initialize clients') {
+                if (runCore) {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake parallel:init_clients'"
+                }
+            }
+            stage('Secondary features') {
+                if (runSecondary) {
+                    def tags_list = ""
+                    if (params.functional_scopes) {
+                        // Re-add the @ prefix stripped from the job parameters
+                        // (Jenkins' Safe HTML markup formatter escapes @ as &#64; in Active Choices labels).
+                        // startsWith guard keeps backward compatibility with jobs still passing @-prefixed scopes.
+                        def transformed_scopes = params.functional_scopes.split(',')
+                                .collect { it.trim() }
+                                .collect { it.startsWith('@') ? it : "@${it}" }
+                                .join(' or ')
+                        tags_list = "export TAGS='${transformed_scopes}'; "
+                    }
+
+                    def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true
+                    def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
+                    def statusCode3 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true
+                    sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
+                }
+            }
         }
         finally {
             stage('Save TF state') {
