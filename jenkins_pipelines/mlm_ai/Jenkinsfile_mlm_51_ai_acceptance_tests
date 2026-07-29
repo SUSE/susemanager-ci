@@ -11,6 +11,16 @@ pipeline {
     }
 
     parameters {
+        choice(
+            name: 'BUILD_TYPE',
+            choices: ['branch', 'container'],
+            description: 'Select "branch" to build from source or "container" to use an existing image.'
+        )
+        string(
+            name: 'CONTAINER_IMAGE',
+            defaultValue: '',
+            description: 'The full name of the container image to use (e.g., "my-registry/my-image:latest"). Only used if BUILD_TYPE is "container".'
+        )
         string(
             name: 'MCP_SERVER_BRANCH',
             defaultValue: 'main',
@@ -29,8 +39,6 @@ pipeline {
     }
 
     environment {
-        // Sanitize JOB_NAME for Docker compatibility (lowercase, no illegal chars)
-        DOCKER_TAG = "${env.JOB_NAME.toLowerCase().replaceAll(/[^a-z0-9]/, '-')}"
         AGENT_MODEL = "${params.AGENT_MODEL}"
         JUDGE_MODEL = "${params.JUDGE_MODEL}"
     }
@@ -43,6 +51,10 @@ pipeline {
             }
         }
 
+        stage('Initialize') {
+            steps { script { dockerTag = '' } }
+        }
+
         stage('Checkout Code') {
             steps {
                 echo 'Checking out mcp-server-uyuni...'
@@ -52,8 +64,11 @@ pipeline {
 
         stage('Build Test Image') {
             steps {
-                echo "Building Docker image: ${env.DOCKER_TAG}"
-                sh "/usr/lib/docker/cli-plugins/docker-buildx build -f Dockerfile.test -t ${env.DOCKER_TAG} ."
+                script {
+                    dockerTag = "${env.JOB_NAME.toLowerCase().replaceAll(/[^a-z0-9]/, '-')}"
+                    echo "Building Docker image: ${dockerTag}"
+                    sh "/usr/lib/docker/cli-plugins/docker-buildx build -f Dockerfile.test -t ${dockerTag} ."
+                }
             }
         }
 
@@ -72,35 +87,79 @@ UYUNI_MCP_LOG_FILE_PATH=/tmp/mcp-server-uyuni.log
 UYUNI_MCP_LOG_LEVEL=DEBUG
 EOF
                 '''
+                script {
+                    if (params.BUILD_TYPE == 'container') {
+                        echo "BUILD_TYPE is container, generating test_config.json to run against ${params.CONTAINER_IMAGE}"
+                        // The docker client inside the test runner is just a remote for the host's docker daemon.
+                        // Therefore, all paths must be absolute paths on the HOST.
+                        // The --env-file argument must be a single string to prevent the client from trying to access the path.
+                        def configJson = """{"mcpServers": {"mcp-server-uyuni": {"command": "docker", "args": ["run", "--network=host", "--env-file=${env.WORKSPACE}/.venv/config", "-i", "--rm", "${params.CONTAINER_IMAGE}"]}}}"""
+                        writeFile(file: 'test/config.json.container', text: configJson)
+                    }
+                }
             }
         }
 
         stage('Run Acceptance Tests') {
             steps {
                 echo 'Running Dockerized tests...'
-                sh '''
-                    if [ ! -f "$HOME/.ai_secrets" ]; then
-                        echo "ERROR: Required env file $HOME/.secrets not found."
-                        echo "Please provision this file on the agent or generate it via Jenkins credentials in the workspace."
-                        exit 1
-                    fi
-                    docker run --rm \
-                               --env-file .venv/config \
-                               -e AGENT_MODEL=$AGENT_MODEL \
-                               -e JUDGE_MODEL=$JUDGE_MODEL \
-                               --env-file $HOME/.ai_secrets \
-                               -v $(pwd)/results:/app/results \
-                               -v $(pwd)/test/test_config.json:/app/test_config.json \
-                               --network=host \
-                               $DOCKER_TAG -s test/test_deepeval.py --junit-xml=results/results.xml
-                '''
+                script {
+                    sh '''
+                        set -e
+                        if [ ! -f "$HOME/.ai_secrets" ]; then
+                            echo "ERROR: Required env file $HOME/.ai_secrets not found."
+                            echo "Please provision this file on the agent or generate it via Jenkins credentials in the workspace."
+                            exit 1
+                        fi
+                    '''
+                    sh """
+                        set -e
+                        if [ -z "${dockerTag}" ]; then
+                            echo "ERROR: The Docker image tag is not set. Cannot run tests."
+                            exit 1
+                        fi
+                        docker run --rm \
+                                   --env-file .venv/config \
+                                   -e AGENT_MODEL=${env.AGENT_MODEL} \
+                                   -e JUDGE_MODEL=${env.JUDGE_MODEL} \
+                                   --env-file \$HOME/.ai_secrets \
+                                   -v "\$(pwd)/results:/app/results" \
+                                   -v /var/run/docker.sock:/var/run/docker.sock \
+                                   -v "\$(pwd)/test/test_config.json:/app/test_config.json" \
+                                   --network=host \
+                                   "${dockerTag}" -s test/test_deepeval.py --junit-xml=results/results.xml
+                    """
+                }
+            }
+        }
+
+        stage('Run Acceptance Tests (Container)') {
+            when { expression { params.BUILD_TYPE == 'container' } }
+            steps {
+                echo 'Running Dockerized tests against a container image...'
+                script {
+                    sh """
+                        set -e
+                        docker run --rm \
+                                   --env-file .venv/config \
+                                   -e AGENT_MODEL=${env.AGENT_MODEL} \
+                                   -e JUDGE_MODEL=${env.JUDGE_MODEL} \
+                                   --env-file \$HOME/.ai_secrets \
+                                   -v "\$(pwd)/results:/app/results" \
+                                   -v /var/run/docker.sock:/var/run/docker.sock \
+                                   -v "\$(pwd)/test/config.json.container:/app/config.json" \
+                                   -v "\$(pwd)/test/test_config.json:/app/test_config.json" \
+                                   --network=host \
+                                   "${dockerTag}"
+                    """
+                }
             }
         }
 
         stage('Cleanup') {
             steps {
                 echo 'Cleaning up Docker images and local config...'
-                sh "docker rmi ${env.DOCKER_TAG} || true"
+                sh "if [ -n \"${dockerTag}\" ]; then docker rmi ${dockerTag} || echo 'Image not found or could not be removed.'; fi"
                 sh "rm -f .venv/config"
             }
         }
