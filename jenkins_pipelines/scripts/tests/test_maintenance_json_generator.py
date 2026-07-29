@@ -236,13 +236,13 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertDictEqual(
             {
                 'sles160_minion': {
-                    'slfo_pr_12345': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/'
+                    'slfo_pr_12345_sles160_x86_64': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/'
                 },
                 'slmicro62_minion': {
-                    'slfo_pr_12345': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/'
+                    'slfo_pr_12345_slmicro62_x86_64': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/'
                 },
                 'opensuse160arm_minion': {
-                    'slfo_pr_12345': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/'
+                    'slfo_pr_12345_opensuse160arm_aarch64': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/'
                 },
             },
             custom_repos,
@@ -297,7 +297,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         repos = captured['repos']
         self.assertIn('opensuse160arm_minion', repos)
         self.assertEqual(
-            repos['opensuse160arm_minion'].get('slfo_pr_12345'),
+            repos['opensuse160arm_minion'].get('slfo_pr_12345_opensuse160arm_aarch64'),
             'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/',
         )
         self.assertIn('sles160_minion', repos)

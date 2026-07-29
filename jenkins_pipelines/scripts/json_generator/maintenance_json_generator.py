@@ -132,24 +132,36 @@ def slfo_pullrequest_client_tool_url(pr_id: str, arch: str = "x86_64") -> str:
     return f"{IBS_URL_PREFIX}{root}{tail}"
 
 
-def slfo_pullrequest_repo_key(pr_id: str) -> str:
-    """Inner dict key for SLFO PullRequest client-tools repos (not an MI id)."""
-    return f"slfo_pr_{pr_id}"
+def slfo_pullrequest_repo_key(pr_id: str, minion: str, arch: str) -> str:
+    """Inner dict key for SLFO PullRequest client-tools repos (not an MI id).
+
+    Args:
+        pr_id: SLFO PullRequest id
+        minion: Minion shortname (e.g. 'sles160', not 'sles160_minion')
+        arch: Architecture (e.g. 'x86_64' or 'aarch64')
+
+    Returns:
+        Repository key in format: slfo_pr_{id}_{minion}_{arch}
+    """
+    return f"slfo_pr_{pr_id}_{minion}_{arch}"
 
 
 def apply_slfo_pullrequest_client_tools(
     custom_repositories: dict[str, dict[str, str]], pr_id: str
 ) -> None:
-    repo_key = slfo_pullrequest_repo_key(pr_id)
-
     # x86_64 minions
     url_x86_64 = slfo_pullrequest_client_tool_url(pr_id, arch="x86_64")
-    update_custom_repositories(custom_repositories, "sles160_minion", repo_key, url_x86_64)
-    update_custom_repositories(custom_repositories, "slmicro62_minion", repo_key, url_x86_64)
+    for node in ["sles160_minion", "slmicro62_minion"]:
+        minion_shortname = node.removesuffix("_minion")
+        update_custom_repositories(custom_repositories, node,
+                                  slfo_pullrequest_repo_key(pr_id, minion_shortname, "x86_64"), url_x86_64)
 
     # aarch64 minion
     url_aarch64 = slfo_pullrequest_client_tool_url(pr_id, arch="aarch64")
-    update_custom_repositories(custom_repositories, "opensuse160arm_minion", repo_key, url_aarch64)
+    node = "opensuse160arm_minion"
+    minion_shortname = node.removesuffix("_minion")
+    update_custom_repositories(custom_repositories, node,
+                              slfo_pullrequest_repo_key(pr_id, minion_shortname, "aarch64"), url_aarch64)
 
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
