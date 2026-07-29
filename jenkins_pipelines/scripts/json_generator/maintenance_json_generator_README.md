@@ -63,7 +63,7 @@ Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, `52
 `-i`, `--mi_ids`: A space-separated list of MI IDs.
 `-f`, `--file`: Path to a file containing MI IDs, each on a new line.
 `-e`, `--no_embargo`: Reject any MIs that are currently under embargo.
-`--slfo-pull-request`: SLFO PullRequest id for `sles160_minion`, `slmicro62_minion` (x86_64), and `opensuse160arm_minion` (aarch64 SLE-16 client-tools) on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which receive a fixed `:ToTest` URL automatically. In `custom_repositories.json`, those entries use the inner key pattern `slfo_pr_<id>` (not the bare PR id) so they cannot collide with MI id keys.
+`--slfo-pull-request`: SLFO PullRequest id for `sles160_minion`, `slmicro62_minion` (x86_64), and `opensuse160arm_minion` (aarch64 SLE-16 client-tools) on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which receive a fixed `:ToTest` URL automatically. In `custom_repositories.json`, those entries use the inner key pattern `slfo_pr_{id}_{minion}_{arch}` (includes minion name and architecture) to ensure each repository has a unique name, preventing race conditions where minions could pick up the wrong-architecture repository.
 
 Example:
 
@@ -104,6 +104,26 @@ MI-based maintenance URLs from the dynamic map (e.g. **`opensuse160arm_minion`**
 (`Multi-Linux-Manager-Server-5.3-x86_64/` and `Multi-Linux-Manager-Proxy-5.3-x86_64/`). On the stable `51-*` / `52-sles` / `52-micro` flows,
 equivalent URLs for `sles160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64) are only added when
 `--slfo-pull-request <id>` is provided.
+
+**Example SLFO PullRequest Output:**
+
+When using `--slfo-pull-request 362`, the generated JSON includes unique repository keys:
+
+```json
+{
+  "sles160_minion": {
+    "slfo_pr_362_sles160_x86_64": "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/362:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
+  },
+  "slmicro62_minion": {
+    "slfo_pr_362_slmicro62_x86_64": "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/362:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
+  },
+  "opensuse160arm_minion": {
+    "slfo_pr_362_opensuse160arm_aarch64": "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/362:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/"
+  }
+}
+```
+
+The key format `slfo_pr_{id}_{minion}_{arch}` ensures that each minion's repository has a globally unique name within the JSON, preventing repository collisions in downstream tooling.
 
 ## Logging
 
