@@ -39,8 +39,12 @@ node('sumaform-cucumber') {
                     value: minionList,
                     defaultValue: minionList,
                     description: 'Node list to run during BV'),
-            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile', description: 'Server container registry'),
-            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile', description: 'Proxy container registry'),
+            // WORKAROUND: the 5.2 :Update container repository does not exist until the first
+            // maintenance update (5.2.1) is published. Revert both registries below to
+            // registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile
+            // once it does. Tracked in https://github.com/SUSE/spacewalk/issues/31401
+            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
