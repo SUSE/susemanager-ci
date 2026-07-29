@@ -2,8 +2,8 @@ def run(params) {
     timestamps {
         // Null-safe defaults for optional stage-control parameters (backward compat with env files that don't declare them)
         def runDeploy    = params.deploy    == null ? true : params.deploy
-        def runCore      = params.core      == null ? true : params.core
-        def runSecondary = params.secondary == null ? true : params.secondary
+        def runCore      = params.run_core      == null ? true : params.run_core
+        def runSecondary = params.run_secondary == null ? true : params.run_secondary
 
         // Init path env variables
         GString resultdir = "${env.WORKSPACE}/results"
@@ -203,9 +203,8 @@ def run(params) {
                                     .collect { it.trim() }
                                     .collect { it.startsWith('@') ? it : "@${it}" }
                                     .join(' or ')
-                            tags_list = "export TAGS='${transformed_scopes}'; "
+                            tags_list = "export TAGS=\"${transformed_scopes}\"; "
                         }
-
                         def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true
                         def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
                         def statusCode3 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true
