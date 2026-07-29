@@ -194,7 +194,6 @@ def run(params) {
                 }
                 stage('Secondary features') {
                     if (runSecondary) {
-                        println "DEBUG functional_scopes raw value: '${params.functional_scopes}'"
                         def tags_list = ""
                         if (params.functional_scopes) {
                             // Re-add the @ prefix stripped from the job parameters
@@ -206,10 +205,6 @@ def run(params) {
                                     .join(' or ')
                             tags_list = "export TAGS=\"${transformed_scopes}\"; "
                         }
-
-                        println "DEBUG tags_list value: '${tags_list}'"
-                        def cmd1 = "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'"
-                        println "DEBUG cmd1: ${cmd1}"
                         def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true
                         def statusCode2 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true
                         def statusCode3 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true
