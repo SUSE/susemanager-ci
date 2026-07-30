@@ -156,7 +156,7 @@ EOF
                                    -v "\$(pwd)/test/test_config.json:/app/test_config.json" \
                                    -v "\$(pwd)/.venv/config:/app/.venv/config" \
                                    --network=host \
-                                   "${dockerTag}"
+                                   "${dockerTag}" -s test/test_deepeval.py --junit-xml=results/results.xml
                     """
                 }
             }
