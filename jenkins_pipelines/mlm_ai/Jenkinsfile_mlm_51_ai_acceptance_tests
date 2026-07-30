@@ -85,6 +85,7 @@ UYUNI_MCP_WRITE_TOOLS_ENABLED=true
 UYUNI_MCP_TRANSPORT=stdio
 UYUNI_MCP_LOG_FILE_PATH=/tmp/mcp-server-uyuni.log
 UYUNI_MCP_LOG_LEVEL=DEBUG
+UYUNI_MCP_SSL_VERIFY=false
 EOF
                 '''
                 script {
