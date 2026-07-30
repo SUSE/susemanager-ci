@@ -94,7 +94,7 @@ EOF
                         // The docker client inside the test runner is just a remote for the host's docker daemon.
                         // Therefore, all paths must be absolute paths on the HOST.
                         // The --env-file argument must be a single string to prevent the client from trying to access the path.
-                        def configJson = """{"mcpServers": {"mcp-server-uyuni": {"command": "docker", "args": ["run", "--network=host", "--env-file=/app/.venv/config", "-i", "--rm", "--cpu-feature=sse4.2", "${params.CONTAINER_IMAGE}"]}}}"""
+                        def configJson = """{"mcpServers": {"mcp-server-uyuni": {"command": "docker", "args": ["run", "--network=host", "--env-file=/app/.venv/config", "-i", "--rm", "${params.CONTAINER_IMAGE}"]}}}"""
                         writeFile(file: 'test/config.json.container', text: configJson)
                     }
                 }
@@ -121,7 +121,6 @@ EOF
                             exit 1
                         fi
                         docker run --rm \
-                                   --cpu-feature=sse4.2 \
                                    --env-file .venv/config \
                                    -e AGENT_MODEL=${env.AGENT_MODEL} \
                                    -e JUDGE_MODEL=${env.JUDGE_MODEL} \
@@ -144,7 +143,6 @@ EOF
                     sh """
                         set -e
                         docker run --rm \
-                                   --cpu-feature=sse4.2 \
                                    --env-file .venv/config \
                                    -e AGENT_MODEL=${env.AGENT_MODEL} \
                                    -e JUDGE_MODEL=${env.JUDGE_MODEL} \
