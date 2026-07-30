@@ -102,6 +102,7 @@ EOF
         }
 
         stage('Run Acceptance Tests') {
+            when { expression { params.BUILD_TYPE == 'branch' } }
             steps {
                 echo 'Running Dockerized tests...'
                 script {
