@@ -121,6 +121,7 @@ EOF
                             exit 1
                         fi
                         docker run --rm \
+                                   --platform linux/amd64/v2 \
                                    --env-file .venv/config \
                                    -e AGENT_MODEL=${env.AGENT_MODEL} \
                                    -e JUDGE_MODEL=${env.JUDGE_MODEL} \
@@ -143,6 +144,7 @@ EOF
                     sh """
                         set -e
                         docker run --rm \
+                                   --platform linux/amd64/v2 \
                                    --env-file .venv/config \
                                    -e AGENT_MODEL=${env.AGENT_MODEL} \
                                    -e JUDGE_MODEL=${env.JUDGE_MODEL} \
