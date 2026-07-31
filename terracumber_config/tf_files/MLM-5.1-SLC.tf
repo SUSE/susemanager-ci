@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-dev-acceptance-tests-BACKUP"
+  default = "https://jenkins.mgr.slc1.suse.org/job/manager-5.1-dev-acceptance-tests-BACKUP"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -122,6 +122,8 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
+  ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
+
   images = ["rocky8o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
   use_avahi    = false
@@ -230,7 +232,7 @@ module "cucumber_testsuite" {
       hypervisor = {
         host        = "selektah.mgr.slc1.suse.org"
         user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
+        private_key = file(pathexpand(var.HYPERVISOR_PRIVATE_SSH_KEY_PATH))
       }
     }
   }
