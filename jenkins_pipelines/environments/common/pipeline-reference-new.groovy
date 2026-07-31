@@ -11,7 +11,7 @@ def run(params) {
 
         // The new Jenkins has no /home/jenkins/.credentials on its agents: the same content
         // is provided by the sumaform-secrets credential and sourced from a temporary file.
-        def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
+        def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de') || env.JENKINS_URL?.contains('jenkins.mgr.slc1.suse.org')
         def credInit = isNewJenkins
                 ? 'set +x; credFile=$(mktemp); echo "$SECRET_CONTENT" > "${credFile}"; chmod 600 "${credFile}"; . "${credFile}"; rm -f "${credFile}"; set -x'
                 : 'set +x; . /home/jenkins/.credentials; set -x'

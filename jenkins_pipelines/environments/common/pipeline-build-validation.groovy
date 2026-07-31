@@ -12,7 +12,7 @@ def run(params) {
         GString tfvarsPrepareScript = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/tf_vars_generator/prepare_tfvars.py"
 
         deployed = false
-        def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
+        def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de') || env.JENKINS_URL?.contains('jenkins.mgr.slc1.suse.org')
         def credInit = isNewJenkins
             ? 'set +x; credFile=$(mktemp); echo "$SECRET_CONTENT" > "${credFile}"; chmod 600 "${credFile}"; . "${credFile}"; rm -f "${credFile}"; set -x'
             : 'set +x; . /home/jenkins/.credentials; set -x'
