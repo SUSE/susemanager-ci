@@ -91,6 +91,16 @@ variable "PROMETHEUS_PUSH_GATEWAY_URL" {
   default = null
 }
 
+variable "CONTROLLER_PUBLIC_SSH_KEY_PATH" {
+  type = string
+  default = "./salt/controller/id_ed25519.pub"
+}
+
+variable "HYPERVISOR_PRIVATE_SSH_KEY_PATH" {
+  type = string
+  default = "~/.ssh/id_ed25519"
+}
+
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
