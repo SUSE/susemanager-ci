@@ -168,7 +168,7 @@ def run(params) {
                         # Note: This is a trade-off, we should be comparing the git revisions of all the packages composing our product
                         #       For that extra mile, we need a new tag in the repo metadata of each built, with the git revision of the related repository.
                     """
-                        sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\\\"%h %<(16,trunc)%cn  %s  %d\\\" ${previous_commit}..${product_commit}'", returnStatus: true
+                        sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\\\"%h %\\<(16,trunc)%cn  %s  %d\\\" ${previous_commit}..${product_commit}'", returnStatus: true
                     } else {
                         println("Product changes disabled, checkbox 'show_product_changes' was not enabled'")
                     }
