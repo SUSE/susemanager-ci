@@ -22,7 +22,7 @@ def run(params) {
         GString logFile = "${resultdirbuild}/sumaform.log"
 
         // Detect the new Jenkins setup (containerized worker)
-        def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de')
+        def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de') || env.JENKINS_URL?.contains('jenkins.mgr.slc1.suse.org')
         // Credentials initialization: new Jenkins injects a secret via withCredentials,
         // old Jenkins sources the credentials file present on the host.
         def credInit = isNewJenkins
