@@ -106,7 +106,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
+  images = ["rocky10o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ref-master-"
@@ -177,7 +177,7 @@ module "cucumber_testsuite" {
       }
     }
     rhlike_minion = {
-      image = "rocky8o"
+      image = "rocky10o"
       provider_settings = {
         mac = "aa:b2:93:01:00:e9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
