@@ -37,13 +37,13 @@ node('sumaform-cucumber') {
                     'slmicro60_minion:selected', 'slmicro61_minion:selected', 'slmicro62_minion:selected'
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
-            // WORKAROUND: the 5.2 :Update container repository does not exist until the first
-            // maintenance update (5.2.1) is published. Revert both registries below to
-            // registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/update/containerfile
-            // once it does. Tracked in https://github.com/SUSE/spacewalk/issues/31401
-            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Server container registry'),
-            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Proxy container registry'),
-            string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
+            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers', description: 'Server container registry'),
+            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/containers/suse-multilinuxmanager/5.2/containers', description: 'Proxy container registry'),
+            // WORKAROUND: the server image is pinned to the 5.2.0 tag because latest in the registry
+            // above still resolves to a 2026-04-28 pre-GA build, while every other 5.2 image there is
+            // current. Reset the default below to '' once releng re-points the server latest tag.
+            // Follow up card to remove this pin: https://github.com/SUSE/spacewalk/issues/31401
+            string(name: 'server_container_image', defaultValue: 'suse/multi-linux-manager/5.2/x86_64/server:5.2.0', description: 'Server container image'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core features'),
