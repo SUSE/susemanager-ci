@@ -6,6 +6,7 @@ pipeline {
     options {
         timestamps()
         timeout(time: 10, unit: 'MINUTES')
+        ansiColor('xterm')
     }
     triggers {
         // 'H * * * *' tells Jenkins to pick a random minute, 

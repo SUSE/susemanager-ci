@@ -8,6 +8,7 @@ pipeline {
         timestamps()
         // Prevents the job from hanging forever if SSH or Docker operations hang
         timeout(time: 30, unit: 'MINUTES')
+        ansiColor('xterm')
     }
 
     parameters {
