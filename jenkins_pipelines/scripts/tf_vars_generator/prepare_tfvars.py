@@ -147,6 +147,23 @@ class TfvarsGenerator:
             }
         }
 
+    def _normalize_hcl_value(self, value):
+        """Strip extra HCL string delimiters that newer python-hcl2 versions include.
+
+        python-hcl2 >= 3.x on Python 3.11 may return strings with their HCL
+        quote delimiters still attached (e.g. '"foo"' as a Python str).  This
+        is a no-op for values already returned as plain strings by older versions.
+        """
+        if isinstance(value, str):
+            if len(value) >= 2 and value.startswith('"') and value.endswith('"'):
+                return value[1:-1].replace('\\"', '"').replace('\\\\', '\\')
+            return value
+        elif isinstance(value, dict):
+            return {k: self._normalize_hcl_value(v) for k, v in value.items()}
+        elif isinstance(value, list):
+            return [self._normalize_hcl_value(item) for item in value]
+        return value
+
     def merge_files(self, file_paths):
         """Merges additional .tfvars files into the data."""
         for file_path in file_paths:
@@ -156,8 +173,12 @@ class TfvarsGenerator:
                 with open(file_path, 'r') as f:
                     content = hcl2.load(f)
                     for key, value in content.items():
+                        # Newer hcl2 versions expose comment metadata as __inline_comments__ etc.
+                        if key.startswith('__'):
+                            continue
                         if isinstance(value, list) and len(value) == 1 and isinstance(value[0], dict):
                             value = value[0]
+                        value = self._normalize_hcl_value(value)
                         if key == 'ENVIRONMENT_CONFIGURATION' and key in self.data:
                             self.data[key].update(value)
                         else:
