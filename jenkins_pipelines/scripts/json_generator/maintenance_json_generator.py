@@ -5,6 +5,7 @@ import json
 import os
 import requests
 import logging
+import sys
 import threading
 
 from ibs_osc_client import IbsOscClient
@@ -30,25 +31,34 @@ def _slfo_pr_id(value: str) -> str:
         )
     return value
 
-def parse_cli_args() -> argparse.Namespace:
+def parse_cli_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="This script reads the open qam-manager requests and creates a json file that can be fed to the BV testsuite pipeline"
     )
-    parser.add_argument("-v", "--version", dest="version",
-                        help="Version of SUMA/MLM to run this script for. Default: 51-sles.",
-                        choices=list(nodes_by_version.keys()), default="51-sles", action='store')
+    parser.add_argument("-v", "--version", required=True, dest="version",
+                        help="Version of SUMA/MLM to run this script for",
+                        choices=list(nodes_by_version.keys()), action='store')
     parser.add_argument("-i", "--mi_ids", required=False, dest="mi_ids", help="Space separated list of MI IDs", nargs='*', action='store')
     parser.add_argument("-f", "--file", required=False, dest="file", help="Path to a file containing MI IDs separated by newline character", action='store')
     parser.add_argument("-e", "--no_embargo", dest="embargo_check", help="Reject MIs under embargo",  action='store_true')
     parser.add_argument(
-        "--slfo-pull-request",
+        "-s", "--slfo-pull-request",
         required=False,
         dest="slfo_pull_request",
         metavar="ID",
         type=_slfo_pr_id,
         help="SLFO PullRequest id for sles160_minion, slmicro62_minion (x86_64), and opensuse160arm_minion (aarch64) on stable 51-* / 52-* only; rejected for *-beta versions (beta uses :ToTest automatically)",
     )
-    args = parser.parse_args()
+
+    if argv is None:
+        argv = sys.argv[1:]
+    # No arguments at all is not a misuse, it is somebody looking for the usage:
+    # show the help instead of an error about the missing -v.
+    if not argv:
+        parser.print_help()
+        raise SystemExit(0)
+
+    args = parser.parse_args(argv)
     if args.slfo_pull_request is not None:
         if not supports_slfo_pull_request(args.version):
             parser.error("--slfo-pull-request is only supported for 51-* and 52-* versions")

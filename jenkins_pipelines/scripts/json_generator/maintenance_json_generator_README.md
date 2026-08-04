@@ -39,7 +39,7 @@ information for the SUSE Manager BV testsuite pipeline.
 - Embargo Checks: The script has an option to reject Maintenance Incidents (MIs)
 that are under embargo.
 - SLFO client tools for `sles160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64):
-  - Stable `51-*` / `52-sles` / `52-micro`: use `--slfo-pull-request <id>` to
+  - Stable `51-*` / `52-sles` / `52-micro`: use `-s` / `--slfo-pull-request <id>` to
     inject a `:PullRequest:/<id>` client-tools URL (independent of MI IDs).
   - Beta `53-sles-beta` / `53-micro-beta`: a static `:ToTest` URL is baked in
     and applied automatically; `--slfo-pull-request` is rejected for beta
@@ -53,22 +53,28 @@ Command-Line Arguments
 The script accepts several command-line arguments to control its behavior.
 
 ```bash
-python3.11 maintenance_json_generator.py [options]
+python3 maintenance_json_generator.py [options]
 ```
+
+The script needs Python 3.10 or newer; do not call a pinned point release such
+as `python3.11`, it is not packaged on every host (Leap 16.0 ships 3.13 only).
+The Jenkins pipelines call plain `python3` for the same reason.
+
+Running the script with no arguments at all prints this help and exits.
 
 Options:
 
-`-v`, `--version`: Specifies the SUSE Manager version. Options are `43` for SUSE
-Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, `52-micro` / `52-sles` for 5.2 (stable), and `53-micro-beta` / `53-sles-beta` for 5.3 beta placeholders. Default is `51-sles`.
+`-v`, `--version`: **Mandatory.** Specifies the SUSE Manager version. Options are `43` for SUSE
+Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, `52-micro` / `52-sles` for 5.2 (stable), and `53-micro-beta` / `53-sles-beta` for 5.3 beta placeholders. There is no default: the version always has to be named, so that a JSON is never silently generated for the wrong product.
 `-i`, `--mi_ids`: A space-separated list of MI IDs.
 `-f`, `--file`: Path to a file containing MI IDs, each on a new line.
 `-e`, `--no_embargo`: Reject any MIs that are currently under embargo.
-`--slfo-pull-request`: SLFO PullRequest id for `sles160_minion`, `slmicro62_minion` (x86_64), and `opensuse160arm_minion` (aarch64 SLE-16 client-tools) on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which receive a fixed `:ToTest` URL automatically. In `custom_repositories.json`, those entries use the inner key pattern `slfo_pr_{id}_{minion}_{arch}` (includes minion name and architecture) to ensure each repository has a unique name, preventing race conditions where minions could pick up the wrong-architecture repository.
+`-s`, `--slfo-pull-request`: SLFO PullRequest id for `sles160_minion`, `slmicro62_minion` (x86_64), and `opensuse160arm_minion` (aarch64 SLE-16 client-tools) on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which receive a fixed `:ToTest` URL automatically. In `custom_repositories.json`, those entries use the inner key pattern `slfo_pr_{id}_{minion}_{arch}` (includes minion name and architecture) to ensure each repository has a unique name, preventing race conditions where minions could pick up the wrong-architecture repository.
 
 Example:
 
 ```bash
-python3.11 maintenance_json_generator.py --version 50-micro --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
+python3 maintenance_json_generator.py --version 50-micro --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
 ```
 
 This command will:
@@ -171,6 +177,9 @@ Repository definitions live under
 
 ## Error Handling
 
+- If `-v` / `--version` is missing, argparse halts with an error naming the
+required argument. Called with no arguments at all, the script prints its help
+and exits with 0 instead.
 - If no MI IDs are provided via CLI or file, the script will print an error
 message and halt execution.
 - Invalid MI IDs or missing files will result in appropriate error messages.
