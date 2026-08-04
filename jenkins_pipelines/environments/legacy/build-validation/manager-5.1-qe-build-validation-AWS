@@ -62,6 +62,7 @@ node('sumaform-cucumber') {
     }
     def mutableParams = [:] + params
     mutableParams.product_version_display = "5.1-released"
+    mutableParams.json_generator_version = "51-micro"
     mutableParams.non_MU_channels_tasks_file = "susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json"
     mutableParams.tf_file = "MLM-5.1-build-validation-paygo-AWS.tf"
     mutableParams.deployment_tfvars = "susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm51_paygo_build_validation_aws.tfvars"

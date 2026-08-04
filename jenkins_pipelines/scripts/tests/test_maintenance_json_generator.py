@@ -1,5 +1,5 @@
 from argparse import Namespace
-from contextlib import redirect_stderr
+from contextlib import redirect_stderr, redirect_stdout
 import io
 import json
 from os import path, remove
@@ -20,12 +20,30 @@ TESTDATA_DIR = Path(__file__).resolve().parent / 'testdata'
 class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_parse_cli_args_default_values(self):
-        sys.argv = ['maintenance_json_generator.py']
+        sys.argv = ['maintenance_json_generator.py', '-v', '51-sles']
         args = parse_cli_args()
         self.assertEqual(args.version, "51-sles")
         self.assertIsNone(args.mi_ids)
         self.assertFalse(args.embargo_check)
         self.assertIsNone(args.slfo_pull_request)
+
+    def test_parse_cli_args_without_arguments_shows_help(self):
+        sys.argv = ['maintenance_json_generator.py']
+        stdout = io.StringIO()
+        with redirect_stdout(stdout):
+            with self.assertRaises(SystemExit) as cm:
+                parse_cli_args()
+        self.assertEqual(cm.exception.code, 0)
+        self.assertIn("usage: maintenance_json_generator.py", stdout.getvalue())
+
+    def test_parse_cli_args_version_is_mandatory(self):
+        sys.argv = ['maintenance_json_generator.py', '-i', '1234']
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as cm:
+                parse_cli_args()
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("the following arguments are required: -v/--version", stderr.getvalue())
 
     def test_parse_cli_args_success(self):
         # shorthand flags
@@ -67,9 +85,14 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         args = parse_cli_args()
         self.assertEqual(args.version, '51-sles')
         self.assertEqual(args.slfo_pull_request, '9999')
+        # -s is the shorthand of --slfo-pull-request
+        sys.argv = ['maintenance_json_generator.py', '-v', '52-sles', '-s', '9999']
+        args = parse_cli_args()
+        self.assertEqual(args.version, '52-sles')
+        self.assertEqual(args.slfo_pull_request, '9999')
 
     def test_parse_cli_args_failure(self):
-        sys.argv = ['maintenance_json_generator.py',  '-x']
+        sys.argv = ['maintenance_json_generator.py',  '-v', '51-sles', '-x']
         stderr = io.StringIO()
         with redirect_stderr(stderr):
             with self.assertRaises(SystemExit) as cm:
@@ -94,6 +117,14 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertIn("--slfo-pull-request is only supported for 51-* and 52-* versions", stderr.getvalue())
 
         sys.argv = ['maintenance_json_generator.py', '--version', '50-micro', '--slfo-pull-request', '9999']
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as cm:
+                parse_cli_args()
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("--slfo-pull-request is only supported for 51-* and 52-* versions", stderr.getvalue())
+
+        sys.argv = ['maintenance_json_generator.py', '-v', '43', '-s', '9999']
         stderr = io.StringIO()
         with redirect_stderr(stderr):
             with self.assertRaises(SystemExit) as cm:

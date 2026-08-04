@@ -32,6 +32,9 @@ def run(params) {
             def client_paygo_stage_result_fail = false
             def products_and_salt_migration_stage_result_fail = false
             def retail_stage_result_fail = false
+            // Version passed to maintenance_json_generator.py: it has no default anymore,
+            // so every environment offering mi_ids has to name the version explicitly.
+            def json_generator_version = params.json_generator_version ?: ''
 
             local_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/local_mirror.tf --gitfolder ${local_mirror_dir} --terraform-bin ${params.bin_path}"
             aws_mirror_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/aws_mirror.tf --gitfolder ${aws_mirror_dir} --terraform-bin ${params.bin_path}"
@@ -74,11 +77,14 @@ def run(params) {
                                         }
                                         // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
                                         if (params.mi_ids?.trim()) {
+                                            if (!json_generator_version) {
+                                                error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
+                                            }
                                             node('manager-jenkins-node') {
                                                 checkout scm
-                                                res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --mi_ids ${params.mi_ids} --no_embargo", returnStatus: true)
-                                                echo "Build Validation JSON script return code:\n ${json_content}"
-                                                if (res_python_script != 0) {
+                                                res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids} --no_embargo", returnStatus: true)
+                                                echo "Build Validation JSON script return code:\n ${res_python_script_}"
+                                                if (res_python_script_ != 0) {
                                                     error("MI IDs (${params.mi_ids}) passed by parameter are wrong, already released or all under embargo")
                                                 }
                                             }

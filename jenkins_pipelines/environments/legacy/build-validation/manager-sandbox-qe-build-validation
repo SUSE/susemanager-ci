@@ -60,6 +60,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
             text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
+            choice(name: 'json_generator_version', choices: ['51-micro', '51-sles', '52-micro', '52-sles', '50-micro', '50-sles', '43'], description: 'Version the MI Identifiers above are resolved for. Has to match product_version and base_os: a SL Micro base_os is a -micro version, a SLES one a -sles version'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
             ])
     ])

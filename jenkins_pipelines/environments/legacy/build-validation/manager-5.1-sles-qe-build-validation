@@ -71,6 +71,7 @@ node('sumaform-cucumber') {
     mutableParams.bin_path = "/usr/bin/tofu"
     mutableParams.bin_plugins_path = "/usr/bin"
     mutableParams.product_version_display = "5.1-released"
+    mutableParams.json_generator_version = "51-sles"
     mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_51.json'
     mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm51_sles_build_validation_nue.tfvars'
 
