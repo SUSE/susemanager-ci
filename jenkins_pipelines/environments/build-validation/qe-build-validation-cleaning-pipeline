@@ -25,6 +25,7 @@ node {
                                 'manager-5.0-sles-qe-build-validation',
                                 'manager-5.1-micro-qe-build-validation',
                                 'manager-5.1-sles-qe-build-validation',
+                                'manager-5.2-sles-qe-build-validation',
                                 'manager-head-qe-build-validation',
                                 'manager-sandbox-qe-build-validation',
                                 'manager-4.3-qe-build-validation-BACKUP',
@@ -32,6 +33,7 @@ node {
                         ], description: 'Path to the tf file to be used'),
                         string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
                         string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+                        string(name: 'redeploy_environment', defaultValue: true, description: 'Redeploy minions and proxy'),
                         string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp6/update/products/manager50/update/containerfile', description: 'Proxy container registry'),
                         booleanParam(name: 'delete_all_resources', defaultValue: false, description: 'Proxy, Monitoring and Retail will be redeployed')
                 ])

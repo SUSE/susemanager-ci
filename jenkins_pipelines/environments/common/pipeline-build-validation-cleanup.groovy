@@ -169,16 +169,17 @@ def run(params) {
                     sh(script: "${TestEnvironmentCleanerProgram} --url ${serverHostname} --mode delete_distributions")
                 }
 
-                stage('Delete client VMs') {
-                    // Determine cleaning mode
-                    String cleaningFlags = "--clean"
-                    if (params.delete_all_resources) {
-                        cleaningFlags += " --delete-all"
-                    }
+                if (params.redeploy_environment) {
+                    stage('Delete client VMs') {
+                        // Determine cleaning mode
+                        String cleaningFlags = "--clean"
+                        if (params.delete_all_resources) {
+                            cleaningFlags += " --delete-all"
+                        }
 
-                    // Execute Terracumber CLI to deploy the environment without clients
-                    withCreds {
-                        sh """
+                        // Execute Terracumber CLI to deploy the environment without clients
+                        withCreds {
+                            sh """
                         #!/bin/bash
                         ${credInit}
                         ${environmentVars}
@@ -199,13 +200,13 @@ def run(params) {
                             --skip-variables-check \
                             --runstep provision
                     """
+                        }
                     }
-                }
 
-                stage('Redeploy the environment with new client VMs') {
-                    // Run Terracumber to deploy the environment
-                    withCreds {
-                        sh """
+                    stage('Redeploy the environment with new client VMs') {
+                        // Run Terracumber to deploy the environment
+                        withCreds {
+                            sh """
                         #!/bin/bash
                         ${credInit}
                         ${environmentVars}
@@ -219,6 +220,7 @@ def run(params) {
                             --skip-variables-check \
                             --runstep provision
                     """
+                        }
                     }
                 }
 
