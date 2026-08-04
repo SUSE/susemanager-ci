@@ -15,7 +15,7 @@ node('sumaform-cucumber') {
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             activeChoice(name: 'minions_to_run', description: 'Node list to run during BV', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
                 return [
-                    'sles15sp5_minion:selected', 'sles15sp7_minion:selected' 
+                    'sles15sp7_minion:selected', 'slmicro62_minion:selected', 'ubuntu2404_minion:selected', 'rocky10_minion:selected' 
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
             string(name: 'server_container_registry', defaultValue: 'registry.suse.de', description: 'Server container registry'),
