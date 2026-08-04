@@ -9,6 +9,7 @@ pipeline {
         timestamps()
         // Prevents the job from hanging forever
         timeout(time: 45, unit: 'MINUTES')
+        ansiColor('xterm')
     }
 
     parameters {
