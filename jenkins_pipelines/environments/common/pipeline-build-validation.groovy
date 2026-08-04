@@ -72,7 +72,16 @@ def run(params) {
                 stage('Build containers') {
                     if (params.container_project && params.mi_project && params.must_deploy) {
                         def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/edit_bci_project"
-                        sh "python3 -m venv ${WORKSPACE}/venv"
+                        sh """
+                        set -e
+                        python3 -m venv ${WORKSPACE}/venv || true
+                        if [ ! -x ${WORKSPACE}/venv/bin/python3 ]; then
+                            echo "venv creation incomplete/failed (missing bin/python3) - likely no working ensurepip bundled with this image's python3-venv package. Recreating without pip and bootstrapping it manually."
+                            rm -rf ${WORKSPACE}/venv
+                            python3 -m venv --without-pip ${WORKSPACE}/venv
+                            curl -sS https://bootstrap.pypa.io/get-pip.py | ${WORKSPACE}/venv/bin/python3
+                        fi
+                    """
                         sh "${WORKSPACE}/venv/bin/pip install -r ${SCRIPT_DIR}/requirements.txt"
                         sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --mi-project ${params.mi_project}", returnStdout: true)
                         custom_project_path = "registry.suse.de/${params.container_project.toLowerCase().replaceAll(':', '/')}/containerfile"
