@@ -37,7 +37,7 @@ node('sumaform-cucumber') {
                     'scope_containerized_proxy', 'scope_hibernate', 'scope_project_lotus', 'scope_software_channels_and_repositories',
                     'scope_ssm'
                 ]
-            """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_scopes']"]])
+            """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: false, script: "return ['error_loading_scopes']"]])
         ])
     ])
 
