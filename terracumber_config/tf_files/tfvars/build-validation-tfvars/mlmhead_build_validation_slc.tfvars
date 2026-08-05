@@ -289,7 +289,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "margarita.mgr.slc1.suse.org"
   }
   base_deblike = {
-    images             = [ "ubuntu2204o", "ubuntu2404o", "ubuntu2604", "debian13o" ]
+    images             = [ "ubuntu2204o", "ubuntu2404o", "ubuntu2604o", "debian13o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
