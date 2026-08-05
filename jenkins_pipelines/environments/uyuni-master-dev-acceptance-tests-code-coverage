@@ -121,7 +121,9 @@ node('sumaform-cucumber-slc1') {
                 def tags_list = ""
                 if (params.functional_scopes) {
                     def transformed_scopes = params.functional_scopes.replaceAll(',', ' or ')
-                    tags_list += "export TAGS=${transformed_scopes}; "
+                    // --cucumber-cmd below is single-quoted, and rake re-splits TAGS through a
+                    // shell, so the value carries its own quotes rather than nesting single ones.
+                    tags_list += "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
                 }
                 def statusCode1 = sh script:"./terracumber-cli ${common_params} ${cucumber_cmd} '${tags_list} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
                 def statusCode2 = sh script:"./terracumber-cli ${common_params} ${cucumber_cmd} '${tags_list} cd /root/spacewalk/testsuite; rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus:true
