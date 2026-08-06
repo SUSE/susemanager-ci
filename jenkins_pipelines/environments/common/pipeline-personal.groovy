@@ -146,7 +146,9 @@ def run(params) {
                                     .collect { it.trim() }
                                     .collect { it.startsWith('@') ? it : "@${it}" }
                                     .join(' or ')
-                            tags_list = "export TAGS='${transformed_scopes}'; "
+                            // --cucumber-cmd below is single-quoted, and rake re-splits TAGS through a
+                            // shell, so the value carries its own quotes rather than nesting single ones.
+                            tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
                         }
 
                         def statusCode1 = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true
