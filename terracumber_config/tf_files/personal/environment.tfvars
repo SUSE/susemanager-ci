@@ -151,25 +151,6 @@ ENVIRONMENT_CONFIGURATION = {
     additional_network  = "192.168.17.0/24"
     dhcp_user           = "root"
   }
-  wiktor = {
-    mac = {
-      controller     = "aa:b2:93:01:01:98"
-      server         = "aa:b2:93:01:01:99"
-      proxy          = "aa:b2:93:01:01:9a"
-      suse-client    = "aa:b2:93:01:01:9b"
-      suse-minion    = "aa:b2:93:01:01:9c"
-      suse-sshminion = "aa:b2:93:01:01:9d"
-      rhlike-minion  = "aa:b2:93:01:01:9e"
-      deblike-minion = "aa:b2:93:01:01:9f"
-      build-host     = "aa:b2:93:01:01:a0"
-      kvm-host       = "aa:b2:93:01:01:a1"
-    }
-    hypervisor          = "suma-05.mgr.suse.de"
-    pool                = "wmaj_disks"
-    bridge              = "br0"
-    additional_network  = "192.168.18.0/24"
-    dhcp_user           = "root"
-  }
   ales = {
     mac = {
       controller     = "aa:b2:93:01:01:a4"
