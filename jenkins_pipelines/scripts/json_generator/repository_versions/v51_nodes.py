@@ -45,6 +45,7 @@ v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "debian13_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-13_x86_64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-22.04_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-24.04_x86_64/"},
+    "ubuntu2604_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-26.04_x86_64/"},
     "alma8_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-8_x86_64/"},
     "amazon2023_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
     "alma9_minion": {"/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
