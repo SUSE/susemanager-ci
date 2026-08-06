@@ -32,7 +32,7 @@ node('sumaform-cucumber-slc1') {
         //Capybara configuration
         capybara_timeout = 10
         default_timeout = 250
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline-rke2-becnhmark.groovy"
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-rke2-benchmark.groovy"
         pipeline.run(params)
     }
 }
