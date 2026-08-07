@@ -96,10 +96,10 @@ module "cucumber_testsuite" {
   // Kubernetes variables
   kubernetes                     = true
   use_devel_oci                  = false
-  install_mlm_server             = false
+  install_mlm_server             = true
   install_mlm_proxy              = false
-  install_traefik                = false
-  install_local_path_provisioner = false
+  install_traefik                = true
+  install_local_path_provisioner = true
   deploy_coco_attestation        = false
   deploy_saline                  = false
   deploy_tftp                    = false
