@@ -90,11 +90,6 @@ def run(params) {
                         custom_project_path = "registry.suse.de/${params.container_project.toLowerCase().replaceAll(':', '/')}/containerfile"
                         server_container_registry = custom_project_path
                         proxy_container_registry = custom_project_path
-                        // WORKAROUND: the 5.2 jobs pin the server image to the 5.2.0 tag, and that pin
-                        // would follow the registry override above into the container project, hiding
-                        // the server image rebuilt there. Remove this together with those pins.
-                        // Follow up card to remove both: https://github.com/SUSE/spacewalk/issues/31401
-                        server_container_image = ''
                     } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
