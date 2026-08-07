@@ -33,10 +33,11 @@ def run(params) {
             String tfVariablesFile = 'susemanager-ci/terracumber_config/tf_files/variables/build-validation-variables.tf'
             String tfRefEnvironmentFile = 'susemanager-ci/terracumber_config/tf_files/personal/environment.tfvars'
 
-            // Declare lock resource use during node bootstrap
-            mgrCreateBootstrapRepo = 'share resource to avoid running mgr create bootstrap repo in parallel'
-            retailProxyConfigurationLock = 'lock proxy retail setup'
-            downloadPackagesLock = 'lock the download package step during client add MU stage'
+            // In-process throttle slots (per-job, scoped to this pipeline run)
+            def muLockSlots = new java.util.concurrent.atomic.AtomicInteger(0)
+            def smokeTestSlots = new java.util.concurrent.atomic.AtomicInteger(0)
+            def bootstrapRepoSlots = new java.util.concurrent.atomic.AtomicInteger(0)
+            def retailProxyLockSlots = new java.util.concurrent.atomic.AtomicInteger(0)
             // Variables to store none critical stage run status
             def monitoring_stage_result_fail = false
             def client_stage_result_fail = false
@@ -421,7 +422,7 @@ def run(params) {
                     // Call the minion testing.
                     try {
                         stage('Clients stages') {
-                            clientTestingStages(params)
+                            clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                         }
                     } catch (Exception ex) {
                         println('ERROR: one or more clients have failed')
@@ -502,7 +503,7 @@ def run(params) {
                                 // Need to be executed after building images for 5.0
                                 // Using lock and proxyHandler to make sure to run it only once, first to start.
                                 stage("Configure retail proxy (${terminal})") {
-                                    lock(resource: retailProxyConfigurationLock) {
+                                    withThrottle(retailProxyLockSlots, 1, 3000) {
                                         if (retailProxyStatus['status'] == 'FAILURE') {
                                             error "Aborting ${terminal}: Retail proxy configuration failed by another branch."
                                         } else if (retailProxyStatus['status'] == 'SUCCESS') {
@@ -657,7 +658,7 @@ def runCucumberRakeTarget(String rake_target, boolean return_status = false, dis
 
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
-def clientTestingStages(params) {
+def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots) {
 
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
@@ -685,18 +686,14 @@ def clientTestingStages(params) {
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
-                        lock(resource: downloadPackagesLock, timeout: 600) {
-                            try {
-                                echo 'Add custom channels and MU repositories'
-                                res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
-                                echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
-                                echo "Custom channels and MU repositories status code: ${res_mu_repos}"
-                                if (res_mu_repos != 0) {
-                                    required_custom_channel_status[node] = 'FAIL'
-                                    error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
-                                }
-                            } finally {
-                                echo 'Release resource downloadPackagesLock'
+                        withThrottle(muLockSlots, 5, 600) {
+                            echo 'Add custom channels and MU repositories'
+                            res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
+                            echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
+                            echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+                            if (res_mu_repos != 0) {
+                                required_custom_channel_status[node] = 'FAIL'
+                                error("Add custom channels and MU repositories failed with status code: ${res_mu_repos}")
                             }
                         }
 
@@ -720,13 +717,15 @@ def clientTestingStages(params) {
                             if (params.confirm_before_continue) {
                                 input 'Press any key to start adding common channels'
                             }
-                            echo 'Add non MU Repositories'
-                            res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", true, temporaryList)
-                            echo "Non MU Repositories status code: ${res_non_MU_repositories}"
-                            echoHtmlReportPath(build_validation_non_MU_script)
-                            if (res_non_MU_repositories != 0) {
-                                required_custom_channel_status[node] = 'FAIL'
-                                error("Add common channels failed with status code: ${res_non_MU_repositories}")
+                            withThrottle(muLockSlots, 5) {
+                                echo 'Add non MU Repositories'
+                                res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", true, temporaryList)
+                                echo "Non MU Repositories status code: ${res_non_MU_repositories}"
+                                echoHtmlReportPath(build_validation_non_MU_script)
+                                if (res_non_MU_repositories != 0) {
+                                    required_custom_channel_status[node] = 'FAIL'
+                                    error("Add common channels failed with status code: ${res_non_MU_repositories}")
+                                }
                             }
                         } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
                             Utils.markStageSkippedForConditional(STAGE_NAME)
@@ -798,20 +797,15 @@ def clientTestingStages(params) {
                                 bootstrap_repository_status[minion_name_without_s390] != 'NOT_CREATED'
                             }
                         }
-                        // Employ a lock resource to prevent concurrent calls to create the bootstrap repository in the manager.
-                        // Utilize a try-catch mechanism to release the resource for other nodes in the event of a failed bootstrap.
-                        lock(resource: mgrCreateBootstrapRepo, timeout: 320) {
-                            try {
-                                echo 'Create bootstrap repository'
-                                res_create_bootstrap_repository = runCucumberRakeTarget("cucumber:build_validation_create_bootstrap_repository_${nodeTag}", true, temporaryList)
-                                echoHtmlReportPath("build_validation_create_bootstrap_repository_${nodeTag}")
-                                echo "Create bootstrap repository status code: ${res_create_bootstrap_repository}"
-                                if (res_create_bootstrap_repository != 0) {
-                                    bootstrap_repository_status[node] = 'FAIL'
-                                    error("Create bootstrap repository failed with status code: ${res_create_bootstrap_repository}")
-                                }
-                            } finally {
-                                echo 'Release resource mgrCreateBootstrapRepo'
+                        // Allow only one node at a time to create bootstrap repository in the manager.
+                        withThrottle(bootstrapRepoSlots, 1, 320) {
+                            echo 'Create bootstrap repository'
+                            res_create_bootstrap_repository = runCucumberRakeTarget("cucumber:build_validation_create_bootstrap_repository_${nodeTag}", true, temporaryList)
+                            echoHtmlReportPath("build_validation_create_bootstrap_repository_${nodeTag}")
+                            echo "Create bootstrap repository status code: ${res_create_bootstrap_repository}"
+                            if (res_create_bootstrap_repository != 0) {
+                                bootstrap_repository_status[node] = 'FAIL'
+                                error("Create bootstrap repository failed with status code: ${res_create_bootstrap_repository}")
                             }
                         }
                     }
@@ -845,13 +839,14 @@ def clientTestingStages(params) {
                     if (params.confirm_before_continue) {
                         input 'Press any key to start running the smoke tests'
                     }
-                    randomWait()
-                    echo 'Run Smoke tests'
-                    res_smoke_tests = runCucumberRakeTarget("cucumber:build_validation_smoke_tests_${nodeTag}", true, temporaryList)
-                    echoHtmlReportPath("build_validation_smoke_tests_${nodeTag}")
-                    echo "Smoke tests status code: ${res_smoke_tests}"
-                    if (res_smoke_tests != 0) {
-                        error("Run Smoke tests failed with status code: ${res_smoke_tests}")
+                    withThrottle(smokeTestSlots, 10, 7200) {
+                        echo 'Run Smoke tests'
+                        res_smoke_tests = runCucumberRakeTarget("cucumber:build_validation_smoke_tests_${nodeTag}", true, temporaryList)
+                        echoHtmlReportPath("build_validation_smoke_tests_${nodeTag}")
+                        echo "Smoke tests status code: ${res_smoke_tests}"
+                        if (res_smoke_tests != 0) {
+                            error("Run Smoke tests failed with status code: ${res_smoke_tests}")
+                        }
                     }
                 } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
@@ -1040,6 +1035,37 @@ def echoHtmlReportPath(String rake_target) {
         }
     } catch (Exception e) {
         echo "Error fetching HTML path from ${path_export_url}: ${e.getMessage()}"
+    }
+}
+
+@NonCPS
+def tryAcquireSlot(java.util.concurrent.atomic.AtomicInteger slots, int max) {
+    int current = slots.get()
+    if (current < max) {
+        return slots.compareAndSet(current, current + 1)
+    }
+    return false
+}
+
+@NonCPS
+def releaseSlot(java.util.concurrent.atomic.AtomicInteger slots) {
+    slots.decrementAndGet()
+}
+
+def withThrottle(java.util.concurrent.atomic.AtomicInteger slots, int max, Integer timeoutSeconds = null, Closure body) {
+    waitUntil {
+        tryAcquireSlot(slots, max)
+    }
+    try {
+        if (timeoutSeconds != null) {
+            timeout(time: timeoutSeconds, unit: 'SECONDS') {
+                body()
+            }
+        } else {
+            body()
+        }
+    } finally {
+        releaseSlot(slots)
     }
 }
 
