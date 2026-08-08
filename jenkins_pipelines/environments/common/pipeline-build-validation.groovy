@@ -59,6 +59,11 @@ def run(params) {
             if (params.deploy_parallelism) {
                 env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
             }
+            // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
+            cucumber_idle_timeout = (params.cucumber_idle_timeout ?: 180).toString().toInteger()
+            withIdleTimeout = { Closure body ->
+                timeout(activity: true, time: cucumber_idle_timeout, unit: 'MINUTES') { body() }
+            }
             try {
                 stage('Clone terracumber, susemanager-ci') {
                     // Create a directory for  to place the directory with the build results (if it does not exist)
@@ -644,10 +649,17 @@ def runCucumberRakeTarget(String rake_target, boolean return_status = false, dis
     // Remove leading/trailing whitespace and execute
     def final_script = script.stripIndent().trim()
 
+    // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
     if (return_status) {
-        return sh(script: final_script, returnStatus: true)
+        def status = 0
+        withIdleTimeout {
+            status = sh(script: final_script, returnStatus: true)
+        }
+        return status
     } else {
-        sh final_script
+        withIdleTimeout {
+            sh final_script
+        }
     }
 }
 
@@ -819,7 +831,9 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                     // Temporarily modify env.exports to include the bootstrap timeout
                     def custom_exports = "${env.exports} export DEFAULT_TIMEOUT=${env.bootstrap_timeout};"
                     // The helper doesn't easily allow overriding env.exports. For this unique case, we'll keep the logic inline to modify the environment variable within the script block for the special DEFAULT_TIMEOUT.
-                    res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${custom_exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
+                    withIdleTimeout {
+                        res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${custom_exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
+                    }
                     echoHtmlReportPath( "build_validation_init_client_${nodeTag}")
                     echo "Init clients status code: ${res_init_clients}"
                     if (res_init_clients != 0) {
