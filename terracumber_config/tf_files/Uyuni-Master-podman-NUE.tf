@@ -157,9 +157,6 @@ module "cucumber_testsuite" {
       database_disk_size    = 60
       login_timeout         = 28800
       large_deployment      = true
-      additional_repos = {
-        podman6_repo = "https://download.opensuse.org/repositories/devel:/microos/openSUSE_Tumbleweed/"
-      }
     }
     proxy_containerized = {
       provider_settings = {
@@ -168,9 +165,6 @@ module "cucumber_testsuite" {
       runtime              = "podman"
       container_registry   = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag        = "latest"
-      additional_repos = {
-        podman6_repo = "https://download.opensuse.org/repositories/devel:/microos/openSUSE_Tumbleweed/"
-      }
     }
     suse_minion = {
       image             = "tumbleweedo"
