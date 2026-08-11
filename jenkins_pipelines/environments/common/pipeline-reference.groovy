@@ -1,7 +1,7 @@
 def run(params) {
     ansiColor('xterm') {
         timestamps {
-            deployed = false
+            def deployed = false
             env.resultdir = "${WORKSPACE}/results"
             env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
             env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"

@@ -10,7 +10,7 @@ def run(params) {
             env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
             // Start pipeline
-            deployed = false
+            def deployed = false
             try {
                 stage('Clone terracumber, susemanager-ci and sumaform') {
                     // Create a directory for  to place the directory with the build results (if it does not exist)

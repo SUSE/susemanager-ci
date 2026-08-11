@@ -18,7 +18,7 @@ def run(params) {
             def mirror_scope = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
             mirror_scope = mirror_scope.replaceAll("-dev", "")
             // Start pipeline
-            deployed = false
+            def deployed = false
             try {
                 stage('Clone terracumber, susemanager-ci and sumaform') {
 
