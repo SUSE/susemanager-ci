@@ -59,7 +59,11 @@ def run(params) {
                 stage('Get results') {
                     if (!deployed) {
                         // Send email
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                        try {
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                        } catch (err) {
+                            println("ERROR: sending the results email failed: ${err}")
+                        }
                     }
                     // Clean up old results
                     sh "./clean-old-results -r ${resultdir}"

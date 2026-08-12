@@ -303,7 +303,12 @@ def run(params) {
                         }
                     }
                     // Send email
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                    } catch (err) {
+                        println("ERROR: sending the results email failed: ${err}")
+                        error = 1
+                    }
 
                     if (rrtg_version) {
                         withCreds {

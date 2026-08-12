@@ -158,7 +158,12 @@ node('sumaform-cucumber-slc1') {
             stage('Get results') {
                 def error = 0
                 // Send email
-                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                try {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                } catch (err) {
+                    println("ERROR: sending the results email failed: ${err}")
+                    error = 1
+                }
                 // Clean up old results
                 sh "./clean-old-results -r ${resultdir}"
                 sh "exit ${error}"

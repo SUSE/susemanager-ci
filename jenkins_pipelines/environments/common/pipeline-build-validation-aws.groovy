@@ -504,7 +504,12 @@ def run(params) {
                         // junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true
                     }
                     // Send email
-                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                    } catch (Exception ex) {
+                        println("ERROR: sending the results email failed.\\nException: ${ex}")
+                        result_error = 1
+                    }
                     // Clean up old results
                     sh "./clean-old-results -r ${resultdir}"
                     // Fail pipeline if paygo client stages failed
