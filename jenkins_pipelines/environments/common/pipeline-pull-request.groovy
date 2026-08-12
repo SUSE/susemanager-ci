@@ -21,6 +21,13 @@ def run(params) {
         tfvars_product_version = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-${product_version}.tfvars"
         tfvars_platform_localisation = "susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-${platform_localisation}-environments.tfvars"
         tf_local_variables = 'susemanager-ci/terracumber_config/tf_files/tfvars/PR-tfvars/PR-testing-additionnal-repos.tf'
+        // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
+        // Anything that is not a positive number of minutes falls back to the default.
+        def rawIdleTimeout = params.cucumber_idle_timeout?.toString()?.trim()
+        def cucumberIdleTimeoutMinutes = rawIdleTimeout?.isInteger() && rawIdleTimeout.toInteger() > 0 ? rawIdleTimeout.toInteger() : 60
+        def withIdleTimeout = { Closure body ->
+            timeout(activity: true, time: cucumberIdleTimeoutMinutes, unit: 'MINUTES') { body() }
+        }
         try {
             stage('Get environment') {
                   checkout scm
@@ -284,37 +291,47 @@ def run(params) {
             stage('Sanity Check') {
                 ws(environment_workspace){
                     if(must_test) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
+                        withIdleTimeout {
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:sanity_check'"
+                        }
                     }
                 }
             }
             stage('Core - Setup') {
                 ws(environment_workspace){
                     if(must_test) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+                        withIdleTimeout {
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:core'"
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:reposync'"
+                        }
                     }
                 }
             }
             stage('Core - Proxy') {
                 ws(environment_workspace){
                     if(must_test) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:proxy'"
+                        withIdleTimeout {
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake cucumber:proxy'"
+                        }
                     }
                 }
             }
             stage('Core - Initialize clients') {
                 ws(environment_workspace){
                     if(must_test) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${rake_namespace}:init_clients'"
+                        withIdleTimeout {
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; rake ${rake_namespace}:init_clients'"
+                        }
                     }
                 }
             }
             stage('Secondary features') {
                 ws(environment_workspace){
                     if(must_test && ( params.functional_scopes || run_all_scopes) ) {
-                        def statusCode1 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus:true
-                        def statusCode2 = sh script:"./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus:true
+                        def statusCode1 = 1
+                        def statusCode2 = 1
+                        withIdleTimeout { statusCode1 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake cucumber:secondary'", returnStatus: true) }
+                        withIdleTimeout { statusCode2 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${secondary_exports} cd /root/spacewalk/testsuite; rake ${rake_namespace}:secondary_parallelizable'", returnStatus: true) }
                         sh "exit \$(( ${statusCode1}|${statusCode2} ))"
                     }
                 }

@@ -59,6 +59,24 @@ def run(params) {
             if (params.deploy_parallelism) {
                 env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
             }
+            // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
+            // Measured on full runs, the worst legitimate silence outside the product sync stays
+            // under 5 minutes, while the sync itself went silent for 62 minutes in
+            // manager-4.3-qe-build-validation #43, so it gets a timeout of its own.
+            // Anything that is not a positive number of minutes falls back to the default.
+            // No 'def': both values are read from runCucumberRakeTarget() and clientTestingStages().
+            def idleTimeoutMinutesOr = { value, int fallback ->
+                def raw = value?.toString()?.trim()
+                raw?.isInteger() && raw.toInteger() > 0 ? raw.toInteger() : fallback
+            }
+            cucumberIdleTimeoutMinutes = idleTimeoutMinutesOr(params.cucumber_idle_timeout, 60)
+            productSyncIdleTimeoutMinutes = idleTimeoutMinutesOr(params.product_sync_idle_timeout, 180)
+            withIdleTimeoutOf = { int minutes, Closure body ->
+                timeout(activity: true, time: minutes, unit: 'MINUTES') { body() }
+            }
+            withIdleTimeout = { Closure body ->
+                withIdleTimeoutOf(cucumberIdleTimeoutMinutes, body)
+            }
             try {
                 stage('Clone terracumber, susemanager-ci') {
                     // Create a directory for  to place the directory with the build results (if it does not exist)
@@ -286,7 +304,7 @@ def run(params) {
                     if (params.must_sync && (deployed || !params.must_deploy)) {
                         // Get minion list from tofu state list command
                         def nodesHandler = getNodesHandler(params)
-                        def res_products = runCucumberRakeTarget('cucumber:build_validation_reposync', true, nodesHandler.envVariableListToDisable)
+                        def res_products = runCucumberRakeTarget('cucumber:build_validation_reposync', true, nodesHandler.envVariableListToDisable, productSyncIdleTimeoutMinutes)
                         echo "Custom channels and MU repositories status code: ${res_products}"
                         sh "exit ${res_products}"
                     } else if (isNewJenkins) {
@@ -621,10 +639,11 @@ def run(params) {
 /**
  * Executes a rake command inside the terracumber cucumber step.
  * @param rake_target The full rake target string (e.g., 'cucumber:build_validation_core').
- * @param disableMinions Optional list of environment variables to unset (for parallel client stages).
  * @param return_status Boolean to decide if the command should return the exit status.
+ * @param disableMinions Optional list of environment variables to unset (for parallel client stages).
+ * @param idleTimeoutMinutes Optional inactivity timeout, for the few targets that stay silent longer than the default.
  */
-def runCucumberRakeTarget(String rake_target, boolean return_status = false, disableMinions = null) {
+def runCucumberRakeTarget(String rake_target, boolean return_status = false, disableMinions = null, Integer idleTimeoutMinutes = null) {
     // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler(params)),
     // For compatibility with the original structure where getNodesHandler(params).envVariableListToDisable is a string.
     def unset_vars = ""
@@ -644,10 +663,18 @@ def runCucumberRakeTarget(String rake_target, boolean return_status = false, dis
     // Remove leading/trailing whitespace and execute
     def final_script = script.stripIndent().trim()
 
+    // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
+    def idleMinutes = idleTimeoutMinutes ?: cucumberIdleTimeoutMinutes
     if (return_status) {
-        return sh(script: final_script, returnStatus: true)
+        def status = 1
+        withIdleTimeoutOf(idleMinutes) {
+            status = sh(script: final_script, returnStatus: true)
+        }
+        return status
     } else {
-        sh final_script
+        withIdleTimeoutOf(idleMinutes) {
+            sh final_script
+        }
     }
 }
 
@@ -819,7 +846,10 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                     // Temporarily modify env.exports to include the bootstrap timeout
                     def custom_exports = "${env.exports} export DEFAULT_TIMEOUT=${env.bootstrap_timeout};"
                     // The helper doesn't easily allow overriding env.exports. For this unique case, we'll keep the logic inline to modify the environment variable within the script block for the special DEFAULT_TIMEOUT.
-                    def res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${custom_exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
+                    def res_init_clients = 1
+                    withIdleTimeout {
+                        res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${custom_exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
+                    }
                     echoHtmlReportPath( "build_validation_init_client_${nodeTag}")
                     echo "Init clients status code: ${res_init_clients}"
                     if (res_init_clients != 0) {
