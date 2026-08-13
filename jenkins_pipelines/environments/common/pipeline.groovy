@@ -246,6 +246,7 @@ def run(params) {
 
                 stage('Get results') {
                     def error = 0
+                    try {
                     if (deployed) {
                         try {
                             sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:finishing'"
@@ -319,9 +320,11 @@ def run(params) {
                         }
                     }
 
-                    // Clean up old results
-                    sh "./clean-old-results -r ${resultdir}"
                     sh "exit ${error}"
+                    } finally {
+                        // Clean up old results — in finally so it runs even when getresults/mail fail
+                        sh "./clean-old-results -r ${resultdir}"
+                    }
                 }
             }
         }
