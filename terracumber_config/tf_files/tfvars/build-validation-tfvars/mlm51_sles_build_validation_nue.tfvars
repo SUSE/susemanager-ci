@@ -105,10 +105,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:1b"
     name = "ubuntu2204-minion"
   }
-  debian12_minion = {
-    mac  = "aa:b2:92:42:01:1c"
-    name = "debian12-minion"
-  }
   debian13_minion = {
     mac  = "aa:b2:92:42:01:11"
     name = "debian13-minion"
@@ -116,6 +112,10 @@ ENVIRONMENT_CONFIGURATION = {
   ubuntu2404_minion = {
     mac  = "aa:b2:92:42:01:1d"
     name = "ubuntu2404-minion"
+  }
+  ubuntu2604_minion = {
+    mac  = "aa:b2:92:42:01:1c"
+    name = "ubuntu2604-minion"
   }
   opensuse160arm_minion = {
     mac  = "aa:b2:92:42:01:2e"
@@ -235,10 +235,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:3b"
     name = "ubuntu2204-sshminion"
   }
-  debian12_sshminion = {
-    mac  = "aa:b2:92:42:01:3c"
-    name = "debian12-sshminion"
-  }
   debian13_sshminion = {
     mac  = "aa:b2:92:42:01:31"
     name = "debian13-sshminion"
@@ -246,6 +242,10 @@ ENVIRONMENT_CONFIGURATION = {
   ubuntu2404_sshminion = {
     mac  = "aa:b2:92:42:01:3d"
     name = "ubuntu2404-sshminion"
+  }
+  ubuntu2604_sshminion = {
+    mac  = "aa:b2:92:42:01:3c"
+    name = "ubuntu2604-sshminion"
   }
   opensuse160arm_sshminion = {
     mac  = "aa:b2:92:42:01:4e"
