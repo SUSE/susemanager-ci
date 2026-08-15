@@ -12,8 +12,7 @@ terracumber_config/
 │   ├── salt-shaker/                   # Salt-shaker specific Terraform files
 │   ├── templates/                     # Terraform wrapper templates for Build Validation
 │   │   ├── build-validation-single-provider.tf
-│   │   ├── build-validation-multi-providers.tf
-│   │   └── PR-testing.tf
+│   │   └── build-validation-multi-providers.tf
 │   ├── tfvars/
 │   │   ├── build-validation-tfvars/   # Per-environment tfvars for BV pipelines
 │   │   │   ├── mlm51_micro_build_validation_prg.tfvars
@@ -22,11 +21,9 @@ terracumber_config/
 │   │   │   └── ...
 │   │   ├── sle-update-tfvars/         # Per-environment tfvars for SLE update pipelines
 │   │   │   └── ...
-│   │   ├── PR-tfvars/                 # tfvars for PR testing
 │   │   └── location.tfvars            # Location-specific network/infrastructure values
 │   └── variables/
-│       ├── build-validation-variables.tf
-│       └── PR-testing-variables.tf
+│       └── build-validation-variables.tf
 └── mail_templates/                    # Email templates for pipeline notifications
 ```
 
