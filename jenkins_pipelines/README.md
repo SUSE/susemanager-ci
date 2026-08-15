@@ -5,8 +5,6 @@ This directory contains the Jenkins pipeline definitions used to deploy and test
 ## Contents
 
 - [environments](environments/): Job definitions for all testsuite including CI, Build Validation, personal, and reference environment pipelines
-- [manager_prs](manager_prs/): Manager PR checks
-- [uyuni_prs](uyuni_prs/): Uyuni PR checks
 - [scripts](scripts/): Helper scripts used by the pipelines
 
 ## Directory structure
@@ -21,15 +19,13 @@ jenkins_pipelines/
 │   ├── salt-shaker/             # One job file per Salt-shaker job (parameter files)
 │   ├── sle-maintenance-update/  # One job file per SLE Maintenance environment (parameter files)
 │   └── manager* | uyuni*        # One job file per other environment (parameter files) mainly CIs
-├── manager_prs/                 # SUMA/MLM PRs project related configurations (not used)
-├── scripts/
-│   ├── edit_bci_project/        # Edit BCI project to build container images (SLE Mi BCI 5.1 and 5.0 pipeline)
-│   ├── json_generator/          # JSON generation scripts
-│   ├── test_review_summary/     # Test review summary script 
-│   ├── tests/                   # Unit tests for the scripts
-│   └── tf_vars_generator/
-│       └── prepare_tfvars.py    # tfvars assembly script (see below)
-└── uyuni_prs/                   # Uyuni PRs project related configurations (not used)
+└── scripts/
+    ├── edit_bci_project/        # Edit BCI project to build container images (SLE Mi BCI 5.1 and 5.0 pipeline)
+    ├── json_generator/          # JSON generation scripts
+    ├── test_review_summary/     # Test review summary script 
+    ├── tests/                   # Unit tests for the scripts
+    └── tf_vars_generator/
+        └── prepare_tfvars.py    # tfvars assembly script (see below)
 ```
 
 ### `environments/build-validation/`
@@ -40,16 +36,15 @@ Each file in this directory is a **job definition** for one BV environment (e.g.
 
 Contains the shared Groovy pipeline scripts reused across multiple jobs:
 
-| File | Purpose                              |
-|---|--------------------------------------|
-| `pipeline-build-validation.groovy` | Standard BV pipeline (deploy + test) |
-| `pipeline-build-validation-aws.groovy` | BV pipeline for AWS deployments      |
+| File                                       | Purpose                              |
+|--------------------------------------------|--------------------------------------|
+| `pipeline-build-validation.groovy`         | Standard BV pipeline (deploy + test) |
+| `pipeline-build-validation-aws.groovy`     | BV pipeline for AWS deployments      |
 | `pipeline-build-validation-cleanup.groovy` | Standalone cleanup pipeline for BV   |
-| `pipeline-personal.groovy` | Personal CI pipeline                 |
-| `pipeline.groovy` | Standard testsuite pipeline (CI)     |
-| `pipeline-pull-request.groovy` | Pull request testing pipeline        |
-| `pipeline-reference.groovy` / `pipeline-reference-new.groovy` | Reference environment pipelines      |
-| `pipeline-salt-shaker.groovy` | Salt-shaker pipeline                 |
+| `pipeline-personal.groovy`                 | Personal CI pipeline                 |
+| `pipeline.groovy`                          | Standard testsuite pipeline (CI)     |
+| `pipeline-reference.groovy` / `pipeline-reference-new.groovy` | Reference environment pipelines |
+| `pipeline-salt-shaker.groovy`              | Salt-shaker pipeline                 |
 
 ## Build Validation pipeline
 
