@@ -198,13 +198,15 @@ module "cucumber_testsuite" {
     #     memory = 8192
     #   }
     # }
-    pxeboot_minion = {
-      image = "sles15sp4o"
-      provider_settings = {
-        vcpu = 2
-        memory = 2048
-      }
-    }
+    ## The Cobbler PXE boot and Retail mass import features cannot pass on 4.3 anymore,
+    ## dropping the PXE boot minion makes all @pxeboot_minion scenarios skip
+    # pxeboot_minion = {
+    #   image = "sles15sp4o"
+    #   provider_settings = {
+    #     vcpu = 2
+    #     memory = 2048
+    #   }
+    # }
     kvm_host = {
       image = "sles15sp4o"
       provider_settings = {
