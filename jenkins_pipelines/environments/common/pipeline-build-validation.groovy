@@ -43,6 +43,8 @@ def run(params) {
             def products_and_salt_migration_stage_result_fail = false
             def retail_stage_result_fail = false
             def containerization_stage_result_fail = false
+            def hub_stage_result_fail = false
+            def hubBuild = null
             def server_container_registry = params.server_container_registry ?: ''
             def proxy_container_registry = params.proxy_container_registry ?: ''
             def server_container_image = params.server_container_image ?: ''
@@ -59,6 +61,25 @@ def run(params) {
                 env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
             }
             try {
+                if (params.enable_hub_stages) {
+                    hubBuild = build job: 'manager-head-qe-hub-testing',
+                        wait: false,
+                        propagate: false,
+                        parameters: [
+                            booleanParam(name: 'must_deploy_hub', value: params.must_deploy),
+                            string(name: 'server_container_registry', value: params.server_container_registry ?: ''),
+                            string(name: 'proxy_container_registry', value: params.proxy_container_registry ?: ''),
+                            string(name: 'server_container_image', value: params.server_container_image ?: ''),
+                            text(name: 'custom_repositories', value: params.custom_repositories ?: '{}'),
+                            string(name: 'mi_ids', value: params.mi_ids ?: ''),
+                            string(name: 'json_generator_version', value: params.json_generator_version ?: ''),
+                            booleanParam(name: 'must_run_hub_core', value: true),
+                            booleanParam(name: 'must_sync_hub', value: true),
+                            booleanParam(name: 'enable_hub_proxy_stages', value: true),
+                            booleanParam(name: 'enable_hub_monitoring_stages', value: true),
+                            booleanParam(name: 'enable_hub_peripheral_stages', value: true),
+                        ]
+                }
                 stage('Clone terracumber, susemanager-ci') {
                     // Create a directory for  to place the directory with the build results (if it does not exist)
                     sh "mkdir -p ${resultdir}"
@@ -595,6 +616,9 @@ def run(params) {
                     }
                     // Clean up old results
                     sh "./clean-old-results -r ${resultdir}"
+                    if (hubBuild != null) {
+                        hub_stage_result_fail = hubBuild.get().result != 'SUCCESS'
+                    }
                     // Fail pipeline if client stages failed
                     if (client_stage_result_fail) {
                         error("Client stage failed")
@@ -614,6 +638,9 @@ def run(params) {
                     // Fail pipeline if containerization stage failed
                     if (containerization_stage_result_fail) {
                         error("Containerization stage failed")
+                    }
+                    if (hub_stage_result_fail) {
+                        error("Hub stage failed")
                     }
                     sh "exit ${result_error}"
                 }
