@@ -5,6 +5,8 @@ This directory contains the Jenkins pipeline definitions used to deploy and test
 ## Contents
 
 - [environments](environments/): Job definitions for all testsuite including CI, Build Validation, personal, and reference environment pipelines
+- [manager_prs](manager_prs/): Manager PR checks
+- [uyuni_prs](uyuni_prs/): Uyuni PR checks
 - [scripts](scripts/): Helper scripts used by the pipelines
 
 ## Directory structure
@@ -19,13 +21,15 @@ jenkins_pipelines/
 │   ├── salt-shaker/             # One job file per Salt-shaker job (parameter files)
 │   ├── sle-maintenance-update/  # One job file per SLE Maintenance environment (parameter files)
 │   └── manager* | uyuni*        # One job file per other environment (parameter files) mainly CIs
-└── scripts/
-    ├── edit_bci_project/        # Edit BCI project to build container images (SLE Mi BCI 5.1 and 5.0 pipeline)
-    ├── json_generator/          # JSON generation scripts
-    ├── test_review_summary/     # Test review summary script 
-    ├── tests/                   # Unit tests for the scripts
-    └── tf_vars_generator/
-        └── prepare_tfvars.py    # tfvars assembly script (see below)
+├── manager_prs/                 # Manager automated tests on PRs
+├── scripts/
+│   ├── edit_bci_project/        # Edit BCI project to build container images (SLE MI BCI 5.1 and 5.0 pipeline)
+│   ├── json_generator/          # JSON generation scripts
+│   ├── test_review_summary/     # Test review summary script
+│   ├── tests/                   # Unit tests for the scripts
+│   └── tf_vars_generator/
+│       └── prepare_tfvars.py    # tfvars assembly script (see below)
+└── uyuni_prs/                   # Uyuni automated tests on PRs
 ```
 
 ### `environments/build-validation/`
