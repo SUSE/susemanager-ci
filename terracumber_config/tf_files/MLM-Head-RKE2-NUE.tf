@@ -122,6 +122,7 @@ module "cucumber_testsuite" {
   deploy_hub_api                 = true
   install_kubectl_helm           = false
   kubeconfig_path                = null
+  install_uyuni_via_testsuite    = true
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER

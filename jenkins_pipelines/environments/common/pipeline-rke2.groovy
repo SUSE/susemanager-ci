@@ -72,14 +72,24 @@ def run(params) {
                     // Collect and tag Flaky tests from the GitHub Board
                     def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake utils:collect_and_tag_flaky_tests'", returnStatus: true
                 }
-                stage('Sanity Check') {
+                stage('Install RKE2') {
                     withIdleTimeout {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake cucumber:sanity_check'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:install_rke2'"
+                    }
+                }
+                stage('Install MLM on RKE2') {
+                    withIdleTimeout {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:install_mlm_on_rke2'"
                     }
                 }
                 stage('Kubernetes sanity checks') {
                     withIdleTimeout {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_sanity_checks'"
+                    }
+                }
+                stage('Sanity Check') {
+                    withIdleTimeout {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:sanity_check'"
                     }
                 }
                 stage('Kubernetes tests') {
