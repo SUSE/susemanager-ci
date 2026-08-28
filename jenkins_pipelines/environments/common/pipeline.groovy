@@ -14,6 +14,7 @@ def run(params) {
             GString junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
             // Mutable: the AWS backend appends PUBLISH_CUCUMBER_REPORT below
             def exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+            def bootstrap_timeout = 300
             GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
 
 
@@ -205,7 +206,7 @@ def run(params) {
                     stage('Core - Initialize clients') {
                         if (runCore) {
                             withIdleTimeout {
-                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake parallel:init_clients'"
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} export DEFAULT_TIMEOUT=${bootstrap_timeout}; rake parallel:init_clients'"
                             }
                         }
                     }

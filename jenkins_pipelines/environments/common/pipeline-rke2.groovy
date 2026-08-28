@@ -8,6 +8,7 @@ def run(params) {
             // The junit plugin doesn't affect full paths
             env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
             env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+            env.bootstrap_timeout = 300
 
             if (params.deploy_parallelism) {
                 env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
@@ -105,7 +106,7 @@ def run(params) {
                 stage('Core - Initialize clients') {
                     if (runCore) {
                         withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake parallel:init_clients'"
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} export DEFAULT_TIMEOUT=${bootstrap_timeout}; rake parallel:init_clients'"
                         }
                     }
                 }
