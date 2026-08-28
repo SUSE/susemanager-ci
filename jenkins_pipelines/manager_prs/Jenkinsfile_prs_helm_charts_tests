@@ -52,7 +52,7 @@ pipeline {
         stage('Run Helm charts test') {
             when {
                 expression {
-                    return fileExists (${test_script})
+                    return fileExists ("${test_script}")
                 }
             }
             steps {
