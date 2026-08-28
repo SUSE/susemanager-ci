@@ -51,9 +51,9 @@ pipeline {
 
         stage('Run Helm charts test') {
             steps {
-                if (fileExists("${test_script}")) {
-                    echo 'Run helm charts tests'
-                    script {
+                echo 'Run helm charts tests'
+                script {
+                    if (fileExists("${test_script}")) {
                         helmcharts_test_cmd = "${gitarro_cmd} ${helmcharts_test}"
                         if (params.GITARRO_PR_NUMBER != "") {
                             helmcharts_test_cmd = "${gitarro_local} ${helmcharts_test}"
@@ -62,10 +62,10 @@ pipeline {
                             helmcharts_test_cmd = "${helmcharts_test_cmd} -P ${params.PR_NUMBER}"
                             currentBuild.displayName = "PR: ${params.PR_NUMBER}"
                         }
+                        sh "export PRODUCT=SUSE-Manager && ${helmcharts_test_cmd}"
+                    } else {
+                        echo "Skipping stage: ${test_script} not found in the PR."
                     }
-                    sh "export PRODUCT=SUSE-Manager && ${helmcharts_test_cmd}"
-                } else {
-                    echo "Skipping stage: ${test_script} not found in the PR."
                 }
             }
         }
