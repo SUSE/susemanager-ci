@@ -108,6 +108,22 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:8c"
     name = "openeuler2403-minion"
   }
+  rhel7_minion = {
+    mac  = "aa:b2:93:04:05:74"
+    name = "rhel7-minion"
+  }
+  rhel8_minion = {
+    mac  = "aa:b2:93:04:05:75"
+    name = "rhel8-minion"
+  }
+  rhel9_minion = {
+    mac  = "aa:b2:93:04:05:76"
+    name = "rhel9-minion"
+  }
+  rhel10_minion = {
+    mac  = "aa:b2:93:04:05:77"
+    name = "rhel10-minion"
+  }
   debian13_minion = {
     mac  = "aa:b2:93:04:05:7d"
     name = "debian13-minion"
@@ -224,6 +240,22 @@ ENVIRONMENT_CONFIGURATION = {
   rocky9_sshminion = {
     mac  = "aa:b2:93:04:05:ad"
     name = "rocky9-sshminion"
+  }
+  rhel7_sshminion = {
+    mac  = "aa:b2:93:04:05:78"
+    name = "rhel7-sshminion"
+  }
+  rhel8_sshminion = {
+    mac  = "aa:b2:93:04:05:79"
+    name = "rhel8-sshminion"
+  }
+  rhel9_sshminion = {
+    mac  = "aa:b2:93:04:05:7a"
+    name = "rhel9-sshminion"
+  }
+  rhel10_sshminion = {
+    mac  = "aa:b2:93:04:05:7b"
+    name = "rhel10-sshminion"
   }
   ubuntu2204_sshminion = {
     mac  = "aa:b2:93:04:05:a7"

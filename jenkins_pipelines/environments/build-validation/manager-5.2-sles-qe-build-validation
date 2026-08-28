@@ -27,6 +27,7 @@ node('sumaform-cucumber') {
                     'centos7_minion:selected', 'centos7_sshminion:selected',
                     'liberty9_minion:selected', 'liberty9_sshminion:selected', 'liberty10_minion', 'liberty10_sshminion',
                     'oracle9_minion:selected', 'oracle9_sshminion:selected', 'oracle10_minion:selected', 'oracle10_sshminion:selected',
+                    'rhel7_minion', 'rhel7_sshminion', 'rhel8_minion', 'rhel8_sshminion', 'rhel9_minion', 'rhel9_sshminion', 'rhel10_minion', 'rhel10_sshminion',
                     'rocky8_minion:selected', 'rocky8_sshminion:selected', 'rocky9_minion:selected', 'rocky9_sshminion:selected', 'rocky10_minion:selected', 'rocky10_sshminion:selected',
                     'ubuntu2204_minion:selected', 'ubuntu2204_sshminion:selected', 'ubuntu2404_minion:selected', 'ubuntu2404_sshminion:selected', 'ubuntu2604_minion:selected', 'ubuntu2604_sshminion:selected',
                     'debian13_minion:selected', 'debian13_sshminion:selected',
