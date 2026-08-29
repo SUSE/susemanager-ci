@@ -57,7 +57,8 @@ node('sumaform-cucumber') {
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
             text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)'),
+            booleanParam(name: 'enable_hub_stages', defaultValue: false, description: 'Trigger hub testing in parallel')
             ])
     ])
 
