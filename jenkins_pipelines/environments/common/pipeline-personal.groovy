@@ -109,6 +109,9 @@ def run(params) {
                         }
                     }
                 }
+                stage('Install RKE2 and MLM') {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:install_mlm_on_rke2'"
+                }
                 stage('Product changes') {
                     if (params.show_product_changes) {
                         sh """
