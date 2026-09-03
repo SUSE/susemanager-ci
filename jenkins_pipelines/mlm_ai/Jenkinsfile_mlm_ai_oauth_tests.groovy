@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'sumaform-cucumber'
+        label 'sumadocker-nue'
     }
     triggers {
         upstream(upstreamProjects: 'manager-5.1-ai-acceptance-tests', threshold: hudson.model.Result.FAILURE)

@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'sumaform-cucumber'
+        label 'sumadocker-nue'
     }
 
     options {
