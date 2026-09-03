@@ -138,26 +138,7 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:04:09:00"
       }
     }
-    server_kubernetes = {
-      image = "tumbleweedo"
-      provider_settings = {
-        mac = "aa:b2:93:04:09:01"
-        vcpu = 8
-        memory = 32768
-      }
-      runtime                        = "rke2"
-      container_tag                  = "latest"
-      container_registry             = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
-      helm_chart_name                = "server-helm"
-      helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
-
-      login_timeout = 28800
-      main_disk_size = 40
-      repository_disk_size = 300
-      database_disk_size = 60
-    }
   }
-  
   provider_settings = {
     pool               = "ssd"
     network_name       = null
