@@ -157,7 +157,13 @@ def run(params) {
                             def outputFile = "${localSumaformDirPath}terraform.tfvars"
 
                             // Build Common Arguments
-                            def jenkinsHost = new URI(env.JENKINS_URL).host
+                            def s390LocalUser
+                            if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de'))
+                                s390LocalUser = 'jenkins@jenkins-node.mgr.suse.de'
+                            else if (env.JENKINS_URL?.contains('jenkins.mgr.slc1.suse.org'))
+                                s390LocalUser = 'jenkins@jenkins-node.mgr.slc1.suse.org'
+                            else
+                                s390LocalUser = 'jenkins@jenkins-worker.mgr.suse.de'
                             def commonArgs = " --output \"${outputFile}\""
                             commonArgs += " --inject SERVER_CONTAINER_REGISTRY=${server_container_registry}"
                             commonArgs += " --inject PROXY_CONTAINER_REGISTRY=${proxy_container_registry}"
@@ -167,7 +173,7 @@ def run(params) {
                             if (isNewJenkins) {
                                 commonArgs += " --inject HYPERVISOR_PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.worker\""
                                 commonArgs += " --inject CONTROLLER_PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
-                                commonArgs += " --inject S390_LOCAL_USER=\"jenkins@${jenkinsHost}\""
+                                commonArgs += " --inject S390_LOCAL_USER=\"${s390LocalUser}\""
                             }
                             if (product_version) {
                                 commonArgs += " --inject PRODUCT_VERSION=${product_version}"
