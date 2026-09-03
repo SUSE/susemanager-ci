@@ -157,6 +157,7 @@ def run(params) {
                             def outputFile = "${localSumaformDirPath}terraform.tfvars"
 
                             // Build Common Arguments
+                            def jenkinsHost = new URI(env.JENKINS_URL).host
                             def commonArgs = " --output \"${outputFile}\""
                             commonArgs += " --inject SERVER_CONTAINER_REGISTRY=${server_container_registry}"
                             commonArgs += " --inject PROXY_CONTAINER_REGISTRY=${proxy_container_registry}"
@@ -166,7 +167,7 @@ def run(params) {
                             if (isNewJenkins) {
                                 commonArgs += " --inject HYPERVISOR_PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.worker\""
                                 commonArgs += " --inject CONTROLLER_PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
-                                commonArgs += " --inject S390_LOCAL_USER=\"jenkins@jenkins.mgr.suse.de\""
+                                commonArgs += " --inject S390_LOCAL_USER=\"jenkins@${jenkinsHost}\""
                             }
                             if (product_version) {
                                 commonArgs += " --inject PRODUCT_VERSION=${product_version}"
@@ -719,10 +720,10 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                             }
                         }
 
-                    } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                    } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
-                } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                } else if (isNewJenkins) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
                 // Don't update required_custom_channel_status for minion who needs non MU repositories
@@ -749,13 +750,13 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                                     error("Add common channels failed with status code: ${res_non_MU_repositories}")
                                 }
                             }
-                        } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                        } else if (isNewJenkins) {
                             Utils.markStageSkippedForConditional(STAGE_NAME)
                         }
-                    } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                    } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
-                } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                } else if (isNewJenkins) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
                 // Don't overwrite required_custom_channel_status variable for minions who don't need non MU repositories ( protect overwrite of add MU fails )
@@ -789,7 +790,7 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                         bootstrap_repository_status[node] = 'FAIL'
                         error("Add Activation Keys failed with status code: ${res_add_keys}")
                     }
-                } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                } else if (isNewJenkins) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
             }
@@ -831,7 +832,7 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                             }
                         }
                     }
-                } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                } else if (isNewJenkins) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
                 bootstrap_repository_status[node] = 'CREATED'
@@ -855,7 +856,7 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                     if (res_init_clients != 0) {
                         error("Bootstrap clients failed with status code: ${res_init_clients}")
                     }
-                } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                } else if (isNewJenkins) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
             }
@@ -874,7 +875,7 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
                             error("Run Smoke tests failed with status code: ${res_smoke_tests}")
                         }
                     }
-                } else if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de')) {
+                } else if (isNewJenkins) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
             }
