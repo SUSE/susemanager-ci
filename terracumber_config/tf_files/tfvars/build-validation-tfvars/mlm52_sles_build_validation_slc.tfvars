@@ -109,6 +109,22 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:20"
     name = "openeuler2403-minion"
   }
+  rhel7_minion = {
+    mac  = "aa:b2:92:05:00:08"
+    name = "rhel7-minion"
+  }
+  rhel8_minion = {
+    mac  = "aa:b2:92:05:00:09"
+    name = "rhel8-minion"
+  }
+  rhel9_minion = {
+    mac  = "aa:b2:92:05:00:0a"
+    name = "rhel9-minion"
+  }
+  rhel10_minion = {
+    mac  = "aa:b2:92:05:00:0b"
+    name = "rhel10-minion"
+  }
   debian13_minion = {
     mac  = "aa:b2:92:05:00:11"
     name = "debian13-minion"
@@ -226,6 +242,22 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:41"
     name = "rocky9-sshminion"
   }
+  rhel7_sshminion = {
+    mac  = "aa:b2:92:05:00:0c"
+    name = "rhel7-sshminion"
+  }
+  rhel8_sshminion = {
+    mac  = "aa:b2:92:05:00:0d"
+    name = "rhel8-sshminion"
+  }
+  rhel9_sshminion = {
+    mac  = "aa:b2:92:05:00:0e"
+    name = "rhel9-sshminion"
+  }
+  rhel10_sshminion = {
+    mac  = "aa:b2:92:05:00:0f"
+    name = "rhel10-sshminion"
+  }
   ubuntu2204_sshminion = {
     mac  = "aa:b2:92:05:00:3b"
     name = "ubuntu2204-sshminion"
@@ -249,7 +281,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   product_version = "5.2-released"
-  name_prefix     = "suma-bv-52-sles-"
+  name_prefix     = "mlm-bv-52-sles-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.2-sles-qe-build-validation-BACKUP"
 }
 
