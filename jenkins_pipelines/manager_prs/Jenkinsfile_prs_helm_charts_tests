@@ -7,26 +7,17 @@ properties([
 pipeline {
 
     options {
-        timeout(time: 30, unit: 'MINUTES') 
+        timeout(time: 30, unit: 'MINUTES')
         ansiColor('xterm')
     }
 
     parameters {
-        string(defaultValue: '', description: 'Gitarro PR', name: 'GITARRO_PR_NUMBER')
         string(defaultValue: '', description: 'SUSE Manager PR', name: 'PR_NUMBER')
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
 
     environment {
-        gitarro_cmd = 'gitarro.ruby2.5'
-        gitarro_local = 'ruby gitarro.rb'
-        test_script = 'susemanager-utils/testing/automation/helm-charts-tests.sh'
-        helmcharts_test = "-r SUSE/spacewalk" +
-                " -c helm_charts_tests -d \"Helm charts tests\" " +
-                " -f \"containers/.*-helm/.*\" " +
-                " -t ${test_script} " +
-                " -u ${env.BUILD_URL} " +
-                " -g ${env.WORKSPACE} "
+        repository = 'SUSE/spacewalk'
     }
     // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
@@ -38,14 +29,6 @@ pipeline {
                 cleanWs()
                 echo 'Check out SCM'
                 checkout scm
-                script {
-                    if (params.GITARRO_PR_NUMBER != '') {
-                        echo 'Check out Gitarro PR'
-                        checkout([$class           : 'GitSCM', branches: [[name: "FETCH_HEAD"]],
-                                  extensions       : [[$class: 'LocalBranch']],
-                                  userRemoteConfigs: [[refspec: "+refs/pull/${params.GITARRO_PR_NUMBER}/head:refs/remotes/origin/PR-${params.GITARRO_PR_NUMBER}", url: "https://git@github.com/openSUSE/gitarro"]]])
-                    }
-                }
             }
         }
 
@@ -53,15 +36,20 @@ pipeline {
             steps {
                 echo 'Run helm charts tests'
                 script {
-                    helmcharts_test_cmd = "${gitarro_cmd} ${helmcharts_test}"
-                    if (params.GITARRO_PR_NUMBER != "") {
-                        helmcharts_test_cmd = "${gitarro_local} ${helmcharts_test}"
-                    }
                     if (params.PR_NUMBER != '') {
-                        helmcharts_test_cmd = "${helmcharts_test_cmd} -P ${params.PR_NUMBER}"
                         currentBuild.displayName = "PR: ${params.PR_NUMBER}"
+                        sh(
+                            "export PRODUCT=SUSE-Manager && pr-checker" +
+                            " --log-level debug" +
+                            " --repo ${repository}" +
+                            " run" +
+                            " --pr ${params.PR_NUMBER}" +
+                            " --check-name helm_charts_tests" +
+                            " --command susemanager-utils/testing/automation/helm-charts-tests.sh"
+                        )
+                    } else {
+                        echo "Missing PR_NUMBER parameter"
                     }
-                    sh "export PRODUCT=SUSE-Manager && ${helmcharts_test_cmd}"
                 }
             }
         }
