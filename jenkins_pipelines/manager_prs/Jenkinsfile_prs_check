@@ -12,9 +12,6 @@ pipeline {
         ansiColor('xterm')
     }
 
-    parameters {
-    }
-
     environment {
       repository = 'SUSE/spacewalk'
     }
