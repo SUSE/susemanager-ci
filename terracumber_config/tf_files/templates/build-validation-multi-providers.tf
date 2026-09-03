@@ -28,7 +28,7 @@ provider "libvirt" {
 # Retail/Infrastructure Host
 provider "libvirt" {
   alias = "host_retail"
-  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.retail.hypervisor}/system"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_retail.hypervisor}/system"
 }
 
 # Debian/Ubuntu Host
