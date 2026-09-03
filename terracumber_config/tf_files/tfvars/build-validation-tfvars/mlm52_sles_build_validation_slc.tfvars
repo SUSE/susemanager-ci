@@ -253,7 +253,7 @@ ENVIRONMENT_CONFIGURATION = {
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.2-sles-qe-build-validation-BACKUP"
 }
 
-BASE_CONFIGURATION = {
+BASE_CONFIGURATIONS = {
   base_core = {
     images             = [ "sles15sp5o", "sles15sp7o", "opensuse156o", "opensuse160o" ]
     pool               = "ssd"
