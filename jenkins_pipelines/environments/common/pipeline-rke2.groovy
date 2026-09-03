@@ -74,12 +74,17 @@ def run(params) {
                 }
                 stage('Install RKE2') {
                     withIdleTimeout {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:install_rke2'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_rke2'"
                     }
                 }
-                stage('Install MLM on RKE2') {
+                stage('Install Server on RKE2') {
                     withIdleTimeout {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:install_mlm_on_rke2'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_server_on_rke2'"
+                    }
+                }
+                stage('Install Proxy on RKE2') {
+                    withIdleTimeout {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_proxy_on_rke2'"
                     }
                 }
                 stage('Kubernetes sanity checks') {
