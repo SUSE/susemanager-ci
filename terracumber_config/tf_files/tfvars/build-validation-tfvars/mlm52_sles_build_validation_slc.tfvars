@@ -131,12 +131,12 @@ ENVIRONMENT_CONFIGURATION = {
   }
   opensuse160arm_minion = {
     mac  = "aa:b2:92:42:00:0a"
-    name = "opensuse160arm-minion-slc"
+    name = "opensuse160arm-minion"
   }
   sles15sp5s390_minion = {
     mac    = "02:00:00:02:01:32"
     name   = "sles15sp5s390-minion"
-    userid = "S52MISLC"
+    userid = "M52MISLC"
   }
   salt_migration_minion = {
     mac  = "aa:b2:92:05:00:2f"
@@ -240,16 +240,16 @@ ENVIRONMENT_CONFIGURATION = {
   }
   opensuse160arm_sshminion = {
     mac  = "aa:b2:92:42:00:0b"
-    name = "opensuse160arm-sshminion-slc"
+    name = "opensuse160arm-sshminion"
   }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:02:01:33"
     name   = "sles15sp5s390-sshminion"
-    userid = "S52SSSLC"
+    userid = "M52SSSLC"
   }
 
   product_version = "5.2-released"
-  name_prefix     = "suma-bv-52-sles-"
+  name_prefix     = "mlm-bv-52-sles-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-5.2-sles-qe-build-validation-BACKUP"
 }
 
