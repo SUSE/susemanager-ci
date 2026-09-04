@@ -98,7 +98,7 @@ module "base_rhlike" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = var.BASE_CONFIGURATIONS.base_old_sle.images
+  images            = var.BASE_CONFIGURATIONS.base_rhlike.images
 
   ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
