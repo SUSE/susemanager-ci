@@ -18,6 +18,7 @@ pipeline {
 
     environment {
         repository = 'SUSE/spacewalk'
+        description = 'Helm charts tests'
     }
     // run only on specific hosts
     agent { label 'suse-manager-unit-tests' }
@@ -40,13 +41,14 @@ pipeline {
                         currentBuild.displayName = "PR: ${params.PR_NUMBER}"
                         sh(
                             "export PRODUCT=SUSE-Manager && pr-checker" +
-                            " --log-level debug" +
                             " --repo ${repository}" +
                             " run" +
                             " --pr ${params.PR_NUMBER}" +
                             " --check-name helm_charts_tests" +
-                            " --command susemanager-utils/testing/automation/helm-charts-tests.sh"
-                        )
+                            " --command susemanager-utils/testing/automation/helm-charts-tests.sh" +
+                            " --build-url ${env.BUILD_URL}" +
+                            " --description \"${description}\""
+                          )
                     } else {
                         echo "Missing PR_NUMBER parameter"
                     }
