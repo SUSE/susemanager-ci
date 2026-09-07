@@ -97,57 +97,53 @@ def run(params) {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:sanity_check'"
                     }
                 }
-                stage('Kubernetes tests') {
+                stage('Core - Kubernetes tests') {
                     withIdleTimeout {
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_tests'"
                     }
                 }
                 stage('Core - Setup') {
-                    if (runCore) {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
-                        }
+                    withIdleTimeout {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
                     }
                 }
                 stage('Core - Proxy') {
-                    if (runCore) {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:proxy'"
-                        }
+                    withIdleTimeout {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:proxy'"
                     }
                 }
                 stage('Core - Initialize clients') {
-                    if (runCore) {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake parallel:init_clients'"
-                        }
+                    withIdleTimeout {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake parallel:init_clients'"
                     }
                 }
                 stage('Secondary features') {
-                    if (runSecondary) {
-                        def tags_list = ""
-                        if (params.functional_scopes) {
-                            // Re-add the @ prefix stripped from the job parameters
-                            // (Jenkins' Safe HTML markup formatter escapes @ as &#64; in Active Choices labels).
-                            // startsWith guard keeps backward compatibility with jobs still passing @-prefixed scopes.
-                            def transformed_scopes = params.functional_scopes.split(',')
-                                    .collect { it.trim() }
-                                    .collect { it.startsWith('@') ? it : "@${it}" }
-                                    .join(' or ')
-                            // --cucumber-cmd below is single-quoted, and rake re-splits TAGS through a
-                            // shell, so the value carries its own quotes rather than nesting single ones.
-                            tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
-                        }
-
-                        def statusCode1 = 1
-                        def statusCode2 = 1
-                        def statusCode3 = 1
-                        withIdleTimeout { statusCode1 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true) }
-                        withIdleTimeout { statusCode2 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true) }
-                        withIdleTimeout { statusCode3 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true) }
-                        sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
+                    def tags_list = ""
+                    // When triggered by cron the Active Choices plugin (JENKINS-42568) always returns
+                    // the first checkbox value instead of none, so ignore functional_scopes on timer builds.
+                    def isTimerTriggered = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
+                    def effectiveScopes = isTimerTriggered ? '' : params.functional_scopes
+                    if (effectiveScopes) {
+                        // Re-add the @ prefix stripped from the job parameters
+                        // (Jenkins' Safe HTML markup formatter escapes @ as &#64; in Active Choices labels).
+                        // startsWith guard keeps backward compatibility with jobs still passing @-prefixed scopes.
+                        def transformed_scopes = effectiveScopes.split(',')
+                                .collect { it.trim() }
+                                .collect { it.startsWith('@') ? it : "@${it}" }
+                                .join(' or ')
+                        // --cucumber-cmd below is single-quoted, and rake re-splits TAGS through a
+                        // shell, so the value carries its own quotes rather than nesting single ones.
+                        tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
                     }
+
+                    def statusCode1 = 1
+                    def statusCode2 = 1
+                    def statusCode3 = 1
+                    withIdleTimeout { statusCode1 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true) }
+                    withIdleTimeout { statusCode2 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true) }
+                    withIdleTimeout { statusCode3 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true) }
+                    sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
                 }
             }
             finally {
