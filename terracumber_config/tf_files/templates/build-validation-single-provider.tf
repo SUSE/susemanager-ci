@@ -60,6 +60,7 @@ module "build_validation_module" {
     libvirt.host_rhlike  = libvirt
     libvirt.host_deblike = libvirt
     libvirt.host_retail  = libvirt
+    libvirt.host_arm     = libvirt
   }
 
   module_base_configurations = {

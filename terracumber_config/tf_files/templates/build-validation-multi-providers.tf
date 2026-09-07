@@ -25,16 +25,22 @@ provider "libvirt" {
   uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_new_sle.hypervisor}/system"
 }
 
+# Debian/Ubuntu Host
+provider "libvirt" {
+  alias = "host_deblike"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_deblike.hypervisor}/system"
+}
+
 # Retail/Infrastructure Host
 provider "libvirt" {
   alias = "host_retail"
   uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_retail.hypervisor}/system"
 }
 
-# Debian/Ubuntu Host
+# ARM Host
 provider "libvirt" {
-  alias = "host_deblike"
-  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_deblike.hypervisor}/system"
+  alias = "host_arm"
+  uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_arm.hypervisor}/system"
 }
 
 # Base Core : Core Infra + Main Testsuite images
@@ -86,31 +92,6 @@ module "base_old_sle" {
   }
 }
 
-# Base RedHat : EL and Liberty
-module "base_rhlike" {
-  providers = { libvirt = libvirt.host_old_sle_rhlike }
-  source    = "./modules/base"
-
-  cc_username       = var.SCC_USER
-  cc_password       = var.SCC_PASSWORD
-  product_version   = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
-  name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
-  use_avahi         = false
-  domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
-
-  images            = var.BASE_CONFIGURATIONS.base_rhlike.images
-
-  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
-  mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
-  use_mirror_images = true
-  testsuite         = true
-
-  provider_settings = {
-    pool        = var.BASE_CONFIGURATIONS.base_rhlike.pool
-    bridge      = var.BASE_CONFIGURATIONS.base_rhlike.bridge
-  }
-}
-
 # Base New SLE : SLES 15 + SLES 16 + SL(E) Micro
 module "base_new_sle" {
   providers = { libvirt = libvirt.host_new_sle }
@@ -136,8 +117,9 @@ module "base_new_sle" {
   }
 }
 
-module "base_retail" {
-  providers = { libvirt = libvirt.host_retail }
+# Base RedHat : EL and Liberty
+module "base_rhlike" {
+  providers = { libvirt = libvirt.host_old_sle_rhlike }
   source    = "./modules/base"
 
   cc_username       = var.SCC_USER
@@ -147,7 +129,7 @@ module "base_retail" {
   use_avahi         = false
   domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
 
-  images            = var.BASE_CONFIGURATIONS.base_retail.images
+  images            = var.BASE_CONFIGURATIONS.base_rhlike.images
 
   ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
@@ -155,9 +137,8 @@ module "base_retail" {
   testsuite         = true
 
   provider_settings = {
-    pool               = var.BASE_CONFIGURATIONS.base_retail.pool
-    bridge             = var.BASE_CONFIGURATIONS.base_retail.bridge
-    additional_network = var.BASE_CONFIGURATIONS.base_retail.additional_network
+    pool        = var.BASE_CONFIGURATIONS.base_rhlike.pool
+    bridge      = var.BASE_CONFIGURATIONS.base_rhlike.bridge
   }
 }
 
@@ -186,6 +167,58 @@ module "base_deblike" {
   }
 }
 
+# Base Retail minions
+module "base_retail" {
+  providers = { libvirt = libvirt.host_retail }
+  source    = "./modules/base"
+
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
+  name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
+  use_avahi         = false
+  domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
+
+  images            = var.BASE_CONFIGURATIONS.base_retail.images
+
+  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
+  mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
+  use_mirror_images = true
+  testsuite         = true
+
+  provider_settings = {
+    pool               = var.BASE_CONFIGURATIONS.base_retail.pool
+    bridge             = var.BASE_CONFIGURATIONS.base_retail.bridge
+    additional_network = var.BASE_CONFIGURATIONS.base_retail.additional_network
+  }
+}
+
+# Base ARM minions
+module "base_arm" {
+  providers = { libvirt = libvirt.host_arm }
+  source    = "./modules/base"
+
+  cc_username       = var.SCC_USER
+  cc_password       = var.SCC_PASSWORD
+  product_version   = var.PRODUCT_VERSION != null ? var.PRODUCT_VERSION : var.ENVIRONMENT_CONFIGURATION.product_version
+  name_prefix       = var.ENVIRONMENT_CONFIGURATION.name_prefix
+  use_avahi         = false
+  domain            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
+
+  images            = var.BASE_CONFIGURATIONS.base_arm.images
+
+  ssh_key_path      = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
+  mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
+  use_mirror_images = true
+  testsuite         = true
+
+  provider_settings = {
+    pool               = var.BASE_CONFIGURATIONS.base_arm.pool
+    bridge             = var.BASE_CONFIGURATIONS.base_arm.bridge
+    additional_network = var.BASE_CONFIGURATIONS.base_arm.additional_network
+  }
+}
+
 module "build_validation_module" {
   source = "./modules/build_validation"
 
@@ -197,6 +230,7 @@ module "build_validation_module" {
     libvirt.host_rhlike  = libvirt.host_old_sle_rhlike
     libvirt.host_deblike = libvirt.host_deblike
     libvirt.host_retail  = libvirt.host_retail
+    libvirt.host_arm     = libvirt.host_arm
   }
 
   # --- BASE MAPPING ---
@@ -208,6 +242,7 @@ module "build_validation_module" {
     rhlike  = module.base_rhlike.configuration
     deblike = module.base_deblike.configuration
     retail  = module.base_retail.configuration
+    arm     = module.base_arm.configuration
   }
 
   environment_configuration       = var.ENVIRONMENT_CONFIGURATION
