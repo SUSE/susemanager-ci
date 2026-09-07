@@ -40,16 +40,16 @@ pipeline {
                         encoding: "UTF-8",
                         text: '''\
                           |{
-                          |  "changelog_test" : [""],
-                          |  "java_lint_checkstyle" : ["java/"],
-                          |  "java_pgsql_tests" : ["java/"],
+                          |  "changelog_test" : ["*"],
+                          |  "java_lint_checkstyle" : ["java/*"],
+                          |  "java_pgsql_tests" : ["java/*"],
                           |  "helm_charts_tests": ["containers/*-helm/*"],
-                          |  "spacecmd_unittests": ["spacecmd/"],
-                          |  "ruby_rubocop" : ["testsuite/"],
-                          |  "backend_unittests_pgsql" : ["python/"],
-                          |  "frontend_checks" : ["web/"],
-                          |  "schema_migration_test_pgsql" : ["schema/spacewalk"],
-                          |  "susemanager_unittests" : ["susemanager/"]
+                          |  "spacecmd_unittests": ["spacecmd/*"],
+                          |  "ruby_rubocop" : ["testsuite/*"],
+                          |  "backend_unittests_pgsql" : ["python/*"],
+                          |  "frontend_checks" : ["web/*"],
+                          |  "schema_migration_test_pgsql" : ["schema/spacewalk/*"],
+                          |  "susemanager_unittests" : ["susemanager/*"]
                           |}
                         '''.stripMargin(),
                     )
