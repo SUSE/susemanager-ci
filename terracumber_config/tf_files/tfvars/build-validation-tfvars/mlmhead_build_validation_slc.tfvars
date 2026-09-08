@@ -88,18 +88,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:8d"
     name = "rocky9-minion"
   }
-  rocky10_minion = {
-    mac  = "aa:b2:93:04:05:8a"
-    name = "rocky10-minion"
-  }
-  alma10_minion = {
-    mac  = "aa:b2:93:04:05:86"
-    name = "alma10-minion"
-  }
-  oracle10_minion = {
-    mac  = "aa:b2:93:04:05:8b"
-    name = "oracle10-minion"
-  }
+  # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
   liberty10_minion = {
     mac  = "aa:b2:93:04:05:92"
     name = "liberty10-minion"
@@ -146,7 +135,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   opensuse160arm_minion = {
     mac  = "aa:b2:92:42:00:10"
-    name = "opensuse160arm-minion-slc"
+    name = "opensuse160arm-minion"
   }
   sles15sp5s390_minion = {
     mac    = "02:00:00:02:01:34"
@@ -159,10 +148,6 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Micro Minions
-  slemicro52_minion = {
-    mac  = "aa:b2:93:04:05:93"
-    name = "slemicro52-minion"
-  }
   slemicro53_minion = {
     mac  = "aa:b2:93:04:05:94"
     name = "slemicro53-minion"
@@ -209,6 +194,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:a1"
     name = "sles15sp7-sshminion"
   }
+  sles160_sshminion = {
+    mac  = "aa:b2:93:04:05:a2"
+    name = "sles160-sshminion"
+  }
   alma8_sshminion = {
     mac  = "aa:b2:93:04:05:a5"
     name = "alma8-sshminion"
@@ -241,6 +230,15 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:ad"
     name = "rocky9-sshminion"
   }
+  # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
+  liberty10_sshminion = {
+    mac  = "aa:b2:93:04:05:b2"
+    name = "liberty10-sshminion"
+  }
+  openeuler2403_sshminion = {
+    mac  = "aa:b2:93:04:05:ac"
+    name = "openeuler2403-sshminion"
+  }
   rhel7_sshminion = {
     mac  = "aa:b2:93:04:05:78"
     name = "rhel7-sshminion"
@@ -257,6 +255,14 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:7b"
     name = "rhel10-sshminion"
   }
+  debian13_sshminion = {
+    mac  = "aa:b2:93:04:05:9d"
+    name = "debian13-sshminion"
+  }
+  raspios13_sshminion = {
+    mac  = "aa:b2:92:42:00:13"
+    name = "raspios13-sshminion"
+  }
   ubuntu2204_sshminion = {
     mac  = "aa:b2:93:04:05:a7"
     name = "ubuntu2204-sshminion"
@@ -271,7 +277,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   opensuse160arm_sshminion = {
     mac  = "aa:b2:92:42:00:11"
-    name = "opensuse160arm-sshminion-slc"
+    name = "opensuse160arm-sshminion"
   }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:02:01:35"
@@ -281,12 +287,12 @@ ENVIRONMENT_CONFIGURATION = {
 
   product_version = "head"
   name_prefix     = "mlm-bv-head-"
-  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-Head/job/manager-head-qe-build-validation-BACKUP/"
+  url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-Head/job/manager-head-qe-build-validation-BACKUP"
 }
 
 BASE_CONFIGURATIONS = {
   base_core = {
-    images             = [ "tumbleweedo", "opensuse156o", "opensuse160o", "sles15sp7o" ]
+    images             = [ "opensuse156o", "opensuse160o", "sles15sp7o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
@@ -300,21 +306,22 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "cosmopolitan.mgr.slc1.suse.org"
   }
   base_rhlike = {
-    images             = [ "almalinux8o", "almalinux9o", "almalinux10o", "amazonlinux2023o", "centos7o", "libertylinux9o", "libertylinux10o", "openeuler2403o", "oraclelinux9o", "oraclelinux10o", "rocky8o", "rocky9o", "rocky10o" ]
+    # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
+    images             = [ "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "libertylinux10o", "openeuler2403o", "oraclelinux9o", "rocky8o", "rocky9o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
     hypervisor         = "cosmopolitan.mgr.slc1.suse.org"
   }
   base_new_sle = {
-    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "slemicro52-ign", "slemicro53-ign" , "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o", "tumbleweedo" ]
+    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
     hypervisor         = "ginfizz.mgr.slc1.suse.org"
   }
   base_retail = {
-    images             = [ "sles15sp6o", "sles15sp7o", "opensuse156o", "opensuse160o", "leapmicro55o" ]
+    images             = [ "sles15sp6o", "sles15sp7o", "opensuse156o", "opensuse160o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = "192.168.100.0/24"

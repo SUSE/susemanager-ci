@@ -100,6 +100,14 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:c5"
     name = "liberty9-minion"
   }
+  liberty10_minion = {
+    mac  = "aa:b2:93:02:01:c6"
+    name = "liberty10-minion"
+  }
+  openeuler2403_minion = {
+    mac  = "aa:b2:93:02:01:c0"
+    name = "openeuler2403-minion"
+  }
   rhel7_minion = {
     mac  = "aa:b2:93:02:01:a8"
     name = "rhel7-minion"
@@ -124,6 +132,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:b1"
     name = "debian13-minion"
   }
+  raspios13_minion = {
+    mac  = "aa:b2:93:02:01:c7"
+    name = "raspios13-minion"
+  }
   ubuntu2404_minion = {
     mac  = "aa:b2:93:02:01:bd"
     name = "ubuntu2404-minion"
@@ -147,10 +159,6 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Micro Minions
-  slemicro52_minion = {
-    mac  = "aa:b2:93:02:01:c7"
-    name = "slemicro52-minion"
-  }
   slemicro53_minion = {
     mac  = "aa:b2:93:02:01:c8"
     name = "slemicro53-minion"
@@ -245,6 +253,14 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:e5"
     name = "liberty9-sshminion"
   }
+  liberty10_sshminion = {
+    mac  = "aa:b2:93:02:01:e6"
+    name = "liberty10-sshminion"
+  }
+  openeuler2403_sshminion = {
+    mac  = "aa:b2:93:02:01:e0"
+    name = "openeuler2403-sshminion"
+  }
   rhel7_sshminion = {
     mac  = "aa:b2:93:02:01:ac"
     name = "rhel7-sshminion"
@@ -268,6 +284,10 @@ ENVIRONMENT_CONFIGURATION = {
   debian13_sshminion = {
     mac  = "aa:b2:93:02:01:d1"
     name = "debian13-sshminion"
+  }
+  raspios13_sshminion = {
+    mac  = "aa:b2:93:02:01:e7"
+    name = "raspios13-sshminion"
   }
   ubuntu2404_sshminion = {
     mac  = "aa:b2:93:02:01:dd"

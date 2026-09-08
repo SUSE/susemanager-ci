@@ -10,7 +10,6 @@ ENVIRONMENT_CONFIGURATION = {
     name  = "server"
     image = "sles15sp7o"
     string_registry = false
-
   }
   proxy_containerized = {
     mac   = "aa:b2:92:05:00:02"
@@ -89,18 +88,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:21"
     name = "rocky9-minion"
   }
-  rocky10_minion = {
-    mac  = "aa:b2:92:05:00:1e"
-    name = "rocky10-minion"
-  }
-  alma10_minion = {
-    mac  = "aa:b2:92:05:00:1a"
-    name = "alma10-minion"
-  }
-  oracle10_minion = {
-    mac  = "aa:b2:92:05:00:1f"
-    name = "oracle10-minion"
-  }
+  # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
   liberty10_minion = {
     mac  = "aa:b2:92:05:00:26"
     name = "liberty10-minion"
@@ -160,10 +148,6 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Micro Minions
-  slemicro52_minion = {
-    mac  = "aa:b2:92:05:00:27"
-    name = "slemicro52-minion"
-  }
   slemicro53_minion = {
     mac  = "aa:b2:92:05:00:28"
     name = "slemicro53-minion"
@@ -210,6 +194,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:35"
     name = "sles15sp7-sshminion"
   }
+  sles160_sshminion = {
+    mac  = "aa:b2:92:05:00:36"
+    name = "sles160-sshminion"
+  }
   alma8_sshminion = {
     mac  = "aa:b2:92:05:00:39"
     name = "alma8-sshminion"
@@ -242,6 +230,15 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:41"
     name = "rocky9-sshminion"
   }
+  # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
+  liberty10_sshminion = {
+    mac  = "aa:b2:92:05:00:46"
+    name = "liberty10-sshminion"
+  }
+  openeuler2403_sshminion = {
+    mac  = "aa:b2:92:05:00:40"
+    name = "openeuler2403-sshminion"
+  }
   rhel7_sshminion = {
     mac  = "aa:b2:92:05:00:0c"
     name = "rhel7-sshminion"
@@ -257,6 +254,14 @@ ENVIRONMENT_CONFIGURATION = {
   rhel10_sshminion = {
     mac  = "aa:b2:92:05:00:0f"
     name = "rhel10-sshminion"
+  }
+  debian13_sshminion = {
+    mac  = "aa:b2:92:05:00:31"
+    name = "debian13-sshminion"
+  }
+  raspios13_sshminion = {
+    mac  = "aa:b2:92:42:00:0d"
+    name = "raspios13-sshminion"
   }
   ubuntu2204_sshminion = {
     mac  = "aa:b2:92:05:00:3b"
@@ -287,7 +292,7 @@ ENVIRONMENT_CONFIGURATION = {
 
 BASE_CONFIGURATIONS = {
   base_core = {
-    images             = [ "sles15sp5o", "sles15sp7o", "opensuse156o", "opensuse160o" ]
+    images             = [ "opensuse156o", "opensuse160o", "sles15sp7o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
@@ -301,21 +306,22 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "tatooine.mgr.slc1.suse.org"
   }
   base_rhlike = {
-    images             = [ "almalinux8o", "almalinux9o", "almalinux10o", "amazonlinux2023o", "centos7o", "libertylinux9o", "libertylinux10o", "openeuler2403o", "oraclelinux9o", "oraclelinux10o", "rocky8o", "rocky9o", "rocky10o" ]
+    # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
+    images             = [ "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "libertylinux10o", "openeuler2403o", "oraclelinux9o", "rocky8o", "rocky9o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
-    hypervisor         = "tatooine.mgr.slc1.suse.org" # Share base_old_sle hypervisor
+    hypervisor         = "tatooine.mgr.slc1.suse.org"
   }
   base_new_sle = {
-    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o" ]
+    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
     hypervisor         = "florina.mgr.slc1.suse.org"
   }
   base_retail = {
-    images             = [ "sles15sp6o","sles15sp7o", "opensuse156o", "opensuse160o" ]
+    images             = [ "sles15sp6o", "sles15sp7o", "opensuse156o", "opensuse160o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = "192.168.52.0/24"
