@@ -318,6 +318,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "suma-12.mgr.suse.de"
   }
   base_arm = {
+    images             = [ "opensuse160armo", "raspios13o" ]
     pool               = "ssd"
     bridge             = "br0"
     additional_network = null

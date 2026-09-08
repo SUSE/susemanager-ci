@@ -279,6 +279,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "mandalore.mgr.slc1.suse.org"
   }
   base_arm = {
+    images             = [ "opensuse156armo" ]
     pool               = "ssd"
     bridge             = "br0"
     additional_network = null

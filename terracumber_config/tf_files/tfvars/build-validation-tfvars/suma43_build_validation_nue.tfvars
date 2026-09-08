@@ -240,6 +240,7 @@ BASE_CONFIGURATIONS = {
     additional_network = "192.168.43.0/24"
   }
   base_arm = {
+    images             = [ "opensuse156armo" ]
     pool               = "ssd"
     bridge             = "br0"
     additional_network = null

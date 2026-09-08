@@ -88,11 +88,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:21"
     name = "rocky9-minion"
   }
-  # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
-  liberty10_minion = {
-    mac  = "aa:b2:92:05:00:26"
-    name = "liberty10-minion"
-  }
+  # alma10, liberty10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
   openeuler2403_minion = {
     mac  = "aa:b2:92:05:00:20"
     name = "openeuler2403-minion"
@@ -230,11 +226,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:05:00:41"
     name = "rocky9-sshminion"
   }
-  # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
-  liberty10_sshminion = {
-    mac  = "aa:b2:92:05:00:46"
-    name = "liberty10-sshminion"
-  }
+  # alma10, liberty10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
   openeuler2403_sshminion = {
     mac  = "aa:b2:92:05:00:40"
     name = "openeuler2403-sshminion"
@@ -292,7 +284,7 @@ ENVIRONMENT_CONFIGURATION = {
 
 BASE_CONFIGURATIONS = {
   base_core = {
-    images             = [ "opensuse156o", "opensuse160o", "sles15sp7o" ]
+    images             = [ "opensuse156o", "opensuse160o", "sles15sp5o", "sles15sp7o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
@@ -307,7 +299,7 @@ BASE_CONFIGURATIONS = {
   }
   base_rhlike = {
     # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
-    images             = [ "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "libertylinux10o", "openeuler2403o", "oraclelinux9o", "rocky8o", "rocky9o" ]
+    images             = [ "almalinux8o", "almalinux9o", "amazonlinux2023o", "centos7o", "libertylinux9o", "openeuler2403o", "oraclelinux9o", "rocky8o", "rocky9o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
