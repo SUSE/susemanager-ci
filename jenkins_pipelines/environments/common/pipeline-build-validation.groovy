@@ -442,7 +442,7 @@ def run(params) {
                     // Call the minion testing.
                     try {
                         stage('Clients stages') {
-                            clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots)
+                            clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots, isNewJenkins)
                         }
                     } catch (Exception ex) {
                         println('ERROR: one or more clients have failed')
@@ -687,7 +687,7 @@ def runCucumberRakeTarget(String rake_target, boolean return_status = false, dis
 
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
-def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots) {
+def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots, isNewJenkins) {
 
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
