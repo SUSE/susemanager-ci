@@ -25,7 +25,7 @@ node('sumaform-cucumber-slc1') {
                     'alma8_minion:selected', 'alma8_sshminion:selected', 'alma9_minion:selected', 'alma9_sshminion:selected', 'alma10_minion', 'alma10_sshminion',
                     'amazon2023_minion:selected', 'amazon2023_sshminion:selected',
                     'centos7_minion:selected', 'centos7_sshminion:selected',
-                    'liberty9_minion:selected', 'liberty9_sshminion:selected', 'liberty10_minion:selected', 'liberty10_sshminion:selected',
+                    'liberty9_minion:selected', 'liberty9_sshminion:selected', 'liberty10_minion', 'liberty10_sshminion',
                     'openeuler2403_minion:selected', 'openeuler2403_sshminion:selected',
                     'oracle9_minion:selected', 'oracle9_sshminion:selected', 'oracle10_minion', 'oracle10_sshminion',
                     'rhel7_minion', 'rhel7_sshminion', 'rhel8_minion', 'rhel8_sshminion', 'rhel9_minion', 'rhel9_sshminion', 'rhel10_minion', 'rhel10_sshminion',
