@@ -5,6 +5,10 @@ terraform {
       source  = "dmacvicar/libvirt"
       version = "0.8.3"
     }
+    feilong = {
+      source  = "bischoff/feilong"
+      version = "0.0.9"
+    }
   }
 }
 
@@ -35,6 +39,18 @@ provider "libvirt" {
 provider "libvirt" {
   alias = "host_deblike"
   uri   = "qemu+tcp://${var.BASE_CONFIGURATIONS.base_deblike.hypervisor}/system"
+}
+
+# ARM Host
+provider "libvirt" {
+  alias = "host_arm"
+  uri   = "qemu+tcp://suma-arm.mgr.suse.de/system"
+}
+
+provider "feilong" {
+  connector   = "https://feilong.mgr.suse.de"
+  admin_token = var.ZVM_ADMIN_TOKEN
+  local_user  = var.S390_LOCAL_USER
 }
 
 # Base Core : Core Infra + Main Testsuite images
@@ -197,6 +213,8 @@ module "build_validation_module" {
     libvirt.host_rhlike  = libvirt.host_old_sle_rhlike
     libvirt.host_deblike = libvirt.host_deblike
     libvirt.host_retail  = libvirt.host_retail
+    libvirt.host_arm     = libvirt.host_arm
+    feilong              = feilong
   }
 
   # --- BASE MAPPING ---
