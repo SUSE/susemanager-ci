@@ -94,18 +94,18 @@ module "cucumber_testsuite" {
   product_version = "uyuni-master"
 
   // Kubernetes variables
-  kubernetes                     = true
-  use_devel_oci                  = true
-  install_mlm_server             = true
-  install_mlm_proxy              = true
-  install_traefik                = true
-  install_local_path_provisioner = true
-  deploy_coco_attestation        = true
-  deploy_saline                  = true
-  deploy_tftp                    = true
-  deploy_hub_api                 = true
-  install_kubectl_helm           = false
-  kubeconfig_path                = null
+  kubernetes                                = true
+  use_devel_oci                             = true
+  deploy_coco_attestation                   = true
+  deploy_saline                             = true
+  deploy_tftp                               = true
+  deploy_hub_api                            = true
+  install_kubectl_helm                      = false
+  kubeconfig_path                           = null
+  install_uyuni_via_testsuite               = true
+  kubernetes_create_static_var_spacewalk_pv = true
+  kubernetes_create_static_var_pgsql_pv     = true
+  local_path_provisioner_default_class      = true
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["tumbleweedo", "opensuse156o", "opensuse160o"]
+  images = ["tumbleweedo", "opensuse160o", "rocky8o", "ubuntu2404o", "sles15sp7o"]
 
   use_avahi    = false
   name_prefix  = "uyuni-ci-master-rke2-"
@@ -179,7 +179,6 @@ module "cucumber_testsuite" {
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
       login_timeout = 28800
     }
-
     suse_minion = {
       image             = "tumbleweedo"
       provider_settings = {
@@ -202,12 +201,12 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    deblike_minion = {
-      image             = "ubuntu2404o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:1b"
-      }
-    }
+    # deblike_minion = {
+    #   image             = "ubuntu2404o"
+    #   provider_settings = {
+    #     mac = "aa:b2:93:01:00:1b"
+    #   }
+    # }
     build_host = {
       image             = "sles15sp7o"
       provider_settings = {
@@ -218,15 +217,14 @@ module "cucumber_testsuite" {
     pxeboot_minion = {
       image = "sles15sp7o"
     }
-    dhcp_dns = {
-      name       = "dhcp-dns"
-      image      = "opensuse156o"
-      hypervisor = {
-        host        = "suma-01.mgr.suse.de"
-        user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
-      }
-    }
+    # dhcp_dns = {
+    #   name       = "dhcp-dns"
+    #   hypervisor = {
+    #     host        = "suma-01.mgr.suse.de"
+    #     user        = "root"
+    #     private_key = file("~/.ssh/id_ed25519")
+    #   }
+    # }
   }
   
   provider_settings = {
@@ -238,5 +236,7 @@ module "cucumber_testsuite" {
 }
 
 output "configuration" {
-  value = module.cucumber_testsuite.configuration
+  sensitive = true
+  value     = module.cucumber_testsuite.configuration
 }
+
