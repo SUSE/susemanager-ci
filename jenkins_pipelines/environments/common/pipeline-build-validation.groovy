@@ -782,7 +782,7 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots,
                             required_custom_channel_status[minion_name_without_ssh] != 'NOT_CREATED'
                         }
                         if (required_custom_channel_status[minion_name_without_ssh] == 'FAIL') {
-                            error("${minion_name_without_ssh} creates bootstrap repository failed")
+                            error("${minion_name_without_ssh} creates mandatory custom channel failed")
                         }
                     }
                     if (params.confirm_before_continue) {
