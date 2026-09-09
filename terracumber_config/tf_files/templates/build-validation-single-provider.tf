@@ -22,7 +22,7 @@ module "base_core" {
   use_avahi       = false
   domain          = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].domain
   ssh_key_path    = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
-  images = lookup(var.BASE_CONFIGURATIONS.base_core, "images", [
+  images = coalesce(try(var.BASE_CONFIGURATIONS.base_core.images, null), [
     "sles12sp5o",
     "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o",
     "sles160o",
