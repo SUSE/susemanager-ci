@@ -63,8 +63,6 @@ module "cucumber_testsuite" {
   use_devel_oci                  = true
   install_mlm_server             = true
   install_mlm_proxy              = true
-  install_traefik                = true
-  install_local_path_provisioner = true
   deploy_coco_attestation        = true
   deploy_saline                  = true
   deploy_tftp                    = true

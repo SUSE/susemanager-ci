@@ -114,8 +114,6 @@ module "cucumber_testsuite" {
   use_devel_oci                  = true
   install_mlm_server             = true
   install_mlm_proxy              = true
-  install_traefik                = true
-  install_local_path_provisioner = true
   deploy_coco_attestation        = true
   deploy_saline                  = true
   deploy_tftp                    = true
@@ -136,7 +134,7 @@ module "cucumber_testsuite" {
   cc_ptf_password = var.SCC_PTF_PASSWORD
   scc_slmicro_pass = var.SCC_MICRO_CREDENTIALS
 
-  images = ["slmicro62o", "opensuse156o", "opensuse160o"]
+  images = ["slmicro62o", "opensuse156o", "opensuse160o", "rocky8o", "ubuntu2404o", "sles15sp7o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-head-rke2-"
@@ -198,60 +196,60 @@ module "cucumber_testsuite" {
       helm_chart_name             = "proxy-helm"
       helm_chart_url              = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2"
     }
-    suse_minion = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:f6"
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    suse_sshminion = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:f8"
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    rhlike_minion = {
-      image = "rocky8o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:fa"
-        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
-        // Also, openscap cannot run with less than 1.25 GB of RAM
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    deblike_minion = {
-      image = "ubuntu2404o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:fb"
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    build_host = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:fd"
-        vcpu = 2
-        memory = 2048
-      }
-    }
-    pxeboot_minion = {
-      image = "sles15sp7o"
-    }
-    dhcp_dns = {
-      name        = "dhcp-dns"
-      image       = "opensuse156o"
-      hypervisor  = {
-        host        = "suma-01.mgr.suse.de"
-        user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
-      }
-    }
+    # suse_minion = {
+    #   image = "sles15sp7o"
+    #   provider_settings = {
+    #     mac = "aa:b2:92:42:00:f6"
+    #     vcpu = 2
+    #     memory = 2048
+    #   }
+    # }
+    # suse_sshminion = {
+    #   image = "sles15sp7o"
+    #   provider_settings = {
+    #     mac = "aa:b2:92:42:00:f8"
+    #     vcpu = 2
+    #     memory = 2048
+    #   }
+    # }
+    # rhlike_minion = {
+    #   image = "rocky8o"
+    #   provider_settings = {
+    #     mac = "aa:b2:92:42:00:fa"
+    #     // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+    #     // Also, openscap cannot run with less than 1.25 GB of RAM
+    #     vcpu = 2
+    #     memory = 2048
+    #   }
+    # }
+    # deblike_minion = {
+    #   image = "ubuntu2404o"
+    #   provider_settings = {
+    #     mac = "aa:b2:92:42:00:fb"
+    #     vcpu = 2
+    #     memory = 2048
+    #   }
+    # }
+    # build_host = {
+    #   image = "sles15sp7o"
+    #   provider_settings = {
+    #     mac = "aa:b2:92:42:00:fd"
+    #     vcpu = 2
+    #     memory = 2048
+    #   }
+    # }
+    # pxeboot_minion = {
+    #   image = "sles15sp7o"
+    # }
+    # dhcp_dns = {
+    #   name        = "dhcp-dns"
+    #   image       = "opensuse156o"
+    #   hypervisor  = {
+    #     host        = "suma-01.mgr.suse.de"
+    #     user        = "root"
+    #     private_key = file("~/.ssh/id_ed25519")
+    #   }
+    # }
   }
 
   provider_settings = {
