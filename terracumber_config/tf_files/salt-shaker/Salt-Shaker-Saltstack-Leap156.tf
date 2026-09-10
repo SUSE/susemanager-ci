@@ -102,6 +102,7 @@ module "base" {
 }
 
 module "salt-shaker-saltstack" {
+  use_os_released_updates = true
   source             = "./modules/salt_testenv"
   base_configuration = module.base.configuration
 
