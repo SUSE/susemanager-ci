@@ -6,15 +6,15 @@ node('sumaform-cucumber') {
         disableConcurrentBuilds(),
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
-            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Branch prepared for the MU tested'),
+            string(name: 'cucumber_ref', defaultValue: '', description: 'Branch prepared for the MU tested. Leave it empty to use the default of the product version below, set it to test a different one'),
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/templates/build-validation-single-provider.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
             string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
-            string(name: 'product_version', defaultValue: '5.1-released', description: 'Server product version'),
-            choice(name: 'base_os', choices: ['slmicro62o', 'slmicro61o', 'sles15sp7o', 'slemicro55o', 'sles15sp6o'], description: 'Server and Proxy base OS'),
+            choice(name: 'product_version', choices: ['5.2-released', '5.1-released', 'head'], description: 'Server product version'),
+            choice(name: 'base_os', choices: ['slmicro62o', 'slmicro61o', 'sles15sp7o'], description: 'Server and Proxy base OS. Has to be a base OS of the product version above: SL Micro 6.2 for 5.2, SL Micro 6.1 for 5.1, SLES 15 SP7 for 5.2, 5.1 and head'),
             activeChoice(name: 'minions_to_run', description: 'Node list to run during BV', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
                 return [
                     'sles12sp5_minion:selected', 'sles12sp5_sshminion:selected',
@@ -40,8 +40,8 @@ node('sumaform-cucumber') {
                     'slmicro60_minion:selected', 'slmicro61_minion:selected', 'slmicro62_minion:selected'
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
-            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Server container registry'),
-            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_registry', defaultValue: '', description: 'Server container registry. Leave it empty to use the default of the product version above, set it to test a different one'),
+            string(name: 'proxy_container_registry', defaultValue: '', description: 'Proxy container registry. Leave it empty to use the default of the product version above, set it to test a different one'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
@@ -61,8 +61,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_test_retail_terminal', defaultValue: false, description: 'Test retail terminal deployments'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             booleanParam(name: 'push_new_custom_repositories', defaultValue: false, description: 'Force push new custom repositories for client tools if pipeline rerun after deployment'),
-            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
-            choice(name: 'json_generator_version', choices: ['51-micro', '51-sles', '52-micro', '52-sles', '50-micro', '50-sles', '43'], description: 'Version the MI Identifiers above are resolved for. Has to match product_version and base_os: a SL Micro base_os is a -micro version, a SLES one a -sles version'),
+            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A). They are resolved for the product version and base OS selected above'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
             ])
     ])
@@ -75,8 +74,48 @@ node('sumaform-cucumber') {
     mutableParams.bin_path = "/usr/bin/tofu"
     mutableParams.bin_plugins_path = "/usr/bin"
     mutableParams.product_version_display = mutableParams.product_version
-    mutableParams.non_MU_channels_tasks_file = 'susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_52.json'
     mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm_sandbox_build_validation_nue.tfvars'
+
+    def configurationByVersion = [
+        '5.2-released': [
+            base_os               : ['slmicro62o', 'sles15sp7o'],
+            container_registry    : 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile',
+            json_generator_version: '52',
+            non_MU_channels_tasks : '52',
+            cucumber_ref          : 'Manager-5.2'
+        ],
+        '5.1-released': [
+            base_os               : ['slmicro61o', 'sles15sp7o'],
+            container_registry    : 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/update/containerfile',
+            json_generator_version: '51',
+            non_MU_channels_tasks : '51',
+            cucumber_ref          : 'Manager-5.1'
+        ],
+        'head': [
+            base_os               : ['sles15sp7o'],
+            container_registry    : 'registry.suse.de',
+            json_generator_version: '',
+            non_MU_channels_tasks : '52',
+            cucumber_ref          : 'master'
+        ]
+    ]
+    if (!configurationByVersion.containsKey(mutableParams.product_version)) {
+        error("product_version '${mutableParams.product_version}' is not one of ${configurationByVersion.keySet().join(', ')}")
+    }
+    def versionConfiguration = configurationByVersion[mutableParams.product_version]
+    if (!versionConfiguration.base_os.contains(mutableParams.base_os)) {
+        error("base_os '${mutableParams.base_os}' is not a base OS of ${mutableParams.product_version}, pick one of ${versionConfiguration.base_os.join(', ')}")
+    }
+    mutableParams.json_generator_version = versionConfiguration.json_generator_version ? "${versionConfiguration.json_generator_version}-${mutableParams.base_os.startsWith('sles') ? 'sles' : 'micro'}" : ''
+    mutableParams.non_MU_channels_tasks_file = "susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_${versionConfiguration.non_MU_channels_tasks}.json"
+    if (!mutableParams.cucumber_ref) {
+        mutableParams.cucumber_ref = versionConfiguration.cucumber_ref
+    }
+    for (registryParam in ['server_container_registry', 'proxy_container_registry']) {
+        if (!mutableParams[registryParam]) {
+            mutableParams[registryParam] = versionConfiguration.container_registry
+        }
+    }
 
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation.groovy"
     pipeline.run(mutableParams)
