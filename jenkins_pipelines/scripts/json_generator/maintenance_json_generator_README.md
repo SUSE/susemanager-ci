@@ -39,8 +39,9 @@ information for the SUSE Manager BV testsuite pipeline.
 - Embargo Checks: The script has an option to reject Maintenance Incidents (MIs)
 that are under embargo.
 - SLFO client tools for `sles160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64):
-  - Stable `51-*` / `52-sles` / `52-micro`: use `-s` / `--slfo-pull-request <id>` to
-    inject a `:PullRequest:/<id>` client-tools URL (independent of MI IDs).
+  - Stable `51-*` / `52-sles` / `52-micro`: the SLES-16 `:ToTest` client-tools URL is
+    always included; use `-s` / `--slfo-pull-request <id>` to also inject a
+    `:PullRequest:/<id>` URL (independent of MI IDs).
   - Beta `53-sles-beta` / `53-micro-beta`: a static `:ToTest` URL is baked in
     and applied automatically; `--slfo-pull-request` is rejected for beta
     versions because the Beta project cannot toggle maintenance on/off under
@@ -91,25 +92,29 @@ repository data for the provided MI IDs.
 
 For **`43`**, **`50-micro`**, and **`50-sles`**, the output always includes static Salt image
 repository URLs for **`slmicro60_minion`** and **`slmicro61_minion`** (`slmicro60_salt`,
-`slmicro61_salt`, `slmicro6_salt_bundle`) in addition to MI-based maintenance URLs.
+`slmicro61_salt`) in addition to MI-based maintenance URLs.
+
+On the stable **`51-*`** and **`52-*`** flows, **`sles160_minion`**, **`slmicro62_minion`**
+(x86_64) and **`opensuse160arm_minion`** (aarch64) always receive the SLES-16
+MultiLinuxManagerTools **`:ToTest`** client tools under the inner key
+**`sles16_client_tools`**. SLE 16 has no maintenance project, so those minions get no
+MI-based URLs; `--slfo-pull-request` adds a PullRequest repo on top.
 
 For **`53-sles-beta`** and **`53-micro-beta`**, the output always includes fixed `:ToTest`
 client-tools URLs independently of MI IDs. **`slmicro62_minion`** and **`sles160_minion`**
 share the same **SLES-16** MultiLinuxManagerTools-Beta **`:ToTest`** path under the inner key
-**`sles16_client_tools`**. **`opensuse160arm_minion`** and other client minions receive
-MI-based maintenance URLs from the dynamic map (e.g. **`opensuse160arm_minion`** uses
-`MultiLinuxManagerTools-Beta_SLE-16_aarch64`). In addition, **`53-sles-beta`** always includes fixed `http://`
-`server` and `proxy` ToTest image repos; path fragments live in
+**`sles16_client_tools`**, and **`opensuse160arm_minion`** gets the aarch64 repo of the same
+path under that key. Other client minions receive MI-based maintenance URLs from the
+dynamic map. In addition, **`53-sles-beta`** always includes fixed `http://` ToTest
+image repos for **`server`** and **`proxy`**; path fragments live in
 **`v53_uyuni_tools_sles_static_repos_beta`** and are prefixed with **`IBS_URL_PREFIX`** in
 **`get_v53_static_and_client_tools`**. URLs resolve under
 `SUSE:/SLE-15-SP7:/Update:/Products:/MultiLinuxManager53:/ToTest/images-SP7/repo/`
 (`SUSE-Multi-Linux-Manager-Server-SLE-5.3-POOL-x86_64-Media1/` and
 `SUSE-Multi-Linux-Manager-Proxy-SLE-5.3-POOL-x86_64-Media1/`). **`53-micro-beta`** pins
-`server_uyuni_tools` and `proxy_uyuni_tools` to the `http://`
-`SLFO:/Products:/Multi-Linux-Manager:/5.3:/ToTest/product/repo/` tree
-(`Multi-Linux-Manager-Server-5.3-x86_64/` and `Multi-Linux-Manager-Proxy-5.3-x86_64/`). On the stable `51-*` / `52-sles` / `52-micro` flows,
-equivalent URLs for `sles160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64) are only added when
-`--slfo-pull-request <id>` is provided.
+`server_uyuni_tools` and `proxy_uyuni_tools` to the
+`http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.3:/ToTest/product/repo/` tree
+(`Multi-Linux-Manager-Server-5.3-x86_64/` and `Multi-Linux-Manager-Proxy-5.3-x86_64/`).
 
 **Example SLFO PullRequest Output:**
 
@@ -165,8 +170,8 @@ Repository definitions live under
   for 5.3 beta placeholders. For **`53-sles-beta`**, fixed ToTest **server** / **proxy**
   image URLs are defined in `v53_uyuni_tools_sles_static_repos_beta`. For
   **`53-micro-beta`** / **`53-sles-beta`**, dynamic client minions include
-  **`opensuse160arm_minion`** (`MultiLinuxManagerTools-Beta_SLE-16_aarch64`),
-  alongside **`opensuse156arm_minion`** (SLE-15 aarch64), in
+  **`opensuse156arm_minion`** (SLE-15 aarch64) and **`raspios13_minion`**
+  (`MultiLinuxManagerTools-Beta_Debian-13_aarch64`) in
   `v53_nodes_dynamic_client_tools_repos_beta`.
 
 `repository_versions/__init__.py` aggregates everything into the

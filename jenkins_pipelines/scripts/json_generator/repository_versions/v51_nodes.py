@@ -38,11 +38,21 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     "slmicro61_minion": {
         "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/"
     },
+    "slmicro62_minion": {
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
+    },
+    "sles160_minion": {
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
+    },
+    "opensuse160arm_minion": {
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/"
+    },
 }
 
 v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-12_x86_64/"},
     "debian13_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-13_x86_64/"},
+    "raspios13_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-13_aarch64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-22.04_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-24.04_x86_64/"},
     "ubuntu2604_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-26.04_x86_64/"},
@@ -54,7 +64,6 @@ v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
     "liberty9_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
     "liberty10_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-10_x86_64/"},
     "openeuler2403_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
-    "opensuse160arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-16_aarch64/"},
     "oracle9_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-9_x86_64/"},
     "oracle10_minion": { "/SUSE_Updates_MultiLinuxManagerTools_EL-10_x86_64/"},
     "rhel7_minion": { "/SUSE_Updates_MultiLinuxManagerTools_RES-7_x86_64/"},
