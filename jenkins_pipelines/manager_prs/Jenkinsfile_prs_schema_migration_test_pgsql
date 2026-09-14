@@ -27,7 +27,8 @@ pipeline {
                 " --check-name ${context}" +
                 " --description \"${description}\"" +
                 " --build-url ${env.BUILD_URL}" +
-                " --command ${test}"
+                " --command ${test}" +
+                " --git-dir ${env.WORKSPACE}/clone"
     }
 
     // run only on specific hosts
