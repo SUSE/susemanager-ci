@@ -28,7 +28,7 @@ node('sumaform-cucumber-slc1') {
                     'liberty9_minion:selected', 'liberty9_sshminion:selected', 'liberty10_minion', 'liberty10_sshminion',
                     'openeuler2403_minion:selected', 'openeuler2403_sshminion:selected',
                     'oracle9_minion:selected', 'oracle9_sshminion:selected', 'oracle10_minion', 'oracle10_sshminion',
-                    'rhel7_minion:selected', 'rhel7_sshminion:selected', 'rhel8_minion:selected', 'rhel8_sshminion:selected', 'rhel9_minion:selected', 'rhel9_sshminion:selected', 'rhel10_minion:selected', 'rhel10_sshminion:selected',
+                    'rhel7_minion:selected', 'rhel7_sshminion:selected', 'rhel8_minion:selected', 'rhel8_sshminion:selected', 'rhel9_minion:selected', 'rhel9_sshminion:selected', 'rhel10_minion', 'rhel10_sshminion',
                     'rocky8_minion:selected', 'rocky8_sshminion:selected', 'rocky9_minion:selected', 'rocky9_sshminion:selected', 'rocky10_minion', 'rocky10_sshminion',
                     'ubuntu2204_minion:selected', 'ubuntu2204_sshminion:selected', 'ubuntu2404_minion:selected', 'ubuntu2404_sshminion:selected', 'ubuntu2604_minion:selected', 'ubuntu2604_sshminion:selected',
                     'debian13_minion:selected', 'debian13_sshminion:selected',
