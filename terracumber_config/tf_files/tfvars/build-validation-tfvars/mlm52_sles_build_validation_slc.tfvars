@@ -114,7 +114,7 @@ ENVIRONMENT_CONFIGURATION = {
     name = "debian13-minion"
   }
   raspios13_minion = {
-    mac  = "aa:b2:92:05:00:27"
+    mac  = "aa:b2:92:42:00:0c"
     name = "raspios13-minion"
   }
   ubuntu2204_minion = {
