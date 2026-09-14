@@ -252,11 +252,11 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertIn('slmicro61_minion', custom_repos)
         self.assertEqual(
             set(custom_repos['slmicro60_minion'].keys()),
-            {'slmicro60_salt', 'slmicro6_salt_bundle'},
+            {'slmicro60_salt'},
         )
         self.assertEqual(
             set(custom_repos['slmicro61_minion'].keys()),
-            {'slmicro61_salt', 'slmicro6_salt_bundle'},
+            {'slmicro61_salt'},
         )
 
     def test_apply_slfo_pullrequest_client_tools(self):
@@ -288,31 +288,35 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertNotIn('aarch64', x86_url)
         self.assertNotIn('x86_64', aarch64_url)
 
-    def test_v51_dynamic_includes_opensuse160arm_sles16_aarch64(self):
-        _static, dynamic = get_v51_static_and_client_tools('sles')
+    def test_sle16_minions_use_static_slfo_client_tools(self):
+        x86_64_url = 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/'
+        aarch64_url = 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/'
+        for get_static_and_client_tools in (
+            get_v51_static_and_client_tools,
+            get_v52_static_and_client_tools,
+        ):
+            static, dynamic = get_static_and_client_tools('sles')
+            self.assertEqual(static['sles160_minion']['sles16_client_tools'], x86_64_url)
+            self.assertEqual(static['slmicro62_minion']['sles16_client_tools'], x86_64_url)
+            self.assertEqual(static['opensuse160arm_minion']['sles16_client_tools'], aarch64_url)
+            self.assertNotIn('opensuse160arm_minion', dynamic)
 
-        self.assertIn('opensuse160arm_minion', dynamic)
-        self.assertIn(
-            '/SUSE_Updates_MultiLinuxManagerTools_SLE-16_aarch64/',
-            dynamic['opensuse160arm_minion'],
+    def test_raspios13_uses_debian13_aarch64_client_tools(self):
+        for get_static_and_client_tools in (
+            get_v51_static_and_client_tools,
+            get_v52_static_and_client_tools,
+        ):
+            _static, dynamic = get_static_and_client_tools('sles')
+            self.assertEqual(
+                dynamic['raspios13_minion'],
+                ['/SUSE_Updates_MultiLinuxManagerTools_Debian-13_aarch64/'],
+            )
+
+        _static, dynamic = get_v53_static_and_client_tools('sles', beta=True)
+        self.assertEqual(
+            dynamic['raspios13_minion'],
+            ['/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-13_aarch64/'],
         )
-
-    def test_v52_dynamic_includes_opensuse160arm_sles16_aarch64(self):
-        _static, dynamic = get_v52_static_and_client_tools('sles')
-
-        self.assertIn('opensuse160arm_minion', dynamic)
-        self.assertIn(
-            '/SUSE_Updates_MultiLinuxManagerTools_SLE-16_aarch64/',
-            dynamic['opensuse160arm_minion'],
-        )
-
-    def test_opensuse160arm_not_in_v51_static_client_tools(self):
-        static, _dynamic = get_v51_static_and_client_tools('sles')
-        self.assertNotIn('opensuse160arm_minion', static)
-
-    def test_opensuse160arm_not_in_v52_static_client_tools(self):
-        static, _dynamic = get_v52_static_and_client_tools('sles')
-        self.assertNotIn('opensuse160arm_minion', static)
 
     @patch('json_generator.maintenance_json_generator.validate_and_store_results')
     def test_slfo_pullrequest_injects_opensuse160arm_in_find_valid_repos(self, _mock_validate):

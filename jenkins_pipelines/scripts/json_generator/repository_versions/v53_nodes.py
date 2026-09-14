@@ -33,16 +33,10 @@ v53_uyuni_tools_sles_repos_beta: Dict[str, Set[str]] = {
 # TODO: These paths need to be updated when 5.3 beta project is created
 v53_uyuni_tools_sles_static_repos_beta: Dict[str, Dict[str, str]] = {
     "server": {
-        "mlm53_sles_beta_totest_images_sp7": (
-            "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager53:/ToTest/"
-            "images-SP7/repo/SUSE-Multi-Linux-Manager-Server-SLE-5.3-POOL-x86_64-Media1/"
-        ),
+        "mlm53_sles_beta_totest_images_sp7": "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager53:/ToTest/images-SP7/repo/SUSE-Multi-Linux-Manager-Server-SLE-5.3-POOL-x86_64-Media1/",
     },
     "proxy": {
-        "mlm53_sles_beta_totest_images_sp7_proxy": (
-            "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager53:/ToTest/"
-            "images-SP7/repo/SUSE-Multi-Linux-Manager-Proxy-SLE-5.3-POOL-x86_64-Media1/"
-        ),
+        "mlm53_sles_beta_totest_images_sp7_proxy": "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager53:/ToTest/images-SP7/repo/SUSE-Multi-Linux-Manager-Proxy-SLE-5.3-POOL-x86_64-Media1/",
     },
 }
 
@@ -66,11 +60,15 @@ v53_nodes_static_client_tools_repositories_beta: Dict[str, Dict[str, str]] = {
     "sles160_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-x86_64/"
     },
+    "opensuse160arm_minion": {
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-aarch64/"
+    },
 }
 
 v53_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
     "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-12_x86_64/"},
     "debian13_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-13_x86_64/"},
+    "raspios13_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-13_aarch64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Ubuntu-22.04_x86_64/"},
     "ubuntu2404_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Ubuntu-24.04_x86_64/"},
     "ubuntu2604_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Ubuntu-26.04_x86_64/"},
@@ -83,7 +81,6 @@ v53_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
     "liberty9_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "openeuler2403_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "opensuse156arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_aarch64/"},
-    "opensuse160arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-16_aarch64/"},
     "oracle9_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "oracle10_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-10_x86_64/"},
     "rhel7_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_RES-7_x86_64/"},

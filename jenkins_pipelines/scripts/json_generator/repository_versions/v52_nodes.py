@@ -36,16 +36,10 @@ v52_uyuni_tools_micro_repos: Dict[str, Dict[str, str]] = {
 # SLES 5.2: static ToTest image repos for server/proxy
 v52_uyuni_tools_sles_static_repos: Dict[str, Dict[str, str]] = {
     "server": {
-        "mlm52_sles_totest_images_sp7": (
-            "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/"
-            "images-SP7/repo/SUSE-Multi-Linux-Manager-Server-SLE-5.2-POOL-x86_64-Media1/"
-        ),
+        "mlm52_sles_totest_images_sp7": "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/images-SP7/repo/SUSE-Multi-Linux-Manager-Server-SLE-5.2-POOL-x86_64-Media1/",
     },
     "proxy": {
-        "mlm52_sles_totest_images_sp7_proxy": (
-            "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/"
-            "images-SP7/repo/SUSE-Multi-Linux-Manager-Proxy-SLE-5.2-POOL-x86_64-Media1/"
-        ),
+        "mlm52_sles_totest_images_sp7_proxy": "/SLE-15-SP7:/Update:/Products:/MultiLinuxManager52:/ToTest/images-SP7/repo/SUSE-Multi-Linux-Manager-Proxy-SLE-5.2-POOL-x86_64-Media1/",
     },
 }
 

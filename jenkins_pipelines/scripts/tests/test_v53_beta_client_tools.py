@@ -37,19 +37,20 @@ class V53BetaClientToolsTest(unittest.TestCase):
         self.assertIn("SLE-15-SP7:", url)
         self.assertIn("SUSE-Multi-Linux-Manager-Server-SLE-5.3-POOL", url)
 
-    def test_opensuse160arm_beta_dynamic_uses_sles16_aarch64(self):
-        _static, dynamic = get_v53_static_and_client_tools("sles", beta=True)
-        self.assertIn("opensuse160arm_minion", dynamic)
-        self.assertIn(
-            "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-16_aarch64/",
-            dynamic["opensuse160arm_minion"],
+    def test_opensuse160arm_beta_uses_static_sles16_aarch64(self):
+        beta = v53_nodes_static_client_tools_repositories_beta
+        self.assertIn("opensuse160arm_minion", beta)
+        self.assertEqual(
+            beta["opensuse160arm_minion"]["sles16_client_tools"],
+            "/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-aarch64/",
         )
 
-    def test_opensuse160arm_not_in_v53_beta_static_client_tools(self):
-        beta = v53_nodes_static_client_tools_repositories_beta
-        self.assertNotIn("opensuse160arm_minion", beta)
-        self.assertIn("sles160_minion", beta)
-        self.assertIn("slmicro62_minion", beta)
+        static, dynamic = get_v53_static_and_client_tools("sles", beta=True)
+        self.assertEqual(
+            static["opensuse160arm_minion"]["sles16_client_tools"],
+            "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools-Beta:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-Beta-SLE-16-aarch64/",
+        )
+        self.assertNotIn("opensuse160arm_minion", dynamic)
 
 
 if __name__ == "__main__":
