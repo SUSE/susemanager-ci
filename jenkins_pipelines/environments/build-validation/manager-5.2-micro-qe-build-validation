@@ -35,7 +35,8 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_boot_node', defaultValue: true, description: 'Bootstrap Node'),
             booleanParam(name: 'must_run_tests', defaultValue: true, description: 'Run Smoke Tests'),
             booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format')
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'Salt & Client Tools SLE Update Repositories for each client, in json format'),
+            booleanParam(name: 'enable_hub_stages', defaultValue: false, description: 'Trigger hub testing in parallel')
             ])
     ])
 
