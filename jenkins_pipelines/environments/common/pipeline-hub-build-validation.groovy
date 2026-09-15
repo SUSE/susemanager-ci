@@ -287,11 +287,6 @@ def hubPeripheralStages() {
                 echo "prh1 channel sync status code: ${res}"
                 sh "exit ${res}"
             }
-            stage('prh1: Proxy2') {
-                def res = runCucumberRakeTarget('cucumber:hub_bv_prh1_proxy2', true)
-                echo "prh1 proxy2 status code: ${res}"
-                sh "exit ${res}"
-            }
             stage('prh1: Add Activation Key') {
                 def res = runCucumberRakeTarget('cucumber:hub_bv_prh1_add_activation_key', true)
                 echo "prh1 add activation key status code: ${res}"
@@ -302,17 +297,30 @@ def hubPeripheralStages() {
                 echo "prh1 create bootstrap repository status code: ${res}"
                 sh "exit ${res}"
             }
+            stage('prh1: Proxy2') {
+                def res = runCucumberRakeTarget('cucumber:hub_bv_prh1_proxy2', true)
+                echo "prh1 proxy2 status code: ${res}"
+                sh "exit ${res}"
+            }
             stage('prh1: Minions') {
                 parallel(
                     'ubuntu2404_minion': {
-                        stage('prh1: ubuntu2404 minion') {
+                        stage('prh1: Bootstrap - ubuntu2404 minion') {
                             def res = runCucumberRakeTarget('cucumber:hub_bv_prh1_ubuntu2404_minion', true)
+                            sh "exit ${res}"
+                        }
+                        stage('prh1: Smoke tests - ubuntu2404 minion') {
+                            def res = runCucumberRakeTarget('cucumber:hub_bv_prh1_ubuntu2404_minion_smoke_tests', true)
                             sh "exit ${res}"
                         }
                     },
                     'sles15sp7_minion': {
-                        stage('prh1: sles15sp7 minion') {
+                        stage('prh1: Bootstrap - sles15sp7 minion') {
                             def res = runCucumberRakeTarget('cucumber:hub_bv_prh1_sles15sp7_minion', true)
+                            sh "exit ${res}"
+                        }
+                        stage('prh1: Smoke tests - sles15sp7 minion') {
+                            def res = runCucumberRakeTarget('cucumber:hub_bv_prh1_sles15sp7_minion_smoke_tests', true)
                             sh "exit ${res}"
                         }
                     }
@@ -330,11 +338,6 @@ def hubPeripheralStages() {
                 echo "prh2 channel sync status code: ${res}"
                 sh "exit ${res}"
             }
-            stage('prh2: Proxy3') {
-                def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_proxy3', true)
-                echo "prh2 proxy3 status code: ${res}"
-                sh "exit ${res}"
-            }
             stage('prh2: Add Activation Key') {
                 def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_add_activation_key', true)
                 echo "prh2 add activation key status code: ${res}"
@@ -345,17 +348,30 @@ def hubPeripheralStages() {
                 echo "prh2 create bootstrap repository status code: ${res}"
                 sh "exit ${res}"
             }
+            stage('prh2: Proxy3') {
+                def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_proxy3', true)
+                echo "prh2 proxy3 status code: ${res}"
+                sh "exit ${res}"
+            }
             stage('prh2: Minions') {
                 parallel(
                     'slmicro62_minion': {
-                        stage('prh2: slmicro62 minion') {
+                        stage('prh2: Bootstrap - slmicro62 minion') {
                             def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_slmicro62_minion', true)
+                            sh "exit ${res}"
+                        }
+                        stage('prh2: Smoke tests - slmicro62 minion') {
+                            def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_slmicro62_minion_smoke_tests', true)
                             sh "exit ${res}"
                         }
                     },
                     'rocky10_minion': {
-                        stage('prh2: rocky10 minion') {
+                        stage('prh2: Bootstrap - rocky10 minion') {
                             def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_rocky10_minion', true)
+                            sh "exit ${res}"
+                        }
+                        stage('prh2: Smoke tests - rocky10 minion') {
+                            def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_rocky10_minion_smoke_tests', true)
                             sh "exit ${res}"
                         }
                     }
