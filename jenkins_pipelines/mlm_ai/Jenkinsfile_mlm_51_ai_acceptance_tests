@@ -28,6 +28,16 @@ pipeline {
             description: 'The branch to check out from the mcp-server-uyuni repository.'
         )
         string(
+            name: 'AGENT_PROVIDER',
+            defaultValue: 'google',
+            description: 'The provider for the AI agent model.'
+        )
+        string(
+            name: 'JUDGE_PROVIDER',
+            defaultValue: 'google',
+            description: 'The provider for the AI judge model.'
+        )
+        string(
             name: 'AGENT_MODEL',
             defaultValue: 'gemini-3.1-flash-lite',
             description: 'The model to use for the AI agent during testing.'
@@ -40,6 +50,8 @@ pipeline {
     }
 
     environment {
+        AGENT_PROVIDER = "${params.AGENT_PROVIDER}"
+        JUDGE_PROVIDER = "${params.JUDGE_PROVIDER}"
         AGENT_MODEL = "${params.AGENT_MODEL}"
         JUDGE_MODEL = "${params.JUDGE_MODEL}"
     }
@@ -125,7 +137,9 @@ EOF
                         fi
                         docker run --rm \
                                    --env-file .venv/config \
+                                   -e AGENT_PROVIDER=${env.AGENT_PROVIDER} \
                                    -e AGENT_MODEL=${env.AGENT_MODEL} \
+                                   -e JUDGE_PROVIDER=${env.JUDGE_PROVIDER} \
                                    -e JUDGE_MODEL=${env.JUDGE_MODEL} \
                                    --env-file \$HOME/.ai_secrets \
                                    -v "\$(pwd)/results:/app/results" \
@@ -147,7 +161,9 @@ EOF
                         set -e
                         docker run --rm \
                                    --env-file .venv/config \
+                                   -e AGENT_PROVIDER=${env.AGENT_PROVIDER} \
                                    -e AGENT_MODEL=${env.AGENT_MODEL} \
+                                   -e JUDGE_PROVIDER=${env.JUDGE_PROVIDER} \
                                    -e JUDGE_MODEL=${env.JUDGE_MODEL} \
                                    --env-file \$HOME/.ai_secrets \
                                    -v "\$(pwd)/results:/app/results" \
