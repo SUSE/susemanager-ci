@@ -29,12 +29,12 @@ pipeline {
         )
         string(
             name: 'AGENT_PROVIDER',
-            defaultValue: 'google',
+            defaultValue: 'goose',
             description: 'The provider for the AI agent model.'
         )
         string(
             name: 'JUDGE_PROVIDER',
-            defaultValue: 'google',
+            defaultValue: 'goose',
             description: 'The provider for the AI judge model.'
         )
         string(
