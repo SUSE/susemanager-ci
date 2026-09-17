@@ -1,10 +1,13 @@
 from argparse import Namespace
 from contextlib import redirect_stderr, redirect_stdout
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import io
 import json
 from os import path, remove
 from pathlib import Path
+import socket
 import sys
+import threading
 import unittest
 from unittest.mock import patch
 
@@ -13,7 +16,7 @@ from repository_versions.v43_nodes import v43_static_slmicro_salt_repositories
 from repository_versions.v51_nodes import get_v51_static_and_client_tools
 from repository_versions.v52_nodes import get_v52_static_and_client_tools
 from repository_versions.v53_nodes import get_v53_static_and_client_tools
-from tests.mock_response import mock_requests_get_success
+from tests.mock_response import MockResponse, mock_requests_get_success
 
 TESTDATA_DIR = Path(__file__).resolve().parent / 'testdata'
 
@@ -29,6 +32,85 @@ def _only_client_tools_exist(url: str) -> bool:
 def _only_mlm_packages_exist(url: str) -> bool:
     """Stand in for IBS: only the Multi-Linux-Manager Packages PullRequest project is published."""
     return MLM_PACKAGES_PR_PROJECT in url
+
+
+class _StatusSequenceServer:
+    """Stand in for IBS: answers the given status codes in order, repeating the last one."""
+
+    def __init__(self, statuses: list[int]):
+        self.requests: int = 0
+        remaining: list[int] = list(statuses)
+        server = self
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                server.requests += 1
+                self.send_response(remaining.pop(0) if remaining else statuses[-1])
+                self.send_header('Content-Length', '0')
+                self.end_headers()
+
+            def log_message(self, *_args):
+                pass
+
+        self._httpd = HTTPServer(('127.0.0.1', 0), Handler)
+        self.url: str = f"http://127.0.0.1:{self._httpd.server_port}/repo/"
+
+    def __enter__(self):
+        self._thread = threading.Thread(target=self._httpd.serve_forever, daemon=True)
+        self._thread.start()
+        return self
+
+    def __exit__(self, *_exc):
+        self._httpd.shutdown()
+        self._httpd.server_close()
+        self._thread.join()
+
+
+class _ConnectionDroppingServer:
+    """Stand in for a broken network: closes the first `drops` connections unanswered."""
+
+    def __init__(self, drops: int):
+        self.connections: int = 0
+        self._drops = drops
+        self._sock = socket.socket()
+        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._sock.bind(('127.0.0.1', 0))
+        self._sock.listen(16)
+        self._sock.settimeout(0.1)
+        self.url: str = f"http://127.0.0.1:{self._sock.getsockname()[1]}/repo/"
+
+    def _serve(self):
+        while not self._stop.is_set():
+            try:
+                conn, _addr = self._sock.accept()
+            except (OSError, TimeoutError):
+                continue
+            self.connections += 1
+            with conn:
+                if self.connections <= self._drops:
+                    continue
+                conn.settimeout(5)
+                conn.recv(4096)
+                conn.sendall(b"HTTP/1.0 200 OK\r\nContent-Length: 0\r\n\r\n")
+
+    def __enter__(self):
+        self._stop = threading.Event()
+        self._thread = threading.Thread(target=self._serve, daemon=True)
+        self._thread.start()
+        return self
+
+    def __exit__(self, *_exc):
+        self._stop.set()
+        self._thread.join()
+        self._sock.close()
+
+
+def _session_without_backoff() -> requests.Session:
+    """The session under test, with the retry waits removed so the tests stay fast."""
+    session = build_session()
+    for adapter in session.adapters.values():
+        adapter.max_retries = adapter.max_retries.new(backoff_factor=0)
+    return session
 
 class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
@@ -195,8 +277,9 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertEqual(len(clean_ids), 2)
         self.assertSetEqual(clean_ids, {'123', '456'})
 
-    @patch('requests.get')
-    def test_create_url(self, mock_http_call):
+    @patch('json_generator.maintenance_json_generator.get_session')
+    def test_create_url(self, mock_get_session):
+        mock_http_call = mock_get_session.return_value.get
         mock_http_call.side_effect = mock_requests_get_success
 
         test_cases: list[tuple[str, str, bool]] = [
@@ -212,10 +295,11 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             res: str = create_url(test_id, test_suffix)
             self.assertEqual(expected_url, res)
         
-    @patch('requests.get')
-    def test_create_url_cache(self, mock_http_call):
+    @patch('json_generator.maintenance_json_generator.get_session')
+    def test_create_url_cache(self, mock_get_session):
         create_url.cache_clear()
-        # requests.get is only called by create_url when the results is not present in the LRU cache,
+        mock_http_call = mock_get_session.return_value.get
+        # the session is only asked by create_url when the result is not present in the LRU cache,
         # therefore we can check the number of times it gets called to verify if there was a cache hit
         mock_http_call.side_effect = mock_requests_get_success
 
@@ -231,13 +315,138 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
                     create_url(id, suffix)
             self.assertEqual(mock_http_call.call_count, num_entries, f"Iteration N°{i+1} of {iterations}")
 
-    @patch('logging.error')
+    def test_setup_logging_silences_the_per_retry_warnings(self):
+        urllib3_logger = logging.getLogger("urllib3.connectionpool")
+        urllib3_logger.setLevel(logging.NOTSET)
+        try:
+            setup_logging()
+            self.assertFalse(urllib3_logger.isEnabledFor(logging.WARNING))
+            # only the per-retry chatter is dropped, a real error still shows
+            self.assertTrue(urllib3_logger.isEnabledFor(logging.ERROR))
+        finally:
+            urllib3_logger.setLevel(logging.NOTSET)
+
+    def test_get_session_hands_every_thread_its_own_session(self):
+        sessions: list[requests.Session] = []
+        lock = threading.Lock()
+
+        def _collect():
+            session = get_session()
+            with lock:
+                sessions.append(session)
+
+        threads = [threading.Thread(target=_collect) for _ in range(4)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
+        self.assertEqual(len(threads), len({id(session) for session in sessions}))
+        # within a thread the session is reused, so the connection pool survives
+        self.assertIs(get_session(), get_session())
+
+    def test_session_retries_transient_statuses(self):
+        for status in (408, 429, 500, 502, 503, 504, 599):
+            with self.subTest(status=status):
+                with _StatusSequenceServer([status, 200]) as server:
+                    res = _session_without_backoff().get(server.url, timeout=(1, 5))
+                    self.assertEqual(200, res.status_code)
+                    self.assertEqual(2, server.requests)
+
+    def test_session_gives_up_after_the_configured_attempts(self):
+        with _StatusSequenceServer([503]) as server:
+            # an exhausted retry raises, so the check is never mistaken for a 404
+            self.assertRaises(requests.RequestException, _session_without_backoff().get, server.url, timeout=(1, 5))
+            self.assertEqual(REQUEST_ATTEMPTS, server.requests)
+
+    def test_session_retries_a_dropped_connection(self):
+        with _ConnectionDroppingServer(drops=2) as server:
+            res = _session_without_backoff().get(server.url, timeout=(1, 5))
+            self.assertEqual(200, res.status_code)
+            self.assertEqual(3, server.connections)
+
+    def test_session_gives_up_on_a_connection_that_keeps_dropping(self):
+        with _ConnectionDroppingServer(drops=REQUEST_ATTEMPTS) as server:
+            self.assertRaises(requests.RequestException, _session_without_backoff().get, server.url, timeout=(1, 5))
+            self.assertEqual(REQUEST_ATTEMPTS, server.connections)
+
+    def test_session_does_not_retry_a_404(self):
+        with _StatusSequenceServer([404]) as server:
+            res = _session_without_backoff().get(server.url, timeout=(1, 5))
+            self.assertEqual(404, res.status_code)
+            self.assertEqual(1, server.requests)
+
+    @patch('json_generator.maintenance_json_generator.get_session')
+    def test_create_url_raises_on_any_status_other_than_success_or_404(self, mock_get_session):
+        create_url.cache_clear()
+        mock_http_call = mock_get_session.return_value.get
+        # 304 is ok() as far as requests is concerned, but it says nothing about the repository
+        for status in (304, 403, 500):
+            with self.subTest(status=status):
+                mock_http_call.return_value = MockResponse(status, status < 400)
+                self.assertRaises(requests.HTTPError, create_url, str(status), "/some_repo/")
+
+    @patch('json_generator.maintenance_json_generator.requests.get')
+    def test_probe_url_only_trusts_a_2xx_or_a_404(self, mock_http_call):
+        probe_url.cache_clear()
+        for status, expected in ((200, True), (404, False), (408, None), (500, None), (599, None)):
+            with self.subTest(status=status):
+                mock_http_call.return_value = MockResponse(status, status < 400)
+                self.assertEqual(expected, probe_url(f"http://ibs.example/{status}/"))
+
+    @patch('json_generator.maintenance_json_generator.requests.get')
+    def test_probe_url_retries_a_transient_status_but_not_a_definitive_one(self, mock_http_call):
+        # a status IBS answers the same way every time is not worth a second request
+        for status, expected_requests in ((503, REQUEST_ATTEMPTS), (429, REQUEST_ATTEMPTS), (403, 1), (400, 1)):
+            with self.subTest(status=status):
+                probe_url.cache_clear()
+                mock_http_call.reset_mock()
+                mock_http_call.return_value = MockResponse(status, False)
+                self.assertIsNone(probe_url(f"http://ibs.example/{status}/"))
+                self.assertEqual(expected_requests, mock_http_call.call_count)
+
+    @patch('logging.warning')
+    @patch('json_generator.maintenance_json_generator.probe_url')
+    def test_warn_on_unresolved_uyuni_tools_repos_reports_an_unanswered_probe(self, mock_probe, mock_logger):
+        url = 'http://ibs.example/ToTest/server_uyuni_tools/'
+        custom_repositories = {'server': {'server_uyuni_tools': url}}
+
+        mock_probe.return_value = None
+        warn_on_unresolved_uyuni_tools_repos(custom_repositories)
+        mock_logger.assert_called_with(f"server: server_uyuni_tools could not be checked on IBS: {url}")
+
+        mock_probe.return_value = False
+        warn_on_unresolved_uyuni_tools_repos(custom_repositories)
+        mock_logger.assert_called_with(f"server: server_uyuni_tools does not exist on IBS: {url}")
+
+        mock_logger.reset_mock()
+        mock_probe.return_value = True
+        warn_on_unresolved_uyuni_tools_repos(custom_repositories)
+        mock_logger.assert_not_called()
+
+    @patch('json_generator.maintenance_json_generator.requests.get')
+    def test_url_exists_stops_the_run_on_an_unanswered_probe(self, mock_http_call):
+        probe_url.cache_clear()
+        # a transient answer must not make the path look absent and pick the other project family
+        mock_http_call.return_value = MockResponse(503, False)
+        self.assertRaises(SystemExit, url_exists, "http://ibs.example/unanswered/")
+
+    @patch('json_generator.maintenance_json_generator.get_session')
+    def test_create_url_does_not_cache_an_unanswered_check(self, mock_get_session):
+        create_url.cache_clear()
+        mock_http_call = mock_get_session.return_value.get
+        mock_http_call.side_effect = [requests.ConnectionError("boom"), MockResponse(200, True)]
+
+        self.assertRaises(requests.ConnectionError, create_url, "1234", "/some_repo/")
+        self.assertEqual(f"{IBS_MAINTENANCE_URL_PREFIX}1234/some_repo/", create_url("1234", "/some_repo/"))
+
+    @patch('logging.warning')
     def test_validate_and_store_results(self, mock_logger):
         test_output_file: str = 'test_custom_repositories.json'
         test_mi_ids: set[str] = {"123", "456", "789"}
         # empty custom_repositories
         self.assertRaises(SystemExit, validate_and_store_results, test_mi_ids, {}, test_output_file)
-        
+
         test_custom_repos: dict[str, dict[str, str]] = {
             'server': {'123': 'some repo', '789': 'some repo'},
             'proxy': {'123': 'some_repo', 'proxy_50': 'some repo'},
@@ -245,8 +454,11 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         }
         # missing MI ID 456
         validate_and_store_results(test_mi_ids, test_custom_repos, test_output_file)
-        mock_logger.assert_called_with("MI IDs #{'456'} do not exist in custom_repositories dictionary.")
-        
+        mock_logger.assert_called_with(
+            "MI IDs ['456'] have no repository in the final JSON, "
+            "perhaps they are not for the version you are running the script for."
+        )
+
         test_custom_repos['some minion']['456'] = "some repo"
         validate_and_store_results(test_mi_ids, test_custom_repos, test_output_file)
         self.assertTrue(path.isfile(test_output_file))
@@ -254,9 +466,22 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         with open(test_output_file) as json_output:
             output_json: dict[str, dict[str, str]] = json.load(json_output)
             self.assertDictEqual(test_custom_repos, output_json)
-        
+
         # cleanup
         remove(test_output_file)
+
+    @patch('logging.error')
+    def test_abort_on_unanswered_checks(self, mock_logger):
+        test_output_file: str = 'test_unanswered_repositories.json'
+        unanswered: list[tuple[str, str]] = [("123/some_repo/", "connection refused")]
+
+        self.assertRaises(SystemExit, abort_on_unanswered_checks, unanswered, test_output_file)
+        mock_logger.assert_called_with("No answer for 123/some_repo/: connection refused")
+        # an incomplete result must not be written
+        self.assertFalse(path.isfile(test_output_file))
+
+    def test_abort_on_unanswered_checks_lets_a_complete_run_through(self):
+        abort_on_unanswered_checks([])
 
     def test_get_version_nodes(self):
         # 4.3
@@ -361,6 +586,21 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             dynamic['raspios13_minion'],
             ['/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-13_aarch64/'],
         )
+
+    @patch('logging.error')
+    @patch('json_generator.maintenance_json_generator.create_url')
+    @patch('json_generator.maintenance_json_generator.validate_and_store_results')
+    def test_find_valid_repos_aborts_on_unanswered_checks(self, mock_validate, mock_create_url, mock_logger):
+        mock_create_url.side_effect = requests.ConnectionError("boom")
+
+        self.assertRaises(SystemExit, find_valid_repos, {'1234'}, '52-sles')
+
+        # the run stops before anything can be written
+        mock_validate.assert_not_called()
+        reported = [call.args[0] for call in mock_logger.call_args_list]
+        self.assertTrue(reported)
+        self.assertTrue(all(message.startswith("No answer for 1234") for message in reported))
+        self.assertTrue(all(message.endswith("boom") for message in reported))
 
     @patch('json_generator.maintenance_json_generator.probe_url', return_value=True)
     @patch('json_generator.maintenance_json_generator.url_exists', side_effect=_only_client_tools_exist)
