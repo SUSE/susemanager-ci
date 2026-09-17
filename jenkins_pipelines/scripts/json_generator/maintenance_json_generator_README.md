@@ -38,11 +38,12 @@ from a file.
 information for the SUSE Manager BV testsuite pipeline.
 - Embargo Checks: The script has an option to reject Maintenance Incidents (MIs)
 that are under embargo.
-- SLFO client tools for `sles160_minion` / `slmicro62_minion` (x86_64) and `opensuse160arm_minion` (aarch64):
-  - Stable `51-*` / `52-sles` / `52-micro`: the SLES-16 `:ToTest` client-tools URL is
-    always included; use `-s` / `--slfo-pull-request <id>` to also inject a
-    `:PullRequest:/<id>` URL (independent of MI IDs).
-  - Beta `53-sles-beta` / `53-micro-beta`: a static `:ToTest` URL is baked in
+- SLFO PullRequests: `-s` / `--slfo-pull-request` takes any number of ids and works
+  out by itself where each one belongs, so the ids of a build validation can be
+  dropped in as they come without sorting them by hand.
+  - Stable `51-*` / `52-sles` / `52-micro`: every id is looked up on IBS and applied
+    to the nodes of the project that publishes it (independent of MI IDs).
+  - Beta `53-sles-beta` / `53-micro-beta`: static `:ToTest` URLs are baked in
     and applied automatically; `--slfo-pull-request` is rejected for beta
     versions because the Beta project cannot toggle maintenance on/off under
     the git workflow.
@@ -70,7 +71,28 @@ Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, `52
 `-i`, `--mi_ids`: A space-separated list of MI IDs.
 `-f`, `--file`: Path to a file containing MI IDs, each on a new line.
 `-e`, `--no_embargo`: Reject any MIs that are currently under embargo.
-`-s`, `--slfo-pull-request`: SLFO PullRequest id for `sles160_minion`, `slmicro62_minion` (x86_64), and `opensuse160arm_minion` (aarch64 SLE-16 client-tools) on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which receive a fixed `:ToTest` URL automatically. In `custom_repositories.json`, those entries use the inner key pattern `slfo_pr_{id}_{minion}_{arch}` (includes minion name and architecture) to ensure each repository has a unique name, preventing race conditions where minions could pick up the wrong-architecture repository.
+`-s`, `--slfo-pull-request`: A space-separated (or comma-separated) list of SLFO PullRequest
+ids, on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which
+receive a fixed `:ToTest` URL automatically.
+
+Each id is looked up on IBS and applied to the project that publishes it - the two families
+are numbered independently, so the layout on IBS is the only reliable way to tell them apart:
+
+| Project | Applied to | Inner key |
+| --- | --- | --- |
+| `SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/<id>:/SLES` | `sles160_minion`, `slmicro62_minion` (x86_64), `opensuse160arm_minion` (aarch64) | `slfo_pr_{id}_{minion}_{arch}` |
+| `SLFO:/Products:/Multi-Linux-Manager:/<5.x>:/Packages:/PullRequest:/<id>:/SL-Micro` | `server`, `proxy` of the `-micro` variant | `slfo_pr_{id}_{server,proxy,retail}_uyuni_tools` |
+
+A PullRequest repo **supersedes** the `:ToTest` repo it corresponds to rather than being
+added next to it, so the node cannot install the `:ToTest` content instead of the one under
+test. The keys include the minion name and architecture so that each repository has a unique
+name, preventing race conditions where minions could pick up the wrong-architecture repository.
+
+An id that exists in neither project aborts the run: a typo must not silently produce a JSON
+that falls back to `:ToTest`. A Packages PullRequest passed to a `-sles` version is skipped
+with a log line instead, so the same list of ids can be used for both variants. Once a
+PullRequest is merged its project disappears from IBS - drop the id, and the `:ToTest`
+fallback then carries the merged content.
 
 Example:
 
@@ -95,10 +117,17 @@ repository URLs for **`slmicro60_minion`** and **`slmicro61_minion`** (`slmicro6
 `slmicro61_salt`) in addition to MI-based maintenance URLs.
 
 On the stable **`51-*`** and **`52-*`** flows, **`sles160_minion`**, **`slmicro62_minion`**
-(x86_64) and **`opensuse160arm_minion`** (aarch64) always receive the SLES-16
+(x86_64) and **`opensuse160arm_minion`** (aarch64) receive the SLES-16
 MultiLinuxManagerTools **`:ToTest`** client tools under the inner key
 **`sles16_client_tools`**. SLE 16 has no maintenance project, so those minions get no
-MI-based URLs; `--slfo-pull-request` adds a PullRequest repo on top.
+MI-based URLs; a client-tools `--slfo-pull-request` id replaces that `:ToTest` entry.
+
+On **`52-micro`** (and **`51-micro`**), **`server`** and **`proxy`** get their
+Multi-Linux-Manager product repos from the **`:ToTest`** tree under the inner keys
+**`server_uyuni_tools`**, **`proxy_uyuni_tools`** and **`retail_uyuni_tools`**; a
+Packages `--slfo-pull-request` id replaces those three with the
+**`:Packages:/PullRequest:/<id>:/SL-Micro`** repos. Whatever is left pointing at
+**`:ToTest`** is checked for existence and logged as a warning if it is not published.
 
 For **`53-sles-beta`** and **`53-micro-beta`**, the output always includes fixed `:ToTest`
 client-tools URLs independently of MI IDs. **`slmicro62_minion`** and **`sles160_minion`**
@@ -118,7 +147,9 @@ image repos for **`server`** and **`proxy`**; path fragments live in
 
 **Example SLFO PullRequest Output:**
 
-When using `--slfo-pull-request 362`, the generated JSON includes unique repository keys:
+With `--slfo-pull-request 362` (a MultiLinuxManagerTools PullRequest), the generated JSON
+includes unique repository keys, and the `sles16_client_tools` entry of those minions is
+gone because the PullRequest repo replaced it:
 
 ```json
 {
@@ -136,6 +167,24 @@ When using `--slfo-pull-request 362`, the generated JSON includes unique reposit
 
 The key format `slfo_pr_{id}_{minion}_{arch}` ensures that each minion's repository has a globally unique name within the JSON, preventing repository collisions in downstream tooling.
 
+A Multi-Linux-Manager Packages PullRequest on a `-micro` version lands on the server and
+proxy instead, for example `--version 52-micro --slfo-pull-request 65`:
+
+```json
+{
+  "server": {
+    "slfo_pr_65_server_uyuni_tools": "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/Packages:/PullRequest:/65:/SL-Micro/product/repo/Multi-Linux-Manager-Server-5.2-x86_64/"
+  },
+  "proxy": {
+    "slfo_pr_65_proxy_uyuni_tools": "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/Packages:/PullRequest:/65:/SL-Micro/product/repo/Multi-Linux-Manager-Proxy-5.2-x86_64/",
+    "slfo_pr_65_retail_uyuni_tools": "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/Packages:/PullRequest:/65:/SL-Micro/product/repo/Multi-Linux-Manager-Retail-Branch-Server-5.2-x86_64/"
+  }
+}
+```
+
+Both families can be passed together, in any order:
+`--version 52-micro --slfo-pull-request 370 65`.
+
 ## Logging
 
 The script includes basic logging for informational messages. To enable logging,
@@ -150,6 +199,14 @@ messages will display timestamped INFO-level messages.
 - `merge_mi_ids()`: Merges MI IDs provided from the CLI or file input.
 - `read_mi_ids_from_file()`: Reads MI IDs from a file.
 - `clean_mi_ids()`: Cleans and formats MI IDs for consistency.
+- `clean_slfo_pull_request_ids()`: Flattens the PullRequest ids of `-s` into a
+  de-duplicated list, whether they were given space or comma separated.
+- `classify_slfo_pull_requests()`: Asks IBS which project publishes each PullRequest
+  id and sorts them into `client_tools` / `mlm_packages`; an unknown id aborts the run.
+- `apply_slfo_pull_requests()`: Applies each classified id to the nodes it belongs to,
+  replacing the `:ToTest` repos it supersedes.
+- `probe_url()`: Cached existence check for an IBS path. Retries on connection errors and on 5xx/429, and returns `None` when IBS stays unreachable.
+- `url_exists()`: Same check, but stops the run when IBS is unreachable. Used by the two functions above.
 
 ### Repository Data
 
@@ -188,6 +245,9 @@ and exits with 0 instead.
 - If no MI IDs are provided via CLI or file, the script will print an error
 message and halt execution.
 - Invalid MI IDs or missing files will result in appropriate error messages.
+- A PullRequest id that no SLFO project publishes halts the run, naming the id and
+every path that was probed. An id found in more than one project halts too, since
+there is no way to tell which one was meant.
 
 ## Dependencies
 

@@ -17,6 +17,19 @@ from tests.mock_response import mock_requests_get_success
 
 TESTDATA_DIR = Path(__file__).resolve().parent / 'testdata'
 
+CLIENT_TOOLS_PR_PROJECT = '/MultiLinuxManagerTools:/PullRequest:/'
+MLM_PACKAGES_PR_PROJECT = ':/Packages:/PullRequest:/'
+
+
+def _only_client_tools_exist(url: str) -> bool:
+    """Stand in for IBS: only the MultiLinuxManagerTools PullRequest project is published."""
+    return CLIENT_TOOLS_PR_PROJECT in url
+
+
+def _only_mlm_packages_exist(url: str) -> bool:
+    """Stand in for IBS: only the Multi-Linux-Manager Packages PullRequest project is published."""
+    return MLM_PACKAGES_PR_PROJECT in url
+
 class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
     def test_parse_cli_args_default_values(self):
@@ -25,7 +38,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertEqual(args.version, "51-sles")
         self.assertIsNone(args.mi_ids)
         self.assertFalse(args.embargo_check)
-        self.assertIsNone(args.slfo_pull_request)
+        self.assertListEqual(args.slfo_pull_requests, [])
 
     def test_parse_cli_args_without_arguments_shows_help(self):
         sys.argv = ['maintenance_json_generator.py']
@@ -84,12 +97,22 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         sys.argv = ['maintenance_json_generator.py', '--version', '51-sles', '--slfo-pull-request', '9999']
         args = parse_cli_args()
         self.assertEqual(args.version, '51-sles')
-        self.assertEqual(args.slfo_pull_request, '9999')
+        self.assertListEqual(args.slfo_pull_requests, ['9999'])
         # -s is the shorthand of --slfo-pull-request
         sys.argv = ['maintenance_json_generator.py', '-v', '52-sles', '-s', '9999']
         args = parse_cli_args()
         self.assertEqual(args.version, '52-sles')
-        self.assertEqual(args.slfo_pull_request, '9999')
+        self.assertListEqual(args.slfo_pull_requests, ['9999'])
+        # several ids, space separated and comma separated, deduplicated
+        sys.argv = ['maintenance_json_generator.py', '-v', '52-micro', '-s', '370', '65']
+        args = parse_cli_args()
+        self.assertListEqual(args.slfo_pull_requests, ['370', '65'])
+        sys.argv = ['maintenance_json_generator.py', '-v', '52-micro', '-s', '370,65']
+        args = parse_cli_args()
+        self.assertListEqual(args.slfo_pull_requests, ['370', '65'])
+        sys.argv = ['maintenance_json_generator.py', '-v', '52-micro', '-s', '370,', '65', '370']
+        args = parse_cli_args()
+        self.assertListEqual(args.slfo_pull_requests, ['370', '65'])
 
     def test_parse_cli_args_failure(self):
         sys.argv = ['maintenance_json_generator.py',  '-v', '51-sles', '-x']
@@ -318,8 +341,10 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             ['/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-13_aarch64/'],
         )
 
+    @patch('json_generator.maintenance_json_generator.probe_url', return_value=True)
+    @patch('json_generator.maintenance_json_generator.url_exists', side_effect=_only_client_tools_exist)
     @patch('json_generator.maintenance_json_generator.validate_and_store_results')
-    def test_slfo_pullrequest_injects_opensuse160arm_in_find_valid_repos(self, _mock_validate):
+    def test_slfo_pullrequest_injects_opensuse160arm_in_find_valid_repos(self, _mock_validate, _mock_url_exists, _mock_probe_url):
         captured: dict[str, dict[str, dict[str, str]]] = {}
 
         def _capture(_ids, custom_repositories, *_args, **_kwargs):
@@ -327,7 +352,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
         _mock_validate.side_effect = _capture
 
-        find_valid_repos(set(), '52-sles', slfo_pull_request_id='12345')
+        find_valid_repos(set(), '52-sles', slfo_pull_request_ids=['12345'])
 
         repos = captured['repos']
         self.assertIn('opensuse160arm_minion', repos)
@@ -337,6 +362,83 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         )
         self.assertIn('sles160_minion', repos)
         self.assertIn('slmicro62_minion', repos)
+        # the PullRequest client tools supersede the :ToTest ones on every SLE-16 minion
+        for node in ('sles160_minion', 'slmicro62_minion', 'opensuse160arm_minion'):
+            self.assertNotIn('sles16_client_tools', repos[node])
+
+    @patch('json_generator.maintenance_json_generator.url_exists')
+    def test_classify_slfo_pull_requests_sorts_ids_by_project(self, mock_url_exists):
+        # 370 only exists in MultiLinuxManagerTools, 65 only in Multi-Linux-Manager Packages
+        def _exists(url: str) -> bool:
+            if CLIENT_TOOLS_PR_PROJECT in url:
+                return '/370:/' in url
+            return '/65:/' in url
+
+        mock_url_exists.side_effect = _exists
+
+        self.assertDictEqual(
+            {'client_tools': ['370'], 'mlm_packages': ['65']},
+            classify_slfo_pull_requests(['370', '65'], '52-micro'),
+        )
+
+    @patch('json_generator.maintenance_json_generator.url_exists', return_value=False)
+    def test_classify_slfo_pull_requests_rejects_unknown_id(self, _mock_url_exists):
+        with self.assertRaises(SystemExit) as cm:
+            classify_slfo_pull_requests(['9999'], '52-micro')
+        self.assertIn('9999 was not found on IBS', str(cm.exception))
+
+    @patch('json_generator.maintenance_json_generator.url_exists', return_value=True)
+    def test_classify_slfo_pull_requests_rejects_ambiguous_id(self, _mock_url_exists):
+        with self.assertRaises(SystemExit) as cm:
+            classify_slfo_pull_requests(['42'], '52-micro')
+        self.assertIn('exists in more than one project', str(cm.exception))
+
+    @patch('json_generator.maintenance_json_generator.url_exists', side_effect=_only_mlm_packages_exist)
+    def test_mlm_packages_pullrequest_replaces_totest_server_and_proxy(self, _mock_url_exists):
+        custom_repos = init_custom_repositories(get_version_nodes('52-micro')['static'])
+        self.assertIn('server_uyuni_tools', custom_repos['server'])
+
+        apply_slfo_pull_requests(custom_repos, ['65'], '52-micro')
+
+        self.assertNotIn('server_uyuni_tools', custom_repos['server'])
+        self.assertEqual(
+            custom_repos['server']['slfo_pr_65_server_uyuni_tools'],
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/Packages:/PullRequest:/65:/SL-Micro/product/repo/Multi-Linux-Manager-Server-5.2-x86_64/',
+        )
+        self.assertNotIn('proxy_uyuni_tools', custom_repos['proxy'])
+        self.assertNotIn('retail_uyuni_tools', custom_repos['proxy'])
+        self.assertEqual(
+            custom_repos['proxy']['slfo_pr_65_proxy_uyuni_tools'],
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/Packages:/PullRequest:/65:/SL-Micro/product/repo/Multi-Linux-Manager-Proxy-5.2-x86_64/',
+        )
+        self.assertEqual(
+            custom_repos['proxy']['slfo_pr_65_retail_uyuni_tools'],
+            'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/Multi-Linux-Manager:/5.2:/Packages:/PullRequest:/65:/SL-Micro/product/repo/Multi-Linux-Manager-Retail-Branch-Server-5.2-x86_64/',
+        )
+        # the SL Micro 6 client tools of the proxy are a different project, untouched
+        self.assertIn('slmicro6_client_tools', custom_repos['proxy'])
+
+    @patch('json_generator.maintenance_json_generator.url_exists', side_effect=_only_mlm_packages_exist)
+    def test_mlm_packages_pullrequest_skipped_on_sles_variant(self, _mock_url_exists):
+        custom_repos = init_custom_repositories(get_version_nodes('52-sles')['static'])
+
+        apply_slfo_pull_requests(custom_repos, ['65'], '52-sles')
+
+        self.assertNotIn('slfo_pr_65_server_uyuni_tools', custom_repos.get('server', {}))
+
+    def test_mlm_product_version(self):
+        self.assertEqual(mlm_product_version('52-micro'), '5.2')
+        self.assertEqual(mlm_product_version('51-sles'), '5.1')
+        self.assertEqual(mlm_product_version('53-micro-beta'), '5.3')
+
+    def test_slfo_pull_request_requires_at_least_one_id(self):
+        sys.argv = ['maintenance_json_generator.py', '--version', '52-micro', '--slfo-pull-request']
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as cm:
+                parse_cli_args()
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("expected at least one argument", stderr.getvalue())
 
     def test_slfo_pull_request_rejected_for_unsupported_versions(self):
         # --slfo-pull-request is only supported for 51-* and 52-* versions
@@ -357,8 +459,9 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         self.assertEqual(cm.exception.code, 2)
         self.assertIn("--slfo-pull-request is only supported for 51-* and 52-* versions", stderr.getvalue())
 
+    @patch('json_generator.maintenance_json_generator.probe_url', return_value=True)
     @patch('json_generator.maintenance_json_generator.validate_and_store_results')
-    def test_beta_version_injects_totest_static_urls(self, _mock_validate):
+    def test_beta_version_injects_totest_static_urls(self, _mock_validate, _mock_probe_url):
         # Beta versions must auto-populate sles160_minion and slmicro62_minion
         # from the static :ToTest map (no --slfo-pull-request required).
         # Updated to test 5.3 beta (5.2 is now stable)
@@ -465,8 +568,9 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             'Multi-Linux-ManagerTools-SL-Micro-6-x86_64/'
         )
 
+    @patch('json_generator.maintenance_json_generator.probe_url', return_value=True)
     @patch('json_generator.maintenance_json_generator.validate_and_store_results')
-    def test_v52_sles_stable_totest_repos_in_final_output(self, _mock_validate):
+    def test_v52_sles_stable_totest_repos_in_final_output(self, _mock_validate, _mock_probe_url):
         # Verify that the static ToTest repos appear in the final custom_repositories output
         captured: dict[str, dict[str, dict[str, str]]] = {}
 

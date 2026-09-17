@@ -15,20 +15,34 @@ IBS_MAINTENANCE_URL_PREFIX: str = 'http://download.suse.de/ibs/SUSE:/Maintenance
 IBS_URL_PREFIX: str = 'http://download.suse.de/ibs/SUSE:'
 JSON_OUTPUT_FILE_NAME: str = 'custom_repositories.json'
 
+SLE16_CLIENT_TOOLS_REPO_NAME: str = 'sles16_client_tools'
+
 # Short timeouts are intentional: thousands of parallel checks are made and
 # @cache prevents retrying the same URL, so false negatives are cheap to
 # accept in exchange for overall throughput. Increase if IBS is unreachable.
 REQUEST_CONNECT_TIMEOUT: float = 1
 REQUEST_READ_TIMEOUT: float = 2
 
+# Timeouts and retries of the SLFO PullRequest existence probes
+PROBE_CONNECT_TIMEOUT: float = 5
+PROBE_READ_TIMEOUT: float = 10
+PROBE_ATTEMPTS: int = 3
+PROBE_RETRY_STATUS_CODES: frozenset[int] = frozenset({429, 500, 502, 503, 504})
+
 def setup_logging():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def _slfo_pr_id(value: str) -> str:
-    if not (value.isdigit() and int(value) > 0):
+    pr_ids = [pr_id.strip() for pr_id in value.split(",") if pr_id.strip()]
+    if not pr_ids:
         raise argparse.ArgumentTypeError(
             f"invalid SLFO PullRequest id: {value!r} (must be a positive integer)"
         )
+    for pr_id in pr_ids:
+        if not (pr_id.isdigit() and int(pr_id) > 0):
+            raise argparse.ArgumentTypeError(
+                f"invalid SLFO PullRequest id: {pr_id!r} (must be a positive integer)"
+            )
     return value
 
 def parse_cli_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -44,10 +58,14 @@ def parse_cli_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "-s", "--slfo-pull-request",
         required=False,
-        dest="slfo_pull_request",
+        dest="slfo_pull_requests",
         metavar="ID",
+        nargs='+',
         type=_slfo_pr_id,
-        help="SLFO PullRequest id for sles160_minion, slmicro62_minion (x86_64), and opensuse160arm_minion (aarch64) on stable 51-* / 52-* only; rejected for *-beta versions (beta uses :ToTest automatically)",
+        help="Space separated list of SLFO PullRequest ids. Each id is looked up on IBS and applied where it belongs: "
+             "MultiLinuxManagerTools PullRequests feed the SLE-16 client tools, Multi-Linux-Manager Packages "
+             "PullRequests feed the server/proxy of the micro variant. Stable 51-* / 52-* only; rejected for "
+             "*-beta versions (beta uses :ToTest automatically)",
     )
 
     if argv is None:
@@ -59,12 +77,26 @@ def parse_cli_args(argv: list[str] | None = None) -> argparse.Namespace:
         raise SystemExit(0)
 
     args = parser.parse_args(argv)
-    if args.slfo_pull_request is not None:
+    args.slfo_pull_requests = clean_slfo_pull_request_ids(args.slfo_pull_requests)
+    if args.slfo_pull_requests:
         if not supports_slfo_pull_request(args.version):
             parser.error("--slfo-pull-request is only supported for 51-* and 52-* versions")
         if args.version.endswith("-beta"):
             parser.error("--slfo-pull-request is not supported for beta versions (beta uses :ToTest automatically)")
     return args
+
+def clean_slfo_pull_request_ids(pr_ids: list[str] | None) -> list[str]:
+    """Flatten '-s 370 65' and '-s 370,65' into a de-duplicated, ordered list of ids."""
+    if not pr_ids:
+        return []
+
+    cleaned: list[str] = []
+    for value in pr_ids:
+        for pr_id in value.split(","):
+            pr_id = pr_id.strip()
+            if pr_id and pr_id not in cleaned:
+                cleaned.append(pr_id)
+    return cleaned
 
 def read_mi_ids_from_file(file_path: str | os.PathLike[str]) -> list[str]:
     """Read newline-separated MI ids from a file (path may be str or pathlib.Path)."""
@@ -127,7 +159,42 @@ def init_custom_repositories(static_repos: dict[str, dict[str, str]] | None = No
 
 
 def supports_slfo_pull_request(version: str) -> bool:
-    return version.startswith("51") or version.startswith("52")
+    return version.startswith(("51", "52"))
+
+
+def is_micro_variant(version: str) -> bool:
+    return version.endswith("-micro")
+
+
+def mlm_product_version(version: str) -> str:
+    """'52-micro' -> '5.2' - the product version as it appears in SLFO paths."""
+    digits = version.split("-", 1)[0]
+    return f"{digits[0]}.{digits[1:]}"
+
+
+@cache
+def probe_url(url: str) -> bool | None:
+    """Whether an IBS path is published, None if IBS could not be reached."""
+    for attempt in range(1, PROBE_ATTEMPTS + 1):
+        try:
+            res: requests.Response = requests.get(url, timeout=(PROBE_CONNECT_TIMEOUT, PROBE_READ_TIMEOUT))
+        except requests.RequestException as exc:
+            logging.warning(f"Error checking {url} (attempt {attempt} of {PROBE_ATTEMPTS}): {exc}")
+            continue
+        # a 5xx or a 429 says nothing about the path, only a 404 does
+        if res.status_code not in PROBE_RETRY_STATUS_CODES:
+            return res.ok
+        logging.warning(f"Error checking {url} (attempt {attempt} of {PROBE_ATTEMPTS}): HTTP {res.status_code}")
+
+    return None
+
+
+def url_exists(url: str) -> bool:
+    """Whether an IBS path is published. An unreachable IBS stops the run."""
+    published = probe_url(url)
+    if published is None:
+        raise SystemExit(f"IBS could not be reached to check {url}")
+    return published
 
 def slfo_pullrequest_client_tool_url(pr_id: str, arch: str = "x86_64") -> str:
     """Return the stable SLE-16 MultiLinuxManagerTools URL for the given PullRequest id and architecture.
@@ -159,19 +226,124 @@ def slfo_pullrequest_repo_key(pr_id: str, minion: str, arch: str) -> str:
 def apply_slfo_pullrequest_client_tools(
     custom_repositories: dict[str, dict[str, str]], pr_id: str
 ) -> None:
-    # x86_64 minions
-    url_x86_64 = slfo_pullrequest_client_tool_url(pr_id, arch="x86_64")
-    for node in ["sles160_minion", "slmicro62_minion"]:
+    for node, arch in [
+        ("sles160_minion", "x86_64"),
+        ("slmicro62_minion", "x86_64"),
+        ("opensuse160arm_minion", "aarch64"),
+    ]:
+        url = slfo_pullrequest_client_tool_url(pr_id, arch=arch)
         minion_shortname = node.removesuffix("_minion")
+        # the PullRequest repo replaces the :ToTest one, it is not added to it
+        custom_repositories.get(node, {}).pop(SLE16_CLIENT_TOOLS_REPO_NAME, None)
         update_custom_repositories(custom_repositories, node,
-                                  slfo_pullrequest_repo_key(pr_id, minion_shortname, "x86_64"), url_x86_64)
+                                  slfo_pullrequest_repo_key(pr_id, minion_shortname, arch), url)
 
-    # aarch64 minion
-    url_aarch64 = slfo_pullrequest_client_tool_url(pr_id, arch="aarch64")
-    node = "opensuse160arm_minion"
-    minion_shortname = node.removesuffix("_minion")
-    update_custom_repositories(custom_repositories, node,
-                              slfo_pullrequest_repo_key(pr_id, minion_shortname, "aarch64"), url_aarch64)
+
+def mlm_packages_pullrequest_url(pr_id: str, product_version: str, repo: str) -> str:
+    """Return the Multi-Linux-Manager Packages PullRequest URL for one product repo.
+
+    Maintenance publishes the SL Micro server/proxy content of an open PullRequest
+    under :Packages:/PullRequest:/<id>:/SL-Micro.
+    """
+    root = f"/SLFO:/Products:/Multi-Linux-Manager:/{product_version}:/Packages:/PullRequest"
+    return f"{IBS_URL_PREFIX}{root}:/{pr_id}:/SL-Micro/product/repo/{repo}/"
+
+
+def mlm_packages_pullrequest_repo_key(pr_id: str, repo_name: str) -> str:
+    """Inner dict key for MLM Packages PullRequest repos (not an MI id)."""
+    return f"slfo_pr_{pr_id}_{repo_name}"
+
+
+def classify_slfo_pull_requests(pr_ids: list[str], version: str) -> dict[str, list[str]]:
+    """Sort PullRequest ids into the family each one belongs to, by asking IBS.
+
+    The families are numbered independently, an id can exist in one and not in
+    the other. An id that exists in neither stops the run.
+    """
+    product_version = mlm_product_version(version)
+    families: dict[str, list[str]] = {"client_tools": [], "mlm_packages": []}
+
+    for pr_id in pr_ids:
+        candidates: dict[str, str] = {
+            "client_tools": slfo_pullrequest_client_tool_url(pr_id),
+            "mlm_packages": mlm_packages_pullrequest_url(
+                pr_id, product_version, f"Multi-Linux-Manager-Server-{product_version}-x86_64"
+            ),
+        }
+        matches: list[str] = [family for family, url in candidates.items() if url_exists(url)]
+
+        if not matches:
+            probed = "\n  ".join(candidates.values())
+            raise SystemExit(
+                f"SLFO PullRequest id {pr_id} was not found on IBS. Probed:\n  {probed}"
+            )
+        if len(matches) > 1:
+            raise SystemExit(
+                f"SLFO PullRequest id {pr_id} exists in more than one project ({', '.join(matches)}), "
+                "cannot tell which one you mean"
+            )
+
+        family = matches[0]
+        families[family].append(pr_id)
+        logging.info(f"SLFO PullRequest {pr_id} resolved as {family}")
+
+    return families
+
+
+def apply_mlm_packages_pullrequest(
+    custom_repositories: dict[str, dict[str, str]], pr_id: str, version: str
+) -> None:
+    """Point server/proxy at a Packages PullRequest instead of the :ToTest repos."""
+    product_version = mlm_product_version(version)
+    repos_by_node: dict[str, dict[str, str]] = {
+        "server": {"server_uyuni_tools": f"Multi-Linux-Manager-Server-{product_version}-x86_64"},
+        "proxy": {
+            "proxy_uyuni_tools": f"Multi-Linux-Manager-Proxy-{product_version}-x86_64",
+            "retail_uyuni_tools": f"Multi-Linux-Manager-Retail-Branch-Server-{product_version}-x86_64",
+        },
+    }
+
+    for node, repos in repos_by_node.items():
+        for repo_name, repo in repos.items():
+            url = mlm_packages_pullrequest_url(pr_id, product_version, repo)
+            if not url_exists(url):
+                raise SystemExit(
+                    f"SLFO PullRequest {pr_id} does not publish {repo}, expected at {url}"
+                )
+            # the PullRequest repo replaces the :ToTest one, it is not added to it
+            custom_repositories.get(node, {}).pop(repo_name, None)
+            update_custom_repositories(
+                custom_repositories, node, mlm_packages_pullrequest_repo_key(pr_id, repo_name), url
+            )
+
+
+def apply_slfo_pull_requests(
+    custom_repositories: dict[str, dict[str, str]], pr_ids: list[str], version: str
+) -> None:
+    families = classify_slfo_pull_requests(pr_ids, version)
+
+    for pr_id in families["client_tools"]:
+        apply_slfo_pullrequest_client_tools(custom_repositories, pr_id)
+
+    for pr_id in families["mlm_packages"]:
+        if not is_micro_variant(version):
+            # a Packages PullRequest only publishes SL Micro server/proxy repos
+            logging.info(
+                f"SLFO PullRequest {pr_id} only applies to the micro variant, skipping it for {version}"
+            )
+            continue
+        apply_mlm_packages_pullrequest(custom_repositories, pr_id, version)
+
+
+def warn_on_unresolved_uyuni_tools_repos(custom_repositories: dict[str, dict[str, str]]) -> None:
+    """Warn about server/proxy repos that are still :ToTest but not published."""
+    for node in ("server", "proxy"):
+        for repo_name, url in custom_repositories.get(node, {}).items():
+            if not (repo_name.endswith("_uyuni_tools") and "/ToTest/" in url):
+                continue
+            # probe_url instead of url_exists, a warning must never end the run
+            if probe_url(url) is False:
+                logging.warning(f"{node}: {repo_name} does not exist on IBS: {url}")
 
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
@@ -185,7 +357,7 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
     custom_repositories[node] = node_ids
 
 
-def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str | None = None, max_workers: int = 20):
+def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_ids: list[str] | None = None, max_workers: int = 20):
     """
     Find valid repository URLs for given MI IDs and version.
 
@@ -194,8 +366,8 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
     Args:
         mi_ids: Set of MI ID strings
         version: SUMA version (43, 50-sles, 51-sles, etc.)
-        slfo_pull_request_id: Optional SLFO PullRequest id for sles160_minion,
-            slmicro62_minion (x86_64), and opensuse160arm_minion (aarch64); only
+        slfo_pull_request_ids: Optional SLFO PullRequest ids, each one looked up
+            on IBS and applied to the nodes of the family it belongs to; only
             valid for stable 51-* / 52-* versions.
         max_workers: Number of concurrent HTTP requests (default: 20)
     """
@@ -239,7 +411,7 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
             except Exception as exc:
                 logging.warning(f"Error checking {mi_id}{repo}: {exc}")
 
-    if slfo_pull_request_id is not None:
+    if slfo_pull_request_ids:
         if not supports_slfo_pull_request(version):
             raise ValueError(
                 f"SLFO PullRequest id is only supported for 51-* and 52-* versions (got {version!r})"
@@ -248,7 +420,9 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_id: str |
             raise ValueError(
                 f"SLFO PullRequest id is not supported for beta versions (got {version!r}); beta uses :ToTest automatically"
             )
-        apply_slfo_pullrequest_client_tools(custom_repositories, slfo_pull_request_id)
+        apply_slfo_pull_requests(custom_repositories, slfo_pull_request_ids, version)
+
+    warn_on_unresolved_uyuni_tools_repos(custom_repositories)
 
     logging.info(f"Found {found_count} valid repositories out of {len(tasks)} checked")
     validate_and_store_results(mi_ids, custom_repositories)
@@ -268,8 +442,8 @@ def main():
 
     mi_ids: set[str] = merge_mi_ids(args)
     logging.info(f"MI IDs: {mi_ids}")
-    if args.slfo_pull_request is not None:
-        logging.info(f"SLFO PullRequest id: {args.slfo_pull_request}")
+    if args.slfo_pull_requests:
+        logging.info(f"SLFO PullRequest ids: {args.slfo_pull_requests}")
     if not mi_ids:
         mi_ids = osc_client.find_maintenance_incidents()
 
@@ -277,7 +451,7 @@ def main():
         logging.info(f"Remove MIs under embargo")
         mi_ids = { id for id in mi_ids if not osc_client.mi_is_under_embargo(id) }
 
-    find_valid_repos(mi_ids, args.version, args.slfo_pull_request)
+    find_valid_repos(mi_ids, args.version, args.slfo_pull_requests)
 
     logging.info("JSON file generated successfully: %s", JSON_OUTPUT_FILE_NAME)
     logging.info("You can open it with: cat %s", JSON_OUTPUT_FILE_NAME)
