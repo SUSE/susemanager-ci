@@ -16,8 +16,8 @@ node('sumaform-cucumber') {
             string(name: 'product_version', defaultValue: '5.1-released', description: 'Server product version'),
             choice(name: 'base_os', choices: ['slmicro62o','slmicro61o', 'sles15sp7o', 'slemicro55o', 'sles15sp6o'], description: 'Server and Proxy base OS'),
             booleanParam(name: 'deploy_retail', defaultValue: false, description: 'If checked: Forces minion1=sles15sp7_minion and minion2=sles15sp7_buildhost. You MUST leave minion1 and minion2 dropdowns empty.'),
-            string(name: 'server_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Server container registry'),
-            string(name: 'proxy_container_repository', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Proxy container registry'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             activeChoice(name: 'minions_to_run', description: 'Node list to run during CI', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
                 return [
