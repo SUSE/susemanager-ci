@@ -33,10 +33,12 @@ v51_uyuni_tools_micro_repos: Dict[str, Dict[str, str]] = {
 
 v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     "slmicro60_minion": {
-        "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/"
+        "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/",
+        "slmicro60_salt": "/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SL-Micro-6.0-x86_64/"
     },
     "slmicro61_minion": {
-        "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/"
+        "slmicro6_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SL-Micro-6:/ToTest/product/repo/Multi-Linux-ManagerTools-SL-Micro-6-x86_64/",
+        "slmicro61_salt": "/SLFO:/1.1:/Staging:/Z/images/repo/SL-Micro-6.1-x86_64/"
     },
     "slmicro62_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
