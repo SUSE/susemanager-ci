@@ -60,8 +60,11 @@ def run(params) {
 
             // Build a terracumber cucumber invocation for a rake target.
             // prefix carries per-run env exports (e.g. TAGS) that must precede the cd.
-            def cucumberCmd = { String rake_target, String prefix = '' ->
-                "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${prefix}cd /root/spacewalk/testsuite; ${env.exports} rake ${rake_target}'"
+            // Note: Jenkins CPS-transforms this closure, which does not honor Groovy
+            // default parameter values — a missing prefix arrives as null, not ''.
+            def cucumberCmd = { String rake_target, String prefix = null ->
+                def safePrefix = prefix ?: ''
+                "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${safePrefix}cd /root/spacewalk/testsuite; ${env.exports} rake ${rake_target}'"
             }
 
             try {
