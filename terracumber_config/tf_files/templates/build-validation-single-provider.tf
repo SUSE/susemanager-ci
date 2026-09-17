@@ -52,7 +52,7 @@ module "base_core" {
     "rocky8o", "rocky9o", "rocky10o",
     "ubuntu2204o", "ubuntu2404o", "ubuntu2604o",
     "debian12o", "debian13o", "raspios13o",
-    "opensuse156o", "opensuse160o"
+    "opensuse160o"
   ])
 
   mirror            = var.PLATFORM_LOCATION_CONFIGURATION[var.LOCATION].mirror
