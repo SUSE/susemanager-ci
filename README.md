@@ -35,7 +35,7 @@ For details have a look at [terracumber_config/README.md](terracumber_config/REA
 | Virthost    | -             | -             | -            | -            | -            | SLES 15 SP7   | SLES 15 SP4  |
 | Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
 | Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| DHCP-DNS    | Leap 15.6     | Leap 15.6     | Leap 15.6    | Leap 15.6    | Leap 15.6    | Leap 15.6     | -            |
+| DHCP-DNS    | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    | Leap 16.0     | -            |
 | Controller  | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    | Leap 16.0     | Leap 16.0    |
 | Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
 | Proxy       | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
