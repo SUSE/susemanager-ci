@@ -36,7 +36,7 @@ node('sumaform-cucumber') {
                     'raspios13_minion', 'raspios13_sshminion',
                     'opensuse160arm_minion:selected', 'opensuse160arm_sshminion:selected',
                     'sles15sp5s390_minion:selected', 'sles15sp5s390_sshminion:selected',
-                    'slemicro52_minion:selected', 'slemicro53_minion:selected', 'slemicro54_minion:selected', 'slemicro55_minion:selected',
+                    'slemicro53_minion:selected', 'slemicro54_minion:selected', 'slemicro55_minion:selected',
                     'slmicro60_minion:selected', 'slmicro61_minion:selected', 'slmicro62_minion:selected'
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
