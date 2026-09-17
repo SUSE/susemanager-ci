@@ -41,7 +41,7 @@ module "base_core" {
     "sles12sp5o",
     "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o",
     "sles160o",
-    "slemicro52-ign", "slemicro53-ign", "slemicro54-ign", "slemicro55o",
+    "slemicro53-ign", "slemicro54-ign", "slemicro55o",
     "slmicro60o", "slmicro61o", "slmicro62o",
     "almalinux8o", "almalinux9o", "almalinux10o",
     "amazonlinux2023o",
