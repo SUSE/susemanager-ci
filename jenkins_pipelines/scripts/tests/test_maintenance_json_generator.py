@@ -324,6 +324,27 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             self.assertEqual(static['opensuse160arm_minion']['sles16_client_tools'], aarch64_url)
             self.assertNotIn('opensuse160arm_minion', dynamic)
 
+    def test_slmicro6_minions_keep_their_static_salt_repos(self):
+        salt_urls = {
+            'slmicro60_minion': (
+                'slmicro60_salt',
+                'http://download.suse.de/ibs/SUSE:/ALP:/Source:/Standard:/1.0:/Staging:/Z/images/repo/SL-Micro-6.0-x86_64/',
+            ),
+            'slmicro61_minion': (
+                'slmicro61_salt',
+                'http://download.suse.de/ibs/SUSE:/SLFO:/1.1:/Staging:/Z/images/repo/SL-Micro-6.1-x86_64/',
+            ),
+        }
+        for get_static_and_client_tools in (
+            get_v51_static_and_client_tools,
+            get_v52_static_and_client_tools,
+        ):
+            for variant in ('sles', 'micro'):
+                static, _dynamic = get_static_and_client_tools(variant)
+                for node, (repo_name, url) in salt_urls.items():
+                    self.assertEqual(static[node][repo_name], url)
+                    self.assertIn('slmicro6_client_tools', static[node])
+
     def test_raspios13_uses_debian13_aarch64_client_tools(self):
         for get_static_and_client_tools in (
             get_v51_static_and_client_tools,
