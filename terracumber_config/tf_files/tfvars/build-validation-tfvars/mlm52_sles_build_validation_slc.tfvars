@@ -284,7 +284,7 @@ ENVIRONMENT_CONFIGURATION = {
 
 BASE_CONFIGURATIONS = {
   base_core = {
-    images             = [ "opensuse156o", "opensuse160o", "sles15sp5o", "sles15sp7o" ]
+    images             = [ "opensuse160o", "sles15sp5o", "sles15sp7o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
@@ -313,7 +313,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "florina.mgr.slc1.suse.org"
   }
   base_retail = {
-    images             = [ "sles15sp6o", "sles15sp7o", "opensuse156o", "opensuse160o" ]
+    images             = [ "sles15sp6o", "sles15sp7o", "opensuse160o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = "192.168.52.0/24"
