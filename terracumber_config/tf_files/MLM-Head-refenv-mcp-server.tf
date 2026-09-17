@@ -118,5 +118,6 @@ module "sles15sp7_minion" {
 }
 
 output "configuration" {
-  value = module.base.configuration
+  sensitive = true
+  value     = module.base.configuration
 }

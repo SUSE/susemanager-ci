@@ -114,6 +114,7 @@ module "build_validation_module" {
 }
 
 output "configuration" {
+  sensitive = true
   value = {
     controller  = module.build_validation_module.configuration.controller
     server      = module.build_validation_module.configuration.server_configuration
