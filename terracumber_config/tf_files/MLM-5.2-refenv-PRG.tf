@@ -239,5 +239,6 @@ module "cucumber_testsuite" {
 }
 
 output "configuration" {
-  value = module.cucumber_testsuite.configuration
+  sensitive = true
+  value     = module.cucumber_testsuite.configuration
 }

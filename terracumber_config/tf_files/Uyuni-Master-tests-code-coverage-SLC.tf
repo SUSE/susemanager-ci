@@ -266,5 +266,6 @@ resource "null_resource" "configure_jacoco" {
 }
 
 output "configuration" {
-  value = module.cucumber_testsuite.configuration
+  sensitive = true
+  value     = module.cucumber_testsuite.configuration
 }

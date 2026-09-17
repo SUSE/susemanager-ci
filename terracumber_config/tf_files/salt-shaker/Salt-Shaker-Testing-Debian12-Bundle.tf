@@ -115,5 +115,6 @@ module "salt-shaker-products-testing" {
 }
 
 output "configuration" {
-  value = module.salt-shaker-products-testing.configuration
+  sensitive = true
+  value     = module.salt-shaker-products-testing.configuration
 }

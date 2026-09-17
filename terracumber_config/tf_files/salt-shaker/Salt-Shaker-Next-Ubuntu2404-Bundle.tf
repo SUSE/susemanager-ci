@@ -115,5 +115,6 @@ module "salt-shaker-products-next" {
 }
 
 output "configuration" {
-  value = module.salt-shaker-products-next.configuration
+  sensitive = true
+  value     = module.salt-shaker-products-next.configuration
 }

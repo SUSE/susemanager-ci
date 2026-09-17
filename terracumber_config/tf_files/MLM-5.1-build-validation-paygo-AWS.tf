@@ -617,6 +617,7 @@ output "aws_mirrors_public_name" {
 }
 
 output "configuration" {
+  sensitive = true
   value = {
     controller  = module.controller.configuration
     server      = module.server.configuration

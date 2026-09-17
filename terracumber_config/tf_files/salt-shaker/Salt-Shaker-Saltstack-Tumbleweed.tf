@@ -116,5 +116,6 @@ module "salt-shaker-saltstack-tumbleweed" {
 }
 
 output "configuration" {
-  value = module.salt-shaker-saltstack-tumbleweed.configuration
+  sensitive = true
+  value     = module.salt-shaker-saltstack-tumbleweed.configuration
 }

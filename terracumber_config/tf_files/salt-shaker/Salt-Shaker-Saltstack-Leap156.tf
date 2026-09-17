@@ -115,5 +115,6 @@ module "salt-shaker-saltstack" {
 }
 
 output "configuration" {
-  value = module.salt-shaker-saltstack.configuration
+  sensitive = true
+  value     = module.salt-shaker-saltstack.configuration
 }
