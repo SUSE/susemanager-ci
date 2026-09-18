@@ -2,7 +2,7 @@ def run(params) {
     ansiColor('xterm') {
         timestamps {
             // Null-safe defaults for optional stage-control parameters (backward compat with env files that don't declare them)
-            def runDeploy = params.deploy == null ? true : params.deploy
+            def runDeploy = params.run_deployment == null ? true : params.run_deployment
             def runCore = params.run_core == null ? true : params.run_core
             def runSecondary = params.run_secondary == null ? true : params.run_secondary
 
