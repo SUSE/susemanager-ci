@@ -198,7 +198,7 @@ module "mirror" {
   provider_settings = {
     public_instance = true
   }
-  image = "opensuse156o"
+  image = "opensuse160o"
 }
 
 module "server" {

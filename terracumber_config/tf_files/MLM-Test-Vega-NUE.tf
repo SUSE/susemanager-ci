@@ -114,7 +114,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
+  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   use_avahi    = false
   name_prefix  = "mlm-test-vega-"
@@ -202,7 +202,7 @@ module "cucumber_testsuite" {
     }
     dhcp_dns = {
       name        = "dhcp-dns"
-      image       = "opensuse156o"
+      image       = "opensuse160o"
       hypervisor  = {
         host        = "cthulhu.mgr.suse.de"
         user        = "root"

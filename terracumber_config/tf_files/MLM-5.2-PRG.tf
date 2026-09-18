@@ -134,7 +134,7 @@ module "cucumber_testsuite" {
 
   ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
 
-  images = ["rocky8o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
+  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-52-podman-"
@@ -239,7 +239,7 @@ module "cucumber_testsuite" {
     }
     dhcp_dns = {
       name = "dhcp-dns"
-      image = "opensuse156o"
+      image = "opensuse160o"
       hypervisor = {
         host        = "suma-01.mgr.suse.de"
         user        = "root"
