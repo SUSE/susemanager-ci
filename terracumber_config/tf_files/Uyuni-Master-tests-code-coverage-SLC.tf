@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
+  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
 
   use_avahi    = false
   name_prefix  = "suma-codecov-"
@@ -213,7 +213,7 @@ module "cucumber_testsuite" {
     }
     dhcp_dns = {
       name = "dhcp-dns"
-      image = "opensuse156o"
+      image = "opensuse160o"
       hypervisor = {
         host        = "screwdriver.mgr.slc1.suse.org"
         user        = "root"

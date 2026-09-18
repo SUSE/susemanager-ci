@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
+  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
   use_avahi    = false
   name_prefix  = "mlm-test-naica-"
@@ -161,7 +161,7 @@ module "cucumber_testsuite" {
       }
     }
     proxy_containerized = {
-      image = "slemicro61o"
+      image = "slmicro61o"
       provider_settings = {
         mac = "aa:b2:93:01:00:62"
         vcpu = 2
@@ -218,7 +218,7 @@ module "cucumber_testsuite" {
     }
     dhcp_dns = {
       name        = "dhcp-dns"
-      image       = "opensuse156o"
+      image       = "opensuse160o"
       hypervisor  = {
         host        = "cthulhu.mgr.suse.de"
         user        = "root"
