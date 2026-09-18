@@ -110,19 +110,18 @@ module "cucumber_testsuite" {
   product_version = "head"
 
   // Kubernetes variables
-  kubernetes                     = true
-  use_devel_oci                  = true
-  install_mlm_server             = true
-  install_mlm_proxy              = true
-  install_traefik                = true
-  install_local_path_provisioner = true
-  deploy_coco_attestation        = true
-  deploy_saline                  = true
-  deploy_tftp                    = true
-  deploy_hub_api                 = true
-  install_kubectl_helm           = false
-  kubeconfig_path                = null
-  install_uyuni_via_testsuite    = true
+  kubernetes                                = true
+  use_devel_oci                             = true
+  deploy_coco_attestation                   = true
+  deploy_saline                             = true
+  deploy_tftp                               = true
+  deploy_hub_api                            = true
+  install_kubectl_helm                      = false
+  kubeconfig_path                           = null
+  install_uyuni_via_testsuite               = true
+  kubernetes_create_static_var_spacewalk_pv = true
+  kubernetes_create_static_var_pgsql_pv     = true
+  local_path_provisioner_default_class      = true
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -136,7 +135,7 @@ module "cucumber_testsuite" {
   cc_ptf_password = var.SCC_PTF_PASSWORD
   scc_slmicro_pass = var.SCC_MICRO_CREDENTIALS
 
-  images = ["slmicro62o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "rocky8o"]
+  images = ["slmicro62o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "rocky8o"]
 
   use_avahi    = false
   name_prefix  = "mlm-ci-head-rke2-"
@@ -224,14 +223,14 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    deblike_minion = {
-      image = "ubuntu2404o"
-      provider_settings = {
-        mac = "aa:b2:92:42:00:fb"
-        vcpu = 2
-        memory = 2048
-      }
-    }
+    # deblike_minion = {
+    #   image = "ubuntu2404o"
+    #   provider_settings = {
+    #     mac = "aa:b2:92:42:00:fb"
+    #     vcpu = 2
+    #     memory = 2048
+    #   }
+    # }
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
@@ -243,15 +242,14 @@ module "cucumber_testsuite" {
     pxeboot_minion = {
       image = "sles15sp7o"
     }
-    dhcp_dns = {
-      name        = "dhcp-dns"
-      image       = "opensuse156o"
-      hypervisor  = {
-        host        = "suma-01.mgr.suse.de"
-        user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
-      }
-    }
+    # dhcp_dns = {
+    #   name        = "dhcp-dns"
+    #   hypervisor  = {
+    #     host        = "suma-01.mgr.suse.de"
+    #     user        = "root"
+    #     private_key = file("~/.ssh/id_ed25519")
+    #   }
+    # }
   }
 
   provider_settings = {
