@@ -1,6 +1,10 @@
 def run(params) {
     ansiColor('xterm') {
         timestamps {
+            def runDeploy = params.run_deployment == null ? true : params.run_deployment
+            def runCore = params.run_core == null ? true : params.run_core
+            def runSecondary = params.run_secondary == null ? true : params.run_secondary
+
             // Init path env variables
             env.resultdir = "${WORKSPACE}/results"
             env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
@@ -65,51 +69,61 @@ def run(params) {
                         }
                     }
                     stage('Deploy') {
-                        // Provision the environment
-                        if (params.terraform_init) {
-                            env.TERRAFORM_INIT = '--init'
-                        } else {
-                            env.TERRAFORM_INIT = ''
-                        }
-                        env.TERRAFORM_TAINT = ''
-                        if (params.terraform_taint) {
-                            switch (params.sumaform_backend) {
-                                case "libvirt":
-                                    env.TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'";
-                                    break;
-                                default:
-                                    println("ERROR: Unknown backend ${params.sumaform_backend}");
-                                    sh "exit 1";
-                                    break;
+                        if (runDeploy) {
+                            // Provision the environment
+                            if (params.terraform_init) {
+                                env.TERRAFORM_INIT = '--init'
+                            } else {
+                                env.TERRAFORM_INIT = ''
                             }
+                            env.TERRAFORM_TAINT = ''
+                            if (params.terraform_taint) {
+                                switch (params.sumaform_backend) {
+                                    case "libvirt":
+                                        env.TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'";
+                                        break;
+                                    default:
+                                        println("ERROR: Unknown backend ${params.sumaform_backend}");
+                                        sh "exit 1";
+                                        break;
+                                }
+                            }
+                            if (isNewJenkins) {
+                                sh """
+                                    sed -i '/HYPERVISOR_PRIVATE_SSH_KEY_PATH/d' ${resultdir}/sumaform/terraform.tfvars 2>/dev/null || true
+                                    sed -i '/CONTROLLER_PUBLIC_SSH_KEY_PATH/d' ${resultdir}/sumaform/terraform.tfvars 2>/dev/null || true
+                                    echo 'HYPERVISOR_PRIVATE_SSH_KEY_PATH="/home/jenkins/.ssh/id_ed25519.worker"' >> ${resultdir}/sumaform/terraform.tfvars
+                                    echo 'CONTROLLER_PUBLIC_SSH_KEY_PATH="/home/jenkins/.ssh/id_ed25519.pub.controller"' >> ${resultdir}/sumaform/terraform.tfvars
+                                """
+                            }
+                            sh "${credInit}; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
+                            deployed = true
+                            // Collect and tag Flaky tests from the GitHub Board
+                            def rakeTarget = ci_label ? "utils:collect_and_tag_flaky_tests[${ci_label}]" : "utils:collect_and_tag_flaky_tests"
+                            def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake ${rakeTarget}'", returnStatus: true
+                        } else {
+                            deployed = true
                         }
-                        if (isNewJenkins) {
-                            sh """
-                                sed -i '/HYPERVISOR_PRIVATE_SSH_KEY_PATH/d' ${resultdir}/sumaform/terraform.tfvars 2>/dev/null || true
-                                sed -i '/CONTROLLER_PUBLIC_SSH_KEY_PATH/d' ${resultdir}/sumaform/terraform.tfvars 2>/dev/null || true
-                                echo 'HYPERVISOR_PRIVATE_SSH_KEY_PATH="/home/jenkins/.ssh/id_ed25519.worker"' >> ${resultdir}/sumaform/terraform.tfvars
-                                echo 'CONTROLLER_PUBLIC_SSH_KEY_PATH="/home/jenkins/.ssh/id_ed25519.pub.controller"' >> ${resultdir}/sumaform/terraform.tfvars
-                            """
-                        }
-                        sh "${credInit}; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
-                        deployed = true
-                        // Collect and tag Flaky tests from the GitHub Board
-                        def rakeTarget = ci_label ? "utils:collect_and_tag_flaky_tests[${ci_label}]" : "utils:collect_and_tag_flaky_tests"
-                        def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake ${rakeTarget}'", returnStatus: true
                     }
                     stage('Install RKE2') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_rke2'"
+                        if (runDeploy) {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_rke2'"
+                            }
                         }
                     }
                     stage('Install Server on RKE2') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_server_on_rke2'"
+                        if (runDeploy) {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_server_on_rke2'"
+                            }
                         }
                     }
                     stage('Install Proxy on RKE2') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_proxy_on_rke2'"
+                        if (runDeploy) {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_proxy_on_rke2'"
+                            }
                         }
                     }
                     stage('Sanity Check') {
@@ -123,48 +137,54 @@ def run(params) {
                     //     }
                     // }
                     stage('Core - Setup') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
+                        if (runCore) {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
+                            }
                         }
                     }
                     stage('Core - Initialize clients') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:init_clients'"
+                        if (runCore) {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:init_clients'"
+                            }
                         }
                     }
                     stage('Secondary features') {
-                        def tags_list = ""
-                        // When triggered by cron the Active Choices plugin (JENKINS-42568) always returns
-                        // the first checkbox value instead of none, so ignore functional_scopes on timer builds.
-                        def isTimerTriggered = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
-                        def effectiveScopes = isTimerTriggered ? '' : params.functional_scopes
-                        if (effectiveScopes) {
-                            // Re-add the @ prefix stripped from the job parameters
-                            // (Jenkins' Safe HTML markup formatter escapes @ as &#64; in Active Choices labels).
-                            // startsWith guard keeps backward compatibility with jobs still passing @-prefixed scopes.
-                            def transformed_scopes = effectiveScopes.split(',')
-                                    .collect { it.trim() }
-                                    .collect { it.startsWith('@') ? it : "@${it}" }
-                                    .join(' or ')
-                            // --cucumber-cmd below is single-quoted, and rake re-splits TAGS through a
-                            // shell, so the value carries its own quotes rather than nesting single ones.
-                            tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
-                        }
+                        if (runSecondary) {
+                            def tags_list = ""
+                            // When triggered by cron the Active Choices plugin (JENKINS-42568) always returns
+                            // the first checkbox value instead of none, so ignore functional_scopes on timer builds.
+                            def isTimerTriggered = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
+                            def effectiveScopes = isTimerTriggered ? '' : params.functional_scopes
+                            if (effectiveScopes) {
+                                // Re-add the @ prefix stripped from the job parameters
+                                // (Jenkins' Safe HTML markup formatter escapes @ as &#64; in Active Choices labels).
+                                // startsWith guard keeps backward compatibility with jobs still passing @-prefixed scopes.
+                                def transformed_scopes = effectiveScopes.split(',')
+                                        .collect { it.trim() }
+                                        .collect { it.startsWith('@') ? it : "@${it}" }
+                                        .join(' or ')
+                                // --cucumber-cmd below is single-quoted, and rake re-splits TAGS through a
+                                // shell, so the value carries its own quotes rather than nesting single ones.
+                                tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
+                            }
 
-                        def statusCode1 = 1
-                        def statusCode2 = 1
-                        def statusCode3 = 1
-                        withIdleTimeout { statusCode1 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true) }
-                        withIdleTimeout { statusCode2 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true) }
-                        withIdleTimeout { statusCode3 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true) }
-                        sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
+                            def statusCode1 = 1
+                            def statusCode2 = 1
+                            def statusCode3 = 1
+                            withIdleTimeout { statusCode1 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true) }
+                            withIdleTimeout { statusCode2 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true) }
+                            withIdleTimeout { statusCode3 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true) }
+                            sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
+                        }
                     }
                 }
             }
             finally {
                 stage('Save TF state') {
-                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*", allowEmptyArchive: true
                 }
 
                 stage('Get results') {
