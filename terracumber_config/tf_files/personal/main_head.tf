@@ -34,7 +34,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse156o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro61o", "slmicro62o"]
+  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro61o", "slmicro62o"]
 
   ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
   use_avahi    = false
@@ -145,7 +145,7 @@ module "cucumber_testsuite" {
     }
     dhcp_dns = {
       name        = "dhcp-dns"
-      image       = "opensuse156o"
+      image       = "opensuse160o"
       hypervisor  = {
         host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
         user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
