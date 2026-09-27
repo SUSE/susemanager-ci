@@ -80,7 +80,7 @@ BASE_CONFIGURATIONS = {
   base_core = {
     pool               = "ssd"
     bridge             = "br0"
-    hypervisor         = "cthulhu.mgr.suse.de"
+    hypervisor         = "suma-07.mgr.suse.de"
     additional_network = null
     images             = ["sles15sp7o", "opensuse160o", "ubuntu2404o", "rocky10o", "slmicro62o"]
   }
