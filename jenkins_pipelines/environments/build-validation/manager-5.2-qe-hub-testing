@@ -36,8 +36,8 @@ node('sumaform-cucumber') {
     mutableParams.sumaform_backend = "libvirt"
     mutableParams.bin_path = "/usr/bin/tofu"
     mutableParams.bin_plugins_path = "/usr/bin"
-    mutableParams.product_version = "head"
-    mutableParams.deployment_tfvars = "susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlmhead_sles_hubtesting_prg.tfvars"
+    mutableParams.product_version = "5.2-released"
+    mutableParams.deployment_tfvars = "susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm52_hubtesting_prg.tfvars"
     mutableParams.product_version_display = mutableParams.product_version
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-hub-build-validation.groovy"
     pipeline.run(mutableParams)

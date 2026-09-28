@@ -72,8 +72,8 @@ ENVIRONMENT_CONFIGURATION = {
     image = "sles15sp7o"
   }
 
-  product_version      = "5.2-nightly"
-  name_prefix          = "mlm-testhub-"
+  product_version      = "5.2-released"
+  name_prefix          = "mlm52-hubtesting-"
   url_prefix           = "https://jenkins.mgr.suse.de/job/manager-qe-test-hub-acceptance-tests"
 }
 BASE_CONFIGURATIONS = {
