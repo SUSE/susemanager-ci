@@ -73,12 +73,6 @@ def run(params) {
             }
             cucumberIdleTimeoutMinutes = idleTimeoutMinutesOr(params.cucumber_idle_timeout, 60)
             productSyncIdleTimeoutMinutes = idleTimeoutMinutesOr(params.product_sync_idle_timeout, 180)
-            withIdleTimeoutOf = { int minutes, Closure body ->
-                timeout(activity: true, time: minutes, unit: 'MINUTES') { body() }
-            }
-            withIdleTimeout = { Closure body ->
-                withIdleTimeoutOf(cucumberIdleTimeoutMinutes, body)
-            }
             try {
                 if (params.enable_hub_stages) {
                     hubBuild = build job: 'manager-head-qe-hub-testing',
@@ -668,6 +662,18 @@ def run(params) {
             }
         }
     }
+}
+
+// Declared as top-level methods (not closures assigned to undeclared vars) so they stay
+// resolvable from any method on this script object, including across a pipeline resume -
+// closure-valued script bindings have been observed coming back null in that case,
+// causing a "No such DSL method" NoSuchMethodError instead of running the timeout.
+def withIdleTimeoutOf(int minutes, Closure body) {
+    timeout(activity: true, time: minutes, unit: 'MINUTES') { body() }
+}
+
+def withIdleTimeout(Closure body) {
+    withIdleTimeoutOf(cucumberIdleTimeoutMinutes, body)
 }
 
 /**
