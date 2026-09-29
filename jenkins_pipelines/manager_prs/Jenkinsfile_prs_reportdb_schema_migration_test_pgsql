@@ -19,8 +19,8 @@ pipeline {
 
     environment {
         repository = "SUSE/spacewalk"
-        context = "schema_migration_test_pgsql"
-        description = "schema migration test"
+        context = "reportdb_schema_migration_test_pgsql"
+        description = "schema migration test for the report DB"
         test = "susemanager-utils/testing/automation/schema-migration-reportdb-test-pgsql.sh"
         runtest_pg = "pr-checker --repo ${repository} run" +
                 " --pr ${params.PR_NUMBER}" +
