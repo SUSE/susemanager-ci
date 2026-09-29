@@ -201,12 +201,12 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    # deblike_minion = {
-    #   image             = "ubuntu2404o"
-    #   provider_settings = {
-    #     mac = "aa:b2:93:01:00:1b"
-    #   }
-    # }
+    deblike_minion = {
+      image             = "ubuntu2404o"
+      provider_settings = {
+        mac = "aa:b2:93:01:00:1b"
+      }
+    }
     build_host = {
       image             = "sles15sp7o"
       provider_settings = {
@@ -217,14 +217,14 @@ module "cucumber_testsuite" {
     pxeboot_minion = {
       image = "sles15sp7o"
     }
-    # dhcp_dns = {
-    #   name       = "dhcp-dns"
-    #   hypervisor = {
-    #     host        = "suma-01.mgr.suse.de"
-    #     user        = "root"
-    #     private_key = file("~/.ssh/id_ed25519")
-    #   }
-    # }
+    dhcp_dns = {
+      name       = "dhcp-dns"
+      hypervisor = {
+        host        = "suma-01.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_ed25519")
+      }
+    }
   }
   
   provider_settings = {

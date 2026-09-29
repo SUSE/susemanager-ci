@@ -171,8 +171,8 @@ module "cucumber_testsuite" {
       image = "slmicro62o"
       provider_settings = {
         mac = "aa:b2:92:42:00:f1"
-        vcpu = 2
-        memory = 16384
+        vcpu = 8
+        memory = 32768
       }
       main_disk_size                 = 500
       login_timeout                  = 28800
@@ -223,14 +223,14 @@ module "cucumber_testsuite" {
         memory = 2048
       }
     }
-    # deblike_minion = {
-    #   image = "ubuntu2404o"
-    #   provider_settings = {
-    #     mac = "aa:b2:92:42:00:fb"
-    #     vcpu = 2
-    #     memory = 2048
-    #   }
-    # }
+    deblike_minion = {
+      image = "ubuntu2404o"
+      provider_settings = {
+        mac = "aa:b2:92:42:00:fb"
+        vcpu = 2
+        memory = 2048
+      }
+    }
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
@@ -242,14 +242,14 @@ module "cucumber_testsuite" {
     pxeboot_minion = {
       image = "sles15sp7o"
     }
-    # dhcp_dns = {
-    #   name        = "dhcp-dns"
-    #   hypervisor  = {
-    #     host        = "suma-01.mgr.suse.de"
-    #     user        = "root"
-    #     private_key = file("~/.ssh/id_ed25519")
-    #   }
-    # }
+    dhcp_dns = {
+      name        = "dhcp-dns"
+      hypervisor  = {
+        host        = "suma-01.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_ed25519")
+      }
+    }
   }
 
   provider_settings = {
