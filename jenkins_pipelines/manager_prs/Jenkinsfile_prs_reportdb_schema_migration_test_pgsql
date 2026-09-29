@@ -1,0 +1,72 @@
+#!/usr/bin/env groovy
+
+// Configure the build properties
+properties([
+        buildDiscarder(logRotator(numToKeepStr: '500'))
+])
+
+pipeline {
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        ansiColor('xterm')
+    }
+
+    parameters {
+        string(defaultValue: '', description: 'SUSE Manager PR', name: 'PR_NUMBER')
+        booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
+    }
+
+    environment {
+        repository = "SUSE/spacewalk"
+        context = "schema_migration_test_pgsql"
+        description = "schema migration test"
+        test = "susemanager-utils/testing/automation/schema-migration-reportdb-test-pgsql.sh"
+        runtest_pg = "pr-checker --repo ${repository} run" +
+                " --pr ${params.PR_NUMBER}" +
+                " --check-name ${context}" +
+                " --description \"${description}\"" +
+                " --build-url ${env.BUILD_URL}" +
+                " --command ${test}" +
+                " --git-dir ${env.WORKSPACE}/clone"
+    }
+
+    // run only on specific hosts
+    agent { label 'suse-manager-unit-tests' }
+
+    stages {
+        stage('Clean Up Workspace') {
+            steps {
+                echo 'Clean up previous workspace'
+                cleanWs()
+                echo 'Check out SCM'
+                checkout scm
+            }
+        }
+
+        stage('Run reportdb schema tests postgresql') {
+            steps {
+                echo 'Run tests'
+                script {
+                    if (params.PR_NUMBER != '') {
+                        currentBuild.displayName = "PR: ${params.PR_NUMBER}"
+                        sh "export PRODUCT=SUSE-Manager && ${runtest_pg}"
+                    } else {
+                        echo "Missing PR_NUMBER parameter"
+                    }
+                }
+            }
+        }
+
+    }
+    post {
+        success {
+            script {
+                if (params.cleanWorkspace == true) {
+                    echo 'Clean up current workspace, when job success.'
+                    cleanWs()
+                }
+            }
+        }
+    }
+}
