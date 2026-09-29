@@ -49,6 +49,7 @@ pipeline {
                           |  "backend_unittests_pgsql" : ["python/*"],
                           |  "frontend_checks" : ["web/*"],
                           |  "schema_migration_test_pgsql" : ["schema/spacewalk/*"],
+                          |  "reportdb_schema_migration_test_pgsql" : ["schema/reportdb/*"],
                           |  "susemanager_unittests" : ["susemanager/*"]
                           |}
                         '''.stripMargin(),
