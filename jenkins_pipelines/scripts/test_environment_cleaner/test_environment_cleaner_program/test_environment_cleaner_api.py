@@ -62,9 +62,10 @@ class ResourceManager:
                 continue
 
             # Pre-filter: only check details for potential deletion candidates
-            # (channels with "custom" in label or in specific list)
+            # (channels with "custom" in label or "Custom Channel" name, or in specific list)
             is_candidate = (
                 "custom" in channel_label.lower() or
+                channel.get('name', '').startswith("Custom Channel") or
                 channel_label in specific_channels_to_delete
             )
 
@@ -110,7 +111,10 @@ class ResourceManager:
         repositories = self.client.channel.software.listUserRepos(self.session_key)
         for repository in repositories:
             logger.info(f"Delete repository : {repository['label']}")
-            self.client.channel.software.removeRepo(self.session_key, repository['label'])
+            try:
+                self.client.channel.software.removeRepo(self.session_key, repository['label'])
+            except xmlrpc.client.Fault as e:
+                logger.warning(f"Failed to delete repository {repository['label']} (fault {e.faultCode}): {e.faultString}")
 
     def delete_salt_keys(self):
         accepted_salt_keys = self.client.saltkey.acceptedList(self.session_key)
