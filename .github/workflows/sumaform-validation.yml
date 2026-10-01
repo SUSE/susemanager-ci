@@ -121,6 +121,10 @@ jobs:
           variable "SERVER_CONTAINER_IMAGE" { default="" }
           variable "SERVER_ADDITIONAL_REPOS" { default={} }
           variable "PROXY_ADDITIONAL_REPOS" { default={} }
+          variable "SERVER_ADDITIONAL_REPOS_TRANSACTIONAL" { default={} }
+          variable "SERVER_ADDITIONAL_REPOS_NON_TRANSACTIONAL" { default={} }
+          variable "PROXY_ADDITIONAL_REPOS_TRANSACTIONAL" { default={} }
+          variable "PROXY_ADDITIONAL_REPOS_NON_TRANSACTIONAL" { default={} }
           variable "BASE_OS" { default="" }
           variable "PRODUCT_VERSION" { default="" }
           variable "CUCUMBER_GITREPO" {}
@@ -179,6 +183,10 @@ jobs:
           variable "SERVER_CONTAINER_IMAGE" { default="" }
           variable "SERVER_ADDITIONAL_REPOS" { default={} }
           variable "PROXY_ADDITIONAL_REPOS" { default={} }
+          variable "SERVER_ADDITIONAL_REPOS_TRANSACTIONAL" { default={} }
+          variable "SERVER_ADDITIONAL_REPOS_NON_TRANSACTIONAL" { default={} }
+          variable "PROXY_ADDITIONAL_REPOS_TRANSACTIONAL" { default={} }
+          variable "PROXY_ADDITIONAL_REPOS_NON_TRANSACTIONAL" { default={} }
           variable "BASE_OS" { default="" }
           variable "PRODUCT_VERSION" { default="" }
           variable "CUCUMBER_GITREPO" {}

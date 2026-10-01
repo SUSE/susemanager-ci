@@ -73,6 +73,10 @@ def run(params) {
                                 if (!json_generator_version_sles || !json_generator_version_micro) {
                                     error("json_generator_version_sles and json_generator_version_micro must both be set to generate custom_repositories.json from mi_ids")
                                 }
+                                // Each version must be the right variant, or the merge would label the repos for the wrong OS
+                                if (!json_generator_version_sles.endsWith('-sles') || !json_generator_version_micro.endsWith('-micro')) {
+                                    error("json_generator_version_sles (${json_generator_version_sles}) must end with -sles and json_generator_version_micro (${json_generator_version_micro}) with -micro")
+                                }
                                 // Both versions must be the same product release (e.g. 52-sles with 52-micro)
                                 if (json_generator_version_sles.split('-')[0] != json_generator_version_micro.split('-')[0]) {
                                     error("json_generator_version_sles (${json_generator_version_sles}) and json_generator_version_micro (${json_generator_version_micro}) must be for the same product version")
