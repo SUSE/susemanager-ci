@@ -105,8 +105,12 @@ module "build_validation_module" {
   server_container_registry       = var.SERVER_CONTAINER_REGISTRY
   server_container_image          = var.SERVER_CONTAINER_IMAGE
   server_additional_repos         = var.SERVER_ADDITIONAL_REPOS
+  server_additional_repos_transactional     = var.SERVER_ADDITIONAL_REPOS_TRANSACTIONAL
+  server_additional_repos_non_transactional = var.SERVER_ADDITIONAL_REPOS_NON_TRANSACTIONAL
   proxy_container_registry        = var.PROXY_CONTAINER_REGISTRY
   proxy_additional_repos          = var.PROXY_ADDITIONAL_REPOS
+  proxy_additional_repos_transactional      = var.PROXY_ADDITIONAL_REPOS_TRANSACTIONAL
+  proxy_additional_repos_non_transactional  = var.PROXY_ADDITIONAL_REPOS_NON_TRANSACTIONAL
   base_os                         = var.BASE_OS
   hypervisor_private_ssh_key_path = var.HYPERVISOR_PRIVATE_SSH_KEY_PATH
   controller_private_ssh_key_path = var.CONTROLLER_PRIVATE_SSH_KEY_PATH
