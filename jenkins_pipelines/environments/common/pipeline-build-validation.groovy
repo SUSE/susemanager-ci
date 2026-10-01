@@ -538,13 +538,13 @@ def run(params) {
                                 // Need to be executed after building images for 5.0
                                 // Using lock and proxyHandler to make sure to run it only once, first to start.
                                 stage("Configure retail proxy (${terminal})") {
-                                    withThrottle(retailProxyLockSlots, 1, 3000) {
+                                    withThrottle(retailProxyLockSlots, 1) {
                                         if (retailProxyStatus['status'] == 'FAILURE') {
                                             error "Aborting ${terminal}: Retail proxy configuration failed by another branch."
                                         } else if (retailProxyStatus['status'] == 'SUCCESS') {
                                             echo "Configure retail proxy already completed (skipped for ${terminal})"
                                         } else {
-                                            def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', true)
+                                            def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', true, null, null, 3000)
                                             if (res_configure_retail_proxy != 0) {
                                                 // CRITICAL: Mark as FAILURE before throwing error so other waiting threads see it
                                                 retailProxyStatus['status'] = 'FAILURE'
@@ -682,8 +682,11 @@ def withIdleTimeout(Closure body) {
  * @param return_status Boolean to decide if the command should return the exit status.
  * @param disableMinions Optional list of environment variables to unset (for parallel client stages).
  * @param idleTimeoutMinutes Optional inactivity timeout, for the few targets that stay silent longer than the default.
+ * @param wallSeconds Optional wall-clock limit, enforced by coreutils timeout (exit 124, or 137 if it had to be killed).
+ *                    Do not use Jenkins timeout() for this: stopping one sh step kills every sh step of the same
+ *                    workspace (durable-task kills by a workspace-wide cookie), i.e. all parallel branches.
  */
-def runCucumberRakeTarget(String rake_target, boolean return_status = false, disableMinions = null, Integer idleTimeoutMinutes = null) {
+def runCucumberRakeTarget(String rake_target, boolean return_status = false, disableMinions = null, Integer idleTimeoutMinutes = null, Integer wallSeconds = null) {
     // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler(params)),
     // For compatibility with the original structure where getNodesHandler(params).envVariableListToDisable is a string.
     def unset_vars = ""
@@ -693,8 +696,9 @@ def runCucumberRakeTarget(String rake_target, boolean return_status = false, dis
         unset_vars = list_to_join ? "unset ${list_to_join.join(' ')}; " : ""
     }
 
+    def wall_prefix = wallSeconds ? "timeout -k 30 -s TERM ${wallSeconds}s " : ""
     def script = """
-        ./terracumber-cli ${common_params} \\
+        ${wall_prefix}./terracumber-cli ${common_params} \\
             --logfile ${resultdirbuild}/testsuite.log \\
             --runstep cucumber \\
             --cucumber-cmd '${unset_vars}${env.exports} cd /root/spacewalk/testsuite; rake ${rake_target}'
@@ -748,9 +752,9 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots,
                         if (params.confirm_before_continue) {
                             input 'Press any key to start adding Maintenance Update repositories'
                         }
-                        withThrottle(muLockSlots, 5, 600) {
+                        withThrottle(muLockSlots, 5) {
                             echo 'Add custom channels and MU repositories'
-                            def res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList)
+                            def res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList, null, 600)
                             echoHtmlReportPath("build_validation_add_maintenance_update_repositories_${nodeTag}")
                             echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                             if (res_mu_repos != 0) {
@@ -860,9 +864,9 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots,
                             }
                         }
                         // Allow only one node at a time to create bootstrap repository in the manager.
-                        withThrottle(bootstrapRepoSlots, 1, 320) {
+                        withThrottle(bootstrapRepoSlots, 1) {
                             echo 'Create bootstrap repository'
-                            def res_create_bootstrap_repository = runCucumberRakeTarget("cucumber:build_validation_create_bootstrap_repository_${nodeTag}", true, temporaryList)
+                            def res_create_bootstrap_repository = runCucumberRakeTarget("cucumber:build_validation_create_bootstrap_repository_${nodeTag}", true, temporaryList, null, 320)
                             echoHtmlReportPath("build_validation_create_bootstrap_repository_${nodeTag}")
                             echo "Create bootstrap repository status code: ${res_create_bootstrap_repository}"
                             if (res_create_bootstrap_repository != 0) {
@@ -905,9 +909,9 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots,
                         input 'Press any key to start running the smoke tests'
                     }
                     randomWait()
-                    withThrottle(smokeTestSlots, 10, 7200) {
+                    withThrottle(smokeTestSlots, 10) {
                         echo 'Run Smoke tests'
-                        def res_smoke_tests = runCucumberRakeTarget("cucumber:build_validation_smoke_tests_${nodeTag}", true, temporaryList)
+                        def res_smoke_tests = runCucumberRakeTarget("cucumber:build_validation_smoke_tests_${nodeTag}", true, temporaryList, null, 7200)
                         echoHtmlReportPath("build_validation_smoke_tests_${nodeTag}")
                         echo "Smoke tests status code: ${res_smoke_tests}"
                         if (res_smoke_tests != 0) {
@@ -1118,18 +1122,14 @@ def releaseSlot(java.util.concurrent.atomic.AtomicInteger slots) {
     slots.decrementAndGet()
 }
 
-def withThrottle(java.util.concurrent.atomic.AtomicInteger slots, int max, Integer timeoutSeconds = null, Closure body) {
+// No Jenkins timeout() here on purpose: when it fires it kills every sh step of the workspace, i.e. all
+// parallel branches. Bound the wall-clock time with runCucumberRakeTarget's wallSeconds instead.
+def withThrottle(java.util.concurrent.atomic.AtomicInteger slots, int max, Closure body) {
     waitUntil {
         tryAcquireSlot(slots, max)
     }
     try {
-        if (timeoutSeconds != null) {
-            timeout(time: timeoutSeconds, unit: 'SECONDS') {
-                body()
-            }
-        } else {
-            body()
-        }
+        body()
     } finally {
         releaseSlot(slots)
     }
