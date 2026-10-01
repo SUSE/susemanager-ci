@@ -1082,7 +1082,7 @@ def cleanMigrationFeatureName(String feature) {
  */
 def echoHtmlReportPath(String rake_target) {
     // Construct the full URL to the file containing the HTML path
-    def path_export_url = "https://${env.controller_hostname}/results/${env.BUILD_NUMBER}/${rake_target}_html_path.txt"
+    def path_export_url = "https://${env.controller_hostname}/results/${env.BUILD_NUMBER}/html_paths/${rake_target}_html_path.txt"
 
     def html_report_path = ''
     try {
