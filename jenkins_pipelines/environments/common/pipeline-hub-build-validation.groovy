@@ -39,7 +39,8 @@ def run(params) {
             def server_container_registry = params.server_container_registry ?: ''
             def proxy_container_registry = params.proxy_container_registry ?: ''
             def server_container_image = params.server_container_image ?: ''
-            def json_generator_version = params.json_generator_version ?: ''
+            def json_generator_version_sles = params.json_generator_version_sles ?: ''
+            def json_generator_version_micro = params.json_generator_version_micro ?: ''
             def product_version = params.product_version ?: ''
 
             try {
@@ -69,16 +70,27 @@ def run(params) {
                                 writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
                             }
                             if (params.mi_ids?.trim()) {
-                                if (!json_generator_version) {
-                                    error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
+                                if (!json_generator_version_sles || !json_generator_version_micro) {
+                                    error("json_generator_version_sles and json_generator_version_micro must both be set to generate custom_repositories.json from mi_ids")
+                                }
+                                // Both versions must be the same product release (e.g. 52-sles with 52-micro)
+                                if (json_generator_version_sles.split('-')[0] != json_generator_version_micro.split('-')[0]) {
+                                    error("json_generator_version_sles (${json_generator_version_sles}) and json_generator_version_micro (${json_generator_version_micro}) must be for the same product version")
                                 }
                                 node('manager-jenkins-node') {
                                     checkout scm
-                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
-                                    echo "Build Validation JSON script return code:\n ${res_python_script_}"
-                                    if (res_python_script_ != 0) {
-                                        error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                                    // The generator always writes custom_repositories.json: drop stale files, then rename after each run
+                                    sh 'rm -f custom_repositories*.json'
+                                    // Plain list iteration: iterating a Map keySet() across sh steps is not CPS-serializable
+                                    for (variant in ['sles', 'micro']) {
+                                        def version = (variant == 'sles') ? json_generator_version_sles : json_generator_version_micro
+                                        def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${version} --mi_ids ${params.mi_ids} && mv custom_repositories.json custom_repositories_${variant}.json", returnStatus: true)
+                                        echo "Build Validation JSON script (${variant}) return code:\n ${res_python_script_}"
+                                        if (res_python_script_ != 0) {
+                                            error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released) for ${version}")
+                                        }
                                     }
+                                    sh 'python3 jenkins_pipelines/scripts/json_generator/merge_hub_repositories.py --sles custom_repositories_sles.json --micro custom_repositories_micro.json --output custom_repositories.json'
                                     stash name: 'custom_repos_json', includes: 'custom_repositories.json'
                                 }
                                 unstash 'custom_repos_json'
