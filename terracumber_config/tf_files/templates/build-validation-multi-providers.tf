@@ -255,6 +255,18 @@ module "build_validation_module" {
   hypervisor_private_ssh_key_path = var.HYPERVISOR_PRIVATE_SSH_KEY_PATH
   controller_private_ssh_key_path = var.CONTROLLER_PRIVATE_SSH_KEY_PATH
   controller_public_ssh_key_path  = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
+
+  # Containerized server sizing and behavior, overridable from server_containerized in ENVIRONMENT_CONFIGURATION
+  server_containerized_memory                  = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.memory, 40960)
+  server_containerized_vcpu                    = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.vcpu, 10)
+  server_containerized_main_disk_size          = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.main_disk_size, 100)
+  server_containerized_repository_disk_size    = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.repository_disk_size, 3072)
+  server_containerized_database_disk_size      = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.database_disk_size, 300)
+  server_containerized_disable_auto_bootstrap  = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.disable_auto_bootstrap, true)
+  server_containerized_disable_auto_channel_sync = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.disable_auto_channel_sync, true)
+  server_containerized_use_os_released_updates = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.use_os_released_updates, true)
+  # null = location default mirror, "" = no mirror
+  server_containerized_server_mounted_mirror   = try(var.ENVIRONMENT_CONFIGURATION.server_containerized.server_mounted_mirror, null)
 }
 
 

@@ -9,6 +9,15 @@ ENVIRONMENT_CONFIGURATION = {
     name  = "server"
     image = "slmicro62o"
     string_registry = true
+    memory                    = 15360
+    vcpu                      = 4
+    main_disk_size            = 50
+    repository_disk_size      = 150
+    database_disk_size        = 50
+    disable_auto_bootstrap    = false
+    disable_auto_channel_sync = false
+    use_os_released_updates   = false
+    server_mounted_mirror     = ""
   }
   server2_containerized = {
     mac   = "aa:b2:93:01:01:98"
