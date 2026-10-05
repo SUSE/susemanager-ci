@@ -67,7 +67,7 @@ pipeline {
         }
         failure {
             emailext (
-                to: '"#discuss-mlm-ai-security-alerts (Slack)" <discuss-mlm-ai-securi-aaaawh46v22ic4ztzmxhlkbpum@suse.slack.com>',
+                to: 'discuss-mlm-ai-securi-aaaawh46v22ic4ztzmxhlkbpum@suse.slack.com',
                 subject: "Security Alert: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: "The build failed before completion. Open an issue to buildops team https://gitlab.suse.de/buildops/release-support/-/issues/new. (Usually Elisei Roca handles this). See logs: ${env.BUILD_URL}"
             )
