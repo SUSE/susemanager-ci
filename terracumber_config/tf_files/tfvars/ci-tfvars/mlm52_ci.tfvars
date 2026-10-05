@@ -1,19 +1,21 @@
 ENVIRONMENT_CONFIGURATION = {
   # Core Infrastructure
   controller = {
-    mac  = "aa:b2:93:01:01:8c"
-    name = "controller"
+    mac    = "aa:b2:93:01:01:8c"
+    name   = "controller"
+    memory = 4096
+    vcpu   = 4
   }
   server_containerized = {
     mac   = "aa:b2:93:01:01:8d"
     name  = "server"
     image = "slmicro62o"
     string_registry = true
-    memory                    = 15360
-    vcpu                      = 4
-    main_disk_size            = 50
-    repository_disk_size      = 150
-    database_disk_size        = 50
+    memory                    = 32768
+    vcpu                      = 8
+    main_disk_size            = 500
+    repository_disk_size      = 0
+    database_disk_size        = 0
     disable_auto_bootstrap    = false
     disable_auto_channel_sync = false
     use_os_released_updates   = false
@@ -30,34 +32,45 @@ ENVIRONMENT_CONFIGURATION = {
     name  = "proxy"
     image = "slmicro62o"
     string_registry = true
+    memory         = 2048
+    vcpu           = 2
+    main_disk_size = 200
   }
 
   # Standard Minions
   sles15sp7_minion = {
     mac  = "aa:b2:93:01:01:90"
     name = "suse-minion"
+    memory = 2048
+    vcpu   = 2
   }
   sles15sp7_sshminion = {
     mac  = "aa:b2:93:01:01:91"
     name = "suse-sshminion"
+    memory = 2048
+    vcpu   = 2
   }
 
   # Standard Minions
   rocky8_minion = {
     mac  = "aa:b2:93:01:01:92"
     name = "rhlike-minion"
+    memory = 2048
+    vcpu   = 2
   }
 
   # Standard Minions
   ubuntu2404_minion = {
     mac  = "aa:b2:93:01:01:93"
     name = "deblike-minion"
+    memory = 2048
+    vcpu   = 2
   }
   sles15sp7_buildhost = {
     mac  = "aa:b2:93:01:01:94"
     name = "build-host"
   }
-  product_version = "5.2-nighly"
+  product_version = "5.2-nightly"
   name_prefix     = "maxime-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/maxime"
 }
