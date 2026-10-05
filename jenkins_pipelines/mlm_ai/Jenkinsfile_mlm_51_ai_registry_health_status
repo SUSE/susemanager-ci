@@ -70,7 +70,7 @@ pipeline {
                 to: 'discuss-mlm-ai-securi-aaaawh46v22ic4ztzmxhlkbpum@suse.slack.com',
                 subject: "Security Alert: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 mimeType: "text/html",
-                body: "The build failed before completion. Open an issue to buildops team <a href="https://gitlab.suse.de/buildops/release-support/-/issues/new">https://gitlab.suse.de/buildops/release-support/-/issues/new</a>. (Usually Elisei Roca handles this). See logs: ${env.BUILD_URL}"
+                body: "The build failed before completion. Open an issue to buildops team <a href='https://gitlab.suse.de/buildops/release-support/-/issues/new'>https://gitlab.suse.de/buildops/release-support/-/issues/new</a>. (Usually Elisei Roca handles this). See logs: ${env.BUILD_URL}"
             )
         }
     }
