@@ -43,7 +43,7 @@ def run(params) {
                     'uyuni': 'uyuni_podman_ci'
             ]
             def ci_label = isAcceptanceJob ? (ci_label_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: '') : ''
-            def rrtg_version = isAcceptanceJob ? env.JOB_BASE_NAME.find(/4\.3|5\.0|5\.1|5\.2|Head/)?.toLowerCase() : null
+            def rrtg_version = isAcceptanceJob ? env.JOB_BASE_NAME.find(/5\.1|5\.2|Head/)?.toLowerCase() : null
             if (!rrtg_version && env.JOB_BASE_NAME == 'uyuni-master-dev-acceptance-tests-podman') {
                 rrtg_version = 'uyuni'
             }
