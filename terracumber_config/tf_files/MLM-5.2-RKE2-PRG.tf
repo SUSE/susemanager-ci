@@ -137,7 +137,7 @@ module "cucumber_testsuite" {
   images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   use_avahi    = false
-  name_prefix  = "mlm-ci-52-podman-"
+  name_prefix  = "mlm-ci-52-rke2-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
