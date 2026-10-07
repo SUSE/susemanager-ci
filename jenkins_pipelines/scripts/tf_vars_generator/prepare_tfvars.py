@@ -220,6 +220,23 @@ class TfvarsGenerator:
             f.write(hcl_content)
             f.write("\n")
 
+def custom_repos_to_tfvars(repos):
+    """Map a custom_repositories.json dict to the *_ADDITIONAL_REPOS tfvars to inject.
+
+    The flat server/proxy key is only injected when no transactional/non_transactional
+    key exists for it: otherwise the merge() in build_validation/main.tf would apply
+    its repos to every host regardless of OS.
+    """
+    injected = {}
+    for k in ("server", "proxy"):
+        split = {s: repos[f"{k}_{s}"] for s in ("transactional", "non_transactional") if f"{k}_{s}" in repos}
+        for suffix, value in split.items():
+            injected[f"{k.upper()}_ADDITIONAL_REPOS_{suffix.upper()}"] = value
+        if k in repos and not split:
+            injected[f"{k.upper()}_ADDITIONAL_REPOS"] = repos[k]
+    return injected
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Scenario A Args
@@ -290,9 +307,7 @@ if __name__ == "__main__":
             print(f"\n[ERROR]: Failed to parse custom repositories JSON file at {args.custom_repositories_json}. Error: {e}")
             sys.exit(1)
 
-        for k in ["server", "proxy"]:
-            if k in repos:
-                vars_to_inject[f"{k.upper()}_ADDITIONAL_REPOS"] = repos[k]
+        vars_to_inject.update(custom_repos_to_tfvars(repos))
 
     gen.inject_variables(vars_to_inject)
 
