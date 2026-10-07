@@ -8,7 +8,7 @@ node('sumaform-cucumber') {
         parameters([
             string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/SUSE/spacewalk.git', description: 'Testsuite Git Repository'),
             string(name: 'cucumber_ref', defaultValue: 'Manager-5.2', description: 'Testsuite Git reference (branch, tag...)'),
-            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/MLM-5.2-PRG.tf', description: 'Path to the tf file to be used'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/MLM-5.2-RKE2-PRG.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
@@ -25,6 +25,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'run_core', defaultValue: true, description: 'Run core testsuite'),
             booleanParam(name: 'run_secondary', defaultValue: true, description: 'Run secondary testsuite'),
             choice(name: 'rake_namespace', choices: ['cucumber', 'parallel'], description: 'Choose [parallel] (Clients and some features will run in parallel) or [cucumber] (all sequential)'),
+            string(name: 'cucumber_idle_timeout', defaultValue: '600', description: 'Idle timeout'),
             activeChoice(name: 'functional_scopes', description: 'Choose the functional scopes that you want to test', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: false, script: """
                 return [
                     'scope_spacewalk_utils', 'scope_visualization', 'scope_notification_message',
@@ -49,7 +50,7 @@ node('sumaform-cucumber') {
         //Capybara configuration
         capybara_timeout = 10
         default_timeout = 250
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline.groovy"
+        def pipeline = load "jenkins_pipelines/environments/common/pipeline-rke2.groovy"
         pipeline.run(params)
     }
 }
