@@ -137,10 +137,10 @@ EOF
                         fi
                         docker run --rm \
                                    --env-file .venv/config \
-                                   -e AGENT_PROVIDER=${env.AGENT_PROVIDER} \
-                                   -e AGENT_MODEL=${env.AGENT_MODEL} \
-                                   -e JUDGE_PROVIDER=${env.JUDGE_PROVIDER} \
-                                   -e JUDGE_MODEL=${env.JUDGE_MODEL} \
+                                   -e AGENT_PROVIDER \
+                                   -e AGENT_MODEL \
+                                   -e JUDGE_PROVIDER \
+                                   -e JUDGE_MODEL \
                                    --env-file \$HOME/.ai_secrets \
                                    -v "\$(pwd)/results:/app/results" \
                                    -v /var/run/docker.sock:/var/run/docker.sock \
