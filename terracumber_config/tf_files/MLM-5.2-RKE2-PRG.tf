@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-Head/job/manager-Head-dev-acceptance-tests-RKE2"
+  default = "https://jenkins.mgr.suse.de/job/manager-5.2-dev-acceptance-tests-RKE2/"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -12,12 +12,12 @@ variable "CUCUMBER_COMMAND" {
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-5.2"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Head-RKE2-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 5.2-PRG $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Head-RKE2-NUE: Environment setup failed"
+  default = "Results 5.2-PRG: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -76,10 +76,6 @@ variable "SCC_PTF_PASSWORD" {
   // Not needed for master, as PTFs are only build for SUSE Manager / MLM
 }
 
-variable "SCC_MICRO_CREDENTIALS" {
-  type = string
-}
-
 variable "GIT_USER" {
   type = string
   default = null // Not needed for master, as it is public
@@ -88,6 +84,21 @@ variable "GIT_USER" {
 variable "GIT_PASSWORD" {
   type = string
   default = null // Not needed for master, as it is public
+}
+
+variable "PROMETHEUS_PUSH_GATEWAY_URL" {
+  type = string
+  default = null
+}
+
+variable "CONTROLLER_PUBLIC_SSH_KEY_PATH" {
+  type = string
+  default = "./salt/controller/id_ed25519.pub"
+}
+
+variable "HYPERVISOR_PRIVATE_SSH_KEY_PATH" {
+  type = string
+  default = "~/.ssh/id_ed25519"
 }
 
 terraform {
@@ -107,21 +118,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "head"
-
-  // Kubernetes variables
-  kubernetes                                = true
-  use_devel_oci                             = true
-  deploy_coco_attestation                   = true
-  deploy_saline                             = true
-  deploy_tftp                               = true
-  deploy_hub_api                            = true
-  install_kubectl_helm                      = false
-  kubeconfig_path                           = null
-  install_uyuni_via_testsuite               = true
-  kubernetes_create_static_var_spacewalk_pv = true
-  kubernetes_create_static_var_pgsql_pv     = true
-  local_path_provisioner_default_class      = true
+  product_version = "5.2-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -131,14 +128,16 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
-  scc_slmicro_pass = var.SCC_MICRO_CREDENTIALS
 
-  images = ["slmicro62o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "rocky8o"]
+  ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
+
+  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro62o"]
 
   use_avahi    = false
-  name_prefix  = "mlm-ci-head-rke2-"
+  name_prefix  = "mlm-ci-52-podman-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -150,7 +149,6 @@ module "cucumber_testsuite" {
 
   container_server = true
   container_proxy  = true
-  beta_enabled = false
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
@@ -162,7 +160,7 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:92:42:00:f0"
+        mac = "aa:b2:93:01:02:d0"
         vcpu = 4
         memory = 4096
       }
@@ -170,7 +168,7 @@ module "cucumber_testsuite" {
     server_kubernetes = {
       image = "slmicro62o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:f1"
+        mac = "aa:b2:93:01:02:d1"
         vcpu = 8
         memory = 32768
       }
@@ -179,28 +177,28 @@ module "cucumber_testsuite" {
       large_deployment               = true
       runtime                        = "rke2"
       container_tag                  = "latest"
-      container_registry             = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64"
+      container_registry             = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.2/x86_64"
       helm_chart_name                = "server-helm"
-      helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.3"
+      helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2"
     }
     proxy_kubernetes = {
       image = "slmicro62o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:f2"
+        mac = "aa:b2:93:01:02:d2"
         vcpu = 2
         memory = 16384
       }
       main_disk_size              = 200
       runtime                     = "rke2"
       container_tag               = "latest"
-      container_registry          = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64"
+      container_registry          = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.2/x86_64"
       helm_chart_name             = "proxy-helm"
-      helm_chart_url              = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.3"
+      helm_chart_url              = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.2"
     }
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:f6"
+        mac = "aa:b2:93:01:02:d6"
         vcpu = 2
         memory = 2048
       }
@@ -208,15 +206,16 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:f8"
+        mac = "aa:b2:93:01:02:d8"
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "iptables" ]
     }
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:fa"
+        mac = "aa:b2:93:01:02:da"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -226,7 +225,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:fb"
+        mac = "aa:b2:93:01:02:db"
         vcpu = 2
         memory = 2048
       }
@@ -234,7 +233,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:92:42:00:fd"
+        mac = "aa:b2:93:01:02:dd"
         vcpu = 2
         memory = 2048
       }
@@ -243,11 +242,12 @@ module "cucumber_testsuite" {
       image = "sles15sp7o"
     }
     dhcp_dns = {
-      name        = "dhcp-dns"
-      hypervisor  = {
+      name = "dhcp-dns"
+      image = "opensuse160o"
+      hypervisor = {
         host        = "suma-01.mgr.suse.de"
         user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
+        private_key = file(pathexpand(var.HYPERVISOR_PRIVATE_SSH_KEY_PATH))
       }
     }
   }
@@ -255,8 +255,8 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool = "ssd"
     network_name = null
-    bridge = "br0"
-    additional_network = "192.168.98.0/24"
+    bridge = "br1"
+    additional_network = "192.168.52.0/24"
   }
 }
 
