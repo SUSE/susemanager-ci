@@ -15,7 +15,10 @@ def run(params) {
 
             def mirror_scope = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
             mirror_scope = mirror_scope.replaceAll("-dev", "")
-            def ci_label = ['4.3': '4.3_ci', '5.0': '5.0_ci', '5.1': '5.1_ci', '5.2': '5.2_ci', 'Head': 'head_ci'].find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: ''
+            def ci_label = ['5.1': '5.1_ci', '5.2': '5.2_ci', 'Head': 'head_ci'].find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: ''
+            // Only 5.2 and head are ingested by RRTG; tag is <version>-rke2
+            def rrtg_version = env.JOB_BASE_NAME.find(/5\.2|Head/)?.toLowerCase()
+            rrtg_version = rrtg_version ? "${rrtg_version}-rke2" : null
             def junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
             // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
             // Anything that is not a positive number of minutes falls back to the default.
@@ -203,6 +206,20 @@ def run(params) {
                             println("ERROR: sending the results email failed: ${err}")
                             error = 1
                         }
+                        if (rrtg_version) {
+                            withCreds {
+                                sh """
+                                    #!/bin/bash
+                                    ${credInit}
+                                    curl -sf -k -X POST \\
+                                      "https://su-agent.qe-hub.mgr.suse.de/api/rrtg/ingest/${rrtg_version}?build=${env.BUILD_NUMBER}" \\
+                                      -u "\${RRTG_USER}:\${RRTG_PASS}" \\
+                                      -H "Content-Type: application/json" \\
+                                    || echo "RRTG ingest failed (non-fatal)"
+                                """
+                            }
+                        }
+
                         sh "exit ${error}"
                     } finally {
                         // In finally so it runs even when getresults/mail fail

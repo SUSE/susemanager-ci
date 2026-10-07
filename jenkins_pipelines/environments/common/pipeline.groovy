@@ -35,15 +35,17 @@ def run(params) {
             def isAcceptanceJob = env.JOB_BASE_NAME.contains('-acceptance-tests')
             def mirror_scope = isAcceptanceJob ? env.JOB_BASE_NAME.split('-acceptance-tests')[0].replaceAll("-dev", "") : null
             def ci_label_map = [
-                    '4.3'  : '4.3_ci',
-                    '5.0'  : '5.0_ci',
                     '5.1'  : '5.1_ci',
                     '5.2'  : '5.2_ci',
                     'Head' : 'head_ci',
                     'uyuni': 'uyuni_podman_ci'
             ]
             def ci_label = isAcceptanceJob ? (ci_label_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: '') : ''
-            def rrtg_version = isAcceptanceJob ? env.JOB_BASE_NAME.find(/4\.3|5\.0|5\.1|5\.2|Head/)?.toLowerCase() : null
+            def rrtg_version = isAcceptanceJob ? env.JOB_BASE_NAME.find(/5\.1|5\.2|Head/)?.toLowerCase() : null
+            // 5.2 and head are reported per deployment flavour (podman / rke2)
+            if (rrtg_version in ['5.2', 'head']) {
+                rrtg_version += env.JOB_BASE_NAME.endsWith('-RKE2') ? '-rke2' : '-podman'
+            }
             if (!rrtg_version && env.JOB_BASE_NAME == 'uyuni-master-dev-acceptance-tests-podman') {
                 rrtg_version = 'uyuni'
             }
@@ -292,15 +294,6 @@ def run(params) {
                             junit allowEmptyResults: true,
                                     testResults: "${junit_resultdir}/*.xml",
                                     skipPublishingChecks: true
-                        }
-                        // Test Report Summary
-                        try {
-                            sh "python3 -m venv ${env.WORKSPACE}/venv"
-                            def SCRIPT_DIR = "${env.WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/test_review_summary"
-                            def testSummary = sh(script: "${env.WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/test_review_summary.py ${resultdirbuild}/cucumber_report/cucumber_report.html.json", returnStdout: true).trim()
-                            echo testSummary
-                        } catch (err) {
-                            println("WARNING: test review summary failed (non-fatal): ${err}")
                         }
                     }
                     // Send email
