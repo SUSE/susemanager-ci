@@ -144,7 +144,7 @@ jobs:
           
           # --- TEST 2: Static BV ---
           echo "::group::Test 2: Validate Static TFVars (MLM 5.1 Micro)"
-          STATIC_VARS="terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm51_micro_build_validation_nue.tfvars"
+          STATIC_VARS="terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm51_micro_build_validation_prg.tfvars"
           LOCATION_VARS="terracumber_config/tf_files/tfvars/location.tfvars"
           
           # Generate/Clean

@@ -162,7 +162,7 @@ variable "BASE_CONFIGURATIONS" {
     additional_network = optional(string)
     hypervisor         = string
   }))
-  description = "Describe the base configuration (default core for NUE and all bases for SLC1). A base without images gets the default list of the template"
+  description = "Describe the base configuration (default core for PRG2 and all bases for SLC1). A base without images gets the default list of the template"
 }
 
 variable "HYPERVISOR_PRIVATE_SSH_KEY_PATH" {

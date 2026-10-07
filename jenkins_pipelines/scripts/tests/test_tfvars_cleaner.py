@@ -76,7 +76,7 @@ class TestTfvarsGenerator(unittest.TestCase):
         self.assertEqual(config['sles15sp4_minion']['mac'], '44:55:66')
 
         # Check Global
-        self.assertEqual(self.generator.data['LOCATION'], 'nue')
+        self.assertEqual(self.generator.data['LOCATION'], 'prg2')
 
     # --- Merging & Injection Tests ---
 
