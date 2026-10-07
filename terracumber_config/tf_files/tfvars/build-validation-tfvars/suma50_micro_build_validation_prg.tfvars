@@ -229,4 +229,4 @@ BASE_CONFIGURATIONS = {
 }
 MAIL_SUBJECT          = "Results 5.0 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 MAIL_SUBJECT_ENV_FAIL = "Results HEAD Build Validation: Environment setup failed"
-LOCATION              = "nue"
+LOCATION              = "prg2"

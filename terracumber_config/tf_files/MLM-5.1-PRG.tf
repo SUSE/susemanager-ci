@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/manager-5.0-infra-reference-NUE"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-dev-acceptance-tests"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -10,28 +10,24 @@ variable "CUCUMBER_COMMAND" {
   default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
-// Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_GITREPO" {
   type = string
   default = "https://github.com/SUSE/spacewalk.git"
 }
 
-// Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-5.0"
+  default = "Manager-5.1"
 }
 
-// Not really used in this pipeline, as we do not run cucumber
 variable "CUCUMBER_RESULTS" {
   type = string
   default = "/root/spacewalk/testsuite"
 }
 
-// Not really used in this pipeline, as we do not send emails on success (no cucumber results)
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results REF5.0-NUE $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 5.1-PRG $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -41,12 +37,12 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results REF5.0-NUE: Environment setup failed"
+  default = "Results 5.1-PRG: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
   type = string
-  default = "../mail_templates/mail-template-jenkins-refenv-fail.txt"
+  default = "../mail_templates/mail-template-jenkins-env-fail.txt"
 }
 
 variable "MAIL_FROM" {
@@ -90,6 +86,11 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+variable "PROMETHEUS_PUSH_GATEWAY_URL" {
+  type = string
+  default = null
+}
+
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
@@ -101,13 +102,13 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+tcp://suma-02.mgr.suse.de/system"
+  uri = "qemu+tcp://suma-01.mgr.suse.de/system"
 }
 
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "5.0-nightly"
+  product_version = "5.1-nightly"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -117,14 +118,14 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slemicro55o"]
+  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slmicro61o"]
 
   use_avahi    = false
-  name_prefix  = "suma-ref-50-"
-  use_shared_resources = true
+  name_prefix  = "mlm-ci-51-"
   domain       = "mgr.suse.de"
   from_email   = "root@suse.de"
 
@@ -137,35 +138,46 @@ module "cucumber_testsuite" {
   container_server = true
   container_proxy  = true
 
-  # server_http_proxy        = "http-proxy.mgr.suse.de:3128"
+  mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images        = true
+
+  server_http_proxy        = "http-proxy.mgr.suse.de:3128"
   custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
+
+  ## Add extra containers
+  deploy_tftp              = true
+  deploy_saline            = true
+  deploy_coco_attestation  = true
+  deploy_hub_api           = true
 
   # when changing images, please also keep in mind to adjust the image matrix in the "Used image versions" section of the README.
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:01:00"
-        vcpu = 2
-        memory = 2048
+        mac = "aa:b2:93:01:01:10"
+        vcpu = 4
+        memory = 4096
       }
     }
     server_containerized = {
-      image = "slemicro55o"
+      image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:01"
-        vcpu = 4
-        memory = 16384
+        mac = "aa:b2:93:01:01:11"
+        vcpu = 8
+        memory = 32768
       }
-      main_disk_size = 550
-      login_timeout = 28800
-      runtime = "podman"
-      container_registry = "registry.suse.de"
-      container_tag = "latest"
+      main_disk_size       = 500
+      login_timeout        = 28800
+      large_deployment     = true
+      runtime              = "podman"
+      container_registry   = "registry.suse.de"
+      container_tag        = "latest"
+
     }
     proxy_containerized = {
-      image = "slemicro55o"
+      image = "slmicro61o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:02"
+        mac = "aa:b2:93:01:01:12"
         vcpu = 2
         memory = 2048
       }
@@ -177,7 +189,7 @@ module "cucumber_testsuite" {
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:06"
+        mac = "aa:b2:93:01:01:16"
         vcpu = 2
         memory = 2048
       }
@@ -185,15 +197,16 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:08"
+        mac = "aa:b2:93:01:01:18"
         vcpu = 2
         memory = 2048
       }
+      additional_packages = [ "iptables" ]
     }
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:09"
+        mac = "aa:b2:93:01:01:1a"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -203,7 +216,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:0b"
+        mac = "aa:b2:93:01:01:1b"
         vcpu = 2
         memory = 2048
       }
@@ -211,25 +224,33 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:01:0d"
+        mac = "aa:b2:93:01:01:1d"
         vcpu = 2
         memory = 2048
       }
     }
-    kvm_host = {
+    pxeboot_minion = {
       image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:93:01:01:0e"
-        vcpu = 2
-        memory = 2048
+    }
+    dhcp_dns = {
+      name = "dhcp-dns"
+      image = "opensuse160o"
+      hypervisor = {
+        host        = "suma-01.mgr.suse.de"
+        user        = "root"
+        private_key = file("~/.ssh/id_ed25519")
       }
     }
   }
+
   provider_settings = {
     pool = "ssd"
     network_name = null
     bridge = "br0"
+    additional_network = "192.168.51.0/24"
   }
+
+  prometheus_push_gateway_url = var.PROMETHEUS_PUSH_GATEWAY_URL
 }
 
 output "configuration" {

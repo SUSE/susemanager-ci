@@ -135,7 +135,7 @@ class TfvarsGenerator:
                 env_config[minion_type] = {'mac': mac_addr, 'name': param_key}
 
         self.data['ENVIRONMENT_CONFIGURATION'] = env_config
-        self.data['LOCATION'] = "nue"
+        self.data['LOCATION'] = "prg2"
 
         # BASE CONFIGURATIONS (Separate Block)
         self.data['BASE_CONFIGURATIONS'] = {
