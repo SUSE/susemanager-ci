@@ -74,6 +74,16 @@ variable "GIT_PASSWORD" {
   default = null // Not needed for master, as it is public
 }
 
+variable "CONTROLLER_PUBLIC_SSH_KEY_PATH" {
+  type = string
+  default = "./salt/controller/id_ed25519.pub"
+}
+
+variable "HYPERVISOR_PRIVATE_SSH_KEY_PATH" {
+  type = string
+  default = "~/.ssh/id_ed25519"
+}
+
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
@@ -115,6 +125,8 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+
+  ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
 
   images = ["tumbleweedo", "opensuse160o", "rocky8o", "ubuntu2404o", "sles15sp7o"]
 
@@ -222,7 +234,7 @@ module "cucumber_testsuite" {
       hypervisor = {
         host        = "suma-01.mgr.suse.de"
         user        = "root"
-        private_key = file("~/.ssh/id_ed25519")
+        private_key = file(pathexpand(var.HYPERVISOR_PRIVATE_SSH_KEY_PATH))
       }
     }
   }
