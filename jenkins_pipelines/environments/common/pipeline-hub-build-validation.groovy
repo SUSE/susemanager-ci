@@ -41,6 +41,8 @@ def run(params) {
             def server_container_image = params.server_container_image ?: ''
             def json_generator_version = params.json_generator_version ?: ''
             def product_version = params.product_version ?: ''
+            // SL Micro minion on prh2 follows the proxy OS: slmicro62 on 5.2/head, slmicro61 on 5.1
+            def prh2_micro_minion = params.prh2_micro_minion ?: 'slmicro62'
 
             try {
                 stage('Clone terracumber, susemanager-ci') {
@@ -218,7 +220,7 @@ def run(params) {
                 if (params.enable_hub_peripheral_stages) {
                     try {
                         stage('Hub peripheral stages') {
-                            hubPeripheralStages()
+                            hubPeripheralStages(prh2_micro_minion)
                         }
                     } catch (Exception ex) {
                         println('ERROR: one or more hub peripheral stages have failed')
@@ -274,7 +276,7 @@ def run(params) {
     }
 }
 
-def hubPeripheralStages() {
+def hubPeripheralStages(String prh2_micro_minion) {
     parallel(
         'prh1': {
             stage('prh1: Server setup') {
@@ -355,13 +357,13 @@ def hubPeripheralStages() {
             }
             stage('prh2: Minions') {
                 parallel(
-                    'slmicro62_minion': {
-                        stage('prh2: Bootstrap - slmicro62 minion') {
-                            def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_slmicro62_minion', true)
+                    ("${prh2_micro_minion}_minion" as String): {
+                        stage("prh2: Bootstrap - ${prh2_micro_minion} minion") {
+                            def res = runCucumberRakeTarget("cucumber:hub_bv_prh2_${prh2_micro_minion}_minion", true)
                             sh "exit ${res}"
                         }
-                        stage('prh2: Smoke tests - slmicro62 minion') {
-                            def res = runCucumberRakeTarget('cucumber:hub_bv_prh2_slmicro62_minion_smoke_tests', true)
+                        stage("prh2: Smoke tests - ${prh2_micro_minion} minion") {
+                            def res = runCucumberRakeTarget("cucumber:hub_bv_prh2_${prh2_micro_minion}_minion_smoke_tests", true)
                             sh "exit ${res}"
                         }
                     },
