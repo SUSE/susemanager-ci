@@ -1,0 +1,54 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'cucumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/uyuni.git', description: 'Testsuite Git Repository'),
+            string(name: 'cucumber_ref', defaultValue: 'master', description: 'Branch prepared for the MU tested'),
+            string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/templates/build-validation-single-provider.tf', description: 'Path to the tf file to be used'),
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            string(name: 'product_version', defaultValue: '5.1-released', description: 'Server product version'),
+            choice(name: 'base_os', choices: ['slmicro62o','slmicro61o', 'sles15sp7o', 'slemicro55o', 'sles15sp6o'], description: 'Server and Proxy base OS'),
+            booleanParam(name: 'deploy_retail', defaultValue: false, description: 'If checked: Forces minion1=sles15sp7_minion and minion2=sles15sp7_buildhost. You MUST leave minion1 and minion2 dropdowns empty.'),
+            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Server container registry'),
+            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager51/totest/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
+            activeChoice(name: 'minions_to_run', description: 'Node list to run during CI', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
+                return [
+                    'sles15sp7_minion:selected', 'sles15sp7_sshminion:selected',
+                    'rocky8_minion:selected', 'rocky8_sshminion:selected',
+                    'ubuntu2404_minion:selected', 'ubuntu2404_sshminion:selected'
+                ]
+            """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
+            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
+            booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
+            booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core stages (setup, reposync, proxy, init clients)'),
+            booleanParam(name: 'must_run_secondary', defaultValue: true, description: 'Run Secondary features'),
+            booleanParam(name: 'must_run_hub', defaultValue: true, description: 'Run hub_testing stage'),
+            string(name: 'rake_namespace', defaultValue: 'cucumber', description: 'Rake namespace for the secondary parallelizable/finishing tasks'),
+            string(name: 'functional_scopes', defaultValue: '', description: 'Optional cucumber TAGS to narrow the secondary run (comma separated, @ optional)'),
+            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
+            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
+            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
+            ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    def mutableParams = [:] + params
+    mutableParams.sumaform_backend = "libvirt"
+    mutableParams.bin_path = "/usr/bin/tofu"
+    mutableParams.bin_plugins_path = "/usr/bin"
+    mutableParams.product_version_display = mutableParams.product_version
+    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/ci-tfvars/mlm52_ci.tfvars'
+    mutableParams.mode = 'ci'
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-ci.groovy"
+    pipeline.run(mutableParams)
+}
