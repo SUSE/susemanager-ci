@@ -96,6 +96,10 @@ variable "CONTROLLER_PUBLIC_SSH_KEY_PATH" {
   default = "./salt/controller/id_ed25519.pub"
 }
 
+variable "SCC_MICRO_CREDENTIALS" {
+  type = string
+}
+
 variable "HYPERVISOR_PRIVATE_SSH_KEY_PATH" {
   type = string
   default = "~/.ssh/id_ed25519"
@@ -120,6 +124,20 @@ module "cucumber_testsuite" {
 
   product_version = "5.2-nightly"
 
+  // Kubernetes variables
+  kubernetes                                = true
+  use_devel_oci                             = true
+  deploy_coco_attestation                   = true
+  deploy_saline                             = true
+  deploy_tftp                               = true
+  deploy_hub_api                            = true
+  install_kubectl_helm                      = false
+  kubeconfig_path                           = null
+  install_uyuni_via_testsuite               = true
+  kubernetes_create_static_var_spacewalk_pv = true
+  kubernetes_create_static_var_pgsql_pv     = true
+  local_path_provisioner_default_class      = true
+
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
   git_password = var.GIT_PASSWORD
@@ -131,6 +149,8 @@ module "cucumber_testsuite" {
 
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
+
+  scc_slmicro_pass = var.SCC_MICRO_CREDENTIALS
 
   ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
 
