@@ -15,9 +15,9 @@ def run(params) {
 
             def mirror_scope = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
             mirror_scope = mirror_scope.replaceAll("-dev", "")
-            def ci_label = ['5.1': '5.1_ci', '5.2': '5.2_ci', 'Head': 'head_ci'].find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: ''
-            // Only 5.2 and head are ingested by RRTG; tag is <version>-rke2
-            def rrtg_version = env.JOB_BASE_NAME.find(/5\.2|Head/)?.toLowerCase()
+            def ci_label = ['5.1': '5.1_ci', '5.2': '5.2_rke2_ci', 'Head': 'head_rke2_ci', 'uyuni': 'uyuni_rke2_ci'].find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: ''
+            // Only 5.2, head and uyuni are ingested by RRTG; tag is <version>-rke2
+            def rrtg_version = env.JOB_BASE_NAME.find(/5\.2|Head|uyuni/)?.toLowerCase()
             rrtg_version = rrtg_version ? "${rrtg_version}-rke2" : null
             def junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
             // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.

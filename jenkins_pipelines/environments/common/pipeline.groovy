@@ -34,11 +34,12 @@ def run(params) {
             // RRTG ingest and OBS/IBS product-commit tracking. Personal jobs skip them.
             def isAcceptanceJob = env.JOB_BASE_NAME.contains('-acceptance-tests')
             def mirror_scope = isAcceptanceJob ? env.JOB_BASE_NAME.split('-acceptance-tests')[0].replaceAll("-dev", "") : null
+            def runtime = env.JOB_BASE_NAME.endsWith('-RKE2') ? 'rke2' : 'podman'
             def ci_label_map = [
                     '5.1'  : '5.1_ci',
-                    '5.2'  : '5.2_ci',
-                    'Head' : 'head_ci',
-                    'uyuni': 'uyuni_podman_ci'
+                    '5.2'  : "5.2_${runtime}_ci",
+                    'Head' : "head_${runtime}_ci",
+                    'uyuni': "uyuni_${runtime}_ci"
             ]
             def ci_label = isAcceptanceJob ? (ci_label_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: '') : ''
             def rrtg_version = isAcceptanceJob ? env.JOB_BASE_NAME.find(/5\.1|5\.2|Head/)?.toLowerCase() : null
@@ -47,7 +48,7 @@ def run(params) {
                 rrtg_version += env.JOB_BASE_NAME.endsWith('-RKE2') ? '-rke2' : '-podman'
             }
             if (!rrtg_version && env.JOB_BASE_NAME == 'uyuni-master-dev-acceptance-tests-podman') {
-                rrtg_version = 'uyuni'
+                rrtg_version = 'uyuni-podman'
             }
             if (params.show_product_changes && isAcceptanceJob) {
                 // Retrieve the hash commit of the last product built in OBS/IBS and previous job
@@ -259,7 +260,7 @@ def run(params) {
                         try {
                             sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:generate_test_report'"
                         } catch (err) {
-                            println("ERROR: rake utils:generate_test_repor failed: ${err}")
+                            println("ERROR: rake utils:generate_test_report failed: ${err}")
                             error = 1
                         }
                         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
