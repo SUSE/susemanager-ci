@@ -26,6 +26,9 @@ ENVIRONMENT_CONFIGURATION = {
     name  = "prh1"
     image = "slmicro62o"
     string_registry = true
+    deploy_hub_api      = false
+    skip_server_install = true
+    use_mirror          = false
   }
   proxy_containerized = {
     mac   = "aa:b2:93:01:01:8e"
