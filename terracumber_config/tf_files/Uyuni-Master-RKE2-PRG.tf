@@ -116,6 +116,9 @@ module "cucumber_testsuite" {
   kubernetes_create_static_var_spacewalk_pv = true
   kubernetes_create_static_var_pgsql_pv     = true
   local_path_provisioner_default_class      = true
+  rke2_version                              = "v1.35.4+rke2r1"
+  cert_manager_namespace                    = "cert-manager"
+  cert_manager_version                      = "v1.19.2"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -169,6 +172,8 @@ module "cucumber_testsuite" {
       container_registry             = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile/uyuni"
       helm_chart_name                = "server-helm"
       helm_chart_url                 = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
+      server_name                    = "uyuni-server"
+      server_namespace               = "uyuni"
 
       login_timeout = 28800
       main_disk_size = 40
@@ -190,6 +195,8 @@ module "cucumber_testsuite" {
       helm_chart_name = "proxy-helm"
       helm_chart_url = "oci://registry.opensuse.org/systemsmanagement/uyuni/master/charts/uyuni"
       login_timeout = 28800
+      proxy_name = "uyuni-proxy"
+      proxy_namespace = "uyuni"
     }
     suse_minion = {
       image             = "tumbleweedo"

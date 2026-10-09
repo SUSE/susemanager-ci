@@ -132,6 +132,9 @@ module "cucumber_testsuite" {
   kubernetes_create_static_var_spacewalk_pv = true
   kubernetes_create_static_var_pgsql_pv     = true
   local_path_provisioner_default_class      = true
+  rke2_version                              = "v1.35.4+rke2r1"
+  cert_manager_namespace                    = "cert-manager"
+  cert_manager_version                      = "v1.19.2"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -194,6 +197,8 @@ module "cucumber_testsuite" {
       container_registry             = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64"
       helm_chart_name                = "server-helm"
       helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.3"
+      server_name                    = "uyuni-server"
+      server_namespace               = "uyuni"
     }
     proxy_kubernetes = {
       image = "slmicro62o"
@@ -208,6 +213,8 @@ module "cucumber_testsuite" {
       container_registry          = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64"
       helm_chart_name             = "proxy-helm"
       helm_chart_url              = "oci://registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/charts/suse/multi-linux-manager/5.3"
+      proxy_name                  = "uyuni-proxy"
+      proxy_namespace             = "uyuni"
     }
     suse_minion = {
       image = "sles15sp7o"
