@@ -25,20 +25,20 @@ For details have a look at [terracumber_config/README.md](terracumber_config/REA
 
 ### In the CI test suite
 
-|             | GitHub PR test| Uyuni         | Head         | 5.2          | 5.1          | 5.0           | 4.3          |
-|-------------|---------------|---------------|--------------|--------------|--------------|---------------|--------------|
-| Minion      | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| SSH minion  | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| Client      | -             | -             | -            | -            | -            | -             | SLES 15 SP4  |
-| RH-like     | Rocky 8       | Rocky 8       | Rocky 8      | Rocky 8      | Rocky 8      | Rocky 8       | Rocky 8      |
-| Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04  | Ubuntu 22.04 |
-| Virthost    | -             | -             | -            | -            | -            | SLES 15 SP7   | SLES 15 SP4  |
-| Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   | SLES 15 SP4  |
-| DHCP-DNS    | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    | Leap 16.0     | -            |
-| Controller  | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    | Leap 16.0     | Leap 16.0    |
-| Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
-| Proxy       | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | SLES 15 SP4  |
+|             | GitHub PR test| Uyuni         | Head         | 5.2          | 5.1          | 5.0           |
+|-------------|---------------|---------------|--------------|--------------|--------------|---------------|
+| Minion      | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   |
+| SSH minion  | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   |
+| Client      | -             | -             | -            | -            | -            | -             |
+| RH-like     | Rocky 8       | Rocky 8       | Rocky 8      | Rocky 8      | Rocky 8      | Rocky 8       |
+| Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04  |
+| Virthost    | -             | -             | -            | -            | -            | SLES 15 SP7   |
+| Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   |
+| Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   |
+| DHCP-DNS    | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    | Leap 16.0     |
+| Controller  | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    | Leap 16.0     |
+| Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 |
+| Proxy       | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 |
 
 ### In the full BV test suites
 
@@ -46,30 +46,30 @@ For details have a look at [terracumber_config/README.md](terracumber_config/REA
 
 ### In the mini BV test suites
 
-|             | 5.2          | 5.1          | 5.0           | 4.3          |
-|-------------|--------------|--------------|---------------|--------------|
-| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     | Leap 16.0    |
-| Server      | SL Micro 6.2 | SL Micro 6.1 | SLES 15 SP6   | SLES 15 SP4  |
-| Proxy       | SL Micro 6.2 | SL Micro 6.1 | SLES 15 SP6   | SLES 15 SP4  |
-| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
+|             | 5.2          | 5.1          | 5.0           |
+|-------------|--------------|--------------|---------------|
+| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     |
+| Server      | SL Micro 6.2 | SL Micro 6.1 | SLES 15 SP6   |
+| Proxy       | SL Micro 6.2 | SL Micro 6.1 | SLES 15 SP6   |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
 
 ### In the MI test suites for packages running in containers
 
-|             | 5.2          | 5.1          | 5.0           | 4.3          |
-|-------------|--------------|--------------|---------------|--------------|
-| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     | Leap 16.0    |
-| Server      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
-| Proxy       | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
-| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | SLES 15 SP4  |
+|             | 5.2          | 5.1          | 5.0           |
+|-------------|--------------|--------------|---------------|
+| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     |
+| Server      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
+| Proxy       | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
 
 ### In the MI test suites for the mgradm and mgrpxy utilities
 
-|             | 5.2          | 5.1          | 5.0           | 4.3          |
-|-------------|--------------|--------------|---------------|--------------|
-| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     | -            |
-| Server      | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | -            |
-| Proxy       | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 | -            |
-| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   | -            |
+|             | 5.2          | 5.1          | 5.0           |
+|-------------|--------------|--------------|---------------|
+| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     |
+| Server      | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 |
+| Proxy       | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
 
 
 ## ## Testing SLES Maintenance Incidents

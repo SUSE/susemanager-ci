@@ -122,7 +122,7 @@ variable "SERVER_ADDITIONAL_REPOS" {
 
 variable "PROXY_CONTAINER_REGISTRY" {
   type = string
-  description = "Proxy container registry path, not needed for 4.3"
+  description = "Proxy container registry path"
   default = ""
 }
 
@@ -134,7 +134,7 @@ variable "PROXY_ADDITIONAL_REPOS" {
 
 variable "SERVER_CONTAINER_IMAGE" {
   type = string
-  description = "Server container image, not needed for 4.3"
+  description = "Server container image"
   default = ""
 }
 

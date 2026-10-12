@@ -34,4 +34,4 @@ python3.11 TestEnvironmentCleaner.py --url <SUSE_Manager_URL> --mode <operation_
     `delete_known_hosts`: Deletes known SSH hosts in server.
     `update_custom_repositories`: Updates custom repositories in controller.
  - `--default-resources-to-delete`: Optional list of resources (proxy, monitoring-server, retail) to enforce deletion during API cleanup operations.
- - `--product_version`: SUSE Manager version (head, 5.2, 5.1, 4.3 or uyuni). Used for handling different paths in specific operations.
+ - `--product_version`: SUSE Manager version (head, 5.2, 5.1, or uyuni). Used for handling different paths in specific operations.

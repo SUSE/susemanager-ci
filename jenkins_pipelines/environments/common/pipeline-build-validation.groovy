@@ -43,7 +43,6 @@ def run(params) {
             def client_stage_result_fail = false
             def products_and_salt_migration_stage_result_fail = false
             def retail_stage_result_fail = false
-            def containerization_stage_result_fail = false
             def hub_stage_result_fail = false
             def hubBuild = null
             def server_container_registry = params.server_container_registry ?: ''
@@ -573,30 +572,6 @@ def run(params) {
                     }
                 }
                 /** Retail stages end **/
-
-                // todo: remove once 4.3 is EOL
-                /** Containerization stages start **/
-                try {
-                    stage('Containerization') {
-                        if (params.must_run_containerization_tests ?: false) {
-                            if (params.confirm_before_continue) {
-                                input 'Press any key to start running the containerization tests'
-                            }
-                            echo 'Prepare Proxy as Pod and run basic tests'
-                            def res_container_proxy = runCucumberRakeTarget('cucumber:build_validation_containerization', true)
-                            echo "Container proxy status code: ${res_container_proxy}"
-                            if (res_container_proxy != 0) {
-                                error("Containerization test failed with status code: ${res_container_proxy}")
-                            }
-                        } else if (isNewJenkins) {
-                            Utils.markStageSkippedForConditional(STAGE_NAME)
-                        }
-                    }
-                } catch (Exception ex) {
-                    println('ERROR: Containerization failed')
-                    containerization_stage_result_fail = true
-                }
-                /** Containerization stages end **/
             }
             finally {
                 stage('Save TF state') {
@@ -649,10 +624,6 @@ def run(params) {
                     // Fail pipeline if retail stages failed
                     if (retail_stage_result_fail) {
                         error("Retail stage failed")
-                    }
-                    // Fail pipeline if containerization stage failed
-                    if (containerization_stage_result_fail) {
-                        error("Containerization stage failed")
                     }
                     if (hub_stage_result_fail) {
                         error("Hub stage failed")

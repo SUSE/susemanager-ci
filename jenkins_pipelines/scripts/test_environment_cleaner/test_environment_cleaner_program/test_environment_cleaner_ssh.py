@@ -104,9 +104,7 @@ class SSHClientManager:
         """
         try:
             self._connect()
-            if self.product_version.startswith("4.3"):
-                self.run_command("rm /var/lib/salt/.ssh/known_hosts")
-            elif any(self.product_version.startswith(version) for version in ["5.0", "5.1"]):
+            if any(self.product_version.startswith(version) for version in ["5.0", "5.1"]):
                 logger.info("Checking files before cleanup...")
                 self.run_command("rm /var/lib/containers/storage/volumes/var-salt/_data/.ssh/known_hosts")
                 logger.info("Known_hosts file cleaned up.")
@@ -122,9 +120,7 @@ class SSHClientManager:
         """
         try:
             self._connect()
-            if self.product_version.startswith("4.3"):
-                logger.warning("Distribution deletion for product version 4.3 is not implemented.")
-            elif any(self.product_version.startswith(version) for version in ["5.0", "5.1"]):
+            if any(self.product_version.startswith(version) for version in ["5.0", "5.1"]):
                 self.run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/distributions/*")
                 self.run_command("rm -rf /var/lib/containers/storage/volumes/srv-www/_data/htdocs/pub/*iso")
                 logger.info("Distributions directories deleted.")
