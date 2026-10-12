@@ -51,7 +51,7 @@ module "base_core" {
     "oraclelinux9o", "oraclelinux10o",
     "rocky8o", "rocky9o", "rocky10o",
     "ubuntu2204o", "ubuntu2404o", "ubuntu2604o",
-    "debian12o", "debian13o", "raspios13o",
+    "debian13o", "raspios13o",
     "opensuse160o"
   ])
 
