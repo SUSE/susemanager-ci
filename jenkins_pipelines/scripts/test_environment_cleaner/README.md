@@ -1,6 +1,6 @@
-# SUSE Manager API and SSH Management Script
+# Multi-Linux Manager API and SSH Management Script
 
-This Python script provides a command-line interface to manage various resources and configurations on a SUSE Manager server through the XML-RPC API and SSH commands. 
+This Python script provides a command-line interface to manage various resources and configurations on a Multi-Linux Manager server through the XML-RPC API and SSH commands. 
 The script enables testers to perform resource cleanup, SSH-based file management, and update custom repositories remotely.
 
 ## Prerequisites
@@ -15,12 +15,12 @@ pip3.11 install -r test_environment_cleaner/requirements.txt
 ## Usage
 
 ```commandline
-python3.11 TestEnvironmentCleaner.py --url <SUSE_Manager_URL> --mode <operation_mode> [options]
+python3.11 TestEnvironmentCleaner.py --url <Multi-Linux_Manager_URL> --mode <operation_mode> [options]
 ```
 
 ### Command-Line Arguments
 
- - `--url`: (Required) URL of the SUSE Manager XML-RPC API.
+ - `--url`: (Required) URL of the Multi-Linux Manager XML-RPC API.
  - `--mode`: (Required) Operation mode. Choose one of the following:
     `delete_users`: Deletes user accounts.
     `delete_activation_keys`: Deletes activation keys.
@@ -34,4 +34,4 @@ python3.11 TestEnvironmentCleaner.py --url <SUSE_Manager_URL> --mode <operation_
     `delete_known_hosts`: Deletes known SSH hosts in server.
     `update_custom_repositories`: Updates custom repositories in controller.
  - `--default-resources-to-delete`: Optional list of resources (proxy, monitoring-server, retail) to enforce deletion during API cleanup operations.
- - `--product_version`: SUSE Manager version (head, 5.2, 5.1, or uyuni). Used for handling different paths in specific operations.
+ - `--product_version`: Multi-Linux Manager version (head, 5.2, 5.1, or uyuni). Used for handling different paths in specific operations.
