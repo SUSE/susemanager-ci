@@ -49,7 +49,7 @@ def main():
     if args.mode != "update_custom_repositories":
         product_version = resource_manager.get_product_version()
     else:
-        product_version = 5.0
+        product_version = 5.2
     # API part
     if args.mode in ["delete_users", "delete_activation_keys", "delete_config_projects",
                      "delete_software_channels", "delete_systems", "delete_repositories",

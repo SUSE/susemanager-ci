@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.0/job/SUSEManager-5.0-AWS"
+  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-qe-build-validation-paygo-aws/"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -17,7 +17,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-5.0"
+  default = "Manager-5.1"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Manager5.0-Master-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Manager5.1-Master-MU $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {

@@ -23,7 +23,7 @@ jenkins_pipelines/
 │   └── manager* | uyuni*        # One job file per other environment (parameter files) mainly CIs
 ├── manager_prs/                 # Manager automated tests on PRs
 ├── scripts/
-│   ├── edit_bci_project/        # Edit BCI project to build container images (SLE MI BCI 5.1 and 5.0 pipeline)
+│   ├── edit_bci_project/        # Edit BCI project to build container images (SLE MI BCI 5.1 and 5.2 pipeline)
 │   ├── json_generator/          # JSON generation scripts
 │   ├── test_review_summary/     # Test review summary script
 │   ├── tests/                   # Unit tests for the scripts
@@ -34,7 +34,7 @@ jenkins_pipelines/
 
 ### `environments/build-validation/`
 
-Each file in this directory is a **job definition** for one BV environment (e.g. `manager-5.0-micro-qe-build-validation`). These files are thin wrappers: they define the job-specific parameters and delegate all pipeline logic to the shared `common/pipeline-build-validation.groovy`.
+Each file in this directory is a **job definition** for one BV environment (e.g. `manager-5.2-sles-qe-build-validation`). These files are thin wrappers: they define the job-specific parameters and delegate all pipeline logic to the shared `common/pipeline-build-validation.groovy`.
 
 ### `environments/common/`
 

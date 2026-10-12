@@ -25,20 +25,18 @@ For details have a look at [terracumber_config/README.md](terracumber_config/REA
 
 ### In the CI test suite
 
-|             | GitHub PR test| Uyuni         | Head         | 5.2          | 5.1          | 5.0           |
-|-------------|---------------|---------------|--------------|--------------|--------------|---------------|
-| Minion      | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   |
-| SSH minion  | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   |
-| Client      | -             | -             | -            | -            | -            | -             |
-| RH-like     | Rocky 8       | Rocky 8       | Rocky 8      | Rocky 8      | Rocky 8      | Rocky 8       |
-| Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04  |
-| Virthost    | -             | -             | -            | -            | -            | SLES 15 SP7   |
-| Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   |
-| Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7   |
-| DHCP-DNS    | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    | Leap 16.0     |
-| Controller  | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    | Leap 16.0     |
-| Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 |
-| Proxy       | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 |
+|             | GitHub PR test| Uyuni         | Head         | 5.2          | 5.1          |
+|-------------|---------------|---------------|--------------|--------------|--------------|
+| Minion      | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  |
+| SSH minion  | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  |
+| RH-like     | Rocky 8       | Rocky 8       | Rocky 8      | Rocky 8      | Rocky 8      |
+| Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04 |
+| Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  |
+| Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  |
+| DHCP-DNS    | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    |
+| Controller  | Leap 16.0     | Leap 16.0     | Leap 16.0    | Leap 16.0    | Leap 16.0    |
+| Server      | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 |
+| Proxy       | Tumbleweed    | Tumbleweed    | SL Micro 6.1 | SL Micro 6.2 | SL Micro 6.1 |
 
 ### In the full BV test suites
 
@@ -46,30 +44,30 @@ For details have a look at [terracumber_config/README.md](terracumber_config/REA
 
 ### In the mini BV test suites
 
-|             | 5.2          | 5.1          | 5.0           |
-|-------------|--------------|--------------|---------------|
-| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     |
-| Server      | SL Micro 6.2 | SL Micro 6.1 | SLES 15 SP6   |
-| Proxy       | SL Micro 6.2 | SL Micro 6.1 | SLES 15 SP6   |
-| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
+|             | 5.2          | 5.1          |
+|-------------|--------------|--------------|
+| Controller  | Leap 16.0    | Leap 16.0    |
+| Server      | SL Micro 6.2 | SL Micro 6.1 |
+| Proxy       | SL Micro 6.2 | SL Micro 6.1 |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  |
 
 ### In the MI test suites for packages running in containers
 
-|             | 5.2          | 5.1          | 5.0           |
-|-------------|--------------|--------------|---------------|
-| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     |
-| Server      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
-| Proxy       | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
-| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
+|             | 5.2          | 5.1          |
+|-------------|--------------|--------------|
+| Controller  | Leap 16.0    | Leap 16.0    |
+| Server      | SLES 15 SP7  | SLES 15 SP7  |
+| Proxy       | SLES 15 SP7  | SLES 15 SP7  |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  |
 
 ### In the MI test suites for the mgradm and mgrpxy utilities
 
-|             | 5.2          | 5.1          | 5.0           |
-|-------------|--------------|--------------|---------------|
-| Controller  | Leap 16.0    | Leap 16.0    | Leap 16.0     |
-| Server      | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 |
-| Proxy       | SL Micro 6.2 | SL Micro 6.1 | SLE Micro 5.5 |
-| Minion      | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP6   |
+|             | 5.2          | 5.1          |
+|-------------|--------------|--------------|
+| Controller  | Leap 16.0    | Leap 16.0    |
+| Server      | SL Micro 6.2 | SL Micro 6.1 |
+| Proxy       | SL Micro 6.2 | SL Micro 6.1 |
+| Minion      | SLES 15 SP7  | SLES 15 SP7  |
 
 
 ## ## Testing SLES Maintenance Incidents
@@ -155,10 +153,10 @@ To safely test without risking production stability, the pipeline utilizes **IBS
 
 #### Current Packages Rebuilt
 
-| Category | 5.0 Packages | 5.1 Packages |
+| Category | 5.1 Packages | 5.2 Packages |
 | --- | --- | --- |
-| **Server** | `server-image`, `server-attestation-image`, `server-hub-xmlrpc-api-image`, `server-migration-14-16-image`, `init-image` | `server-image`, `server-attestation-image`, `server-hub-xmlrpc-api-image`, `server-migration-14-16-image`, `server-postgresql-image`, `server-saline-image` |
-| **Proxy** | `proxy-helm`, `proxy-httpd`, `proxy-salt-broker`, `proxy-squid`, `proxy-ssh`, `proxy-tftpd` | `proxy-helm`, `proxy-httpd`, `proxy-salt-broker`, `proxy-squid`, `proxy-ssh`, `proxy-tftpd` |
+| **Server** | `server-image`, `server-attestation-image`, `server-hub-xmlrpc-api-image`, `server-migration-14-16-image`, `server-postgresql-image`, `server-saline-image` | ? |
+| **Proxy** | `proxy-helm`, `proxy-httpd`, `proxy-salt-broker`, `proxy-squid`, `proxy-ssh`, `proxy-tftpd` | ? |
 
 #### Key Benefits of this Architecture
 
