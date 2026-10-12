@@ -6,7 +6,7 @@ class TestResourceManager(unittest.TestCase):
     def setUp(self):
         self.manager_url = "localhost"
         self.resources_to_delete = {"monitoring"}
-        self.product_version = "5.0"
+        self.product_version = "5.2"
         self.resource_manager = ResourceManager(self.manager_url, self.resources_to_delete)
 
         # Mock the ServerProxy and session key to avoid actual API calls
@@ -53,7 +53,7 @@ class TestResourceManager(unittest.TestCase):
 @patch("test_environment_cleaner_program.test_environment_cleaner_api.ResourceManager.get_product_version")
 def test_delete_software_channels(self, mock_get_product_version):
     # Mock the product version to bypass the first conditional
-    mock_get_product_version.return_value = "5.0.2"
+    mock_get_product_version.return_value = "5.2.1"
 
     # Mock the channels returned by listMyChannels
     self.mock_client.channel.software.listMyChannels.return_value = [

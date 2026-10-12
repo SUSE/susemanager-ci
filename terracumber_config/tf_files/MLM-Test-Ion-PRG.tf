@@ -103,7 +103,7 @@ provider "libvirt" {
 module "cucumber_testsuite" {
   source = "./modules/cucumber_testsuite"
 
-  product_version = "5.0-released"
+  product_version = "5.2-released"
 
   // Cucumber repository configuration for the controller
   git_username = var.GIT_USER
@@ -116,7 +116,7 @@ module "cucumber_testsuite" {
   cc_ptf_username = var.SCC_PTF_USER
   cc_ptf_password = var.SCC_PTF_PASSWORD
 
-  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slemicro55o"]
+  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "slemicro55o", "slmicro62o"]
 
   use_avahi    = false
   name_prefix  = "mlm-test-ion-"

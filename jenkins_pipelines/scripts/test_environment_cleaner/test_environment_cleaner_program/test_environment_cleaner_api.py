@@ -50,7 +50,7 @@ class ResourceManager:
             "ubuntu-2404-noble-amd64"
         }
 
-        # No need to differentiate between versions (MLM 5.0, 5.1, 5.2 vs Uyuni)
+        # No need to differentiate between versions (MLM 5.1, 5.2 vs Uyuni)
         # Uyuni BV is now gone, and the behavior should be the same across all versions and products
         channels = self.client.channel.listMyChannels(self.session_key)
 

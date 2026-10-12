@@ -10,7 +10,7 @@ from test_environment_cleaner_program.TestEnvironmentCleaner import main
 
 class TestMainProgram(unittest.TestCase):
     def setUp(self):
-        self.product_version = "5.0"
+        self.product_version = "5.2"
 
     @patch("test_environment_cleaner_program.TestEnvironmentCleaner.ResourceManager")
     @patch("test_environment_cleaner_program.TestEnvironmentCleaner.SSHClientManager")
@@ -34,13 +34,13 @@ class TestMainProgram(unittest.TestCase):
         with patch.object(sys, 'argv', test_args):
             # Configure the ResourceManager mock
             mock_resource_manager = MockResourceManager.return_value
-            mock_resource_manager.get_product_version.return_value = "5.0"
+            mock_resource_manager.get_product_version.return_value = "5.2"
 
             mock_ssh_manager = MockSSHClientManager.return_value
 
             main()
 
-            MockSSHClientManager.assert_called_once_with(url="http://test-url.com", password='linux', product_version="5.0")
+            MockSSHClientManager.assert_called_once_with(url="http://test-url.com", password='linux', product_version="5.2")
             mock_ssh_manager.delete_known_hosts.assert_called_once()
 
     @patch("test_environment_cleaner_program.TestEnvironmentCleaner.ResourceManager")
