@@ -18,7 +18,6 @@ node('sumaform-cucumber') {
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             string(name: 'mi_ids', defaultValue: '', description: 'Maintenance Incident IDs (comma-separated)'),
             string(name: 'json_generator_version', defaultValue: '', description: 'Version for the maintenance JSON generator'),
-            booleanParam(name: 'use_previous_terraform_state', defaultValue: false, description: 'Use previous Terraform state'),
             booleanParam(name: 'must_deploy_hub', defaultValue: true, description: 'Deploy hub environment'),
             booleanParam(name: 'must_run_hub_core', defaultValue: true, description: 'Run Core features'),
             booleanParam(name: 'must_sync_hub', defaultValue: true, description: 'Sync. products and channels'),
@@ -38,6 +37,7 @@ node('sumaform-cucumber') {
     mutableParams.bin_plugins_path = "/usr/bin"
     mutableParams.product_version = "5.2-released"
     mutableParams.deployment_tfvars = "susemanager-ci/terracumber_config/tf_files/tfvars/build-validation-tfvars/mlm52_hubtesting_prg.tfvars"
+    mutableParams.prh2_micro_minion = "slmicro62"
     mutableParams.product_version_display = mutableParams.product_version
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-hub-build-validation.groovy"
     pipeline.run(mutableParams)
