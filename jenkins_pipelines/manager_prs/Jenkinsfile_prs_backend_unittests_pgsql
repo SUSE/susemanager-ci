@@ -13,7 +13,7 @@ pipeline {
     }
 
     parameters {
-        string(defaultValue: '', description: 'SUSE Manager PR', name: 'PR_NUMBER')
+        string(defaultValue: '', description: 'Multi-Linux Manager PR', name: 'PR_NUMBER')
         booleanParam(defaultValue: true, description: 'Clean up workspace after a successful execution.', name: 'cleanWorkspace')
     }
 

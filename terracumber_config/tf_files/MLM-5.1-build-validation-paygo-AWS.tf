@@ -129,7 +129,7 @@ variable "NAME_PREFIX" {
 }
 
 variable "SERVER_AMI" {
-  description = "Custom AMI ID to use for server. Leave empty to use the default SUSE Manager image."
+  description = "Custom AMI ID to use for server. Leave empty to use the default Multi-Linux Manager image."
   type = string
   default     = ""
 }
@@ -141,7 +141,7 @@ variable "SERVER_ADDITIONAL_REPOS" {
 }
 
 variable "PROXY_AMI" {
-  description = "Custom AMI ID to use for proxy. Leave empty to use the default SUSE Manager image."
+  description = "Custom AMI ID to use for proxy. Leave empty to use the default Multi-Linux Manager image."
   type        = string
   default     = ""
 }

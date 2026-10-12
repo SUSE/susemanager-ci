@@ -67,13 +67,13 @@ variable "SCC_PASSWORD" {
 variable "SCC_PTF_USER" {
   type = string
   default = null
-  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+  // Not needed for master, as PTFs are only built for MLM
 }
 
 variable "SCC_PTF_PASSWORD" {
   type = string
   default = null
-  // Not needed for master, as PTFs are only build for SUSE Manager / MLM
+  // Not needed for master, as PTFs are only built for MLM
 }
 
 variable "SCC_MICRO_CREDENTIALS" {

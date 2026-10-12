@@ -28,8 +28,8 @@ MODES = [
 ]
 
 def main():
-    parser = argparse.ArgumentParser(description="Manage SUSE Manager API actions.")
-    parser.add_argument("--url", required=True, help="The URL of the SUSE Manager XML-RPC API.")
+    parser = argparse.ArgumentParser(description="Manage Multi-Linux Manager API actions.")
+    parser.add_argument("--url", required=True, help="The URL of the Multi-Linux Manager XML-RPC API.")
     parser.add_argument("--mode", required=True, choices=MODES, help="The mode of operation.")
     parser.add_argument("--default-resources-to-delete", type=str, nargs='*',
                         choices=['proxy', 'monitoring-server', 'build', 'terminal'],

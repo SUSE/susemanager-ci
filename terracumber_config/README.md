@@ -100,7 +100,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   product_version = "x.x-released"
-  name_prefix     = "suma-bv-xx-micro-"
+  name_prefix     = "mlm-bv-xx-micro-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-qe/job/manager-x.x-micro-qe-build-validation"
 }
 ```
