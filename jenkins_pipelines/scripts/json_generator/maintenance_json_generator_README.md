@@ -20,17 +20,17 @@ This Python script automates the process of gathering and processing open QAM
 (Quality Assurance Maintenance) requests for SUSE Linux Enterprise Server (SLES)
 that affect SUSE Manager. The output is a JSON file, which can be fed into the
 BV (Build Validation) testsuite pipeline for further testing. It supports SUSE
-Manager / MLM 4.3, 5.0, 5.1, 5.2 (stable), and 5.3 beta placeholders.
+Manager / MLM 5.1, 5.2 (stable), and 5.3 beta placeholders.
 
 The script allows users to input Maintenance Incident (MI) IDs and generates the
 appropriate repository information for the selected version's nodes (servers,
-proxies, and clients). The supported `--version` values are: `43`, `50-micro`,
-`50-sles`, `51-micro`, `51-sles`, `52-micro`, `52-sles`, `53-micro-beta`,
+proxies, and clients). The supported `--version` values are: `51-micro`,
+`51-sles`, `52-micro`, `52-sles`, `53-micro-beta`,
 `53-sles-beta`.
 
 ## Features
 
-- Support for SUSE Manager / MLM 4.3, 5.0, 5.1, 5.2 (stable), and 5.3 beta placeholders: the
+- Support for SUSE Manager / MLM 5.1, 5.2 (stable), and 5.3 beta placeholders: the
 version is selected via `--version`.
 - Flexible MI ID Input: MI IDs can be provided via CLI arguments or by reading
 from a file.
@@ -66,8 +66,7 @@ Running the script with no arguments at all prints this help and exits.
 
 Options:
 
-`-v`, `--version`: **Mandatory.** Specifies the SUSE Manager version. Options are `43` for SUSE
-Manager 4.3, `50-micro` / `50-sles` for 5.0, `51-micro` / `51-sles` for 5.1, `52-micro` / `52-sles` for 5.2 (stable), and `53-micro-beta` / `53-sles-beta` for 5.3 beta placeholders. There is no default: the version always has to be named, so that a JSON is never silently generated for the wrong product.
+`-v`, `--version`: **Mandatory.** Specifies the SUSE Manager version. Options are `51-micro` / `51-sles` for 5.1, `52-micro` / `52-sles` for 5.2 (stable), and `53-micro-beta` / `53-sles-beta` for 5.3 beta placeholders. There is no default: the version always has to be named, so that a JSON is never silently generated for the wrong product.
 `-i`, `--mi_ids`: A space-separated list of MI IDs.
 `-f`, `--file`: Path to a file containing MI IDs, each on a new line.
 `-e`, `--no_embargo`: Reject any MIs that are currently under embargo.
@@ -97,12 +96,12 @@ fallback then carries the merged content.
 Example:
 
 ```bash
-python3 maintenance_json_generator.py --version 50-micro --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
+python3 maintenance_json_generator.py --version 51-micro --mi_ids 1234 5678 --file mi_ids.txt --no_embargo
 ```
 
 This command will:
 
-1. Run the script for SUSE Manager 5.0 (`--version 50-micro`).
+1. Run the script for SUSE Manager 5.1 (`--version 51-micro`).
 2. Use MI IDs 1234 and 5678 along with any additional MI IDs from the file
 mi_ids.txt.
 3. Reject any MIs that are under embargo (`--no_embargo`).
@@ -112,9 +111,7 @@ mi_ids.txt.
 The script generates a file named custom_repositories.json, which contains the
 repository data for the provided MI IDs.
 
-For **`43`**, **`50-micro`**, and **`50-sles`**, the output always includes static Salt image
-repository URLs for **`slmicro60_minion`** and **`slmicro61_minion`** (`slmicro60_salt`,
-`slmicro61_salt`) in addition to MI-based maintenance URLs.
+Static Salt image repository URLs for **`slmicro60_minion`** and **`slmicro61_minion`** (`slmicro60_salt`, `slmicro61_salt`) are still included for versions that define them, in addition to MI-based maintenance URLs.
 
 On the stable **`51-*`** and **`52-*`** flows, **`sles160_minion`**, **`slmicro62_minion`**
 (x86_64) and **`opensuse160arm_minion`** (aarch64) receive the SLES-16
@@ -213,12 +210,6 @@ messages will display timestamped INFO-level messages.
 Repository definitions live under
 [repository_versions/](repository_versions), one module per major version:
 
-- `v43_nodes.py`: server/proxy (`v43_nodes`), client tools (`v43_client_tools`),
-  static Salt image repos (`v43_static_slmicro_salt_repositories`), and the
-  helper `get_v43_nodes_sorted()`.
-- `v50_nodes.py`: base node sets for SL Micro / SLES (`v50_micro_nodes`,
-  `v50_sles_nodes`) and the helper
-  `get_v50_nodes_sorted(v43_client_tools, variant)`.
 - `v51_nodes.py` / `v52_nodes.py`: the helpers
   `get_v51_static_and_client_tools(variant)` and
   `get_v52_static_and_client_tools(variant)`, which return a
@@ -233,7 +224,7 @@ Repository definitions live under
 
 `repository_versions/__init__.py` aggregates everything into the
 `nodes_by_version` mapping, whose keys are exactly the strings accepted by
-`--version` (`43`, `50-micro`, `50-sles`, `51-micro`, `51-sles`, `52-micro`,
+`--version` (`51-micro`, `51-sles`, `52-micro`,
 `52-sles`, `53-micro-beta`, `53-sles-beta`) and whose values are
 `{"static": ..., "dynamic": ...}` dicts consumed by the main script.
 
