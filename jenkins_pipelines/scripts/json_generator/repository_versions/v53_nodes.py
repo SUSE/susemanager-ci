@@ -66,7 +66,6 @@ v53_nodes_static_client_tools_repositories_beta: Dict[str, Dict[str, str]] = {
 }
 
 v53_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
-    "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-12_x86_64/"},
     "debian13_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-13_x86_64/"},
     "raspios13_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Debian-13_aarch64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools-Beta_Ubuntu-22.04_x86_64/"},
@@ -80,7 +79,6 @@ v53_nodes_dynamic_client_tools_repos_beta: Dict[str, Set[str]] = {
     "liberty10_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-10_x86_64/"},
     "liberty9_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "openeuler2403_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
-    "opensuse156arm_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_SLE-15_aarch64/"},
     "oracle9_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-9_x86_64/"},
     "oracle10_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_EL-10_x86_64/"},
     "rhel7_minion": { "/SUSE_Updates_MultiLinuxManagerTools-Beta_RES-7_x86_64/"},

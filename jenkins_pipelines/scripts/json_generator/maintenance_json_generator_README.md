@@ -218,9 +218,9 @@ Repository definitions live under
   for 5.3 beta placeholders. For **`53-sles-beta`**, fixed ToTest **server** / **proxy**
   image URLs are defined in `v53_uyuni_tools_sles_static_repos_beta`. For
   **`53-micro-beta`** / **`53-sles-beta`**, dynamic client minions include
-  **`opensuse156arm_minion`** (SLE-15 aarch64) and **`raspios13_minion`**
-  (`MultiLinuxManagerTools-Beta_Debian-13_aarch64`) in
-  `v53_nodes_dynamic_client_tools_repos_beta`.
+  **`raspios13_minion`** (`MultiLinuxManagerTools-Beta_Debian-13_aarch64`) in
+  `v53_nodes_dynamic_client_tools_repos_beta`. **`opensuse160arm_minion`** stays
+  static-only (see above), it does not get a dynamic entry.
 
 `repository_versions/__init__.py` aggregates everything into the
 `nodes_by_version` mapping, whose keys are exactly the strings accepted by

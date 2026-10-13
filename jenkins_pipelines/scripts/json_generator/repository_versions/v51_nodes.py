@@ -52,7 +52,6 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
 }
 
 v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
-    "debian12_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-12_x86_64/"},
     "debian13_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-13_x86_64/"},
     "raspios13_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Debian-13_aarch64/"},
     "ubuntu2204_minion": {"/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-22.04_x86_64/"},
@@ -128,9 +127,9 @@ def get_v51_static_and_client_tools(
                   'micro' variant) to {repo_name: full_IBS_URL}. Full URLs are built by
                   prepending IBS_URL_PREFIX to the configured path fragments.
             Dict[str, List[str]]        # dynamic_repos
-                - Maps dynamic nodes (e.g. "debian12_minion", and "server"/"proxy" for
+                - Maps dynamic nodes (e.g. "ubuntu2604_minion", and "server"/"proxy" for
                   the 'sles' variant) to a sorted list of maintenance-path suffixes
-                  (e.g. "/SUSE_Updates_MultiLinuxManagerTools_Debian-12_x86_64/").
+                  (e.g. "/SUSE_Updates_MultiLinuxManagerTools_Ubuntu-26.04_x86_64/").
                   These are NOT full URLs: callers combine them with
                   IBS_MAINTENANCE_URL_PREFIX and an MI id via
                   create_url(mi_id, suffix) in maintenance_json_generator.py.
@@ -151,7 +150,7 @@ def get_v51_static_and_client_tools(
     Example:
         static_repos, dynamic_repos = get_v51_static_and_client_tools("micro")
         static_repos["server"]["server_uyuni_tools"]   # full URL
-        dynamic_repos["debian12_minion"][0]            # maintenance suffix
+        dynamic_repos["ubuntu2604_minion"][0]          # maintenance suffix
         # Example for the sles variant:
         # static_repos, dynamic_repos = get_v51_static_and_client_tools("sles")
         # dynamic_repos["server"][0]                   # maintenance suffix
