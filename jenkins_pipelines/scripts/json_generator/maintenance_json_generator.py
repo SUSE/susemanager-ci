@@ -365,7 +365,7 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_ids: list
 
     Args:
         mi_ids: Set of MI ID strings
-        version: SUMA version (43, 50-sles, 51-sles, etc.)
+        version: SUMA version (51-sles, 52-micro, etc.)
         slfo_pull_request_ids: Optional SLFO PullRequest ids, each one looked up
             on IBS and applied to the nodes of the family it belongs to; only
             valid for stable 51-* / 52-* versions.

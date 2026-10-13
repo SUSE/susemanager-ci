@@ -30,8 +30,9 @@ performs the following tasks:
   details about MIs and their associated repositories.
 
 The output is a JSON file, which can be used for further testing in the BV
-(Build Validation) testsuite pipeline. The script supports SUSE Manager
-4.3 (SUMA 4.3), SUSE Manager 5.0 (SUMA 5.0), SUSE Multi-Linux Manager 5.1 (MLM 5.1), and SUSE Multi-Linux Manager 5.2 (MLM 5.2).
+(Build Validation) testsuite pipeline. The script supports SUSE Multi-Linux
+Manager 5.1 (MLM 5.1), SUSE Multi-Linux Manager 5.2 (MLM 5.2), and the 5.3
+beta placeholders.
 
 ## Features
 
