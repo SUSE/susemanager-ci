@@ -264,12 +264,10 @@ def run(params) {
                     sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
                 }
 
-                // --- New hub_testing stage. cucumber:hub_full_topology is a placeholder
-                //     rake task to be authored later; a non-zero result fails the build. ---
                 stage('hub_testing') {
                     if (runHub) {
                         withIdleTimeout {
-                            sh cucumberCmd('cucumber:hub_full_topology')
+                            sh cucumberCmd('cucumber:hub_server_to_server')
                         }
                     } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
