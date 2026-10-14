@@ -1,32 +1,57 @@
 def run(params) {
     ansiColor('xterm') {
         timestamps {
+            // Null-safe defaults for optional stage-control parameters (backward compat with env files that don't declare them)
+            def runDeploy = params.deploy == null ? true : params.deploy
+            def runCore = params.run_core == null ? true : params.run_core
+            def runSecondary = params.run_secondary == null ? true : params.run_secondary
+
             // Init path env variables
-            env.resultdir = "${WORKSPACE}/results"
-            env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
+            GString resultdir = "${env.WORKSPACE}/results"
+            GString resultdirbuild = "${resultdir}/${env.BUILD_NUMBER}"
 
             // The junit plugin doesn't affect full paths
-            env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
-            env.exports = "export BUILD_NUMBER=${BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+            GString junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
+            // Mutable: the AWS backend appends PUBLISH_CUCUMBER_REPORT below
+            def exports = "export BUILD_NUMBER=${env.BUILD_NUMBER}; export CAPYBARA_TIMEOUT=${capybara_timeout}; export DEFAULT_TIMEOUT=${default_timeout}; export CUCUMBER_PUBLISH_QUIET=true;"
+            GString common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --terraform-bin ${params.bin_path}"
+
 
             if (params.deploy_parallelism) {
-                env.common_params = "${env.common_params} --parallelism ${params.deploy_parallelism}"
+                common_params = "${common_params} --parallelism ${params.deploy_parallelism}"
+            }
+            // Bastion support (from pipeline.groovy)
+            if (params.bastion_ssh_key_file) {
+                common_params = "${common_params} --bastion_ssh_key ${params.bastion_ssh_key_file} --bastion_user ${params.bastion_username}"
+                if (params.bastion_hostname) {
+                    common_params = "${common_params} --bastion_hostname ${params.bastion_hostname}"
+                }
             }
 
-            def mirror_scope = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
-            mirror_scope = mirror_scope.replaceAll("-dev", "")
-            def ci_label = ['5.1': '5.1_ci', '5.2': '5.2_rke2_ci', 'Head': 'head_rke2_ci', 'uyuni': 'uyuni_rke2_ci'].find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: ''
-            // Only 5.2, head and uyuni are ingested by RRTG; tag is <version>-rke2
-            def rrtg_version = env.JOB_BASE_NAME.find(/5\.2|Head|uyuni/)?.toLowerCase()
-            rrtg_version = rrtg_version ? "${rrtg_version}-rke2" : null
-            def junit_resultdir = "results/${env.BUILD_NUMBER}/results_junit"
-            // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
-            // Anything that is not a positive number of minutes falls back to the default.
-            def rawIdleTimeout = params.cucumber_idle_timeout?.toString()?.trim()
-            def cucumberIdleTimeoutMinutes = rawIdleTimeout?.isInteger() && rawIdleTimeout.toInteger() > 0 ? rawIdleTimeout.toInteger() : 60
-            def withIdleTimeout = { Closure body ->
-                timeout(activity: true, time: cucumberIdleTimeoutMinutes, unit: 'MINUTES') { body() }
+            def previous_commit = null
+            def product_commit = null
+            // CI-job detection: acceptance-tests jobs get mirror sync, flaky-test labels,
+            // RRTG ingest and OBS/IBS product-commit tracking. Personal jobs skip them.
+            def isAcceptanceJob = env.JOB_BASE_NAME.contains('-acceptance-tests')
+            def mirror_scope = isAcceptanceJob ? env.JOB_BASE_NAME.split('-acceptance-tests')[0].replaceAll("-dev", "") : null
+            def runtime = env.JOB_BASE_NAME.endsWith('-RKE2') ? 'rke2' : 'podman'
+            def ci_label_map = [
+                    '5.1'  : '5.1_ci',
+                    '5.2'  : "5.2_${runtime}_ci",
+                    'Head' : "head_${runtime}_ci",
+                    'uyuni': "uyuni_${runtime}_ci"
+            ]
+            def ci_label = isAcceptanceJob ? (ci_label_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: '') : ''
+            def rrtg_version = isAcceptanceJob ? env.JOB_BASE_NAME.find(/5\.1|5\.2|Head/)?.toLowerCase() : null
+            // 5.2 and head are reported per deployment flavour (podman / rke2)
+            if (rrtg_version in ['5.2', 'head']) {
+                rrtg_version += env.JOB_BASE_NAME.endsWith('-RKE2') ? '-rke2' : '-podman'
             }
+            if (!rrtg_version && env.JOB_BASE_NAME == 'uyuni-master-dev-acceptance-tests-podman') {
+                rrtg_version = 'uyuni-podman'
+            }
+            // Start pipeline
+            def deployed = false
             def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de') || env.JENKINS_URL?.contains('jenkins.mgr.slc1.suse.org')
             def credInit = isNewJenkins
                     ? 'set +x; credFile=$(mktemp); echo "$SECRET_CONTENT" > "${credFile}"; chmod 600 "${credFile}"; . "${credFile}"; rm -f "${credFile}"; set -x'
@@ -38,21 +63,28 @@ def run(params) {
                     body()
                 }
             }
-            // Start pipeline
-            def deployed = false
+            // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
+            // Anything that is not a positive number of minutes falls back to the default.
+            def rawIdleTimeout = params.cucumber_idle_timeout?.toString()?.trim()
+            def cucumberIdleTimeoutMinutes = rawIdleTimeout?.isInteger() && rawIdleTimeout.toInteger() > 0 ? rawIdleTimeout.toInteger() : 60
+            def withIdleTimeout = { Closure body ->
+                timeout(activity: true, time: cucumberIdleTimeoutMinutes, unit: 'MINUTES') { body() }
+            }
             try {
                 withCreds {
                     stage('Clone terracumber, susemanager-ci and sumaform') {
-
                         // Create a directory for  to place the directory with the build results (if it does not exist)
                         sh "mkdir -p ${resultdir}"
                         git url: params.terracumber_gitrepo, branch: params.terracumber_ref
                         dir("susemanager-ci") {
                             checkout scm
                         }
-                        // Clone sumaform
-                        sh "${credInit}; ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync"
-
+                        // Always sync sumaform — the deploy stage needs the checkout regardless
+                        sh """
+                        #!/bin/bash
+                        ${credInit}
+                        ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
+                    """
                         // Restore Terraform states from artifacts
                         if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
                             copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
@@ -64,101 +96,118 @@ def run(params) {
                             sh "ssh root@minima-mirror-ci-bv.${domain} -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh || echo 'no mirror script for this scope'\""
                         }
                     }
-                    stage('Deploy') {
-                        // Provision the environment
-                        if (params.terraform_init) {
-                            env.TERRAFORM_INIT = '--init'
-                        } else {
-                            env.TERRAFORM_INIT = ''
-                        }
-                        env.TERRAFORM_TAINT = ''
-                        if (params.terraform_taint) {
-                            switch (params.sumaform_backend) {
-                                case "libvirt":
-                                    env.TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'";
-                                    break;
-                                default:
-                                    println("ERROR: Unknown backend ${params.sumaform_backend}");
-                                    sh "exit 1";
-                                    break;
+                    if (runDeploy) {
+                        stage('Deploy') {
+                            // Provision the environment
+                            if (params.terraform_init) {
+                                env.TERRAFORM_INIT = '--init'
+                            } else {
+                                env.TERRAFORM_INIT = ''
                             }
-                        }
-                        if (isNewJenkins) {
-                            sh """
+                            env.TERRAFORM_TAINT = ''
+                            if (params.terraform_taint) {
+                                switch (params.sumaform_backend) {
+                                    case "libvirt":
+                                        env.TERRAFORM_TAINT = " --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning).*'";
+                                        break;
+                                    case "aws":
+                                        env.TERRAFORM_TAINT = " --taint '.*(host).*'";
+                                        exports = "${exports} export PUBLISH_CUCUMBER_REPORT=true;";
+                                        break;
+                                    default:
+                                        println("ERROR: Unknown backend ${params.sumaform_backend}");
+                                        sh "exit 1";
+                                        break;
+                                }
+                            }
+                            if (isNewJenkins) {
+                                sh """
                                 sed -i '/HYPERVISOR_PRIVATE_SSH_KEY_PATH/d' ${resultdir}/sumaform/terraform.tfvars 2>/dev/null || true
                                 sed -i '/CONTROLLER_PUBLIC_SSH_KEY_PATH/d' ${resultdir}/sumaform/terraform.tfvars 2>/dev/null || true
                                 echo 'HYPERVISOR_PRIVATE_SSH_KEY_PATH="/home/jenkins/.ssh/id_ed25519.worker"' >> ${resultdir}/sumaform/terraform.tfvars
                                 echo 'CONTROLLER_PUBLIC_SSH_KEY_PATH="/home/jenkins/.ssh/id_ed25519.pub.controller"' >> ${resultdir}/sumaform/terraform.tfvars
                             """
+                            }
+                            sh """
+                            #!/bin/bash
+                            ${credInit}
+                            set -o pipefail
+                            export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}
+                            export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}
+                            export TERRAFORM=${params.bin_path}
+                            export TERRAFORM_PLUGINS=${params.bin_plugins_path}
+                            ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'
+                        """
+                            deployed = true
+                            // Collect and tag Flaky tests from the GitHub Board
+                            def rakeTarget = ci_label ? "utils:collect_and_tag_flaky_tests[${ci_label}]" : "utils:collect_and_tag_flaky_tests"
+                            def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake ${rakeTarget}'", returnStatus: true
                         }
-                        sh "${credInit}; set -o pipefail; export TF_VAR_CUCUMBER_GITREPO=${params.cucumber_gitrepo}; export TF_VAR_CUCUMBER_BRANCH=${params.cucumber_ref}; export TERRAFORM=${params.bin_path}; export TERRAFORM_PLUGINS=${params.bin_plugins_path}; ./terracumber-cli ${common_params} --logfile ${resultdirbuild}/sumaform.log ${env.TERRAFORM_INIT} ${env.TERRAFORM_TAINT} --sumaform-backend ${params.sumaform_backend} --runstep provision | sed -E 's/([^.]+)module\\.([^.]+)\\.module\\.([^.]+)(\\.module\\.[^.]+)?(\\[[0-9]+\\])?(\\.module\\.[^.]+)?(\\.[^.]+)?(.*)/\\1\\2.\\3\\8/'"
+                        stage('Install RKE2') {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_rke2'"
+                            }
+                        }
+                        stage('Install Server on RKE2') {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_server_on_rke2'"
+                            }
+                        }
+                        stage('Install Proxy on RKE2') {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_proxy_on_rke2'"
+                            }
+                        }
+                    } else {
                         deployed = true
-                        // Collect and tag Flaky tests from the GitHub Board
-                        def rakeTarget = ci_label ? "utils:collect_and_tag_flaky_tests[${ci_label}]" : "utils:collect_and_tag_flaky_tests"
-                        def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${env.exports} rake ${rakeTarget}'", returnStatus: true
-                    }
-                    stage('Install RKE2') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_rke2'"
-                        }
-                    }
-                    stage('Install Server on RKE2') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_server_on_rke2'"
-                        }
-                    }
-                    stage('Install Proxy on RKE2') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_proxy_on_rke2'"
-                        }
                     }
                     stage('Sanity Check') {
                         withIdleTimeout {
                             sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:sanity_check'"
                         }
                     }
-                    // stage('Kubernetes tests') {
-                    //     withIdleTimeout {
-                    //         sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_tests'"
-                    //     }
-                    // }
                     stage('Core - Setup') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
+                        if (runCore) {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
+                            }
                         }
                     }
                     stage('Core - Initialize clients') {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:init_clients'"
+                        if (runCore) {
+                            withIdleTimeout {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:init_clients'"
+                            }
                         }
                     }
                     stage('Secondary features') {
-                        def tags_list = ""
-                        // When triggered by cron the Active Choices plugin (JENKINS-42568) always returns
-                        // the first checkbox value instead of none, so ignore functional_scopes on timer builds.
-                        def isTimerTriggered = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
-                        def effectiveScopes = isTimerTriggered ? '' : params.functional_scopes
-                        if (effectiveScopes) {
-                            // Re-add the @ prefix stripped from the job parameters
-                            // (Jenkins' Safe HTML markup formatter escapes @ as &#64; in Active Choices labels).
-                            // startsWith guard keeps backward compatibility with jobs still passing @-prefixed scopes.
-                            def transformed_scopes = effectiveScopes.split(',')
-                                    .collect { it.trim() }
-                                    .collect { it.startsWith('@') ? it : "@${it}" }
-                                    .join(' or ')
-                            // --cucumber-cmd below is single-quoted, and rake re-splits TAGS through a
-                            // shell, so the value carries its own quotes rather than nesting single ones.
-                            tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
+                        if (runSecondary) {
+                            def tags_list = ""
+                            // When triggered by cron the Active Choices plugin (JENKINS-42568) always returns
+                            // the first checkbox value instead of none, so ignore functional_scopes on timer builds.
+                            def isTimerTriggered = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
+                            def effectiveScopes = isTimerTriggered ? '' : params.functional_scopes
+                            if (effectiveScopes) {
+                                // Re-add the @ prefix stripped from the job parameters
+                                // (Jenkins' Safe HTML markup formatter escapes @ as &#64; in Active Choices labels).
+                                // startsWith guard keeps backward compatibility with jobs still passing @-prefixed scopes.
+                                def transformed_scopes = effectiveScopes.split(',')
+                                        .collect { it.trim() }
+                                        .collect { it.startsWith('@') ? it : "@${it}" }
+                                        .join(' or ')
+                                // --cucumber-cmd below is single-quoted, and rake re-splits TAGS through a
+                                // shell, so the value carries its own quotes rather than nesting single ones.
+                                tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
+                            }
+                            def statusCode1 = 1
+                            def statusCode2 = 1
+                            def statusCode3 = 1
+                            withIdleTimeout { statusCode1 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true) }
+                            withIdleTimeout { statusCode2 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true) }
+                            withIdleTimeout { statusCode3 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true) }
+                            sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
                         }
-
-                        def statusCode1 = 1
-                        def statusCode2 = 1
-                        def statusCode3 = 1
-                        withIdleTimeout { statusCode1 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true) }
-                        withIdleTimeout { statusCode2 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true) }
-                        withIdleTimeout { statusCode3 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true) }
-                        sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
                     }
                 }
             }
@@ -170,59 +219,60 @@ def run(params) {
                 stage('Get results') {
                     def error = 0
                     try {
-                        if (deployed) {
-                            try {
-                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:finishing'"
-                            } catch (err) {
-                                println("ERROR: rake cucumber:finishing failed: ${err}")
-                                error = 1
-                            }
-                            try {
-                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:generate_test_report'"
-                            } catch (err) {
-                                println("ERROR: rake utils:generate_test_report failed: ${err}")
-                                error = 1
-                            }
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                            publishHTML(target: [
-                                    allowMissing         : true,
-                                    alwaysLinkToLastBuild: false,
-                                    keepAll              : true,
-                                    reportDir            : "${resultdirbuild}/results/cucumber_report/",
-                                    reportFiles          : 'index.html',
-                                    reportName           : "TestSuite Report"]
-                            )
-                            // skipPublishingChecks: Checks API not configured on this instance
-                            catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
-                                junit allowEmptyResults: true,
-                                        testResults: "${junit_resultdir}/*.xml",
-                                        skipPublishingChecks: true
-                            }
-                        }
-                        // Send email
+                    if (deployed) {
                         try {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:finishing'"
                         } catch (err) {
-                            println("ERROR: sending the results email failed: ${err}")
+                            println("ERROR: rake cucumber:finishing failed: ${err}")
                             error = 1
                         }
-                        if (rrtg_version) {
-                            withCreds {
-                                sh """
-                                    #!/bin/bash
-                                    ${credInit}
-                                    curl -sf -k -X POST \\
-                                      "https://su-agent.qe-hub.mgr.suse.de/api/rrtg/ingest/${rrtg_version}?build=${env.BUILD_NUMBER}" \\
-                                      -u "\${RRTG_USER}:\${RRTG_PASS}" \\
-                                      -H "Content-Type: application/json" \\
-                                    || echo "RRTG ingest failed (non-fatal)"
-                                """
-                            }
+                        try {
+                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:generate_test_report'"
+                        } catch (err) {
+                            println("ERROR: rake utils:generate_test_report failed: ${err}")
+                            error = 1
                         }
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                        publishHTML(target: [
+                                allowMissing         : true,
+                                alwaysLinkToLastBuild: false,
+                                keepAll              : true,
+                                reportDir            : "${resultdirbuild}/results/cucumber_report/",
+                                reportFiles          : 'index.html',
+                                reportName           : "TestSuite Report"]
+                        )
+                        // skipPublishingChecks: Checks API not configured on this instance
+                        catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
+                            junit allowEmptyResults: true,
+                                    testResults: "${junit_resultdir}/*.xml",
+                                    skipPublishingChecks: true
+                        }
+                    }
+                    // Send email
+                    try {
+                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                    } catch (err) {
+                        println("ERROR: sending the results email failed: ${err}")
+                        error = 1
+                    }
 
-                        sh "exit ${error}"
+                    if (rrtg_version) {
+                        withCreds {
+                            sh """
+                          #!/bin/bash
+                          ${credInit}
+                          curl -sf -k -X POST \\
+                            "https://su-agent.qe-hub.mgr.suse.de/api/rrtg/ingest/${rrtg_version}?build=${env.BUILD_NUMBER}" \\
+                            -u "\${RRTG_USER}:\${RRTG_PASS}" \\
+                            -H "Content-Type: application/json" \\
+                          || echo "RRTG ingest failed (non-fatal)"
+                        """
+                        }
+                    }
+
+                    sh "exit ${error}"
                     } finally {
-                        // In finally so it runs even when getresults/mail fail
+                        // Clean up old results — in finally so it runs even when getresults/mail fail
                         sh "./clean-old-results -r ${resultdir}"
                     }
                 }
