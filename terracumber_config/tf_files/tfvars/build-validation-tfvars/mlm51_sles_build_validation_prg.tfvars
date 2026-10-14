@@ -133,9 +133,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:1c"
     name = "ubuntu2604-minion"
   }
-  opensuse160arm_minion = {
+  opensuse161arm_minion = {
     mac  = "aa:b2:92:42:01:2e"
-    name = "opensuse160arm-minion"
+    name = "opensuse161arm-minion"
   }
   salt_migration_minion = {
     mac  = "aa:b2:92:42:01:2f"
@@ -275,9 +275,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:3c"
     name = "ubuntu2604-sshminion"
   }
-  opensuse160arm_sshminion = {
+  opensuse161arm_sshminion = {
     mac  = "aa:b2:92:42:01:4e"
-    name = "opensuse160arm-sshminion"
+    name = "opensuse161arm-sshminion"
   }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:42:00:2b"
@@ -296,7 +296,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "suma-10.mgr.suse.de"
   }
   base_arm = {
-    images             = [ "opensuse160armo" ]
+    images             = [ "opensuse161armo" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
