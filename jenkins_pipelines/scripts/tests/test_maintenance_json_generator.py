@@ -268,8 +268,8 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
                 'slmicro62_minion': {
                     'slfo_pr_12345_slmicro62_x86_64': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/'
                 },
-                'opensuse160arm_minion': {
-                    'slfo_pr_12345_opensuse160arm_aarch64': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/'
+                'opensuse161arm_minion': {
+                    'slfo_pr_12345_opensuse161arm_aarch64': 'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/'
                 },
             },
             custom_repos,
@@ -294,8 +294,8 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
             static, dynamic = get_static_and_client_tools('sles')
             self.assertEqual(static['sles160_minion']['sles16_client_tools'], x86_64_url)
             self.assertEqual(static['slmicro62_minion']['sles16_client_tools'], x86_64_url)
-            self.assertEqual(static['opensuse160arm_minion']['sles16_client_tools'], aarch64_url)
-            self.assertNotIn('opensuse160arm_minion', dynamic)
+            self.assertEqual(static['opensuse161arm_minion']['sles16_client_tools'], aarch64_url)
+            self.assertNotIn('opensuse161arm_minion', dynamic)
 
     def test_slmicro6_minions_keep_their_static_salt_repos(self):
         salt_urls = {
@@ -338,7 +338,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
     @patch('json_generator.maintenance_json_generator.probe_url', return_value=True)
     @patch('json_generator.maintenance_json_generator.url_exists', side_effect=_only_client_tools_exist)
     @patch('json_generator.maintenance_json_generator.validate_and_store_results')
-    def test_slfo_pullrequest_injects_opensuse160arm_in_find_valid_repos(self, _mock_validate, _mock_url_exists, _mock_probe_url):
+    def test_slfo_pullrequest_injects_opensuse161arm_in_find_valid_repos(self, _mock_validate, _mock_url_exists, _mock_probe_url):
         captured: dict[str, dict[str, dict[str, str]]] = {}
 
         def _capture(_ids, custom_repositories, *_args, **_kwargs):
@@ -349,15 +349,15 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
         find_valid_repos(set(), '52-sles', slfo_pull_request_ids=['12345'])
 
         repos = captured['repos']
-        self.assertIn('opensuse160arm_minion', repos)
+        self.assertIn('opensuse161arm_minion', repos)
         self.assertEqual(
-            repos['opensuse160arm_minion'].get('slfo_pr_12345_opensuse160arm_aarch64'),
+            repos['opensuse161arm_minion'].get('slfo_pr_12345_opensuse161arm_aarch64'),
             'http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/12345:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/',
         )
         self.assertIn('sles160_minion', repos)
         self.assertIn('slmicro62_minion', repos)
         # the PullRequest client tools supersede the :ToTest ones on every SLE-16 minion
-        for node in ('sles160_minion', 'slmicro62_minion', 'opensuse160arm_minion'):
+        for node in ('sles160_minion', 'slmicro62_minion', 'opensuse161arm_minion'):
             self.assertNotIn('sles16_client_tools', repos[node])
 
     @patch('json_generator.maintenance_json_generator.url_exists')

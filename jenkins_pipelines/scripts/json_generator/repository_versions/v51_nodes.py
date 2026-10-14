@@ -46,7 +46,7 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     "sles160_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
     },
-    "opensuse160arm_minion": {
+    "opensuse161arm_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/"
     },
 }
