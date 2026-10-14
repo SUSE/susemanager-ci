@@ -124,13 +124,17 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:91"
     name = "debian13-minion"
   }
+  debian13_sshminion = {
+    mac  = "aa:b2:93:01:02:a7"
+    name = "debian13-sshminion"
+  }
   ubuntu2404_minion = {
     mac  = "aa:b2:93:01:02:9d"
     name = "ubuntu2404-minion"
   }
-  opensuse160arm_minion = {
+  opensuse161arm_minion = {
     mac  = "aa:b2:93:01:02:ae"
-    name = "opensuse160arm-minion"
+    name = "opensuse161arm-minion"
   }
   salt_migration_minion = {
     mac  = "aa:b2:93:01:02:af"
@@ -261,13 +265,17 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:b1"
     name = "debian13-sshminion"
   }
+  raspios13_minion = {
+    mac  = "aa:b2:93:01:02:c7"
+    name = "raspios13-minion"
+  }
   ubuntu2404_sshminion = {
     mac  = "aa:b2:93:01:02:bd"
     name = "ubuntu2404-sshminion"
   }
-  opensuse160arm_sshminion = {
+  opensuse161arm_sshminion = {
     mac  = "aa:b2:93:01:02:ce"
-    name = "opensuse160arm-sshminion"
+    name = "opensuse161arm-sshminion"
   }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:42:00:2f"
@@ -286,7 +294,7 @@ BASE_CONFIGURATIONS = {
     additional_network = "192.168.100.0/24"
   }
   base_arm = {
-    images             = [ "opensuse160armo" ]
+    images             = [ "opensuse161armo", "raspios13o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null

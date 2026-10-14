@@ -129,9 +129,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:88"
     name = "ubuntu2604-minion"
   }
-  opensuse160arm_minion = {
+  opensuse161arm_minion = {
     mac  = "aa:b2:92:42:00:10"
-    name = "opensuse160arm-minion"
+    name = "opensuse161arm-minion"
   }
   sles15sp5s390_minion = {
     mac    = "02:00:00:02:01:34"
@@ -267,9 +267,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:04:05:a8"
     name = "ubuntu2604-sshminion"
   }
-  opensuse160arm_sshminion = {
+  opensuse161arm_sshminion = {
     mac  = "aa:b2:92:42:00:11"
-    name = "opensuse160arm-sshminion"
+    name = "opensuse161arm-sshminion"
   }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:02:01:35"
@@ -327,7 +327,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "caipirinha.mgr.slc1.suse.org"
   }
   base_arm = {
-    images             = [ "opensuse160armo", "raspios13o" ]
+    images             = [ "opensuse161armo", "raspios13o" ]
     pool               = "ssd"
     bridge             = "br0"
     additional_network = null
