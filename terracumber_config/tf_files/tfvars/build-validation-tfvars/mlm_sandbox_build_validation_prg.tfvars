@@ -124,9 +124,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:91"
     name = "debian13-minion"
   }
-  debian13_sshminion = {
+  raspios13_minion = {
     mac  = "aa:b2:93:01:02:a7"
-    name = "debian13-sshminion"
+    name = "raspios13-minion"
   }
   ubuntu2404_minion = {
     mac  = "aa:b2:93:01:02:9d"
@@ -265,9 +265,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:b1"
     name = "debian13-sshminion"
   }
-  raspios13_minion = {
+  raspios13_sshminion = {
     mac  = "aa:b2:93:01:02:c7"
-    name = "raspios13-minion"
+    name = "raspios13-sshminion"
   }
   ubuntu2404_sshminion = {
     mac  = "aa:b2:93:01:02:bd"
