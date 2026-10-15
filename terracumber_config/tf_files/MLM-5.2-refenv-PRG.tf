@@ -158,7 +158,7 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:02:f0"
+        mac = "aa:b2:93:01:00:a0"
         vcpu = 2
         memory = 2048
       }
@@ -166,7 +166,7 @@ module "cucumber_testsuite" {
     server_containerized = {
       image = "slmicro62o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:f1"
+        mac = "aa:b2:93:01:00:a1"
         vcpu = 4
         memory = 16384
       }
@@ -179,7 +179,7 @@ module "cucumber_testsuite" {
     proxy_containerized = {
       image = "slmicro62o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:f2"
+        mac = "aa:b2:93:01:00:a2"
         vcpu = 2
         memory = 2048
       }
@@ -191,7 +191,7 @@ module "cucumber_testsuite" {
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:f6"
+        mac = "aa:b2:93:01:00:a6"
         vcpu = 2
         memory = 2048
       }
@@ -199,7 +199,7 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:f8"
+        mac = "aa:b2:93:01:00:a8"
         vcpu = 2
         memory = 2048
       }
@@ -207,7 +207,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky10o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:f9"
+        mac = "aa:b2:93:01:00:a9"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -217,7 +217,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:fb"
+        mac = "aa:b2:93:01:00:ab"
         vcpu = 2
         memory = 2048
       }
@@ -225,7 +225,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:fd"
+        mac = "aa:b2:93:01:00:ad"
         vcpu = 2
         memory = 2048
       }
@@ -234,7 +234,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool = "ssd"
     network_name = null
-    bridge = "br1"
+    bridge = "br0"
   }
 }
 

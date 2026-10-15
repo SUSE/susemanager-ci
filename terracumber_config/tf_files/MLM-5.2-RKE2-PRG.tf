@@ -183,7 +183,7 @@ module "cucumber_testsuite" {
   host_settings = {
     controller = {
       provider_settings = {
-        mac = "aa:b2:93:01:02:d0"
+        mac = "aa:b2:92:42:00:d0"
         vcpu = 4
         memory = 4096
       }
@@ -191,7 +191,7 @@ module "cucumber_testsuite" {
     server_kubernetes = {
       image = "slmicro62o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:d1"
+        mac = "aa:b2:92:42:00:d1"
         vcpu = 8
         memory = 32768
       }
@@ -209,7 +209,7 @@ module "cucumber_testsuite" {
     proxy_kubernetes = {
       image = "slmicro62o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:d2"
+        mac = "aa:b2:92:42:00:d2"
         vcpu = 2
         memory = 16384
       }
@@ -225,7 +225,7 @@ module "cucumber_testsuite" {
     suse_minion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:d6"
+        mac = "aa:b2:92:42:00:d6"
         vcpu = 2
         memory = 2048
       }
@@ -233,7 +233,7 @@ module "cucumber_testsuite" {
     suse_sshminion = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:d8"
+        mac = "aa:b2:92:42:00:d8"
         vcpu = 2
         memory = 2048
       }
@@ -242,7 +242,7 @@ module "cucumber_testsuite" {
     rhlike_minion = {
       image = "rocky8o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:da"
+        mac = "aa:b2:92:42:00:da"
         // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
         // Also, openscap cannot run with less than 1.25 GB of RAM
         vcpu = 2
@@ -252,7 +252,7 @@ module "cucumber_testsuite" {
     deblike_minion = {
       image = "ubuntu2404o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:db"
+        mac = "aa:b2:92:42:00:db"
         vcpu = 2
         memory = 2048
       }
@@ -260,7 +260,7 @@ module "cucumber_testsuite" {
     build_host = {
       image = "sles15sp7o"
       provider_settings = {
-        mac = "aa:b2:93:01:02:dd"
+        mac = "aa:b2:92:42:00:dd"
         vcpu = 2
         memory = 2048
       }
@@ -282,7 +282,7 @@ module "cucumber_testsuite" {
   provider_settings = {
     pool = "ssd"
     network_name = null
-    bridge = "br1"
+    bridge = "br0"
     additional_network = "192.168.152.0/24"
   }
 }
