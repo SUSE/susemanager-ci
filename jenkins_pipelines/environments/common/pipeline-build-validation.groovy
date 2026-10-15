@@ -37,6 +37,7 @@ def run(params) {
             def muLockSlots = new java.util.concurrent.atomic.AtomicInteger(0)
             def smokeTestSlots = new java.util.concurrent.atomic.AtomicInteger(0)
             def bootstrapRepoSlots = new java.util.concurrent.atomic.AtomicInteger(0)
+            def bootstrapClientSlots = new java.util.concurrent.atomic.AtomicInteger(0)
             def retailProxyLockSlots = new java.util.concurrent.atomic.AtomicInteger(0)
             // Variables to store none critical stage run status
             def monitoring_stage_result_fail = false
@@ -456,7 +457,7 @@ def run(params) {
                     // Call the minion testing.
                     try {
                         stage('Clients stages') {
-                            clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots, isNewJenkins)
+                            clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots, bootstrapClientSlots, isNewJenkins)
                         }
                     } catch (Exception ex) {
                         println('ERROR: one or more clients have failed')
@@ -695,7 +696,7 @@ def runCucumberRakeTarget(String rake_target, boolean return_status = false, dis
 
 // Develop a function that outlines the various stages of a minion.
 // These stages will be executed concurrently.
-def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots, isNewJenkins) {
+def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots, bootstrapClientSlots, isNewJenkins) {
 
     // Implement a hash map to store the various stages of nodes.
     def tests = [:]
@@ -756,7 +757,7 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots,
                             }
                             withThrottle(muLockSlots, 5) {
                                 echo 'Add non MU Repositories'
-                                def res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", true, temporaryList)
+                                def res_non_MU_repositories = runCucumberRakeTarget("cucumber:${build_validation_non_MU_script}", true, temporaryList, null, 600)
                                 echo "Non MU Repositories status code: ${res_non_MU_repositories}"
                                 echoHtmlReportPath(build_validation_non_MU_script)
                                 if (res_non_MU_repositories != 0) {
@@ -857,18 +858,20 @@ def clientTestingStages(params, muLockSlots, smokeTestSlots, bootstrapRepoSlots,
                         input 'Press any key to start bootstraping the clients'
                     }
                     randomWait()
-                    echo 'Bootstrap clients'
-                    // Temporarily modify env.exports to include the bootstrap timeout
-                    def custom_exports = "${env.exports} export DEFAULT_TIMEOUT=${env.bootstrap_timeout};"
-                    // The helper doesn't easily allow overriding env.exports. For this unique case, we'll keep the logic inline to modify the environment variable within the script block for the special DEFAULT_TIMEOUT.
-                    def res_init_clients = 1
-                    withIdleTimeout {
-                        res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${custom_exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
-                    }
-                    echoHtmlReportPath( "build_validation_init_client_${nodeTag}")
-                    echo "Init clients status code: ${res_init_clients}"
-                    if (res_init_clients != 0) {
-                        error("Bootstrap clients failed with status code: ${res_init_clients}")
+                    withThrottle(bootstrapClientSlots, 10) {
+                        echo 'Bootstrap clients'
+                        // Temporarily modify env.exports to include the bootstrap timeout
+                        def custom_exports = "${env.exports} export DEFAULT_TIMEOUT=${env.bootstrap_timeout};"
+                        // The helper doesn't easily allow overriding env.exports. For this unique case, we'll keep the logic inline to modify the environment variable within the script block for the special DEFAULT_TIMEOUT.
+                        def res_init_clients = 1
+                        withIdleTimeout {
+                            res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${custom_exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
+                        }
+                        echoHtmlReportPath( "build_validation_init_client_${nodeTag}")
+                        echo "Init clients status code: ${res_init_clients}"
+                        if (res_init_clients != 0) {
+                            error("Bootstrap clients failed with status code: ${res_init_clients}")
+                        }
                     }
                 } else if (isNewJenkins) {
                     Utils.markStageSkippedForConditional(STAGE_NAME)
