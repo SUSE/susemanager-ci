@@ -109,7 +109,7 @@ At the end of the build, we have a **"What-If" snapshot**. This provides the **q
 
 The UI allows the QE team to target exact incidents without code changes:
 
-* **`container_project`**: The target IBS project (e.g., `Devel:Galaxy:Manager:MUTesting:5.0`).
+* **`container_project`**: The target IBS project (e.g., `Devel:Galaxy:Manager:MUTesting:5.2`).
 * **`mi_project`**: The incident project (e.g., `SUSE:Maintenance:12345`).
 
 #### 2. The "Build Containers" Stage
@@ -149,7 +149,7 @@ Upon a successful build, Jenkins intercepts the new registry paths and rewrites 
 
 ### Understanding the IBS "Branching" Architecture
 
-To safely test without risking production stability, the pipeline utilizes **IBS Branching**. Projects like `MUTesting:5.0` do not host independent source code; they are branched from official release projects.
+To safely test without risking production stability, the pipeline utilizes **IBS Branching**. Projects like `MUTesting:5.2` do not host independent source code; they are branched from official release projects.
 
 #### Current Packages Rebuilt
 

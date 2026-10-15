@@ -37,7 +37,6 @@ def run(params) {
             def muLockSlots = new java.util.concurrent.atomic.AtomicInteger(0)
             def smokeTestSlots = new java.util.concurrent.atomic.AtomicInteger(0)
             def bootstrapRepoSlots = new java.util.concurrent.atomic.AtomicInteger(0)
-            def retailProxyLockSlots = new java.util.concurrent.atomic.AtomicInteger(0)
             // Variables to store none critical stage run status
             def monitoring_stage_result_fail = false
             def client_stage_result_fail = false
@@ -63,7 +62,7 @@ def run(params) {
             // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
             // Measured on full runs, the worst legitimate silence outside the product sync stays
             // under 5 minutes, while the sync itself went silent for 62 minutes in
-            // manager-4.3-qe-build-validation #43, so it gets a timeout of its own.
+            // one run, so it gets a timeout of its own.
             // Anything that is not a positive number of minutes falls back to the default.
             // No 'def': both values are read from runCucumberRakeTarget() and clientTestingStages().
             def idleTimeoutMinutesOr = { value, int fallback ->
@@ -502,6 +501,10 @@ def run(params) {
                                     }
                                 }
                         )
+                        stage('Configure retail proxy') {
+                            def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', true, null, null, 3000)
+                            sh "exit ${res_configure_retail_proxy}"
+                        }
                     } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
@@ -523,38 +526,11 @@ def run(params) {
                         // ----- End: Get Terminal List -----
 
                         def terminal_deployment_testing = [:]
-                        // PENDING = Not run yet
-                        // SUCCESS = Configured successfully
-                        // FAILURE = Configured failed, do not retry
-                        def retailProxyStatus = [status: 'PENDING']
                         terminalsList.each { terminal ->
                             terminal_deployment_testing["${terminal}"] = {
                                 stage("Build image for ${terminal}") {
                                     def res_build_image = runCucumberRakeTarget("cucumber:build_validation_retail_build_image_${terminal}", true)
                                     sh "exit ${res_build_image}"
-                                }
-                                // TODO: Move back configure retail proxy to Retail: Bootstrap build hosts stage once 4.3 and 5.0 are EOL
-                                // Need to be executed after building images for 5.0
-                                // Using lock and proxyHandler to make sure to run it only once, first to start.
-                                stage("Configure retail proxy (${terminal})") {
-                                    withThrottle(retailProxyLockSlots, 1) {
-                                        if (retailProxyStatus['status'] == 'FAILURE') {
-                                            error "Aborting ${terminal}: Retail proxy configuration failed by another branch."
-                                        } else if (retailProxyStatus['status'] == 'SUCCESS') {
-                                            echo "Configure retail proxy already completed (skipped for ${terminal})"
-                                        } else {
-                                            def res_configure_retail_proxy = runCucumberRakeTarget('cucumber:build_validation_retail_configure_proxy', true, null, null, 3000)
-                                            if (res_configure_retail_proxy != 0) {
-                                                // CRITICAL: Mark as FAILURE before throwing error so other waiting threads see it
-                                                retailProxyStatus['status'] = 'FAILURE'
-                                                error "Retail proxy configuration failed with exit code: ${res_configure_retail_proxy}"
-                                            } else {
-                                                // Mark as SUCCESS
-                                                retailProxyStatus['status'] = 'SUCCESS'
-                                                echo "Proxy successfully configured by ${terminal}"
-                                            }
-                                        }
-                                    }
                                 }
                                 stage("Prepare group and saltboot for ${terminal}") {
                                     def res_prepare_group_saltboot = runCucumberRakeTarget("cucumber:build_validation_retail_prepare_group_saltboot_${terminal}", true)
