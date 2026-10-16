@@ -214,7 +214,6 @@ def run(params) {
                                 scenarioArgs += " --minion6 \"${params.minion6}\""
                                 scenarioArgs += " --minion7 \"${params.minion7}\""
                                 scenarioArgs += " --base-os \"${base_os}\""
-                                scenarioArgs += " --string-registry \"${params.string_registry}\""
                                 if (params.deploy_retail) {
                                     scenarioArgs += " --deploy-retail"
                                 }

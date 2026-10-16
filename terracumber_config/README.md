@@ -72,13 +72,11 @@ ENVIRONMENT_CONFIGURATION = {
     mac             = "xx:xx:xx:xx:xx:xx"
     name            = "server"
     image           = "slemicro55o"
-    string_registry = false
   }
   proxy_containerized = {
     mac             = "xx:xx:xx:xx:xx:xx"
     name            = "proxy"
     image           = "slemicro55o"
-    string_registry = false
   }
 
   # Optional minions — only deployed when declared
