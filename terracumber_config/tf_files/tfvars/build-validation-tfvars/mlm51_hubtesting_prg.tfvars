@@ -8,7 +8,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac                 = "aa:b2:93:01:01:d1"
     name                = "hub"
     image               = "slmicro61o"
-    string_registry     = true
     deploy_hub_api      = true
     skip_server_install = false
   }
@@ -16,7 +15,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac                 = "aa:b2:93:01:01:d2"
     name                = "prh1"
     image               = "slmicro61o"
-    string_registry     = true
     use_mirror          = false
     deploy_hub_api      = false
     skip_server_install = true
@@ -25,7 +23,6 @@ ENVIRONMENT_CONFIGURATION = {
     mac                 = "aa:b2:93:01:01:d3"
     name                = "prh2"
     image               = "slmicro61o"
-    string_registry     = true
     use_mirror          = false
     deploy_hub_api      = false
     skip_server_install = true
@@ -34,19 +31,16 @@ ENVIRONMENT_CONFIGURATION = {
     mac   = "aa:b2:93:01:01:d4"
     name  = "proxy"
     image = "slmicro61o"
-    string_registry = true
   }
   proxy2_containerized = {
     mac   = "aa:b2:93:01:01:d5"
     name  = "proxy2"
     image = "sles15sp7o"
-    string_registry = true
   }
   proxy3_containerized = {
     mac   = "aa:b2:93:01:01:d6"
     name  = "proxy3"
     image = "slmicro61o"
-    string_registry = true
   }
 
   # Standard Minions
