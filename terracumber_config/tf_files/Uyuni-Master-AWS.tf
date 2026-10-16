@@ -84,6 +84,11 @@ variable "AVAILABILITY_ZONE" {
   default = "eu-central-1b"
 }
 
+variable "CONTROLLER_PUBLIC_SSH_KEY_PATH" {
+  type = string
+  default = "./salt/controller/id_ed25519.pub"
+}
+
 variable "KEY_FILE" {
   type = string
   default = "/home/jenkins/.ssh/testing-suma.pem"
@@ -116,6 +121,8 @@ module "cucumber_testsuite" {
 
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
+
+  ssh_key_path = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
 
   images = ["rocky9", "opensuse160o", "tumbleweedo", "sles15sp7o", "ubuntu2404"]
 
