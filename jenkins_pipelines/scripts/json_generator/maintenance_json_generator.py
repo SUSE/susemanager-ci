@@ -4,9 +4,11 @@ from functools import cache
 import json
 import os
 import requests
+from requests.adapters import HTTPAdapter
 import logging
 import sys
 import threading
+from urllib3.util.retry import Retry
 
 from ibs_osc_client import IbsOscClient
 from repository_versions import VersionNodes, nodes_by_version
@@ -17,20 +19,52 @@ JSON_OUTPUT_FILE_NAME: str = 'custom_repositories.json'
 
 SLE16_CLIENT_TOOLS_REPO_NAME: str = 'sles16_client_tools'
 
-# Short timeouts are intentional: thousands of parallel checks are made and
-# @cache prevents retrying the same URL, so false negatives are cheap to
-# accept in exchange for overall throughput. Increase if IBS is unreachable.
-REQUEST_CONNECT_TIMEOUT: float = 1
-REQUEST_READ_TIMEOUT: float = 2
+DEFAULT_MAX_WORKERS: int = 20
 
-# Timeouts and retries of the SLFO PullRequest existence probes
+# A check that does not complete is not a missing repository, so every check is
+# retried before its result is believed. 404 is the only answer from IBS that
+# means the repository is absent.
+REQUEST_CONNECT_TIMEOUT: float = 5
+REQUEST_READ_TIMEOUT: float = 15
+# requests per check, the first one included
+REQUEST_ATTEMPTS: int = 3
+REQUEST_RETRY_STATUS_CODES: frozenset[int] = frozenset({408, 429}) | frozenset(range(500, 600))
+
+# The SLFO PullRequest existence probes answer faster, but retry the same
+# statuses the same number of times
 PROBE_CONNECT_TIMEOUT: float = 5
 PROBE_READ_TIMEOUT: float = 10
-PROBE_ATTEMPTS: int = 3
-PROBE_RETRY_STATUS_CODES: frozenset[int] = frozenset({429, 500, 502, 503, 504})
+
+def build_session() -> requests.Session:
+    retry = Retry(
+        total=REQUEST_ATTEMPTS - 1,
+        connect=REQUEST_ATTEMPTS - 1,
+        read=REQUEST_ATTEMPTS - 1,
+        backoff_factor=0.5,
+        status_forcelist=REQUEST_RETRY_STATUS_CODES,
+        allowed_methods=frozenset({"GET"}),
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session = requests.Session()
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    return session
+
+_SESSIONS = threading.local()
+
+def get_session() -> requests.Session:
+    """The calling thread's session - requests.Session is not thread-safe."""
+    session: requests.Session | None = getattr(_SESSIONS, "session", None)
+    if session is None:
+        session = build_session()
+        _SESSIONS.session = session
+    return session
 
 def setup_logging():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    # urllib3 warns once per retry, which buries the run under hundreds of lines
+    # when IBS is slow; what never completed is reported at the end instead
+    logging.getLogger("urllib3.connectionpool").setLevel(logging.ERROR)
 
 def _slfo_pr_id(value: str) -> str:
     pr_ids = [pr_id.strip() for pr_id in value.split(",") if pr_id.strip()]
@@ -122,8 +156,24 @@ def clean_mi_ids(mi_ids: list[str]) -> set[str]:
 def create_url(mi_id: str, suffix: str) -> str:
     url = f"{IBS_MAINTENANCE_URL_PREFIX}{mi_id}{suffix}"
 
-    res: requests.Response = requests.get(url, timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT))
-    return url if res.ok else ""
+    res: requests.Response = get_session().get(url, timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT))
+    if 200 <= res.status_code < 300:
+        return url
+    if res.status_code == requests.codes.not_found:
+        return ""
+    raise requests.HTTPError(f"HTTP {res.status_code}", response=res)
+
+def abort_on_unanswered_checks(unanswered: list[tuple[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
+    """An unanswered check is not an absent repository, so nothing is written."""
+    if not unanswered:
+        return
+
+    for target, error in unanswered:
+        logging.error(f"No answer for {target}: {error}")
+    raise SystemExit(
+        f"{len(unanswered)} of the repository checks never completed, so {output_file} was not written. "
+        "Re-run once IBS is reachable."
+    )
 
 def validate_and_store_results(expected_ids: set [str], custom_repositories: dict[str, dict[str, str]], output_file: str = JSON_OUTPUT_FILE_NAME):
     if not custom_repositories:
@@ -133,7 +183,10 @@ def validate_and_store_results(expected_ids: set [str], custom_repositories: dic
     # there should be no set difference if all MI IDs are in the JSON
     missing_ids: set[str] = expected_ids.difference(found_ids)
     if missing_ids:
-        logging.error(f"MI IDs #{missing_ids} do not exist in custom_repositories dictionary.")
+        logging.warning(
+            f"MI IDs {sorted(missing_ids)} have no repository in the final JSON, "
+            "perhaps they are not for the version you are running the script for."
+        )
 
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(custom_repositories, f, indent=2, sort_keys=True)
@@ -175,16 +228,23 @@ def mlm_product_version(version: str) -> str:
 @cache
 def probe_url(url: str) -> bool | None:
     """Whether an IBS path is published, None if IBS could not be reached."""
-    for attempt in range(1, PROBE_ATTEMPTS + 1):
+    for attempt in range(1, REQUEST_ATTEMPTS + 1):
         try:
             res: requests.Response = requests.get(url, timeout=(PROBE_CONNECT_TIMEOUT, PROBE_READ_TIMEOUT))
         except requests.RequestException as exc:
-            logging.warning(f"Error checking {url} (attempt {attempt} of {PROBE_ATTEMPTS}): {exc}")
+            logging.warning(f"Error checking {url} (attempt {attempt} of {REQUEST_ATTEMPTS}): {exc}")
             continue
-        # a 5xx or a 429 says nothing about the path, only a 404 does
-        if res.status_code not in PROBE_RETRY_STATUS_CODES:
-            return res.ok
-        logging.warning(f"Error checking {url} (attempt {attempt} of {PROBE_ATTEMPTS}): HTTP {res.status_code}")
+        # only a 2xx says the path is published and only a 404 says it is absent
+        if 200 <= res.status_code < 300:
+            return True
+        if res.status_code == requests.codes.not_found:
+            return False
+        # a status IBS will not answer differently on a retry is reported as
+        # unanswered straight away
+        if res.status_code not in REQUEST_RETRY_STATUS_CODES:
+            logging.warning(f"Error checking {url}: HTTP {res.status_code}")
+            return None
+        logging.warning(f"Error checking {url} (attempt {attempt} of {REQUEST_ATTEMPTS}): HTTP {res.status_code}")
 
     return None
 
@@ -342,8 +402,11 @@ def warn_on_unresolved_uyuni_tools_repos(custom_repositories: dict[str, dict[str
             if not (repo_name.endswith("_uyuni_tools") and "/ToTest/" in url):
                 continue
             # probe_url instead of url_exists, a warning must never end the run
-            if probe_url(url) is False:
+            published = probe_url(url)
+            if published is False:
                 logging.warning(f"{node}: {repo_name} does not exist on IBS: {url}")
+            elif published is None:
+                logging.warning(f"{node}: {repo_name} could not be checked on IBS: {url}")
 
 
 def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], node: str, mi_id: str, url: str):
@@ -357,7 +420,7 @@ def update_custom_repositories(custom_repositories: dict[str, dict[str, str]], n
     custom_repositories[node] = node_ids
 
 
-def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_ids: list[str] | None = None, max_workers: int = 20):
+def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_ids: list[str] | None = None, max_workers: int = DEFAULT_MAX_WORKERS):
     """
     Find valid repository URLs for given MI IDs and version.
 
@@ -390,6 +453,7 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_ids: list
     # Execute HTTP requests in parallel
     lock = threading.Lock()
     found_count = 0
+    unanswered: list[tuple[str, str]] = []
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         # Submit all tasks
@@ -409,7 +473,10 @@ def find_valid_repos(mi_ids: set[str], version: str, slfo_pull_request_ids: list
                         update_custom_repositories(custom_repositories, node, mi_id, repo_url)
                         found_count += 1
             except Exception as exc:
-                logging.warning(f"Error checking {mi_id}{repo}: {exc}")
+                with lock:
+                    unanswered.append((f"{mi_id}{repo}", str(exc)))
+
+    abort_on_unanswered_checks(unanswered)
 
     if slfo_pull_request_ids:
         if not supports_slfo_pull_request(version):
