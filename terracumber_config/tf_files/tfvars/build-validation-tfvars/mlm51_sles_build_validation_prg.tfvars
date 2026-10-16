@@ -100,19 +100,19 @@ ENVIRONMENT_CONFIGURATION = {
     name = "liberty9-minion"
   }
   rhel7_minion = {
-    mac  = "aa:b2:92:42:01:08"
+    mac  = "aa:b2:92:42:01:30"
     name = "rhel7-minion"
   }
   rhel8_minion = {
-    mac  = "aa:b2:92:42:01:09"
+    mac  = "aa:b2:92:42:01:31"
     name = "rhel8-minion"
   }
   rhel9_minion = {
-    mac  = "aa:b2:92:42:01:0a"
+    mac  = "aa:b2:92:42:01:32"
     name = "rhel9-minion"
   }
   rhel10_minion = {
-    mac  = "aa:b2:92:42:01:0b"
+    mac  = "aa:b2:92:42:01:33"
     name = "rhel10-minion"
   }
   ubuntu2204_minion = {
@@ -173,108 +173,108 @@ ENVIRONMENT_CONFIGURATION = {
 
   # SSH Minions
   sles12sp5_sshminion = {
-    mac  = "aa:b2:92:42:01:30"
+    mac  = "aa:b2:92:42:01:40"
     name = "sles12sp5-sshminion"
   }
   sles15sp4_sshminion = {
-    mac  = "aa:b2:92:42:01:32"
+    mac  = "aa:b2:92:42:01:42"
     name = "sles15sp4-sshminion"
   }
   sles15sp5_sshminion = {
-    mac  = "aa:b2:92:42:01:33"
+    mac  = "aa:b2:92:42:01:43"
     name = "sles15sp5-sshminion"
   }
   sles15sp6_sshminion = {
-    mac  = "aa:b2:92:42:01:34"
+    mac  = "aa:b2:92:42:01:44"
     name = "sles15sp6-sshminion"
   }
   sles15sp7_sshminion = {
-    mac  = "aa:b2:92:42:01:35"
+    mac  = "aa:b2:92:42:01:45"
     name = "sles15sp7-sshminion"
   }
   sles160_sshminion = {
-    mac  = "aa:b2:92:42:01:36"
+    mac  = "aa:b2:92:42:01:46"
     name = "sles160-sshminion"
   }
   centos7_sshminion = {
-    mac  = "aa:b2:92:42:01:37"
+    mac  = "aa:b2:92:42:01:47"
     name = "centos7-sshminion"
   }
   # We forgot to automate amazon 2
   rocky8_sshminion = {
-    mac  = "aa:b2:92:42:01:38"
+    mac  = "aa:b2:92:42:01:48"
     name = "rocky8-sshminion"
   }
   alma8_sshminion = {
-    mac  = "aa:b2:92:42:01:39"
+    mac  = "aa:b2:92:42:01:49"
     name = "alma8-sshminion"
   }
   rocky9_sshminion = {
-    mac  = "aa:b2:92:42:01:41"
+    mac  = "aa:b2:92:42:01:51"
     name = "rocky9-sshminion"
   }
   rocky10_sshminion = {
-    mac  = "aa:b2:92:42:01:3e"
+    mac  = "aa:b2:92:42:01:4e"
     name = "rocky10-sshminion"
   }
   alma9_sshminion = {
-    mac  = "aa:b2:92:42:01:42"
+    mac  = "aa:b2:92:42:01:52"
     name = "alma9-sshminion"
   }
   alma10_sshminion = {
-    mac  = "aa:b2:92:42:01:3a"
+    mac  = "aa:b2:92:42:01:4a"
     name = "alma10-sshminion"
   }
   oracle9_sshminion = {
-    mac  = "aa:b2:92:42:01:43"
+    mac  = "aa:b2:92:42:01:53"
     name = "oracle9-sshminion"
   }
   oracle10_sshminion = {
-    mac  = "aa:b2:92:42:01:3f"
+    mac  = "aa:b2:92:42:01:4f"
     name = "oracle10-sshminion"
   }
   amazon2023_sshminion = {
-    mac  = "aa:b2:92:42:01:44"
+    mac  = "aa:b2:92:42:01:54"
     name = "amazon2023-sshminion"
   }
   liberty9_sshminion = {
-    mac  = "aa:b2:92:42:01:45"
+    mac  = "aa:b2:92:42:01:55"
     name = "liberty9-sshminion"
   }
   rhel7_sshminion = {
-    mac  = "aa:b2:92:42:01:0c"
+    mac  = "aa:b2:92:42:01:60"
     name = "rhel7-sshminion"
   }
   rhel8_sshminion = {
-    mac  = "aa:b2:92:42:01:0d"
+    mac  = "aa:b2:92:42:01:61"
     name = "rhel8-sshminion"
   }
   rhel9_sshminion = {
-    mac  = "aa:b2:92:42:01:0e"
+    mac  = "aa:b2:92:42:01:62"
     name = "rhel9-sshminion"
   }
   rhel10_sshminion = {
-    mac  = "aa:b2:92:42:01:0f"
+    mac  = "aa:b2:92:42:01:63"
     name = "rhel10-sshminion"
   }
   ubuntu2204_sshminion = {
-    mac  = "aa:b2:92:42:01:3b"
+    mac  = "aa:b2:92:42:01:4b"
     name = "ubuntu2204-sshminion"
   }
   debian13_sshminion = {
-    mac  = "aa:b2:92:42:01:31"
+    mac  = "aa:b2:92:42:01:41"
     name = "debian13-sshminion"
   }
   ubuntu2404_sshminion = {
-    mac  = "aa:b2:92:42:01:3d"
+    mac  = "aa:b2:92:42:01:4d"
     name = "ubuntu2404-sshminion"
   }
   ubuntu2604_sshminion = {
-    mac  = "aa:b2:92:42:01:3c"
+    mac  = "aa:b2:92:42:01:4c"
     name = "ubuntu2604-sshminion"
   }
   opensuse161arm_sshminion = {
-    mac  = "aa:b2:92:42:01:4e"
+    mac  = "aa:b2:92:42:01:5e"
     name = "opensuse161arm-sshminion"
   }
   sles15sp5s390_sshminion = {
