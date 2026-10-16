@@ -16,7 +16,7 @@ def run(params) {
             // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
             // Measured on full runs, the worst legitimate silence outside the product sync stays
             // under 5 minutes, while the sync itself went silent for 62 minutes in
-            // manager-4.3-qe-build-validation #43, so it gets a timeout of its own.
+            // one run, so it gets a timeout of its own.
             // Anything that is not a positive number of minutes falls back to the default.
             // No 'def': both values are read from clientTestingStages() and clientMigrationStages().
             def idleTimeoutMinutesOr = { value, int fallback ->
