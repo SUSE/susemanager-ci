@@ -1,155 +1,155 @@
 ENVIRONMENT_CONFIGURATION = {
   # Core Infrastructure
   controller = {
-    mac    = "aa:b2:93:02:01:a0"
+    mac    = "aa:b2:93:02:01:90"
     name   = "controller"
     memory = 24576
   }
   server_containerized = {
-    mac             = "aa:b2:93:02:01:a1"
+    mac             = "aa:b2:93:02:01:91"
     name            = "server"
     image           = "sles15sp7o"
     string_registry = true
   }
   proxy_containerized = {
-    mac             = "aa:b2:93:02:01:a2"
+    mac             = "aa:b2:93:02:01:92"
     name            = "proxy"
     image           = "sles15sp7o"
     string_registry = true
   }
   monitoring_server = {
-    mac   = "aa:b2:93:02:01:a3"
+    mac   = "aa:b2:93:02:01:93"
     name  = "monitoring"
     image = "sles15sp7o"
   }
   sles15sp6_buildhost = {
-    mac  = "aa:b2:93:02:01:a6"
+    mac  = "aa:b2:93:02:01:96"
     name = "sles15sp6-build"
   }
   sles15sp7_buildhost = {
-    mac  = "aa:b2:93:02:01:a7"
+    mac  = "aa:b2:93:02:01:97"
     name = "sles15sp7-build"
   }
 
   # Standard Minions
   sles12sp5_minion = {
-    mac  = "aa:b2:93:02:01:b0"
+    mac  = "aa:b2:93:02:01:a0"
     name = "sles12sp5-minion"
   }
   sles15sp4_minion = {
-    mac  = "aa:b2:93:02:01:b2"
+    mac  = "aa:b2:93:02:01:a2"
     name = "sles15sp4-minion"
   }
   sles15sp5_minion = {
-    mac  = "aa:b2:93:02:01:b3"
+    mac  = "aa:b2:93:02:01:a3"
     name = "sles15sp5-minion"
   }
   sles15sp6_minion = {
-    mac  = "aa:b2:93:02:01:b4"
+    mac  = "aa:b2:93:02:01:a4"
     name = "sles15sp6-minion"
   }
   sles15sp7_minion = {
-    mac  = "aa:b2:93:02:01:b5"
+    mac  = "aa:b2:93:02:01:a5"
     name = "sles15sp7-minion"
   }
   sles160_minion = {
-    mac  = "aa:b2:93:02:01:b6"
+    mac  = "aa:b2:93:02:01:a6"
     name = "sles160-minion"
   }
   centos7_minion = {
-    mac  = "aa:b2:93:02:01:b7"
+    mac  = "aa:b2:93:02:01:a7"
     name = "centos7-minion"
   }
   rocky8_minion = {
-    mac  = "aa:b2:93:02:01:b8"
+    mac  = "aa:b2:93:02:01:a8"
     name = "rocky8-minion"
   }
   alma8_minion = {
-    mac  = "aa:b2:93:02:01:b9"
+    mac  = "aa:b2:93:02:01:a9"
     name = "alma8-minion"
   }
   rocky9_minion = {
-    mac  = "aa:b2:93:02:01:c1"
+    mac  = "aa:b2:93:02:01:b1"
     name = "rocky9-minion"
   }
   rocky10_minion = {
-    mac  = "aa:b2:93:02:01:be"
+    mac  = "aa:b2:93:02:01:ae"
     name = "rocky10-minion"
   }
   alma9_minion = {
-    mac  = "aa:b2:93:02:01:c2"
+    mac  = "aa:b2:93:02:01:b2"
     name = "alma9-minion"
   }
   alma10_minion = {
-    mac  = "aa:b2:93:02:01:ba"
+    mac  = "aa:b2:93:02:01:aa"
     name = "alma10-minion"
   }
   oracle9_minion = {
-    mac  = "aa:b2:93:02:01:c3"
+    mac  = "aa:b2:93:02:01:b3"
     name = "oracle9-minion"
   }
   oracle10_minion = {
-    mac  = "aa:b2:93:02:01:bf"
+    mac  = "aa:b2:93:02:01:af"
     name = "oracle10-minion"
   }
   amazon2023_minion = {
-    mac  = "aa:b2:93:02:01:c4"
+    mac  = "aa:b2:93:02:01:b4"
     name = "amazon2023-minion"
   }
   liberty9_minion = {
-    mac  = "aa:b2:93:02:01:c5"
+    mac  = "aa:b2:93:02:01:b5"
     name = "liberty9-minion"
   }
   liberty10_minion = {
-    mac  = "aa:b2:93:02:01:c6"
+    mac  = "aa:b2:93:02:01:b6"
     name = "liberty10-minion"
   }
   openeuler2403_minion = {
-    mac  = "aa:b2:93:02:01:c0"
+    mac  = "aa:b2:93:02:01:b0"
     name = "openeuler2403-minion"
   }
   rhel7_minion = {
-    mac  = "aa:b2:93:02:01:a8"
+    mac  = "aa:b2:93:02:01:c0"
     name = "rhel7-minion"
   }
   rhel8_minion = {
-    mac  = "aa:b2:93:02:01:a9"
+    mac  = "aa:b2:93:02:01:c1"
     name = "rhel8-minion"
   }
   rhel9_minion = {
-    mac  = "aa:b2:93:02:01:aa"
+    mac  = "aa:b2:93:02:01:c2"
     name = "rhel9-minion"
   }
   rhel10_minion = {
-    mac  = "aa:b2:93:02:01:ab"
+    mac  = "aa:b2:93:02:01:c3"
     name = "rhel10-minion"
   }
   ubuntu2204_minion = {
-    mac  = "aa:b2:93:02:01:bb"
+    mac  = "aa:b2:93:02:01:ab"
     name = "ubuntu2204-minion"
   }
   debian13_minion = {
-    mac  = "aa:b2:93:02:01:b1"
+    mac  = "aa:b2:93:02:01:a1"
     name = "debian13-minion"
   }
   raspios13_minion = {
-    mac  = "aa:b2:93:02:01:c7"
+    mac  = "aa:b2:93:02:01:b7"
     name = "raspios13-minion"
   }
   ubuntu2404_minion = {
-    mac  = "aa:b2:93:02:01:bd"
+    mac  = "aa:b2:93:02:01:ad"
     name = "ubuntu2404-minion"
   }
   ubuntu2604_minion = {
-    mac  = "aa:b2:93:02:01:bc"
+    mac  = "aa:b2:93:02:01:ac"
     name = "ubuntu2604-minion"
   }
   opensuse161arm_minion = {
-    mac  = "aa:b2:93:02:01:ce"
+    mac  = "aa:b2:93:02:01:be"
     name = "opensuse161arm-minion"
   }
   salt_migration_minion = {
-    mac  = "aa:b2:93:02:01:cf"
+    mac  = "aa:b2:93:02:01:bf"
     name = "salt-migration-minion"
   }
   sles15sp5s390_minion = {
@@ -160,27 +160,27 @@ ENVIRONMENT_CONFIGURATION = {
 
   # Micro Minions
   slemicro53_minion = {
-    mac  = "aa:b2:93:02:01:c8"
+    mac  = "aa:b2:93:02:01:b8"
     name = "slemicro53-minion"
   }
   slemicro54_minion = {
-    mac  = "aa:b2:93:02:01:c9"
+    mac  = "aa:b2:93:02:01:b9"
     name = "slemicro54-minion"
   }
   slemicro55_minion = {
-    mac  = "aa:b2:93:02:01:ca"
+    mac  = "aa:b2:93:02:01:ba"
     name = "slemicro55-minion"
   }
   slmicro60_minion = {
-    mac  = "aa:b2:93:02:01:cb"
+    mac  = "aa:b2:93:02:01:bb"
     name = "slmicro60-minion"
   }
   slmicro61_minion = {
-    mac  = "aa:b2:93:02:01:cc"
+    mac  = "aa:b2:93:02:01:bc"
     name = "slmicro61-minion"
   }
   slmicro62_minion = {
-    mac  = "aa:b2:93:02:01:cd"
+    mac  = "aa:b2:93:02:01:bd"
     name = "slmicro62-minion"
   }
 
@@ -262,19 +262,19 @@ ENVIRONMENT_CONFIGURATION = {
     name = "openeuler2403-sshminion"
   }
   rhel7_sshminion = {
-    mac  = "aa:b2:93:02:01:ac"
+    mac  = "aa:b2:93:02:01:f0"
     name = "rhel7-sshminion"
   }
   rhel8_sshminion = {
-    mac  = "aa:b2:93:02:01:ad"
+    mac  = "aa:b2:93:02:01:f1"
     name = "rhel8-sshminion"
   }
   rhel9_sshminion = {
-    mac  = "aa:b2:93:02:01:ae"
+    mac  = "aa:b2:93:02:01:f2"
     name = "rhel9-sshminion"
   }
   rhel10_sshminion = {
-    mac  = "aa:b2:93:02:01:af"
+    mac  = "aa:b2:93:02:01:f3"
     name = "rhel10-sshminion"
   }
   ubuntu2204_sshminion = {
