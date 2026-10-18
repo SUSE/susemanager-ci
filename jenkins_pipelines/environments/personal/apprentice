@@ -10,6 +10,7 @@ node('sumaform-cucumber') {
             string(name: 'tf_file', defaultValue: 'susemanager-ci/terracumber_config/tf_files/personal/main_51.tf', description: 'Path to the tf file to be used'),
             string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
             string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            choice(name: 'pipeline_type', choices: ['podman', 'rke2'], description: 'RKE2 or podman pipeline'),
             choice(name: 'sumaform_backend', choices: ['libvirt'], description: 'Sumaform backend to be used (see https://github.com/uyuni-project/sumaform#backend-choice)'),
             choice(name: 'bin_path', choices: ['/usr/bin/tofu', '/usr/bin/terraform'], description: 'Binary path'),
             choice(name: 'bin_plugins_path', choices: ['/usr/bin'], description: 'Plugins path'),
@@ -54,7 +55,15 @@ node('sumaform-cucumber') {
         newParams.capybara_timeout = 10
         newParams.default_timeout = 250
         newParams.environment = 'apprentice'
-        def pipeline = load "jenkins_pipelines/environments/common/pipeline-personal.groovy"
+        def pipelineFile
+        if (params.pipeline_type == 'rke2') {
+            pipelineFile = 'pipeline-personal-rke2.groovy'
+        } else if (params.pipeline_type == 'podman') {
+            pipelineFile = 'pipeline-personal.groovy'
+        } else {
+            error "Unsupported pipeline_type: ${params.pipeline_type}"
+        }
+        def pipeline = load "jenkins_pipelines/environments/common/${pipelineFile}"
         pipeline.run(newParams)
     }
 }
