@@ -1,0 +1,178 @@
+variable "CONTAINER_REGISTRY" {
+  type = string
+  description = "Container repository for server and proxy"
+  default = "registry.suse.de"
+}
+
+terraform {
+  required_version = ">= 1.6.0"
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.8.3"
+    }
+  }
+}
+
+provider "libvirt" {
+  uri = "qemu+tcp://${var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor}/system"
+}
+
+module "cucumber_testsuite" {
+  source = "./modules/cucumber_testsuite"
+
+  product_version = "5.2-nightly"
+
+  // Cucumber repository configuration for the controller
+  git_username  = var.GIT_USER
+  git_password  = var.GIT_PASSWORD
+  git_repo      = var.CUCUMBER_GITREPO
+  branch        = var.CUCUMBER_BRANCH
+  cc_ptf_username = var.SCC_PTF_USER
+  cc_ptf_password = var.SCC_PTF_PASSWORD
+
+  cc_username   = var.SCC_USER
+  cc_password   = var.SCC_PASSWORD
+
+  images        = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "tumbleweedo", "slmicro62o"]
+
+  ssh_key_path  = var.CONTROLLER_PUBLIC_SSH_KEY_PATH
+  use_avahi     = false
+  name_prefix   = "${var.ENVIRONMENT}-"
+  domain        = "mgr.suse.de"
+  from_email    = "root@suse.de"
+
+  no_auth_registry          = "registry.mgr.suse.de"
+  auth_registry             = "registry.mgr.suse.de:5000/cucutest"
+  auth_registry_username    = "cucutest"
+  auth_registry_password    = "cucusecret"
+  git_profiles_repo         = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
+
+  container_server          = true
+  container_proxy           = true
+
+  mirror                    = "minima-mirror-ci-bv.mgr.suse.de"
+  use_mirror_images         = true
+  server_http_proxy         = "http-proxy.mgr.suse.de:3128"
+  custom_download_endpoint  = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
+
+  // Kubernetes variables
+  kubernetes                                = true
+  use_devel_oci                             = true
+  deploy_coco_attestation                   = true
+  deploy_saline                             = true
+  deploy_tftp                               = true
+  deploy_hub_api                            = true
+  install_kubectl_helm                      = false
+  kubeconfig_path                           = null
+  install_uyuni_via_testsuite               = true
+  kubernetes_create_static_var_spacewalk_pv = true
+  kubernetes_create_static_var_pgsql_pv     = true
+  local_path_provisioner_default_class      = true
+  rke2_version                              = "v1.35.4+rke2r1"
+  cert_manager_namespace                    = "cert-manager"
+  cert_manager_version                      = "v1.19.2"
+
+  # when changing images, please also keep in mind to adjust the image matrix in the "Used image versions" section of the README.
+  host_settings = {
+    controller = {
+      provider_settings = {
+        mac       = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["controller"]
+        memory    = 4096
+        vcpu      = 4
+        cpu_model = "host-passthrough"
+      }
+    }
+    server_kubernetes = {
+      provider_settings = {
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["server"]
+        vcpu = 8
+        memory = 32768
+      }
+      main_disk_size                 = 500
+      login_timeout                  = 28800
+      large_deployment               = true
+      runtime                        = "rke2"
+      container_tag                  = "latest"
+      container_registry             = "registry.suse.de/devel/galaxy/manager/5.2/mlm-products-sle15/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      helm_chart_name                = "server-helm"
+      helm_chart_url                 = "oci://registry.suse.de/devel/galaxy/manager/5.2/mlm-products-sle15/charts/suse/multi-linux-manager/5.2"
+      server_name                    = "uyuni-server"
+      server_namespace               = "uyuni"
+    }
+    proxy_kubernetes = {
+      provider_settings = {
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["proxy"]
+        vcpu = 2
+        memory = 16384
+      }
+      main_disk_size              = 200
+      runtime                     = "rke2"
+      container_tag               = "latest"
+      container_registry          = "registry.suse.de/devel/galaxy/manager/5.2/mlm-products-sle15/containerfile/suse/multi-linux-manager/5.2/x86_64"
+      helm_chart_name             = "proxy-helm"
+      helm_chart_url              = "oci://registry.suse.de/devel/galaxy/manager/5.2/mlm-products-sle15/charts/suse/multi-linux-manager/5.2"
+      proxy_name                  = "uyuni-proxy"
+      proxy_namespace             = "uyuni"
+    }
+    suse_minion = {
+      image             = "tumbleweedo"
+      provider_settings = {
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
+      }
+    }
+    suse_sshminion = {
+      image             = "tumbleweedo"
+      provider_settings = {
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
+      }
+    }
+    rhlike_minion = {
+      image             = "rocky8o"
+      provider_settings = {
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["rhlike-minion"]
+        // Since start of May we have problems with the instance not booting after a restart if there is only a CPU and only 1024Mb for RAM
+        // Also, openscap cannot run with less than 1.25 GB of RAM
+        vcpu   = 2
+        memory = 2048
+      }
+    }
+    deblike_minion = {
+      image             = "ubuntu2404o"
+      provider_settings = {
+        mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["deblike-minion"]
+      }
+    }
+    build_host = {
+      image             = "sles15sp7o"
+      provider_settings = {
+        mac    = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["build-host"]
+        memory = 2048
+      }
+    }
+    pxeboot_minion = {
+      image = "sles15sp7o"
+    }
+    dhcp_dns = {
+      name       = "dhcp-dns"
+      image      = "opensuse160o"
+      hypervisor = {
+        host        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].hypervisor
+        user        = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].dhcp_user
+        private_key = file(pathexpand(var.HYPERVISOR_PRIVATE_SSH_KEY_PATH))
+      }
+    }
+  }
+  provider_settings = {
+    pool               = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].pool
+    network_name       = null
+    bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
+    additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
+  }
+}
+
+
+output "configuration" {
+  sensitive = true
+  value     = module.cucumber_testsuite.configuration
+}
