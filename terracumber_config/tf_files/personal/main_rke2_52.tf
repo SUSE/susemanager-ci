@@ -4,6 +4,10 @@ variable "CONTAINER_REGISTRY" {
   default = "registry.suse.de"
 }
 
+variable "SCC_MICRO_CREDENTIALS" {
+  type = string
+}
+
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
