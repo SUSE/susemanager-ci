@@ -288,7 +288,7 @@ BASE_CONFIGURATIONS = {
   base_core = {
     pool               = "ssd"
     bridge             = "br1"
-    hypervisor         = "suma-11.mgr.suse.de"
+    hypervisor         = "suma-06.mgr.suse.de"
     additional_network = "192.168.100.0/24"
   }
   base_arm = {
