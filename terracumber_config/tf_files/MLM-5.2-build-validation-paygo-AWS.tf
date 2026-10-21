@@ -2,7 +2,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-qe-build-validation-paygo-aws/"
+  default = "https://jenkins.mgr.suse.de/view/Manager/view/Manager-5.2/job/manager-5.2-qe-build-validation-paygo-aws/"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
@@ -18,7 +18,7 @@ variable "CUCUMBER_GITREPO" {
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "Manager-5.1"
+  default = "Manager-5.2"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -28,7 +28,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Manager5.1-AWS-BV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Manager5.2-AWS-BV $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -38,7 +38,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Manager5.1-AWS-BV: Environment setup failed"
+  default = "Results Manager5.2-AWS-BV: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -118,18 +118,19 @@ variable "SLES_REGISTRATION_CODE" {
   default = null
 }
 
-variable "ALLOWED_IPS" {
-  type = list(string)
-  default = []
-}
-
 variable "NAME_PREFIX" {
   type = string
   default = null
 }
 
+// Prefix of the shared infrastructure deployed by aws_mirror.tf (manager-5.2-qe-build-validation-AWS-mirror)
+variable "INFRA_NAME_PREFIX" {
+  type = string
+  default = "mlm-bv-aws-"
+}
+
 variable "SERVER_AMI" {
-  description = "Custom AMI ID to use for server. Leave empty to use the default Multi-Linux Manager image."
+  description = "Custom AMI ID to use for server. Leave empty to use the default SUSE Manager image."
   type = string
   default     = ""
 }
@@ -141,7 +142,7 @@ variable "SERVER_ADDITIONAL_REPOS" {
 }
 
 variable "PROXY_AMI" {
-  description = "Custom AMI ID to use for proxy. Leave empty to use the default Multi-Linux Manager image."
+  description = "Custom AMI ID to use for proxy. Leave empty to use the default SUSE Manager image."
   type        = string
   default     = ""
 }
@@ -171,34 +172,62 @@ provider "aws" {
   region     = var.REGION
 }
 
+// Look up the VPC, subnets, security groups and bastion created by aws_mirror.tf
+data "aws_vpc" "infra" {
+  tags = { Name = "${var.INFRA_NAME_PREFIX}vpc" }
+}
+
+data "aws_subnet" "infra" {
+  for_each = toset(["public", "private", "private-additional"])
+  vpc_id   = data.aws_vpc.infra.id
+  tags     = { Name = "${var.INFRA_NAME_PREFIX}${each.key}-subnet" }
+}
+
+data "aws_security_group" "infra" {
+  for_each = toset(["public", "private", "private-additional"])
+  vpc_id   = data.aws_vpc.infra.id
+  tags     = { Name = "${var.INFRA_NAME_PREFIX}${each.key}-security-group" }
+}
+
+data "aws_instance" "bastion" {
+  instance_tags = { Name = "${var.INFRA_NAME_PREFIX}bastion" }
+  filter {
+    name   = "instance-state-name"
+    values = ["running"]
+  }
+}
+
 module "base" {
   source                   = "./modules/base"
-  product_version          = "5.1-released"
+  product_version          = "5.2-released"
   cc_username              = var.SCC_USER
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
-  mirror                   = var.MIRROR
+  mirror                   = var.MIRROR != "" ? var.MIRROR : null
   testsuite                = true
   use_avahi                = false
   use_eip_bastion          = false
   is_server_paygo_instance = true
+  // The sumaform default ~/.ssh/id_ed25519.pub does not exist on Jenkins agents: hosts get the controller key per module
+  ssh_key_path             = null
   provider_settings        = {
     availability_zone = var.AVAILABILITY_ZONE
     region            = var.REGION
-    ssh_allowed_ips   = var.ALLOWED_IPS
     key_name          = var.KEY_NAME
     key_file          = var.KEY_FILE
-  }
-}
 
-module "mirror" {
-  source = "./modules/mirror"
-  base_configuration = module.base.configuration
-  disable_cron = true
-  provider_settings = {
-    public_instance = true
+    create_network                       = false
+    create_private_network               = false
+    create_additional_network            = false
+    vpc_id                               = data.aws_vpc.infra.id
+    public_subnet_id                     = data.aws_subnet.infra["public"].id
+    private_subnet_id                    = data.aws_subnet.infra["private"].id
+    private_additional_subnet_id         = data.aws_subnet.infra["private-additional"].id
+    public_security_group_id             = data.aws_security_group.infra["public"].id
+    private_security_group_id            = data.aws_security_group.infra["private"].id
+    private_additional_security_group_id = data.aws_security_group.infra["private-additional"].id
+    bastion_host                         = data.aws_instance.bastion.public_dns
   }
-  image = "opensuse160o"
 }
 
 module "server" {
@@ -208,7 +237,7 @@ module "server" {
       mirror = null
     })
   name                       = var.ENVIRONMENT_CONFIGURATION.server_containerized.name
-  image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "smlm-server-51-${var.ARCHITECTURE}-ltd-paygo"
+  image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "smlm-server-52-${var.ARCHITECTURE}-ltd-paygo"
   main_disk_size             = 200
   repository_disk_size       = 1500
   database_disk_size         = 0
@@ -244,7 +273,7 @@ module "proxy_containerized" {
   server_configuration      = module.server.configuration
   name                      = var.ENVIRONMENT_CONFIGURATION.proxy_containerized.name
   proxy_registration_code   = var.PROXY_REGISTRATION_CODE
-  image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "smlm-proxy-51-${var.ARCHITECTURE}-byos"
+  image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "smlm-proxy-52-${var.ARCHITECTURE}-byos"
   provision                 = false
 
 
@@ -606,14 +635,6 @@ module "controller" {
 
 output "bastion_public_name" {
   value = lookup(module.base.configuration, "bastion_host", null)
-}
-
-output "aws_mirrors_private_name" {
-  value = module.mirror.configuration.hostnames
-}
-
-output "aws_mirrors_public_name" {
-  value = module.mirror.configuration.public_names
 }
 
 output "configuration" {
