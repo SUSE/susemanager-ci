@@ -146,6 +146,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:be"
     name = "opensuse161arm-minion"
   }
+  opensuse161ppc_minion = {
+    mac  = "aa:b2:93:02:01:c4"
+    name = "opensuse161ppc-minion"
+  }
   salt_migration_minion = {
     mac  = "aa:b2:93:02:01:bf"
     name = "salt-migration-minion"
@@ -299,6 +303,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:02:01:ee"
     name = "opensuse161arm-sshminion"
   }
+  opensuse161ppc_sshminion = {
+    mac  = "aa:b2:93:02:01:f4"
+    name = "opensuse161ppc-sshminion"
+  }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:42:00:2d"
     name   = "sles15sp5s390-sshminion"
@@ -321,6 +329,13 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     additional_network = null
     hypervisor         = "suma-arm.mgr.suse.de"
+  }
+  base_ppc = {
+    images             = [ "opensuse161ppco" ]
+    pool               = "ssd"
+    bridge             = "br0"
+    additional_network = null
+    hypervisor         = "suma-ppc.mgr.suse.de"
   }
 }
 MAIL_SUBJECT          = "Results Uyuni Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
