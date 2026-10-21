@@ -131,6 +131,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:10"
     name = "opensuse161arm-minion"
   }
+  opensuse161ppc_minion = {
+    mac  = "aa:b2:92:42:00:14"
+    name = "opensuse161ppc-minion"
+  }
   sles15sp5s390_minion = {
     mac    = "02:00:00:02:01:34"
     name   = "sles15sp5s390-minion"
@@ -269,6 +273,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:11"
     name = "opensuse161arm-sshminion"
   }
+  opensuse161ppc_sshminion = {
+    mac  = "aa:b2:92:42:00:15"
+    name = "opensuse161ppc-sshminion"
+  }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:02:01:35"
     name   = "sles15sp5s390-sshminion"
@@ -330,6 +338,13 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     additional_network = null
     hypervisor         = "suma-arm.mgr.suse.de"
+  }
+  base_ppc = {
+    images             = [ "opensuse161ppco" ]
+    pool               = "ssd"
+    bridge             = "br0"
+    additional_network = null
+    hypervisor         = "suma-ppc.mgr.suse.de"
   }
 }
 

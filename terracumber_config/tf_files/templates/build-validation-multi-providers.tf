@@ -47,6 +47,11 @@ provider "libvirt" {
   uri   = "qemu+tcp://suma-arm.mgr.suse.de/system"
 }
 
+provider "libvirt" {
+  alias = "host_ppc"
+  uri   = "qemu+tcp://suma-ppc.mgr.suse.de/system"
+}
+
 provider "feilong" {
   connector   = "https://feilong.mgr.suse.de"
   admin_token = var.ZVM_ADMIN_TOKEN
@@ -214,6 +219,7 @@ module "build_validation_module" {
     libvirt.host_deblike = libvirt.host_deblike
     libvirt.host_retail  = libvirt.host_retail
     libvirt.host_arm     = libvirt.host_arm
+    libvirt.host_ppc     = libvirt.host_ppc
     feilong              = feilong
   }
 
