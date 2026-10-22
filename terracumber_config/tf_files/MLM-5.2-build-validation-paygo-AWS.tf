@@ -199,7 +199,7 @@ data "aws_instance" "bastion" {
 
 module "base" {
   source                   = "./modules/base"
-  product_version          = "5.2-released"
+  product_version          = "5.2-paygo"
   cc_username              = var.SCC_USER
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX

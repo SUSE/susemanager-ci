@@ -135,7 +135,6 @@ module "base" {
     ssh_allowed_ips   = var.ALLOWED_IPS
     key_name          = var.KEY_NAME
     key_file          = var.KEY_FILE
-    // sumaform defaults to opensuse156o, which is no longer in the AWS images list
     bastion_image     = "opensuse160o"
   }
 }
@@ -146,7 +145,6 @@ module "mirror" {
   source = "./modules/mirror"
   base_configuration = module.base.configuration
   disable_cron = true
-  // Content is served over HTTP only: no host mounts the mirror via NFS
   nfs_server = false
   // Any key will do: without one, the default state has no own state and the mirror "require: sls: default" fail
   ssh_key_path = "./salt/controller/id_ed25519.pub"
