@@ -79,7 +79,7 @@ are numbered independently, so the layout on IBS is the only reliable way to tel
 
 | Project | Applied to | Inner key |
 | --- | --- | --- |
-| `SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/<id>:/SLES` | `sles160_minion`, `slmicro62_minion` (x86_64), `opensuse161arm_minion` (aarch64) | `slfo_pr_{id}_{minion}_{arch}` |
+| `SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/<id>:/SLES` | `sles160_minion`, `slmicro62_minion` (x86_64), `opensuse161arm_minion` (aarch64), `opensuse161ppc_minion` (ppc64le) | `slfo_pr_{id}_{minion}_{arch}` |
 | `SLFO:/Products:/Multi-Linux-Manager:/<5.x>:/Packages:/PullRequest:/<id>:/SL-Micro` | `server`, `proxy` of the `-micro` variant | `slfo_pr_{id}_{server,proxy,retail}_uyuni_tools` |
 
 A PullRequest repo **supersedes** the `:ToTest` repo it corresponds to rather than being
@@ -114,7 +114,8 @@ repository data for the provided MI IDs.
 Static Salt image repository URLs for **`slmicro60_minion`** and **`slmicro61_minion`** (`slmicro60_salt`, `slmicro61_salt`) are still included for versions that define them, in addition to MI-based maintenance URLs.
 
 On the stable **`51-*`** and **`52-*`** flows, **`sles160_minion`**, **`slmicro62_minion`**
-(x86_64) and **`opensuse161arm_minion`** (aarch64) receive the SLES-16
+(x86_64), **`opensuse161arm_minion`** (aarch64) and **`opensuse161ppc_minion`**
+(ppc64le) receive the SLES-16
 MultiLinuxManagerTools **`:ToTest`** client tools under the inner key
 **`sles16_client_tools`**. SLE 16 has no maintenance project, so those minions get no
 MI-based URLs; a client-tools `--slfo-pull-request` id replaces that `:ToTest` entry.
@@ -129,8 +130,8 @@ Packages `--slfo-pull-request` id replaces those three with the
 For **`53-sles-beta`** and **`53-micro-beta`**, the output always includes fixed `:ToTest`
 client-tools URLs independently of MI IDs. **`slmicro62_minion`** and **`sles160_minion`**
 share the same **SLES-16** MultiLinuxManagerTools-Beta **`:ToTest`** path under the inner key
-**`sles16_client_tools`**, and **`opensuse161arm_minion`** gets the aarch64 repo of the same
-path under that key. Other client minions receive MI-based maintenance URLs from the
+**`sles16_client_tools`**, and **`opensuse161arm_minion`** / **`opensuse161ppc_minion`** get
+the aarch64 and ppc64le repos of the same path under that key. Other client minions receive MI-based maintenance URLs from the
 dynamic map. In addition, **`53-sles-beta`** always includes fixed `http://` ToTest
 image repos for **`server`** and **`proxy`**; path fragments live in
 **`v53_uyuni_tools_sles_static_repos_beta`** and are prefixed with **`IBS_URL_PREFIX`** in
@@ -158,6 +159,9 @@ gone because the PullRequest repo replaced it:
   },
   "opensuse161arm_minion": {
     "slfo_pr_362_opensuse161arm_aarch64": "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/362:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/"
+  },
+  "opensuse161ppc_minion": {
+    "slfo_pr_362_opensuse161ppc_ppc64le": "http://download.suse.de/ibs/SUSE:/SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/362:/SLES/product/repo/Multi-Linux-ManagerTools-SLE-16-ppc64le/"
   }
 }
 ```
@@ -219,8 +223,8 @@ Repository definitions live under
   image URLs are defined in `v53_uyuni_tools_sles_static_repos_beta`. For
   **`53-micro-beta`** / **`53-sles-beta`**, dynamic client minions include
   **`raspios13_minion`** (`MultiLinuxManagerTools-Beta_Debian-13_aarch64`) in
-  `v53_nodes_dynamic_client_tools_repos_beta`. **`opensuse161arm_minion`** stays
-  static-only (see above), it does not get a dynamic entry.
+  `v53_nodes_dynamic_client_tools_repos_beta`. **`opensuse161arm_minion`** and
+  **`opensuse161ppc_minion`** stay static-only (see above), they do not get a dynamic entry.
 
 `repository_versions/__init__.py` aggregates everything into the
 `nodes_by_version` mapping, whose keys are exactly the strings accepted by
