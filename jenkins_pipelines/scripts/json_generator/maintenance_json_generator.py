@@ -259,7 +259,8 @@ def url_exists(url: str) -> bool:
 def slfo_pullrequest_client_tool_url(pr_id: str, arch: str = "x86_64") -> str:
     """Return the stable SLE-16 MultiLinuxManagerTools URL for the given PullRequest id and architecture.
 
-    This URL is used for sles160_minion, slmicro62_minion (x86_64), and opensuse161arm_minion (aarch64).
+    This URL is used for sles160_minion, slmicro62_minion (x86_64), opensuse161arm_minion (aarch64)
+    and opensuse161ppc_minion (ppc64le).
     SL Micro 6.2 consumes the same SLE-16 client-tools repo on the stable PullRequest path.
     Beta client tools do not use PullRequest URLs - they are served from static
     :ToTest definitions in repository_versions/*_nodes.py.
@@ -275,7 +276,7 @@ def slfo_pullrequest_repo_key(pr_id: str, minion: str, arch: str) -> str:
     Args:
         pr_id: SLFO PullRequest id
         minion: Minion shortname (e.g. 'sles160', not 'sles160_minion')
-        arch: Architecture (e.g. 'x86_64' or 'aarch64')
+        arch: Architecture (e.g. 'x86_64', 'aarch64' or 'ppc64le')
 
     Returns:
         Repository key in format: slfo_pr_{id}_{minion}_{arch}
@@ -290,6 +291,7 @@ def apply_slfo_pullrequest_client_tools(
         ("sles160_minion", "x86_64"),
         ("slmicro62_minion", "x86_64"),
         ("opensuse161arm_minion", "aarch64"),
+        ("opensuse161ppc_minion", "ppc64le"),
     ]:
         url = slfo_pullrequest_client_tool_url(pr_id, arch=arch)
         minion_shortname = node.removesuffix("_minion")
