@@ -140,6 +140,7 @@ module "cucumber_testsuite" {
     network_name       = null
     bridge             = "br1"
     additional_network = "192.168.101.0/24"
+    autostart          = true
   }
 }
 

@@ -77,6 +77,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "suma-07.mgr.suse.de"
     additional_network = null
     images             = ["sles15sp7o", "opensuse160o", "ubuntu2404o", "rocky10o", "slmicro61o"]
+    autostart          = true
   }
 }
 MAIL_SUBJECT          = "Results 5.1 Hub Testing $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

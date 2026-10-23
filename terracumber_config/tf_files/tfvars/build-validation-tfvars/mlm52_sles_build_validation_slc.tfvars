@@ -295,6 +295,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = null
     hypervisor         = "caladan.mgr.slc1.suse.org"
+    autostart          = true
   }
   base_old_sle = {
     images             = [ "sles12sp5o" ]
@@ -302,6 +303,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = null
     hypervisor         = "tatooine.mgr.slc1.suse.org"
+    autostart          = true
   }
   base_rhlike = {
     # alma10, oracle10, and rocky 10 cannot run in SLC (no x86_v3)
@@ -310,6 +312,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = null
     hypervisor         = "tatooine.mgr.slc1.suse.org"
+    autostart          = true
   }
   base_new_sle = {
     images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o" ]
@@ -317,6 +320,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = null
     hypervisor         = "florina.mgr.slc1.suse.org"
+    autostart          = true
   }
   base_retail = {
     images             = [ "sles15sp6o", "sles15sp7o", "opensuse160o" ]
@@ -324,6 +328,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = "192.168.52.0/24"
     hypervisor         = "terminus.mgr.slc1.suse.org"
+    autostart          = true
   }
   base_deblike = {
     images             = [ "ubuntu2204o", "ubuntu2404o", "ubuntu2604o", "debian13o" ]
@@ -331,6 +336,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = null
     hypervisor         = "trantor.mgr.slc1.suse.org"
+    autostart          = true
   }
   base_arm = {
     images             = [ "opensuse161armo", "raspios13o" ]
@@ -338,6 +344,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     additional_network = null
     hypervisor         = "suma-arm.mgr.suse.de"
+    autostart          = true
   }
   base_ppc = {
     images             = [ "opensuse161ppco" ]
@@ -345,6 +352,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     additional_network = null
     hypervisor         = "suma-ppc.mgr.suse.de"
+    autostart          = true
   }
 }
 MAIL_SUBJECT          = "Results 5.2 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

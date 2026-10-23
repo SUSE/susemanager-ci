@@ -207,6 +207,7 @@ module "cucumber_testsuite" {
     pool = "ssd"
     network_name = null
     bridge = "br0"
+    autostart          = true
   }
 }
 

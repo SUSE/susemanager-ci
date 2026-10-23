@@ -300,6 +300,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = "192.168.51.0/24"
     hypervisor         = "suma-10.mgr.suse.de"
+    autostart          = true
   }
   base_arm = {
     images             = [ "opensuse161armo" ]
@@ -307,6 +308,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = null
     hypervisor         = "suma-arm.mgr.suse.de"
+    autostart          = true
   }
   base_ppc = {
     images             = [ "opensuse161ppco" ]
@@ -314,6 +316,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br1"
     additional_network = null
     hypervisor         = "suma-ppc.mgr.suse.de"
+    autostart          = true
   }
 }
 MAIL_SUBJECT          = "Results 5.1 Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
