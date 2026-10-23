@@ -424,7 +424,7 @@ class MaintenanceJsonGeneratorTestCase(unittest.TestCase):
 
         test_custom_repos: dict[str, dict[str, str]] = {
             'server': {'123': 'some repo', '789': 'some repo'},
-            'proxy': {'123': 'some_repo', 'proxy_50': 'some repo'},
+            'proxy': {'123': 'some_repo', 'proxy_51': 'some repo'},
             'some minion': {'789': 'some repo'}
         }
         # missing MI ID 456

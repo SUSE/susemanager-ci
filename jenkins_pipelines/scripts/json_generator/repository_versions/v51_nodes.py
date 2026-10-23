@@ -148,7 +148,7 @@ def get_v51_static_and_client_tools(
        - Input: v51_nodes_dynamic_client_tools_repos (Dict[str, Set[str]])
        - Merged with Uyuni server/proxy repos for the 'sles' variant.
        - Output: Dict[str, List[str]] with sorted maintenance-path suffixes.
-       - Mirrors the pattern in v43/v50: sets of paths are converted to sorted lists.
+       - Mirrors the pattern in v52: sets of paths are converted to sorted lists.
 
     Example:
         static_repos, dynamic_repos = get_v51_static_and_client_tools("micro")
