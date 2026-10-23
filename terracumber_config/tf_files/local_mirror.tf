@@ -1,23 +1,23 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Uyuni/job/uyuni-manager-mu-cloud"
+  default = "https://jenkins.mgr.suse.de/job/manager-build-validation-AWS-infra"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
 variable "CUCUMBER_COMMAND" {
   type = string
-  default = "export PRODUCT='Uyuni' && run-testsuite"
+  default = "export PRODUCT='SUSE-Manager' && run-testsuite"
 }
 
 variable "CUCUMBER_GITREPO" {
   type = string
-  default = "https://github.com/uyuni-project/uyuni.git"
+  default = "https://github.com/SUSE/spacewalk.git"
 }
 
 variable "CUCUMBER_BRANCH" {
   type = string
-  default = "master"
+  default = "Manager-5.2"
 }
 
 variable "CUCUMBER_RESULTS" {
@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Uyuni-Master $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results AWS infra local mirror $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Uyuni-Master: Environment setup failed"
+  default = "Results AWs infra local mirror: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
@@ -47,12 +47,12 @@ variable "MAIL_TEMPLATE_ENV_FAIL" {
 
 variable "MAIL_FROM" {
   type = string
-  default = "mnoel@suse.de"
+  default = "jenkins@suse.de"
 }
 
 variable "MAIL_TO" {
   type = string
-  default = "mnoel@suse.de"
+  default = "galaxy-ci@suse.de"
 }
 
 // sumaform specific variables
@@ -76,9 +76,11 @@ variable "GIT_PASSWORD" {
   // Not needed for master, as it is public
 }
 
+// Jenkins agents have no ~/.ssh/id_ed25519.pub: use the controller key shipped with sumaform,
+// its private half is used by the pipeline to reach the mirror (see local_mirror_ssh_private_key)
 variable "SSH_KEY" {
   type = string
-  default = "/home/jenkins/.ssh/id_ed25519.pub"
+  default = "./salt/controller/id_ed25519.pub"
 }
 
 terraform {
@@ -123,13 +125,16 @@ module "mirror" {
   customize_minima_file = "mirror/etc/minima-customize.yaml"
   synchronize_immediately = true
   disable_cron = true
+  // Content is copied to the AWS mirror via rsync over SSH: no host mounts this mirror via NFS
+  nfs_server = false
   image = "opensuse160o"
   volume_provider_settings = {
     pool = local.pool
   }
   provider_settings = {
-    mac                = "52:54:00:ba:b7:98"
     memory             = 4096
+    // The mirror is not in DNS (the agent cannot resolve tf.local): connect via its DHCP lease IP
+    use_dhcp_ip        = true
   }
 }
 
@@ -139,4 +144,8 @@ output "local_mirrors_public_name" {
 
 output "local_mirrors_public_ip" {
   value = module.mirror.configuration.ipaddrs
+}
+
+output "local_mirror_ssh_private_key" {
+  value = abspath(trimsuffix(var.SSH_KEY, ".pub"))
 }
