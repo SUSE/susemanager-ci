@@ -273,7 +273,7 @@ def run(params) {
                                 --runstep cucumber \\
                                 --cucumber-cmd 'mkdir -p /mnt/www/${env.BUILD_NUMBER} && \\
                                                 rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/results/${env.BUILD_NUMBER}/ /mnt/www/${env.BUILD_NUMBER}/ && \\
-                                                rsync -av --no-owner --no-group  /root/spacewalk/testsuite/spacewalk-debug.tar.bz2 /mnt/www/${env.BUILD_NUMBER}/ && \\
+                                                ( rsync -av --no-owner --no-group  /root/spacewalk/testsuite/spacewalk-debug.tar.bz2 /mnt/www/${env.BUILD_NUMBER}/ || true ) && \\
                                                 rsync -av --no-owner --no-group  /root/spacewalk/testsuite/logs/ /mnt/www/${env.BUILD_NUMBER}/ && \\
                                                 rsync -avz --no-owner --no-group  /root/spacewalk/testsuite/results/${env.BUILD_NUMBER}/results/cucumber_report/ /mnt/www/${env.BUILD_NUMBER}/'
                             """
