@@ -142,6 +142,7 @@ class TfvarsGenerator:
                 'bridge': core_info.get("bridge", "MISSING"),
                 'additional_network': core_info.get("additional_network", "MISSING"),
                 'hypervisor': core_info.get("hypervisor", "MISSING"),
+                'autostart': True,
             }
         }
 

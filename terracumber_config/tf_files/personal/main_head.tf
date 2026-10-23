@@ -159,6 +159,7 @@ module "cucumber_testsuite" {
     network_name       = null
     bridge             = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].bridge
     additional_network = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].additional_network
+    autostart          = true
   }
 }
 

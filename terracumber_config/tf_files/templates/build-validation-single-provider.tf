@@ -67,6 +67,7 @@ module "base_core" {
   provider_settings = {
     pool               = var.BASE_CONFIGURATIONS.base_core["pool"]
     bridge             = var.BASE_CONFIGURATIONS.base_core["bridge"]
+    autostart          = var.BASE_CONFIGURATIONS.base_core.autostart
     additional_network = var.BASE_CONFIGURATIONS.base_core["additional_network"]
   }
 }
