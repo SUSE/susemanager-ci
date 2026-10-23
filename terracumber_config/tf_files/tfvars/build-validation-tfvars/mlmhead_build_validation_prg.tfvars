@@ -322,6 +322,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     additional_network = "192.168.100.0/24"
     hypervisor         = "suma-12.mgr.suse.de"
+    autostart          = true
   }
   base_arm = {
     images             = [ "opensuse161armo", "raspios13o" ]
@@ -329,6 +330,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     additional_network = null
     hypervisor         = "suma-arm.mgr.suse.de"
+    autostart          = true
   }
   base_ppc = {
     images             = [ "opensuse161ppco" ]
@@ -336,6 +338,7 @@ BASE_CONFIGURATIONS = {
     bridge             = "br0"
     additional_network = null
     hypervisor         = "suma-ppc.mgr.suse.de"
+    autostart          = true
   }
 }
 MAIL_SUBJECT          = "Results Uyuni Build Validation $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
