@@ -45,7 +45,7 @@ module "base_core" {
   images = coalesce(try(var.BASE_CONFIGURATIONS.base_core.images, null), [
     "sles12sp5o",
     "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o",
-    "sles160o",
+    "sles160o", "sles161o", "slesforsap160o", "slesforsap161o",
     "slemicro53-ign", "slemicro54-ign", "slemicro55o",
     "slmicro60o", "slmicro61o", "slmicro62o",
     "almalinux8o", "almalinux9o", "almalinux10o",

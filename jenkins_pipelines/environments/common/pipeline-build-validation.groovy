@@ -54,6 +54,25 @@ def run(params) {
             // Version passed to maintenance_json_generator.py: it has no default anymore,
             // so every environment offering mi_ids has to name the version explicitly.
             def json_generator_version = params.json_generator_version ?: ''
+            // The new Jenkins instances have no 'manager-jenkins-node' agent: run the generator on the current agent there,
+            // from the susemanager-ci clone of this workspace. The JSON is written to the current directory.
+            def generateCustomRepositoriesFromMiIds = {
+                def generate = { String generatorScript ->
+                    def res_python_script_ = sh(script: "python3 ${generatorScript} --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
+                    echo "Build Validation JSON script return code:\n ${res_python_script_}"
+                    if (res_python_script_ != 0) {
+                        error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                    }
+                }
+                if (isNewJenkins) {
+                    generate("${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py")
+                } else {
+                    node('manager-jenkins-node') {
+                        checkout scm
+                        generate('jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py')
+                    }
+                }
+            }
 
             env.common_params = "--outputdir ${resultdir} --tf ${params.tf_file} --gitfolder ${resultdir}/sumaform --tf_variables_description_file=${tfVariablesFile} --terraform-bin ${params.bin_path}"
 
@@ -157,14 +176,7 @@ def run(params) {
                                 if (!json_generator_version) {
                                     error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
                                 }
-                                node('manager-jenkins-node') {
-                                    checkout scm
-                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
-                                    echo "Build Validation JSON script return code:\n ${res_python_script_}"
-                                    if (res_python_script_ != 0) {
-                                        error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
-                                    }
-                                }
+                                generateCustomRepositoriesFromMiIds()
                             }
 
                             def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
@@ -305,14 +317,7 @@ def run(params) {
                             if (!json_generator_version) {
                                 error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
                             }
-                            node('manager-jenkins-node') {
-                                checkout scm
-                                def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
-                                echo "Build Validation JSON script return code:\n ${res_python_script_}"
-                                if (res_python_script_ != 0) {
-                                    error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
-                                }
-                            }
+                            generateCustomRepositoriesFromMiIds()
                         }
                         sh(script: "${TestEnvironmentCleanerProgram} --url ${env.controller_hostname} --mode update_custom_repositories")
                     } else if (isNewJenkins) {
