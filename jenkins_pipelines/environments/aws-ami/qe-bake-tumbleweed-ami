@@ -22,5 +22,8 @@ node('sumaform-cucumber') {
     }
     def mutableParams = [:] + params
     def pipeline = load "jenkins_pipelines/environments/aws-ami/pipeline-aws-ami.groovy"
-    pipeline.run(mutableParams)
+
+    withCredentials([file(credentialsId: 'aws-secrets', variable: 'AWS_SHARED_CREDENTIALS_FILE')]) {
+        pipeline.run(mutableParams)
+    }
 }
