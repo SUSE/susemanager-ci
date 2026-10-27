@@ -72,6 +72,7 @@ ENVIRONMENT_CONFIGURATION = {
   sles15sp7_buildhost = {
     mac  = "aa:b2:93:01:01:94"
     name = "build-host"
+    terminal_private_name = "pxeboot"
   }
   product_version = "5.2-nightly"
   name_prefix     = "maxime-"
