@@ -150,6 +150,30 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:74"
     name = "opensuse161ppc-minion"
   }
+  sles161_minion = {
+    mac  = "aa:b2:92:42:00:75"
+    name = "sles161-minion"
+  }
+  slesforsap15sp5_minion = {
+    mac  = "aa:b2:92:42:00:76"
+    name = "slesforsap15sp5-minion"
+  }
+  slesforsap15sp6_minion = {
+    mac  = "aa:b2:92:42:00:77"
+    name = "slesforsap15sp6-minion"
+  }
+  slesforsap15sp7_minion = {
+    mac  = "aa:b2:92:42:00:78"
+    name = "slesforsap15sp7-minion"
+  }
+  slesforsap160_minion = {
+    mac  = "aa:b2:92:42:00:79"
+    name = "slesforsap160-minion"
+  }
+  slesforsap161_minion = {
+    mac  = "aa:b2:92:42:00:7a"
+    name = "slesforsap161-minion"
+  }
   salt_migration_minion = {
     mac  = "aa:b2:92:42:00:6f"
     name = "salt-migration-minion"
@@ -306,6 +330,10 @@ ENVIRONMENT_CONFIGURATION = {
   opensuse161ppc_sshminion = {
     mac  = "aa:b2:92:42:00:a4"
     name = "opensuse161ppc-sshminion"
+  }
+  sles161_sshminion = {
+    mac  = "aa:b2:92:42:00:a5"
+    name = "sles161-sshminion"
   }
   sles15sp5s390_sshminion = {
     mac  = "02:00:00:42:00:25"

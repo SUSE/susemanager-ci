@@ -135,6 +135,30 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:14"
     name = "opensuse161ppc-minion"
   }
+  sles161_minion = {
+    mac  = "aa:b2:93:04:05:a5"
+    name = "sles161-minion"
+  }
+  slesforsap15sp5_minion = {
+    mac  = "aa:b2:93:04:05:a6"
+    name = "slesforsap15sp5-minion"
+  }
+  slesforsap15sp6_minion = {
+    mac  = "aa:b2:93:04:05:a7"
+    name = "slesforsap15sp6-minion"
+  }
+  slesforsap15sp7_minion = {
+    mac  = "aa:b2:93:04:05:a8"
+    name = "slesforsap15sp7-minion"
+  }
+  slesforsap160_minion = {
+    mac  = "aa:b2:93:04:05:a9"
+    name = "slesforsap160-minion"
+  }
+  slesforsap161_minion = {
+    mac  = "aa:b2:93:04:05:aa"
+    name = "slesforsap161-minion"
+  }
   sles15sp5s390_minion = {
     mac    = "02:00:00:02:01:34"
     name   = "sles15sp5s390-minion"
@@ -277,6 +301,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:15"
     name = "opensuse161ppc-sshminion"
   }
+  sles161_sshminion = {
+    mac  = "aa:b2:93:04:05:d5"
+    name = "sles161-sshminion"
+  }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:02:01:35"
     name   = "sles15sp5s390-sshminion"
@@ -312,7 +340,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "cosmopolitan.mgr.slc1.suse.org"
   }
   base_new_sle = {
-    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o" ]
+    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "sles161o", "slesforsap160o", "slesforsap161o", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null

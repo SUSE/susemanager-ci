@@ -46,6 +46,15 @@ v51_nodes_static_client_tools_repositories: Dict[str, Dict[str, str]] = {
     "sles160_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
     },
+    "sles161_minion": {
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
+    },
+    "slesforsap160_minion": {
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
+    },
+    "slesforsap161_minion": {
+        "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-x86_64/"
+    },
     "opensuse161arm_minion": {
         "sles16_client_tools": "/SLFO:/Products:/MultiLinuxManagerTools:/SLES-16:/ToTest/product/repo/Multi-Linux-ManagerTools-SLE-16-aarch64/"
     },
@@ -101,6 +110,26 @@ v51_nodes_dynamic_client_tools_repos: Dict[str, Set[str]] = {
                          "/SUSE_Updates_SLE-Module-Development-Tools_15-SP7_x86_64/",
                          "/SUSE_Updates_SLE-Module-Systems-Management_15-SP7_x86_64/",
                          "/SUSE_Updates_SLE-Product-SLES_15-SP7-LTSS_x86_64/"},
+    "slesforsap15sp5_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_x86_64/",
+                                "/SUSE_Updates_SLE-Module-Systems-Management_15-SP5_x86_64/",
+                                "/SUSE_Updates_SLE-Product-SLES_SAP_15-SP5_x86_64/",
+                                "/SUSE_Updates_SLE-Module-SAP-Applications_15-SP5_x86_64/",
+                                "/SUSE_Updates_SLE-Product-HA_15-SP5_x86_64/"},
+    "slesforsap15sp6_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_x86_64/",
+                                "/SUSE_Updates_SLE-Module-Development-Tools_15-SP6_x86_64/",
+                                "/SUSE_Updates_SLE-Module-Systems-Management_15-SP6_x86_64/",
+                                "/SUSE_Updates_SLE-Product-SLES_SAP_15-SP6_x86_64/",
+                                "/SUSE_Updates_SLE-Module-SAP-Applications_15-SP6_x86_64/",
+                                "/SUSE_Updates_SLE-Product-HA_15-SP6_x86_64/"},
+    "slesforsap15sp7_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-15_x86_64/",
+                                "/SUSE_Updates_SLE-Module-Server-Applications_15-SP7_x86_64/",
+                                "/SUSE_Updates_SLE-Module-Basesystem_15-SP7_x86_64/",
+                                "/SUSE_Updates_SLE-Module-Python3_15-SP7_x86_64/",
+                                "/SUSE_Updates_SLE-Module-Development-Tools_15-SP7_x86_64/",
+                                "/SUSE_Updates_SLE-Module-Systems-Management_15-SP7_x86_64/",
+                                "/SUSE_Updates_SLE-Product-SLES_SAP_15-SP7_x86_64/",
+                                "/SUSE_Updates_SLE-Module-SAP-Applications_15-SP7_x86_64/",
+                                "/SUSE_Updates_SLE-Product-HA_15-SP7_x86_64/"},
     "slemicro53_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-Micro-5_x86_64/",
                           "/SUSE_Updates_SLE-Micro_5.3_x86_64/"},
     "slemicro54_minion": { "/SUSE_Updates_MultiLinuxManagerTools_SLE-Micro-5_x86_64/",
