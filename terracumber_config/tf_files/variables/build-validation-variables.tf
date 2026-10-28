@@ -161,6 +161,7 @@ variable "BASE_CONFIGURATIONS" {
     bridge             = string
     additional_network = optional(string)
     hypervisor         = string
+    autostart          = optional(bool, false)
   }))
   description = "Describe the base configuration (default core for PRG2 and all bases for SLC1). A base without images gets the default list of the template"
 }

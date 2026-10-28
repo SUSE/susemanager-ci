@@ -32,6 +32,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "suma-11.mgr.suse.de"
     additional_network = null
     images              = ["sles15sp7o", "opensuse160o"]
+    autostart          = true
   }
 }
 MAIL_SUBJECT          = "Results 5.1 SLE Update $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"

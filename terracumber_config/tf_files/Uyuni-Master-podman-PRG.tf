@@ -231,6 +231,7 @@ module "cucumber_testsuite" {
     network_name       = null
     bridge             = "br0"
     additional_network = "192.168.102.0/24"
+    autostart          = true
   }
 
   prometheus_push_gateway_url = var.PROMETHEUS_PUSH_GATEWAY_URL

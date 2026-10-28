@@ -103,7 +103,7 @@ ENVIRONMENT_CONFIGURATION = {
 }
 ```
 
-**`BASE_CONFIGURATIONS`** — a map of hypervisor connection details. For single-provider sites this contains one entry (`base_core` plus any architecture-specific entries like `base_arm`). For multi-provider sites (SLC), it contains one entry per hypervisor.
+**`BASE_CONFIGURATIONS`** — a map of hypervisor connection details. For single-provider sites this contains one entry (`base_core` plus any architecture-specific entries like `base_arm`). For multi-provider sites (SLC), it contains one entry per hypervisor. Set `autostart = true` on an entry so its VMs start again when the hypervisor boots (default `false`).
 
 ```hcl
 # Single-provider example (Nuremberg)

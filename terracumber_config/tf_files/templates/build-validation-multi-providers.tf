@@ -79,6 +79,7 @@ module "base_core" {
   provider_settings = {
     pool        = var.BASE_CONFIGURATIONS.base_core.pool
     bridge      = var.BASE_CONFIGURATIONS.base_core.bridge
+    autostart   = var.BASE_CONFIGURATIONS.base_core.autostart
   }
 }
 
@@ -104,6 +105,7 @@ module "base_old_sle" {
   provider_settings = {
     pool        = var.BASE_CONFIGURATIONS.base_old_sle.pool
     bridge      = var.BASE_CONFIGURATIONS.base_old_sle.bridge
+    autostart   = var.BASE_CONFIGURATIONS.base_old_sle.autostart
   }
 }
 
@@ -129,6 +131,7 @@ module "base_rhlike" {
   provider_settings = {
     pool        = var.BASE_CONFIGURATIONS.base_rhlike.pool
     bridge      = var.BASE_CONFIGURATIONS.base_rhlike.bridge
+    autostart   = var.BASE_CONFIGURATIONS.base_rhlike.autostart
   }
 }
 
@@ -154,6 +157,7 @@ module "base_new_sle" {
   provider_settings = {
     pool        = var.BASE_CONFIGURATIONS.base_new_sle.pool
     bridge      = var.BASE_CONFIGURATIONS.base_new_sle.bridge
+    autostart   = var.BASE_CONFIGURATIONS.base_new_sle.autostart
   }
 }
 
@@ -178,6 +182,7 @@ module "base_retail" {
   provider_settings = {
     pool               = var.BASE_CONFIGURATIONS.base_retail.pool
     bridge             = var.BASE_CONFIGURATIONS.base_retail.bridge
+    autostart          = var.BASE_CONFIGURATIONS.base_retail.autostart
     additional_network = var.BASE_CONFIGURATIONS.base_retail.additional_network
   }
 }
@@ -204,6 +209,7 @@ module "base_deblike" {
   provider_settings = {
     pool               = var.BASE_CONFIGURATIONS.base_deblike.pool
     bridge             = var.BASE_CONFIGURATIONS.base_deblike.bridge
+    autostart          = var.BASE_CONFIGURATIONS.base_deblike.autostart
   }
 }
 
