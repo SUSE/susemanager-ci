@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://jenkins.mgr.suse.de/job/manager-5.2-dev-acceptance-tests-RKE2/"
+  default = "https://jenkins.mgr.suse.de/job/manager-5.2-dev-acceptance-tests-RKE2"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step

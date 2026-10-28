@@ -4,9 +4,9 @@
 Build:   $urlprefix/$timestamp
 Console: $urlprefix/$timestamp/console
 Results: $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp
-Report:  $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/cucumber_report/index.html
+Report:  $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/results/cucumber_report/index.html
 Logs:    $urlprefix/$timestamp/execution/node/3/ws/results/$timestamp/spacewalk-debug.tar.bz2
-Pipeline: https://ci.suse.de/blue/organizations/jenkins/uyuni-master-dev-acceptance-tests-podman/detail/uyuni-master-dev-acceptance-tests-podman/$timestamp/pipeline
+Pipeline: $urlprefix/$timestamp/stages/
 
 #################################################################
 # SCENARIOS
