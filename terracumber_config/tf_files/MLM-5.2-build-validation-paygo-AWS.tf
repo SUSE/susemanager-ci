@@ -199,7 +199,6 @@ data "aws_instance" "bastion" {
 
 module "base" {
   source                   = "./modules/base"
-  product_version          = "5.2-paygo"
   cc_username              = var.SCC_USER
   cc_password              = var.SCC_PASSWORD
   name_prefix              = var.NAME_PREFIX
@@ -242,7 +241,7 @@ module "server" {
   main_disk_size             = 100
   repository_disk_size       = 1000
   database_disk_size         = 0
-  product_version            = var.ENVIRONMENT_CONFIGURATION.server_containerized.product_version
+  product_version            = "5.2-paygo"
 
   auto_accept                    = false
   monitored                      = false
@@ -277,7 +276,7 @@ module "proxy_containerized" {
   image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "smlm-proxy-52-${var.ARCHITECTURE}-byos"
   provision                 = false
 
-
+  product_version           = "5.2-paygo"
   auto_configure            = false
   use_os_released_updates   = false
   ssh_key_path              = "./salt/controller/id_ed25519.pub"
