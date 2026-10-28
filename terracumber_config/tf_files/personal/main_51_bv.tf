@@ -42,7 +42,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:01:94"
     name = "build-host"
   }
-  product_version = "5.1-nighly"
+  product_version = "5.1-nightly"
   name_prefix     = "maxime-"
   url_prefix      = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/maxime"
 }

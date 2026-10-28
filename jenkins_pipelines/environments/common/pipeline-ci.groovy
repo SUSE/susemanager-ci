@@ -129,7 +129,9 @@ def run(params) {
                                     if (res_python_script_ != 0) {
                                         error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
                                     }
+                                    stash name: 'custom_repos_json', includes: 'custom_repositories.json'
                                 }
+                                unstash 'custom_repos_json'
                             }
 
                             def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
@@ -188,7 +190,7 @@ def run(params) {
                             --logfile ${resultdirbuild}/sumaform.log \
                             --init \
                             --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
-                            ${(!params.mode || params.mode == 'BV') ? "--custom-repositories ${WORKSPACE}/custom_repositories.json \\" : ''} \
+                            ${(!params.mode || params.mode == 'BV') ? "--custom-repositories ${WORKSPACE}/custom_repositories.json" : ''} \
                             --sumaform-backend ${params.sumaform_backend} \
                             --skip-variables-check \
                             --tf_configuration_files "${outputFile}" \
@@ -269,7 +271,7 @@ def run(params) {
             }
             finally {
                 stage('Save TF state') {
-                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*"
+                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*", allowEmptyArchive: true
                 }
 
                 stage('Get results') {
@@ -303,9 +305,15 @@ def run(params) {
                                         skipPublishingChecks: true
                             }
                         }
-                        // Send email (subject comes from MAIL_SUBJECT in the tfvars via terracumber)
+                        // Send email. The mail step reads the variable defaults of the BV variables file
+                        // ("Set in TFVARS"), so the subject and URL are passed as TF_VAR_* overrides.
                         try {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                            withEnv([
+                                    "TF_VAR_MAIL_SUBJECT=CI ${product_version} #${BUILD_NUMBER}",
+                                    "TF_VAR_MAIL_SUBJECT_ENV_FAIL=CI ${product_version} #${BUILD_NUMBER}: environment failed",
+                                    "TF_VAR_URL_PREFIX=${env.BUILD_URL}"]) {
+                                sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
+                            }
                         } catch (err) {
                             println("ERROR: sending the results email failed: ${err}")
                             result_error = 1

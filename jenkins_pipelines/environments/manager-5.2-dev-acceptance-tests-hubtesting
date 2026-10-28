@@ -30,6 +30,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_hub', defaultValue: true, description: 'Run hub_testing stage'),
             string(name: 'rake_namespace', defaultValue: 'cucumber', description: 'Rake namespace for the secondary parallelizable/finishing tasks'),
             string(name: 'functional_scopes', defaultValue: '', description: 'Optional cucumber TAGS to narrow the secondary run (comma separated, @ optional)'),
+            choice(name: 'json_generator_version', choices: ['52-micro', '52-sles'], description: 'Version the MI Identifiers below are resolved for. Has to match base_os: a SL Micro base_os is 52-micro, a SLES one 52-sles'),
             text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
             ])

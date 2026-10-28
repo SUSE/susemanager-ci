@@ -21,8 +21,7 @@ node('sumaform-cucumber') {
             activeChoice(name: 'minions_to_run', description: 'Node list to run during CI', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
                 return [
                     'sles15sp7_minion:selected', 'sles15sp7_sshminion:selected',
-                    'rocky8_minion:selected', 'rocky8_sshminion:selected',
-                    'ubuntu2404_minion:selected', 'ubuntu2404_sshminion:selected'
+                    'rocky8_minion:selected', 'ubuntu2404_minion:selected'
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
@@ -31,6 +30,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_hub', defaultValue: true, description: 'Run hub_testing stage'),
             string(name: 'rake_namespace', defaultValue: 'cucumber', description: 'Rake namespace for the secondary parallelizable/finishing tasks'),
             string(name: 'functional_scopes', defaultValue: '', description: 'Optional cucumber TAGS to narrow the secondary run (comma separated, @ optional)'),
+            choice(name: 'json_generator_version', choices: ['51-micro', '51-sles', '52-micro', '52-sles'], description: 'Version the MI Identifiers below are resolved for. Has to match product_version and base_os: a SL Micro base_os is a -micro version, a SLES one a -sles version'),
             text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
             text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
             ])
@@ -44,7 +44,7 @@ node('sumaform-cucumber') {
     mutableParams.bin_path = "/usr/bin/tofu"
     mutableParams.bin_plugins_path = "/usr/bin"
     mutableParams.product_version_display = mutableParams.product_version
-    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/ci-tfvars/mlm52_personal.tfvars'
+    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/ci-tfvars/mlm52_maxime_personal.tfvars'
     mutableParams.mode = 'ci'
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-ci.groovy"
     pipeline.run(mutableParams)
