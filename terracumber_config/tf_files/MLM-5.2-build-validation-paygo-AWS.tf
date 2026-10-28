@@ -236,10 +236,11 @@ module "server" {
     {
       mirror = null
     })
+  mirror_nfs_server          = false
   name                       = var.ENVIRONMENT_CONFIGURATION.server_containerized.name
   image                      = var.SERVER_AMI != "" ? var.SERVER_AMI : "smlm-server-52-${var.ARCHITECTURE}-ltd-paygo"
-  main_disk_size             = 200
-  repository_disk_size       = 1500
+  main_disk_size             = 100
+  repository_disk_size       = 1000
   database_disk_size         = 0
   product_version            = var.ENVIRONMENT_CONFIGURATION.server_containerized.product_version
 
