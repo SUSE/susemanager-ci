@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results 5.2-PRG $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results 5.2-PODMAN-PRG $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results 5.2-PRG: Environment setup failed"
+  default = "Results 5.2-PODMAN-PRG: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {

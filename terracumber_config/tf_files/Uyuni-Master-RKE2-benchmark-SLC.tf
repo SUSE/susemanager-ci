@@ -27,7 +27,7 @@ variable "CUCUMBER_RESULTS" {
 
 variable "MAIL_SUBJECT" {
   type = string
-  default = "Results Uyuni-Master RKE2 $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
+  default = "Results Uyuni-Master RKE2 Benchmark $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
 }
 
 variable "MAIL_TEMPLATE" {
@@ -37,7 +37,7 @@ variable "MAIL_TEMPLATE" {
 
 variable "MAIL_SUBJECT_ENV_FAIL" {
   type = string
-  default = "Results Uyuni-Master RKE2: Environment setup failed"
+  default = "Results Uyuni-Master RKE2 Benchmark: Environment setup failed"
 }
 
 variable "MAIL_TEMPLATE_ENV_FAIL" {
