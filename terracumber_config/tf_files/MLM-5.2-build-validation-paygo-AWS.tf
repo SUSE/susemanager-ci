@@ -256,7 +256,7 @@ module "server" {
   publish_private_ssl_key        = false
   use_os_released_updates        = false
   disable_download_tokens        = false
-  large_deployment               = true
+  large_deployment               = false
   provision                      = true
   install_salt_bundle            = false
   ssh_key_path            = "./salt/controller/id_ed25519.pub"
