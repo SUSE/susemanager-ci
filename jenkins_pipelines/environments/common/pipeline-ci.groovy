@@ -124,7 +124,9 @@ def run(params) {
                                 }
                                 node('manager-jenkins-node') {
                                     checkout scm
-                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
+                                    // The IDs can be newline separated: pass them as a file, not interpolated in the shell
+                                    writeFile file: 'mi_ids.txt', text: params.mi_ids.trim().split(/[\s,]+/).join('\n'), encoding: 'UTF-8'
+                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --file mi_ids.txt", returnStatus: true)
                                     echo "CI JSON script return code:\n ${res_python_script_}"
                                     if (res_python_script_ != 0) {
                                         error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
@@ -145,9 +147,16 @@ def run(params) {
                             else
                                 s390LocalUser = 'jenkins@jenkins-worker.mgr.suse.de'
                             def commonArgs = " --output \"${outputFile}\""
-                            commonArgs += " --inject SERVER_CONTAINER_REGISTRY=${server_container_registry}"
-                            commonArgs += " --inject PROXY_CONTAINER_REGISTRY=${proxy_container_registry}"
-                            commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
+                            // Empty means the nightly defaults of the product version: only a user override is injected
+                            if (server_container_registry) {
+                                commonArgs += " --inject SERVER_CONTAINER_REGISTRY=${server_container_registry}"
+                            }
+                            if (proxy_container_registry) {
+                                commonArgs += " --inject PROXY_CONTAINER_REGISTRY=${proxy_container_registry}"
+                            }
+                            if (server_container_image) {
+                                commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
+                            }
                             commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
                             commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
                             if (isNewJenkins) {
@@ -311,7 +320,8 @@ def run(params) {
                             withEnv([
                                     "TF_VAR_MAIL_SUBJECT=CI ${product_version} #${BUILD_NUMBER}",
                                     "TF_VAR_MAIL_SUBJECT_ENV_FAIL=CI ${product_version} #${BUILD_NUMBER}: environment failed",
-                                    "TF_VAR_URL_PREFIX=${env.BUILD_URL}"]) {
+                                    // the mail templates append /<BUILD_NUMBER>, so the job URL must not end with a slash
+                                    "TF_VAR_URL_PREFIX=${env.JOB_URL.replaceAll('/+$', '')}"]) {
                                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
                         } catch (err) {

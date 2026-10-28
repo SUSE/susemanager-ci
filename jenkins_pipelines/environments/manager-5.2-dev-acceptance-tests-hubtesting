@@ -15,8 +15,8 @@ node('sumaform-cucumber') {
             string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
             string(name: 'product_version', defaultValue: '5.2-nightly', description: 'Server product version'),
             choice(name: 'base_os', choices: ['slmicro62o','slmicro61o', 'sles15sp7o', 'slemicro55o', 'sles15sp6o'], description: 'Server and Proxy base OS'),
-            string(name: 'server_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Server container registry'),
-            string(name: 'proxy_container_registry', defaultValue: 'registry.suse.de/suse/sle-15-sp7/update/products/multilinuxmanager52/totest/containerfile', description: 'Proxy container registry'),
+            string(name: 'server_container_registry', defaultValue: '', description: 'Server container registry (empty: nightly default; set to test a maintenance totest registry)'),
+            string(name: 'proxy_container_registry', defaultValue: '', description: 'Proxy container registry (empty: nightly default; set to test a maintenance totest registry)'),
             string(name: 'server_container_image', defaultValue: '', description: 'Server container image'),
             activeChoice(name: 'minions_to_run', description: 'Node list to run during CI', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
                 return [
