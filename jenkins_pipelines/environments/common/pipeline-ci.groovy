@@ -124,9 +124,7 @@ def run(params) {
                                 }
                                 node('manager-jenkins-node') {
                                     checkout scm
-                                    // The IDs can be newline separated: pass them as a file, not interpolated in the shell
-                                    writeFile file: 'mi_ids.txt', text: params.mi_ids.trim().split(/[\s,]+/).join('\n'), encoding: 'UTF-8'
-                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --file mi_ids.txt", returnStatus: true)
+                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
                                     echo "CI JSON script return code:\n ${res_python_script_}"
                                     if (res_python_script_ != 0) {
                                         error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
