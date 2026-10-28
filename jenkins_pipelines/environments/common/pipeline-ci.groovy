@@ -77,7 +77,7 @@ def run(params) {
                 }
 
                 // --- Deploy (mechanism copied from pipeline-build-validation.groovy,
-                //     proven against mlm52_ci.tfvars) ---
+                //     proven against mlm52_personal.tfvars) ---
                 stage('Build containers') {
                     if (params.container_project && params.mi_project && params.must_deploy) {
                         def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/edit_bci_project"

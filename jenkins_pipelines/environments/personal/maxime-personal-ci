@@ -44,7 +44,7 @@ node('sumaform-cucumber') {
     mutableParams.bin_path = "/usr/bin/tofu"
     mutableParams.bin_plugins_path = "/usr/bin"
     mutableParams.product_version_display = mutableParams.product_version
-    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/ci-tfvars/mlm52_ci.tfvars'
+    mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/ci-tfvars/mlm52_personal.tfvars'
     mutableParams.mode = 'ci'
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-ci.groovy"
     pipeline.run(mutableParams)
