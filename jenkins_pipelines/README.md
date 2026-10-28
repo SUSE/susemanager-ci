@@ -44,6 +44,7 @@ Contains the shared Groovy pipeline scripts reused across multiple jobs:
 |--------------------------------------------|--------------------------------------|
 | `pipeline-build-validation.groovy`         | Standard BV pipeline (deploy + test) |
 | `pipeline-build-validation-aws.groovy`     | BV pipeline for AWS deployments      |
+| `pipeline-build-validation-aws-mirror.groovy` | Shared AWS infrastructure (VPC, bastion, private mirror) for the AWS BV pipelines |
 | `pipeline-build-validation-cleanup.groovy` | Standalone cleanup pipeline for BV   |
 | `pipeline-personal.groovy`                 | Personal CI pipeline                 |
 | `pipeline.groovy`                          | Standard testsuite pipeline (CI)     |
