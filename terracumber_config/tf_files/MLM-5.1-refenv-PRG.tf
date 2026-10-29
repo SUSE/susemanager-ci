@@ -1,7 +1,7 @@
 // Mandatory variables for terracumber
 variable "URL_PREFIX" {
   type = string
-  default = "https://ci.suse.de/view/Manager/view/Manager-5.1/job/manager-5.1-infra-reference-PRG"
+  default = "https://jenkins.mgr.suse.de/job/manager-5.1-infra-reference"
 }
 
 // Not really used as this is for --runall parameter, and we run cucumber step by step
