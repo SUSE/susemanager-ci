@@ -106,12 +106,12 @@ def run(params) {
 
                 stage('Get results') {
                     def error = 0
-                    if (deployed) {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker_getresults"
-                        // skipPublishingChecks: Checks API not configured on this instance
-                        // skipMarkingBuildUnstable: prevents warning icon when checks are skipped
-                        junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true, skipMarkingBuildUnstable: true
-                    }
+                    // if (deployed) {
+                    sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker_getresults"
+                    // skipPublishingChecks: Checks API not configured on this instance
+                    // skipMarkingBuildUnstable: prevents warning icon when checks are skipped
+                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                    // }
                     // Send email
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep saltshaker_mail"
                     // Clean up old results
