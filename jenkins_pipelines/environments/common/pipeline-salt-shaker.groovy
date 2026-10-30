@@ -62,7 +62,7 @@ def run(params) {
                         echo "Skipping unit tests as they were not selected for this execution"
                         return
                     }
-                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                         if (!params.testsuite_dir) {
                             sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} unit -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-unit.xml -vvv --color=yes --tb=native'"
                         } else {
@@ -76,7 +76,7 @@ def run(params) {
                         echo "Skipping integration tests as they were not selected for this execution"
                         return
                     }
-                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                         if (!params.testsuite_dir) {
                             sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} integration -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-integration.xml -vvv --color=yes --tb=native'"
                         } else {
@@ -90,7 +90,7 @@ def run(params) {
                         echo "Skipping functional tests as they were not selected for this execution"
                         return
                     }
-                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                         if (!params.testsuite_dir) {
                             sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker --saltshaker-cmd '/usr/bin/salt-test --package-flavor ${params.salt_flavor} --skiplist ${params.skip_list_url} functional -- --core-tests --ssh-tests --slow-tests --run-expensive --run-destructive --junitxml /root/results_junit/junit-report-functional.xml -vvv --color=yes --tb=native'"
                         } else {
@@ -109,8 +109,9 @@ def run(params) {
                     // if (deployed) {
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep saltshaker_getresults"
                     // skipPublishingChecks: Checks API not configured on this instance
-                    // skipMarkingBuildUnstable: prevents warning icon when checks are skipped
-                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                    // Test failures must leave the build UNSTABLE (not FAILURE): Jenkins only shows the
+                    // job-level "Latest Test Result" view and trend based on the last successful build
+                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true
                     // }
                     // Send email
                     sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep saltshaker_mail"
