@@ -73,6 +73,9 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:bd"
     name = "build-host"
     terminal_private_name = "pxeboot"
+    terminal_manufacturer = "Intel"
+    terminal_product      = "Genuine"
+    terminal_private_ip   = 4
   }
   product_version = "5.2-nightly"
   name_prefix     = "mlm-ci-52-hubtesting-"
