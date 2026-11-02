@@ -46,16 +46,16 @@ jobs:
         uses: robinraju/release-downloader@28fc21f50d76778e7023361aa1f863e717d3d56f #v1.13
         with:
           repository: Bischoff/terraform-provider-feilong
-          tag: 'v0.0.9'
-          fileName: 'terraform-provider-feilong_0.0.9_linux_amd64.tar.gz'
+          tag: 'v0.0.10'
+          fileName: 'terraform-provider-feilong_0.0.10_linux_amd64.tar.gz'
           extract: true
 
       - name: Setup Providers
         run: |
           # Install feilong provider
           srcdir=/home/runner/work/susemanager-ci/susemanager-ci/
-          dstdir_terraform=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.9/linux_amd64/
-          dstdir_opentofu=/usr/share/terraform/plugins/registry.opentofu.org/bischoff/feilong/0.0.9/linux_amd64/
+          dstdir_terraform=/usr/share/terraform/plugins/registry.terraform.io/bischoff/feilong/0.0.10/linux_amd64/
+          dstdir_opentofu=/usr/share/terraform/plugins/registry.opentofu.org/bischoff/feilong/0.0.10/linux_amd64/
           sudo mkdir -p $dstdir_terraform
           sudo mkdir -p $dstdir_opentofu
           sudo ln -s $srcdir/terraform-provider-feilong $dstdir_terraform
