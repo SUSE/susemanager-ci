@@ -149,8 +149,6 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
-  container_server = true
-  container_proxy  = true
   beta_enabled = false
 
   //server_http_proxy        = "http-proxy.mgr.suse.de:3128"
@@ -170,7 +168,6 @@ module "cucumber_testsuite" {
         mac = "aa:b2:93:01:00:c1"
       }
       main_disk_size = 500
-      login_timeout = 28800
       runtime = "podman"
       container_registry = "registry.suse.de"
       container_tag = "latest"

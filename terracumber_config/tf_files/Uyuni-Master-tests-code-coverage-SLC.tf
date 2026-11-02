@@ -124,9 +124,6 @@ module "cucumber_testsuite" {
   domain       = "mgr.slc1.suse.org"
   from_email   = "root@suse.com"
 
-  container_server = true
-  container_proxy  = true
-
   mirror                   = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images        = true
   
@@ -160,7 +157,6 @@ module "cucumber_testsuite" {
       main_disk_size        = 40
       repository_disk_size  = 250
       database_disk_size    = 60
-      login_timeout         = 28800
       large_deployment      = true
     }
     proxy_containerized = {

@@ -129,8 +129,6 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo      = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
-  container_server = true
-  container_proxy  = true
   beta_enabled = false
 
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
@@ -154,7 +152,6 @@ module "cucumber_testsuite" {
         memory = 32768
       }
       main_disk_size       = 500
-      login_timeout        = 28800
       large_deployment     = true
       runtime              = "podman"
       container_registry   = "registry.suse.de"
