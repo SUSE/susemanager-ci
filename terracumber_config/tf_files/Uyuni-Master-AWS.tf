@@ -137,9 +137,6 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
-  container_server = true
-  container_proxy  = true
-
   mirror = "mirror.sumaci.aws"
   // use_mirror_images = true
 
@@ -168,7 +165,6 @@ module "cucumber_testsuite" {
       runtime = "podman"
       container_registry = "registry.opensuse.org/systemsmanagement/uyuni/master/containerfile"
       container_tag = "latest"
-      login_timeout = 28800
     }
     proxy_containerized = {
       image = "tumbleweedo"

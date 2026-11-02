@@ -118,9 +118,6 @@ module "cucumber_testsuite" {
   domain       = "mgr.slc1.suse.org"
   from_email   = "root@suse.de"
   
-  container_server = true
-  container_proxy  = true
-
   mirror                   = "minima-mirror-ci-bv.mgr.slc1.suse.org"
   use_mirror_images        = true
 

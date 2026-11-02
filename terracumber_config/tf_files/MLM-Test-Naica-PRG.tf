@@ -129,9 +129,6 @@ module "cucumber_testsuite" {
   auth_registry_password = "cucusecret"
   git_profiles_repo = "https://github.com/uyuni-project/uyuni.git#:testsuite/features/profiles/temporary"
 
-  container_server = true
-  container_proxy = true
-
   mirror                   = "minima-mirror-ci-bv.mgr.suse.de"
   use_mirror_images        = true
 
@@ -152,7 +149,6 @@ module "cucumber_testsuite" {
         memory = 32768
       }
       main_disk_size = 500
-      login_timeout = 28800
       runtime = "podman"
       container_registry = "registry.suse.de/devel/galaxy/manager/test/naica/containerfile"
       container_tag = "latest"
@@ -173,12 +169,6 @@ module "cucumber_testsuite" {
       container_tag = "latest"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Naica/SL_Micro_61/"
-      }
-    }
-    suse_client = {
-      image = "sles15sp7o"
-      provider_settings = {
-        mac = "aa:b2:93:01:00:64"
       }
     }
     suse_minion = {
