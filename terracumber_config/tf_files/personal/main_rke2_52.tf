@@ -121,13 +121,13 @@ module "cucumber_testsuite" {
       proxy_namespace             = "uyuni"
     }
     suse_minion = {
-      image             = "tumbleweedo"
+      image             = "sles15sp7o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-minion"]
       }
     }
     suse_sshminion = {
-      image             = "tumbleweedo"
+      image             = "sles15sp7o"
       provider_settings = {
         mac = var.ENVIRONMENT_CONFIGURATION[var.ENVIRONMENT].mac["suse-sshminion"]
       }
