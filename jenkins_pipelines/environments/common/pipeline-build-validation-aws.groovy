@@ -99,7 +99,7 @@ def run(params) {
                                             if (!json_generator_version) {
                                                 error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
                                             }
-                                            node('manager-jenkins-node') {
+                                            node('jenkins-agent') {
                                                 checkout scm
                                                 def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids} --no_embargo", returnStatus: true)
                                                 echo "Build Validation JSON script return code:\n ${res_python_script_}"
