@@ -170,6 +170,22 @@ def run(params) {
                 }
 
                 if (params.redeploy_environment) {
+                    stage('Check no provisioning is tainted') {
+                        // A tainted terraform_data.provisioning is replaced by the apply below: it re-runs
+                        // provisioning (e.g. mgr-storage-server on a server that already has data) and fails.
+                        String tainted = sh(
+                                script: """
+                            jq -r '.resources[]
+                                | select(.type == "terraform_data" and .name == "provisioning")
+                                | .module as \$m | .instances[] | select(.status == "tainted") | \$m' ${localTfStateFile}
+                        """,
+                                returnStdout: true
+                        ).trim()
+                        if (tainted) {
+                            error("Tainted provisioning would be re-run on:\n${tainted}\nRun 'tofu untaint' on them in ${targetedSumaformDirPath} first.")
+                        }
+                    }
+
                     stage('Delete client VMs') {
                         // Determine cleaning mode
                         String cleaningFlags = "--clean"
