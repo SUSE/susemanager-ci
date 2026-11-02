@@ -1,0 +1,36 @@
+name: Scripts unit tests
+
+on:
+  pull_request:
+    paths:
+      - 'jenkins_pipelines/scripts/**'
+      - '.github/workflows/scripts-tests.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 #v6.0.0
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python3.11 -m pip install --upgrade pip
+          # tf_vars_generator needs python-hcl2, json_generator needs requests, test_ibs_osc_client needs the osc binary
+          pip3.11 install -r jenkins_pipelines/scripts/tf_vars_generator/requirements.txt requests osc
+
+      - name: Configure osc
+        # test_ibs_osc_client runs `osc --apiurl https://api.suse.de version`; osc exits 1 without a config (it cannot prompt in CI). Dummy credentials, no network call is made.
+        run: |
+          mkdir -p ~/.config/osc
+          printf '%s\n' '[general]' 'apiurl = https://api.suse.de' 'credentials_mgr_class = osc.credentials.PlaintextConfigFileCredentialsManager' '' '[https://api.suse.de]' 'user = ci' 'pass = ci' > ~/.config/osc/oscrc
+          chmod 600 ~/.config/osc/oscrc
+
+      - name: Run tests
+        # Must run from scripts/: tests import json_generator.* and tests.mock_response
+        run: cd jenkins_pipelines/scripts; python3.11 -m unittest discover -s tests -t . -v

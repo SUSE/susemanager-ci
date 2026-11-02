@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, mock_open
 import sys
 import os
+import tempfile
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -99,6 +100,35 @@ class TestTfvarsGenerator(unittest.TestCase):
         self.assertEqual(env_config['key1'], 'val1') # Preserved
         self.assertEqual(env_config['key2'], 'val2') # Added
         self.assertEqual(self.generator.data['OTHER_CONFIG'], 'val3') # Top-level added
+
+    @patch('prepare_tfvars.hcl2.load')
+    @patch('builtins.open', new_callable=mock_open)
+    def test_merge_files_quoted_map_keys(self, mock_file, mock_hcl_load):
+        """python-hcl2 3.x returns map keys with their quotes ('"46932"'): they must not be re-escaped on save."""
+        mock_hcl_load.return_value = {
+            'SERVER_ADDITIONAL_REPOS': {'"46932"': '"http://example.org/a:/b/"'}
+        }
+
+        self.generator.merge_files(['dummy.tfvars'])
+
+        self.assertEqual(self.generator.data['SERVER_ADDITIONAL_REPOS'],
+                         {'46932': 'http://example.org/a:/b/'})
+        self.assertEqual(self.generator.to_hcl(self.generator.data),
+                         'SERVER_ADDITIONAL_REPOS = {\n  "46932" = "http://example.org/a:/b/"\n}')
+
+    def test_merge_files_round_trip_numeric_map_keys(self):
+        """Real hcl2 parse then save: a numeric map key must come out as "46932", never "\\"46932\\"" (broke Salt repos.additional)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, 'in.tfvars')
+            with open(path, 'w') as f:
+                f.write('PROXY_ADDITIONAL_REPOS = {\n  "46932" = "http://example.org/p/"\n  "46932_1" = "http://example.org/r/"\n}\n')
+
+            self.generator.merge_files([path])
+
+        out = self.generator.to_hcl(self.generator.data)
+        self.assertNotIn('\\"', out)
+        self.assertIn('"46932" = "http://example.org/p/"', out)
+        self.assertIn('"46932_1" = "http://example.org/r/"', out)
 
     def test_inject_variables(self):
         """Test variable injection."""

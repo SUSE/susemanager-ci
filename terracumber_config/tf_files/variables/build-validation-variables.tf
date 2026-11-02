@@ -120,6 +120,18 @@ variable "SERVER_ADDITIONAL_REPOS" {
   default     = {}
 }
 
+variable "SERVER_ADDITIONAL_REPOS_TRANSACTIONAL" {
+  type        = map(string)
+  description = "extra server repositories for transactional (SL Micro) hosts, in the form {label = \"url\"}"
+  default     = {}
+}
+
+variable "SERVER_ADDITIONAL_REPOS_NON_TRANSACTIONAL" {
+  type        = map(string)
+  description = "extra server repositories for non-transactional (SLES) hosts, in the form {label = \"url\"}"
+  default     = {}
+}
+
 variable "PROXY_CONTAINER_REGISTRY" {
   type = string
   description = "Proxy container registry path"
@@ -129,6 +141,18 @@ variable "PROXY_CONTAINER_REGISTRY" {
 variable "PROXY_ADDITIONAL_REPOS" {
   type        = map(string)
   description = "extra proxy repositories in the form {label = \"url\"}"
+  default     = {}
+}
+
+variable "PROXY_ADDITIONAL_REPOS_TRANSACTIONAL" {
+  type        = map(string)
+  description = "extra proxy repositories for transactional (SL Micro) hosts, in the form {label = \"url\"}"
+  default     = {}
+}
+
+variable "PROXY_ADDITIONAL_REPOS_NON_TRANSACTIONAL" {
+  type        = map(string)
+  description = "extra proxy repositories for non-transactional (SLES) hosts, in the form {label = \"url\"}"
   default     = {}
 }
 

@@ -9,6 +9,23 @@ import hcl2
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+def custom_repos_to_tfvars(repos):
+    """Maps a custom_repositories JSON dict to *_ADDITIONAL_REPOS tfvars for server and proxy.
+
+    A split key (<kind>_transactional / <kind>_non_transactional) replaces the flat <kind> key;
+    without any split key the flat key keeps its legacy behaviour.
+    """
+    result = {}
+    for kind in ("server", "proxy"):
+        split = {s: f"{kind}_{s}" for s in ("transactional", "non_transactional") if f"{kind}_{s}" in repos}
+        if split:
+            for suffix, key in split.items():
+                result[f"{kind.upper()}_ADDITIONAL_REPOS_{suffix.upper()}"] = repos[key]
+        elif kind in repos:
+            result[f"{kind.upper()}_ADDITIONAL_REPOS"] = repos[kind]
+    return result
+
+
 class TfvarsGenerator:
     def __init__(self):
         self.data = {}
@@ -157,7 +174,8 @@ class TfvarsGenerator:
                 return value[1:-1].replace('\\"', '"').replace('\\\\', '\\')
             return value
         elif isinstance(value, dict):
-            return {k: self._normalize_hcl_value(v) for k, v in value.items()}
+            # Keys carry the delimiters too (e.g. '"46932"'); without this hcl_key() re-escapes them to '"\"46932\""'
+            return {self._normalize_hcl_value(k): self._normalize_hcl_value(v) for k, v in value.items()}
         elif isinstance(value, list):
             return [self._normalize_hcl_value(item) for item in value]
         return value
@@ -287,9 +305,7 @@ if __name__ == "__main__":
             print(f"\n[ERROR]: Failed to parse custom repositories JSON file at {args.custom_repositories_json}. Error: {e}")
             sys.exit(1)
 
-        for k in ["server", "proxy"]:
-            if k in repos:
-                vars_to_inject[f"{k.upper()}_ADDITIONAL_REPOS"] = repos[k]
+        vars_to_inject.update(custom_repos_to_tfvars(repos))
 
     gen.inject_variables(vars_to_inject)
 
