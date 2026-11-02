@@ -98,6 +98,12 @@ def run(params) {
 
                 stage("Extract server hostname") {
                     try {
+                        // The copied .terraform provider cache can be incomplete (e.g. broken symlinks after cp -r): re-init so 'tofu output' works
+                        sh """
+                            set -e
+                            cd ${localSumaformDirPath}
+                            tofu init -input=false
+                        """
                         serverHostname = sh(
                                 script: """
                             set -e
@@ -114,6 +120,11 @@ def run(params) {
                         """,
                                 returnStdout: true
                         ).trim()
+
+                        // No pipefail in sh: a failing 'tofu output' yields an empty string, not an error
+                        if (!serverHostname || serverHostname == 'null' || !controllerHostname || controllerHostname == 'null') {
+                            error("Empty hostname from tofu output (server='${serverHostname}', controller='${controllerHostname}')")
+                        }
 
                         // Print the value for confirmation
                         echo "Extracted server hostname: ${serverHostname}"
