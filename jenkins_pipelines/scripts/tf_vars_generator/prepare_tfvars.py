@@ -157,7 +157,8 @@ class TfvarsGenerator:
                 return value[1:-1].replace('\\"', '"').replace('\\\\', '\\')
             return value
         elif isinstance(value, dict):
-            return {k: self._normalize_hcl_value(v) for k, v in value.items()}
+            # Keys carry the delimiters too (e.g. '"46932"'); without this hcl_key() re-escapes them to '"\"46932\""'
+            return {self._normalize_hcl_value(k): self._normalize_hcl_value(v) for k, v in value.items()}
         elif isinstance(value, list):
             return [self._normalize_hcl_value(item) for item in value]
         return value
