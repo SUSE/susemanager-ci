@@ -31,7 +31,7 @@ pipeline {
             " --command ${test}"
     }
     // run only on specific hosts
-    agent { label 'suse-manager-unit-tests' }
+    agent { label 'sumadocker-nue' }
 
     stages {
         stage('Clean Up Workspace') {

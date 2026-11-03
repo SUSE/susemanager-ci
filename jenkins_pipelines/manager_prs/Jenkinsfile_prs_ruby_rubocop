@@ -29,7 +29,7 @@ pipeline {
                 " --command ${test}"
     }
 
-    agent { label 'suse-manager-unit-tests' }
+    agent { label 'sumadocker-nue' }
 
     stages {
         stage('Clean Up Workspace') {

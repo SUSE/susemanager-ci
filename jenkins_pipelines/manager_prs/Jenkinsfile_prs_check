@@ -16,7 +16,7 @@ pipeline {
       repository = 'SUSE/spacewalk'
     }
 
-    agent { label 'suse-manager-unit-tests' }
+    agent { label 'sumadocker-nue' }
 
     triggers {
         cron('H/10 * * * *')
