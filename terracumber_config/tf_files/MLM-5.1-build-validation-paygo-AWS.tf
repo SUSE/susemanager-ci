@@ -108,11 +108,6 @@ variable "SERVER_REGISTRATION_CODE" {
   default = null
 }
 
-variable "PROXY_REGISTRATION_CODE" {
-  type = string
-  default = null
-}
-
 variable "SLES_REGISTRATION_CODE" {
   type = string
   default = null
@@ -243,7 +238,6 @@ module "proxy_containerized" {
   base_configuration        = module.base.configuration
   server_configuration      = module.server.configuration
   name                      = var.ENVIRONMENT_CONFIGURATION.proxy_containerized.name
-  proxy_registration_code   = var.PROXY_REGISTRATION_CODE
   image                     = var.PROXY_AMI != "" ? var.PROXY_AMI : "smlm-proxy-51-${var.ARCHITECTURE}-byos"
   provision                 = false
 
