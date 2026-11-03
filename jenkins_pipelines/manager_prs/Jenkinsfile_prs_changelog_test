@@ -30,7 +30,7 @@ pipeline {
                 " --description \"Merging enabled (requires changelog_test passing)\" "
     }
     // run only on specific hosts
-    agent { label 'suse-manager-unit-tests' }
+    agent { label 'sumadocker-nue' }
 
     stages {
         stage('Clean Up Workspace') {
