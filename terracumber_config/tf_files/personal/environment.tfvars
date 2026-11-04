@@ -56,7 +56,7 @@ ENVIRONMENT_CONFIGURATION = {
     additional_network  = "192.168.12.0/24"
     dhcp_user           = "root"
   }
-  oscar = {
+  martin = {
     mac = {
       controller     = "aa:b2:93:01:01:5c"
       server         = "aa:b2:93:01:01:5d"
@@ -70,7 +70,7 @@ ENVIRONMENT_CONFIGURATION = {
       kvm-host       = "aa:b2:93:01:01:65"
     }
     hypervisor          = "suma-05.mgr.suse.de"
-    pool                = "obarrios_disks"
+    pool                = "mkoci_disks"
     bridge              = "br0"
     additional_network  = "192.168.13.0/24"
     dhcp_user           = "root"
