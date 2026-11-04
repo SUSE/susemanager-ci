@@ -30,6 +30,23 @@ class V53BetaClientToolsTest(unittest.TestCase):
         self.assertIn("slmicro62_minion", beta)
         self.assertIn("sles160_minion", beta)
 
+    def test_new_sle16_and_sap_nodes_use_the_beta_sles16_client_tools(self):
+        beta = v53_nodes_static_client_tools_repositories_beta
+        for node in ("sles161_minion", "slesforsap160_minion", "slesforsap161_minion"):
+            self.assertEqual(
+                beta[node]["sles16_client_tools"],
+                beta["sles160_minion"]["sles16_client_tools"],
+            )
+
+    def test_sap15_nodes_use_the_beta_sle15_client_tools_without_ltss_plus_sap_repos(self):
+        _static, dynamic = get_v53_static_and_client_tools("sles", beta=True)
+        for sp in ("sp5", "sp6", "sp7"):
+            sap = set(dynamic[f"slesforsap15{sp}_minion"])
+            sles = set(dynamic[f"sles15{sp}_minion"])
+            sap_only = {url for url in sap if "SAP" in url or "Product-HA" in url}
+            self.assertTrue(sap_only)
+            self.assertEqual(sap - sap_only, {url for url in sles if "LTSS" not in url})
+
     def test_sles_beta_static_image_urls_are_prefixed_in_getter(self):
         static, _dynamic = get_v53_static_and_client_tools("sles", beta=True)
         url = static["server"]["mlm53_sles_beta_totest_images_sp7"]

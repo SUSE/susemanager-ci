@@ -259,8 +259,8 @@ def url_exists(url: str) -> bool:
 def slfo_pullrequest_client_tool_url(pr_id: str, arch: str = "x86_64") -> str:
     """Return the stable SLE-16 MultiLinuxManagerTools URL for the given PullRequest id and architecture.
 
-    This URL is used for sles160_minion, slmicro62_minion (x86_64), opensuse161arm_minion (aarch64)
-    and opensuse161ppc_minion (ppc64le).
+    This URL is used for sles160_minion, sles161_minion, slesforsap160_minion, slesforsap161_minion,
+    slmicro62_minion (x86_64), opensuse161arm_minion (aarch64) and opensuse161ppc_minion (ppc64le).
     SL Micro 6.2 consumes the same SLE-16 client-tools repo on the stable PullRequest path.
     Beta client tools do not use PullRequest URLs - they are served from static
     :ToTest definitions in repository_versions/*_nodes.py.
@@ -289,6 +289,9 @@ def apply_slfo_pullrequest_client_tools(
 ) -> None:
     for node, arch in [
         ("sles160_minion", "x86_64"),
+        ("sles161_minion", "x86_64"),
+        ("slesforsap160_minion", "x86_64"),
+        ("slesforsap161_minion", "x86_64"),
         ("slmicro62_minion", "x86_64"),
         ("opensuse161arm_minion", "aarch64"),
         ("opensuse161ppc_minion", "ppc64le"),

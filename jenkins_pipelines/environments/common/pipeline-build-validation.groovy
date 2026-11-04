@@ -714,6 +714,10 @@ def clientTestingStages(params, muLockSlots, nonMuLockSlots, smokeTestSlots, boo
             // Generate a temporary list that comprises of all the minions except the one currently undergoing testing.
             // This list is utilized to establish an SSH session exclusively with the minion undergoing testing.
             def temporaryList = nodesHandler.envVariableList.toList() - node.toUpperCase()
+            // SLES for SAP 15 features are skipped unless the plain SLES 15 variable is also set (Before hook in env.rb)
+            if (node.startsWith('slesforsap15sp')) {
+                temporaryList = temporaryList - node.replace('slesforsap', 'sles').toUpperCase()
+            }
             def nodeTag = node
             stage("${node}") {
                 echo "Testing ${node}"
