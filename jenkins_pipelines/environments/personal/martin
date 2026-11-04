@@ -54,7 +54,7 @@ node('sumaform-cucumber') {
         def newParams = [:] + params
         newParams.capybara_timeout = 10
         newParams.default_timeout = 250
-        newParams.environment = 'oscar'
+        newParams.environment = 'martin'
         def pipelineFile
         if (params.pipeline_type == 'rke2') {
             pipelineFile = 'pipeline-personal-rke2.groovy'
