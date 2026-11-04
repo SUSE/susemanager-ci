@@ -79,7 +79,7 @@ are numbered independently, so the layout on IBS is the only reliable way to tel
 
 | Project | Applied to | Inner key |
 | --- | --- | --- |
-| `SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/<id>:/SLES` | `sles160_minion`, `slmicro62_minion` (x86_64), `opensuse161arm_minion` (aarch64), `opensuse161ppc_minion` (ppc64le) | `slfo_pr_{id}_{minion}_{arch}` |
+| `SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/<id>:/SLES` | `sles160_minion`, `sles161_minion`, `slesforsap160_minion`, `slesforsap161_minion`, `slmicro62_minion` (x86_64), `opensuse161arm_minion` (aarch64), `opensuse161ppc_minion` (ppc64le) | `slfo_pr_{id}_{minion}_{arch}` |
 | `SLFO:/Products:/Multi-Linux-Manager:/<5.x>:/Packages:/PullRequest:/<id>:/SL-Micro` | `server`, `proxy` of the `-micro` variant | `slfo_pr_{id}_{server,proxy,retail}_uyuni_tools` |
 
 A PullRequest repo **supersedes** the `:ToTest` repo it corresponds to rather than being
