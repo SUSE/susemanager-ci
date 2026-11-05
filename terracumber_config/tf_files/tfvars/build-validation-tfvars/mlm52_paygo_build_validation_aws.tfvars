@@ -1,34 +1,34 @@
 ENVIRONMENT_CONFIGURATION = {
   server_containerized = {
     name               = "server"
-    product_version    = "5.1-paygo"
+    product_version    = "5.2-paygo"
   }
   proxy_containerized = {
     name               = "proxy"
   }
   sles12sp5_paygo_minion = {
     name               = "sles12sp5-paygo-minion"
-    product_version    = "5.1-paygo"
+    product_version    = "5.2-paygo"
   }
   sles15sp5_paygo_minion = {
     name               = "sles15sp5-paygo-minion"
-    product_version    = "5.1-paygo"
+    product_version    = "5.2-paygo"
   }
   sles15sp6_paygo_minion = {
     name               = "sles15sp6-paygo-minion"
-    product_version    = "5.1-paygo"
+    product_version    = "5.2-paygo"
   }
   sles15sp7_paygo_minion = {
     name               = "sles15sp7-paygo-minion"
-    product_version    = "5.1-paygo"
+    product_version    = "5.2-paygo"
   }
   sles160_paygo_minion = {
     name               = "sles160-paygo-minion"
-    product_version    = "5.1-paygo"
+    product_version    = "5.2-paygo"
   }
   slesforsap15sp5_paygo_minion = {
     name               = "slesforsap15sp5-paygo-minion"
-    product_version    = "5.1-paygo"
+    product_version    = "5.2-paygo"
   }
   sles12sp5_minion = {
     name               = "sles12sp5-minion"
@@ -59,7 +59,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
   rhel9_paygo_minion = {
     name               = "rhel9-paygo-minion"
-    product_version    = "5.1-paygo"
+    product_version    = "5.2-paygo"
   }
-  product_version = "5.1-released"
+  product_version = "5.2-released"
 }
