@@ -74,13 +74,14 @@ Options:
 ids, on stable 5.1 / 5.2 only (independent of MI ids). Rejected for `-beta` versions, which
 receive a fixed `:ToTest` URL automatically.
 
-Each id is looked up on IBS and applied to the project that publishes it - the two families
+Each id is looked up on IBS and applied to the project that publishes it - the three families
 are numbered independently, so the layout on IBS is the only reliable way to tell them apart:
 
 | Project | Applied to | Inner key |
 | --- | --- | --- |
 | `SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/<id>:/SLES` | `sles160_minion`, `slmicro62_minion` (x86_64), `opensuse161arm_minion` (aarch64), `opensuse161ppc_minion` (ppc64le) | `slfo_pr_{id}_{minion}_{arch}` |
 | `SLFO:/Products:/Multi-Linux-Manager:/<5.x>:/Packages:/PullRequest:/<id>:/SL-Micro` | `server`, `proxy` of the `-micro` variant | `slfo_pr_{id}_{server,proxy,retail}_uyuni_tools` |
+| `SLFO:/<ver>:/PullRequest:/<id>/standard/` | Minions for the matching SLFO release (`1.0` -> `slmicro60`, `1.1` -> `slmicro61`, `1.2` -> `sles160`/`slmicro62`, `1.3` -> `opensuse161` arm/ppc) | `slfo_pr_{id}_{minion}_{arch}` |
 
 A PullRequest repo **supersedes** the `:ToTest` repo it corresponds to rather than being
 added next to it, so the node cannot install the `:ToTest` content instead of the one under
@@ -183,8 +184,24 @@ proxy instead, for example `--version 52-micro --slfo-pull-request 65`:
 }
 ```
 
-Both families can be passed together, in any order:
-`--version 52-micro --slfo-pull-request 370 65`.
+An SLFO base OS PullRequest feeds the salt repository of the minions corresponding to that
+SLFO release (`1.0` -> `slmicro60`, `1.1` -> `slmicro61`, `1.2` -> `sles160`/`slmicro62`,
+`1.3` -> `opensuse161`), replacing static salt repos where defined. For example:
+`--version 52-sles --slfo-pull-request 9675`:
+
+```json
+{
+  "sles160_minion": {
+    "slfo_pr_9675_sles160_x86_64": "http://download.suse.de/ibs/SUSE:/SLFO:/1.2:/PullRequest:/9675/standard/"
+  },
+  "slmicro62_minion": {
+    "slfo_pr_9675_slmicro62_x86_64": "http://download.suse.de/ibs/SUSE:/SLFO:/1.2:/PullRequest:/9675/standard/"
+  }
+}
+```
+
+All families can be passed together, in any order:
+`--version 52-micro --slfo-pull-request 372 68 9675`.
 
 ## Logging
 
@@ -203,9 +220,12 @@ messages will display timestamped INFO-level messages.
 - `clean_slfo_pull_request_ids()`: Flattens the PullRequest ids of `-s` into a
   de-duplicated list, whether they were given space or comma separated.
 - `classify_slfo_pull_requests()`: Asks IBS which project publishes each PullRequest
-  id and sorts them into `client_tools` / `mlm_packages`; an unknown id aborts the run.
+  id and sorts them into `client_tools` / `mlm_packages` / `slfo_<ver>`; an unknown id aborts the run.
 - `apply_slfo_pull_requests()`: Applies each classified id to the nodes it belongs to,
-  replacing the `:ToTest` repos it supersedes.
+  replacing the `:ToTest` or static salt repos it supersedes.
+- `apply_slfo_pullrequest_client_tools()`: Points SLE-16 client tools minions at a MultiLinuxManagerTools PullRequest.
+- `apply_slfo_pullrequest_os()`: Points minions at an SLFO base OS / salt PullRequest for the corresponding SLFO release.
+- `apply_mlm_packages_pullrequest()`: Points server/proxy at a Packages PullRequest instead of :ToTest repos.
 - `probe_url()`: Cached existence check for an IBS path. Retries on connection errors and on 5xx/429, and returns `None` when IBS stays unreachable.
 - `url_exists()`: Same check, but stops the run when IBS is unreachable. Used by the two functions above.
 

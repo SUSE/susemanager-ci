@@ -98,7 +98,8 @@ def parse_cli_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=_slfo_pr_id,
         help="Space separated list of SLFO PullRequest ids. Each id is looked up on IBS and applied where it belongs: "
              "MultiLinuxManagerTools PullRequests feed the SLE-16 client tools, Multi-Linux-Manager Packages "
-             "PullRequests feed the server/proxy of the micro variant. Stable 51-* / 52-* only; rejected for "
+             "PullRequests feed the server/proxy of the micro variant, and SLFO base OS PullRequests feed "
+             "the corresponding minion salt repos (SLFO 1.0 through 1.3). Stable 51-* / 52-* only; rejected for "
              "*-beta versions (beta uses :ToTest automatically)",
     )
 
@@ -256,6 +257,15 @@ def url_exists(url: str) -> bool:
         raise SystemExit(f"IBS could not be reached to check {url}")
     return published
 
+
+SLFO_OS_MINIONS: dict[str, tuple[tuple[str, str], ...]] = {
+    "1.0": (("slmicro60_minion", "x86_64"),),
+    "1.1": (("slmicro61_minion", "x86_64"),),
+    "1.2": (("sles160_minion", "x86_64"), ("slmicro62_minion", "x86_64")),
+    "1.3": (("opensuse161arm_minion", "aarch64"), ("opensuse161ppc_minion", "ppc64le")),
+}
+
+
 def slfo_pullrequest_client_tool_url(pr_id: str, arch: str = "x86_64") -> str:
     """Return the stable SLE-16 MultiLinuxManagerTools URL for the given PullRequest id and architecture.
 
@@ -270,8 +280,13 @@ def slfo_pullrequest_client_tool_url(pr_id: str, arch: str = "x86_64") -> str:
     return f"{IBS_URL_PREFIX}{root}{tail}"
 
 
+def slfo_pullrequest_os_url(pr_id: str, slfo_version: str) -> str:
+    """Return the SLFO base OS PullRequest standard repository URL for the given SLFO version."""
+    return f"{IBS_URL_PREFIX}/SLFO:/{slfo_version}:/PullRequest:/{pr_id}/standard/"
+
+
 def slfo_pullrequest_repo_key(pr_id: str, minion: str, arch: str) -> str:
-    """Inner dict key for SLFO PullRequest client-tools repos (not an MI id).
+    """Inner dict key for SLFO PullRequest repos (not an MI id).
 
     Args:
         pr_id: SLFO PullRequest id
@@ -284,6 +299,22 @@ def slfo_pullrequest_repo_key(pr_id: str, minion: str, arch: str) -> str:
     return f"slfo_pr_{pr_id}_{minion}_{arch}"
 
 
+def _point_minion_at_slfo_pullrequest(
+    custom_repositories: dict[str, dict[str, str]],
+    node: str,
+    arch: str,
+    pr_id: str,
+    url: str,
+    superseded_repo: str,
+) -> None:
+    """Add the PullRequest repo to a minion, dropping the repo it supersedes."""
+    minion_shortname = node.removesuffix("_minion")
+    custom_repositories.get(node, {}).pop(superseded_repo, None)
+    update_custom_repositories(
+        custom_repositories, node, slfo_pullrequest_repo_key(pr_id, minion_shortname, arch), url
+    )
+
+
 def apply_slfo_pullrequest_client_tools(
     custom_repositories: dict[str, dict[str, str]], pr_id: str
 ) -> None:
@@ -293,12 +324,22 @@ def apply_slfo_pullrequest_client_tools(
         ("opensuse161arm_minion", "aarch64"),
         ("opensuse161ppc_minion", "ppc64le"),
     ]:
-        url = slfo_pullrequest_client_tool_url(pr_id, arch=arch)
-        minion_shortname = node.removesuffix("_minion")
         # the PullRequest repo replaces the :ToTest one, it is not added to it
-        custom_repositories.get(node, {}).pop(SLE16_CLIENT_TOOLS_REPO_NAME, None)
-        update_custom_repositories(custom_repositories, node,
-                                  slfo_pullrequest_repo_key(pr_id, minion_shortname, arch), url)
+        _point_minion_at_slfo_pullrequest(
+            custom_repositories, node, arch, pr_id,
+            slfo_pullrequest_client_tool_url(pr_id, arch=arch), SLE16_CLIENT_TOOLS_REPO_NAME,
+        )
+
+
+def apply_slfo_pullrequest_os(
+    custom_repositories: dict[str, dict[str, str]], pr_id: str, slfo_version: str
+) -> None:
+    """Point minions at an SLFO base OS / salt PullRequest instead of static salt repos."""
+    url = slfo_pullrequest_os_url(pr_id, slfo_version)
+    for node, arch in SLFO_OS_MINIONS.get(slfo_version, ()):
+        _point_minion_at_slfo_pullrequest(
+            custom_repositories, node, arch, pr_id, url, f"{node.removesuffix('_minion')}_salt"
+        )
 
 
 def mlm_packages_pullrequest_url(pr_id: str, product_version: str, repo: str) -> str:
@@ -323,7 +364,11 @@ def classify_slfo_pull_requests(pr_ids: list[str], version: str) -> dict[str, li
     the other. An id that exists in neither stops the run.
     """
     product_version = mlm_product_version(version)
-    families: dict[str, list[str]] = {"client_tools": [], "mlm_packages": []}
+    families: dict[str, list[str]] = {
+        "client_tools": [],
+        "mlm_packages": [],
+        **{f"slfo_{ver}": [] for ver in SLFO_OS_MINIONS},
+    }
 
     for pr_id in pr_ids:
         candidates: dict[str, str] = {
@@ -331,6 +376,7 @@ def classify_slfo_pull_requests(pr_ids: list[str], version: str) -> dict[str, li
             "mlm_packages": mlm_packages_pullrequest_url(
                 pr_id, product_version, f"Multi-Linux-Manager-Server-{product_version}-x86_64"
             ),
+            **{f"slfo_{ver}": slfo_pullrequest_os_url(pr_id, ver) for ver in SLFO_OS_MINIONS},
         }
         matches: list[str] = [family for family, url in candidates.items() if url_exists(url)]
 
@@ -395,6 +441,10 @@ def apply_slfo_pull_requests(
             )
             continue
         apply_mlm_packages_pullrequest(custom_repositories, pr_id, version)
+
+    for ver in SLFO_OS_MINIONS:
+        for pr_id in families[f"slfo_{ver}"]:
+            apply_slfo_pullrequest_os(custom_repositories, pr_id, ver)
 
 
 def warn_on_unresolved_uyuni_tools_repos(custom_repositories: dict[str, dict[str, str]]) -> None:
