@@ -135,6 +135,30 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:0e"
     name = "opensuse161ppc-minion"
   }
+  sles161_minion = {
+    mac  = "aa:b2:92:05:00:35"
+    name = "sles161-minion"
+  }
+  slesforsap15sp5_minion = {
+    mac  = "aa:b2:92:05:00:36"
+    name = "slesforsap15sp5-minion"
+  }
+  slesforsap15sp6_minion = {
+    mac  = "aa:b2:92:05:00:37"
+    name = "slesforsap15sp6-minion"
+  }
+  slesforsap15sp7_minion = {
+    mac  = "aa:b2:92:05:00:38"
+    name = "slesforsap15sp7-minion"
+  }
+  slesforsap160_minion = {
+    mac  = "aa:b2:92:05:00:39"
+    name = "slesforsap160-minion"
+  }
+  slesforsap161_minion = {
+    mac  = "aa:b2:92:05:00:3a"
+    name = "slesforsap161-minion"
+  }
   sles15sp5s390_minion = {
     mac    = "02:00:00:02:01:32"
     name   = "sles15sp5s390-minion"
@@ -277,6 +301,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:0f"
     name = "opensuse161ppc-sshminion"
   }
+  sles161_sshminion = {
+    mac  = "aa:b2:92:05:00:65"
+    name = "sles161-sshminion"
+  }
   sles15sp5s390_sshminion = {
     mac    = "02:00:00:02:01:33"
     name   = "sles15sp5s390-sshminion"
@@ -312,7 +340,7 @@ BASE_CONFIGURATIONS = {
     hypervisor         = "tatooine.mgr.slc1.suse.org"
   }
   base_new_sle = {
-    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o" ]
+    images             = [ "sles15sp4o", "sles15sp5o", "sles15sp6o", "sles15sp7o", "sles160o", "sles161o", "slesforsap160o", "slesforsap161o", "slemicro53-ign", "slemicro54-ign", "slemicro55o", "slmicro60o", "slmicro61o", "slmicro62o" ]
     pool               = "ssd"
     bridge             = "br1"
     additional_network = null
