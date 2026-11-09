@@ -39,6 +39,42 @@ def run(params) {
             def withIdleTimeout = { Closure body ->
                 timeout(activity: true, time: cucumberIdleTimeoutMinutes, unit: 'MINUTES') { body() }
             }
+            // Quiet window: skip the whole run (NOT_BUILT) while inside "DAY HH:MM-DAY HH:MM", e.g. "SUN 11:00-MON 05:00".
+            // Empty disables it. A malformed value fails open (the run proceeds).
+            // Edit these two lines to change the window (for a test, set a window around the current time).
+            def quietWindow = 'SUN 11:00-MON 05:00'
+            def quietTimezone = 'Europe/Berlin'
+            // Issue 31517: only timer builds are gated. TEST ONLY: true also gates manual builds so it can be tried by hand; set to false for the real thing.
+            def quietGateManualBuilds = true
+            def timerBuild = !currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause').isEmpty()
+            if (quietWindow && (timerBuild || quietGateManualBuilds)) {
+                def inQuiet = false
+                try {
+                    def days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
+                    def toMin = { String s ->
+                        def p = s.trim().split(' ')
+                        def hm = p[1].split(':')
+                        def d = days.indexOf(p[0].toUpperCase())
+                        if (d < 0) { error "bad day '${p[0]}'" }
+                        d * 1440 + hm[0].toInteger() * 60 + hm[1].toInteger()
+                    }
+                    def tz = quietTimezone
+                    def parts = quietWindow.split('-')
+                    def now = sh(script: "TZ=${tz} date +'%u %H %M'", returnStdout: true).trim().split(' ')
+                    int n = (now[0].toInteger() - 1) * 1440 + now[1].toInteger() * 60 + now[2].toInteger()
+                    int s = toMin(parts[0])
+                    int e = toMin(parts[1])
+                    inQuiet = s <= e ? (n >= s && n < e) : (n >= s || n < e)
+                } catch (err) {
+                    println("WARNING: invalid quiet_window '${quietWindow}' (${err}); running anyway")
+                }
+                if (inQuiet) {
+                    currentBuild.result = 'NOT_BUILT'
+                    currentBuild.description = "Skipped: quiet window ${quietWindow}"
+                    println("Quiet window ${quietWindow} is active, skipping the run")
+                    return
+                }
+            }
             try {
                 withCreds {
                     stage('Clone terracumber, susemanager-ci and sumaform') {
