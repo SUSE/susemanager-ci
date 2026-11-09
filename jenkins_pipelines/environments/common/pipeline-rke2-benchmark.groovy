@@ -1,4 +1,5 @@
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
     ansiColor('xterm') {
         timestamps {
             // Init path env variables

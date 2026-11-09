@@ -1,4 +1,6 @@
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
             // Null-safe defaults for optional stage-control parameters (backward compat with env files that don't declare them)
@@ -63,11 +65,16 @@ def run(params) {
                 product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
                 product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'));
                 print "Current product commit: ${product_commit}"
-                previous_commit = currentBuild.getPreviousBuild()?.description
-                if (previous_commit == null) {
+                // Walk back past builds without a "[commit]" description (e.g. quiet-window skips)
+                def previousBuild = currentBuild.getPreviousBuild()
+                while (previousBuild != null && !(previousBuild.description?.contains('[') && previousBuild.description?.contains(']'))) {
+                    previousBuild = previousBuild.getPreviousBuild()
+                }
+                if (previousBuild == null) {
                     previous_commit = product_commit
                 } else {
-                    previous_commit = previous_commit.substring(previous_commit.indexOf('[') + 1, previous_commit.indexOf(']'));
+                    def desc = previousBuild.description
+                    previous_commit = desc.substring(desc.indexOf('[') + 1, desc.indexOf(']'))
                 }
                 print "Previous product commit: ${previous_commit}"
             }
@@ -112,7 +119,7 @@ def run(params) {
                     """
                         // Restore Terraform states from artifacts
                         if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
-                            copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                            copyArtifacts projectName: currentBuild.projectName, selector: lastWithArtifacts()
                         }
 
                         // run minima sync on mirror
@@ -263,7 +270,7 @@ def run(params) {
                             println("ERROR: rake utils:generate_test_report failed: ${err}")
                             error = 1
                         }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                        safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
                         // In the case of an AWS environment, we want to export the reports to a publicly accessible web server.
                         if (params.sumaform_backend == "aws") {
                             try {
@@ -282,14 +289,16 @@ def run(params) {
                                 error = 1
                             }
                         }
-                        publishHTML(target: [
-                                allowMissing         : true,
-                                alwaysLinkToLastBuild: false,
-                                keepAll              : true,
-                                reportDir            : "${resultdirbuild}/results/cucumber_report/",
-                                reportFiles          : 'index.html',
-                                reportName           : "TestSuite Report"]
-                        )
+                        safe.run('publishHTML') {
+                            publishHTML(target: [
+                                    allowMissing         : true,
+                                    alwaysLinkToLastBuild: false,
+                                    keepAll              : true,
+                                    reportDir            : "${resultdirbuild}/results/cucumber_report/",
+                                    reportFiles          : 'index.html',
+                                    reportName           : "TestSuite Report"]
+                            )
+                        }
                         // skipPublishingChecks: Checks API not configured on this instance
                         catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
                             junit allowEmptyResults: true,
@@ -322,7 +331,7 @@ def run(params) {
                     sh "exit ${error}"
                     } finally {
                         // Clean up old results — in finally so it runs even when getresults/mail fail
-                        sh "./clean-old-results -r ${resultdir}"
+                        safe.run('clean-old-results') { sh "./clean-old-results -r ${resultdir}" }
                     }
                 }
             }

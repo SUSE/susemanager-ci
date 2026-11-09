@@ -1,4 +1,6 @@
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
             // Init path env variables
@@ -62,7 +64,7 @@ def run(params) {
                         }
                         // Restore Terraform states from artifacts
                         if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
-                            copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                            copyArtifacts projectName: currentBuild.projectName, selector: lastWithArtifacts()
                         }
                     }
                     stage('Deploy') {
@@ -198,7 +200,7 @@ def run(params) {
                             println("ERROR: rake utils:generate_test_repor failed: ${err}")
                             error = 1
                         }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
+                        safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
                         // Publish rich Cucumber report via the cucumber-reports plugin.
                         // Reads all JSON files from the per-build results folder and produces
                         // an interactive report with trend graphs, feature/scenario breakdown,
@@ -222,7 +224,7 @@ def run(params) {
                     }
                     // Send email
                     // Clean up old results
-                    sh "./clean-old-results -r ${resultdir}"
+                    safe.run('clean-old-results') { sh "./clean-old-results -r ${resultdir}" }
                     sh "exit ${error}"
                 }
             }

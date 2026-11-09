@@ -1,4 +1,6 @@
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
             def deployed = false
@@ -430,15 +432,17 @@ def run(params) {
                             // real test failures are already tracked by the stage failure flags below
                             println("ERROR: rake utils:generate_test_report failed.\\nException: ${ex}")
                         }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                        publishHTML(target: [
-                                allowMissing         : true,
-                                alwaysLinkToLastBuild: false,
-                                keepAll              : true,
-                                reportDir            : "${resultdirbuild}/results/cucumber_report/",
-                                reportFiles          : 'index.html',
-                                reportName           : "Build Validation report"]
-                        )
+                        safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
+                        safe.run('publishHTML') {
+                            publishHTML(target: [
+                                    allowMissing         : true,
+                                    alwaysLinkToLastBuild: false,
+                                    keepAll              : true,
+                                    reportDir            : "${resultdirbuild}/results/cucumber_report/",
+                                    reportFiles          : 'index.html',
+                                    reportName           : "Build Validation report"]
+                            )
+                        }
                     }
                     // Send email
                     try {
@@ -448,7 +452,7 @@ def run(params) {
                         result_error = 1
                     }
                     // Clean up old results
-                    sh "./clean-old-results -r ${resultdir}"
+                    safe.run('clean-old-results') { sh "./clean-old-results -r ${resultdir}" }
                     // Fail pipeline if paygo client stages failed
                     if (client_paygo_stage_result_fail) {
                         error("Paygo client stage failed")
