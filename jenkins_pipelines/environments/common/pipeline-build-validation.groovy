@@ -76,7 +76,8 @@ def run(params) {
             productSyncIdleTimeoutMinutes = idleTimeoutMinutesOr(params.product_sync_idle_timeout, 180)
             try {
                 if (params.enable_hub_stages) {
-                    hubBuild = build job: 'manager-head-qe-hub-testing',
+                    def hubJobName = env.JOB_NAME.replaceFirst(/^(manager-(?:head|\d+\.\d+)).*/, '$1-qe-hub-testing')
+                    hubBuild = build job: hubJobName,
                         wait: false,
                         propagate: false,
                         parameters: [
