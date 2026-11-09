@@ -81,7 +81,7 @@ are numbered independently, so the layout on IBS is the only reliable way to tel
 | --- | --- | --- |
 | `SLFO:/Products:/MultiLinuxManagerTools:/PullRequest:/<id>:/SLES` | `sles160_minion`, `sles161_minion`, `slesforsap160_minion`, `slesforsap161_minion`, `slmicro62_minion` (x86_64), `opensuse161arm_minion` (aarch64), `opensuse161ppc_minion` (ppc64le) | `slfo_pr_{id}_{minion}_{arch}` |
 | `SLFO:/Products:/Multi-Linux-Manager:/<5.x>:/Packages:/PullRequest:/<id>:/SL-Micro` | `server`, `proxy` of the `-micro` variant | `slfo_pr_{id}_{server,proxy,retail}_uyuni_tools` |
-| `SLFO:/<ver>:/PullRequest:/<id>/standard/` | Minions for the matching SLFO release (`1.0` -> `slmicro60`, `1.1` -> `slmicro61`, `1.2` -> `sles160`/`slmicro62`, `1.3` -> `opensuse161` arm/ppc) | `slfo_pr_{id}_{minion}_{arch}` |
+| `SLFO:/<ver>:/PullRequest:/<id>/standard/` | Minions for the matching SLFO release (`1.0` -> `slmicro60`, `1.1` -> `slmicro61`, `1.2` -> `sles160`/`slesforsap160`/`slmicro62`, `1.3` -> `sles161`/`slesforsap161`/`opensuse161` arm/ppc) | `slfo_pr_{id}_{minion}_{arch}` |
 
 A PullRequest repo **supersedes** the `:ToTest` repo it corresponds to rather than being
 added next to it, so the node cannot install the `:ToTest` content instead of the one under
@@ -185,8 +185,8 @@ proxy instead, for example `--version 52-micro --slfo-pull-request 65`:
 ```
 
 An SLFO base OS PullRequest feeds the salt repository of the minions corresponding to that
-SLFO release (`1.0` -> `slmicro60`, `1.1` -> `slmicro61`, `1.2` -> `sles160`/`slmicro62`,
-`1.3` -> `opensuse161`), replacing static salt repos where defined. For example:
+SLFO release (`1.0` -> `slmicro60`, `1.1` -> `slmicro61`, `1.2` -> `sles160`/`slesforsap160`/`slmicro62`,
+`1.3` -> `sles161`/`slesforsap161`/`opensuse161`), replacing static salt repos where defined. For example:
 `--version 52-sles --slfo-pull-request 9675`:
 
 ```json

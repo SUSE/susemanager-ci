@@ -261,8 +261,17 @@ def url_exists(url: str) -> bool:
 SLFO_OS_MINIONS: dict[str, tuple[tuple[str, str], ...]] = {
     "1.0": (("slmicro60_minion", "x86_64"),),
     "1.1": (("slmicro61_minion", "x86_64"),),
-    "1.2": (("sles160_minion", "x86_64"), ("slmicro62_minion", "x86_64")),
-    "1.3": (("opensuse161arm_minion", "aarch64"), ("opensuse161ppc_minion", "ppc64le")),
+    "1.2": (
+        ("sles160_minion", "x86_64"),
+        ("slesforsap160_minion", "x86_64"),
+        ("slmicro62_minion", "x86_64"),
+    ),
+    "1.3": (
+        ("sles161_minion", "x86_64"),
+        ("slesforsap161_minion", "x86_64"),
+        ("opensuse161arm_minion", "aarch64"),
+        ("opensuse161ppc_minion", "ppc64le"),
+    ),
 }
 
 
