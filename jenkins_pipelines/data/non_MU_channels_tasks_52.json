@@ -6,5 +6,6 @@
   "rhel9_minion" : "build_validation_rhel9_minion_add_ubi_repository",
   "rhel10_minion" : "build_validation_rhel10_minion_add_ubi_repository",
   "rocky8_minion" : "build_validation_rocky8_minion_add_iso",
-  "ubuntu2404_minion" : "build_validation_ubuntu2404_minion_add_universe_and_main_noble_repositories"
+  "ubuntu2404_minion" : "build_validation_ubuntu2404_minion_add_universe_and_main_noble_repositories",
+  "ubuntu2604_minion" : "build_validation_ubuntu2604_minion_add_universe_and_main_resolute_repositories"
 }
