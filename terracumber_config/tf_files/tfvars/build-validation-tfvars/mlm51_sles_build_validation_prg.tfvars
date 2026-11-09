@@ -99,6 +99,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:01:25"
     name = "liberty9-minion"
   }
+  liberty10_minion = {
+    mac  = "aa:b2:92:42:01:26"
+    name = "liberty10-minion"
+  }
   rhel7_minion = {
     mac  = "aa:b2:92:42:01:30"
     name = "rhel7-minion"
@@ -268,6 +272,10 @@ ENVIRONMENT_CONFIGURATION = {
   liberty9_sshminion = {
     mac  = "aa:b2:92:42:01:55"
     name = "liberty9-sshminion"
+  }
+  liberty10_sshminion = {
+    mac  = "aa:b2:92:42:01:56"
+    name = "liberty10-sshminion"
   }
   rhel7_sshminion = {
     mac  = "aa:b2:92:42:01:60"
