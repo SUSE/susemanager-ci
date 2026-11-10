@@ -138,6 +138,10 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:93:01:02:b4"
     name = "opensuse161ppc-minion"
   }
+  sles160_minion = {
+    mac  = "aa:b2:93:01:02:96"
+    name = "sles160-minion"
+  }
   sles161_minion = {
     mac  = "aa:b2:93:01:02:b5"
     name = "sles161-minion"
@@ -306,6 +310,10 @@ ENVIRONMENT_CONFIGURATION = {
   opensuse161ppc_sshminion = {
     mac  = "aa:b2:93:01:02:e4"
     name = "opensuse161ppc-sshminion"
+  }
+  sles160_sshminion = {
+    mac  = "aa:b2:93:01:02:c6"
+    name = "sles160-sshminion"
   }
   sles161_sshminion = {
     mac  = "aa:b2:93:01:02:e5"
