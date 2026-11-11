@@ -8,8 +8,8 @@ def run(params) {
     ansiColor('xterm') {
         timestamps {
             // Capybara configuration
-            def capybara_timeout = 60
-            def default_timeout = 500
+            def capybara_timeout = params.capybara_timeout == null ? 60 : params.capybara_timeout
+            def default_timeout = params.default_timeout == null ? 500 : params.default_timeout
 
             env.resultdir = "${WORKSPACE}/results"
             env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"

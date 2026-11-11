@@ -46,6 +46,8 @@ node('sumaform-cucumber') {
     mutableParams.product_version_display = mutableParams.product_version
     mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/ci-tfvars/mlm52_maxime_personal.tfvars'
     mutableParams.mode = 'ci'
+    mutableParams.capybara_timeout = 10
+    mutableParams.default_timeout = 250
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-ci.groovy"
     pipeline.run(mutableParams)
 }
