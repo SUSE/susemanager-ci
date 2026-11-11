@@ -9,6 +9,7 @@ ENVIRONMENT_CONFIGURATION = {
     mac  = "aa:b2:92:42:00:41"
     name = "server"
     image = "sles15sp7o"
+    repository_disk_size = 5000
   }
   proxy_containerized = {
     mac  = "aa:b2:92:42:00:42"
@@ -349,7 +350,7 @@ BASE_CONFIGURATIONS = {
     pool               = "ssd"
     bridge             = "br0"
     additional_network = "192.168.52.0/24"
-    hypervisor         = "suma-14.mgr.suse.de"
+    hypervisor         = "suma-07.mgr.suse.de"
   }
   base_arm = {
     images             = [ "opensuse161armo", "raspios13o" ]
