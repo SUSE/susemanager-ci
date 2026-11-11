@@ -5,6 +5,13 @@ ENVIRONMENT_CONFIGURATION = {
     name   = "controller"
     memory = 4096
     vcpu   = 4
+
+    no_auth_registry = "registry.mgr.suse.de"
+    auth_registry = "registry.mgr.suse.de:5000/cucutest"
+    auth_registry_username = "cucutest"
+    auth_registry_password = "cucusecret"
+    server_http_proxy = "http-proxy.mgr.suse.de:3128"
+    custom_download_endpoint = "ftp://minima-mirror-ci-bv.mgr.suse.de:445"
   }
   server_containerized = {
     mac   = "aa:b2:93:01:01:8d"
