@@ -67,7 +67,8 @@ def run(params) {
                 print "Current product commit: ${product_commit}"
                 // Walk back past builds without a "[commit]" description (e.g. quiet-window skips)
                 def previousBuild = currentBuild.getPreviousBuild()
-                while (previousBuild != null && !(previousBuild.description?.contains('[') && previousBuild.description?.contains(']'))) {
+                def hasCommit = { String d -> d != null && d.indexOf('[') >= 0 && d.indexOf(']') > d.indexOf('[') }
+                while (previousBuild != null && !hasCommit(previousBuild.description)) {
                     previousBuild = previousBuild.getPreviousBuild()
                 }
                 if (previousBuild == null) {
