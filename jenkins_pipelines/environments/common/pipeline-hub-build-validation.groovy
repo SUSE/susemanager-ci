@@ -1,6 +1,8 @@
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
             def capybara_timeout = 60
@@ -249,17 +251,19 @@ def run(params) {
                             println("ERROR: rake utils:generate_test_report failed")
                             result_error = 1
                         }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                        publishHTML(target: [
-                                allowMissing         : true,
-                                alwaysLinkToLastBuild: false,
-                                keepAll              : true,
-                                reportDir            : "${resultdirbuild}/results/cucumber_report/",
-                                reportFiles          : 'index.html',
-                                reportName           : "Hub Build Validation report"]
-                        )
+                        safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
+                        safe.run('publishHTML') {
+                            publishHTML(target: [
+                                    allowMissing         : true,
+                                    alwaysLinkToLastBuild: false,
+                                    keepAll              : true,
+                                    reportDir            : "${resultdirbuild}/results/cucumber_report/",
+                                    reportFiles          : 'index.html',
+                                    reportName           : "Hub Build Validation report"]
+                            )
+                        }
                     }
-                    sh "./clean-old-results -r ${resultdir}"
+                    safe.run('clean-old-results') { sh "./clean-old-results -r ${resultdir}" }
                     if (proxy_stage_result_fail) {
                         error("Proxy stage failed")
                     }

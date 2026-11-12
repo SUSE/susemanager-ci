@@ -1,4 +1,6 @@
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
             def deployed = false
@@ -42,7 +44,7 @@ def run(params) {
 
                         // Restore Terraform states from artifacts
                         if (params.use_previous_terraform_state) {
-                            copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                            copyArtifacts projectName: currentBuild.projectName, selector: lastWithArtifacts()
                         }
                     }
                     stage('Deploy') {
@@ -114,7 +116,7 @@ def run(params) {
                         }
                     }
                     // Clean up old results
-                    sh "./clean-old-results -r ${resultdir}"
+                    safe.run('clean-old-results') { sh "./clean-old-results -r ${resultdir}" }
                 }
             }
         }

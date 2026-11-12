@@ -1,6 +1,8 @@
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
             //Capybara configuration
@@ -136,7 +138,7 @@ def run(params) {
                         // Restore Terraform states from artifacts
                         copyArtifacts(
                                 projectName: env.JOB_NAME,
-                                selector: [$class: 'SpecificBuildSelector', buildNumber: "${currentBuild.previousBuild.number}"],
+                                selector: lastWithArtifacts(),
                                 optional: true
                         )
                     }
@@ -595,19 +597,21 @@ def run(params) {
                             println("ERROR: rake utils:generate_test_report failed")
                             result_error = 1
                         }
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                        publishHTML(target: [
-                                allowMissing         : true,
-                                alwaysLinkToLastBuild: false,
-                                keepAll              : true,
-                                reportDir            : "${resultdirbuild}/results/cucumber_report/",
-                                reportFiles          : 'index.html',
-                                reportName           : "Build Validation report"]
-                        )
+                        safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
+                        safe.run('publishHTML') {
+                            publishHTML(target: [
+                                    allowMissing         : true,
+                                    alwaysLinkToLastBuild: false,
+                                    keepAll              : true,
+                                    reportDir            : "${resultdirbuild}/results/cucumber_report/",
+                                    reportFiles          : 'index.html',
+                                    reportName           : "Build Validation report"]
+                            )
+                        }
 //                    junit allowEmptyResults: true, testResults: "${junit_resultdir}/*.xml", skipPublishingChecks: true
                     }
                     // Clean up old results
-                    sh "./clean-old-results -r ${resultdir}"
+                    safe.run('clean-old-results') { sh "./clean-old-results -r ${resultdir}" }
                     if (hubBuild != null) {
                         hub_stage_result_fail = hubBuild.get().result != 'SUCCESS'
                     }

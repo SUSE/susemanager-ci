@@ -1,4 +1,5 @@
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
     ansiColor('xterm') {
         timestamps {
             // Init path env variables
@@ -62,7 +63,7 @@ def run(params) {
                         }
                         // Restore Terraform states from artifacts
                         if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
-                            copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                            copyArtifacts projectName: currentBuild.projectName, selector: lastWithArtifacts()
                         }
                     }
                     stage('Deploy') {

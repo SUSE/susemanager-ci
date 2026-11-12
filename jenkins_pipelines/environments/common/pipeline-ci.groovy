@@ -5,6 +5,8 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 // cannot see helpers defined in the caller, and the spec accepts duplication
 // over sharing so BV/CI stay independent.
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
             // Capybara configuration
@@ -297,15 +299,17 @@ def run(params) {
                                 println("ERROR: rake utils:generate_test_report failed: ${err}")
                                 result_error = 1
                             }
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                            publishHTML(target: [
-                                    allowMissing         : true,
-                                    alwaysLinkToLastBuild: false,
-                                    keepAll              : true,
-                                    reportDir            : "${resultdirbuild}/results/cucumber_report/",
-                                    reportFiles          : 'index.html',
-                                    reportName           : "TestSuite Report"]
-                            )
+                            safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
+                            safe.run('publishHTML') {
+                                publishHTML(target: [
+                                        allowMissing         : true,
+                                        alwaysLinkToLastBuild: false,
+                                        keepAll              : true,
+                                        reportDir            : "${resultdirbuild}/results/cucumber_report/",
+                                        reportFiles          : 'index.html',
+                                        reportName           : "TestSuite Report"]
+                                )
+                            }
                             catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
                                 junit allowEmptyResults: true,
                                         testResults: "${junit_resultdir}/*.xml",
@@ -329,7 +333,7 @@ def run(params) {
                         sh "exit ${result_error}"
                     } finally {
                         // Clean up old results — in finally so it runs even when getresults/mail fail
-                        sh "./clean-old-results -r ${resultdir}"
+                        safe.run('clean-old-results') { sh "./clean-old-results -r ${resultdir}" }
                     }
                 }
             }

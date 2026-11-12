@@ -1,4 +1,6 @@
 def run(params) {
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
             def runDeploy = params.run_deployment == null ? true : params.run_deployment
@@ -59,7 +61,7 @@ def run(params) {
 
                         // Restore Terraform states from artifacts
                         if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
-                            copyArtifacts projectName: currentBuild.projectName, selector: specific("${currentBuild.previousBuild.number}")
+                            copyArtifacts projectName: currentBuild.projectName, selector: lastWithArtifacts()
                         }
 
                         // run minima sync on mirror
@@ -203,15 +205,17 @@ def run(params) {
                                 println("ERROR: rake utils:generate_test_report failed: ${err}")
                                 error = 1
                             }
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults"
-                            publishHTML(target: [
-                                    allowMissing         : true,
-                                    alwaysLinkToLastBuild: false,
-                                    keepAll              : true,
-                                    reportDir            : "${resultdirbuild}/results/cucumber_report/",
-                                    reportFiles          : 'index.html',
-                                    reportName           : "TestSuite Report"]
-                            )
+                            safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
+                            safe.run('publishHTML') {
+                                publishHTML(target: [
+                                        allowMissing         : true,
+                                        alwaysLinkToLastBuild: false,
+                                        keepAll              : true,
+                                        reportDir            : "${resultdirbuild}/results/cucumber_report/",
+                                        reportFiles          : 'index.html',
+                                        reportName           : "TestSuite Report"]
+                                )
+                            }
                             // skipPublishingChecks: Checks API not configured on this instance
                             catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
                                 junit allowEmptyResults: true,
@@ -243,7 +247,7 @@ def run(params) {
                         sh "exit ${error}"
                     } finally {
                         // In finally so it runs even when getresults/mail fail
-                        sh "./clean-old-results -r ${resultdir}"
+                        safe.run('clean-old-results') { sh "./clean-old-results -r ${resultdir}" }
                     }
                 }
             }
