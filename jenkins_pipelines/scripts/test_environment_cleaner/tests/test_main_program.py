@@ -22,7 +22,7 @@ class TestMainProgram(unittest.TestCase):
 
             main()
 
-            MockResourceManager.assert_called_once_with("http://test-url.com", [])
+            MockResourceManager.assert_called_once_with("http://test-url.com", [], [])
             mock_resource_manager.get_session_key.assert_called_once()
             mock_resource_manager.delete_users.assert_called_once()
             mock_resource_manager.logout_session.assert_called_once()

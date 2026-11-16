@@ -10,6 +10,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 import argparse
+import json
 import logging
 from test_environment_cleaner_api import ResourceManager
 from test_environment_cleaner_ssh import SSHClientManager
@@ -37,15 +38,21 @@ def main():
     parser.add_argument("--controller_url",required=False, help="The controller URL.")
     parser.add_argument("--hypervisor_url",required=False, help="The terminal hypervisor URL.")
     parser.add_argument("--system-to-delete",required=False, help="System name to delete")
+    parser.add_argument("--non-mu-channels-file", required=False,
+                        help="non_MU_channels_tasks JSON file; its _channels_to_delete labels are removed by delete_software_channels.")
 
     args = parser.parse_args()
+    channels_to_delete = []
+    if args.non_mu_channels_file:
+        with open(args.non_mu_channels_file) as channels_file:
+            channels_to_delete = json.load(channels_file)["_channels_to_delete"]
     manager_url = args.url
     default_resources_to_delete = [
         item.replace("monitoring-server", "monitoring") if item == "monitoring-server" else item
         for item in args.default_resources_to_delete
     ]
 
-    resource_manager = ResourceManager(manager_url, default_resources_to_delete)
+    resource_manager = ResourceManager(manager_url, default_resources_to_delete, channels_to_delete)
     if args.mode != "update_custom_repositories":
         product_version = resource_manager.get_product_version()
     else:

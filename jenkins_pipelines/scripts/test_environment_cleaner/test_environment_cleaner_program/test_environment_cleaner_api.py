@@ -10,8 +10,10 @@ username = "admin"
 password = "admin"
 
 class ResourceManager:
-    def __init__(self, manager_url, resources_to_delete):
+    def __init__(self, manager_url, resources_to_delete, channels_to_delete=()):
         self.resources_to_keep = {"proxy", "monitoring", "build", "terminal"} - set(resources_to_delete)
+        # Exact labels of non-MU child channels created by the BV features (non_MU_channels_tasks_*.json)
+        self.channels_to_delete = set(channels_to_delete)
         self.session_key = None
         self.client = xmlrpc.client.ServerProxy(f"http://{manager_url}/rpc/api")
 
@@ -45,11 +47,6 @@ class ResourceManager:
 
     def delete_software_channels(self):
         """Delete only custom child channels (keeps all parent channels and vendor child channels)."""
-        # Specific child channels to delete by exact label match (use set for O(1) lookup)
-        specific_channels_to_delete = {
-            "ubuntu-2404-noble-amd64"
-        }
-
         # No need to differentiate between versions (MLM 5.1, 5.2 vs Uyuni)
         # Uyuni BV is now gone, and the behavior should be the same across all versions and products
         channels = self.client.channel.listMyChannels(self.session_key)
@@ -66,7 +63,7 @@ class ResourceManager:
             is_candidate = (
                 "custom" in channel_label.lower() or
                 channel.get('name', '').startswith("Custom Channel") or
-                channel_label in specific_channels_to_delete
+                channel_label in self.channels_to_delete
             )
 
             if not is_candidate:
