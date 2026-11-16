@@ -124,7 +124,15 @@ def run(params) {
                         fi
                     """
                         sh "${WORKSPACE}/venv/bin/pip install -r ${SCRIPT_DIR}/requirements.txt"
-                        sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --mi-project ${params.mi_project}", returnStdout: true)
+                        // Backstop above edit.py's own --timeout (3600s); stderr logging goes to the console
+                        def buildStatus = 0
+                        timeout(time: 90, unit: 'MINUTES') {
+                            buildStatus = sh(script: "${WORKSPACE}/venv/bin/python ${SCRIPT_DIR}/edit.py --container-project ${params.container_project} --mi-project ${params.mi_project}", returnStatus: true)
+                        }
+                        if (buildStatus != 0) {
+                            currentBuild.description = "${currentBuild.description ?: ''} [Build containers failed, exit ${buildStatus}]"
+                            error("Build containers failed (exit ${buildStatus}, 1=build/dependency 2=timeout 3=osc error): see the ERROR line above")
+                        }
                         custom_project_path = "registry.suse.de/${params.container_project.toLowerCase().replaceAll(':', '/')}/containerfile"
                         server_container_registry = custom_project_path
                         proxy_container_registry = custom_project_path

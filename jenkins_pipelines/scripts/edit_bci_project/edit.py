@@ -22,10 +22,11 @@ import sys
 import time
 
 
-def run_osc_command(command, input_data=None):
+def run_osc_command(command, input_data=None, timeout=None):
     """
     A helper function to run osc commands from a neutral directory.
     It returns the stdout of the command.
+    subprocess.TimeoutExpired is not caught: callers that pass a timeout handle it.
     """
     logging.debug(f"Running command: {' '.join(command)}")
 
@@ -37,7 +38,8 @@ def run_osc_command(command, input_data=None):
             stderr=subprocess.PIPE,
             encoding="utf-8",
             check=True,
-            cwd=tempfile.gettempdir()
+            cwd=tempfile.gettempdir(),
+            timeout=timeout
         )
         return result.stdout
 
@@ -109,13 +111,22 @@ def verify_metadata(api_url, container_project, mi_project):
     logging.info("Metadata verification passed.")
 
 
-def wait_for_build_completion(api_url, project, repository="containerfile"):
+def _describe(items):
+    """items: list of (package, arch, code, details)."""
+    return "; ".join(f"{p} ({a}) {c}" + (f": {d}" if d else "") for p, a, c, d in items)
+
+
+def wait_for_build_completion(api_url, project, repository="containerfile",
+                              timeout=3600, unresolvable_grace=900,
+                              sleep=time.sleep, now=time.monotonic, run=run_osc_command):
     """
     Polls the OBS project until all packages reach a final state.
     Returns the final status XML for further processing.
+    Exit codes: 1 failed/broken or unresolvable past the grace period,
+    2 global timeout, 3 too many consecutive polling errors.
     """
     logging.info("Metadata updated. Waiting 60 seconds for the IBS/OBS scheduler to trigger rebuilds...")
-    time.sleep(60)
+    sleep(60)
 
     logging.info(f"Starting to poll build results in project '{project}', repository '{repository}'...")
 
@@ -123,34 +134,87 @@ def wait_for_build_completion(api_url, project, repository="containerfile"):
 
     success_states = {'succeeded', 'excluded', 'disabled'}
     failure_states = {'failed', 'broken'}
+    max_errors = 10
+
+    deadline = now() + timeout
+    unresolvable_since = {}  # (arch, package) -> first seen time
+    errors = 0
+    last_pending = "no package status yet"
 
     while True:
+        # No poll after the deadline: a late all-final answer must not turn an expired wait into success
+        if now() >= deadline:
+            logging.error(f"ERROR: timeout after {timeout}s, non-final packages: {last_pending}")
+            sys.exit(2)
         try:
-            xml_output = run_osc_command(cmd)
-            root = ET.fromstring(xml_output)
+            try:
+                # A hung osc must not outlive the global deadline
+                out = run(cmd, timeout=max(1, deadline - now()))
+            except subprocess.TimeoutExpired:
+                logging.error(f"ERROR: timeout after {timeout}s, 'osc results' did not answer")
+                sys.exit(2)
+            except SystemExit:
+                # run_osc_command exits on osc failure: count it as a polling error instead
+                raise RuntimeError("osc results failed (osc output logged above)")
+            root = ET.fromstring(out)
+            errors = 0
+        except Exception as e:
+            if now() >= deadline:
+                logging.error(f"ERROR: timeout after {timeout}s, last polling error: {e}")
+                sys.exit(2)
+            errors += 1
+            logging.warning(f"Error during polling ({errors}/{max_errors}): {e}. Retrying...")
+            if errors >= max_errors:
+                logging.error(f"Giving up after {max_errors} consecutive polling errors: {e}")
+                sys.exit(3)
+            sleep(10)
+            continue
 
-            # Extract all 'code' attributes from <status> tags
-            statuses = [status.get('code') for status in root.findall(".//status")]
+        statuses = []  # (package, arch, code, details)
+        for result in root.findall(".//result"):
+            for st in result.findall("./status"):
+                details = st.findtext("details")
+                statuses.append((st.get('package'), result.get('arch'), st.get('code'),
+                                 details.strip() if details else ""))
 
-            if not statuses:
-                logging.info("No package status found yet. Waiting...")
-                time.sleep(20)
-                continue
-
-            if any(s in failure_states for s in statuses):
-                logging.error(f"Build failed. Found fatal statuses: {set(statuses) & failure_states}")
+        if not statuses:
+            logging.info("No package status found yet. Waiting...")
+        else:
+            failed = [x for x in statuses if x[2] in failure_states]
+            if failed:
+                logging.error(f"ERROR: {_describe(failed)}")
                 sys.exit(1)
 
-            if all(s in success_states for s in statuses):
+            t = now()
+            current = {(a, p): d for p, a, c, d in statuses if c == 'unresolvable'}
+            for key in list(unresolvable_since):
+                if key not in current:
+                    del unresolvable_since[key]
+            for key in current:
+                unresolvable_since.setdefault(key, t)
+            stuck = [(p, a, d) for (a, p), d in current.items() if t - unresolvable_since[(a, p)] >= unresolvable_grace]
+            if stuck:
+                mins = unresolvable_grace // 60
+                logging.error("ERROR: " + "; ".join(
+                    f"{p} ({a}) unresolvable for {mins} min: {d}" for p, a, d in stuck))
+                sys.exit(1)
+
+            pending = [x for x in statuses if x[2] not in success_states]
+            last_pending = _describe(pending)
+            if not pending:
                 logging.info("All packages in repository are in a succeeded/final state.")
                 return root
 
-            logging.info(f"Build in progress. Packages processing: {len([s for s in statuses if s not in success_states])}")
-            time.sleep(20)
+            if now() >= deadline:
+                logging.error(f"ERROR: timeout after {timeout}s, non-final packages: {last_pending}")
+                sys.exit(2)
 
-        except Exception as e:
-            logging.warning(f"Error during polling: {e}. Retrying...")
-            time.sleep(10)
+            logging.info(f"Build in progress. Packages processing: {len(pending)}")
+
+        if not statuses and now() >= deadline:
+            logging.error(f"ERROR: timeout after {timeout}s, no package status found")
+            sys.exit(2)
+        sleep(20)
 
 
 def print_mi_build_info(api_url, project, mi_project, results_xml, repository="containerfile"):
@@ -241,6 +305,9 @@ def main():
     parser.add_argument("--api-url", default="https://api.suse.de", help="The OBS API URL.")
     parser.add_argument("--prefer", help="The value for the 'Prefer' rule in prjconf.")
     parser.add_argument("--mi-project", help="The project name of the MI to validate.")
+    parser.add_argument("--timeout", type=int, default=3600, help="Global build wait deadline in seconds (exit 2).")
+    parser.add_argument("--unresolvable-grace", type=int, default=900,
+                        help="Seconds a package may stay unresolvable before failing (exit 1).")
     args = parser.parse_args()
 
     # --- Edit Project Configuration ---
@@ -299,7 +366,9 @@ def main():
 
             # Wipe and Wait
             run_osc_command(["osc", "-A", args.api_url, "wipebinaries", "--all", args.container_project])
-            final_results = wait_for_build_completion(args.api_url, args.container_project)
+            final_results = wait_for_build_completion(
+                args.api_url, args.container_project,
+                timeout=args.timeout, unresolvable_grace=args.unresolvable_grace)
 
             # --- Verification Step ---
             print_mi_build_info(args.api_url, args.container_project, args.mi_project, final_results)
