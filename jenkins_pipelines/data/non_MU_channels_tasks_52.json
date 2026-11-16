@@ -8,5 +8,10 @@
   "rocky8_minion" : "build_validation_rocky8_minion_add_iso",
   "debian13_minion" : "build_validation_debian13_minion_add_main_trixie_repository",
   "ubuntu2404_minion" : "build_validation_ubuntu2404_minion_add_universe_and_main_noble_repositories",
-  "ubuntu2604_minion" : "build_validation_ubuntu2604_minion_add_universe_and_main_resolute_repositories"
+  "ubuntu2604_minion" : "build_validation_ubuntu2604_minion_add_universe_and_main_resolute_repositories",
+  "_channels_to_delete" : [
+    "ubuntu-2404-noble-amd64",
+    "ubuntu-2604-resolute-amd64",
+    "debian-13-trixie-amd64"
+  ]
 }

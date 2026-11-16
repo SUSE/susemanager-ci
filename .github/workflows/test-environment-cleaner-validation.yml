@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'jenkins_pipelines/scripts/test_environment_cleaner/**'
+      - 'jenkins_pipelines/data/non_MU_channels_tasks_*.json'
       - '.github/workflows/test-environment-cleaner-validation.yml'
 
 jobs:

@@ -134,7 +134,8 @@ def run(params) {
                     sh(script: "${programCall} delete_config_projects")
                 }
                 stage('Delete software channels') {
-                    sh(script: "${programCall} delete_software_channels")
+                    // Same file the BV pipelines use for the non-MU channels (identical for 5.1 and 5.2)
+                    sh(script: "${programCall} delete_software_channels --non-mu-channels-file ${WORKSPACE}/susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_52.json")
                 }
                 stage('Delete activation keys') {
                     sh(script: "${programCall} delete_activation_keys")
