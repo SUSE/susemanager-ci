@@ -241,15 +241,9 @@ def run(params) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
-                stage('Secondary features') {
-                    if (!runSecondary) {
-                        if (isNewJenkins) {
-                            Utils.markStageSkippedForConditional(STAGE_NAME)
-                        }
-                        return
-                    }
+                stage('Secondary') {
                     def tags_list = ""
-                    if (params.functional_scopes) {
+                    if (runSecondary && params.functional_scopes) {
                         // Re-add the @ prefix stripped from the job parameters, then join as an OR expression.
                         def transformed_scopes = params.functional_scopes.split(',')
                                 .collect { it.trim() }
@@ -259,22 +253,42 @@ def run(params) {
                         // so the value carries its own quotes rather than nesting single ones.
                         tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
                     }
-                    def statusCode1 = 1
-                    def statusCode2 = 1
-                    def statusCode3 = 1
-                    withIdleTimeout { statusCode1 = sh(script: cucumberCmd('cucumber:secondary', tags_list), returnStatus: true) }
-                    withIdleTimeout { statusCode2 = sh(script: cucumberCmd("${params.rake_namespace}:secondary_parallelizable", tags_list), returnStatus: true) }
-                    withIdleTimeout { statusCode3 = sh(script: cucumberCmd("${params.rake_namespace}:secondary_finishing", tags_list), returnStatus: true) }
-                    sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
-                }
-
-                stage('hub_testing') {
-                    if (runHub) {
-                        withIdleTimeout {
-                            sh cucumberCmd('cucumber:hub_server_to_server')
+                    // A failing sub-stage marks itself and the build FAILURE but the next one still runs,
+                    // so a secondary failure no longer skips hub testing or the finalize step.
+                    def runRake = { String task, boolean enabled, String tags = '' ->
+                        if (enabled) {
+                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                withIdleTimeout { sh cucumberCmd(task, tags) }
+                            }
+                        } else if (isNewJenkins) {
+                            Utils.markStageSkippedForConditional(STAGE_NAME)
                         }
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
+                    }
+                    // One short rake call per family (run_sets/secondary_{seq,par}_<family>.yml), in run order.
+                    // Parallel families run one after the other: each parallel_cucumber uses the Capybara
+                    // ports 8888+N, so two of them at the same time would collide.
+                    def sequentialFamilies = ['server', 'clients', 'onboarding', 'salt', 'actions', 'proxy',
+                                              'misc', 'cobbler', 'shared_state', 'diskcheck']
+                    def parallelFamilies = ['server', 'clients']
+                    stage('Secondary - Sequential') {
+                        sequentialFamilies.each { family ->
+                            stage("Sequential - ${family}") {
+                                runRake("cucumber:secondary_seq_${family}", runSecondary, tags_list)
+                            }
+                        }
+                    }
+                    stage('Secondary - Parallel') {
+                        parallelFamilies.each { family ->
+                            stage("Parallel - ${family}") {
+                                runRake("${params.rake_namespace}:secondary_par_${family}", runSecondary, tags_list)
+                            }
+                        }
+                    }
+                    stage('Hub Testing') {
+                        runRake('cucumber:hub_server_to_server', runHub)
+                    }
+                    stage('Secondary - Finalize') {
+                        runRake("${params.rake_namespace}:secondary_finishing", runSecondary, tags_list)
                     }
                 }
             }
