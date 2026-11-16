@@ -20,10 +20,10 @@ The script is written in Python 3 and bridges standard OS operations with extern
 * **Injection**: It injects a new `<path>` element for **every** repository name resolved by the resolution logic.
 * **Binary Management (`osc wipebinaries`)**:
   Immediately following a metadata update, the script executes `osc wipebinaries --all`. This forces the IBS scheduler to discard old build artifacts and ensures that the subsequent build is performed strictly against the newly injected MI repositories.
-* **`wait_for_build_completion(api_url, project)`**:
+* **`wait_for_build_completion(api_url, project, repository="containerfile", timeout=3600, unresolvable_grace=900, sleep, now, run)`** (`sleep`, `now` and `run` are injectable for tests):
   A smart polling mechanism that waits for the IBS scheduler to process the update.
 * **Safety Sleep**: Initiates a 60-second sleep to ensure the scheduler has time to invalidate previous build states.
-* **State Evaluation**: Continuously queries `osc results`, tracking packages until they all reach a final state (`succeeded`, `excluded`, `disabled`). If any package enters a fatal state (`failed`, `broken`, `unresolvable`), the script exits with an error.
+* **State Evaluation**: Continuously queries `osc results`, tracking packages until they all reach a final state (`succeeded`, `excluded`, `disabled`). Exit codes: 1 if a package is `failed`/`broken`, or stays `unresolvable` longer than `--unresolvable-grace` seconds (default 900); 2 when `--timeout` seconds (default 3600) pass without all packages being final; 3 after 10 consecutive `osc`/XML polling errors. The ERROR line lists the packages with the OBS details text.
 * **Build Validation & Dependency Audit** (`print_mi_build_info`):
   Once a build reaches the succeeded state, the script performs a deep audit of the build environment. For every package and architecture, it executes osc buildinfo and parses the resulting XML to identify and print all build dependencies (bdep) that were successfully sourced from the validated mi_project. The user will still need to confirm visually that the maintenance fixes were actually utilized during the container build.
 * **`print_registries(container_project)`**:
