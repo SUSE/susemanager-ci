@@ -34,7 +34,6 @@ def run(params) {
             def server_container_image = params.server_container_image ?: ''
             def product_version = params.product_version ?: ''
             def base_os = params.base_os ?: ''
-            def json_generator_version = params.json_generator_version ?: ''
 
             // Nightly extras ported from pipeline.groovy: product changes, sanity check, flaky-test tagging,
             // mirror sync and RRTG ingest. Opt-in: only jobs that set params.nightly get them.
@@ -182,27 +181,6 @@ def run(params) {
                             ${credInit}
                             ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
                         """
-
-                            // custom_repositories.json from parameter (self-skips when unset)
-                            if (params.custom_repositories?.trim()) {
-                                writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
-                            }
-                            // custom_repositories.json from MI Identifiers (self-skips when unset)
-                            if (params.mi_ids?.trim()) {
-                                if (!json_generator_version) {
-                                    error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
-                                }
-                                node('manager-jenkins-node') {
-                                    checkout scm
-                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
-                                    echo "CI JSON script return code:\n ${res_python_script_}"
-                                    if (res_python_script_ != 0) {
-                                        error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
-                                    }
-                                    stash name: 'custom_repos_json', includes: 'custom_repositories.json'
-                                }
-                                unstash 'custom_repos_json'
-                            }
 
                             def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
                             def outputFile = "${localSumaformDirPath}terraform.tfvars"
@@ -373,7 +351,7 @@ def run(params) {
                     stage('Secondary - Parallel') {
                         parallelFamilies.each { family ->
                             stage("Parallel - ${family}") {
-                                runRake("${params.rake_namespace}:secondary_par_${family}", runSecondary, tags_list)
+                                runRake("cucumber:secondary_par_${family}", runSecondary, tags_list)
                             }
                         }
                     }
@@ -381,7 +359,7 @@ def run(params) {
                         runRake('cucumber:hub_server_to_server', runHub)
                     }
                     stage('Secondary - Finalize') {
-                        runRake("${params.rake_namespace}:secondary_finishing", runSecondary, tags_list)
+                        runRake("cucumber:secondary_finishing", runSecondary, tags_list)
                     }
                 }
             }
