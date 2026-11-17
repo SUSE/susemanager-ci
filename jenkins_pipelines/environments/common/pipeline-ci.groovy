@@ -336,8 +336,8 @@ def run(params) {
                         }
                     }
                     // One short rake call per family (run_sets/secondary_{seq,par}_<family>.yml), in run order.
-                    // Parallel families run one after the other: each parallel_cucumber uses the Capybara
-                    // ports 8888+N, so two of them at the same time would collide.
+                    // Parallel families run concurrently: each parallel_cucumber uses the Capybara ports
+                    // 8888+offset+N (N < 6), so every family gets its own CAPYBARA_PORT_OFFSET.
                     def sequentialFamilies = ['server', 'clients', 'onboarding', 'salt', 'actions', 'proxy',
                                               'misc', 'cobbler', 'shared_state', 'diskcheck']
                     def parallelFamilies = ['server', 'clients']
@@ -349,11 +349,19 @@ def run(params) {
                         }
                     }
                     stage('Secondary - Parallel') {
-                        parallelFamilies.each { family ->
-                            stage("Parallel - ${family}") {
-                                runRake("cucumber:secondary_par_${family}", runSecondary, tags_list)
+                        def branches = [:]
+                        for (int i = 0; i < parallelFamilies.size(); i++) {
+                            def family = parallelFamilies[i]
+                            def portOffset = i * 10
+                            branches["Parallel - ${family}"] = {
+                                stage("Parallel - ${family}") {
+                                    // The offset travels in the rake prefix: the command runs on the controller.
+                                    runRake("cucumber:secondary_par_${family}", runSecondary,
+                                            "export CAPYBARA_PORT_OFFSET=${portOffset}; ${tags_list}")
+                                }
                             }
                         }
+                        parallel branches
                     }
                     stage('Hub Testing') {
                         runRake('cucumber:hub_server_to_server', runHub)
