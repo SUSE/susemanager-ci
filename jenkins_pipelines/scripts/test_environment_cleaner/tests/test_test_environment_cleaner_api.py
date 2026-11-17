@@ -27,6 +27,21 @@ class TestResourceManager(unittest.TestCase):
         self.mock_client.auth.login.assert_called_once_with("admin", "admin")
         self.assertEqual(self.resource_manager.session_key, "mock_session_key")
 
+    def test_delete_image_profiles_falls_back_to_retail_labels(self):
+        profile = self.mock_client.image.profile
+        # Listing fails while a profile has no activation key, then works once it is deleted
+        profile.listImageProfiles.side_effect = [Exception("ERROR IN SERIALIZER"), []]
+        self.resource_manager.delete_image_profiles()
+
+        profile.delete.assert_any_call("mock_session_key", "suse_os_image_15_sp6")
+        profile.delete.assert_any_call("mock_session_key", "suse_os_image_15_sp7")
+
+    def test_delete_image_profiles_fails_if_profiles_remain(self):
+        profile = self.mock_client.image.profile
+        profile.listImageProfiles.side_effect = [[{"label": "stale"}], [{"label": "stale"}]]
+        with self.assertRaises(RuntimeError):
+            self.resource_manager.delete_image_profiles()
+
     def test_logout_session(self):
         self.resource_manager.logout_session()
         self.mock_client.auth.logout.assert_called_once_with("mock_session_key")
