@@ -80,22 +80,22 @@ def run(params) {
                 if (params.enable_hub_stages) {
                     def hubJobName = env.JOB_NAME.replaceFirst(/^(manager-(?:head|\d+\.\d+)).*/, '$1-qe-hub-testing')
                     hubBuild = build job: hubJobName,
-                        wait: false,
-                        propagate: false,
-                        parameters: [
-                            booleanParam(name: 'must_deploy_hub', value: params.must_deploy),
-                            string(name: 'server_container_registry', value: params.server_container_registry ?: ''),
-                            string(name: 'proxy_container_registry', value: params.proxy_container_registry ?: ''),
-                            string(name: 'server_container_image', value: params.server_container_image ?: ''),
-                            text(name: 'custom_repositories', value: params.custom_repositories ?: '{}'),
-                            string(name: 'mi_ids', value: params.mi_ids ?: ''),
-                            string(name: 'json_generator_version', value: params.json_generator_version ?: ''),
-                            booleanParam(name: 'must_run_hub_core', value: true),
-                            booleanParam(name: 'must_sync_hub', value: true),
-                            booleanParam(name: 'enable_hub_proxy_stages', value: true),
-                            booleanParam(name: 'enable_hub_monitoring_stages', value: true),
-                            booleanParam(name: 'enable_hub_peripheral_stages', value: true),
-                        ]
+                            wait: false,
+                            propagate: false,
+                            parameters: [
+                                    booleanParam(name: 'must_deploy_hub', value: params.must_deploy),
+                                    string(name: 'server_container_registry', value: params.server_container_registry ?: ''),
+                                    string(name: 'proxy_container_registry', value: params.proxy_container_registry ?: ''),
+                                    string(name: 'server_container_image', value: params.server_container_image ?: ''),
+                                    text(name: 'custom_repositories', value: params.custom_repositories ?: '{}'),
+                                    string(name: 'mi_ids', value: params.mi_ids ?: ''),
+                                    string(name: 'json_generator_version', value: params.json_generator_version ?: ''),
+                                    booleanParam(name: 'must_run_hub_core', value: true),
+                                    booleanParam(name: 'must_sync_hub', value: true),
+                                    booleanParam(name: 'enable_hub_proxy_stages', value: true),
+                                    booleanParam(name: 'enable_hub_monitoring_stages', value: true),
+                                    booleanParam(name: 'enable_hub_peripheral_stages', value: true),
+                            ]
                 }
                 stage('Clone terracumber, susemanager-ci') {
                     // Create a directory for  to place the directory with the build results (if it does not exist)
@@ -110,8 +110,8 @@ def run(params) {
                     currentBuild.description = nameDisplay(params)
                 }
 
-                stage('Build containers') {
-                    if (params.container_project && params.mi_project && params.must_deploy) {
+                if (params.container_project && params.mi_project && params.must_deploy) {
+                    stage('Build containers') {
                         def SCRIPT_DIR = "${WORKSPACE}/susemanager-ci/jenkins_pipelines/scripts/edit_bci_project"
                         sh """
                         set -e
@@ -136,141 +136,144 @@ def run(params) {
                         custom_project_path = "registry.suse.de/${params.container_project.toLowerCase().replaceAll(':', '/')}/containerfile"
                         server_container_registry = custom_project_path
                         proxy_container_registry = custom_project_path
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
 
-                stage('Deploy') {
-                    if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
-                        // Restore Terraform states from artifacts
-                        copyArtifacts(
-                                projectName: env.JOB_NAME,
-                                selector: lastWithArtifacts(),
-                                optional: true
-                        )
-                    }
+                // No deploy requested: the environment is already deployed, so later stages must not be blocked
+                if (!params.must_deploy) {
+                    deployed = true
+                }
+                // Hidden when nothing to do
+                if (params.must_deploy || (params.use_previous_terraform_state && currentBuild.previousBuild != null)) {
+                    stage('Deploy') {
+                        if (params.use_previous_terraform_state && currentBuild.previousBuild != null) {
+                            // Restore Terraform states from artifacts
+                            copyArtifacts(
+                                    projectName: env.JOB_NAME,
+                                    selector: lastWithArtifacts(),
+                                    optional: true
+                            )
+                        }
 
-                    if (params.must_deploy) {
-                        withCreds {
-                            // Clone sumaform
-                            sh """
-                            #!/bin/bash
-                            set -e -o pipefail
-                            ${credInit}
-                            ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
-                        """
+                        if (params.must_deploy) {
+                            withCreds {
+                                // Clone sumaform
+                                sh """
+                                #!/bin/bash
+                                set -e -o pipefail
+                                ${credInit}
+                                ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
+                            """
 
-                            // Generate custom_repositories.json file in the workspace from the value passed by parameter
-                            if (params.custom_repositories?.trim()) {
-                                writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
-                            }
-                            // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
-                            if (params.mi_ids?.trim()) {
-                                if (!json_generator_version) {
-                                    error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
+                                // Generate custom_repositories.json file in the workspace from the value passed by parameter
+                                if (params.custom_repositories?.trim()) {
+                                    writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
                                 }
-                                node('jenkins-agent') {
-                                    checkout scm
-                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
-                                    echo "Build Validation JSON script return code:\n ${res_python_script_}"
-                                    if (res_python_script_ != 0) {
-                                        error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                                // Generate custom_repositories.json file in the workspace using a Python script - MI Identifiers passed by parameter
+                                if (params.mi_ids?.trim()) {
+                                    if (!json_generator_version) {
+                                        error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
+                                    }
+                                    node('jenkins-agent') {
+                                        checkout scm
+                                        def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
+                                        echo "Build Validation JSON script return code:\n ${res_python_script_}"
+                                        if (res_python_script_ != 0) {
+                                            error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                                        }
                                     }
                                 }
-                            }
 
-                            def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
-                            def outputFile = "${localSumaformDirPath}terraform.tfvars"
+                                def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
+                                def outputFile = "${localSumaformDirPath}terraform.tfvars"
 
-                            // Build Common Arguments
-                            def s390LocalUser
-                            if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de'))
-                                s390LocalUser = 'jenkins@jenkins-node.mgr.suse.de'
-                            else if (env.JENKINS_URL?.contains('jenkins.mgr.slc1.suse.org'))
-                                s390LocalUser = 'jenkins@jenkins-node.mgr.slc1.suse.org'
-                            else
-                                s390LocalUser = 'jenkins@jenkins-worker.mgr.suse.de'
-                            def commonArgs = " --output \"${outputFile}\""
-                            commonArgs += " --inject SERVER_CONTAINER_REGISTRY=${server_container_registry}"
-                            commonArgs += " --inject PROXY_CONTAINER_REGISTRY=${proxy_container_registry}"
-                            commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
-                            commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
-                            commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
-                            if (isNewJenkins) {
-                                commonArgs += " --inject HYPERVISOR_PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.worker\""
-                                commonArgs += " --inject CONTROLLER_PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
-                                commonArgs += " --inject S390_LOCAL_USER=\"${s390LocalUser}\""
-                            }
-                            if (product_version) {
-                                commonArgs += " --inject PRODUCT_VERSION=${product_version}"
-                            }
-                            if (base_os) {
-                                commonArgs += " --inject BASE_OS=${base_os}"
-                            }
-                            if (fileExists('custom_repositories.json')) {
-                                commonArgs += " --custom-repositories-json ${WORKSPACE}/custom_repositories.json"
-                            }
-
-                            // Personal scenario specific arguments
-                            def scenarioArgs = ""
-
-                            //  -- Personal BV Arguments --
-                            if (params.environment) {
-                                // We construct from env reference. No cleaning needed as we only add selected minions.
-                                scenarioArgs += " --env-file \"${tfRefEnvironmentFile}\" --user \"${params.environment}\" --product-version \"${product_version}\""
-                                scenarioArgs += " --minion1 \"${params.minion1}\""
-                                scenarioArgs += " --minion2 \"${params.minion2}\""
-                                scenarioArgs += " --minion3 \"${params.minion3}\""
-                                scenarioArgs += " --minion4 \"${params.minion4}\""
-                                scenarioArgs += " --minion5 \"${params.minion5}\""
-                                scenarioArgs += " --minion6 \"${params.minion6}\""
-                                scenarioArgs += " --minion7 \"${params.minion7}\""
-                                scenarioArgs += " --base-os \"${base_os}\""
-                                if (params.deploy_retail) {
-                                    scenarioArgs += " --deploy-retail"
+                                // Build Common Arguments
+                                def s390LocalUser
+                                if (env.JENKINS_URL?.contains('jenkins.mgr.suse.de'))
+                                    s390LocalUser = 'jenkins@jenkins-node.mgr.suse.de'
+                                else if (env.JENKINS_URL?.contains('jenkins.mgr.slc1.suse.org'))
+                                    s390LocalUser = 'jenkins@jenkins-node.mgr.slc1.suse.org'
+                                else
+                                    s390LocalUser = 'jenkins@jenkins-worker.mgr.suse.de'
+                                def commonArgs = " --output \"${outputFile}\""
+                                commonArgs += " --inject SERVER_CONTAINER_REGISTRY=${server_container_registry}"
+                                commonArgs += " --inject PROXY_CONTAINER_REGISTRY=${proxy_container_registry}"
+                                commonArgs += " --inject SERVER_CONTAINER_IMAGE=${server_container_image}"
+                                commonArgs += " --inject CUCUMBER_GITREPO=${params.cucumber_gitrepo}"
+                                commonArgs += " --inject CUCUMBER_BRANCH=${params.cucumber_ref}"
+                                if (isNewJenkins) {
+                                    commonArgs += " --inject HYPERVISOR_PRIVATE_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.worker\""
+                                    commonArgs += " --inject CONTROLLER_PUBLIC_SSH_KEY_PATH=\"/home/jenkins/.ssh/id_ed25519.pub.controller\""
+                                    commonArgs += " --inject S390_LOCAL_USER=\"${s390LocalUser}\""
                                 }
-                                scenarioArgs += " --merge-files \"${locationFile}\"" // Merge location only
+                                if (product_version) {
+                                    commonArgs += " --inject PRODUCT_VERSION=${product_version}"
+                                }
+                                if (base_os) {
+                                    commonArgs += " --inject BASE_OS=${base_os}"
+                                }
+                                if (fileExists('custom_repositories.json')) {
+                                    commonArgs += " --custom-repositories-json ${WORKSPACE}/custom_repositories.json"
+                                }
 
-                            } else if (params.get('deployment_tfvars')) {
-                                // -- Common BV arguments --
-                                // We load a static file and clean it based on minions_to_run list.
-                                def minionsToKeep = params.minions_to_run.split(/,\s*/).join(' ')
-                                scenarioArgs += " --merge-files \"${params.deployment_tfvars}\" \"${locationFile}\""
-                                scenarioArgs += " --clean --keep-resources ${minionsToKeep}"
-                            } else {
-                                error "No environment or deployment_tfvars specified"
+                                // Personal scenario specific arguments
+                                def scenarioArgs = ""
+
+                                //  -- Personal BV Arguments --
+                                if (params.environment) {
+                                    // We construct from env reference. No cleaning needed as we only add selected minions.
+                                    scenarioArgs += " --env-file \"${tfRefEnvironmentFile}\" --user \"${params.environment}\" --product-version \"${product_version}\""
+                                    scenarioArgs += " --minion1 \"${params.minion1}\""
+                                    scenarioArgs += " --minion2 \"${params.minion2}\""
+                                    scenarioArgs += " --minion3 \"${params.minion3}\""
+                                    scenarioArgs += " --minion4 \"${params.minion4}\""
+                                    scenarioArgs += " --minion5 \"${params.minion5}\""
+                                    scenarioArgs += " --minion6 \"${params.minion6}\""
+                                    scenarioArgs += " --minion7 \"${params.minion7}\""
+                                    scenarioArgs += " --base-os \"${base_os}\""
+                                    if (params.deploy_retail) {
+                                        scenarioArgs += " --deploy-retail"
+                                    }
+                                    scenarioArgs += " --merge-files \"${locationFile}\"" // Merge location only
+
+                                } else if (params.get('deployment_tfvars')) {
+                                    // -- Common BV arguments --
+                                    // We load a static file and clean it based on minions_to_run list.
+                                    def minionsToKeep = params.minions_to_run.split(/,\s*/).join(' ')
+                                    scenarioArgs += " --merge-files \"${params.deployment_tfvars}\" \"${locationFile}\""
+                                    scenarioArgs += " --clean --keep-resources ${minionsToKeep}"
+                                } else {
+                                    error "No environment or deployment_tfvars specified"
+                                }
+
+                                // Generate the tfvars
+                                sh "python3 ${tfvarsPrepareScript} ${commonArgs} ${scenarioArgs}"
+
+                                // Deploy the environment
+                                sh """
+                                #!/bin/bash
+                                set -e -o pipefail
+                                ${credInit}
+                                export TERRAFORM=${params.bin_path}
+                                export TERRAFORM_PLUGINS=${params.bin_plugins_path}
+                
+                            ./terracumber-cli ${common_params} \
+                                --logfile ${resultdirbuild}/sumaform.log \
+                                --init \
+                                --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
+                                ${(!params.mode || params.mode == 'BV') ? "--custom-repositories ${WORKSPACE}/custom_repositories.json" : ''} \
+                                --sumaform-backend ${params.sumaform_backend} \
+                                --skip-variables-check \
+                                --tf_configuration_files "${outputFile}" \
+                                --runstep provision
+                        """
+
+                                // Generate features and rake files
+                                runCucumberRakeTarget('utils:generate_build_validation_features')
+                                runCucumberRakeTarget('jenkins:generate_rake_files_build_validation')
+                                deployed = true
                             }
-
-                            // Generate the tfvars
-                            sh "python3 ${tfvarsPrepareScript} ${commonArgs} ${scenarioArgs}"
-
-                            // Deploy the environment
-                            sh """
-                            #!/bin/bash
-                            set -e -o pipefail
-                            ${credInit}
-                            export TERRAFORM=${params.bin_path}
-                            export TERRAFORM_PLUGINS=${params.bin_plugins_path}
-            
-                        ./terracumber-cli ${common_params} \
-                            --logfile ${resultdirbuild}/sumaform.log \
-                            --init \
-                            --taint '.*(domain|combustion_disk|cloudinit_disk|ignition_disk|main_disk|data_disk|database_disk|standalone_provisioning|server_extra_nfs_mounts).*' \
-                            ${(!params.mode || params.mode == 'BV') ? "--custom-repositories ${WORKSPACE}/custom_repositories.json" : ''} \
-                            --sumaform-backend ${params.sumaform_backend} \
-                            --skip-variables-check \
-                            --tf_configuration_files "${outputFile}" \
-                            --runstep provision
-                    """
-
-                            // Generate features and rake files
-                            runCucumberRakeTarget('utils:generate_build_validation_features')
-                            runCucumberRakeTarget('jenkins:generate_rake_files_build_validation')
-                            deployed = true
                         }
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
 
@@ -296,18 +299,14 @@ def run(params) {
                     }
                 }
 
-                stage('Run core features') {
-                    if (params.must_run_core && (deployed || !params.must_deploy)) {
+                if (params.must_run_core && (deployed || !params.must_deploy)) {
+                    stage('Run core features') {
                         runCucumberRakeTarget('cucumber:build_validation_core')
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
 
-                stage('Copy the new custom repository json file to controller') {
-
-
-                    if (params.push_new_custom_repositories) {
+                if (params.push_new_custom_repositories) {
+                    stage('Copy the new custom repository json file to controller') {
                         // Generate custom_repositories.json file in the workspace from the value passed by parameter
                         if (params.custom_repositories?.trim()) {
                             writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
@@ -328,72 +327,76 @@ def run(params) {
                             }
                         }
                         sh(script: "${TestEnvironmentCleanerProgram} --url ${env.controller_hostname} --mode update_custom_repositories")
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
 
-                stage('Sync. products and channels') {
-                    if (params.must_sync && (deployed || !params.must_deploy)) {
+                if (params.must_sync && (deployed || !params.must_deploy)) {
+                    stage('Sync. products and channels') {
                         // Get minion list from tofu state list command
                         def nodesHandler = getNodesHandler(params)
                         def res_products = runCucumberRakeTarget('cucumber:build_validation_reposync', true, nodesHandler.envVariableListToDisable, productSyncIdleTimeoutMinutes)
                         echo "Custom channels and MU repositories status code: ${res_products}"
                         sh "exit ${res_products}"
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
 
                 /** Proxy stages begin **/
-                stage('Add MUs Proxy') {
-                    if (params.must_add_MU_repositories && params.enable_proxy_stages) {
-                        echo 'Add proxy MUs'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding Maintenance Update repositories'
+                // One parent stage with sequential sub-stages (no parallel).
+                // Parent is shown as skipped (without sub-stages) when proxy stages are disabled.
+                stage('Proxy stages') {
+                    if (params.enable_proxy_stages) {
+                        stage('Add MUs Proxy') {
+                            if (params.must_add_MU_repositories) {
+                                echo 'Add proxy MUs'
+                                if (params.confirm_before_continue) {
+                                    input 'Press any key to start adding Maintenance Update repositories'
+                                }
+                                echo 'Add custom channels and MU repositories'
+                                def res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_proxy', true)
+                                echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+                                sh "exit ${res_mu_repos}"
+                            } else if (isNewJenkins) {
+                                Utils.markStageSkippedForConditional(STAGE_NAME)
+                            }
                         }
-                        echo 'Add custom channels and MU repositories'
-                        def res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_proxy', true)
-                        echo "Custom channels and MU repositories status code: ${res_mu_repos}"
-                        sh "exit ${res_mu_repos}"
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
-                    }
-                }
-                stage('Add Activation Keys Proxy') {
-                    if (params.must_add_keys && params.enable_proxy_stages) {
-                        echo 'Add proxy activation key'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding activation keys'
+                        stage('Add Activation Keys Proxy') {
+                            if (params.must_add_keys) {
+                                echo 'Add proxy activation key'
+                                if (params.confirm_before_continue) {
+                                    input 'Press any key to start adding activation keys'
+                                }
+                                def res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_proxy', true)
+                                echo "Add Proxy Activation Key status code: ${res_add_keys}"
+                                sh "exit ${res_add_keys}"
+                            } else if (isNewJenkins) {
+                                Utils.markStageSkippedForConditional(STAGE_NAME)
+                            }
                         }
-                        def res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_proxy', true)
-                        echo "Add Proxy Activation Key status code: ${res_add_keys}"
-                        sh "exit ${res_add_keys}"
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
-                    }
-                }
-                stage('Create bootstrap repository Proxy') {
-                    if (params.must_create_bootstrap_repos && params.enable_proxy_stages) {
-                        echo 'Create bootstrap repository ${node}'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start creating the proxy bootstrap repository'
+                        stage('Create bootstrap repository Proxy') {
+                            if (params.must_create_bootstrap_repos) {
+                                echo 'Create proxy bootstrap repository'
+                                if (params.confirm_before_continue) {
+                                    input 'Press any key to start creating the proxy bootstrap repository'
+                                }
+                                def res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_proxy', true)
+                                echo "Create Proxy bootstrap repository status code: ${res_create_bootstrap_repos}"
+                                sh "exit ${res_create_bootstrap_repos}"
+                            } else if (isNewJenkins) {
+                                Utils.markStageSkippedForConditional(STAGE_NAME)
+                            }
                         }
-                        def res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_proxy', true)
-                        echo "Create Proxy bootstrap repository status code: ${res_create_bootstrap_repos}"
-                        sh "exit ${res_create_bootstrap_repos}"
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
-                    }
-                }
-                stage('Bootstrap Proxy') {
-                    if (params.must_boot_node && params.enable_proxy_stages) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start bootstraping the Proxy'
+                        stage('Bootstrap Proxy') {
+                            if (params.must_boot_node) {
+                                if (params.confirm_before_continue) {
+                                    input 'Press any key to start bootstraping the Proxy'
+                                }
+                                def res_init_proxy = runCucumberRakeTarget('cucumber:build_validation_init_proxy', true)
+                                echo "Init Proxy status code: ${res_init_proxy}"
+                                sh "exit ${res_init_proxy}"
+                            } else if (isNewJenkins) {
+                                Utils.markStageSkippedForConditional(STAGE_NAME)
+                            }
                         }
-                        def res_init_proxy = runCucumberRakeTarget('cucumber:build_validation_init_proxy', true)
-                        echo "Init Proxy status code: ${res_init_proxy}"
-                        sh "exit ${res_init_proxy}"
                     } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
@@ -404,56 +407,60 @@ def run(params) {
                 // Hide monitoring for qe update pipeline
                 if (params.enable_monitoring_stages) {
                     try {
-                        stage('Add MUs Monitoring') {
-                            if (params.must_add_MU_repositories && params.enable_monitoring_stages) {
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start adding Maintenance Update repositories'
+                        // One parent stage with sequential sub-stages (no parallel).
+                        // The enclosing if already hides the whole block when monitoring is disabled.
+                        stage('Monitoring stages') {
+                            stage('Add MUs Monitoring') {
+                                if (params.must_add_MU_repositories) {
+                                    if (params.confirm_before_continue) {
+                                        input 'Press any key to start adding Maintenance Update repositories'
+                                    }
+                                    echo 'Add custom channels and MU repositories'
+                                    def res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_monitoring_server', true)
+                                    echo "Custom channels and MU repositories status code: ${res_mu_repos}"
+                                    sh "exit ${res_mu_repos}"
+                                } else if (isNewJenkins) {
+                                    Utils.markStageSkippedForConditional(STAGE_NAME)
                                 }
-                                echo 'Add custom channels and MU repositories'
-                                def res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_monitoring_server', true)
-                                echo "Custom channels and MU repositories status code: ${res_mu_repos}"
-                                sh "exit ${res_mu_repos}"
-                            } else if (isNewJenkins) {
-                                Utils.markStageSkippedForConditional(STAGE_NAME)
                             }
-                        }
-                        stage('Add Activation Keys Monitoring') {
-                            if (params.must_add_keys && params.enable_monitoring_stages) {
-                                echo 'Add server monitoring activation key'
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start adding activation keys'
+                            stage('Add Activation Keys Monitoring') {
+                                if (params.must_add_keys) {
+                                    echo 'Add server monitoring activation key'
+                                    if (params.confirm_before_continue) {
+                                        input 'Press any key to start adding activation keys'
+                                    }
+                                    def res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_monitoring_server', true)
+                                    echo "Add Server Monitoring Activation Key status code: ${res_add_keys}"
+                                    sh "exit ${res_add_keys}"
+                                } else if (isNewJenkins) {
+                                    Utils.markStageSkippedForConditional(STAGE_NAME)
                                 }
-                                def res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_monitoring_server', true)
-                                echo "Add Server Monitoring Activation Key status code: ${res_add_keys}"
-                                sh "exit ${res_add_keys}"
-                            } else if (isNewJenkins) {
-                                Utils.markStageSkippedForConditional(STAGE_NAME)
                             }
-                        }
-                        stage('Create bootstrap repository Monitoring') {
-                            if (params.must_create_bootstrap_repos && params.enable_monitoring_stages) {
-                                echo 'Create server monitoring bootstrap repository'
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start creating the Server Monitoring bootstrap repository'
+                            stage('Create bootstrap repository Monitoring') {
+                                if (params.must_create_bootstrap_repos) {
+                                    echo 'Create server monitoring bootstrap repository'
+                                    if (params.confirm_before_continue) {
+                                        input 'Press any key to start creating the Server Monitoring bootstrap repository'
+                                    }
+                                    def res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_monitoring_server', true)
+                                    echo "Create Server Monitoring bootstrap repository status code: ${res_create_bootstrap_repos}"
+                                    sh "exit ${res_create_bootstrap_repos}"
+                                } else if (isNewJenkins) {
+                                    Utils.markStageSkippedForConditional(STAGE_NAME)
                                 }
-                                def res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_monitoring_server', true)
-                                echo "Create Server Monitoring bootstrap repository status code: ${res_create_bootstrap_repos}"
-                                sh "exit ${res_create_bootstrap_repos}"
-                            } else if (isNewJenkins) {
-                                Utils.markStageSkippedForConditional(STAGE_NAME)
                             }
-                        }
-                        stage('Bootstrap Monitoring Server') {
-                            if (params.must_boot_node && params.enable_monitoring_stages) {
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start bootstraping the Monitoring Server'
+                            stage('Bootstrap Monitoring Server') {
+                                if (params.must_boot_node) {
+                                    if (params.confirm_before_continue) {
+                                        input 'Press any key to start bootstraping the Monitoring Server'
+                                    }
+                                    echo 'Register monitoring server as minion with gui'
+                                    def res_init_monitoring = runCucumberRakeTarget('cucumber:build_validation_init_monitoring', true)
+                                    echo "Init Monitoring Server status code: ${res_init_monitoring}"
+                                    sh "exit ${res_init_monitoring}"
+                                } else if (isNewJenkins) {
+                                    Utils.markStageSkippedForConditional(STAGE_NAME)
                                 }
-                                echo 'Register monitoring server as minion with gui'
-                                def res_init_monitoring = runCucumberRakeTarget('cucumber:build_validation_init_monitoring', true)
-                                echo "Init Monitoring Server status code: ${res_init_monitoring}"
-                                sh "exit ${res_init_monitoring}"
-                            } else if (isNewJenkins) {
-                                Utils.markStageSkippedForConditional(STAGE_NAME)
                             }
                         }
                     } catch (Exception ex) {
