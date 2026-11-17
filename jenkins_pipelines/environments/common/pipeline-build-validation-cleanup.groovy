@@ -137,6 +137,15 @@ def run(params) {
                     // Same file the BV pipelines use for the non-MU channels (identical for 5.1 and 5.2)
                     sh(script: "${programCall} delete_software_channels --non-mu-channels-file ${WORKSPACE}/susemanager-ci/jenkins_pipelines/data/non_MU_channels_tasks_52.json")
                 }
+                if (params.delete_all_resources) {
+                    // Before the activation keys: a profile whose key is gone cannot be listed or deleted any more
+                    stage('Delete retail images') {
+                        sh(script: "${programCall} delete_images")
+                    }
+                    stage('Delete retail image profiles') {
+                        sh(script: "${programCall} delete_image_profiles")
+                    }
+                }
                 stage('Delete activation keys') {
                     sh(script: "${programCall} delete_activation_keys")
                 }
@@ -152,14 +161,6 @@ def run(params) {
                 if (params.delete_all_resources) {
                     stage('Delete system groups') {
                         sh(script: "${programCall} delete_system_groups")
-                    }
-                    stage('Delete retail images') {
-                        sh(script: "${programCall} delete_images")
-                    }
-                    stage('Delete retail image profiles') {
-                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            sh(script: "${programCall} delete_image_profiles")
-                        }
                     }
                 }
                 stage('Delete ssh know hosts') {
