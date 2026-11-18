@@ -62,7 +62,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   # Standard Minions
-  rocky8_minion = {
+  rocky10_minion = {
     mac  = "aa:b2:92:42:00:ea"
     name = "rhlike-minion"
     memory = 2048
