@@ -192,9 +192,6 @@ def run(params) {
                 stage('Add MUs Proxy') {
                     if (params.must_add_MU_repositories && params.enable_proxy_stages) {
                         echo 'Add proxy MUs'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding Maintenance Update repositories'
-                        }
                         echo 'Add custom channels and MU repositories'
                         def res_mu_repos = 1
                         withIdleTimeout {
@@ -207,9 +204,6 @@ def run(params) {
                 stage('Add Activation Keys Proxy') {
                     if (params.must_add_keys && params.enable_proxy_stages) {
                         echo 'Add proxy activation key'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding activation keys'
-                        }
                         def res_add_keys = 1
                         withIdleTimeout {
                             res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_proxy'", returnStatus: true)
@@ -221,9 +215,6 @@ def run(params) {
                 stage('Create bootstrap repository Proxy') {
                     if (params.must_create_bootstrap_repos && params.enable_proxy_stages) {
                         echo 'Create proxy bootstrap repository'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start creating the proxy bootstrap repository'
-                        }
                         def res_create_bootstrap_repos = 1
                         withIdleTimeout {
                             res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_proxy'", returnStatus: true)
@@ -234,9 +225,6 @@ def run(params) {
                 }
                 stage('Bootstrap Proxy') {
                     if (params.must_boot_node && params.enable_proxy_stages) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start bootstraping the Proxy'
-                        }
                         def res_init_proxy = 1
                         withIdleTimeout {
                             res_init_proxy = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_proxy'", returnStatus: true)
@@ -261,9 +249,6 @@ def run(params) {
                         client_paygo_stage_result_fail = true
                     }
                     stage('Paygo testing') {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start paygo related tests'
-                        }
                         def res_paygo_testing = 1
                         withIdleTimeout {
                             res_paygo_testing = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_paygo_testing'", returnStatus: true)
@@ -281,9 +266,6 @@ def run(params) {
                     try {
                         stage('Add MUs Monitoring') {
                             if (params.must_add_MU_repositories && params.enable_monitoring_stages) {
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start adding Maintenance Update repositories'
-                                }
                                 echo 'Add custom channels and MU repositories'
                                 def res_mu_repos = 1
                                 withIdleTimeout {
@@ -296,9 +278,6 @@ def run(params) {
                         stage('Add Activation Keys Monitoring') {
                             if (params.must_add_keys && params.enable_monitoring_stages) {
                                 echo 'Add server monitoring activation key'
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start adding activation keys'
-                                }
                                 def res_add_keys = 1
                                 withIdleTimeout {
                                     res_add_keys = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_add_activation_key_monitoring_server'", returnStatus: true)
@@ -310,9 +289,6 @@ def run(params) {
                         stage('Create bootstrap repository Monitoring') {
                             if (params.must_create_bootstrap_repos && params.enable_monitoring_stages) {
                                 echo 'Create server monitoring bootstrap repository'
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start creating the Server Monitoring bootstrap repository'
-                                }
                                 def res_create_bootstrap_repos = 1
                                 withIdleTimeout {
                                     res_create_bootstrap_repos = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${env.exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_create_bootstrap_repository_monitoring_server'", returnStatus: true)
@@ -323,9 +299,6 @@ def run(params) {
                         }
                         stage('Bootstrap Monitoring Server') {
                             if (params.must_boot_node && params.enable_monitoring_stages) {
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start bootstraping the Monitoring Server'
-                                }
                                 echo 'Register monitoring server as minion with gui'
                                 def res_init_monitoring = 1
                                 withIdleTimeout {
@@ -374,9 +347,6 @@ def run(params) {
                 try {
                     stage('Prepare and run Retail') {
                         if (params.must_prepare_retail) {
-                            if (params.confirm_before_continue) {
-                                input 'Press any key to start running the retail tests'
-                            }
                             echo 'Prepare Proxy for Retail'
                             def res_retail_proxy = 1
                             withIdleTimeout {
@@ -527,9 +497,6 @@ def clientTestingStages(params, capybara_timeout, default_timeout, minion_type =
                             println "MU channel available for ${node} "
                         }
                     } else {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding Maintenance Update repositories'
-                        }
                         echo 'Add custom channels and MU repositories'
                         def res_mu_repos = 1
                         withIdleTimeout {
@@ -551,9 +518,6 @@ def clientTestingStages(params, capybara_timeout, default_timeout, minion_type =
                     // We have this condition inside the stage to see in Jenkins which minion is skipped
                     if (json_matching_non_MU_data.containsKey(node)) {
                         def build_validation_non_MU_script = json_matching_non_MU_data["${node}"]
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding common channels'
-                        }
                         echo 'Add non MU Repositories'
                         def res_non_MU_repositories = 1
                         withIdleTimeout {
@@ -569,9 +533,6 @@ def clientTestingStages(params, capybara_timeout, default_timeout, minion_type =
             stage("Add Activation Keys ${node}") {
                 // skip this stage for Salt migration minion
                 if (params.must_add_keys && !node.contains('salt_migration_minion')) {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start adding activation keys'
-                    }
                     echo 'Add Activation Keys'
                     def res_add_keys = 1
                     withIdleTimeout {
@@ -586,9 +547,6 @@ def clientTestingStages(params, capybara_timeout, default_timeout, minion_type =
             stage("Create bootstrap repository ${node}") {
                 if (params.must_create_bootstrap_repos) {
                     if (!node.contains('ssh')) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start creating bootstrap repositories'
-                        }
                         // Employ a lock resource to prevent concurrent calls to create the bootstrap repository in the manager.
                         // Utilize a try-catch mechanism to release the resource for other nodes in the event of a failed bootstrap.
                         lock(resource: mgrCreateBootstrapRepo, timeout: 320) {
@@ -611,9 +569,6 @@ def clientTestingStages(params, capybara_timeout, default_timeout, minion_type =
             }
             stage("Bootstrap client ${node}") {
                 if (params.must_boot_node) {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start bootstraping the clients'
-                    }
                     randomWait()
                     echo 'Bootstrap clients'
                     def res_init_clients = 1
@@ -628,9 +583,6 @@ def clientTestingStages(params, capybara_timeout, default_timeout, minion_type =
             }
             stage("Run Smoke Tests ${node}") {
                 if (params.must_run_tests && !node.contains('byos')) {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start running the smoke tests'
-                    }
                     randomWait()
                     echo 'Run Smoke tests'
                     def res_smoke_tests = 1
@@ -703,9 +655,6 @@ def clientMigrationStages() {
         def minion = feature.replace("_migration.feature", "")
 
         migration_tests["${minion}"] = {
-            if (params.confirm_before_continue) {
-                input "Press any key to start testing the migration of ${minion}"
-            }
             stage("${minion} migration") {
                 def res_minion_migration = 1
                 withIdleTimeout {

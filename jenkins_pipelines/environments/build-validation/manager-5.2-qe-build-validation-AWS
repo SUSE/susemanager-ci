@@ -43,7 +43,6 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_tests', defaultValue: false, description: 'Run Smoke Tests'),
             booleanParam(name: 'must_run_products_and_salt_migration_tests', defaultValue: false, description: 'Run products and Salt migration Tests'),
             booleanParam(name: 'must_prepare_retail', defaultValue: false, description: 'Prepare and run Retail'),
-            booleanParam(name: 'confirm_before_continue', defaultValue: false, description: 'Confirmation button between stages'),
             string(name: 'server_ami', defaultValue: '', description: 'Specify the server ami image if not using the default search'),
             string(name: 'proxy_ami', defaultValue: '', description: 'Specify the proxy ami image if not using the default search'),
             choice(name: 'architecture', choices: ['x86_64', 'arm64'], description: 'Server and Proxy architecture'),
