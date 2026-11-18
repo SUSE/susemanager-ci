@@ -158,6 +158,9 @@ module "cucumber_testsuite" {
       container_registry   = "registry.suse.de"
       //container_registry = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
       container_tag        = "latest"
+      // shortcut: develHead mgradm still defaults to the 5.2 image path, drop once it is rebuilt for 5.3
+      container_image      = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64/server"
+      db_container_image   = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64/server-postgresql"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_62/"
       }
@@ -175,6 +178,12 @@ module "cucumber_testsuite" {
       container_registry = "registry.suse.de"
       //container_registry = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile"
       container_tag = "latest"
+      // shortcut: develHead mgrpxy still defaults to the 5.2 image path, drop once it is rebuilt for 5.3
+      httpd_container_image       = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64/proxy-httpd"
+      salt_broker_container_image = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64/proxy-salt-broker"
+      squid_container_image       = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64/proxy-squid"
+      ssh_container_image         = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64/proxy-ssh"
+      tftpd_container_image       = "registry.suse.de/devel/galaxy/manager/main/mlm-beta-products-sle15/containerfile/suse/multi-linux-manager/5.3/x86_64/proxy-tftpd"
       additional_repos = {
         Test_repo = "http://download.suse.de/ibs/Devel:/Galaxy:/Manager:/TEST:/Orion/SL_Micro_62/"
       }
