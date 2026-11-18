@@ -1,0 +1,98 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '1')),
+        disableConcurrentBuilds(),
+        parameters([
+            choice(name: 'hypervisor', choices: [
+                'suma-01.mgr.suse.de',
+                'suma-02.mgr.suse.de',
+                'suma-03.mgr.suse.de',
+                'suma-04.mgr.suse.de',
+                'suma-05.mgr.suse.de',
+                'suma-06.mgr.suse.de',
+                'suma-07.mgr.suse.de',
+                'suma-08.mgr.suse.de',
+                'suma-11.mgr.suse.de',
+                'suma-12.mgr.suse.de',
+                'suma-13.mgr.suse.de',
+                'suma-16.mgr.suse.de',
+                'metropolis.mgr.slc1.suse.org',
+                'selektah.mgr.slc1.suse.org',
+                'bloodymary.mgr.slc1.suse.org',
+                'screwdriver.mgr.slc1.suse.org'
+            ], description: 'The hypervisor where the environment runs'),
+            choice(name: 'environment', choices: [
+                'mlm-ci-51-',
+                'mlm-ci-52-podman-',
+                'mlm-ci-52-rke2-',
+                'mlm-ci-head-podman-',
+                'mlm-ci-head-rke2-',
+                'mlm-ref-51-',
+                'mlm-ref-52-',
+                'mlm-ref-head-',
+                'uyuni-ci-main-podman',
+                'uyuni-ci-master-',
+                'uyuni-ci-master-rke2-',
+                'uyuni-ci-master-podman-',
+                'uyuni-ref-master-',
+                'suma-test-ion-',
+                'mlm-test-hexagon-',
+                'suma-test-naica-',
+                'suma-test-orion-',
+                'mlm-test-orion-',
+                'suma-codecov-',
+                'mlm-su-51-micro-',
+                'mlm-su-51-sles-',
+                'mlm-bv-head-',
+                'mlm-testhub-',
+                'mlm-test-ion-',
+                'mlm-test-naica-',
+                'mlm-ci-52-hubtesting-',
+                'mlm-su-52-micro-',
+                'mlm-su-52-sles-',
+                'mlm-bv-sandbox-'
+            ], description: 'The prefix of the environment'),
+            choice(name: 'job', choices: [
+                'none',
+                'manager-5.1-dev-acceptance-tests',
+                'manager-5.2-dev-acceptance-tests-podman',
+                'manager-5.2-dev-acceptance-tests-RKE2',
+                'manager-5.2-dev-acceptance-tests-hubtesting',
+                'manager-Head-dev-acceptance-tests-podman',
+                'manager-Head-dev-acceptance-tests-RKE2',
+                'manager-5.1-infra-reference',
+                'manager-5.1-infra-reference-NUE',
+                'manager-5.2-infra-reference',
+                'manager-Head-infra-reference',
+                'manager-Head-infra-reference-NUE',
+                'uyuni-main-dev-acceptance-tests-podman',
+                'uyuni-master-dev-acceptance-tests-NUE',
+                'uyuni-master-dev-acceptance-tests-podman',
+                'uyuni-master-dev-acceptance-tests-RKE2',
+                'uyuni-master-infra-reference',
+                'uyuni-master-infra-reference-NUE',
+                'manager-TEST-acceptance-tests',
+                'manager-TEST-Hexagon-acceptance-tests',
+                'manager-TEST-Naica-acceptance-tests',
+                'manager-TEST-Orion-acceptance-tests',
+                'manager-TEST-Ion-acceptance-tests',
+                'manager-TEST-Hub-acceptance-tests',
+                'manager-5.1-qe-mi-validation-bci',
+                'manager-5.1-qe-mi-validation-mgrtools',
+                'manager-5.2-qe-mi-validation-bci',
+                'manager-5.2-qe-mi-validation-mgrtools',
+                'manager-head-qe-build-validation',
+                'manager-sandbox-qe-build-validation'
+            ], description: 'Job whose workspace is deleted on the worker (none to skip). Folder jobs must be deleted by hand'),
+        ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-infra-cleanup-environment.groovy"
+    pipeline.run(params)
+}
