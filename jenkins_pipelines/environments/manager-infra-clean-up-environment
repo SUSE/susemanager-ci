@@ -46,7 +46,13 @@ node('sumaform-cucumber') {
                 'mlm-su-51-micro-',
                 'mlm-su-51-sles-',
                 'mlm-bv-head-',
-                'mlm-testhub-'
+                'mlm-testhub-',
+                'mlm-test-ion-',
+                'mlm-test-naica-',
+                'mlm-ci-52-hubtesting-',
+                'mlm-su-52-micro-',
+                'mlm-su-52-sles-',
+                'mlm-bv-sandbox-'
             ], description: 'The prefix of the environment'),
             choice(name: 'job', choices: [
                 'none',
