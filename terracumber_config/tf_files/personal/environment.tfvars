@@ -37,25 +37,6 @@ ENVIRONMENT_CONFIGURATION = {
     additional_network  = "192.168.11.0/24"
     dhcp_user           = "root"
   }
-  pablo = {
-    mac = {
-      controller     = "aa:b2:93:01:01:50"
-      server         = "aa:b2:93:01:01:51"
-      proxy          = "aa:b2:93:01:01:52"
-      suse-client    = "aa:b2:93:01:01:53"
-      suse-minion    = "aa:b2:93:01:01:54"
-      suse-sshminion = "aa:b2:93:01:01:55"
-      rhlike-minion  = "aa:b2:93:01:01:56"
-      deblike-minion = "aa:b2:93:01:01:57"
-      build-host     = "aa:b2:93:01:01:58"
-      kvm-host       = "aa:b2:93:01:01:59"
-    }
-    hypervisor          = "suma-05.mgr.suse.de"
-    pool                = "pgomez_disks"
-    bridge              = "br0"
-    additional_network  = "192.168.12.0/24"
-    dhcp_user           = "root"
-  }
   martin = {
     mac = {
       controller     = "aa:b2:93:01:01:5c"
