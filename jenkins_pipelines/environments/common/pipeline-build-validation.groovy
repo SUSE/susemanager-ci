@@ -348,11 +348,7 @@ def run(params) {
                 /** Proxy stages begin **/
                 stage('Add MUs Proxy') {
                     if (params.must_add_MU_repositories && params.enable_proxy_stages) {
-                        echo 'Add proxy MUs'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding Maintenance Update repositories'
-                        }
-                        echo 'Add custom channels and MU repositories'
+                        echo 'Add proxy custom channels and MU repositories'
                         def res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_proxy', true)
                         echo "Custom channels and MU repositories status code: ${res_mu_repos}"
                         sh "exit ${res_mu_repos}"
@@ -363,9 +359,6 @@ def run(params) {
                 stage('Add Activation Keys Proxy') {
                     if (params.must_add_keys && params.enable_proxy_stages) {
                         echo 'Add proxy activation key'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding activation keys'
-                        }
                         def res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_proxy', true)
                         echo "Add Proxy Activation Key status code: ${res_add_keys}"
                         sh "exit ${res_add_keys}"
@@ -376,9 +369,6 @@ def run(params) {
                 stage('Create bootstrap repository Proxy') {
                     if (params.must_create_bootstrap_repos && params.enable_proxy_stages) {
                         echo 'Create bootstrap repository ${node}'
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start creating the proxy bootstrap repository'
-                        }
                         def res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_proxy', true)
                         echo "Create Proxy bootstrap repository status code: ${res_create_bootstrap_repos}"
                         sh "exit ${res_create_bootstrap_repos}"
@@ -388,9 +378,6 @@ def run(params) {
                 }
                 stage('Bootstrap Proxy') {
                     if (params.must_boot_node && params.enable_proxy_stages) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start bootstraping the Proxy'
-                        }
                         def res_init_proxy = runCucumberRakeTarget('cucumber:build_validation_init_proxy', true)
                         echo "Init Proxy status code: ${res_init_proxy}"
                         sh "exit ${res_init_proxy}"
@@ -406,9 +393,6 @@ def run(params) {
                     try {
                         stage('Add MUs Monitoring') {
                             if (params.must_add_MU_repositories && params.enable_monitoring_stages) {
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start adding Maintenance Update repositories'
-                                }
                                 echo 'Add custom channels and MU repositories'
                                 def res_mu_repos = runCucumberRakeTarget('cucumber:build_validation_add_maintenance_update_repositories_monitoring_server', true)
                                 echo "Custom channels and MU repositories status code: ${res_mu_repos}"
@@ -420,9 +404,6 @@ def run(params) {
                         stage('Add Activation Keys Monitoring') {
                             if (params.must_add_keys && params.enable_monitoring_stages) {
                                 echo 'Add server monitoring activation key'
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start adding activation keys'
-                                }
                                 def res_add_keys = runCucumberRakeTarget('cucumber:build_validation_add_activation_key_monitoring_server', true)
                                 echo "Add Server Monitoring Activation Key status code: ${res_add_keys}"
                                 sh "exit ${res_add_keys}"
@@ -433,9 +414,6 @@ def run(params) {
                         stage('Create bootstrap repository Monitoring') {
                             if (params.must_create_bootstrap_repos && params.enable_monitoring_stages) {
                                 echo 'Create server monitoring bootstrap repository'
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start creating the Server Monitoring bootstrap repository'
-                                }
                                 def res_create_bootstrap_repos = runCucumberRakeTarget('cucumber:build_validation_create_bootstrap_repository_monitoring_server', true)
                                 echo "Create Server Monitoring bootstrap repository status code: ${res_create_bootstrap_repos}"
                                 sh "exit ${res_create_bootstrap_repos}"
@@ -445,9 +423,6 @@ def run(params) {
                         }
                         stage('Bootstrap Monitoring Server') {
                             if (params.must_boot_node && params.enable_monitoring_stages) {
-                                if (params.confirm_before_continue) {
-                                    input 'Press any key to start bootstraping the Monitoring Server'
-                                }
                                 echo 'Register monitoring server as minion with gui'
                                 def res_init_monitoring = runCucumberRakeTarget('cucumber:build_validation_init_monitoring', true)
                                 echo "Init Monitoring Server status code: ${res_init_monitoring}"
@@ -495,9 +470,6 @@ def run(params) {
                 /** Retail stages begin **/
                 stage('Retail: Bootstrap build hosts') {
                     if (params.must_prepare_retail) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start running the retail tests'
-                        }
                         parallel(
                                 'Init build host sles15sp7': {
                                     stage('Init build host sles15sp7') {
@@ -520,9 +492,6 @@ def run(params) {
                 }
                 stage('Retail: Test terminal deployments') {
                     if (params.must_test_retail_terminal) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start running the retail tests'
-                        }
                         def nodesHandler = getNodesHandler(params)
                         // Filter the nodeList for items that are terminals
                         // The handler already identifies 'terminal' strings in the state
@@ -738,9 +707,6 @@ def clientTestingStages(params, muLockSlots, nonMuLockSlots, smokeTestSlots, boo
             stage("Add MUs ${node}") {
                 if (params.must_add_MU_repositories) {
                     if (!node.contains('ssh')) {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start adding Maintenance Update repositories'
-                        }
                         withThrottle(muLockSlots, 5) {
                             echo 'Add custom channels and MU repositories'
                             def res_mu_repos = runCucumberRakeTarget("cucumber:build_validation_add_maintenance_update_repositories_${nodeTag}", true, temporaryList, null, 600)
@@ -769,9 +735,6 @@ def clientTestingStages(params, muLockSlots, nonMuLockSlots, smokeTestSlots, boo
                         // We have this condition inside the stage to see in Jenkins which minion is skipped
                         if (json_matching_non_MU_data.containsKey(node)) {
                             def build_validation_non_MU_script = json_matching_non_MU_data["${node}"]
-                            if (params.confirm_before_continue) {
-                                input 'Press any key to start adding common channels'
-                            }
                             withThrottle(nonMuLockSlots, 1) {
                                 withThrottle(muLockSlots, 5) {
                                     echo 'Add non MU Repositories'
@@ -813,9 +776,6 @@ def clientTestingStages(params, muLockSlots, nonMuLockSlots, smokeTestSlots, boo
                             error("${minion_name_without_ssh} creates mandatory custom channel failed")
                         }
                     }
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start adding activation keys'
-                    }
                     echo 'Add Activation Keys'
                     def res_add_keys = runCucumberRakeTarget("cucumber:build_validation_add_activation_key_${nodeTag}", true, temporaryList)
                     echoHtmlReportPath("build_validation_add_activation_key_${nodeTag}")
@@ -844,9 +804,6 @@ def clientTestingStages(params, muLockSlots, nonMuLockSlots, smokeTestSlots, boo
                             println "Bootstrap repository available for ${node} "
                         }
                     } else {
-                        if (params.confirm_before_continue) {
-                            input 'Press any key to start creating bootstrap repositories'
-                        }
                         // Make sure s390 minions create their bootstrap repositories after the x86_64 equivalents to avoid flushing the repository folders.
                         if (node.contains('s390')){
                             def minion_name_without_s390 = node.replaceAll('s390', '')
@@ -873,9 +830,6 @@ def clientTestingStages(params, muLockSlots, nonMuLockSlots, smokeTestSlots, boo
             }
             stage("Bootstrap client ${node}") {
                 if (params.must_boot_node) {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start bootstraping the clients'
-                    }
                     randomWait()
                     echo 'Bootstrap clients'
                     // Temporarily modify env.exports to include the bootstrap timeout
@@ -896,9 +850,6 @@ def clientTestingStages(params, muLockSlots, nonMuLockSlots, smokeTestSlots, boo
             }
             stage("Run Smoke Tests ${node}") {
                 if (params.must_run_tests) {
-                    if (params.confirm_before_continue) {
-                        input 'Press any key to start running the smoke tests'
-                    }
                     randomWait()
                     withThrottle(smokeTestSlots, 10) {
                         echo 'Run Smoke tests'
@@ -974,9 +925,6 @@ def clientMigrationStages() {
         def minion = cleanMigrationFeatureName(feature)
 
         migration_tests["${minion}"] = {
-            if (params.confirm_before_continue) {
-                input "Press any key to start testing the migration of ${minion}"
-            }
             stage("${minion} migration") {
                 def res_minion_migration = runCucumberRakeTarget("cucumber:build_validation_migration_${minion}", true)
                 echo "${minion} migration status code: ${res_minion_migration}"
