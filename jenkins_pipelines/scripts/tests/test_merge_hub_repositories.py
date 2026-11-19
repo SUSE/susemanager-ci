@@ -34,10 +34,10 @@ class TestMerge(unittest.TestCase):
         self.assertEqual(merged["server_transactional"], MICRO["server"])
         self.assertEqual(merged["proxy_transactional"], MICRO["proxy"])
 
-    def test_flat_keys_are_the_micro_ones(self):
+    def test_no_flat_server_or_proxy_key(self):
         merged = m.merge(SLES, MICRO)
-        self.assertEqual(merged["server"], MICRO["server"])
-        self.assertEqual(merged["proxy"], MICRO["proxy"])
+        self.assertNotIn("server", merged)
+        self.assertNotIn("proxy", merged)
 
     def test_shared_minion_keys_are_kept_once(self):
         merged = m.merge(SLES, MICRO)
