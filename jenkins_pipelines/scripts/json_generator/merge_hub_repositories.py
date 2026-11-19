@@ -2,7 +2,8 @@
 """Merge the sles and micro maintenance_json_generator.py outputs into one hub custom_repositories.json.
 
 server/proxy mean different repositories per variant, so they are relabelled
-*_non_transactional (sles run) and *_transactional (micro run). Every other key is shared.
+*_non_transactional (sles run) and *_transactional (micro run). The flat server/proxy keys are not
+written: a flat key would hide which variant it holds. Every other key is shared.
 """
 import argparse
 import json
@@ -24,9 +25,6 @@ def merge(sles: dict, micro: dict) -> dict:
             merged[f"{key}_non_transactional"] = sles[key]
         if key in micro:
             merged[f"{key}_transactional"] = micro[key]
-            # ponytail: the flat key is only read by the testsuite (primary proxy custom channel) and assumes
-            # the primary instances are micro; add a --primary-variant option if a topology puts sles first
-            merged[key] = micro[key]
     return merged
 
 
