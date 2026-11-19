@@ -221,6 +221,11 @@ def run(params) {
                         }
                     }
 
+                    stage('Delete salt keys of the deleted client VMs') {
+                        // The first deletion runs while the old VMs are still up, and a running minion can put its key back
+                        sh(script: "${programCall} delete_salt_keys")
+                    }
+
                     stage('Redeploy the environment with new client VMs') {
                         // Run Terracumber to deploy the environment
                         withCreds {
