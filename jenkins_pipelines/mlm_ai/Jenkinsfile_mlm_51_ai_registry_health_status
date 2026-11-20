@@ -29,14 +29,14 @@ pipeline {
                      * 1. set -o pipefail: Fail the pipeline if any command in it fails.
                      * 2. curl -sL: Fetch page silently, follow redirects.
                      * 3. -H "User-Agent...": Mimic a browser to avoid being blocked.
-                     * 4. grep -oE 'grade-[A-Z]' | sed 's/grade-//': Look for 'grade-X' and return only 'X' using portable tools.
+                     * 4. grep -oE 'grade-([A-Z]|pending)' | sed 's/grade-//': Look for 'grade-X' or 'grade-pending' and return the value.
                      * 5. tail -1: Ensure we get the last match (to get the main badge).
                      */
                     def healthGrade = sh(
                         script: """#!/usr/bin/env bash
                             set -o pipefail
                             curl -sL -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "${env.TARGET_URL}" | \
-                            grep -oE 'grade-[A-Z]' | \
+                            grep -oE 'grade-([A-Z]|pending)' | \
                             sed 's/grade-//' | \
                             tail -1
                         """,
@@ -51,6 +51,9 @@ pipeline {
 
                     if (healthGrade == 'A') {
                         echo "SUCCESS: Image is healthy (Grade A)."
+                    } else if (healthGrade.equalsIgnoreCase('pending')) {
+                        echo "WARNING: Image health check is pending. Scan has not completed yet."
+                        currentBuild.result = 'UNSTABLE'
                     } else {
                         // This will stop the pipeline and mark it as 'Failure'
                         error "FAIL: Image health check did not meet the required threshold. Detected grade: '${healthGrade}'. URL: ${env.TARGET_URL}"
