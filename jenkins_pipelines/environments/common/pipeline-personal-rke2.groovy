@@ -1,5 +1,5 @@
 def run(params) {
-    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet(manualWindow: 'MON 00:00-MON 05:00')) { return }
     def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
