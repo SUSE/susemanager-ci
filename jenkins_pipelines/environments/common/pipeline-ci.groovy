@@ -115,6 +115,13 @@ def run(params) {
                             ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
                         """
 
+                            // Restore the previous Terraform state (as pipeline-personal.groovy does). Without it a
+                            // build landing on a fresh workspace, e.g. after an aborted run, plans a full create
+                            // against infra that already exists.
+                            if (currentBuild.previousBuild != null && !fileExists("results/sumaform/terraform.tfstate")) {
+                                safe.run('restore-tfstate') { copyArtifacts projectName: currentBuild.projectName, selector: lastWithArtifacts(), optional: true }
+                            }
+
                             // custom_repositories.json from parameter (self-skips when unset)
                             if (params.custom_repositories?.trim()) {
                                 writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
@@ -280,25 +287,16 @@ def run(params) {
             }
             finally {
                 stage('Save TF state') {
-                    archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*", allowEmptyArchive: true
+                    safe.run('save-tfstate') { archiveArtifacts artifacts: "results/sumaform/terraform.tfstate, results/sumaform/.terraform/**/*", allowEmptyArchive: true }
                 }
 
                 stage('Get results') {
                     def result_error = 0
                     try {
                         if (deployed || !params.must_deploy) {
-                            try {
-                                sh cucumberCmd('cucumber:finishing')
-                            } catch (err) {
-                                println("ERROR: rake cucumber:finishing failed: ${err}")
-                                result_error = 1
-                            }
-                            try {
-                                sh cucumberCmd('utils:generate_test_report')
-                            } catch (err) {
-                                println("ERROR: rake utils:generate_test_report failed: ${err}")
-                                result_error = 1
-                            }
+                            // safe.run keeps an abort from escaping the finally block (ABORTED is recorded)
+                            if (!safe.run('finishing') { sh cucumberCmd('cucumber:finishing') }) { result_error = 1 }
+                            if (!safe.run('generate_test_report') { sh cucumberCmd('utils:generate_test_report') }) { result_error = 1 }
                             safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
                             safe.run('publishHTML') {
                                 publishHTML(target: [
@@ -318,7 +316,7 @@ def run(params) {
                         }
                         // Send email. The mail step reads the variable defaults of the BV variables file
                         // ("Set in TFVARS"), so the subject and URL are passed as TF_VAR_* overrides.
-                        try {
+                        if (!safe.run('mail') {
                             withEnv([
                                     "TF_VAR_MAIL_SUBJECT=CI ${product_version} #${BUILD_NUMBER}",
                                     "TF_VAR_MAIL_SUBJECT_ENV_FAIL=CI ${product_version} #${BUILD_NUMBER}: environment failed",
@@ -326,10 +324,7 @@ def run(params) {
                                     "TF_VAR_URL_PREFIX=${env.JOB_URL.replaceAll('/+$', '')}"]) {
                                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
-                        } catch (err) {
-                            println("ERROR: sending the results email failed: ${err}")
-                            result_error = 1
-                        }
+                        }) { result_error = 1 }
                         sh "exit ${result_error}"
                     } finally {
                         // Clean up old results — in finally so it runs even when getresults/mail fail
