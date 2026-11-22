@@ -1,4 +1,4 @@
-// Weekly CI freeze (SUSE/spacewalk#31517): no run from Sunday 11:00 to Monday 05:00 (Europe/Berlin),
+// Weekly CI freeze (SUSE/spacewalk#31517): no run from Sunday 18:00 to Monday 05:00 (Europe/Berlin),
 // so Jenkins and the infrastructure hosts can be updated on Monday morning.
 //
 // Usage, first statement of run() in a pipeline:
@@ -7,21 +7,20 @@
 // Options (all optional):
 //     window:     "DAY HH:MM-DAY HH:MM" (MON..SUN), may wrap past Sunday. Empty disables the gate.
 //     timezone:   timezone the window is evaluated in.
-//     gateManual: also gate builds started by hand or by the hub. Default false: timer builds only.
+//     manualWindow: window for builds started by hand or by the hub. Default empty: they are never gated.
 //
 // Returns true (and marks the build NOT_BUILT) when the run must be skipped.
 // A malformed window fails open: it warns and the run proceeds.
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 
 def skipIfQuiet(Map opts = [:]) {
-    String window = opts.containsKey('window') ? opts.window : 'SUN 11:00-MON 05:00'
+    String window = opts.containsKey('window') ? opts.window : 'SUN 18:00-MON 05:00'
     String tz = opts.timezone ?: 'Europe/Berlin'
-    boolean gateManual = opts.gateManual ?: false
-    if (!window?.trim()) {
-        return false
-    }
     def timerBuild = !currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause').isEmpty()
-    if (!timerBuild && !gateManual) {
+    if (!timerBuild) {
+        window = opts.manualWindow ?: ''
+    }
+    if (!window?.trim()) {
         return false
     }
     boolean inQuiet = false

@@ -3,7 +3,7 @@
 // The AWS mirror is private: every SSH connection to it goes through the bastion.
 // With deploy_mirrors unset, only the VPC, private network and bastion are deployed.
 def run(params) {
-    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
+    if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet(manualWindow: 'MON 00:00-MON 05:00')) { return }
     def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
     ansiColor('xterm') {
         timestamps {
