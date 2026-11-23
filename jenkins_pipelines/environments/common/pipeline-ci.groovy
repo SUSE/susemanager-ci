@@ -249,9 +249,13 @@ def run(params) {
                         return
                     }
                     def tags_list = ""
-                    if (params.functional_scopes) {
+                    // When triggered by cron the Active Choices plugin (JENKINS-42568) always returns
+                    // the first checkbox value instead of none, so ignore functional_scopes on timer builds.
+                    def isTimerTriggered = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
+                    def effectiveScopes = isTimerTriggered ? '' : params.functional_scopes
+                    if (effectiveScopes) {
                         // Re-add the @ prefix stripped from the job parameters, then join as an OR expression.
-                        def transformed_scopes = params.functional_scopes.split(',')
+                        def transformed_scopes = effectiveScopes.split(',')
                                 .collect { it.trim() }
                                 .collect { it.startsWith('@') ? it : "@${it}" }
                                 .join(' or ')
