@@ -131,10 +131,12 @@ def run(params) {
                     dir("susemanager-ci") {
                         checkout scm
                     }
-                    // Run minima sync on the mirror. The tf template has no literal domain, so take it from the Jenkins host.
+                    // Run minima sync on the mirror of the deployment: LOCATION comes from the deployment tfvars,
+                    // the mirror host from location.tfvars (not from the Jenkins host, which may differ).
                     if (mirror_scope != null) {
-                        def domain = env.JENKINS_URL?.contains('slc1') ? 'mgr.slc1.suse.org' : 'mgr.suse.de'
-                        sh "ssh root@minima-mirror-ci-bv.${domain} -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh || echo 'no mirror script for this scope'\""
+                        def location = sh(script: "grep -oP '^LOCATION\\s*=\\s*\"\\K[^\"]+' ${params.deployment_tfvars}", returnStdout: true).trim()
+                        def mirror = sh(script: "sed -n '/^  ${location} = {/,/}/p' susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars | grep -oP 'mirror\\s*=\\s*\"\\K[^\"]+'", returnStdout: true).trim()
+                        sh "ssh root@${mirror} -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh || echo 'no mirror script for this scope'\""
                     }
                 }
 
@@ -166,6 +168,12 @@ def run(params) {
                 stage('Deploy') {
 
                     if (params.must_deploy) {
+                        // Jenkins hands out a "@N" copy of the workspace when the base one is still leased, i.e. the
+                        // previous run is not fully finished. The copy has no Terraform state, so Deploy would plan a
+                        // full create against infrastructure that already exists. Stop before touching libvirt.
+                        if (env.WORKSPACE ==~ /.*@\d+$/) {
+                            error("Workspace ${env.WORKSPACE} is a Jenkins copy (@N): the previous build still holds the base workspace and the Terraform state is not here. Wait for it to finish, then re-run.")
+                        }
                         withCreds {
                             // Clone sumaform
                             sh """
@@ -414,6 +422,7 @@ def run(params) {
                                     sh """
                                   #!/bin/bash
                                   ${credInit}
+                                  set +x  # credInit re-enables tracing, which would print RRTG_USER:RRTG_PASS below
                                   curl -sf -k -X POST \\
                                     "https://su-agent.qe-hub.mgr.suse.de/api/rrtg/ingest/${rrtg_version}?build=${env.BUILD_NUMBER}" \\
                                     -u "\${RRTG_USER}:\${RRTG_PASS}" \\
