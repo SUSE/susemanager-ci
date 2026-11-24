@@ -320,6 +320,7 @@ def run(params) {
                             sh """
                           #!/bin/bash
                           ${credInit}
+                          set +x  # credInit re-enables tracing, which would print RRTG_USER:RRTG_PASS below
                           curl -sf -k -X POST \\
                             "https://su-agent.qe-hub.mgr.suse.de/api/rrtg/ingest/${rrtg_version}?build=${env.BUILD_NUMBER}" \\
                             -u "\${RRTG_USER}:\${RRTG_PASS}" \\
