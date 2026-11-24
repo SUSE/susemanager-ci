@@ -26,9 +26,10 @@ node('sumaform-cucumber') {
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),
+            booleanParam(name: 'restore_tfstate', defaultValue: false, description: 'Restore the previous build Terraform state. Only when the workspace was lost but the VMs still exist; never after a manual cleanup'),
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core stages (setup, reposync, proxy, init clients)'),
             booleanParam(name: 'must_run_secondary', defaultValue: true, description: 'Run Secondary features'),
-            booleanParam(name: 'must_run_hub', defaultValue: false, description: 'Run hub_testing stage'),
+            booleanParam(name: 'must_run_hub', defaultValue: true, description: 'Run hub_testing stage'),
             activeChoice(name: 'functional_scopes', description: 'Choose the functional scopes that you want to test', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: false, script: """
                 return [
                     'scope_spacewalk_utils', 'scope_visualization', 'scope_notification_message',

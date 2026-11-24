@@ -115,10 +115,9 @@ def run(params) {
                             ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
                         """
 
-                            // Restore the previous Terraform state (as pipeline-personal.groovy does). Without it a
-                            // build landing on a fresh workspace, e.g. after an aborted run, plans a full create
-                            // against infra that already exists.
-                            if (currentBuild.previousBuild != null && !fileExists("results/sumaform/terraform.tfstate")) {
+                            // Opt-in only: restoring the previous state breaks after a manual cleanup (the VMs are gone,
+                            // refresh fails with "Storage volume not found"). Use it when the workspace was lost but the VMs still exist.
+                            if (params.restore_tfstate && currentBuild.previousBuild != null && !fileExists("results/sumaform/terraform.tfstate")) {
                                 safe.run('restore-tfstate') { copyArtifacts projectName: currentBuild.projectName, selector: lastWithArtifacts(), optional: true }
                             }
 
