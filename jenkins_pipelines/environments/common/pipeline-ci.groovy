@@ -36,6 +36,57 @@ def run(params) {
             def base_os = params.base_os ?: ''
             def json_generator_version = params.json_generator_version ?: ''
 
+            // Nightly extras ported from pipeline.groovy: product changes, sanity check, flaky-test tagging,
+            // mirror sync and RRTG ingest. Opt-in: only jobs that set params.nightly get them.
+            def isNightly = params.nightly == true
+            def showProductChanges = isNightly && params.show_product_changes
+            def previous_commit = null
+            def product_commit = null
+            def runtime = env.JOB_BASE_NAME.endsWith('-RKE2') ? 'rke2' : 'podman'
+            def mirror_scope = isNightly ? env.JOB_BASE_NAME.split('-acceptance-tests')[0].replaceAll("-dev", "") : null
+            def ci_label_map = [
+                    '5.1'  : '5.1_ci',
+                    '5.2'  : "5.2_${runtime}_ci",
+                    'Head' : "head_${runtime}_ci",
+                    'uyuni': "uyuni_${runtime}_ci"
+            ]
+            def ci_label = isNightly ? (ci_label_map.find { k, v -> env.JOB_BASE_NAME.contains(k) }?.value ?: '') : ''
+            def rrtg_version = isNightly ? env.JOB_BASE_NAME.find(/5\.1|5\.2|Head/)?.toLowerCase() : null
+            // 5.2 and head are reported per deployment flavour (podman / rke2)
+            if (rrtg_version in ['5.2', 'head']) {
+                rrtg_version += env.JOB_BASE_NAME.endsWith('-RKE2') ? '-rke2' : '-podman'
+            }
+            if (isNightly && !rrtg_version && env.JOB_BASE_NAME == 'uyuni-master-dev-acceptance-tests-podman') {
+                rrtg_version = 'uyuni-podman'
+            }
+            if (showProductChanges) {
+                // Retrieve the hash commit of the last product built in OBS/IBS and previous job
+                def prefix = env.JOB_BASE_NAME.split('-acceptance-tests')[0]
+                if (prefix == "uyuni-master-dev") {
+                    prefix = "manager-Head-dev"
+                }
+                // The 2obs jobs are releng, not dev
+                prefix = prefix.replaceAll("-dev", "-releng")
+                def request = httpRequest ignoreSslErrors: true, url: "https://ci.suse.de/job/${prefix}-2obs/lastBuild/api/json"
+                def requestJson = readJSON text: request.getContent()
+                product_commit = "${requestJson.actions.lastBuiltRevision.SHA1}"
+                product_commit = product_commit.substring(product_commit.indexOf('[') + 1, product_commit.indexOf(']'))
+                print "Current product commit: ${product_commit}"
+                // Walk back past builds without a "[commit]" description (e.g. quiet-window skips)
+                def previousBuild = currentBuild.getPreviousBuild()
+                def hasCommit = { String d -> d != null && d.indexOf('[') >= 0 && d.indexOf(']') > d.indexOf('[') }
+                while (previousBuild != null && !hasCommit(previousBuild.description)) {
+                    previousBuild = previousBuild.getPreviousBuild()
+                }
+                if (previousBuild == null) {
+                    previous_commit = product_commit
+                } else {
+                    def desc = previousBuild.description
+                    previous_commit = desc.substring(desc.indexOf('[') + 1, desc.indexOf(']'))
+                }
+                print "Previous product commit: ${previous_commit}"
+            }
+
             def isNewJenkins = env.JENKINS_URL?.contains('jenkins.mgr.suse.de') || env.JENKINS_URL?.contains('jenkins.mgr.slc1.suse.org')
             def credInit = isNewJenkins
                     ? 'set +x; credFile=$(mktemp); echo "$SECRET_CONTENT" > "${credFile}"; chmod 600 "${credFile}"; . "${credFile}"; rm -f "${credFile}"; set -x'
@@ -71,10 +122,19 @@ def run(params) {
 
             try {
                 stage('Clone terracumber, susemanager-ci') {
+                    if (showProductChanges) {
+                        // Rename build using product commit hash; the next build reads it back as previous_commit
+                        currentBuild.description = product_commit ? "[${product_commit}]" : "[${params.tf_file}]"
+                    }
                     sh "mkdir -p ${resultdir}"
                     git url: params.terracumber_gitrepo, branch: params.terracumber_ref
                     dir("susemanager-ci") {
                         checkout scm
+                    }
+                    // Run minima sync on the mirror. The tf template has no literal domain, so take it from the Jenkins host.
+                    if (mirror_scope != null) {
+                        def domain = env.JENKINS_URL?.contains('slc1') ? 'mgr.slc1.suse.org' : 'mgr.suse.de'
+                        sh "ssh root@minima-mirror-ci-bv.${domain} -t \"test -x /usr/local/bin/minima-${mirror_scope}.sh && /usr/local/bin/minima-${mirror_scope}.sh || echo 'no mirror script for this scope'\""
                     }
                 }
 
@@ -206,6 +266,31 @@ def run(params) {
                             --runstep provision
                     """
                             deployed = true
+                            if (isNightly) {
+                                // Collect and tag flaky tests from the GitHub Board (non-fatal)
+                                def rakeTarget = ci_label ? "utils:collect_and_tag_flaky_tests[${ci_label}]" : "utils:collect_and_tag_flaky_tests"
+                                sh script: cucumberCmd(rakeTarget), returnStatus: true
+                            }
+                        }
+                    } else if (isNewJenkins) {
+                        Utils.markStageSkippedForConditional(STAGE_NAME)
+                    }
+                }
+
+                stage('Product changes') {
+                    if (showProductChanges) {
+                        // Comparison between the previous and the current git revision of the spacewalk (or uyuni)
+                        // repository pushed in IBS (or OBS), run on the controller.
+                        sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/; git --no-pager log --pretty=format:\"%h %<(16,trunc)%cn  %s  %d\" ${previous_commit}..${product_commit}'", returnStatus: true
+                    } else if (isNewJenkins) {
+                        Utils.markStageSkippedForConditional(STAGE_NAME)
+                    }
+                }
+
+                stage('Sanity Check') {
+                    if (isNightly) {
+                        withIdleTimeout {
+                            sh cucumberCmd('cucumber:sanity_check')
                         }
                     } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
@@ -322,6 +407,22 @@ def run(params) {
                                 sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/mail.log --runstep mail"
                             }
                         }) { result_error = 1 }
+
+                        if (rrtg_version) {
+                            safe.run('rrtg-ingest') {
+                                withCreds {
+                                    sh """
+                                  #!/bin/bash
+                                  ${credInit}
+                                  curl -sf -k -X POST \\
+                                    "https://su-agent.qe-hub.mgr.suse.de/api/rrtg/ingest/${rrtg_version}?build=${env.BUILD_NUMBER}" \\
+                                    -u "\${RRTG_USER}:\${RRTG_PASS}" \\
+                                    -H "Content-Type: application/json" \\
+                                  || echo "RRTG ingest failed (non-fatal)"
+                                """
+                                }
+                            }
+                        }
                         sh "exit ${result_error}"
                     } finally {
                         // Clean up old results — in finally so it runs even when getresults/mail fail
