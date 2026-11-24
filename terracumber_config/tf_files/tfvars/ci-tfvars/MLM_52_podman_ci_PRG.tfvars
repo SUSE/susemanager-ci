@@ -93,7 +93,7 @@ BASE_CONFIGURATIONS = {
     pool               = "ssd"
     bridge             = "br0"
     hypervisor         = "suma-01.mgr.suse.de"
-    additional_network = "192.168.153.0/24"
+    additional_network = "192.168.52.0/24"
   }
 }
 MAIL_SUBJECT          = "Results 5.2-PODMAN-PRG $status: $tests scenarios ($failures failed, $errors errors, $skipped skipped, $passed passed)"
