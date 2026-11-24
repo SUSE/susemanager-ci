@@ -43,9 +43,6 @@ node('sumaform-cucumber') {
                     'scope_software_channels_and_repositories', 'scope_ssm'
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_scopes']"]]),
-            choice(name: 'json_generator_version', choices: ['52-micro', '52-sles'], description: 'Version the MI Identifiers below are resolved for. Has to match base_os: a SL Micro base_os is 52-micro, a SLES one 52-sles'),
-            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
             ])
     ])
 
@@ -60,6 +57,8 @@ node('sumaform-cucumber') {
     mutableParams.product_version_display = mutableParams.product_version
     mutableParams.deployment_tfvars = 'susemanager-ci/terracumber_config/tf_files/tfvars/ci-tfvars/MLM_52_podman_ci_PRG.tfvars'
     mutableParams.mode = 'ci'
+    mutableParams.nightly = true
+    mutableParams.show_product_changes = true
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-ci.groovy"
     pipeline.run(mutableParams)
 }
