@@ -67,7 +67,7 @@ ENVIRONMENT_CONFIGURATION = {
   }
 
   product_version      = "5.2-released"
-  name_prefix          = "mlm52-hubtesting-"
+  name_prefix          = "mlm-bv-52-hubtesting-"
   url_prefix           = "https://jenkins.mgr.suse.de/job/manager-qe-test-hub-acceptance-tests"
 }
 BASE_CONFIGURATIONS = {
