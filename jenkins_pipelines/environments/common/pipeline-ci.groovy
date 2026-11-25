@@ -34,6 +34,7 @@ def run(params) {
             def server_container_image = params.server_container_image ?: ''
             def product_version = params.product_version ?: ''
             def base_os = params.base_os ?: ''
+            def json_generator_version = params.json_generator_version ?: ''
 
             // Nightly extras ported from pipeline.groovy: product changes, sanity check, flaky-test tagging,
             // mirror sync and RRTG ingest. Opt-in: only jobs that set params.nightly get them.
@@ -182,7 +183,28 @@ def run(params) {
                             ./terracumber-cli ${common_params} --gitrepo ${params.sumaform_gitrepo} --gitref ${params.sumaform_ref} --runstep gitsync
                         """
 
-                            def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
+                            // custom_repositories.json from parameter (self-skips when unset)
+                            if (params.custom_repositories?.trim()) {
+                                writeFile file: 'custom_repositories.json', text: params.custom_repositories, encoding: "UTF-8"
+                            }
+                            // custom_repositories.json from MI Identifiers (self-skips when unset)
+                            if (params.mi_ids?.trim()) {
+                                if (!json_generator_version) {
+                                    error("json_generator_version is not set for this environment, cannot generate custom_repositories.json from mi_ids")
+                                }
+                                node('manager-jenkins-node') {
+                                    checkout scm
+                                    def res_python_script_ = sh(script: "python3 jenkins_pipelines/scripts/json_generator/maintenance_json_generator.py --version ${json_generator_version} --mi_ids ${params.mi_ids}", returnStatus: true)
+                                    echo "CI JSON script return code:\n ${res_python_script_}"
+                                    if (res_python_script_ != 0) {
+                                        error("MI IDs (${params.mi_ids}) passed by parameter are wrong (or already released)")
+                                    }
+                                    stash name: 'custom_repos_json', includes: 'custom_repositories.json'
+                                }
+                                unstash 'custom_repos_json'
+                            }
+
+                            def locationFile ="susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
                             def outputFile = "${localSumaformDirPath}terraform.tfvars"
 
                             def s390LocalUser
@@ -314,7 +336,11 @@ def run(params) {
                 }
                 stage('Secondary') {
                     def tags_list = ""
-                    if (runSecondary && params.functional_scopes) {
+                    // When triggered by cron the Active Choices plugin (JENKINS-42568) always returns
+                    // the first checkbox value instead of none, so ignore functional_scopes on timer builds.
+                    def isTimerTriggered = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
+                    def effectiveScopes = isTimerTriggered ? '' : params.functional_scopes
+                    if (runSecondary && effectiveScopes) {
                         // Re-add the @ prefix stripped from the job parameters, then join as an OR expression.
                         def transformed_scopes = effectiveScopes.split(',')
                                 .collect { it.trim() }
@@ -328,7 +354,8 @@ def run(params) {
                     // so a secondary failure no longer skips hub testing or the finalize step.
                     def runRake = { String task, boolean enabled, String tags = '' ->
                         if (enabled) {
-                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                            // catchInterruptions: false so an abort or idle timeout still exits the stage
+                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE', catchInterruptions: false) {
                                 withIdleTimeout { sh cucumberCmd(task, tags) }
                             }
                         } else if (isNewJenkins) {
