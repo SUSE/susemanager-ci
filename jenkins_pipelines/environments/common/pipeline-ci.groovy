@@ -383,7 +383,7 @@ def run(params) {
                             branches["Parallel - ${family}"] = {
                                 stage("Parallel - ${family}") {
                                     // The offset travels in the rake prefix: the command runs on the controller.
-                                    runRake("cucumber:secondary_par_${family}", runSecondary,
+                                    runRake("${params.rake_namespace ?: 'cucumber'}:secondary_par_${family}", runSecondary,
                                             "export CAPYBARA_PORT_OFFSET=${portOffset}; ${tags_list}")
                                 }
                             }
