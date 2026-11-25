@@ -335,7 +335,7 @@ BASE_CONFIGURATIONS = {
     pool               = "ssd"
     bridge             = "br1"
     additional_network = "192.168.51.0/24"
-    hypervisor         = "suma-10.mgr.suse.de"
+    hypervisor         = "suma-06.mgr.suse.de"
   }
   base_arm = {
     images             = [ "opensuse161armo" ]
