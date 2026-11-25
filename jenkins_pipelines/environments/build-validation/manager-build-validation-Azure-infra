@@ -1,0 +1,35 @@
+#!/usr/bin/env groovy
+
+node('sumaform-cucumber') {
+    properties([
+        buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5')),
+        disableConcurrentBuilds(),
+        parameters([
+            string(name: 'sumaform_gitrepo', defaultValue: 'https://github.com/uyuni-project/sumaform.git', description: 'Sumaform Git Repository'),
+            string(name: 'sumaform_ref', defaultValue: 'master', description: 'Sumaform Git reference (branch, tag...)'),
+            string(name: 'deploy_parallelism', defaultValue: '', description: 'Advanced: Define the number of parallel resource operations for the executable binary'),
+            string(name: 'terracumber_gitrepo', defaultValue: 'https://github.com/uyuni-project/terracumber.git', description: 'Terracumber Git Repository'),
+            string(name: 'terracumber_ref', defaultValue: 'master', description: 'Terracumber Git ref (branch, tag...)'),
+            string(name: 'azure_location', defaultValue: 'francecentral', description: 'Azure region where to deploy the infrastructure'),
+            string(name: 'infra_name_prefix', defaultValue: 'mlm-bv-azure-', description: 'Name prefix of the shared Azure infrastructure (resource group, virtual network, bastion), to be passed to the Azure BV pipelines'),
+            string(name: 'key_file', defaultValue: '/home/jenkins/.ssh/testing-suma.pem', description: 'Path to the SSH private key to access the instances in Azure: its public key is installed on them'),
+            text(name: 'allowed_IPS', defaultValue: '195.135.223.0/24', description: 'Public IPs or CIDRs allowed to SSH into the bastion, separated by new line: keep the Jenkins workers, add your own if needed'),
+            booleanParam(name: 'destroy_environment', defaultValue: false, description: 'Destroy the infrastructure deployed by the previous runs instead of deploying. Destroy the server pipelines environments first'),
+            booleanParam(name: 'confirm_destroy', defaultValue: false, description: 'Confirm destroy_environment: both must be checked'),
+        ])
+    ])
+
+    stage('Checkout pipeline') {
+        checkout scm
+    }
+    def mutableParams = [:] + params
+    mutableParams.bin_path = "/usr/bin/tofu"
+    mutableParams.bin_plugins_path = "/usr/bin"
+
+    def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation-azure-infra.groovy"
+
+    // Secret file exporting ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID and ARM_SUBSCRIPTION_ID for the azurerm provider
+    withCredentials([file(credentialsId: 'azure-secrets', variable: 'AZURE_SECRETS_FILE')]) {
+        pipeline.run(mutableParams)
+    }
+}
