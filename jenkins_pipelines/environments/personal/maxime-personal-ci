@@ -28,11 +28,7 @@ node('sumaform-cucumber') {
             booleanParam(name: 'must_run_core', defaultValue: true, description: 'Run Core stages (setup, reposync, proxy, init clients)'),
             booleanParam(name: 'must_run_secondary', defaultValue: true, description: 'Run Secondary features'),
             booleanParam(name: 'must_run_hub', defaultValue: true, description: 'Run hub_testing stage'),
-            string(name: 'rake_namespace', defaultValue: 'cucumber', description: 'Rake namespace for the secondary parallelizable/finishing tasks'),
             string(name: 'functional_scopes', defaultValue: '', description: 'Optional cucumber TAGS to narrow the secondary run (comma separated, @ optional)'),
-            choice(name: 'json_generator_version', choices: ['51-micro', '51-sles', '52-micro', '52-sles'], description: 'Version the MI Identifiers below are resolved for. Has to match product_version and base_os: a SL Micro base_os is a -micro version, a SLES one a -sles version'),
-            text(name: 'mi_ids', defaultValue: '', description: 'MI Identifiers separated by comma or whitespaces (Option A)'),
-            text(name: 'custom_repositories', defaultValue: '{}', description: 'MU Repositories in json format (Option B)')
             ])
     ])
 
@@ -48,6 +44,7 @@ node('sumaform-cucumber') {
     mutableParams.mode = 'ci'
     mutableParams.capybara_timeout = 10
     mutableParams.default_timeout = 250
+    mutableParams.rake_namespace = "cucumber"
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-ci.groovy"
     pipeline.run(mutableParams)
 }

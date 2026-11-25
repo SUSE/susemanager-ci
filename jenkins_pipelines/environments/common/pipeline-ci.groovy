@@ -204,7 +204,7 @@ def run(params) {
                                 unstash 'custom_repos_json'
                             }
 
-                            def locationFile = "susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
+                            def locationFile ="susemanager-ci/terracumber_config/tf_files/tfvars/location.tfvars"
                             def outputFile = "${localSumaformDirPath}terraform.tfvars"
 
                             def s390LocalUser
@@ -334,19 +334,13 @@ def run(params) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
-                stage('Secondary features') {
-                    if (!runSecondary) {
-                        if (isNewJenkins) {
-                            Utils.markStageSkippedForConditional(STAGE_NAME)
-                        }
-                        return
-                    }
+                stage('Secondary') {
                     def tags_list = ""
                     // When triggered by cron the Active Choices plugin (JENKINS-42568) always returns
                     // the first checkbox value instead of none, so ignore functional_scopes on timer builds.
                     def isTimerTriggered = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
                     def effectiveScopes = isTimerTriggered ? '' : params.functional_scopes
-                    if (effectiveScopes) {
+                    if (runSecondary && effectiveScopes) {
                         // Re-add the @ prefix stripped from the job parameters, then join as an OR expression.
                         def transformed_scopes = effectiveScopes.split(',')
                                 .collect { it.trim() }
@@ -356,22 +350,51 @@ def run(params) {
                         // so the value carries its own quotes rather than nesting single ones.
                         tags_list = "export TAGS=\"\\\"${transformed_scopes}\\\"\"; "
                     }
-                    def statusCode1 = 1
-                    def statusCode2 = 1
-                    def statusCode3 = 1
-                    withIdleTimeout { statusCode1 = sh(script: cucumberCmd('cucumber:secondary', tags_list), returnStatus: true) }
-                    withIdleTimeout { statusCode2 = sh(script: cucumberCmd("${params.rake_namespace}:secondary_parallelizable", tags_list), returnStatus: true) }
-                    withIdleTimeout { statusCode3 = sh(script: cucumberCmd("${params.rake_namespace}:secondary_finishing", tags_list), returnStatus: true) }
-                    sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
-                }
-
-                stage('hub_testing') {
-                    if (runHub) {
-                        withIdleTimeout {
-                            sh cucumberCmd('cucumber:hub_server_to_server')
+                    // A failing sub-stage marks itself and the build FAILURE but the next one still runs,
+                    // so a secondary failure no longer skips hub testing or the finalize step.
+                    def runRake = { String task, boolean enabled, String tags = '' ->
+                        if (enabled) {
+                            // catchInterruptions: false so an abort or idle timeout still exits the stage
+                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE', catchInterruptions: false) {
+                                withIdleTimeout { sh cucumberCmd(task, tags) }
+                            }
+                        } else if (isNewJenkins) {
+                            Utils.markStageSkippedForConditional(STAGE_NAME)
                         }
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
+                    }
+                    // One short rake call per family (run_sets/secondary_{seq,par}_<family>.yml), in run order.
+                    // Parallel families run concurrently: each parallel_cucumber uses the Capybara ports
+                    // 8888+offset+N (N < 6), so every family gets its own CAPYBARA_PORT_OFFSET.
+                    def sequentialFamilies = ['server', 'clients', 'onboarding', 'salt', 'actions', 'proxy',
+                                              'misc', 'cobbler', 'shared_state', 'diskcheck']
+                    def parallelFamilies = ['server', 'clients']
+                    stage('Secondary - Sequential') {
+                        sequentialFamilies.each { family ->
+                            stage("Sequential - ${family}") {
+                                runRake("cucumber:secondary_seq_${family}", runSecondary, tags_list)
+                            }
+                        }
+                    }
+                    stage('Secondary - Parallel') {
+                        def branches = [:]
+                        for (int i = 0; i < parallelFamilies.size(); i++) {
+                            def family = parallelFamilies[i]
+                            def portOffset = i * 10
+                            branches["Parallel - ${family}"] = {
+                                stage("Parallel - ${family}") {
+                                    // The offset travels in the rake prefix: the command runs on the controller.
+                                    runRake("${params.rake_namespace ?: 'cucumber'}:secondary_par_${family}", runSecondary,
+                                            "export CAPYBARA_PORT_OFFSET=${portOffset}; ${tags_list}")
+                                }
+                            }
+                        }
+                        parallel branches
+                    }
+                    stage('Hub Testing') {
+                        runRake('cucumber:hub_server_to_server', runHub)
+                    }
+                    stage('Secondary - Finalize') {
+                        runRake("cucumber:secondary_finishing", runSecondary, tags_list)
                     }
                 }
             }
