@@ -296,12 +296,9 @@ def run(params) {
                 }
 
                 stage('Sanity Check') {
-                    if (isNightly) {
-                        withIdleTimeout {
-                            sh cucumberCmd('cucumber:sanity_check')
-                        }
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
+                    withIdleTimeout {
+                        sh cucumberCmd('cucumber:sanity_check')
+
                     }
                 }
 
