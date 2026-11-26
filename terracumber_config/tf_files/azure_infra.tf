@@ -76,15 +76,22 @@ variable "ALLOWED_IPS" {
   default = []
 }
 
-// Prefix of the shared infrastructure (resource group, virtual network, subnets, bastion): server pipelines look it up by this prefix
+// Prefix of the shared infrastructure (virtual network, subnets, bastion): server pipelines look it up by this prefix
 variable "NAME_PREFIX" {
   type = string
   default = "mlm-bv-azure-"
 }
 
-// The subscription is taken from ARM_SUBSCRIPTION_ID
+// Existing resource group where everything is deployed: it is never created nor destroyed here
+variable "RESOURCE_GROUP_NAME" {
+  type = string
+}
+
+// The subscription is taken from ARM_SUBSCRIPTION_ID.
+// No resource provider registration: it needs subscription-wide permissions, and Microsoft.Compute and Microsoft.Network are registered already
 provider "azurerm" {
   features {}
+  resource_provider_registrations = "none"
 }
 
 module "base" {
@@ -97,6 +104,7 @@ module "base" {
   ssh_key_path      = null
   provider_settings = {
     location            = var.LOCATION
+    resource_group_name = var.RESOURCE_GROUP_NAME
     ssh_allowed_ips     = var.ALLOWED_IPS
     key_file            = var.KEY_FILE
     public_key_location = var.PUBLIC_KEY_FILE

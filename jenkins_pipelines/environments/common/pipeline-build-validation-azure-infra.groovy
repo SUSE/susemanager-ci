@@ -1,5 +1,5 @@
-// Deploys the Azure infrastructure shared by the Azure build validation pipelines:
-// resource group, virtual network with public, private and additional subnets, NAT gateway and bastion.
+// Deploys the Azure infrastructure shared by the Azure build validation pipelines into an existing resource group:
+// virtual network with public, private and additional subnets, NAT gateway and bastion.
 // Hosts in the private subnets are reachable through the bastion only.
 def run(params) {
     if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet(manualWindow: 'MON 00:00-MON 05:00')) { return }
@@ -37,6 +37,9 @@ def run(params) {
             if (!params.allowed_IPS?.trim()) {
                 error("allowed_IPS must not be empty: Azure rejects an SSH rule without source addresses")
             }
+            if (!params.resource_group_name?.trim()) {
+                error("resource_group_name must not be empty: this pipeline only deploys into an existing resource group")
+            }
 
             try {
                 stage('Clone terracumber, susemanager-ci and sumaform') {
@@ -53,6 +56,7 @@ def run(params) {
                     def public_key_file = "${azure_infra_dir}/key_file.pub"
                     sh "ssh-keygen -y -f ${params.key_file} > ${public_key_file}"
                     def azure_configuration = "LOCATION = \"${params.azure_location}\"\n" +
+                            "RESOURCE_GROUP_NAME = \"${params.resource_group_name.trim()}\"\n" +
                             "NAME_PREFIX = \"${params.infra_name_prefix}\"\n" +
                             "KEY_FILE = \"${params.key_file}\"\n" +
                             "PUBLIC_KEY_FILE = \"${public_key_file}\"\n" +
