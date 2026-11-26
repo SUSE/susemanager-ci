@@ -155,6 +155,8 @@ module "cucumber_testsuite" {
     controller = {
       provider_settings = {
         mac = "aa:b2:93:01:00:10"
+        vcpu = 4
+        memory = 4096
       }
     }
     server_kubernetes = {
