@@ -1,6 +1,8 @@
 def run(params) {
     if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet(manualWindow: 'MON 00:00-MON 05:00')) { return }
     def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
+    def idle = load('jenkins_pipelines/environments/common/helpers/idle-timeout.groovy')
+    def cuc = load('jenkins_pipelines/environments/common/helpers/cucumber.groovy')
     ansiColor('xterm') {
         timestamps {
             // Init path env variables
@@ -36,11 +38,9 @@ def run(params) {
             }
             // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
             // Anything that is not a positive number of minutes falls back to the default.
-            def rawIdleTimeout = params.cucumber_idle_timeout?.toString()?.trim()
-            def cucumberIdleTimeoutMinutes = rawIdleTimeout?.isInteger() && rawIdleTimeout.toInteger() > 0 ? rawIdleTimeout.toInteger() : 60
-            def withIdleTimeout = { Closure body ->
-                timeout(activity: true, time: cucumberIdleTimeoutMinutes, unit: 'MINUTES') { body() }
-            }
+            def idleMinutes = idle.minutesOr(params.cucumber_idle_timeout, 60)
+            def cx = cuc.context(commonParams: common_params, resultdirbuild: resultdirbuild,
+                    exports: exports, idleMinutes: idleMinutes, idle: idle)
             try {
                 withCreds {
                     stage('Clone terracumber, susemanager-ci and sumaform') {
@@ -107,7 +107,7 @@ def run(params) {
                         """
                             deployed = true
                             // Collect and tag Flaky tests from the GitHub Board
-                            def statusCode = sh script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:collect_and_tag_flaky_tests'", returnStatus: true
+                            def statusCode = cuc.rake(cx, 'utils:collect_and_tag_flaky_tests', [returnStatus: true, idleMinutes: 0])
                         } else {
                             deployed = true
                         }
@@ -115,43 +115,31 @@ def run(params) {
                 }
                 stage('Install RKE2') {
                     if (params.run_deployment) {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_rke2'"
-                        }
+                        cuc.rake(cx, 'cucumber:kubernetes_install_rke2')
                     }
                 }
                 stage('Install Server on RKE2') {
                     if (params.run_deployment) {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_server_on_rke2'"
-                        }
+                        cuc.rake(cx, 'cucumber:kubernetes_install_mlm_server_on_rke2')
                     }
                 }
                 stage('Install Proxy on RKE2') {
                     if (params.run_deployment) {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:kubernetes_install_mlm_proxy_on_rke2'"
-                        }
+                        cuc.rake(cx, 'cucumber:kubernetes_install_mlm_proxy_on_rke2')
                     }
                 }
                 stage('Sanity Check') {
-                    withIdleTimeout {
-                        sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:sanity_check'"
-                    }
+                    cuc.rake(cx, 'cucumber:sanity_check')
                 }
                 stage('Core - Setup') {
                     if (params.run_core) {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:core'"
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:reposync'"
-                        }
+                        cuc.rake(cx, 'cucumber:core')
+                        cuc.rake(cx, 'cucumber:reposync')
                     }
                 }
                 stage('Core - Initialize clients') {
                     if (params.run_core) {
-                        withIdleTimeout {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:init_clients'"
-                        }
+                        cuc.rake(cx, 'cucumber:init_clients')
                     }
                 }
                 stage('Secondary features') {
@@ -173,9 +161,9 @@ def run(params) {
                         def statusCode1 = 1
                         def statusCode2 = 1
                         def statusCode3 = 1
-                        withIdleTimeout { statusCode1 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake cucumber:secondary'", returnStatus: true) }
-                        withIdleTimeout { statusCode2 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_parallelizable'", returnStatus: true) }
-                        withIdleTimeout { statusCode3 = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${tags_list}cd /root/spacewalk/testsuite; ${exports} rake ${params.rake_namespace}:secondary_finishing'", returnStatus: true) }
+                        statusCode1 = cuc.rake(cx, 'cucumber:secondary', [returnStatus: true, prefix: tags_list])
+                        statusCode2 = cuc.rake(cx, "${params.rake_namespace}:secondary_parallelizable", [returnStatus: true, prefix: tags_list])
+                        statusCode3 = cuc.rake(cx, "${params.rake_namespace}:secondary_finishing", [returnStatus: true, prefix: tags_list])
                         sh "exit \$(( ${statusCode1}|${statusCode2}|${statusCode3} ))"
                     }
                 }
@@ -189,13 +177,13 @@ def run(params) {
                     def error = 0
                     if (deployed) {
                         try {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake cucumber:finishing'"
+                            cuc.rake(cx, 'cucumber:finishing', [idleMinutes: 0])
                         } catch (err) {
                             println("ERROR: rake cucumber:finishing failed: ${err}")
                             error = 1
                         }
                         try {
-                            sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'cd /root/spacewalk/testsuite; ${exports} rake utils:generate_test_report'"
+                            cuc.rake(cx, 'utils:generate_test_report', [idleMinutes: 0])
                         } catch (err) {
                             println("ERROR: rake utils:generate_test_repor failed: ${err}")
                             error = 1
