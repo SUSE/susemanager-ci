@@ -49,6 +49,13 @@ pipeline {
         )
     }
 
+    triggers {
+        // Poll the SCM every five minutes for changes.
+        // 'H' is used to spread out the load on Jenkins.
+        // This requires the Jenkins job to be configured to point to the mcp-server-uyuni git repository.
+        pollSCM('H/5 * * * *')
+    }
+
     environment {
         AGENT_PROVIDER = "${params.AGENT_PROVIDER}"
         JUDGE_PROVIDER = "${params.JUDGE_PROVIDER}"
