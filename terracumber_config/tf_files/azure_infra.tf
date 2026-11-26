@@ -105,7 +105,7 @@ module "base" {
   provider_settings = {
     location            = var.LOCATION
     resource_group_name = var.RESOURCE_GROUP_NAME
-    ssh_allowed_ips     = var.ALLOWED_IPS
+    allowed_ips         = var.ALLOWED_IPS
     key_file            = var.KEY_FILE
     public_key_location = var.PUBLIC_KEY_FILE
   }
