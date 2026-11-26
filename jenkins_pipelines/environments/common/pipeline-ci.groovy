@@ -7,6 +7,8 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 def run(params) {
     if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet()) { return }
     def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
+    def idle = load('jenkins_pipelines/environments/common/helpers/idle-timeout.groovy')
+    def cuc = load('jenkins_pipelines/environments/common/helpers/cucumber.groovy')
     ansiColor('xterm') {
         timestamps {
             // Capybara configuration
@@ -105,20 +107,11 @@ def run(params) {
             }
 
             // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
-            def rawIdleTimeout = params.cucumber_idle_timeout?.toString()?.trim()
-            def cucumberIdleTimeoutMinutes = rawIdleTimeout?.isInteger() && rawIdleTimeout.toInteger() > 0 ? rawIdleTimeout.toInteger() : 60
-            def withIdleTimeout = { Closure body ->
-                timeout(activity: true, time: cucumberIdleTimeoutMinutes, unit: 'MINUTES') { body() }
-            }
+            def idleMinutes = idle.minutesOr(params.cucumber_idle_timeout, 60)
 
-            // Build a terracumber cucumber invocation for a rake target.
-            // prefix carries per-run env exports (e.g. TAGS) that must precede the cd.
-            // Note: Jenkins CPS-transforms this closure, which does not honor Groovy
-            // default parameter values — a missing prefix arrives as null, not ''.
-            def cucumberCmd = { String rake_target, String prefix = null ->
-                def safePrefix = prefix ?: ''
-                "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd '${safePrefix}cd /root/spacewalk/testsuite; ${env.exports} rake ${rake_target}'"
-            }
+            // Shared cucumber runner (helpers/cucumber.groovy): builds the terracumber call and applies the idle timeout.
+            def cx = cuc.context(commonParams: env.common_params, resultdirbuild: env.resultdirbuild,
+                                 exports: env.exports, idleMinutes: idleMinutes, idle: idle)
 
             try {
                 stage('Clone terracumber, susemanager-ci') {
@@ -277,7 +270,7 @@ def run(params) {
                             if (isNightly) {
                                 // Collect and tag flaky tests from the GitHub Board (non-fatal)
                                 def rakeTarget = ci_label ? "utils:collect_and_tag_flaky_tests[${ci_label}]" : "utils:collect_and_tag_flaky_tests"
-                                sh script: cucumberCmd(rakeTarget), returnStatus: true
+                                cuc.rake(cx, rakeTarget, [returnStatus: true, idleMinutes: 0])
                             }
                         }
                     } else if (isNewJenkins) {
@@ -296,40 +289,28 @@ def run(params) {
                 }
 
                 stage('Sanity Check') {
-                    if (isNightly) {
-                        withIdleTimeout {
-                            sh cucumberCmd('cucumber:sanity_check')
-                        }
-                    } else if (isNewJenkins) {
-                        Utils.markStageSkippedForConditional(STAGE_NAME)
-                    }
+                    cuc.rake(cx, 'cucumber:sanity_check')
                 }
 
                 // --- CI rake states (copied from pipeline.groovy) ---
                 stage('Core - Setup') {
                     if (runCore) {
-                        withIdleTimeout {
-                            sh cucumberCmd('cucumber:core')
-                            sh cucumberCmd('cucumber:reposync')
-                        }
+                        cuc.rake(cx, 'cucumber:core')
+                        cuc.rake(cx, 'cucumber:reposync')
                     } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
                 stage('Core - Proxy') {
                     if (runCore) {
-                        withIdleTimeout {
-                            sh cucumberCmd('cucumber:proxy')
-                        }
+                        cuc.rake(cx, 'cucumber:proxy')
                     } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
                 }
                 stage('Core - Initialize clients') {
                     if (runCore) {
-                        withIdleTimeout {
-                            sh cucumberCmd('parallel:init_clients')
-                        }
+                        cuc.rake(cx, 'parallel:init_clients')
                     } else if (isNewJenkins) {
                         Utils.markStageSkippedForConditional(STAGE_NAME)
                     }
@@ -356,7 +337,7 @@ def run(params) {
                         if (enabled) {
                             // catchInterruptions: false so an abort or idle timeout still exits the stage
                             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE', catchInterruptions: false) {
-                                withIdleTimeout { sh cucumberCmd(task, tags) }
+                                cuc.rake(cx, task, [prefix: tags])
                             }
                         } else if (isNewJenkins) {
                             Utils.markStageSkippedForConditional(STAGE_NAME)
@@ -408,8 +389,8 @@ def run(params) {
                     try {
                         if (deployed || !params.must_deploy) {
                             // safe.run keeps an abort from escaping the finally block (ABORTED is recorded)
-                            if (!safe.run('finishing') { sh cucumberCmd('cucumber:finishing') }) { result_error = 1 }
-                            if (!safe.run('generate_test_report') { sh cucumberCmd('utils:generate_test_report') }) { result_error = 1 }
+                            if (!safe.run('finishing') { cuc.rake(cx, 'cucumber:finishing', [idleMinutes: 0]) }) { result_error = 1 }
+                            if (!safe.run('generate_test_report') { cuc.rake(cx, 'utils:generate_test_report', [idleMinutes: 0]) }) { result_error = 1 }
                             safe.run('getresults') { sh "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep getresults" }
                             safe.run('publishHTML') {
                                 publishHTML(target: [

@@ -3,6 +3,9 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 def run(params) {
     if (load('jenkins_pipelines/environments/common/helpers/quiet-window.groovy').skipIfQuiet(manualWindow: 'MON 00:00-MON 05:00')) { return }
     def safe = load('jenkins_pipelines/environments/common/helpers/safe-step.groovy')
+    // No 'def' on idle, cuc and cx: read by top-level methods, which cannot see run() locals.
+    idle = load('jenkins_pipelines/environments/common/helpers/idle-timeout.groovy')
+    cuc = load('jenkins_pipelines/environments/common/helpers/cucumber.groovy')
     ansiColor('xterm') {
         timestamps {
             //Capybara configuration
@@ -69,12 +72,10 @@ def run(params) {
             // one run, so it gets a timeout of its own.
             // Anything that is not a positive number of minutes falls back to the default.
             // No 'def': both values are read from runCucumberRakeTarget() and clientTestingStages().
-            def idleTimeoutMinutesOr = { value, int fallback ->
-                def raw = value?.toString()?.trim()
-                raw?.isInteger() && raw.toInteger() > 0 ? raw.toInteger() : fallback
-            }
-            cucumberIdleTimeoutMinutes = idleTimeoutMinutesOr(params.cucumber_idle_timeout, 60)
-            productSyncIdleTimeoutMinutes = idleTimeoutMinutesOr(params.product_sync_idle_timeout, 180)
+            cucumberIdleTimeoutMinutes = idle.minutesOr(params.cucumber_idle_timeout, 60)
+            productSyncIdleTimeoutMinutes = idle.minutesOr(params.product_sync_idle_timeout, 180)
+            cx = cuc.context(commonParams: env.common_params, resultdirbuild: env.resultdirbuild,
+                             exports: env.exports, idleMinutes: cucumberIdleTimeoutMinutes, idle: idle)
             try {
                 if (params.enable_hub_stages) {
                     def hubJobName = env.JOB_NAME.replaceFirst(/^(manager-(?:head|\d+\.\d+)).*/, '$1-qe-hub-testing')
@@ -594,62 +595,22 @@ def run(params) {
     }
 }
 
-// Declared as top-level methods (not closures assigned to undeclared vars) so they stay
-// resolvable from any method on this script object, including across a pipeline resume -
-// closure-valued script bindings have been observed coming back null in that case,
-// causing a "No such DSL method" NoSuchMethodError instead of running the timeout.
-def withIdleTimeoutOf(int minutes, Closure body) {
-    timeout(activity: true, time: minutes, unit: 'MINUTES') { body() }
-}
-
-def withIdleTimeout(Closure body) {
-    withIdleTimeoutOf(cucumberIdleTimeoutMinutes, body)
-}
-
 /**
- * Executes a rake command inside the terracumber cucumber step.
+ * Executes a rake command inside the terracumber cucumber step, via helpers/cucumber.groovy.
+ * A top-level method (not a closure assigned to an undeclared var) so it stays resolvable from any method
+ * on this script object, including across a pipeline resume - closure-valued script bindings have been
+ * observed coming back null in that case, causing a "No such DSL method" NoSuchMethodError.
  * @param rake_target The full rake target string (e.g., 'cucumber:build_validation_core').
  * @param return_status Boolean to decide if the command should return the exit status.
- * @param disableMinions Optional list of environment variables to unset (for parallel client stages).
+ * @param disableMinions Optional list (or space-separated string) of environment variables to unset (for parallel client stages).
  * @param idleTimeoutMinutes Optional inactivity timeout, for the few targets that stay silent longer than the default.
  * @param wallSeconds Optional wall-clock limit, enforced by coreutils timeout (exit 124, or 137 if it had to be killed).
  *                    Do not use Jenkins timeout() for this: stopping one sh step kills every sh step of the same
  *                    workspace (durable-task kills by a workspace-wide cookie), i.e. all parallel branches.
  */
 def runCucumberRakeTarget(String rake_target, boolean return_status = false, disableMinions = null, Integer idleTimeoutMinutes = null, Integer wallSeconds = null) {
-    // Note: The disableMinions is provided as a space-separated string in the code (e.g., in getNodesHandler(params)),
-    // For compatibility with the original structure where getNodesHandler(params).envVariableListToDisable is a string.
-    def unset_vars = ""
-    if (disableMinions) {
-        // If it's a list/set, join it to a string. If it's already a string, use it.
-        def list_to_join = disableMinions instanceof String ? disableMinions.split(' ') : disableMinions
-        unset_vars = list_to_join ? "unset ${list_to_join.join(' ')}; " : ""
-    }
-
-    def wall_prefix = wallSeconds ? "timeout -k 30 -s TERM ${wallSeconds}s " : ""
-    def script = """
-        ${wall_prefix}./terracumber-cli ${common_params} \\
-            --logfile ${resultdirbuild}/testsuite.log \\
-            --runstep cucumber \\
-            --cucumber-cmd '${unset_vars}${env.exports} cd /root/spacewalk/testsuite; rake ${rake_target}'
-    """
-
-    // Remove leading/trailing whitespace and execute
-    def final_script = script.stripIndent().trim()
-
-    // Inactivity timeout: kills a cucumber run that has stopped producing output entirely.
-    def idleMinutes = idleTimeoutMinutes ?: cucumberIdleTimeoutMinutes
-    if (return_status) {
-        def status = 1
-        withIdleTimeoutOf(idleMinutes) {
-            status = sh(script: final_script, returnStatus: true)
-        }
-        return status
-    } else {
-        withIdleTimeoutOf(idleMinutes) {
-            sh final_script
-        }
-    }
+    return cuc.rake(cx, rake_target, [returnStatus: return_status, unset: disableMinions,
+                                      idleMinutes: idleTimeoutMinutes, wallSeconds: wallSeconds])
 }
 
 // Develop a function that outlines the various stages of a minion.
@@ -812,9 +773,7 @@ def clientTestingStages(params, muLockSlots, nonMuLockSlots, smokeTestSlots, boo
                     def custom_exports = "${env.exports} export DEFAULT_TIMEOUT=${env.bootstrap_timeout};"
                     // The helper doesn't easily allow overriding env.exports. For this unique case, we'll keep the logic inline to modify the environment variable within the script block for the special DEFAULT_TIMEOUT.
                     def res_init_clients = 1
-                    withIdleTimeout {
-                        res_init_clients = sh(script: "./terracumber-cli ${common_params} --logfile ${resultdirbuild}/testsuite.log --runstep cucumber --cucumber-cmd 'unset ${temporaryList.join(' ')}; ${custom_exports} cd /root/spacewalk/testsuite; rake cucumber:build_validation_init_client_${nodeTag}'", returnStatus: true)
-                    }
+                    res_init_clients = cuc.rake(cx, "cucumber:build_validation_init_client_${nodeTag}", [returnStatus: true, unset: temporaryList, exports: custom_exports])
                     echoHtmlReportPath( "build_validation_init_client_${nodeTag}")
                     echo "Init clients status code: ${res_init_clients}"
                     if (res_init_clients != 0) {
