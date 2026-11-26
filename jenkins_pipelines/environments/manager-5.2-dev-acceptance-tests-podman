@@ -22,7 +22,7 @@ node('sumaform-cucumber') {
             activeChoice(name: 'minions_to_run', description: 'Node list to run during CI', choiceType: 'PT_CHECKBOX', script: [$class: 'GroovyScript', script: [$class: 'SecureGroovyScript', sandbox: true, script: """
                 return [
                     'sles15sp7_minion:selected', 'sles15sp7_sshminion:selected',
-                    'rocky8_minion:selected', 'ubuntu2404_minion:selected'
+                    'rocky10_minion:selected', 'ubuntu2404_minion:selected'
                 ]
             """.stripIndent()], fallbackScript: [$class: 'SecureGroovyScript', sandbox: true, script: "return ['error_loading_minions']"]]),
             booleanParam(name: 'must_deploy', defaultValue: true, description: 'Deploy'),

@@ -117,7 +117,7 @@ module "cucumber_testsuite" {
   cc_username = var.SCC_USER
   cc_password = var.SCC_PASSWORD
 
-  images = ["rocky8o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
+  images = ["rocky10o", "opensuse160o", "ubuntu2404o", "sles15sp7o", "tumbleweedo"]
 
   use_avahi    = false
   name_prefix  = "suma-codecov-"
@@ -183,7 +183,7 @@ module "cucumber_testsuite" {
       }
     }
     rhlike_minion = {
-      image = "rocky8o"
+      image = "rocky10o"
       provider_settings = {
         mac = "aa:b2:92:04:00:f6"
         memory = 4096

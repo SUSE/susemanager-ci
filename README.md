@@ -29,7 +29,7 @@ For details have a look at [terracumber_config/README.md](terracumber_config/REA
 |-------------|---------------|---------------|--------------|--------------|--------------|
 | Minion      | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  |
 | SSH minion  | Tumbleweed    | Tumbleweed    | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  |
-| RH-like     | Rocky 8       | Rocky 8       | Rocky 8      | Rocky 8      | Rocky 8      |
+| RH-like     | Rocky 8       | Rocky 10      | Rocky 10     | Rocky 10     | Rocky 10     |
 | Deb-like    | Ubuntu 24.04  | Ubuntu 24.04  | Ubuntu 24.04 | Ubuntu 24.04 | Ubuntu 24.04 |
 | Buildhost   | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  |
 | Terminal    | Leap 15.6     | SLES 15 SP7   | SLES 15 SP7  | SLES 15 SP7  | SLES 15 SP7  |
