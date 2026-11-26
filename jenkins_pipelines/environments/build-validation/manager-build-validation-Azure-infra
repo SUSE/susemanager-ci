@@ -29,7 +29,7 @@ node('sumaform-cucumber') {
 
     def pipeline = load "jenkins_pipelines/environments/common/pipeline-build-validation-azure-infra.groovy"
 
-    // Secret file exporting ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID and ARM_SUBSCRIPTION_ID for the azurerm provider
+    // Secret file setting ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID and ARM_SUBSCRIPTION_ID for the azurerm provider
     withCredentials([file(credentialsId: 'azure-secrets', variable: 'AZURE_SECRETS_FILE')]) {
         pipeline.run(mutableParams)
     }

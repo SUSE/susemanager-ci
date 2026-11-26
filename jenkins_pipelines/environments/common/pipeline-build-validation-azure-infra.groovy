@@ -9,8 +9,8 @@ def run(params) {
             env.resultdir = "${WORKSPACE}/results"
             env.resultdirbuild = "${resultdir}/${BUILD_NUMBER}"
             def azure_infra_dir = "${resultdir}/sumaform-azure-infra"
-            // Exports the ARM_* variables of the azure-secrets credential without echoing them
-            def azInit = 'set +x; . "${AZURE_SECRETS_FILE}"; set -x'
+            // Exports the ARM_* variables of the azure-secrets credential without echoing them: set -a exports plain KEY=value lines too
+            def azInit = 'set +x; set -a; . "${AZURE_SECRETS_FILE}"; set +a; set -x'
 
             def azure_infra_params = "--outputdir ${resultdir} --tf susemanager-ci/terracumber_config/tf_files/azure_infra.tf --gitfolder ${azure_infra_dir} --terraform-bin ${params.bin_path}"
             if (params.deploy_parallelism) {
